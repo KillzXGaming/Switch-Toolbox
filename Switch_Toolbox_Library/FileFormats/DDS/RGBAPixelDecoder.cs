@@ -8,32 +8,30 @@ namespace Toolbox.Library
 {
     public class RGBAPixelDecoder
     {
-        private static byte[] GetComponentsFromPixel(TEX_FORMAT format, int pixel)
+        private static byte[] GetComponentsFromPixel(TEX_FORMAT format, int pixel, byte[] comp)
         {
-            byte[] comp = new byte[] { 0, 0xFF, 0, 0, 0, 0xFF };
-
             switch (format)
             {
                 case TEX_FORMAT.L8:
-                    comp[2] = (byte)(pixel & 0xFF);
-                    break;
-                case TEX_FORMAT.L4:
-                    comp[2] = (byte)((pixel & 0xF) * 17);
-                    comp[3] = (byte)(((pixel & 0xF0) >> 4) * 17);
+                    comp[0] = (byte)(pixel & 0xFF);
                     break;
                 case TEX_FORMAT.LA8:
-                    comp[2] = (byte)(pixel & 0xFF);
-                    comp[3] = (byte)((pixel & 0xFF00) >> 8);
+                    comp[0] = (byte)(pixel & 0xFF);
+                    comp[1] = (byte)((pixel & 0xFF00) >> 8);
+                    break;
+                case TEX_FORMAT.LA4:
+                    comp[0] = (byte)((pixel & 0xF) * 17);
+                    comp[1] = (byte)(((pixel & 0xF0) >> 4) * 17);
                     break;
                 case TEX_FORMAT.R5G5B5_UNORM:
-                    comp[2] = (byte)((pixel & 0x1F) / 0x1F * 0xFF);
-                    comp[3] = (byte)(((pixel & 0x7E0) >> 5) / 0x3F * 0xFF);
-                    comp[4] = (byte)(((pixel & 0xF800) >> 11) / 0x1F * 0xFF);
+                    comp[0] = (byte)((pixel & 0x1F) / 0x1F * 0xFF);
+                    comp[1] = (byte)(((pixel & 0x7E0) >> 5) / 0x3F * 0xFF);
+                    comp[2] = (byte)(((pixel & 0xF800) >> 11) / 0x1F * 0xFF);
                     break;
                 case TEX_FORMAT.B5G6R5_UNORM:
-                    comp[2] = (byte)(((pixel & 0xF800) >> 11) / 0x1F * 0xFF);
-                    comp[3] = (byte)(((pixel & 0x7E0) >> 5) / 0x3F * 0xFF);
-                    comp[4] = (byte)((pixel & 0x1F) / 0x1F * 0xFF);
+                    comp[0] = (byte)(((pixel & 0xF800) >> 11) / 0x1F * 0xFF);
+                    comp[1] = (byte)(((pixel & 0x7E0) >> 5) / 0x3F * 0xFF);
+                    comp[2] = (byte)((pixel & 0x1F) / 0x1F * 0xFF);
                     break;
             }
 
@@ -54,10 +52,16 @@ namespace Toolbox.Library
             int inPos = 0;
             int outPos = 0;
 
+            byte[] comp = new byte[] { 0, 0, 0, 0xFF, 0, 0xFF };
             byte[] compSel = new byte[4] {0,1,2,3 };
 
-            if (format == TEX_FORMAT.L8 || format == TEX_FORMAT.LA8)
-                compSel = new byte[4] { 2, 2, 2, 3 };
+            if (format == TEX_FORMAT.LA8)
+            {
+                compSel = new byte[4] { 0, 0, 0, 1 };
+                bpp = 2;
+            }
+            else if (format == TEX_FORMAT.L8)
+                compSel = new byte[4] { 0, 0, 0, 5 };
 
             for (int Y = 0; Y < height; Y++)
             {
@@ -70,7 +74,7 @@ namespace Toolbox.Library
                     for (int i = 0; i < bpp; i++)
                         pixel |= data[inPos + i] << (8 * i);
 
-                    byte[] comp = GetComponentsFromPixel(format, pixel);
+                    comp = GetComponentsFromPixel(format, pixel, comp);
 
                     output[outPos + 3] = comp[compSel[3]];
                     output[outPos + 2] = comp[compSel[2]];

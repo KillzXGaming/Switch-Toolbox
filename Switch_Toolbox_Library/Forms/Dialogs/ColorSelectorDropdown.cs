@@ -12,10 +12,21 @@ namespace Toolbox.Library.Forms
 {
     public partial class ColorSelectorDropdown : STUserControl
     {
+        public EventHandler ColorApplied;
+
         public STColor8 Color8
         {
             get { return colorSelector1.Color8; }
-            set { colorSelector1.Color8 = value; }
+        }
+
+        public STColor16 Color16
+        {
+            get { return colorSelector1.Color16; }
+        }
+
+        public STColor Color32
+        {
+            get { return colorSelector1.Color32; }
         }
 
         public Color Color
@@ -47,6 +58,11 @@ namespace Toolbox.Library.Forms
 
             var fullColor = Color.FromArgb(colorSelector1.Alpha, colorSelector1.Color);
             pictureBoxCustom1.Image = BitmapExtension.FillColor(30,30, fullColor);
+        }
+
+        private void stButton1_Click(object sender, EventArgs e)
+        {
+            ColorApplied?.Invoke(sender,e);
         }
     }
 }

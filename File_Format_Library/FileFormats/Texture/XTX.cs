@@ -98,6 +98,7 @@ namespace FirstPlugin
                 BC4S = 0x0000004a,
                 BC5U = 0x0000004b,
                 BC5S = 0x0000004c,
+                BC7U = 0x0000004d,
 
                 //Same order as this https://github.com/aboood40091/BNTX-Editor/blob/master/globals.py
                 //However SRGB goes after unorm
@@ -515,7 +516,7 @@ namespace FirstPlugin
                 editor.LoadProperties(GenericProperties);
             }
 
-            private static XTXFormats.XTXImageFormat ConvertFromGenericFormat(TEX_FORMAT Format)
+            public static XTXFormats.XTXImageFormat ConvertFromGenericFormat(TEX_FORMAT Format)
             {
                 switch (Format)
                 {
@@ -525,6 +526,7 @@ namespace FirstPlugin
                     case TEX_FORMAT.BC4_UNORM: return XTXFormats.XTXImageFormat.BC4U;
                     case TEX_FORMAT.BC4_SNORM: return XTXFormats.XTXImageFormat.BC4S;
                     case TEX_FORMAT.BC5_UNORM: return XTXFormats.XTXImageFormat.BC5U;
+                    case TEX_FORMAT.BC7_UNORM: return XTXFormats.XTXImageFormat.BC7U;
                     case TEX_FORMAT.R8_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_R8;
                     case TEX_FORMAT.R8G8_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RG8;
                     case TEX_FORMAT.R10G10B10A2_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGB10A2;
@@ -564,7 +566,12 @@ namespace FirstPlugin
                 }
             }
 
-            private static TEX_FORMAT ConvertFormat(XTXFormats.XTXImageFormat Format)
+            public static TEX_FORMAT ConvertFormat(uint Format)
+            {
+                return ConvertFormat((XTXFormats.XTXImageFormat)Format);
+            }
+
+            public static TEX_FORMAT ConvertFormat(XTXFormats.XTXImageFormat Format)
             {
                 switch (Format)
                 {
@@ -575,6 +582,7 @@ namespace FirstPlugin
                     case XTXFormats.XTXImageFormat.BC4S: return TEX_FORMAT.BC4_SNORM;
                     case XTXFormats.XTXImageFormat.BC5U: return TEX_FORMAT.BC5_UNORM;
                     case XTXFormats.XTXImageFormat.BC5S: return TEX_FORMAT.BC5_SNORM;
+                    case XTXFormats.XTXImageFormat.BC7U: return TEX_FORMAT.BC7_UNORM;
                     case XTXFormats.XTXImageFormat.NVN_FORMAT_R8: return TEX_FORMAT.R8_UNORM;
                     case XTXFormats.XTXImageFormat.NVN_FORMAT_RG8: return TEX_FORMAT.R8G8_UNORM;
                     case XTXFormats.XTXImageFormat.NVN_FORMAT_RGB10A2: return TEX_FORMAT.R10G10B10A2_UNORM;

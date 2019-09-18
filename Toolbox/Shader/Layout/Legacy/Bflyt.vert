@@ -21,11 +21,11 @@ vec2 SetFlip(vec2 tex)
 	else if (flipTexture == 2) //FlipV
 	      return vec2(1, -1) * tex + vec2(0, 1);
 	else if (flipTexture == 3) //Rotate90
-	      return rotateUV(tex, 90.0);
+	      return rotateUV(tex, radians(90.0));
 	else if (flipTexture == 4) //Rotate180
-	      return rotateUV(tex, 180.0);
+	      return rotateUV(tex, radians(180.0));
 	else if (flipTexture == 5) //Rotate270
-	      return rotateUV(tex, 270.0);
+	      return rotateUV(tex, radians(270.0));
 
 	return outTexCoord;
 }
@@ -33,7 +33,7 @@ vec2 SetFlip(vec2 tex)
 void main()
 {
 	gl_FrontColor = gl_Color;
-	vec2 texCoord0 = uvScale0 * (gl_MultiTexCoord0.xy + uvTranslate0);
+	vec2 texCoord0 = vec2(0.5, 0.5) + uvScale0 * (gl_MultiTexCoord0.xy + (uvTranslate0 / uvScale0 - 0.5));
 	gl_TexCoord[0].st = SetFlip(texCoord0);
 	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 }

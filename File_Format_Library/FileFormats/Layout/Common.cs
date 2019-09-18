@@ -482,7 +482,7 @@ namespace LayoutBXLYT
         public BxlytMaterial Material { get; set; }
 
         public ushort MaterialIndex;
-        public WindowFrameTexFlip TextureFlip;
+        public WindowFrameTexFlip TextureFlip { get; set; }
     }
 
     public class TexCoord
@@ -573,7 +573,158 @@ namespace LayoutBXLYT
 
     public class BxlanHeader : LayoutHeader
     {
+        public BxlanPAT1 AnimationTag;
+        public BxlanPAI1 AnimationInfo;
+    }
 
+    public class BxlanPAT1 : SectionCommon
+    {
+        [DisplayName("Name"), CategoryAttribute("Animation")]
+        public string Name { get; set; }
+
+        [DisplayName("Groups"), CategoryAttribute("Animation")]
+        public List<string> Groups { get; set; }
+
+        [DisplayName("Start"), CategoryAttribute("Frames")]
+        public short StartFrame { get; set; }
+
+        [DisplayName("End"), CategoryAttribute("Frames")]
+        public short EndFrame { get; set; }
+
+        [DisplayName("Animation Order"), CategoryAttribute("Parameters")]
+        public ushort AnimationOrder { get; set; }
+
+        [DisplayName("Child Binding"), CategoryAttribute("Parameters")]
+        public bool ChildBinding { get; set; }
+    }
+
+    public class BxlanPAI1 : SectionCommon
+    {
+        public ushort FrameSize;
+        public bool Loop;
+
+        public List<string> Textures { get; set; }
+        public List<BxlanPaiEntry> Entries = new List<BxlanPaiEntry>();
+    }
+
+    public class BxlanPaiEntry
+    {
+        [DisplayName("Name"), CategoryAttribute("Animation")]
+        public string Name { get; set; }
+
+        [DisplayName("Target"), CategoryAttribute("Animation")]
+        public AnimationTarget Target { get; set; }
+
+        public List<BxlanPaiTag> Tags = new List<BxlanPaiTag>();
+    }
+
+    public class BxlanPaiTag
+    {
+        public List<BxlanPaiTagEntry> Entries = new List<BxlanPaiTagEntry>();
+
+        public string Tag;
+
+        public string Type
+        {
+            get { return TypeDefine.ContainsKey(Tag) ? TypeDefine[Tag] : Tag; }
+        }
+
+        public Dictionary<string, string> TypeDefine = new Dictionary<string, string>()
+            {
+                {"FLPA","PaneSRT" },
+                {"FLVI","Visibility" },
+                {"FLTS","TextureSRT" },
+                {"FLVC","VertexColor" },
+                {"FLMC","MaterialColor" },
+                {"FLTP","TexturePattern" },
+                {"FLIM","IndTextureSRT" },
+                {"FLAC","AlphaTest" },
+                {"FLCT","FontShadow" },
+                {"FLCC","PerCharacterTransformCurve" },
+
+                {"RLPA","PaneSRT" },
+                {"RLVI","Visibility" },
+                {"RLTS","TextureSRT" },
+                {"RLVC","VertexColor" },
+                {"RLMC","MaterialColor" },
+                {"RLTP","TexturePattern" },
+                {"RLIM","IndTextureSRT" },
+                {"RLAC","AlphaTest" },
+                {"RLCT","FontShadow" },
+                {"RLCC","PerCharacterTransformCurve" },
+
+                {"CLPA","PaneSRT" },
+                {"CLVI","Visibility" },
+                {"CLTS","TextureSRT" },
+                {"CLVC","VertexColor" },
+                {"CLMC","MaterialColor" },
+                {"CLTP","TexturePattern" },
+                {"CLIM","IndTextureSRT" },
+                {"CLAC","AlphaTest" },
+                {"CLCT","FontShadow" },
+                {"CLCC","PerCharacterTransformCurve" },
+            };
+    }
+
+    public class BxlanPaiTagEntry
+    {
+        [Browsable(false)]
+        public virtual string TargetName
+        {
+            get { return AnimationTarget.ToString(); }
+        }
+
+        public byte AnimationTarget;
+
+        [DisplayName("Index"), CategoryAttribute("Tag")]
+        public byte Index { get; set; }
+
+        [DisplayName("Data Type"), CategoryAttribute("Tag")]
+        public KeyType DataType { get; set; }
+
+        public List<KeyFrame> KeyFrames = new List<KeyFrame>();
+    }
+
+    public class KeyFrame
+    {
+        [DisplayName("Blend"), CategoryAttribute("Key Frame")]
+        public float Blend { get; set; }
+        [DisplayName("Frame"), CategoryAttribute("Key Frame")]
+        public float Frame { get; set; }
+        [DisplayName("Value"), CategoryAttribute("Key Frame")]
+        public float Value { get; set; }
+
+        public KeyFrame(FileReader reader, KeyType DataType)
+        {
+            Frame = reader.ReadSingle();
+            switch (DataType)
+            {
+                case KeyType.Float:
+                    Value = reader.ReadSingle();
+                    Blend = reader.ReadSingle();
+                    break;
+                case KeyType.Uin16:
+                    Value = (float)reader.ReadInt16();
+                    Blend = (float)reader.ReadInt16();
+                    break;
+            }
+        }
+
+        public void Write(FileWriter writer, KeyType DataType)
+        {
+            writer.Write(Frame);
+            switch (DataType)
+            {
+                case KeyType.Float:
+                    writer.Write(Value);
+                    writer.Write(Blend);
+                    break;
+                case KeyType.Uin16:
+                    writer.Write((ushort)Value);
+                    writer.Write((ushort)Blend);
+                    break;
+            }
+        }
     }
 
     public class BxlytHeader : LayoutHeader

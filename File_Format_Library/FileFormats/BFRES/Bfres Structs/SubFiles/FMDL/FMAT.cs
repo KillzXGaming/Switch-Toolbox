@@ -289,7 +289,7 @@ namespace Bfres.Structs
 
             if (ShaderName == "alRenderMaterial" || ShaderName == "alRenderCloudLayer" || ShaderName == "alRenderSky")
                 Runtime.activeGame = Runtime.ActiveGame.SMO;
-            else if (ShaderName == "forward_plus_char")
+            else if (ShaderName == "forward_plus_char" || ShaderName == "bezel_pbr")
                 Runtime.activeGame = Runtime.ActiveGame.Bezel;
             else if (ShaderName == "Turbo_UBER")
                 Runtime.activeGame = Runtime.ActiveGame.MK8D;

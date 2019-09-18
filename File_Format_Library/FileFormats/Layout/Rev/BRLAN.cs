@@ -11,13 +11,13 @@ using SharpYaml.Serialization;
 
 namespace LayoutBXLYT
 {
-    public class BFLAN : IEditorForm<LayoutEditor>, IFileFormat, IConvertableTextFormat
+    public class BRLAN : IEditorForm<LayoutEditor>, IFileFormat, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "Cafe Layout Animation (GUI)" };
-        public string[] Extension { get; set; } = new string[] { "*.bflan" };
+        public string[] Description { get; set; } = new string[] { "Revolution Layout Animation (GUI)" };
+        public string[] Extension { get; set; } = new string[] { "*.brlan" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -26,7 +26,7 @@ namespace LayoutBXLYT
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "FLAN");
+                return reader.CheckSignature(4, "RLAN");
             }
         }
 
@@ -41,12 +41,14 @@ namespace LayoutBXLYT
 
         #region Text Converter Interface
         public TextFileType TextFileType => TextFileType.Xml;
-        public bool CanConvertBack => true;
+        public bool CanConvertBack => false;
 
         public string ConvertToString()
         {
-            var serializerSettings = new SerializerSettings()
-            {
+            return "";
+
+       /*     var serializerSettings = new SerializerSettings()
+/
                 //  EmitTags = false
             };
 
@@ -54,17 +56,17 @@ namespace LayoutBXLYT
             serializerSettings.ComparerForKeySorting = null;
             serializerSettings.RegisterTagMapping("Header", typeof(Header));
 
-            return FLAN.ToXml(header);
+         //   return FLAN.ToXml(header);
 
             var serializer = new Serializer(serializerSettings);
             string yaml = serializer.Serialize(header, typeof(Header));
-            return yaml;
+            return yaml;*/
         }
 
         public void ConvertFromString(string text)
         {
-            header = FLAN.FromXml(text);
-            header.FileInfo = this;
+         //   header = RLAN.FromXml(text);
+         //   header.FileInfo = this;
         }
 
         #endregion
@@ -102,14 +104,14 @@ namespace LayoutBXLYT
 
         public class Header : BxlanHeader
         {
-            private const string Magic = "FLAN";
+            private const string Magic = "RLAN";
             private ushort ByteOrderMark;
             private ushort HeaderSize;
 
             //As of now this should be empty but just for future proofing
             private List<SectionCommon> UnknownSections = new List<SectionCommon>();
 
-            public void Read(FileReader reader, BFLAN bflan)
+            public void Read(FileReader reader, BRLAN bflan)
             {
                 AnimationTag = new PAT1();
                 AnimationInfo = new PAI1();
@@ -118,10 +120,9 @@ namespace LayoutBXLYT
                 reader.ReadSignature(4, Magic);
                 ByteOrderMark = reader.ReadUInt16();
                 reader.CheckByteOrderMark(ByteOrderMark);
-                HeaderSize = reader.ReadUInt16();
-                Version = reader.ReadUInt32();
-                SetVersionInfo();
+                Version = reader.ReadUInt16();
                 uint FileSize = reader.ReadUInt32();
+                HeaderSize = reader.ReadUInt16();
                 ushort sectionCount = reader.ReadUInt16();
                 reader.ReadUInt16(); //Padding
 
@@ -164,11 +165,10 @@ namespace LayoutBXLYT
                 else
                     writer.Write((ushort)0xFEFF);
                 writer.SetByteOrder(IsBigEndian);
-                writer.Write(HeaderSize);
-                writer.Write(Version);
+                writer.Write((ushort)Version);
                 writer.Write(uint.MaxValue); //Reserve space for file size later
+                writer.Write(HeaderSize);
                 writer.Write(ushort.MaxValue); //Reserve space for section count later
-                writer.Seek(2); //padding
 
                 int sectionCount = 0;
 
@@ -197,6 +197,7 @@ namespace LayoutBXLYT
                 }
             }
         }
+
 
         public class PAT1 : BxlanPAT1
         {
@@ -340,7 +341,7 @@ namespace LayoutBXLYT
             {
                 long startPos = reader.Position;
 
-                Name = reader.ReadString(28, true);
+                Name = reader.ReadString(0x14, true);
                 var numTags = reader.ReadByte();
                 Target = reader.ReadEnum<AnimationTarget>(false);
                 reader.ReadUInt16(); //padding
@@ -357,7 +358,7 @@ namespace LayoutBXLYT
             {
                 long startPos = writer.Position;
 
-                writer.WriteString(Name, 28);
+                writer.WriteString(Name, 0x14);
                 writer.Write((byte)Tags.Count);
                 writer.Write(Target, false);
                 writer.Write((ushort)0);
@@ -375,7 +376,7 @@ namespace LayoutBXLYT
 
         public class PaiTag : BxlanPaiTag
         {
-            private uint Unknown {get;set;}
+            private uint Unknown { get; set; }
 
             public PaiTag(FileReader reader, Header header, AnimationTarget target)
             {
@@ -392,22 +393,22 @@ namespace LayoutBXLYT
                     reader.SeekBegin(startPos + offsets[i]);
                     switch (Tag)
                     {
-                        case "FLPA":
+                        case "RLPA":
                             Entries.Add(new FLPATagEntry(reader, header));
                             break;
-                        case "FLTS":
+                        case "RLTS":
                             Entries.Add(new FLTSTagEntry(reader, header));
                             break;
-                        case "FLVI":
+                        case "RLVI":
                             Entries.Add(new FLVITagEntry(reader, header));
                             break;
-                        case "FLVC":
+                        case "RLVC":
                             Entries.Add(new FLVCTagEntry(reader, header));
                             break;
-                        case "FLMC":
+                        case "RLMC":
                             Entries.Add(new FLMCTagEntry(reader, header));
                             break;
-                        case "FLTP":
+                        case "RLTP":
                             Entries.Add(new FLTPTagEntry(reader, header));
                             break;
                         default:

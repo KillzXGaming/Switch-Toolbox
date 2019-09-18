@@ -579,7 +579,7 @@ namespace FirstPlugin
                 surf.numMips = 1;
                 surf.mipOffset = new uint[0];
                 surf.mipData = ImageData;
-                surf.tileMode = (uint)GX2.GX2TileMode.MODE_2D_TILED_THIN1;
+                surf.tileMode = (uint)image.TileMode;
                 surf.swizzle = image.Swizzle;
                 surf.numArray = 1;
 

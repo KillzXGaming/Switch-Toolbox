@@ -31,7 +31,21 @@ namespace Toolbox.Library.Forms
             }
         }
 
-        public STColor8 Color8 { get; set; }
+        public STColor8 Color8
+        {
+            get { return new STColor8(NewColor); }
+        }
+
+        public STColor16 Color16
+        {
+            get { return new STColor16(NewColor); }
+        }
+
+        public STColor Color32
+        {
+            get { return new STColor(NewColor); }
+        }
+
 
         /// <summary>
         /// The color the dialog gets and sets.
@@ -328,8 +342,6 @@ namespace Toolbox.Library.Forms
 
         protected virtual void OnColorChanged(bool hsvToRgb)
         {
-            Color8 = new STColor8(NewColor);
-
             colorSquare.Invalidate();
             huePanel.Invalidate();
 

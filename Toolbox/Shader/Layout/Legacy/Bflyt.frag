@@ -28,10 +28,10 @@ void main()
 
 	if (debugShading == 0)
 	{
-		vec3 whiteInterpolation = mix(textureMap0.rgb, whiteColor.rgb, vec3(1));
-		vec3 blackInterpolation = mix(vec3(1) - textureMap0.rgb, blackColor.rgb, vec3(1));
+		vec3 whiteInterpolation = whiteColor.rgb * textureMap0.rgb;
+		vec3 blackInterpolation = (vec3(1) - textureMap0.rgb) * blackColor.rgb;
 
-		vec3 colorBlend = textureMap0.rgb * whiteColor.rgb;
+		vec3 colorBlend = whiteInterpolation + blackInterpolation;
 		float alpha = textureMap0.a * whiteColor.a;
 		gl_FragColor = gl_Color * vec4(colorBlend,alpha);
 	}

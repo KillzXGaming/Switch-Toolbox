@@ -76,7 +76,7 @@ namespace FirstPlugin
 
                         reader.SeekBegin(offset + 48);
                         ulong unk = reader.ReadUInt64(); //Varies. Shifts like a offset or size
-                        ulong headerOffset = reader.ReadUInt64(); 
+                        ulong headerOffset = reader.ReadUInt64();
                         ulong sectionSize = reader.ReadUInt64();
                         ulong unk3 = reader.ReadUInt64(); //16
                         ulong unk4 = reader.ReadUInt64(); //4
@@ -87,16 +87,17 @@ namespace FirstPlugin
                         ulong unk6 = reader.ReadUInt64(); //32
                         ulong unk7 = reader.ReadUInt64(); //24
                         ulong unk8 = reader.ReadUInt64(); //40
-                        ulong imageSize = reader.ReadUInt64();
+
+                        //Matches XTX info header
+                        uint imageSize = reader.ReadUInt32();
+                        uint Alignment = reader.ReadUInt32();
                         entry.Width = reader.ReadUInt32();
                         entry.Height = reader.ReadUInt32();
                         entry.Depth = reader.ReadUInt32();
-                        entry.ArrayCount = reader.ReadUInt32();
+                        entry.Target = reader.ReadUInt32();
                         uint Format = reader.ReadUInt32();
-                        if (Formats.ContainsKey(Format))
-                            entry.Format = Formats[Format];
-                        else
-                            Console.WriteLine("Unsupported format! " + Format.ToString("X"));
+
+                        XTX.TextureInfo.ConvertFormat(Format);
 
                         uint unk10 = reader.ReadUInt32(); //1
                         entry.ImageData = reader.ReadBytes((int)imageSize);
@@ -105,12 +106,6 @@ namespace FirstPlugin
                 }
             }
         }
-
-        private Dictionary<uint, TEX_FORMAT> Formats = new Dictionary<uint, TEX_FORMAT>()
-        {
-            {0x25 , TEX_FORMAT.R8G8B8A8_UNORM},
-            {0x4d , TEX_FORMAT.BC7_UNORM},
-        };
 
         public void Unload()
         {
@@ -123,6 +118,8 @@ namespace FirstPlugin
 
         public class TextureWrapper : STGenericTexture
         {
+            public uint Target = 1;
+
             public byte[] ImageData;
 
             public TextureWrapper()
@@ -161,7 +158,7 @@ namespace FirstPlugin
             private bool hasShownDialog = false;
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
             {
-                return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, 1);
+                return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, (int)Target);
             }
 
 

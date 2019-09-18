@@ -149,7 +149,6 @@
     </Reference>
     <Reference Include="Syroot.Maths">
       <HintPath>..\Toolbox\Lib\Syroot.Maths.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Syroot.NintenTools.Bfres">
       <HintPath>..\Toolbox\Lib\Syroot.NintenTools.Bfres.dll</HintPath>
@@ -314,6 +313,7 @@
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
     <Compile Include="FileFormats\Layout\Common.cs" />
     <Compile Include="FileFormats\Layout\RenderablePane.cs" />
+    <Compile Include="FileFormats\Layout\Rev\BRLAN.cs" />
     <Compile Include="FileFormats\Layout\Rev\BrlytShader.cs" />
     <Compile Include="FileFormats\Layout\Rev\BRLYT.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />

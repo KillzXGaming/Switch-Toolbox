@@ -367,6 +367,8 @@ namespace FirstPlugin
             Formats.Add(typeof(LayoutBXLYT.Cafe.BFLYT));
             Formats.Add(typeof(LayoutBXLYT.BCLYT));
             Formats.Add(typeof(LayoutBXLYT.BRLYT));
+            Formats.Add(typeof(LayoutBXLYT.BFLAN));
+            Formats.Add(typeof(LayoutBXLYT.BRLAN));
             Formats.Add(typeof(ZSI));
             Formats.Add(typeof(IGZ_TEX));
             Formats.Add(typeof(MOD));
@@ -383,7 +385,6 @@ namespace FirstPlugin
             Formats.Add(typeof(DARC));
             Formats.Add(typeof(BFLIM));
             Formats.Add(typeof(BCLIM));
-            Formats.Add(typeof(LayoutBXLYT.BFLAN));
             Formats.Add(typeof(DAT_Bayonetta));
             Formats.Add(typeof(XCI));
             Formats.Add(typeof(TVOL));

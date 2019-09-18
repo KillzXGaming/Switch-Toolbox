@@ -477,7 +477,8 @@ namespace LayoutBXLYT.Cafe
                                 parentPane = currentPane;
                             break;
                         case "pae1":
-                            currentPane = parentPane;
+                            if (parentPane != null)
+                                currentPane = parentPane;
                             parentPane = currentPane.Parent;
                             break;
                         case "grp1":
@@ -1341,12 +1342,10 @@ namespace LayoutBXLYT.Cafe
                     }
                 }
 
-                foreach (var archive in PluginRuntime.SarcArchives)
+                for (int i = 0; i < PluginRuntime.SarcArchives.Count; i++)
                 {
-                    Console.WriteLine("Searching archive! " + archive.FileName);
-
                     BFLYT bflyt = null;
-                    SearchArchive(archive, ref bflyt);
+                    SearchArchive(PluginRuntime.SarcArchives[i], ref bflyt);
                     if (bflyt != null)
                         return bflyt;
                 }

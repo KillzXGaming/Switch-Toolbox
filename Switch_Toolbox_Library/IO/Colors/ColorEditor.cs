@@ -16,6 +16,7 @@ namespace Toolbox.Library.IO
             return UITypeEditorEditStyle.DropDown;
         }
 
+        IWindowsFormsEditorService _service;
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
             if (value.GetType() != typeof(STColor8) &&
@@ -25,11 +26,12 @@ namespace Toolbox.Library.IO
                 return value;
             }
 
-            IWindowsFormsEditorService frmsvr = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
-            if (frmsvr == null)
+            _service = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+            if (_service == null)
                 return null;
 
             var control = new ColorSelectorDropdown();
+            control.ColorApplied += ColorSelectorClose;
 
             Color color = Color.White;
             if (value is STColor8)
@@ -42,16 +44,22 @@ namespace Toolbox.Library.IO
             control.Color = color;
             control.Alpha = color.A;
 
-            frmsvr.DropDownControl(control);
+            _service.DropDownControl(control);
 
             if (value is STColor8)
                 return control.Color8;
             if (value is STColor16)
-                return (STColor16)value;
+                return control.Color16;
             if (value is STColor)
-                return (STColor)value;
+                return control.Color32;
 
             return value;
+        }
+
+        private void ColorSelectorClose(object sender, EventArgs e)
+        {
+            if (_service != null)
+                _service.CloseDropDown();
         }
 
         private void OnColorChanged(object sender, EventArgs e)

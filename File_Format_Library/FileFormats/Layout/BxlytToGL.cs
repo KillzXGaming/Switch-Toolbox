@@ -323,6 +323,13 @@ namespace LayoutBXLYT
             float contentWidth = ((window.StretchLeft + (pane.Width - frameLeft)) - frameRight) + window.StretchRight;
             float contentHeight = ((window.StretchTop + (pane.Height - frameTop)) - frameBottom) + window.StretchBottm;
 
+            //Apply pane alpha
+            for (int i = 0; i < colors.Length; i++)
+            {
+                uint setalpha = (uint)((colors[i].A * effectiveAlpha) / 255);
+                colors[i] = Color.FromArgb((int)setalpha, colors[i]);
+            }
+
             if (!window.NotDrawnContent && window.WindowKind != WindowKind.HorizontalNoContent)
             {
                 SetupShaders(window.Content.Material, Textures);
@@ -475,6 +482,8 @@ namespace LayoutBXLYT
                         {
                             SetupShaders(matTL, Textures);
 
+                            matTL.Shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
+
                             float pieceWidth = pane.Width - frameRight;
                             float pieceHeight = frameTop;
 
@@ -492,15 +501,17 @@ namespace LayoutBXLYT
                         {
                             SetupShaders(matTR, Textures);
 
+                            matTR.Shader.SetInt("flipTexture", (int)window.WindowFrames[1].TextureFlip);
+
                             float pieceWidth = frameRight;
                             float pieceHeight = pane.Height - frameBottom;
 
                             texCoords = new Vector2[]
                             {
-                                new Vector2(1, 0),
                                 new Vector2(0, 0),
-                                new Vector2(0,(pane.Height - frameTop) / frameTop),
+                                new Vector2(1, 0),
                                 new Vector2(1,(pane.Height - frameTop) / frameTop),
+                                new Vector2(0,(pane.Height - frameTop) / frameTop),
                             };
 
                             DrawQuad(dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors);
@@ -509,15 +520,17 @@ namespace LayoutBXLYT
                         {
                             SetupShaders(matBL, Textures);
 
+                            matBL.Shader.SetInt("flipTexture", (int)window.WindowFrames[2].TextureFlip);
+
                             float pieceWidth = frameLeft;
                             float pieceHeight = pane.Height - frameTop;
 
                             texCoords = new Vector2[]
                             {
-                                new Vector2(0,(pane.Height - frameBottom) / frameBottom),
-                                new Vector2(1,(pane.Height - frameBottom) / frameBottom),
-                                new Vector2(1, 0),
-                                new Vector2(0, 0),
+                                new Vector2(0,1 - ((pane.Height - frameTop) / frameTop)),
+                                new Vector2(1,1 - ((pane.Height - frameTop) / frameTop)),
+                                new Vector2(1, 1),
+                                new Vector2(0, 1),
                             };
 
                             DrawQuad(dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors);
@@ -526,15 +539,17 @@ namespace LayoutBXLYT
                         {
                             SetupShaders(matBR, Textures);
 
+                            matBR.Shader.SetInt("flipTexture", (int)window.WindowFrames[3].TextureFlip);
+
                             float pieceWidth = pane.Width - frameLeft;
                             float pieceHeight = frameBottom;
 
                             texCoords = new Vector2[]
                             {
-                                new Vector2((pane.Width - frameLeft) / frameLeft, 1),
-                                new Vector2(0, 1),
-                                new Vector2(0, 0),
-                                new Vector2((pane.Width - frameLeft) / frameLeft, 0),
+                                new Vector2(1 - ((pane.Width - frameLeft) / frameLeft), 0),
+                                new Vector2(1, 0),
+                                new Vector2(1, 1),
+                                new Vector2(1 - ((pane.Width - frameLeft) / frameLeft), 1),
                             };
 
                             DrawQuad(dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors);
@@ -556,30 +571,71 @@ namespace LayoutBXLYT
                         if (matTL.TextureMaps.Length > 0)
                         {
                             SetupShaders(matTL, Textures);
+                            matTL.Shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0, 0),
+                                new Vector2(1, 0),
+                                new Vector2(1, 1),
+                                new Vector2(0, 1),
+                            };
+
                             DrawQuad(dX, dY, frameLeft, frameTop, texCoords, colors);
                         }
 
                         if (matTR.TextureMaps.Length > 0)
                         {
                             SetupShaders(matTR, Textures);
+                            matTR.Shader.SetInt("flipTexture", (int)window.WindowFrames[1].TextureFlip);
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0, 0),
+                                new Vector2(1, 0),
+                                new Vector2(1, 1),
+                                new Vector2(0, 1),
+                            };
+
                             DrawQuad(dX + pane.Width - frameRight, dY, frameRight, frameTop, texCoords, colors);
                         }
 
                         if (matBL.TextureMaps.Length > 0)
                         {
                             SetupShaders(matBL, Textures);
+                            matBL.Shader.SetInt("flipTexture", (int)window.WindowFrames[2].TextureFlip);
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0, 0),
+                                new Vector2(1, 0),
+                                new Vector2(1, 1),
+                                new Vector2(0, 1),
+                            };
+
                             DrawQuad(dX, dY - pane.Height + frameTop, frameLeft, frameBottom, texCoords, colors);
                         }
 
                         if (matBR.TextureMaps.Length > 0)
                         {
                             SetupShaders(matBR, Textures);
+                            matBR.Shader.SetInt("flipTexture", (int)window.WindowFrames[3].TextureFlip);
+
+                            texCoords = new Vector2[]
+                            {
+                                new Vector2(0, 0),
+                                new Vector2(1, 0),
+                                new Vector2(1, 1),
+                                new Vector2(0, 1),
+                            };
+
                             DrawQuad(dX + pane.Width - frameLeft, dY - pane.Height + frameBottom, frameRight, frameBottom, texCoords, colors);
                         }
 
                         if (matT.TextureMaps.Length > 0)
                         {
                             SetupShaders(matT, Textures);
+                            matT.Shader.SetInt("flipTexture", (int)window.WindowFrames[4].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
@@ -595,13 +651,14 @@ namespace LayoutBXLYT
                         if (matB.TextureMaps.Length > 0)
                         {
                             SetupShaders(matB, Textures);
+                            matB.Shader.SetInt("flipTexture", (int)window.WindowFrames[5].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
-                                 new Vector2((pane.Width - frameLeft) / frameLeft, 1),
-                                new Vector2(0, 1),
-                                new Vector2(0, 0),
-                                new Vector2((pane.Width - frameLeft) / frameLeft, 0),
+                                new Vector2(1-((pane.Width - frameLeft) / frameLeft), 0),
+                                new Vector2(1, 0),
+                                new Vector2(1, 1),
+                                new Vector2(1-((pane.Width - frameLeft) / frameLeft), 1),
                             };
 
                             DrawQuad(dX + frameRight, dY - (pane.Height - frameBottom), contentWidth, frameTop, texCoords, colors);
@@ -610,13 +667,14 @@ namespace LayoutBXLYT
                         if (matL.TextureMaps.Length > 0)
                         {
                             SetupShaders(matL, Textures);
+                            matL.Shader.SetInt("flipTexture", (int)window.WindowFrames[6].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
-                                new Vector2(0,(pane.Height - frameTop) / frameTop),
-                                new Vector2(1,(pane.Height - frameTop) / frameTop),
-                                new Vector2(1, 0),
-                                new Vector2(0, 0),
+                                new Vector2(0,1-((pane.Height - frameTop) / frameTop)),
+                                new Vector2(1,1-((pane.Height - frameTop) / frameTop)),
+                                new Vector2(1, 1),
+                                new Vector2(0, 1),
                             };
 
                             DrawQuad(dX, dY - frameTop, frameLeft, contentHeight, texCoords, colors);
@@ -625,6 +683,8 @@ namespace LayoutBXLYT
                         if (matR.TextureMaps.Length > 0)
                         {
                             SetupShaders(matR, Textures);
+                            matR.Shader.SetInt("flipTexture", (int)window.WindowFrames[7].TextureFlip);
+
                             texCoords = new Vector2[]
                             {
                                 new Vector2(0, 0),

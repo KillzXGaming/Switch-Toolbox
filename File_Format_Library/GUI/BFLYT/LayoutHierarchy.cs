@@ -95,9 +95,9 @@ namespace LayoutBXLYT
         private void LoadAnimations(BxlanHeader bxlan, TreeNode root)
         {
             treeView1.Nodes.Add(root);
-            if (bxlan is BFLAN.Header)
+            if (bxlan is BxlanHeader)
             {
-                var header = bxlan as BFLAN.Header;
+                var header = bxlan as BxlanHeader;
                 var pat1 = new TreeNode("Tag Info") { Tag = header.AnimationTag };
                 var pai1 = new TreeNode("Animation Info") { Tag = header.AnimationInfo };
 
@@ -109,7 +109,7 @@ namespace LayoutBXLYT
             }
         }
 
-        private void LoadAnimationEntry(BFLAN.PaiEntry entry, TreeNode root)
+        private void LoadAnimationEntry(BxlanPaiEntry entry, TreeNode root)
         {
             var nodeEntry = new TreeNode(entry.Name) { Tag = entry };
             root.Nodes.Add(nodeEntry);
@@ -123,7 +123,7 @@ namespace LayoutBXLYT
             }
         }
 
-        private void LoadTagEntry(BFLAN.PaiTagEntry entry, TreeNode root, int index)
+        private void LoadTagEntry(BxlanPaiTagEntry entry, TreeNode root, int index)
         {
             var nodeEntry = new TreeNode(entry.TargetName) { Tag = entry };
             root.Nodes.Add(nodeEntry);
