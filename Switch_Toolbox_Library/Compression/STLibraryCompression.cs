@@ -173,9 +173,17 @@ namespace Toolbox.Library.IO
                     {
                         var ms = new System.IO.MemoryStream();
                         if (hasMagic)
+                        {
                             br.Position = 2;
-                        using (var ds = new DeflateStream(new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 6)), CompressionMode.Decompress))
-                            ds.CopyTo(ms);
+                            using (var ds = new DeflateStream(new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 6)), CompressionMode.Decompress))
+                                ds.CopyTo(ms);
+                        }
+                        else
+                        {
+                            using (var ds = new DeflateStream(new MemoryStream(b), CompressionMode.Decompress))
+                                ds.CopyTo(ms);
+                        }
+
                         return ms.ToArray();
                     }
                 }
@@ -248,11 +256,8 @@ namespace Toolbox.Library.IO
         //Mario Tennis Aces Custom compression
         public class MTA_CUSTOM
         {
-            [DllImport("Lib/LibTennis32.dll", CallingConvention = CallingConvention.Cdecl)]
-            static extern void DecompressBuffer32(IntPtr output, IntPtr input, uint len);
-
             [DllImport("Lib/LibTennis64.dll", CallingConvention = CallingConvention.Cdecl)]
-            static extern void DecompressBuffer64(IntPtr output, IntPtr input, uint len);
+            static extern void DecompressBuffer(IntPtr output, IntPtr input, uint len);
 
             public unsafe byte[] Decompress(byte[] input, uint decompressedLength)
             {
@@ -261,10 +266,9 @@ namespace Toolbox.Library.IO
                     fixed (byte* inputPtr = input)
                     {
                         if (Environment.Is64BitProcess)
-                            DecompressBuffer64((IntPtr)outputPtr, (IntPtr)inputPtr, decompressedLength);
+                            DecompressBuffer((IntPtr)outputPtr, (IntPtr)inputPtr, decompressedLength);
                         else
-                            DecompressBuffer32((IntPtr)outputPtr, (IntPtr)inputPtr, decompressedLength);
-                     //   Decompress(outputPtr, inputPtr, decompressedLength);
+                            MarioTennisCmp32.DecompressBuffer((IntPtr)outputPtr, (IntPtr)inputPtr, decompressedLength);
                     }
 
                     byte[] decomp = new byte[decompressedLength];

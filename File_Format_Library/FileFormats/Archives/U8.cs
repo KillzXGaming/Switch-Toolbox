@@ -173,11 +173,6 @@ namespace FirstPlugin
 
         public class FileEntry : ArchiveFileInfo
         {
-            public override bool OpenFileFormatOnLoad
-            {
-                get { return true; }
-            }
-
             public NodeEntry nodeEntry;
         }
 

@@ -18,6 +18,8 @@ namespace Toolbox.Library
 
         public bool Identify(Stream stream, string fileName)
         {
+            if (stream.Length < 12) return false;
+
             using (var reader = new FileReader(stream, true))
             {
                 uint DecompressedSize = reader.ReadUInt32();
