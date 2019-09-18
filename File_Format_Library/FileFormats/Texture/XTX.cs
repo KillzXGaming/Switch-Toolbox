@@ -98,6 +98,37 @@ namespace FirstPlugin
                 BC4S = 0x0000004a,
                 BC5U = 0x0000004b,
                 BC5S = 0x0000004c,
+
+                //Same order as this https://github.com/aboood40091/BNTX-Editor/blob/master/globals.py
+                //However SRGB goes after unorm
+                ASTC_4x4_UNORM = 0x00000079,
+                ASTC_5x4_UNORM = 0x0000007A,
+                ASTC_5x5_UNORM = 0x0000007B,
+                ASTC_6x5_UNORM = 0x0000007C,
+                ASTC_6x6_UNORM = 0x0000007D,
+                ASTC_8x5_UNORM = 0x0000007E,
+                ASTC_8x6_UNORM = 0x0000007F,
+                ASTC_8x8_UNORM = 0x00000080,
+                ASTC_10x5_UNORM = 0x00000081,
+                ASTC_10x6_UNORM = 0x00000082,
+                ASTC_10x8_UNORM = 0x00000083,
+                ASTC_10x10_UNORM = 0x00000084,
+                ASTC_12x10_UNORM = 0x00000085,
+                ASTC_12x12_UNORM = 0x00000086,
+                ASTC_4x4_SRGB = 0x00000087,
+                ASTC_5x4_SRGB = 0x00000088,
+                ASTC_5x5_SRGB = 0x00000089,
+                ASTC_6x5_SRGB = 0x0000008A,
+                ASTC_6x6_SRGB = 0x0000008B,
+                ASTC_8x5_SRGB = 0x0000008C,
+                ASTC_8x6_SRGB = 0x0000008D,
+                ASTC_8x8_SRGB = 0x0000008E,
+                ASTC_10x5_SRGB = 0x0000008F,
+                ASTC_10x6_SRGB = 0x00000090,
+                ASTC_10x8_SRGB = 0x00000091,
+                ASTC_10x10_SRGB = 0x00000092,
+                ASTC_12x10_SRGB = 0x00000093,
+                ASTC_12x12_SRGB = 0x00000094,
             };
 
             public static uint blk_dims(uint format)
@@ -502,6 +533,32 @@ namespace FirstPlugin
                     case TEX_FORMAT.B4G4R4A4_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA4;
                     case TEX_FORMAT.R8G8B8A8_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8;
                     case TEX_FORMAT.R8G8B8A8_UNORM_SRGB: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8_SRGB;
+                    case TEX_FORMAT.ASTC_4x4_UNORM: return XTXFormats.XTXImageFormat.ASTC_4x4_UNORM;
+                    case TEX_FORMAT.ASTC_5x4_UNORM: return XTXFormats.XTXImageFormat.ASTC_5x4_UNORM;
+                    case TEX_FORMAT.ASTC_5x5_UNORM: return XTXFormats.XTXImageFormat.ASTC_5x5_UNORM;
+                    case TEX_FORMAT.ASTC_6x5_UNORM: return XTXFormats.XTXImageFormat.ASTC_6x5_UNORM;
+                    case TEX_FORMAT.ASTC_6x6_UNORM: return XTXFormats.XTXImageFormat.ASTC_6x6_UNORM;
+                    case TEX_FORMAT.ASTC_8x5_UNORM: return XTXFormats.XTXImageFormat.ASTC_8x5_UNORM;
+                    case TEX_FORMAT.ASTC_8x6_UNORM: return XTXFormats.XTXImageFormat.ASTC_8x6_UNORM;
+                    case TEX_FORMAT.ASTC_8x8_UNORM: return XTXFormats.XTXImageFormat.ASTC_8x8_UNORM;
+                    case TEX_FORMAT.ASTC_10x5_UNORM: return XTXFormats.XTXImageFormat.ASTC_10x5_UNORM;
+                    case TEX_FORMAT.ASTC_10x6_UNORM: return XTXFormats.XTXImageFormat.ASTC_10x6_UNORM;
+                    case TEX_FORMAT.ASTC_10x10_UNORM: return XTXFormats.XTXImageFormat.ASTC_10x10_UNORM;
+                    case TEX_FORMAT.ASTC_12x10_UNORM: return XTXFormats.XTXImageFormat.ASTC_12x10_UNORM;
+                    case TEX_FORMAT.ASTC_12x12_UNORM: return XTXFormats.XTXImageFormat.ASTC_12x12_UNORM;
+                    case TEX_FORMAT.ASTC_4x4_SRGB: return XTXFormats.XTXImageFormat.ASTC_4x4_SRGB;
+                    case TEX_FORMAT.ASTC_5x4_SRGB: return XTXFormats.XTXImageFormat.ASTC_5x4_SRGB;
+                    case TEX_FORMAT.ASTC_5x5_SRGB: return XTXFormats.XTXImageFormat.ASTC_5x5_SRGB;
+                    case TEX_FORMAT.ASTC_6x5_SRGB: return XTXFormats.XTXImageFormat.ASTC_6x5_SRGB;
+                    case TEX_FORMAT.ASTC_6x6_SRGB: return XTXFormats.XTXImageFormat.ASTC_6x6_SRGB;
+                    case TEX_FORMAT.ASTC_8x5_SRGB: return XTXFormats.XTXImageFormat.ASTC_8x5_SRGB;
+                    case TEX_FORMAT.ASTC_8x6_SRGB: return XTXFormats.XTXImageFormat.ASTC_8x6_SRGB;
+                    case TEX_FORMAT.ASTC_8x8_SRGB: return XTXFormats.XTXImageFormat.ASTC_8x8_SRGB;
+                    case TEX_FORMAT.ASTC_10x5_SRGB: return XTXFormats.XTXImageFormat.ASTC_10x5_SRGB;
+                    case TEX_FORMAT.ASTC_10x6_SRGB: return XTXFormats.XTXImageFormat.ASTC_10x6_SRGB;
+                    case TEX_FORMAT.ASTC_10x10_SRGB: return XTXFormats.XTXImageFormat.ASTC_10x10_SRGB;
+                    case TEX_FORMAT.ASTC_12x10_SRGB: return XTXFormats.XTXImageFormat.ASTC_12x10_SRGB;
+                    case TEX_FORMAT.ASTC_12x12_SRGB: return XTXFormats.XTXImageFormat.ASTC_12x12_SRGB;
                     default:
                         throw new Exception($"Cannot convert format {Format}");
                 }
@@ -526,6 +583,32 @@ namespace FirstPlugin
                     case XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA4: return TEX_FORMAT.B4G4R4A4_UNORM;
                     case XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8: return TEX_FORMAT.R8G8B8A8_UNORM;
                     case XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8_SRGB: return TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_4x4_UNORM: return TEX_FORMAT.ASTC_4x4_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_5x4_UNORM: return TEX_FORMAT.ASTC_5x4_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_5x5_UNORM: return TEX_FORMAT.ASTC_5x5_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_6x5_UNORM: return TEX_FORMAT.ASTC_6x5_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_6x6_UNORM: return TEX_FORMAT.ASTC_6x6_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_8x5_UNORM: return TEX_FORMAT.ASTC_8x5_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_8x6_UNORM: return TEX_FORMAT.ASTC_8x6_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_8x8_UNORM: return TEX_FORMAT.ASTC_8x8_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_10x5_UNORM: return TEX_FORMAT.ASTC_10x5_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_10x6_UNORM: return TEX_FORMAT.ASTC_10x6_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_10x10_UNORM: return TEX_FORMAT.ASTC_10x10_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_12x10_UNORM: return TEX_FORMAT.ASTC_12x10_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_12x12_UNORM: return TEX_FORMAT.ASTC_12x12_UNORM;
+                    case XTXFormats.XTXImageFormat.ASTC_4x4_SRGB: return TEX_FORMAT.ASTC_4x4_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_5x4_SRGB: return TEX_FORMAT.ASTC_5x4_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_5x5_SRGB: return TEX_FORMAT.ASTC_5x5_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_6x5_SRGB: return TEX_FORMAT.ASTC_6x5_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_6x6_SRGB: return TEX_FORMAT.ASTC_6x6_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_8x5_SRGB: return TEX_FORMAT.ASTC_8x5_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_8x6_SRGB: return TEX_FORMAT.ASTC_8x6_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_8x8_SRGB: return TEX_FORMAT.ASTC_8x8_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_10x5_SRGB: return TEX_FORMAT.ASTC_10x5_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_10x6_SRGB: return TEX_FORMAT.ASTC_10x6_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_10x10_SRGB: return TEX_FORMAT.ASTC_10x10_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_12x10_SRGB: return TEX_FORMAT.ASTC_12x10_SRGB;
+                    case XTXFormats.XTXImageFormat.ASTC_12x12_SRGB: return TEX_FORMAT.ASTC_12x12_SRGB;
                     default:
                         throw new Exception($"Cannot convert format {Format}");
                 }
