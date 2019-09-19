@@ -897,8 +897,8 @@ namespace LayoutBXLYT
 
                 Name = reader.ReadString(0x14, true);
 
-                WhiteColor = reader.ReadColor16RGBA();
                 BlackColor = reader.ReadColor16RGBA();
+                WhiteColor = reader.ReadColor16RGBA();
                 ColorRegister3 = reader.ReadColor16RGBA();
                 TevColor1 = reader.ReadColor8RGBA();
                 TevColor2 = reader.ReadColor8RGBA();

@@ -115,10 +115,10 @@ namespace Toolbox.Library
         //If true, the editors will call "SetImageData" for setting data back to the original data.
         public abstract bool CanEdit { get; set; }
 
-        public STChannelType RedChannel;
-        public STChannelType GreenChannel;
-        public STChannelType BlueChannel;
-        public STChannelType AlphaChannel;
+        public STChannelType RedChannel = STChannelType.Red;
+        public STChannelType GreenChannel = STChannelType.Green;
+        public STChannelType BlueChannel = STChannelType.Blue;
+        public STChannelType AlphaChannel = STChannelType.Alpha;
 
         /// <summary>
         /// The total length of all the bytes given from GetImageData.
@@ -510,7 +510,7 @@ namespace Toolbox.Library
 
                 Console.WriteLine("Decoding " + Format + " " + Runtime.UseDirectXTexDecoder);
 
-                if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format))
+                if (PlatformSwizzle == PlatformSwizzle.Platform_3DS)
                 {
                     var Image = BitmapExtension.GetBitmap(ConvertBgraToRgba(CTR_3DS.DecodeBlock(data, (int)width, (int)height, Format)),
                       (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -637,7 +637,7 @@ namespace Toolbox.Library
             byte[] imageData = new byte[0];
             bool DontSwapRG = false;
 
-            if (PlatformSwizzle == PlatformSwizzle.Platform_3DS && !IsCompressed(Format))
+            if (PlatformSwizzle == PlatformSwizzle.Platform_3DS)
             {
                 imageData = CTR_3DS.DecodeBlock(data, (int)Width, (int)Height, Format);
                 DontSwapRG = true;

@@ -61,10 +61,10 @@ namespace LayoutBXLYT
                 var pic1Pane = pane as Cafe.BFLYT.PIC1;
 
                 Color[] Colors = new Color[] {
-                    pic1Pane.ColorTopLeft.Color,
-                    pic1Pane.ColorTopRight.Color,
                     pic1Pane.ColorBottomRight.Color,
                     pic1Pane.ColorBottomLeft.Color,
+                    pic1Pane.ColorTopLeft.Color,
+                    pic1Pane.ColorTopRight.Color,
                 };
 
                 var mat = pic1Pane.Material;

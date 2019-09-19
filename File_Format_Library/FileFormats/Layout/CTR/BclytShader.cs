@@ -21,26 +21,31 @@ namespace LayoutBXLYT
         
         public override void OnCompiled()
         {
-            SetColor("whiteColor", Color.FromArgb(255,255,255,255));
+            SetColor("whiteColor", Color.FromArgb(255, 255, 255, 255));
             SetColor("blackColor", Color.FromArgb(0, 0, 0, 0));
             SetInt("debugShading", 0);
             SetInt("hasTexture0", 0);
             SetInt("numTextureMaps", 0);
+            SetInt("flipTexture", 0);
+            SetInt("textures0", 0);
+            SetInt("textures1", 0);
+            SetInt("textures2", 0);
 
-            SetVec2("uvScale0", new Vector2(1,1));
+            SetVec2("uvScale0", new Vector2(1, 1));
             SetFloat("uvRotate0", 0);
             SetVec2("uvTranslate0", new Vector2(0, 0));
         }
 
         public void SetMaterials(Dictionary<string, STGenericTexture> textures)
         {
-            SetColor("whiteColor", Color.FromArgb(255, 255, 255, 255));
-            SetColor("blackColor", Color.FromArgb(0, 0, 0, 0));
+            SetColor("whiteColor", material.TevConstantColors[0].Color);
+            SetColor("blackColor", material.TevColor.Color);
             SetInt("debugShading", (int)Runtime.LayoutEditor.Shading);
             SetInt("numTextureMaps", material.TextureMaps.Count);
             SetVec2("uvScale0", new Vector2(1, 1));
             SetFloat("uvRotate0", 0);
             SetVec2("uvTranslate0", new Vector2(0, 0));
+            SetInt("flipTexture", 0);
 
             BindTextureUniforms();
 
@@ -60,16 +65,9 @@ namespace LayoutBXLYT
             if (material.TextureTransforms.Count > 0)
             {
                 var transform = material.TextureTransforms[0];
-                float shiftX = 0;
-                float shiftY = 0;
-                if (transform.Scale.X < 0)
-                    shiftX = 1;
-                if (transform.Scale.Y < 0)
-                    shiftY = 1;
-
-                //SetVec2("uvScale0",new Vector2(transform.Scale.X, transform.Scale.Y));
-               // SetFloat("uvRotate0", transform.Rotate);
-               // SetVec2("uvTranslate0",new Vector2(shiftX + transform.Translate.X, shiftY + transform.Translate.Y));
+                SetVec2("uvScale0", new Vector2(transform.Scale.X, transform.Scale.Y));
+                SetFloat("uvRotate0", transform.Rotate);
+                SetVec2("uvTranslate0", new Vector2(transform.Translate.X, transform.Translate.Y));
             }
         }
 

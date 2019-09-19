@@ -196,6 +196,14 @@ namespace Toolbox.Library.Rendering
             pixelInternalFormat = PixelInternalFormat.Rgba;
             pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
 
+            if (GenericTexture.PlatformSwizzle == PlatformSwizzle.Platform_3DS ||
+                GenericTexture.PlatformSwizzle == PlatformSwizzle.Platform_Gamecube)
+            {
+                UseOpenGLDecoder = false;
+                pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Bgra;
+            }
+
+
             if (UseOpenGLDecoder)
                   SetPixelFormats(GenericTexture.Format);
  
@@ -313,9 +321,9 @@ namespace Toolbox.Library.Rendering
                  width,
                  height,
                  GenericTexture.Format,
-                 new byte[0],
+                 GenericTexture.GetPaletteData(),
                  GenericTexture.Parameters,
-                 PALETTE_FORMAT.None,
+                 GenericTexture.PaletteFormat,
                  GenericTexture.PlatformSwizzle));
             }
 
@@ -346,9 +354,9 @@ namespace Toolbox.Library.Rendering
                         width,
                         height,
                         GenericTexture.Format,
-                        new byte[0],
+                        GenericTexture.GetPaletteData(),
                         GenericTexture.Parameters,
-                        PALETTE_FORMAT.None,
+                        GenericTexture.PaletteFormat,
                         GenericTexture.PlatformSwizzle));
                     }
                     else

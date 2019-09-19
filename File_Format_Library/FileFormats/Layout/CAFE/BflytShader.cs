@@ -66,12 +66,9 @@ namespace LayoutBXLYT
             if (material.TextureTransforms.Length > 0)
             {
                 var transform = material.TextureTransforms[0];
-                float shiftX = 0;
-                float shiftY = 0;
-
                 SetVec2("uvScale0",new Vector2(transform.Scale.X, transform.Scale.Y));
                 SetFloat("uvRotate0", transform.Rotate);
-                SetVec2("uvTranslate0",new Vector2(shiftX + transform.Translate.X, shiftY + transform.Translate.Y));
+                SetVec2("uvTranslate0",new Vector2(transform.Translate.X, transform.Translate.Y));
             }
         }
 
