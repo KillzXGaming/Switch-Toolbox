@@ -12,7 +12,11 @@ uniform int hasTexture0;
 uniform int hasTexture1;
 uniform int hasTexture2;
 
+uniform int ThresholdingAlphaInterpolation;
+
 uniform sampler2D uvTestPattern;
+
+#define gamma 2.2
 
 void main()
 {
@@ -28,11 +32,24 @@ void main()
 
 	if (debugShading == 0)
 	{
-		vec3 whiteInterpolation = whiteColor.rgb * textureMap0.rgb;
+		// Convert to sRGB.
+		vec3 whiteColorSRGB = pow(whiteColor.rgb, vec3(1.0 / gamma));
+
+		vec3 whiteInterpolation = whiteColorSRGB.rgb * textureMap0.rgb;
 		vec3 blackInterpolation = (vec3(1) - textureMap0.rgb) * blackColor.rgb;
+
 
 		vec3 colorBlend = whiteInterpolation + blackInterpolation;
 		float alpha = textureMap0.a * whiteColor.a;
+		if (ThresholdingAlphaInterpolation != 0)
+		{
+		    //Todo these need to interpolate and be smoother
+		     if (textureMap0.a >= whiteColor.a) alpha = 1.0;
+		     if (textureMap0.a <= blackColor.a) alpha = 0.0;
+			// if (blackColor.a < alpha && alpha < whiteColor.a)
+			//	 alpha = mix(0.0, 1.0, textureMap0.a);
+		}
+
 		gl_FragColor = gl_Color * vec4(colorBlend,alpha);
 	}
 	else if (debugShading == 5)

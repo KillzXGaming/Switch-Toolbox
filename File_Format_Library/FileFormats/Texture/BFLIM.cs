@@ -265,6 +265,7 @@ namespace FirstPlugin
                     bflim.Width = bflim.image.Width;
                     bflim.Height = bflim.image.Height;
 
+
                     bflim.ImageData = ftex.texture.Data;
                     var form = new GenericEditorForm(false, bflim.OpenForm());
                     LibraryGUI.CreateMdiWindow(form);
@@ -410,15 +411,18 @@ namespace FirstPlugin
                 image = new Image(Is3DS);
                 image.Read(reader);
 
+                bool isBc4Alpha = image.BflimFormat == 16;
+
                 if (Is3DS)
                     Format = Formats3DS[image.BflimFormat];
                 else
                     Format = FormatsWiiU[image.BflimFormat];
 
+
                 Width = image.Width;
                 Height = image.Height;
 
-                LoadComponents(Format);
+                LoadComponents(Format, isBc4Alpha);
 
                 uint ImageSize = reader.ReadUInt32();
 
@@ -430,7 +434,7 @@ namespace FirstPlugin
             }
         }
 
-        private void LoadComponents(TEX_FORMAT Format)
+        private void LoadComponents(TEX_FORMAT Format, bool isBc4Alpha)
         {
             switch (Format)
             {
@@ -446,7 +450,15 @@ namespace FirstPlugin
                     RedChannel = STChannelType.Red;
                     GreenChannel = STChannelType.Red;
                     BlueChannel = STChannelType.Red;
-                    AlphaChannel = STChannelType.Red;
+                    AlphaChannel = STChannelType.One;
+
+                    if (isBc4Alpha)
+                    {
+                        RedChannel = STChannelType.One;
+                        GreenChannel = STChannelType.One;
+                        BlueChannel = STChannelType.One;
+                        AlphaChannel = STChannelType.Red;
+                    }
                     break;
             }
         }

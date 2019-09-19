@@ -209,6 +209,16 @@ namespace LayoutBXLYT.Cafe
                         if (!textures.ContainsKey(bflim.FileName))
                             textures.Add(bflim.FileName, bflim);
                     }
+                    Console.WriteLine("file " + file);
+                    if (Utils.GetExtension(file) == ".bntx")
+                    {
+                        BNTX bntx = (BNTX)STFileLoader.OpenFileFormat(file);
+                        foreach (var tex in bntx.Textures)
+                        {
+                            if (!textures.ContainsKey(tex.Key))
+                                textures.Add(tex.Key, tex.Value);
+                        }
+                    }
                 }
             }
 
@@ -1926,6 +1936,12 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("Name"), CategoryAttribute("General")]
             public override string Name { get; set; }
 
+            [DisplayName("Thresholding Alpha Interpolation"), CategoryAttribute("Alpha")]
+            public override bool ThresholdingAlphaInterpolation
+            {
+                get { return Convert.ToBoolean((flags >> 18) & 0x1); }
+            }
+
             [DisplayName("Black Color"), CategoryAttribute("Color")]
             public STColor8 BlackColor { get; set; }
 
@@ -2010,7 +2026,6 @@ namespace LayoutBXLYT.Cafe
                 var hasIndParam = Convert.ToBoolean((flags >> 14) & 0x1);
                 var projTexGenParamCount = Convert.ToUInt32((flags >> 15) & 0x3);
                 var hasFontShadowParam = Convert.ToBoolean((flags >> 17) & 0x1);
-                var thresholdingAlphaInterpolation = Convert.ToBoolean((flags >> 18) & 0x1);
 
                 TextureMaps = new TextureRef[texCount];
                 TextureTransforms = new TextureTransform[mtxCount];

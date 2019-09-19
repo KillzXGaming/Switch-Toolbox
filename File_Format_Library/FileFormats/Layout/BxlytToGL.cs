@@ -60,7 +60,7 @@ namespace LayoutBXLYT
             {
                 var pic1Pane = pane as Cafe.BFLYT.PIC1;
 
-                Color[] Colors = new Color[] {
+               Color[] Colors = new Color[] {
                     pic1Pane.ColorBottomRight.Color,
                     pic1Pane.ColorBottomLeft.Color,
                     pic1Pane.ColorTopLeft.Color,
@@ -90,9 +90,6 @@ namespace LayoutBXLYT
                 DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
                 mat.Shader.Disable();
-
-                GL.BindTexture(TextureTarget.Texture2D, 0);
-                GL.PopAttrib();
             }
             else if (pane is BCLYT.PIC1)
             {
@@ -128,9 +125,6 @@ namespace LayoutBXLYT
                 DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
                 mat.Shader.Disable();
-
-                GL.BindTexture(TextureTarget.Texture2D, 0);
-                GL.PopAttrib();
             }
             else if (pane is BRLYT.PIC1)
             {
@@ -166,10 +160,12 @@ namespace LayoutBXLYT
                 DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
                 mat.Shader.Disable();
-
-                GL.BindTexture(TextureTarget.Texture2D, 0);
-                GL.PopAttrib();
             }
+
+
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.PopAttrib();
+            GL.UseProgram(0);
         }
 
         public static void DrawBoundryPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
@@ -345,17 +341,14 @@ namespace LayoutBXLYT
             if (!window.UseVertexColorForAll)
             {
                 colors = new Color[] {
-                    Color.White, Color.White,
-                    Color.White, Color.White,
+                    Color.FromArgb(effectiveAlpha, 255,255,255),
+                    Color.FromArgb(effectiveAlpha, 255,255,255),
+                    Color.FromArgb(effectiveAlpha, 255,255,255),
+                    Color.FromArgb(effectiveAlpha, 255,255,255),
                 };
             }
 
-            //Apply pane alpha
-            for (int i = 0; i < colors.Length; i++)
-            {
-                uint setalpha = (uint)((colors[i].A * effectiveAlpha) / 255);
-                colors[i] = Color.FromArgb((int)setalpha, colors[i]);
-            }
+
 
             switch (window.FrameCount)
             {
@@ -478,6 +471,14 @@ namespace LayoutBXLYT
                         var matBL = window.WindowFrames[2].Material;
                         var matBR = window.WindowFrames[3].Material;
 
+                        //Todo check this
+                        if (window.UseOneMaterialForAll)
+                        {
+                          /*  matTR = matTL;
+                            matBL = matTL;
+                            matBR = matTL;*/
+                        }
+
                         if (matTL.TextureMaps.Length > 0)
                         {
                             SetupShaders(matTL, Textures);
@@ -567,6 +568,18 @@ namespace LayoutBXLYT
                         var matB = window.WindowFrames[5].Material;
                         var matL = window.WindowFrames[6].Material;
                         var matR = window.WindowFrames[7].Material;
+
+                        //Todo check this
+                        if (window.UseOneMaterialForAll)
+                        {
+                         /*   matTR = matTL;
+                            matBL = matTL;
+                            matBR = matTL;
+                            matT = matTL;
+                            matB = matTL;
+                            matL = matTL;
+                            matR = matTL;*/
+                        }
 
                         if (matTL.TextureMaps.Length > 0)
                         {
@@ -973,8 +986,8 @@ namespace LayoutBXLYT
         {
             for (int i = 0; i < colors.Length; i++)
             {
-                uint setalpha = (uint)((colors[i].A * alpha) / 255);
-                colors[i] = Color.FromArgb((int)setalpha, colors[i]);
+                float outAlpha = BasePane.MixColors(colors[i].A, alpha);
+                colors[i] = Color.FromArgb(Utils.FloatToIntClamp(outAlpha), colors[i]);
             }
 
             if (LayoutEditor.UseLegacyGL)

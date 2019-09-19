@@ -93,6 +93,14 @@ namespace LayoutBXLYT
                 GL.Uniform1(uniforms[name], value);
         }
 
+        public void SetBool(string name, bool value)
+        {
+            int intValue = value == true ? 1 : 0;
+
+            if (uniforms.ContainsKey(name))
+                GL.Uniform1(uniforms[name], intValue);
+        }
+
         public void SetColor(string name, Color color)
         {
             if (uniforms.ContainsKey(name))

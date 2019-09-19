@@ -31,6 +31,7 @@ namespace LayoutBXLYT
             SetInt("textures0", 0);
             SetInt("textures1", 0);
             SetInt("textures2", 0);
+            SetBool("ThresholdingAlphaInterpolation", false);
 
             SetVec2("uvScale0", new Vector2(1,1));
             SetFloat("uvRotate0", 0);
@@ -47,18 +48,22 @@ namespace LayoutBXLYT
             SetFloat("uvRotate0", 0);
             SetVec2("uvTranslate0", new Vector2(0, 0));
             SetInt("flipTexture", 0);
+            SetBool("ThresholdingAlphaInterpolation", material.ThresholdingAlphaInterpolation);
 
             BindTextureUniforms();
 
+            int id = 1;
             for (int i = 0; i < material.TextureMaps.Length; i++)
             {
                 if (textures.ContainsKey(material.TextureMaps[i].Name))
                 {
-                    GL.ActiveTexture(TextureUnit.Texture0 + i);
-                    SetInt($"textures{i}", 0);
+                    GL.ActiveTexture(TextureUnit.Texture0 + id);
+                    SetInt($"textures{i}", id);
                     bool isBinded = BxlytToGL.BindGLTexture(material.TextureMaps[i], textures[material.TextureMaps[i].Name]);
                     if (isBinded)
                         SetInt($"hasTexture{i}", 1);
+
+                    id++;
                 }
             }
 

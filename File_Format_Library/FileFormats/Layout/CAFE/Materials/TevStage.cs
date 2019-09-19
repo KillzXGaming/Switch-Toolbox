@@ -4,21 +4,21 @@ namespace LayoutBXLYT.Cafe
 {
     public class TevStage
     {
-        public byte RGBMode { get; set; }
-        public byte AlphaMode { get; set; }
+        public TevMode RGBMode { get; set; }
+        public TevMode AlphaMode { get; set; }
         public ushort unk { get; set; }
 
         public TevStage(FileReader reader, BFLYT.Header header)
         {
-            RGBMode = reader.ReadByte();
-            AlphaMode = reader.ReadByte();
+            RGBMode = (TevMode)reader.ReadByte();
+            AlphaMode = (TevMode)reader.ReadByte();
             unk = reader.ReadUInt16();
         }
 
         public void Write(FileWriter writer)
         {
-            writer.Write(RGBMode);
-            writer.Write(AlphaMode);
+            writer.Write(RGBMode, false);
+            writer.Write(AlphaMode, false);
             writer.Write(unk);
         }
     }

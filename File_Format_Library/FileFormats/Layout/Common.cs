@@ -124,6 +124,20 @@ namespace LayoutBXLYT
                 parentTransform.W);
         }
 
+        public static float MixColors(params float[] c)
+        {
+            float a = c[0];
+            for (int i = 1; i < c.Length; i++)
+            {
+                a *= c[i];
+            }
+            for (int i = 1; i < c.Length; i++)
+            {
+                a /= 255f;
+            }
+            return a / 255f;
+        }
+
         //Get the previous transform from the parent origin
         private Vector4 ParentOriginTransform(Vector4 points)
         {
@@ -437,6 +451,22 @@ namespace LayoutBXLYT
         Rotate90 = 3,
         Rotate180 = 4,
         Rotate270 = 5
+    }
+
+    public enum TevMode : byte
+    {
+        Replace,
+        Modulate,
+        Add,
+        AddSigned,
+        Interpolate,
+        Subtract,
+        AddMultiplicate,
+        MultiplcateAdd,
+        Overlay,
+        Indirect,
+        BlendIndirect,
+        EachIndirect,
     }
 
     public interface IWindowPane
@@ -755,6 +785,9 @@ namespace LayoutBXLYT
     {
         [DisplayName("Name"), CategoryAttribute("General")]
         public virtual string Name { get; set; }
+
+        [DisplayName("Thresholding Alpha Interpolation"), CategoryAttribute("Alpha")]
+        public virtual bool ThresholdingAlphaInterpolation { get; set; }
 
         [Browsable(false)]
         public virtual BxlytShader Shader { get; set; }

@@ -30,6 +30,7 @@ namespace LayoutBXLYT
             SetInt("textures0", 0);
             SetInt("textures1", 0);
             SetInt("textures2", 0);
+            SetBool("ThresholdingAlphaInterpolation", false);
 
             SetVec2("uvScale0", new Vector2(1, 1));
             SetFloat("uvRotate0", 0);
@@ -46,6 +47,7 @@ namespace LayoutBXLYT
             SetFloat("uvRotate0", 0);
             SetVec2("uvTranslate0", new Vector2(0, 0));
             SetInt("flipTexture", 0);
+            SetBool("ThresholdingAlphaInterpolation", material.ThresholdingAlphaInterpolation);
 
             BindTextureUniforms();
 
