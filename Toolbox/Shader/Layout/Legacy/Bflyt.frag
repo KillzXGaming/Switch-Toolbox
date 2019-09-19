@@ -34,9 +34,10 @@ void main()
 	{
 		// Convert to sRGB.
 		vec3 whiteColorSRGB = pow(whiteColor.rgb, vec3(1.0 / gamma));
+		vec3  blackColorSRGB = pow(blackColor.rgb, vec3(1.0 / gamma));
 
-		vec3 whiteInterpolation = whiteColorSRGB.rgb * textureMap0.rgb;
-		vec3 blackInterpolation = (vec3(1) - textureMap0.rgb) * blackColor.rgb;
+		vec3 whiteInterpolation = whiteColor.rgb * textureMap0.rgb;
+		vec3 blackInterpolation = (vec3(1) - textureMap0.rgb) * blackColorSRGB.rgb;
 
 
 		vec3 colorBlend = whiteInterpolation + blackInterpolation;
