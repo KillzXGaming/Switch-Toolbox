@@ -183,24 +183,33 @@ namespace Toolbox.Library.IO
 
             if (stream.Length < 8) return null;
 
-            //Check all supported compression formats and decompress. Then loop back
-            if (!Compressed)
+            //Try catch incase it fails, continute to load the file anyways if the check may be false 
+            try
             {
-                foreach (ICompressionFormat compressionFormat in FileManager.GetCompressionFormats())
+                //Check all supported compression formats and decompress. Then loop back
+                if (!Compressed)
                 {
-                    stream.Position = streamStartPos;
-                    if (compressionFormat.Identify(stream, FileName))
+                    foreach (ICompressionFormat compressionFormat in FileManager.GetCompressionFormats())
                     {
                         stream.Position = streamStartPos;
+                        if (compressionFormat.Identify(stream, FileName))
+                        {
+                            stream.Position = streamStartPos;
 
-                        stream = compressionFormat.Decompress(stream);
-                        CompressedSize = stream.Length;
+                            stream = compressionFormat.Decompress(stream);
+                            CompressedSize = stream.Length;
 
-                        return OpenFileFormat(stream, FileName, LeaveStreamOpen, InArchive,
-                            true, compressionFormat, DecompressedSize, CompressedSize);
+                            return OpenFileFormat(stream, FileName, LeaveStreamOpen, InArchive,
+                                true, compressionFormat, DecompressedSize, CompressedSize);
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
 
             stream.Position = streamStartPos;
             foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
