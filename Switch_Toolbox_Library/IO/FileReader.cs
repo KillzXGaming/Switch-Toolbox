@@ -19,6 +19,12 @@ namespace Toolbox.Library.IO
             this.Position = 0;
         }
 
+        public FileReader(Stream stream, Encoding encoding, bool leaveOpen = false)
+    : base(stream, encoding, leaveOpen)
+        {
+            this.Position = 0;
+        }
+
         public FileReader(string fileName, bool leaveOpen = false)
              : this(new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), leaveOpen)
         {

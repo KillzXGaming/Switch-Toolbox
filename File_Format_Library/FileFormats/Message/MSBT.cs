@@ -268,9 +268,10 @@ namespace FirstPlugin
                 EntryCount = reader.ReadUInt32();
                 Offsets = reader.ReadUInt32s((int)EntryCount);
 
+                Console.WriteLine($"");
                 for (int i = 0; i < EntryCount; i++)
                 {
-                    reader.Position = Offsets[i] + Position;
+                    reader.SeekBegin(Offsets[i] + Position);
                     ReadMessageString(reader, (uint)i);
                 }
             }
@@ -279,13 +280,20 @@ namespace FirstPlugin
             {
                 List<byte> chars = new List<byte>();
 
-                short charCheck = reader.ReadInt16();
-                while (charCheck != 0)
+                byte charCheck = reader.ReadByte();
+                byte charCheck2 = reader.ReadByte();
+                while (charCheck != 0 && charCheck2 != 0)
                 {
-                    chars.Add((byte)(charCheck >> 8));
-                    chars.Add((byte)(charCheck & 255));
+                    chars.Add(charCheck);
+                    chars.Add(charCheck2);
 
-                    charCheck = reader.ReadInt16();
+                    if (reader.Position < reader.BaseStream.Length - 2)
+                    {
+                        charCheck = reader.ReadByte();
+                        charCheck2 = reader.ReadByte();
+                    }
+                    else
+                        break;
                 }
 
                 TextData.Add(new StringEntry(chars.ToArray()) { Index = index, });

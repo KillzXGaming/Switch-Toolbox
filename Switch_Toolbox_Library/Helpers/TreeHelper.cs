@@ -111,9 +111,9 @@ namespace Toolbox.Library
                     if (ParentPath != string.Empty)
                         FilePath = FilePath.Replace(ParentPath, string.Empty);
 
-                    var path = Path.Combine(overridePath, FilePath);
+                    var path = $"{overridePath}/{FilePath}";
 
-                    progressBar.Task = $"Extracting File {file}";
+                    progressBar.Task = $"Extracting File {FileName}";
                     progressBar.Value = (Curfile++ * 100) / Collection.Count();
                     progressBar.Refresh();
                     CreateDirectoryIfExists($"{path}");
