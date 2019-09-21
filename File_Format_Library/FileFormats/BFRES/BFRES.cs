@@ -1593,6 +1593,7 @@ namespace FirstPlugin
                 case BRESGroupType.ColorAnim:
                 case BRESGroupType.TexSrtAnim:
                 case BRESGroupType.MatVisAnim:
+                case BRESGroupType.MaterialAnim:
                     for (int i = 0; i < group.Nodes.Count; i++)
                     {
                         ((FMAA)group.Nodes[i]).SaveAnimData();
