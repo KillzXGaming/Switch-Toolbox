@@ -34,9 +34,11 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.encodingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findAllResultsPanel1 = new ScintillaNET_FindReplaceDialog.FindAllResults.FindAllResultsPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.encodingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wordWrapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,6 +62,7 @@
             // 
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.viewToolStripMenuItem,
             this.searchToolStripMenuItem,
             this.encodingToolStripMenuItem});
             this.stContextMenuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -98,6 +101,12 @@
             this.findToolStripMenuItem.Text = "Find";
             this.findToolStripMenuItem.Click += new System.EventHandler(this.findToolStripMenuItem_Click);
             // 
+            // encodingToolStripMenuItem
+            // 
+            this.encodingToolStripMenuItem.Name = "encodingToolStripMenuItem";
+            this.encodingToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
+            this.encodingToolStripMenuItem.Text = "Encoding";
+            // 
             // findAllResultsPanel1
             // 
             this.findAllResultsPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -117,11 +126,21 @@
             this.splitter1.TabIndex = 5;
             this.splitter1.TabStop = false;
             // 
-            // encodingToolStripMenuItem
+            // viewToolStripMenuItem
             // 
-            this.encodingToolStripMenuItem.Name = "encodingToolStripMenuItem";
-            this.encodingToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
-            this.encodingToolStripMenuItem.Text = "Encoding";
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.wordWrapToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // wordWrapToolStripMenuItem
+            // 
+            this.wordWrapToolStripMenuItem.CheckOnClick = true;
+            this.wordWrapToolStripMenuItem.Name = "wordWrapToolStripMenuItem";
+            this.wordWrapToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.wordWrapToolStripMenuItem.Text = "Word Wrap";
+            this.wordWrapToolStripMenuItem.Click += new System.EventHandler(this.wordWrapToolStripMenuItem_Click);
             // 
             // TextEditor
             // 
@@ -151,5 +170,7 @@
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem encodingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wordWrapToolStripMenuItem;
     }
 }

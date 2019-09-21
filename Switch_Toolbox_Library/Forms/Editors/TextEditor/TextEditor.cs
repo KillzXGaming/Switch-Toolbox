@@ -133,6 +133,7 @@ namespace Toolbox.Library.Forms
         {
             InitializeComponent();
 
+
             findReplaceDialog = new FindReplace();
             findReplaceDialog.Scintilla = scintilla1;
             findReplaceDialog.FindAllResults += MyFindReplace_FindAllResults;
@@ -341,6 +342,14 @@ namespace Toolbox.Library.Forms
             {
                 System.IO.File.WriteAllText(sfd.FileName, scintilla1.Text);
             }
+        }
+
+        private void wordWrapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (wordWrapToolStripMenuItem.Checked)
+                scintilla1.WrapMode = WrapMode.Word;
+            else
+                scintilla1.WrapMode = WrapMode.None;
         }
     }
 }

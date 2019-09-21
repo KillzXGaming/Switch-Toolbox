@@ -87,7 +87,8 @@
       <HintPath>..\Toolbox\Gl_EditorFramework.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="KCLExt">
+    <Reference Include="KCLExt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolbox\Lib\KCLExt.dll</HintPath>
     </Reference>
     <Reference Include="LibHac">

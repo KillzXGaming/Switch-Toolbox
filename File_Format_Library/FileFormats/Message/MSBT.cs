@@ -234,6 +234,11 @@ namespace FirstPlugin
                 Data = data;
             }
 
+            public StringEntry(string text, Encoding encoding)
+            {
+                Data = encoding.GetBytes(text);
+            }
+
             public uint Index
             {
                 get { return _index; }
@@ -272,32 +277,20 @@ namespace FirstPlugin
                 for (int i = 0; i < EntryCount; i++)
                 {
                     reader.SeekBegin(Offsets[i] + Position);
-                    ReadMessageString(reader, (uint)i);
+                    ReadMessageString(reader, header, (uint)i);
                 }
             }
 
-            private void ReadMessageString(FileReader reader, uint index)
+            private void ReadMessageString(FileReader reader, Header header, uint index)
             {
-                List<byte> chars = new List<byte>();
+                string text = "";
+                if (header.StringEncoding == Encoding.BigEndianUnicode)
+                    text = reader.ReadUTF16String();
+                else
+                    text = reader.ReadZeroTerminatedString(header.StringEncoding);
 
-                byte charCheck = reader.ReadByte();
-                byte charCheck2 = reader.ReadByte();
-                while (charCheck != 0 && charCheck2 != 0)
-                {
-                    chars.Add(charCheck);
-                    chars.Add(charCheck2);
-
-                    if (reader.Position < reader.BaseStream.Length - 2)
-                    {
-                        charCheck = reader.ReadByte();
-                        charCheck2 = reader.ReadByte();
-                    }
-                    else
-                        break;
-                }
-
-                TextData.Add(new StringEntry(chars.ToArray()) { Index = index, });
-                OriginalTextData.Add(new StringEntry(chars.ToArray()) { Index = index, });
+                TextData.Add(new StringEntry(text, header.StringEncoding) { Index = index, });
+                OriginalTextData.Add(new StringEntry(text, header.StringEncoding) { Index = index, });
             }
 
             private char[] GetControlCode(FileReader reader)

@@ -32,6 +32,23 @@ namespace FirstPlugin.Forms
             listViewCustom1.CanResizeList = false;
 
             hexEditor1.EnableMenuBar = false;
+
+            Reload();
+        }
+
+        private void Reload()
+        {
+            string[] fontSizes = { "8", "9", "10", "11", "12", "14", "16", "18",
+                                   "20", "22", "24", "26", "28", "30", "36", "48", "72" };
+
+            FontFamily[] fontFamilies = new InstalledFontCollection().Families;
+            fontFamiltyCB.Items.Clear();
+            fontFamiltyCB.Items.AddRange(fontFamilies.Select(o => o.Name).ToArray());
+            fontFamiltyCB.SelectedText = Runtime.MessageEditor.FontFamily.Name;
+
+            fontSizeCB.Items.Clear();
+            fontSizeCB.Items.AddRange(fontSizes);
+            fontSizeCB.SelectedText = Runtime.MessageEditor.FontSize.ToString();
         }
 
         MSBT activeMessageFile;
@@ -129,6 +146,27 @@ namespace FirstPlugin.Forms
                     UpdateFont(new Font(privateFonts.Families[0], editTextTB.Font.Size));
                 }
             }
+        }
+
+        private void fontFamiltyCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ReloadFont();
+        }
+
+        private void fontSizeCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ReloadFont();
+        }
+
+        private void ReloadFont()
+        {
+            float fontSize = 12;
+            float.TryParse(fontSizeCB.Text, out fontSize);
+            originalTextTB.Font = new Font(fontFamiltyCB.Text, fontSize);
+            editTextTB.Font = new Font(fontFamiltyCB.Text, fontSize);
+
+         //   Runtime.MessageEditor.FontFamily = fontFamiltyCB.SelectedText;
+         //   Runtime.MessageEditor.FontSize = fontSize;
         }
     }
 }

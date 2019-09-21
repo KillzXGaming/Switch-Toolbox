@@ -29,11 +29,16 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MSBTEditor));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.fontSizeCB = new Toolbox.Library.Forms.STComboBox();
+            this.fontFamiltyCB = new Toolbox.Library.Forms.STComboBox();
+            this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.editTextTB = new Toolbox.Library.Forms.STTextBox();
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.originalTextTB = new Toolbox.Library.Forms.STTextBox();
@@ -56,6 +61,7 @@
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            this.stToolStrip1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,7 +70,8 @@
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(0, 27);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 52);
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -74,28 +81,9 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(916, 493);
+            this.splitContainer1.Size = new System.Drawing.Size(916, 468);
             this.splitContainer1.SplitterDistance = 305;
             this.splitContainer1.TabIndex = 11;
-            // 
-            // listViewCustom1
-            // 
-            this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listViewCustom1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this.listViewCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewCustom1.Location = new System.Drawing.Point(0, 0);
-            this.listViewCustom1.Name = "listViewCustom1";
-            this.listViewCustom1.OwnerDraw = true;
-            this.listViewCustom1.Size = new System.Drawing.Size(305, 493);
-            this.listViewCustom1.TabIndex = 0;
-            this.listViewCustom1.UseCompatibleStateImageBehavior = false;
-            this.listViewCustom1.View = System.Windows.Forms.View.Details;
-            this.listViewCustom1.SelectedIndexChanged += new System.EventHandler(this.listViewCustom1_SelectedIndexChanged);
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Width = 305;
             // 
             // splitContainer2
             // 
@@ -112,8 +100,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.hexEditor1);
             this.splitContainer2.Panel2.Controls.Add(this.stLabel3);
-            this.splitContainer2.Size = new System.Drawing.Size(607, 493);
-            this.splitContainer2.SplitterDistance = 303;
+            this.splitContainer2.Size = new System.Drawing.Size(607, 468);
+            this.splitContainer2.SplitterDistance = 287;
             this.splitContainer2.TabIndex = 6;
             // 
             // splitContainer3
@@ -131,9 +119,73 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.originalTextTB);
             this.splitContainer3.Panel2.Controls.Add(this.stLabel2);
-            this.splitContainer3.Size = new System.Drawing.Size(607, 303);
+            this.splitContainer3.Size = new System.Drawing.Size(607, 287);
             this.splitContainer3.SplitterDistance = 202;
             this.splitContainer3.TabIndex = 0;
+            // 
+            // fontSizeCB
+            // 
+            this.fontSizeCB.BorderColor = System.Drawing.Color.Empty;
+            this.fontSizeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.fontSizeCB.ButtonColor = System.Drawing.Color.Empty;
+            this.fontSizeCB.FormattingEnabled = true;
+            this.fontSizeCB.IsReadOnly = false;
+            this.fontSizeCB.Location = new System.Drawing.Point(493, 24);
+            this.fontSizeCB.Name = "fontSizeCB";
+            this.fontSizeCB.Size = new System.Drawing.Size(81, 21);
+            this.fontSizeCB.TabIndex = 15;
+            this.fontSizeCB.SelectedIndexChanged += new System.EventHandler(this.fontSizeCB_SelectedIndexChanged);
+            // 
+            // fontFamiltyCB
+            // 
+            this.fontFamiltyCB.BorderColor = System.Drawing.Color.Empty;
+            this.fontFamiltyCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.fontFamiltyCB.ButtonColor = System.Drawing.Color.Empty;
+            this.fontFamiltyCB.FormattingEnabled = true;
+            this.fontFamiltyCB.IsReadOnly = false;
+            this.fontFamiltyCB.Location = new System.Drawing.Point(310, 24);
+            this.fontFamiltyCB.Name = "fontFamiltyCB";
+            this.fontFamiltyCB.Size = new System.Drawing.Size(176, 21);
+            this.fontFamiltyCB.TabIndex = 14;
+            this.fontFamiltyCB.SelectedIndexChanged += new System.EventHandler(this.fontFamiltyCB_SelectedIndexChanged);
+            // 
+            // stToolStrip1
+            // 
+            this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1});
+            this.stToolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.stToolStrip1.Name = "stToolStrip1";
+            this.stToolStrip1.Size = new System.Drawing.Size(922, 25);
+            this.stToolStrip1.TabIndex = 13;
+            this.stToolStrip1.Text = "stToolStrip1";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "toolStripButton1";
+            // 
+            // listViewCustom1
+            // 
+            this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewCustom1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.listViewCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewCustom1.Location = new System.Drawing.Point(0, 0);
+            this.listViewCustom1.Name = "listViewCustom1";
+            this.listViewCustom1.OwnerDraw = true;
+            this.listViewCustom1.Size = new System.Drawing.Size(305, 468);
+            this.listViewCustom1.TabIndex = 0;
+            this.listViewCustom1.UseCompatibleStateImageBehavior = false;
+            this.listViewCustom1.View = System.Windows.Forms.View.Details;
+            this.listViewCustom1.SelectedIndexChanged += new System.EventHandler(this.listViewCustom1_SelectedIndexChanged);
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Width = 305;
             // 
             // editTextTB
             // 
@@ -144,7 +196,7 @@
             this.editTextTB.Location = new System.Drawing.Point(3, 16);
             this.editTextTB.Multiline = true;
             this.editTextTB.Name = "editTextTB";
-            this.editTextTB.Size = new System.Drawing.Size(200, 284);
+            this.editTextTB.Size = new System.Drawing.Size(200, 268);
             this.editTextTB.TabIndex = 0;
             // 
             // stLabel1
@@ -166,7 +218,7 @@
             this.originalTextTB.Multiline = true;
             this.originalTextTB.Name = "originalTextTB";
             this.originalTextTB.ReadOnly = true;
-            this.originalTextTB.Size = new System.Drawing.Size(385, 284);
+            this.originalTextTB.Size = new System.Drawing.Size(382, 268);
             this.originalTextTB.TabIndex = 3;
             // 
             // stLabel2
@@ -186,7 +238,7 @@
             this.hexEditor1.EnableMenuBar = true;
             this.hexEditor1.Location = new System.Drawing.Point(13, 29);
             this.hexEditor1.Name = "hexEditor1";
-            this.hexEditor1.Size = new System.Drawing.Size(591, 154);
+            this.hexEditor1.Size = new System.Drawing.Size(588, 145);
             this.hexEditor1.TabIndex = 5;
             // 
             // stLabel3
@@ -231,6 +283,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.fontSizeCB);
+            this.Controls.Add(this.fontFamiltyCB);
+            this.Controls.Add(this.stToolStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.stMenuStrip1);
             this.Name = "MSBTEditor";
@@ -250,6 +305,8 @@
             this.splitContainer3.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
+            this.stToolStrip1.ResumeLayout(false);
+            this.stToolStrip1.PerformLayout();
             this.stMenuStrip1.ResumeLayout(false);
             this.stMenuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -274,5 +331,9 @@
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadFontToolStripMenuItem;
         private Toolbox.Library.Forms.STContextMenuStrip stContextMenuStrip1;
+        private Toolbox.Library.Forms.STToolStrip stToolStrip1;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private Toolbox.Library.Forms.STComboBox fontFamiltyCB;
+        private Toolbox.Library.Forms.STComboBox fontSizeCB;
     }
 }
