@@ -1968,7 +1968,7 @@
             Reads and returns an <see cref="!:ResDict&lt;T&gt;"/> instance with elements of type <typeparamref name="T"/> from
             the following offset or returns an empty instance if the read offset is 0.
             </summary>
-            <typeparam name="T">The type of the <see cref="T:Syroot.NintenTools.NSW.Bfres.Core.IResData"/> elements.</typeparam>
+            <typeparam name="T">The type of the <see cref="!:IRes Data"/> elements.</typeparam>
             <returns>The <see cref="!:ResDict&lt;T&gt;"/> instance.</returns>
         </member>
         <member name="M:Syroot.NintenTools.NSW.Bfres.Core.ResFileLoader.LoadList``1(System.Int32,System.Nullable{System.Int64})">
