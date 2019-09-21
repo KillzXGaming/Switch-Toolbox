@@ -37,6 +37,13 @@ namespace Toolbox.Library
         public static string TpGamePath = "";
         public static string BotwGamePath = "";
 
+        public class MessageEditor
+        {
+            public static FontFamily FontFamily = new FontFamily("Arial");
+
+            public static int FontSize = 12;
+        }
+
         public class LayoutEditor
         {
             public static bool IsGamePreview = false;
