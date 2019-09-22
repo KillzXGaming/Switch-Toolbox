@@ -25,32 +25,34 @@ namespace Toolbox.Library
 
         public bool CanCompress { get; } = true;
 
+        private bool UseLZMAMagicHeader = true;
+
         public Stream Decompress(Stream stream)
         {
             using (var reader = new FileReader(stream))
             {
-                reader.SetByteOrder(true);
+                reader.SetByteOrder(false);
 
                 var output = new System.IO.MemoryStream();
                 if (reader.CheckSignature(4, "LZMA", 1))
                 {
-                    byte unk = reader.ReadByte();
+                    byte unk = reader.ReadByte(); //0xFF
                     uint magic = reader.ReadUInt32();
-                    ushort unk2 = reader.ReadUInt16();
+                    reader.ReadByte(); //padding
+                    UseLZMAMagicHeader = true;
                 }
 
-                uint decompressedSize = reader.ReadUInt32();
-                var properties = reader.ReadBytes(5);
+                byte[] properties = reader.ReadBytes(5); //Property and dictionary size
+                ulong decompressedSize = reader.ReadUInt64();
 
-                var compressedSize = stream.Length - 16;
+                var compressedSize = stream.Length - reader.Position;
                 var copressedBytes = reader.ReadBytes((int)compressedSize);
 
                 SevenZip.Compression.LZMA.Decoder decode = new SevenZip.Compression.LZMA.Decoder();
                 decode.SetDecoderProperties(properties);
 
-
                 MemoryStream ms = new MemoryStream(copressedBytes);
-                decode.Code(ms, output, compressedSize, decompressedSize, null);
+                decode.Code(ms, output, compressedSize, (int)decompressedSize, null);
 
                 return output;
             }
@@ -59,10 +61,22 @@ namespace Toolbox.Library
         public Stream Compress(Stream stream)
         {
             MemoryStream mem = new MemoryStream();
-            using (GZipStream gzip = new GZipStream(mem, CompressionMode.Compress, true))
+            using (var writer = new FileWriter(mem, true))
             {
-                stream.CopyTo(gzip);
+                writer.SetByteOrder(false);
+                if (UseLZMAMagicHeader)
+                {
+                    writer.Write((byte)0xFF);
+                    writer.WriteSignature("LZMA");
+                    writer.Write((byte)0);
+                }
             }
+
+            SevenZip.Compression.LZMA.Encoder encode = new SevenZip.Compression.LZMA.Encoder();
+            encode.WriteCoderProperties(mem);
+            mem.Write(BitConverter.GetBytes(stream.Length), (int)stream.Position, 8);
+            encode.Code(stream, mem, -1, -1, null);
+
             return mem;
         }
     }
