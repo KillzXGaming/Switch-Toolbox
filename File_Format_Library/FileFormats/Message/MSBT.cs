@@ -92,6 +92,8 @@ namespace FirstPlugin
             public NLI1 NLI1;
             public TXT2 Text2;
 
+            public bool IsBigEndian = false;
+
             public void Read(FileReader reader)
             {
                 Label1 = new LBL1();
@@ -102,6 +104,7 @@ namespace FirstPlugin
                 reader.ReadSignature(8, "MsgStdBn");
                 ByteOrderMark = reader.ReadUInt16();
                 reader.CheckByteOrderMark(ByteOrderMark);
+                IsBigEndian = reader.IsBigEndian;
                 Padding = reader.ReadUInt16();
                 byte encoding = reader.ReadByte();
                 Version = reader.ReadByte();
@@ -125,16 +128,19 @@ namespace FirstPlugin
                     {
                         case "NLI1":
                             NLI1 = new NLI1();
+                            NLI1.Signature = Signature;
                             NLI1.Read(reader, this);
                             entries.Add(NLI1);
                             break;
                         case "TXT2":
                             Text2 = new TXT2();
+                            Text2.Signature = Signature;
                             Text2.Read(reader, this);
                             entries.Add(Text2);
                             break;
                         case "LBL1":
                             Label1 = new LBL1();
+                            Label1.Signature = Signature;
                             Label1.Read(reader, this);
                             entries.Add(Label1);
                             break;
@@ -169,13 +175,14 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer)
             {
-                if (ByteOrderMark == 0xFEFF)
-                    writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                else
-                    writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
-
+                writer.SetByteOrder(true);
+       
                 writer.WriteSignature("MsgStdBn");
-                writer.Write(ByteOrderMark);
+                if (!IsBigEndian)
+                    writer.Write((ushort)0xFFFE);
+                else
+                    writer.Write((ushort)0xFEFF);
+                writer.SetByteOrder(IsBigEndian);
                 writer.Write(Padding);
                 writer.Write(StringEncoding == Encoding.UTF8 ? (byte)0 : (byte)1);
                 writer.Write(Version);
@@ -187,7 +194,7 @@ namespace FirstPlugin
                 writer.Write(Reserved);
 
                 foreach (var entry in entries)
-                    entry.Write(writer, this);
+                    WriteSection(writer, this, entry.Signature, entry);
 
                 //Write file size
                 using (writer.TemporarySeek(_ofsFileSize, System.IO.SeekOrigin.Begin))
@@ -273,7 +280,6 @@ namespace FirstPlugin
                 EntryCount = reader.ReadUInt32();
                 Offsets = reader.ReadUInt32s((int)EntryCount);
 
-                Console.WriteLine($"");
                 for (int i = 0; i < EntryCount; i++)
                 {
                     reader.SeekBegin(Offsets[i] + Position);
@@ -291,6 +297,30 @@ namespace FirstPlugin
 
                 TextData.Add(new StringEntry(text, header.StringEncoding) { Index = index, });
                 OriginalTextData.Add(new StringEntry(text, header.StringEncoding) { Index = index, });
+            }
+
+            public override void Write(FileWriter writer, Header header)
+            {
+                writer.Seek(8);
+
+                long pos = writer.Position;
+                writer.Write(TextData.Count);
+                writer.Write(new uint[TextData.Count]);
+
+                for (int i = 0; i < EntryCount; i++)
+                {
+                    writer.WriteUint32Offset(pos + 4 + (i * 4), pos);
+                    if (header.StringEncoding == Encoding.UTF8)
+                        writer.WriteString(TextData[i].ToString(), Encoding.UTF8);
+                    else
+                    {
+                        for (int j = 0; j < TextData[i].ToString().Length; j+= 2)
+                        {
+                            writer.Write(TextData[i].ToString()[j + 1]);
+                            writer.Write(TextData[i].ToString()[j]);
+                        }
+                    }
+                }
             }
 
             private char[] GetControlCode(FileReader reader)
@@ -462,8 +492,6 @@ namespace FirstPlugin
 
             public override void Write(FileWriter writer, Header header)
             {
-                writer.WriteSignature(Signature);
-                writer.Write(Data.Length);
                 writer.Write(Padding);
                 writer.Write(Entries.Count);
                 for (int i = 0; i < Entries.Count; i++)
@@ -514,14 +542,37 @@ namespace FirstPlugin
 
             public override void Write(FileWriter writer, Header header)
             {
-                writer.WriteSignature(Signature);
-                writer.Write(Data.Length);
                 writer.Write(Padding);
 
                 for (int i = 0; i < Groups.Count; i++)
                 {
 
                 }
+            }
+        }
+
+        public static void WriteSection(FileWriter writer, Header header, string magic, MSBTEntry section)
+        {
+            long startPos = writer.Position;
+            writer.WriteSignature(magic);
+            writer.Write(uint.MaxValue);
+            section.Write(writer, header);
+            long endPos = writer.Position - 16;
+            WritePadding(writer);
+
+            using (writer.TemporarySeek(startPos + 4, System.IO.SeekOrigin.Begin))
+            {
+                writer.Write((uint)(endPos - startPos));
+            }
+        }
+
+        private static void WritePadding(FileWriter writer)
+        {
+            long alignedBytes = writer.BaseStream.Position % 16;
+            if (alignedBytes > 0)
+            {
+                for (int i = 0; i < 16 - alignedBytes; i++)
+                    writer.Write((byte)0xAB);
             }
         }
 
@@ -538,12 +589,9 @@ namespace FirstPlugin
             }
             public virtual void Write(FileWriter writer, Header header)
             {
-                writer.WriteSignature(Signature);
-                writer.Write(Data.Length);
                 writer.Write(Padding);
                 writer.Write(EntryCount);
                 writer.Write(Data);
-                writer.Align(16);
             }
         }
     }

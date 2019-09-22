@@ -228,6 +228,8 @@ namespace Toolbox.Library.IO
                 }
             }
 
+            stream.Close();
+
             return null;
         }
 

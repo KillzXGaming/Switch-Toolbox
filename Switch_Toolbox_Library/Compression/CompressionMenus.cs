@@ -133,12 +133,20 @@ namespace Toolbox.Library.IO
             Cursor.Current = Cursors.Default;
             if (sfd.ShowDialog() == DialogResult.OK)
             {
+                Stream stream;
                 if (Compress)
-                    compressionFormat.Compress(data).ExportToFile(sfd.FileName);
+                    stream = compressionFormat.Compress(data);
                 else
-                    compressionFormat.Decompress(data).ExportToFile(sfd.FileName);
+                    stream = compressionFormat.Decompress(data);
 
-                MessageBox.Show($"File has been saved to {sfd.FileName}", "Save Notification");
+                if (stream != null)
+                {
+                    stream.ExportToFile(sfd.FileName);
+                    stream.Flush();
+                    stream.Close();
+
+                    MessageBox.Show($"File has been saved to {sfd.FileName}", "Save Notification");
+                }
             }
         }
     }

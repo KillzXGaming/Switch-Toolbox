@@ -46,20 +46,26 @@ namespace FirstPlugin
 
         public void ClearFiles() { files.Clear(); }
 
+        public uint Version = 1;
+
         public void Load(System.IO.Stream stream)
         {
+            CanSave = true;
+            CanReplaceFiles = true;
+            CanRenameFiles = true;
+
             using (var reader = new FileReader(stream))
             {
                 reader.SetByteOrder(false);
-                uint version = reader.ReadUInt32();
+                Version = reader.ReadUInt32();
                 uint numEntries = reader.ReadUInt32();
 
                 for (int i = 0; i < numEntries; i++)
                 {
                     var file = new FileEntry();
                     file.FileName = reader.ReadString(24, true);
-                    uint unk = reader.ReadUInt32(); // 8
-                    uint unk2 = reader.ReadUInt32(); // 12
+                    file.unk = reader.ReadUInt32(); // 8
+                    file.unk2 = reader.ReadUInt32(); // 12
                     uint dataLength = reader.ReadUInt32();
                     uint index = reader.ReadUInt32();
                     uint dataOffset = reader.ReadUInt32();
@@ -79,6 +85,28 @@ namespace FirstPlugin
 
         public void Save(System.IO.Stream stream)
         {
+            using (var writer = new FileWriter(stream))
+            {
+                writer.Write(Version);
+                writer.Write(files.Count);
+
+                long pos = writer.Position;
+                for (int i = 0; i < files.Count; i++)
+                {
+                    writer.WriteString(files[i].FileName, 24);
+                    writer.Write(files[i].unk);
+                    writer.Write(files[i].unk2);
+                    writer.Write(files[i].FileData.Length);
+                    writer.Write(i);
+                    writer.Write(uint.MaxValue);
+                }
+
+                for (int i = 0; i < files.Count; i++)
+                {
+                    writer.WriteUint32Offset(pos + 40 + (i * 44));
+                    writer.Write(files[i].FileData);
+                }
+            }
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
@@ -93,7 +121,8 @@ namespace FirstPlugin
 
         public class FileEntry : ArchiveFileInfo
         {
-
+            public uint unk;
+            public uint unk2;
         }
     }
 }
