@@ -388,6 +388,7 @@ namespace FirstPlugin
             Formats.Add(typeof(DAT_Bayonetta));
             Formats.Add(typeof(XCI));
             Formats.Add(typeof(TVOL));
+            Formats.Add(typeof(VIBS));
 
             //   Formats.Add(typeof(MSBP));
             //   Formats.Add(typeof(BFGRP));
