@@ -383,7 +383,7 @@ namespace FirstPlugin
             private string DecompileShader()
             {
                 //Shader A and B usually need to be combined but atm it has some issues
-               return NSWShaderDecompile.DecompileShader(shaderType, data[1], Address);
+               return NSWShaderDecompile.DecompileShader(shaderType, data[1], 0x30);
             }
         }
     }
