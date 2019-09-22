@@ -257,6 +257,12 @@
     <Compile Include="Forms\Dialogs\ColorSelectorDropdown.Designer.cs">
       <DependentUpon>ColorSelectorDropdown.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Dialogs\LzmaSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Dialogs\LzmaSettingsForm.Designer.cs">
+      <DependentUpon>LzmaSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Dialogs\STColorDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -914,6 +920,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\ExportModelSettings.resx">
       <DependentUpon>ExportModelSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Dialogs\LzmaSettingsForm.resx">
+      <DependentUpon>LzmaSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Dialogs\STColorDialog.resx">
       <DependentUpon>STColorDialog.cs</DependentUpon>

@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using Toolbox.Library.IO;
+using Toolbox.Library.Forms;
 
 namespace Toolbox.Library
 {
@@ -61,21 +62,34 @@ namespace Toolbox.Library
         public Stream Compress(Stream stream)
         {
             MemoryStream mem = new MemoryStream();
-            using (var writer = new FileWriter(mem, true))
-            {
-                writer.SetByteOrder(false);
-                if (UseLZMAMagicHeader)
-                {
-                    writer.Write((byte)0xFF);
-                    writer.WriteSignature("LZMA");
-                    writer.Write((byte)0);
-                }
-            }
 
-            SevenZip.Compression.LZMA.Encoder encode = new SevenZip.Compression.LZMA.Encoder();
-            encode.WriteCoderProperties(mem);
-            mem.Write(BitConverter.GetBytes(stream.Length), (int)stream.Position, 8);
-            encode.Code(stream, mem, -1, -1, null);
+            LzmaSettingsForm settingsDlg = new LzmaSettingsForm();
+            if (settingsDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                if (settingsDlg.WriteMagicHeader) {
+                    using (var writer = new FileWriter(mem, true))
+                    {
+                        writer.SetByteOrder(false);
+                        if (UseLZMAMagicHeader)
+                        {
+                            writer.Write((byte)0xFF);
+                            writer.WriteSignature("LZMA");
+                            writer.Write((byte)0);
+                        }
+                    }
+                }
+
+
+                SevenZip.Compression.LZMA.Encoder encode = new SevenZip.Compression.LZMA.Encoder();
+                if (settingsDlg.WriteProperties)
+                    encode.WriteCoderProperties(mem);
+                if (settingsDlg.WriteDecomSize)
+                    mem.Write(BitConverter.GetBytes(stream.Length), (int)stream.Position, 8);
+
+                encode.Code(stream, mem, -1, -1, null);
+            }
+            else
+                return null;
 
             return mem;
         }
