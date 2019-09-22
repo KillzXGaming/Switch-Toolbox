@@ -296,7 +296,7 @@ namespace Bfres.Structs
             else
             {
                 group = GetOrCreateFolder<FMAA>(type);
-                FMAA fmaa = new FMAA(new ResNX.MaterialAnim(), type);
+                FMAA fmaa = new FMAA(new ResNX.MaterialAnim());
                 group.AddNode(fmaa, "NewShaderParamAnim_fsp");
             }
 
@@ -317,7 +317,7 @@ namespace Bfres.Structs
             else
             {
                 group = GetOrCreateFolder<FMAA>(type);
-                FMAA fmaa = new FMAA(new ResNX.MaterialAnim(), type);
+                FMAA fmaa = new FMAA(new ResNX.MaterialAnim());
                 group.AddNode(fmaa, "NewColorAnim_fcl");
             }
 
@@ -338,7 +338,7 @@ namespace Bfres.Structs
             else
             {
                 group = GetOrCreateFolder<FMAA>(type);
-                FMAA fmaa = new FMAA(new ResNX.MaterialAnim(), type);
+                FMAA fmaa = new FMAA(new ResNX.MaterialAnim());
                 group.AddNode(fmaa, "NewTextureTransformAnim_fts");
             }
 
@@ -359,7 +359,7 @@ namespace Bfres.Structs
             else
             {
                 group = GetOrCreateFolder<FMAA>(type);
-                FMAA fmaa = new FMAA(new ResNX.MaterialAnim(), type);
+                FMAA fmaa = new FMAA(new ResNX.MaterialAnim());
                 group.AddNode(fmaa, "NewTexturePatternAnim_ftp");
             }
 
@@ -396,7 +396,7 @@ namespace Bfres.Structs
             else
             {
                 group = GetOrCreateFolder<FMAA>(MaterialAnimation.AnimationType.Visibilty);
-                FMAA fmaa = new FMAA(new ResNX.MaterialAnim(), MaterialAnimation.AnimationType.Visibilty);
+                FMAA fmaa = new FMAA(new ResNX.MaterialAnim());
                 group.AddNode(fmaa, "NewMatVisAnim_fvm");
             }
 

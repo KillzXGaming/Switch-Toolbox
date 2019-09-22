@@ -1150,34 +1150,35 @@ namespace FirstPlugin
                 for (int i = 0; i < resFile.MaterialAnims.Count; i++)
                 {
                     var anim = resFile.MaterialAnims[i];
-                    if (FMAA.IsShaderParamAnimation(anim.Name))
+                    var fmaa = new FMAA(anim);
+                    if (fmaa.AnimType == MaterialAnimation.AnimationType.ShaderParam)
                     {
-                        group.AddNode(new FMAA(anim, MaterialAnimation.AnimationType.ShaderParam));
+                        group.AddNode(fmaa);
                         HasShaderParamsAnim = true;
                     }
-                    else if (FMAA.IsSRTAnimation(anim.Name))
+                    else if (fmaa.AnimType == MaterialAnimation.AnimationType.TextureSrt)
                     {
-                        group2.AddNode(new FMAA(anim, MaterialAnimation.AnimationType.TextureSrt));
+                        group2.AddNode(fmaa);
                         HasTextureSrtAnim = true;
                     }
-                    else if(FMAA.IsTexturePattern(anim.Name))
+                    else if (fmaa.AnimType == MaterialAnimation.AnimationType.TexturePattern)
                     {
-                        group3.AddNode(new FMAA(anim, MaterialAnimation.AnimationType.TexturePattern));
+                        group3.AddNode(fmaa);
                         HasTexturePatternAnim = true;
                     }
-                    else if (FMAA.IsColorAnimation(anim.Name))
+                    else if (fmaa.AnimType == MaterialAnimation.AnimationType.Color)
                     {
-                        group4.AddNode(new FMAA(anim, MaterialAnimation.AnimationType.Color));
+                        group4.AddNode(fmaa);
                         HasColorAnim = true;
                     }
-                    else if (FMAA.IsVisibiltyAnimation(anim.Name))
+                    else if (fmaa.AnimType == MaterialAnimation.AnimationType.Visibilty)
                     {
-                        group5.AddNode(new FMAA(anim, MaterialAnimation.AnimationType.Visibilty));
+                        group5.AddNode(fmaa);
                         HasMatVisAnim = true;
                     }
                     else
                     {
-                        group6.AddNode(new FMAA(anim, MaterialAnimation.AnimationType.ShaderParam));
+                        group.AddNode(fmaa);
                         HasMaterialAnim = true;
                     }
                 }

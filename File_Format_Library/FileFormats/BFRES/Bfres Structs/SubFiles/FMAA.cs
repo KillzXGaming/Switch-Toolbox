@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -13,56 +14,39 @@ namespace Bfres.Structs
 {
     public class FMAA : MaterialAnimation
     {
-        private static readonly string ShaderParamAnimType = "_fsp";
-        private static readonly string ShaderParamAnimType2= "_sp";
-        private static readonly string TexturePatternAnimType = "_ftp";
-        private static readonly string TexturePatternAnimType2 = "_tp";
-        private static readonly string TextureSrtAnimType = "_fts";
-        private static readonly string TextureSrtAnimType2 = "_ts";
-        private static readonly string ColorAnimType = "_fcl";
-        private static readonly string ColorAnimType2 = "_cl";
-        private static readonly string VisibiltyAnimType = "_fvm";
-        private static readonly string VisibiltyAnimType2 = "_vm";
-
-        public string GetTypeExtension()
+        public override AnimationType AnimType
         {
-            if (Parent == null)
-                return "";
-
-            BFRESGroupNode AnimFolder = (BFRESGroupNode)Parent;
-
-            switch (AnimFolder.Type)
+            get
             {
-                case BRESGroupType.TexPatAnim: return TexturePatternAnimType;
-                case BRESGroupType.ShaderParamAnim: return ShaderParamAnimType;
-                case BRESGroupType.TexSrtAnim: return TextureSrtAnimType;
-                case BRESGroupType.ColorAnim: return ColorAnimType;
-                case BRESGroupType.MatVisAnim: return VisibiltyAnimType;
-                default:
-                    return "";
+                if (MaterialAnim != null)
+                {
+                    string nameType = MaterialAnim.Name.Split('_').Last();
+
+                    if (MaterialAnim.TextureNames?.Count > 0)
+                        return AnimationType.TexturePattern;
+                    else if (nameMappedTypes.ContainsKey($"_{nameType}"))
+                        return nameMappedTypes[$"_{nameType}"];
+                    else
+                        return AnimationType.ShaderParam;
+                }
+
+                return AnimationType.ShaderParam;
             }
         }
 
-        public static bool IsShaderParamAnimation(string name) {
-            return name.Contains(ShaderParamAnimType) ||
-                   name.Contains(ShaderParamAnimType2);
-        }
-        public static bool IsSRTAnimation(string name){
-            return name.Contains(TextureSrtAnimType) ||
-                   name.Contains(TextureSrtAnimType2);
-        }
-        public static bool IsTexturePattern(string name) {
-            return name.Contains(TexturePatternAnimType) ||
-                   name.Contains(TexturePatternAnimType2);
-        }
-        public static bool IsColorAnimation(string name) {
-            return name.Contains(ColorAnimType) ||
-                   name.Contains(ColorAnimType2);
-        }
-        public static bool IsVisibiltyAnimation(string name) {
-            return name.Contains(VisibiltyAnimType) ||
-                   name.Contains(VisibiltyAnimType2);
-        }
+        private Dictionary<string, AnimationType> nameMappedTypes = new Dictionary<string, AnimationType>
+        {
+            {"_fsp", AnimationType.ShaderParam },
+            {"_sp", AnimationType.ShaderParam },
+            {"_ftp", AnimationType.TexturePattern },
+            {"_tp", AnimationType.TexturePattern },
+            {"_fts", AnimationType.TextureSrt },
+            {"_ts", AnimationType.TextureSrt },
+            {"_fcl", AnimationType.Color },
+            {"_cl", AnimationType.Color },
+            {"_fvm", AnimationType.Visibilty },
+            {"_vm", AnimationType.Visibilty },
+        };
 
         public override void OnDoubleMouseClick(TreeView treeview)
         {
@@ -147,6 +131,7 @@ namespace Bfres.Structs
         {
             MaterialAnim.FrameCount = FrameCount;
             MaterialAnim.TextureNames = Textures;
+            MaterialAnim.Name = Text;
 
             int TexturePatternCurveIndex = 0;
             int ParamCurveIndex = 0;
@@ -306,42 +291,6 @@ namespace Bfres.Structs
 
         }
 
-        private string GetString(string Name)
-        {
-            StringBuilder builder = new StringBuilder(Name);
-
-            builder.Replace(ShaderParamAnimType, "");
-            builder.Replace(TexturePatternAnimType, "");
-            builder.Replace(TextureSrtAnimType, "");
-            builder.Replace(ColorAnimType, "");
-            builder.Replace(VisibiltyAnimType, "");
-
-            return builder.ToString();
-        }
-
-        public string SetName()
-        {
-            Text = GetString(Text); //Remove any extension just in case
-
-            //Add extension to the end of the string based on type
-            if (AnimType == AnimationType.Color)
-                Text += ColorAnimType;
-            else if (AnimType == AnimationType.ShaderParam)
-                Text += ShaderParamAnimType;
-            else if (AnimType == AnimationType.TexturePattern)
-                Text += TexturePatternAnimType;
-            else if (AnimType == AnimationType.TextureSrt)
-                Text += TextureSrtAnimType;
-            else if (AnimType == AnimationType.Visibilty)
-                Text += VisibiltyAnimType;
-            else
-                Text += ShaderParamAnimType;
-
-            MaterialAnim.Name = Text;
-
-            return Text;
-        }
-
         public BFRESRender BFRESRender;
         public MaterialAnim MaterialAnim;
         public FMAA()
@@ -382,7 +331,7 @@ namespace Bfres.Structs
             return ((BFRESGroupNode)Parent).GetResFile();
         }
 
-        public FMAA(MaterialAnim anim, AnimationType type) { LoadAnim(anim); AnimType = type; }
+        public FMAA(MaterialAnim anim) { LoadAnim(anim); }
 
         private void LoadAnim(MaterialAnim anim)
         {
@@ -390,7 +339,7 @@ namespace Bfres.Structs
 
             MaterialAnim = anim;
             FrameCount = MaterialAnim.FrameCount;
-            Text = GetString(anim.Name);
+            Text = anim.Name;
 
             Textures.Clear();
             if (anim.TextureNames != null)
@@ -414,11 +363,13 @@ namespace Bfres.Structs
                     paramInfo.Type = AnimationType.ShaderParam;
 
                     //There is no better way to determine if the param is a color type afaik
-                    if (anim.Name.Contains(ColorAnimType) || param.Name.Contains("Color") || param.Name.Contains("color") || param.Name == "multi_tex_reg2")
+                    if (param.Name.Contains("Color") || param.Name.Contains("color") || param.Name == "multi_tex_reg2")
                         paramInfo.Type = AnimationType.Color;
-                    else if (anim.Name.Contains(TextureSrtAnimType))
+                    else if (AnimType == AnimationType.TexturePattern)
                         paramInfo.Type = AnimationType.TexturePattern;
-                    else if (anim.Name.Contains(ShaderParamAnimType))
+                    else if (AnimType == AnimationType.TextureSrt)
+                        paramInfo.Type = AnimationType.TextureSrt;
+                    else 
                         paramInfo.Type = AnimationType.ShaderParam;
 
                     //Get constant anims
@@ -731,20 +682,20 @@ namespace Bfres.Structs
             if (ext == ".bfmaa")
             {
                 MaterialAnim.Import(FileName);
-                MaterialAnim.Name = Text + GetTypeExtension();
+                MaterialAnim.Name = Text;
                 LoadAnim(MaterialAnim);
             }
             else if (ext == ".yaml")
             {
                 MaterialAnim = YamlFmaa.FromYaml(FileName);
-                MaterialAnim.Name = Text + GetTypeExtension();
+                MaterialAnim.Name = Text;
                 LoadAnim(MaterialAnim);
             }
             else if (ext == ".gif" || ext == ".png" || ext == ".apng")
             {
                 BNTX bntx = PluginRuntime.bntxContainers[0];
                 GifToTexturePatternAnimation anim = new GifToTexturePatternAnimation(FileName, bntx, this);
-                MaterialAnim.Name = Text + GetTypeExtension();
+                MaterialAnim.Name = Text;
                 LoadAnim(MaterialAnim);
             }
 

@@ -10,7 +10,7 @@ namespace Toolbox.Library.Animations
 {
     public class MaterialAnimation : Animation
     {
-        public AnimationType AnimType;
+        public virtual AnimationType AnimType { get; set; }
         public enum AnimationType
         {
             ShaderParam,
