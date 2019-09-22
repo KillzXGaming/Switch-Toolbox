@@ -273,6 +273,12 @@ namespace Toolbox.Library
                     case "LayoutDisplayGrid":
                         bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayGrid);
                         break;
+                    case "TitleKeys":
+                       Runtime.SwitchKeys.TitleKeys = node.InnerText;
+                        break;
+                    case "ProdKeys":
+                        Runtime.SwitchKeys.ProdKeys = node.InnerText;
+                        break;
                 }
             }
 
@@ -357,6 +363,7 @@ namespace Toolbox.Library
             doc.AppendChild(mainNode);
 
             AppendPathSettings(doc, mainNode);
+            AppendSwitchKeyPathSettings(doc, mainNode);
 
             return doc;
         }
@@ -435,6 +442,7 @@ namespace Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "EnableImageZoom", Runtime.ImageEditor.EnableImageZoom.ToString()));
             parentNode.AppendChild(createNode(doc, "CustomPicureBoxBGColor", ColorTranslator.ToHtml(Runtime.CustomPicureBoxBGColor)));
         }
+
         private static void AppendPathSettings(XmlDocument doc, XmlNode parentNode)
         {
             XmlNode PathsNode = doc.CreateElement("PATHS");
@@ -447,6 +455,15 @@ namespace Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "SpecularCubeMapPath", Runtime.PBR.SpecularCubeMapPath.ToString()));
             PathsNode.AppendChild(createNode(doc, "DiffuseCubeMapPath", Runtime.PBR.DiffuseCubeMapPath.ToString()));
         }
+
+        private static void AppendSwitchKeyPathSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode PathsNode = doc.CreateElement("SWITCH_KEY_PATHS");
+            parentNode.AppendChild(PathsNode);
+            PathsNode.AppendChild(createNode(doc, "TitleKeys", Runtime.SwitchKeys.TitleKeys.ToString()));
+            PathsNode.AppendChild(createNode(doc, "ProdKeys", Runtime.SwitchKeys.ProdKeys.ToString()));
+        }
+
         private static void AppenPBRSettings(XmlDocument doc, XmlNode parentNode)
         {
             XmlNode SettingsNode = doc.CreateElement("PBR");

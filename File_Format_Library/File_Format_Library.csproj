@@ -520,6 +520,12 @@
     <Compile Include="GUI\Editors\PTCL\EmitterEditorNX.Designer.cs">
       <DependentUpon>EmitterEditorNX.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Rom\SwitchKeySelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Rom\SwitchKeySelectionForm.Designer.cs">
+      <DependentUpon>SwitchKeySelectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\TextureUI\Importers\BNTX\BinaryTextureImporterList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1452,6 +1458,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Materials\Texture Selector.resx">
       <DependentUpon>Texture Selector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Rom\SwitchKeySelectionForm.resx">
+      <DependentUpon>SwitchKeySelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SMO\OdysseyCostumeLoader.resx">
       <DependentUpon>OdysseyCostumeLoader.cs</DependentUpon>

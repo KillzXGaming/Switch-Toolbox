@@ -55,11 +55,9 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            string homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string KeyFile = Path.Combine(homeFolder, ".switch", "prod.keys");
-            string TitleKeyFile = Path.Combine(homeFolder, ".switch", "title.keys");
-
-            var Keys = ExternalKeys.ReadKeyFile(KeyFile, TitleKeyFile);
+            var Keys = Forms.SwitchKeySelectionForm.ShowKeySelector();
+            if (Keys == null)
+                throw new Exception("Failed to get keys. Please select valid paths!");
 
             Stream Input;
 
@@ -79,6 +77,15 @@ namespace FirstPlugin
                      Nca.OpenSection(Nca.Sections.FirstOrDefault
                             (s => s?.Type == SectionType.Romfs || s?.Type == SectionType.Bktr)
                             .SectionNum, false, IntegrityCheckLevel.None, true));
+
+            if (Nca.CanOpenSection((int)ProgramPartitionType.Code))
+            {
+                var exefs = new Pfs(Nca.OpenSection((int)ProgramPartitionType.Code,
+                        false, IntegrityCheckLevel.None, true));
+
+                foreach (var file in exefs.Files)
+                    files.Add(new ExefsEntry(exefs,file));
+            }
 
             for (int i = 0; i < romfs.Files.Count; i++)
                 files.Add(new FileEntry(romfs,romfs.Files[i]));
@@ -103,6 +110,42 @@ namespace FirstPlugin
         public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
         {
             return false;
+        }
+
+        public class ExefsEntry : FileEntry
+        {
+            private Pfs ParentPfs;
+            private PfsFileEntry fileEntry;
+
+            public override Stream FileDataStream
+            {
+                get
+                {
+                    return ParentPfs.OpenFile(fileEntry).AsStream();
+                }
+            }
+
+            public override void Export()
+            {
+                string fileName = Path.GetFileName(FileName.RemoveIllegaleFolderNameCharacters());
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.FileName = fileName;
+                sfd.DefaultExt = Path.GetExtension(fileName);
+                sfd.Filter = "Raw Data (*.*)|*.*";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    FileDataStream.ExportToFile(sfd.FileName);
+                }
+            }
+
+            public ExefsEntry(Pfs pfs, PfsFileEntry entry)
+            {
+                ParentPfs = pfs;
+                fileEntry = entry;
+                FileName = $"Exefs/{fileEntry.Name}";
+            }
         }
 
         public class FileEntry : ArchiveFileInfo
@@ -138,11 +181,16 @@ namespace FirstPlugin
                 }
             }
 
+            public FileEntry()
+            {
+
+            }
+
             public FileEntry(Romfs romfs, RomfsFile romfsFile)
             {
                 ParentROMFS = romfs;
                 File = romfsFile;
-                FileName = File.FullPath;
+                FileName = $"Romfs/{File.FullPath}";
             }
         }
     }

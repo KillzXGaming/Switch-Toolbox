@@ -37,6 +37,24 @@ namespace Toolbox.Library
         public static string TpGamePath = "";
         public static string BotwGamePath = "";
 
+        public class SwitchKeys
+        {
+            public static string SwitchFolder = System.IO.Path.Combine(Environment.GetFolderPath(
+                Environment.SpecialFolder.UserProfile), ".switch");
+
+            public static string TitleKeys = System.IO.Path.Combine(SwitchFolder, "title.keys");
+            public static string ProdKeys = System.IO.Path.Combine(SwitchFolder, "prod.keys");
+
+            public static bool HasKeys()
+            {
+                Console.WriteLine($"ProdKeys {ProdKeys} Exists? {System.IO.File.Exists(ProdKeys)}");
+                Console.WriteLine($"TitleKeys {TitleKeys} Exists? {System.IO.File.Exists(TitleKeys)}");
+
+                return System.IO.File.Exists(ProdKeys) &&
+                       System.IO.File.Exists(TitleKeys);
+            }
+        }
+
         public class MessageEditor
         {
             public static FontFamily FontFamily = new FontFamily("Arial");

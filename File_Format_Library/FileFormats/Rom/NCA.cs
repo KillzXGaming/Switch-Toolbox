@@ -46,11 +46,9 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            string homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string KeyFile = Path.Combine(homeFolder, ".switch", "prod.keys");
-            string TitleKeyFile = Path.Combine(homeFolder, ".switch", "title.keys");
-
-            var Keys = ExternalKeys.ReadKeyFile(KeyFile, TitleKeyFile);
+            var Keys = Forms.SwitchKeySelectionForm.ShowKeySelector();
+            if (Keys == null)
+                throw new Exception("Failed to get keys. Please select valid paths!");
 
             var Nca = new Nca(Keys, stream.AsStorage(), true);
 
@@ -58,6 +56,15 @@ namespace FirstPlugin
                      Nca.OpenSection(Nca.Sections.FirstOrDefault
                             (s => s?.Type == SectionType.Romfs || s?.Type == SectionType.Bktr)
                             .SectionNum, false, IntegrityCheckLevel.None, true));
+
+            if (Nca.CanOpenSection((int)ProgramPartitionType.Code))
+            {
+                var exefs = new Pfs(Nca.OpenSection((int)ProgramPartitionType.Code,
+                        false, IntegrityCheckLevel.None, true));
+
+                foreach (var file in exefs.Files)
+                    files.Add(new NSP.ExefsEntry(exefs, file));
+            }
 
             for (int i = 0; i < romfs.Files.Count; i++)
                 files.Add(new NSP.FileEntry(romfs, romfs.Files[i]));
