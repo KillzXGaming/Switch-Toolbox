@@ -295,6 +295,7 @@ namespace FirstPlugin
         {
             List<Type> Formats = new List<Type>();
             Formats.Add(typeof(BFRES));
+            Formats.Add(typeof(TVOL));
             Formats.Add(typeof(BTI));
             Formats.Add(typeof(TXE));
             Formats.Add(typeof(SARC));
@@ -387,7 +388,6 @@ namespace FirstPlugin
             Formats.Add(typeof(BCLIM));
             Formats.Add(typeof(DAT_Bayonetta));
             Formats.Add(typeof(XCI));
-            Formats.Add(typeof(TVOL));
             Formats.Add(typeof(VIBS));
 
             //   Formats.Add(typeof(MSBP));

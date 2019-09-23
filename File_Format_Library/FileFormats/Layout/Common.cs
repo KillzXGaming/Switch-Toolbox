@@ -410,6 +410,38 @@ namespace LayoutBXLYT
         WhiteColorGreen,
         WhiteColorBlue,
         WhiteColorAlpha,
+        TextureColorBlendRatio,
+        TexColor0Red,
+        TexColor0Green,
+        TexColor0Blue,
+        TexColor0Alpha,
+        TexColor1Red,
+        TexColor1Green,
+        TexColor1Blue,
+        TexColor1Alpha,
+        TexColor2Red,
+        TexColor2Green,
+        TexColor2Blue,
+        TexColor2Alpha,
+        TevKonstantColor0Red,
+        TevKonstantColor0Green,
+        TevKonstantColor0Blue,
+        TevKonstantColor0Alpha,
+        TevKonstantColor1Red,
+        TevKonstantColor1Green,
+        TevKonstantColor1Blue,
+        TevKonstantColor1Alpha,
+        TevKonstantColor2Red,
+        TevKonstantColor2Green,
+        TevKonstantColor2Blue,
+        TevKonstantColor2Alpha,
+    }
+
+    public enum LIMTarget : byte
+    {
+        Rotation,
+        ScaleU,
+        ScaleV,
     }
 
     public enum LFSTarget : byte

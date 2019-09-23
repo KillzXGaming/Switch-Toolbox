@@ -69,7 +69,7 @@ namespace LayoutBXLYT
 
         #endregion
 
-        Header header;
+        public Header header;
 
         public void Load(System.IO.Stream stream)
         {

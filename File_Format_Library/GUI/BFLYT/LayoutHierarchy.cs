@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using FirstPlugin;
+using Toolbox.Library;
 using Toolbox.Library.Forms;
 using LayoutBXLYT.Cafe;
 
@@ -15,10 +15,13 @@ namespace LayoutBXLYT
 {
     public partial class LayoutHierarchy : LayoutDocked
     {
+        private LayoutEditor ParentEditor;
         private STContextMenuStrip ContexMenu;
 
-        public LayoutHierarchy()
+        public LayoutHierarchy(LayoutEditor layoutEditor)
         {
+            ParentEditor = layoutEditor;
+
             InitializeComponent();
 
             treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
@@ -74,13 +77,42 @@ namespace LayoutBXLYT
             isLoaded = true;
         }
 
+        public void SearchAnimations(BxlytHeader bxlyt, EventHandler onPropertySelected)
+        {
+            OnProperySelected = onPropertySelected;
+
+            isLoaded = false;
+
+            var layoutFile = bxlyt.FileInfo;
+            var parentArchive = layoutFile.IFileInfo.ArchiveParent;
+            if (parentArchive == null) return;
+
+            treeView1.BeginUpdate();
+            foreach (var file in parentArchive.Files)
+            {
+                if (Utils.GetExtension(file.FileName) == ".bflan") {
+                    LoadAnimation(file);
+                }
+            }
+
+            treeView1.EndUpdate();
+
+            isLoaded = true;
+        }
+
+        public void LoadAnimation(ArchiveFileInfo archiveEntry)
+        {
+            var animNode = new TreeNode(System.IO.Path.GetFileName(archiveEntry.FileName)) { Tag = archiveEntry };
+            animNode.Nodes.Add("<dummy>");
+            treeView1.Nodes.Add(animNode);
+        }
+
         public void LoadAnimation(BxlanHeader bxlan, EventHandler onPropertySelected)
         {
             isLoaded = false;
             OnProperySelected = onPropertySelected;
 
             treeView1.BeginUpdate();
-            treeView1.Nodes.Clear();
             LoadAnimations(bxlan,new TreeNode(bxlan.FileName) { Tag = bxlan });
             treeView1.EndUpdate();
             isLoaded = true;
@@ -92,9 +124,11 @@ namespace LayoutBXLYT
             isLoaded = false;
         }
 
-        private void LoadAnimations(BxlanHeader bxlan, TreeNode root)
+        private void LoadAnimations(BxlanHeader bxlan, TreeNode root, bool LoadRoot = true)
         {
-            treeView1.Nodes.Add(root);
+            if (LoadRoot)
+                treeView1.Nodes.Add(root);
+
             if (bxlan is BxlanHeader)
             {
                 var header = bxlan as BxlanHeader;
@@ -376,6 +410,27 @@ namespace LayoutBXLYT
                     ContexMenu.Items.Add(new STToolStipMenuItem("Display Panes", null, TogglePane, Keys.Control | Keys.H));
                 //    ContexMenu.Items.Add(new STToolStipMenuItem("Display Children Panes", null, TogglePane, Keys.Control | Keys.H));
                     ContexMenu.Show(Cursor.Position);
+                }
+            }
+        }
+
+        private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            //Create and expand a file format, then update the tag
+            //Allows for faster loading
+            if (e.Node.Tag is ArchiveFileInfo)
+            {
+                e.Node.Nodes.Clear();
+
+                var archiveNode = e.Node.Tag as ArchiveFileInfo;
+                var fileFormat = archiveNode.OpenFile();
+
+                //Update the tag so this doesn't run again
+                e.Node.Tag = "Expanded";
+
+                if (fileFormat != null && fileFormat is BFLAN) {
+                    LoadAnimations(((BFLAN)fileFormat).header, e.Node, false);
+                    ParentEditor.AnimationFiles.Add(((BFLAN)fileFormat).header);
                 }
             }
         }

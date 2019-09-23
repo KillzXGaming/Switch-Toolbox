@@ -80,6 +80,7 @@ namespace LayoutBXLYT
         private List<LayoutViewer> Viewports = new List<LayoutViewer>();
         private LayoutViewer ActiveViewport;
         private LayoutHierarchy LayoutHierarchy;
+        private LayoutHierarchy AnimLayoutHierarchy;
         private LayoutTextureList LayoutTextureList;
         private LayoutProperties LayoutProperties;
         private LayoutTextDocked TextConverter;
@@ -102,6 +103,8 @@ namespace LayoutBXLYT
             if (!isLoaded)
                 InitializeDockPanels();
 
+            AnimLayoutHierarchy?.SearchAnimations(header, ObjectSelected);
+
             isLoaded = true;
         }
 
@@ -112,12 +115,14 @@ namespace LayoutBXLYT
 
             ShowAnimationHierarchy();
             ShowPropertiesPanel();
+            AnimLayoutHierarchy.LoadAnimation(ActiveAnimation, ObjectSelected);
 
             isLoaded = true;
         }
 
         private void InitializeDockPanels(bool isAnimation = false)
         {
+            ShowAnimationHierarchy();
             ShowTextureList();
             ShowPartsEditor();
             ShowPaneHierarchy();
@@ -231,6 +236,9 @@ namespace LayoutBXLYT
 
         private void ShowPartsEditor()
         {
+            if (LayoutPartsEditor != null)
+                return;
+
             LayoutPartsEditor = new LayoutPartsEditor();
             LayoutPartsEditor.Text = "Parts Editor";
             LayoutPartsEditor.Show(dockPanel1, DockState.DockLeft);
@@ -238,6 +246,9 @@ namespace LayoutBXLYT
 
         private void ShowPropertiesPanel()
         {
+            if (LayoutProperties != null)
+                return;
+
             LayoutProperties = new LayoutProperties();
             LayoutProperties.Text = "Properties";
             if (LayoutHierarchy != null)
@@ -248,15 +259,20 @@ namespace LayoutBXLYT
 
         public void ShowAnimationHierarchy()
         {
-            LayoutHierarchy = new LayoutHierarchy();
-            LayoutHierarchy.Text = "Animation Hierarchy";
-            LayoutHierarchy.LoadAnimation(ActiveAnimation, ObjectSelected);
-            LayoutHierarchy.Show(dockPanel1, DockState.DockLeft);
+            if (AnimLayoutHierarchy != null)
+                return;
+
+            AnimLayoutHierarchy = new LayoutHierarchy(this);
+            AnimLayoutHierarchy.Text = "Animation Hierarchy";
+            AnimLayoutHierarchy.Show(dockPanel1, DockState.DockLeft);
         }
 
         private void ShowPaneHierarchy()
         {
-            LayoutHierarchy = new LayoutHierarchy();
+            if (LayoutHierarchy != null)
+                return;
+
+            LayoutHierarchy = new LayoutHierarchy(this);
             LayoutHierarchy.Text = "Hierarchy";
             LayoutHierarchy.LoadLayout(ActiveLayout, ObjectSelected);
             LayoutHierarchy.Show(dockPanel1, DockState.DockLeft);
@@ -264,6 +280,9 @@ namespace LayoutBXLYT
 
         private void ShowTextureList()
         {
+            if (LayoutTextureList != null)
+                return;
+
             LayoutTextureList = new LayoutTextureList();
             LayoutTextureList.Text = "Texture List";
             LayoutTextureList.LoadTextures(ActiveLayout);
