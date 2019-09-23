@@ -10,6 +10,10 @@ namespace Toolbox.Library
     //A folder that can easily batch export multiple folders
     public class STTextureFolder : TreeNodeCustom, IContextMenuNode
     {
+        public STTextureFolder()
+        {
+        }
+
         public STTextureFolder(string text)
         {
             Text = text;

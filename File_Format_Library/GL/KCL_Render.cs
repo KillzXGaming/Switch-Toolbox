@@ -211,12 +211,10 @@ namespace FirstPlugin
         {
             CheckBuffers();
 
-            if (!Runtime.OpenTKInitialized)
+            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
                 return;
 
             control.CurrentShader = defaultShaderProgram;
-
-            GL.LoadIdentity();
 
             control.UpdateModelMatrix(
             Matrix4.CreateScale(Runtime.previewScale));

@@ -211,7 +211,7 @@ namespace FirstPlugin
 
         public override void Draw(GL_ControlLegacy control, Pass pass)
         {
-            if (Disposing) return;
+            if (Disposing || pass == Pass.TRANSPARENT) return;
 
             bool buffersWereInitialized = ibo_elements != 0 && vbo_position != 0;
             if (!buffersWereInitialized)

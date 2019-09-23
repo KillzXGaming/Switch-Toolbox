@@ -330,6 +330,7 @@
     <Compile Include="FileFormats\Rom\3DS\RomFSStructure.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Grezzo\CTXB.cs" />
+    <Compile Include="FileFormats\Texture\SIR0.cs" />
     <Compile Include="FileFormats\Texture\TVOL.cs" />
     <Compile Include="FileFormats\Texture\TPL.cs" />
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
