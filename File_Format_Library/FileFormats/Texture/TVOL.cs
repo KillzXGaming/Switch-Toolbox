@@ -71,7 +71,7 @@ namespace FirstPlugin
                         TextureWrapper entry = new TextureWrapper();
                         entry.ImageKey = "texture";
                         entry.SelectedImageKey = "texture";
-                        entry.Format = TEX_FORMAT.BC7_UNORM;
+                        entry.Format = TEX_FORMAT.R8G8B8A8_UNORM;
                         entry.Text = reader.ReadZeroTerminatedString();
 
                         reader.SeekBegin(offset + 48);
@@ -85,22 +85,48 @@ namespace FirstPlugin
                         reader.ReadUInt32(); //padding
                         uint unk5 = reader.ReadUInt32(); //C03F
                         ulong unk6 = reader.ReadUInt64(); //32
-                        ulong unk7 = reader.ReadUInt64(); //24
-                        ulong unk8 = reader.ReadUInt64(); //40
 
-                        //Matches XTX info header
-                        uint imageSize = reader.ReadUInt32();
-                        uint Alignment = reader.ReadUInt32();
-                        entry.Width = reader.ReadUInt32();
-                        entry.Height = reader.ReadUInt32();
-                        entry.Depth = reader.ReadUInt32();
-                        entry.Target = reader.ReadUInt32();
-                        uint Format = reader.ReadUInt32();
+                        if (unk6 != 32)
+                        {
+                            //Platform PC
+                            reader.Seek(-8);
+                            uint unk7 = reader.ReadUInt32();
+                            uint unk8 = reader.ReadUInt32();
+                            uint unk9 = reader.ReadUInt32();
+                            uint unk10 = reader.ReadUInt32();
+                            entry.Width = reader.ReadUInt32();
+                            entry.Height = reader.ReadUInt32();
+                            entry.Depth = reader.ReadUInt32();
+                            entry.ArrayCount = reader.ReadUInt32();
+                            reader.Seek(44);
+                            uint imageSize = reader.ReadUInt32();
+                            reader.Seek(16);
 
-                        XTX.TextureInfo.ConvertFormat(Format);
+                            entry.Parameters.DontSwapRG = true;
+                            entry.ImageData = reader.ReadBytes((int)imageSize);
+                        }
+                        else
+                        {
+                            entry.PlatformSwizzle = PlatformSwizzle.Platform_Switch;
 
-                        uint unk10 = reader.ReadUInt32(); //1
-                        entry.ImageData = reader.ReadBytes((int)imageSize);
+                            //Platform switch
+                            ulong unk7 = reader.ReadUInt64(); //24
+                            ulong unk8 = reader.ReadUInt64(); //40
+
+                            //Matches XTX info header
+                            uint imageSize = reader.ReadUInt32();
+                            uint Alignment = reader.ReadUInt32();
+                            entry.Width = reader.ReadUInt32();
+                            entry.Height = reader.ReadUInt32();
+                            entry.Depth = reader.ReadUInt32();
+                            entry.Target = reader.ReadUInt32();
+                            uint Format = reader.ReadUInt32();
+                            uint unk10 = reader.ReadUInt32(); //1
+                            entry.ImageData = reader.ReadBytes((int)imageSize);
+
+                            entry.Format = XTX.TextureInfo.ConvertFormat(Format);
+                        }
+
                         Nodes.Add(entry);
                     }
                 }
@@ -155,10 +181,12 @@ namespace FirstPlugin
 
             }
 
-            private bool hasShownDialog = false;
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
             {
-                return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, (int)Target);
+                if (PlatformSwizzle == PlatformSwizzle.Platform_Switch)
+                    return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, (int)Target);
+                else
+                    return ImageData;
             }
 
 
