@@ -583,6 +583,14 @@ namespace FirstPlugin
 
         }
 
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listViewCustom1.SelectedItems.Count <= 0)
+                return;
+
+            Clipboard.SetText(listViewCustom1.SelectedItems[0].Text);
+        }
+
         private void deleteNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (treeView1.SelectedNode == null)

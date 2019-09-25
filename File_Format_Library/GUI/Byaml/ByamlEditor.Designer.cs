@@ -50,14 +50,15 @@
             this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnToXml = new Toolbox.Library.Forms.STButton();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
+            this.btnXmlToByaml = new Toolbox.Library.Forms.STButton();
             this.stContextMenuStrip1 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.addItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnXmlToByaml = new Toolbox.Library.Forms.STButton();
-            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
-            this.btnToXml = new Toolbox.Library.Forms.STButton();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -261,43 +262,26 @@
             this.tabPage2.Text = "XML Editor";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // stContextMenuStrip1
+            // btnToXml
             // 
-            this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addItemToolStripMenuItem,
-            this.editToolStripMenuItem,
-            this.renameToolStripMenuItem,
-            this.deleteToolStripMenuItem});
-            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(124, 92);
+            this.btnToXml.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnToXml.Location = new System.Drawing.Point(15, 6);
+            this.btnToXml.Name = "btnToXml";
+            this.btnToXml.Size = new System.Drawing.Size(107, 23);
+            this.btnToXml.TabIndex = 2;
+            this.btnToXml.Text = "Generate";
+            this.btnToXml.UseVisualStyleBackColor = false;
+            this.btnToXml.Click += new System.EventHandler(this.btnToXml_Click);
             // 
-            // addItemToolStripMenuItem
+            // stPanel2
             // 
-            this.addItemToolStripMenuItem.Name = "addItemToolStripMenuItem";
-            this.addItemToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
-            this.addItemToolStripMenuItem.Text = "Add Item";
-            this.addItemToolStripMenuItem.Click += new System.EventHandler(this.addNodeToolStripMenuItem_Click);
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
-            this.editToolStripMenuItem.Text = "Edit";
-            this.editToolStripMenuItem.Click += new System.EventHandler(this.editValueNodeMenuItem_Click);
-            // 
-            // renameToolStripMenuItem
-            // 
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
-            this.renameToolStripMenuItem.Text = "Rename";
-            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
-            // 
-            // deleteToolStripMenuItem
-            // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            this.stPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stPanel2.Location = new System.Drawing.Point(6, 35);
+            this.stPanel2.Name = "stPanel2";
+            this.stPanel2.Size = new System.Drawing.Size(183, 30);
+            this.stPanel2.TabIndex = 1;
             // 
             // btnXmlToByaml
             // 
@@ -310,26 +294,51 @@
             this.btnXmlToByaml.UseVisualStyleBackColor = false;
             this.btnXmlToByaml.Click += new System.EventHandler(this.btnXmlToByaml_Click);
             // 
-            // stPanel2
+            // stContextMenuStrip1
             // 
-            this.stPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.stPanel2.Location = new System.Drawing.Point(6, 35);
-            this.stPanel2.Name = "stPanel2";
-            this.stPanel2.Size = new System.Drawing.Size(532, 328);
-            this.stPanel2.TabIndex = 1;
+            this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addItemToolStripMenuItem,
+            this.editToolStripMenuItem,
+            this.renameToolStripMenuItem,
+            this.deleteToolStripMenuItem,
+            this.copyToolStripMenuItem});
+            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(181, 136);
             // 
-            // btnToXml
+            // addItemToolStripMenuItem
             // 
-            this.btnToXml.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnToXml.Location = new System.Drawing.Point(15, 6);
-            this.btnToXml.Name = "btnToXml";
-            this.btnToXml.Size = new System.Drawing.Size(107, 23);
-            this.btnToXml.TabIndex = 2;
-            this.btnToXml.Text = "Generate";
-            this.btnToXml.UseVisualStyleBackColor = false;
-            this.btnToXml.Click += new System.EventHandler(this.btnToXml_Click);
+            this.addItemToolStripMenuItem.Name = "addItemToolStripMenuItem";
+            this.addItemToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addItemToolStripMenuItem.Text = "Add Item";
+            this.addItemToolStripMenuItem.Click += new System.EventHandler(this.addNodeToolStripMenuItem_Click);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editToolStripMenuItem.Text = "Edit";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.editValueNodeMenuItem_Click);
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyToolStripMenuItem.Text = "Copy as text";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // ByamlEditor
             // 
@@ -384,5 +393,6 @@
         private Toolbox.Library.Forms.STButton btnXmlToByaml;
         private Toolbox.Library.Forms.STPanel stPanel2;
         private Toolbox.Library.Forms.STButton btnToXml;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
     }
 }
