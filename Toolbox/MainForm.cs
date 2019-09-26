@@ -1333,5 +1333,14 @@ namespace Toolbox
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
         }
+
+        private void batchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FolderSelectDialog folderDlg = new FolderSelectDialog();
+            if (folderDlg.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.BatchFileTable(folderDlg.SelectedPath);
+            }
+        }
     }
 }

@@ -238,6 +238,36 @@ namespace Toolbox.Library.IO
             Cursor.Current = Cursors.Default;
         }
 
+        public static void BatchFileTable(string directory)
+        {
+            foreach (var file in Directory.GetDirectories(directory))
+                BatchFileTable(file);
+
+            foreach (var file in Directory.GetFiles(directory))
+            {
+                var fileStream = File.OpenRead(file);
+                uint compLength = (uint)fileStream.Length;
+                uint decompLength = (uint)fileStream.Length;
+                bool yaz0 = false;
+                foreach (ICompressionFormat compressionFormat in FileManager.GetCompressionFormats())
+                {
+                    fileStream.Position = 0;
+                    if (compressionFormat.Identify(fileStream, file))
+                    {
+                        fileStream.Position = 0;
+                        if (compressionFormat is Yaz0)
+                            yaz0 = true;
+
+                        var decomp = compressionFormat.Decompress(fileStream);
+                        decompLength = (uint)decomp.Length;
+                        decomp.Close();
+                    }
+                }
+
+                SatisfyFileTables(null, file, File.OpenRead(file), compLength, decompLength, yaz0);
+            }
+        }
+
         private static Stream CompressFileFormat(ICompressionFormat compressionFormat, Stream data, bool FileIsCompressed, int Alignment,
               string FileName, bool EnableDialog = true)
         {
