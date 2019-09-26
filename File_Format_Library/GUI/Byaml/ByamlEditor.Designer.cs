@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.treeView1 = new System.Windows.Forms.TreeView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CopyNode = new System.Windows.Forms.ToolStripMenuItem();
             this.addNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,14 +40,15 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.importFromXmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
-            this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnToXml = new Toolbox.Library.Forms.STButton();
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
@@ -59,29 +59,18 @@
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyDataAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
+            this.stPanel1.SuspendLayout();
+            this.stTabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.stPanel1.SuspendLayout();
-            this.stTabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // treeView1
-            // 
-            this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 0);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(178, 363);
-            this.treeView1.TabIndex = 0;
-            this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.BeforeExpand);
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // contextMenuStrip1
             // 
@@ -167,6 +156,67 @@
             this.importFromXmlToolStripMenuItem.Text = "Import from xml";
             this.importFromXmlToolStripMenuItem.Click += new System.EventHandler(this.importFromXmlToolStripMenuItem_Click);
             // 
+            // stPanel1
+            // 
+            this.stPanel1.Controls.Add(this.stTabControl1);
+            this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel1.Location = new System.Drawing.Point(0, 0);
+            this.stPanel1.Name = "stPanel1";
+            this.stPanel1.Size = new System.Drawing.Size(549, 398);
+            this.stPanel1.TabIndex = 15;
+            // 
+            // stTabControl1
+            // 
+            this.stTabControl1.Controls.Add(this.tabPage1);
+            this.stTabControl1.Controls.Add(this.tabPage2);
+            this.stTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stTabControl1.Location = new System.Drawing.Point(0, 0);
+            this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
+            this.stTabControl1.Name = "stTabControl1";
+            this.stTabControl1.SelectedIndex = 0;
+            this.stTabControl1.Size = new System.Drawing.Size(549, 398);
+            this.stTabControl1.TabIndex = 15;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.splitContainer1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(541, 369);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Editor";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.listViewCustom1);
+            this.splitContainer1.Size = new System.Drawing.Size(535, 363);
+            this.splitContainer1.SplitterDistance = 178;
+            this.splitContainer1.TabIndex = 14;
+            // 
+            // treeView1
+            // 
+            this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.Location = new System.Drawing.Point(0, 0);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(178, 363);
+            this.treeView1.TabIndex = 0;
+            this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.BeforeExpand);
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            // 
             // listViewCustom1
             // 
             this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -200,55 +250,6 @@
             this.columnHeader3.Text = "Data";
             this.columnHeader3.Width = 146;
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.listViewCustom1);
-            this.splitContainer1.Size = new System.Drawing.Size(535, 363);
-            this.splitContainer1.SplitterDistance = 178;
-            this.splitContainer1.TabIndex = 14;
-            // 
-            // stPanel1
-            // 
-            this.stPanel1.Controls.Add(this.stTabControl1);
-            this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stPanel1.Location = new System.Drawing.Point(0, 0);
-            this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(549, 398);
-            this.stPanel1.TabIndex = 15;
-            // 
-            // stTabControl1
-            // 
-            this.stTabControl1.Controls.Add(this.tabPage1);
-            this.stTabControl1.Controls.Add(this.tabPage2);
-            this.stTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stTabControl1.Location = new System.Drawing.Point(0, 0);
-            this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
-            this.stTabControl1.Name = "stTabControl1";
-            this.stTabControl1.SelectedIndex = 0;
-            this.stTabControl1.Size = new System.Drawing.Size(549, 398);
-            this.stTabControl1.TabIndex = 15;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.splitContainer1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(541, 369);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Editor";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.btnToXml);
@@ -280,7 +281,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.stPanel2.Location = new System.Drawing.Point(6, 35);
             this.stPanel2.Name = "stPanel2";
-            this.stPanel2.Size = new System.Drawing.Size(183, 30);
+            this.stPanel2.Size = new System.Drawing.Size(0, 0);
             this.stPanel2.TabIndex = 1;
             // 
             // btnXmlToByaml
@@ -301,9 +302,10 @@
             this.editToolStripMenuItem,
             this.renameToolStripMenuItem,
             this.deleteToolStripMenuItem,
-            this.copyToolStripMenuItem});
+            this.copyToolStripMenuItem,
+            this.copyDataAsTextToolStripMenuItem});
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(181, 136);
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(181, 158);
             // 
             // addItemToolStripMenuItem
             // 
@@ -337,8 +339,15 @@
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.copyToolStripMenuItem.Text = "Copy as text";
+            this.copyToolStripMenuItem.Text = "Copy item as text";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
+            // copyDataAsTextToolStripMenuItem
+            // 
+            this.copyDataAsTextToolStripMenuItem.Name = "copyDataAsTextToolStripMenuItem";
+            this.copyDataAsTextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyDataAsTextToolStripMenuItem.Text = "Copy data as text";
+            this.copyDataAsTextToolStripMenuItem.Click += new System.EventHandler(this.copyDataAsTextToolStripMenuItem_Click);
             // 
             // ByamlEditor
             // 
@@ -349,13 +358,13 @@
             this.Size = new System.Drawing.Size(549, 398);
             this.Load += new System.EventHandler(this.ByamlViewer_Load);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.stPanel1.ResumeLayout(false);
+            this.stTabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.stPanel1.ResumeLayout(false);
-            this.stTabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.stContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -394,5 +403,6 @@
         private Toolbox.Library.Forms.STPanel stPanel2;
         private Toolbox.Library.Forms.STButton btnToXml;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyDataAsTextToolStripMenuItem;
     }
 }

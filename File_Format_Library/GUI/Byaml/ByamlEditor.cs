@@ -591,6 +591,30 @@ namespace FirstPlugin
             Clipboard.SetText(listViewCustom1.SelectedItems[0].Text);
         }
 
+        private void copyDataAsTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (listViewCustom1.SelectedItems.Count <= 0)
+                return;
+
+            if (listViewCustom1.SelectedItems.Count <= 0)
+                return;
+
+            var target = listViewCustom1.SelectedItems[0].Tag as EditableNode;
+            var value = target.Get();
+            if (value is string)
+                Clipboard.SetText((string)value);
+            else
+            {
+                try{
+                    Clipboard.SetText(value.ToString());
+                }
+                catch
+                {
+
+                }
+            }
+        }
+
         private void deleteNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (treeView1.SelectedNode == null)

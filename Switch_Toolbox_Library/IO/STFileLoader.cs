@@ -76,7 +76,7 @@ namespace Toolbox.Library.IO
                     if (fileFormat.Identify(stream) && fileFormat.GetType() == type)
                     {
                         fileFormat.IFileInfo = new IFileInfo();
-                        return OpenFileFormat(new MemoryStream(data), FileName);
+                        return OpenFileFormat(stream, FileName);
                     }
                 }
             }
@@ -209,7 +209,6 @@ namespace Toolbox.Library.IO
             {
                 Console.WriteLine(ex.ToString());
             }
-
 
             stream.Position = streamStartPos;
             foreach (IFileFormat fileFormat in FileManager.GetFileFormats())
