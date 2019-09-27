@@ -109,7 +109,7 @@ namespace Bfres.Structs
 
         public void UpdateEditor() {
 
-            ((BFRES)Parent.Parent.Parent).LoadEditors(this);
+            ((BFRES)Parent?.Parent?.Parent)?.LoadEditors(this);
         }
 
         public override string ExportFilter => FileFilters.GetFilter(typeof(FSKA),null, true);

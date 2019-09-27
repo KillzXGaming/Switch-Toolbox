@@ -76,7 +76,7 @@ namespace Bfres.Structs
         public override void OnClick(TreeView treeView) => UpdateEditor();
 
         public void UpdateEditor(){
-            ((BFRES)Parent.Parent.Parent).LoadEditors(this);
+            ((BFRES)Parent?.Parent?.Parent)?.LoadEditors(this);
         }
 
         public override void Export(string FileName)

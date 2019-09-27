@@ -1326,8 +1326,7 @@ namespace Bfres.Structs
         }
 
         public void UpdateEditor(){
-            if (Parent != null)
-                ((BFRES)Parent.Parent).LoadEditors(this);
+            ((BFRES)Parent?.Parent)?.LoadEditors(this);
         }
 
         private void CreateSkeleton()
