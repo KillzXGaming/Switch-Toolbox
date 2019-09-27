@@ -141,6 +141,12 @@ namespace Toolbox.Library.Forms
 
         public bool ShowChannelEditor = true;
 
+        public void ResetMenus()
+        {
+            fileToolStripMenuItem.DropDownItems.Clear();
+            fileToolStripMenuItem.DropDownItems.Add(exportToolStripMenuItem);  
+        }
+
         public void AddFileContextEvent(string Name, EventHandler eventHandler, bool Checked = false)
         {
             if (Name == "Save")

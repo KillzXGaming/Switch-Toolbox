@@ -589,8 +589,6 @@ namespace Bfres.Structs
             surf.swizzle = texture.Swizzle;
             surf.numArray = texture.ArrayLength;
 
-
-
             if (Tex2Swizzle != 0)
                 surf.mip_swizzle = Tex2Swizzle;
 

@@ -107,6 +107,7 @@ namespace FirstPlugin
 
                 form.Text = Text;
                 form.Dock = DockStyle.Fill;
+                form.ResetMenus();
                 form.AddFileContextEvent("Save", Save);
                 form.AddFileContextEvent("Replace", Replace);
                 form.LoadProperties(prop);
