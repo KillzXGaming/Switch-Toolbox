@@ -44,7 +44,7 @@ namespace Toolbox.Library
             stream.Position = startPosition;
 
             var mem = new System.IO.MemoryStream();
-            using (GZipStream source = new GZipStream(stream, CompressionMode.Decompress, false))
+            using (GZipStream source = new GZipStream(stream, CompressionMode.Decompress, true))
             {
                 source.CopyTo(mem);
             }   
