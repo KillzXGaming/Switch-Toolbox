@@ -1360,6 +1360,7 @@ namespace LayoutBXLYT.Cafe
                             else if (Utils.GetExtension(file) == ".bflyt")
                             {
                                 var openedFile = STFileLoader.OpenFileFormat(file);
+                                if (openedFile == null) continue;
 
                                 openedFile.IFileInfo = new IFileInfo();
                                 openedFile.IFileInfo.ArchiveParent = fileFormat.IFileInfo.ArchiveParent;

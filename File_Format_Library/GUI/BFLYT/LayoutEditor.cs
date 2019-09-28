@@ -126,19 +126,29 @@ namespace LayoutBXLYT
             LayoutFiles.Add(header);
             ActiveLayout = header;
 
-            if (ActiveViewport == null)
-            {
-                LayoutViewer Viewport = new LayoutViewer(this,header, Textures);
-                Viewport.DockContent = new DockContent();
-                Viewport.DockContent.Controls.Add(Viewport);
-                Viewport.Dock = DockStyle.Fill;
-                Viewport.DockContent.Show(dockPanel1, DockState.Document);
-                Viewport.DockContent.DockHandler.AllowEndUserDocking = false;
-                Viewports.Add(Viewport);
-                ActiveViewport = Viewport;
-            }
-            else
-                ActiveViewport.LoadLayout(header);
+            LayoutViewer Viewport = new LayoutViewer(this, header, Textures);
+            Viewport.DockContent = new DockContent();
+            Viewport.DockContent.Text = header.FileName;
+            Viewport.DockContent.Controls.Add(Viewport);
+            Viewport.Dock = DockStyle.Fill;
+            Viewport.DockContent.Show(dockPanel1, DockState.Document);
+            Viewport.DockContent.DockHandler.AllowEndUserDocking = false;
+            Viewports.Add(Viewport);
+            ActiveViewport = Viewport;
+
+            /*    if (ActiveViewport == null)
+                {
+                    LayoutViewer Viewport = new LayoutViewer(this,header, Textures);
+                    Viewport.DockContent = new DockContent();
+                    Viewport.DockContent.Controls.Add(Viewport);
+                    Viewport.Dock = DockStyle.Fill;
+                    Viewport.DockContent.Show(dockPanel1, DockState.Document);
+                    Viewport.DockContent.DockHandler.AllowEndUserDocking = false;
+                    Viewports.Add(Viewport);
+                    ActiveViewport = Viewport;
+                }
+                else
+                    ActiveViewport.LoadLayout(header);*/
 
             orthographicViewToolStripMenuItem.Checked = Runtime.LayoutEditor.UseOrthographicView;
 
