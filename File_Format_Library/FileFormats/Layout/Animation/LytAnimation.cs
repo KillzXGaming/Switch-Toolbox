@@ -16,6 +16,11 @@ namespace LayoutBXLYT
 
         public List<string> Textures = new List<string>();
 
+        public void UpdateLayout(BxlytHeader heeader)
+        {
+            parentLayout = heeader;
+        }
+
         public override void Reset()
         {
             if (parentLayout == null) return;

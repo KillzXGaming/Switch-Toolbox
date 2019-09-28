@@ -455,14 +455,23 @@ namespace LayoutBXLYT
 
         private void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
         {
-            var dockContent = dockPanel1.ActiveDocument as LayoutViewer;
-            if (dockContent != null)
-            {
-                var file = (dockContent).LayoutFile;
-                ReloadEditors(file);
-                ActiveViewport = dockContent;
+            var dockContent = dockPanel1.ActiveDocument as DockContent;
+            if (dockContent == null) return;
 
-                dockContent.UpdateViewport();
+            LayoutViewer viewer = null;
+            foreach (var control in dockContent.Controls)
+                if (control is LayoutViewer)
+                    viewer = control as LayoutViewer;
+
+            if (viewer != null)
+            {
+                var file = viewer.LayoutFile;
+                ActiveLayout = file;
+                ReloadEditors(file);
+                ActiveViewport = viewer;
+                viewer.UpdateViewport();
+
+                Console.WriteLine("changed " + ActiveLayout.FileName);
             }
         }
 
