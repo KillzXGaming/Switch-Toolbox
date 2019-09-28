@@ -12,6 +12,11 @@ namespace Toolbox.Library
 {
    public class Utils
     {
+        public static bool CompareNoExtension(string a, string b)
+        {
+            return (Path.GetFileNameWithoutExtension(a) == Path.GetFileNameWithoutExtension(b));
+        }
+
         public static byte[] CreateMD5Hash(string filename)
         {
             using (var md5 = System.Security.Cryptography.MD5.Create())

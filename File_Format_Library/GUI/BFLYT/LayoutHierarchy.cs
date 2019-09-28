@@ -90,12 +90,15 @@ namespace LayoutBXLYT
             treeView1.BeginUpdate();
             foreach (var file in parentArchive.Files)
             {
-                if (Utils.GetExtension(file.FileName) == ".bflan") {
+                if (Utils.GetExtension(file.FileName) == ".brlan" ||
+                    Utils.GetExtension(file.FileName) == ".bclan" ||
+                    Utils.GetExtension(file.FileName) == ".bflan") {
                     LoadAnimation(file);
                 }
             }
 
             treeView1.EndUpdate();
+            treeView1.Sort();
 
             isLoaded = true;
         }
@@ -124,7 +127,7 @@ namespace LayoutBXLYT
             isLoaded = false;
         }
 
-        private void LoadAnimations(BxlanHeader bxlan, TreeNode root, bool LoadRoot = true)
+        public void LoadAnimations(BxlanHeader bxlan, TreeNode root, bool LoadRoot = true)
         {
             if (LoadRoot)
                 treeView1.Nodes.Add(root);
@@ -420,18 +423,7 @@ namespace LayoutBXLYT
             //Allows for faster loading
             if (e.Node.Tag is ArchiveFileInfo)
             {
-                e.Node.Nodes.Clear();
 
-                var archiveNode = e.Node.Tag as ArchiveFileInfo;
-                var fileFormat = archiveNode.OpenFile();
-
-                //Update the tag so this doesn't run again
-                e.Node.Tag = "Expanded";
-
-                if (fileFormat != null && fileFormat is BFLAN) {
-                    LoadAnimations(((BFLAN)fileFormat).header, e.Node, false);
-                    ParentEditor.AnimationFiles.Add(((BFLAN)fileFormat).header);
-                }
             }
         }
     }

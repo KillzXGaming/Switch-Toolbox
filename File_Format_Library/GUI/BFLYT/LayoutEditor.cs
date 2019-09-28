@@ -25,6 +25,10 @@ namespace LayoutBXLYT
         /// </summary>
         public static bool UseLegacyGL = true;
 
+        public LayoutViewer GamePreviewWindow;
+
+        private LayoutCustomPaneMapper CustomMapper;
+
         private Dictionary<string, STGenericTexture> Textures;
 
         public List<BxlytHeader> LayoutFiles = new List<BxlytHeader>();
@@ -45,6 +49,7 @@ namespace LayoutBXLYT
         public LayoutEditor()
         {
             InitializeComponent();
+            CustomMapper = new LayoutCustomPaneMapper();
 
             Textures = new Dictionary<string, STGenericTexture>();
 
@@ -67,6 +72,7 @@ namespace LayoutBXLYT
             displayWindowPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayWindowPane;
             renderInGamePreviewToolStripMenuItem.Checked = Runtime.LayoutEditor.IsGamePreview;
             displayGridToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayGrid;
+            displayTextPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayTextPane;
 
             ObjectSelected += OnObjectSelected;
             ObjectChanged += OnObjectChanged;
@@ -85,25 +91,63 @@ namespace LayoutBXLYT
         private LayoutProperties LayoutProperties;
         private LayoutTextDocked TextConverter;
         private LayoutPartsEditor LayoutPartsEditor;
+        private STAnimationPanel AnimationPanel;
 
         private bool isLoaded = false;
         public void LoadBxlyt(BxlytHeader header)
         {
+         /*   if (PluginRuntime.BxfntFiles.Count > 0)
+            {
+                var result = MessageBox.Show("Found font files opened. Would you like to save character images to disk? " +
+                    "(Allows for faster loading and won't need to be reopened)", "Layout Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    var cacheDir = $"{Runtime.ExecutableDir}/Cached/Font";
+                    if (!System.IO.Directory.Exists(cacheDir))
+                        System.IO.Directory.CreateDirectory(cacheDir);
+
+                    foreach (var bffnt in PluginRuntime.BxfntFiles)
+                    {
+                        if (!System.IO.Directory.Exists($"{cacheDir}/{bffnt.Name}"))
+                            System.IO.Directory.CreateDirectory($"{cacheDir}/{bffnt.Name}");
+
+                        var fontBitmap = bffnt.GetBitmapFont(true);
+                        foreach (var character in fontBitmap.Characters)
+                        {
+                            var charaMap = character.Value;
+                            charaMap.CharBitmap.Save($"{cacheDir}/{bffnt.Name}/cmap_{Convert.ToUInt16(character.Key).ToString("x2")}_{charaMap.CharWidth}_{charaMap.GlyphWidth}_{charaMap.LeftOffset}.png");
+                        }
+
+                        fontBitmap.Dispose();
+                    }
+                }
+            }*/
+
             LayoutFiles.Add(header);
             ActiveLayout = header;
 
-            LayoutViewer Viewport = new LayoutViewer(header, Textures);
-            Viewport.Dock = DockStyle.Fill;
-            Viewport.Show(dockPanel1, DockState.Document);
-            Viewport.DockHandler.AllowEndUserDocking = false;
-            Viewports.Add(Viewport);
-            ActiveViewport = Viewport;
-            ActiveViewport.UseOrtho = orthographicViewToolStripMenuItem.Checked;
+            if (ActiveViewport == null)
+            {
+                LayoutViewer Viewport = new LayoutViewer(this,header, Textures);
+                Viewport.DockContent = new DockContent();
+                Viewport.DockContent.Controls.Add(Viewport);
+                Viewport.Dock = DockStyle.Fill;
+                Viewport.DockContent.Show(dockPanel1, DockState.Document);
+                Viewport.DockContent.DockHandler.AllowEndUserDocking = false;
+                Viewports.Add(Viewport);
+                ActiveViewport = Viewport;
+            }
+            else
+                ActiveViewport.LoadLayout(header);
+
+            orthographicViewToolStripMenuItem.Checked = Runtime.LayoutEditor.UseOrthographicView;
 
             if (!isLoaded)
                 InitializeDockPanels();
 
             AnimLayoutHierarchy?.SearchAnimations(header, ObjectSelected);
+
+            CustomMapper.LoadMK8DCharaSelect(Textures, header);
 
             isLoaded = true;
         }
@@ -128,6 +172,7 @@ namespace LayoutBXLYT
             ShowPaneHierarchy();
             ShowPropertiesPanel();
             UpdateBackColor();
+            ShowAnimationPanel();
         }
 
         private void ResetEditors()
@@ -180,6 +225,19 @@ namespace LayoutBXLYT
         {
             if (isChecked) return;
 
+            if (AnimationPanel != null)
+            {
+                if (e is TreeViewEventArgs)
+                {
+                    var node = ((TreeViewEventArgs)e).Node;
+                    if (node.Tag is ArchiveFileInfo) {
+                        UpdateAnimationNode(node);
+                    }
+
+                    if (node.Tag is BxlanHeader)
+                        UpdateAnimationPlayer((BxlanHeader)node.Tag);
+                }
+            }
             if (LayoutProperties != null && (string)sender == "Select")
             {
                 ActiveViewport?.SelectedPanes.Clear();
@@ -210,6 +268,25 @@ namespace LayoutBXLYT
             }
         }
 
+        private void UpdateAnimationNode(TreeNode node)
+        {
+            node.Nodes.Clear();
+
+            var archiveNode = node.Tag as ArchiveFileInfo;
+            var fileFormat = archiveNode.OpenFile();
+
+            //Update the tag so this doesn't run again
+            node.Tag = "Expanded";
+
+            if (fileFormat != null && fileFormat is BXLAN)
+            {
+                node.Tag = ((BXLAN)fileFormat).BxlanHeader;
+
+                LayoutHierarchy.LoadAnimations(((BXLAN)fileFormat).BxlanHeader, node, false);
+                AnimationFiles.Add(((BXLAN)fileFormat).BxlanHeader);
+            }
+        }
+
         private void ToggleChildern(TreeNode node, bool isChecked)
         {
             if (node.Tag is BasePane)
@@ -220,9 +297,17 @@ namespace LayoutBXLYT
                 ToggleChildern(child, isChecked);
         }
 
-        public void InitalizeEditors()
+        private void UpdateAnimationPlayer(BxlanHeader animHeader)
         {
+            if (AnimationPanel == null) return;
 
+            if (ActiveLayout != null)
+            {
+                AnimationPanel.Reset();
+                AnimationPanel.AddAnimation(animHeader.ToGenericAnimation(ActiveLayout), true);
+                //   foreach (var anim in AnimationFiles)
+                //     AnimationPanel.AddAnimation(anim.ToGenericAnimation(ActiveLayout), false);
+            }
         }
 
         private void LayoutEditor_ParentChanged(object sender, EventArgs e)
@@ -287,6 +372,21 @@ namespace LayoutBXLYT
             LayoutTextureList.Text = "Texture List";
             LayoutTextureList.LoadTextures(ActiveLayout);
             LayoutTextureList.Show(dockPanel1, DockState.DockRight);
+        }
+
+        public void ShowAnimationPanel()
+        {
+            DockContent dockContent = new DockContent();
+            AnimationPanel = new STAnimationPanel();
+            AnimationPanel.Dock = DockStyle.Fill;
+            AnimationPanel.SetViewport(ActiveViewport.GetGLControl());
+            dockContent.Controls.Add(AnimationPanel);
+            LayoutTextureList.Show(dockPanel1, DockState.DockRight);
+
+            if (ActiveViewport != null)
+                dockContent.Show(ActiveViewport.Pane, DockAlignment.Bottom, 0.2);
+            else
+                dockContent.Show(dockPanel1, DockState.DockBottom);
         }
 
         private void stComboBox1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -569,7 +669,7 @@ namespace LayoutBXLYT
         {
             if (fileFormat.CanSave)
             {
-                if (fileFormat.IFileInfo != null && 
+                if (fileFormat.IFileInfo != null &&
                     fileFormat.IFileInfo.ArchiveParent != null && !ForceDialog)
                 {
                     if (fileFormat is IEditorFormParameters)
@@ -622,7 +722,7 @@ namespace LayoutBXLYT
                 orthographicViewToolStripMenuItem.Checked = false;
             else
                 orthographicViewToolStripMenuItem.Checked = true;
-            
+
             ToggleOrthMode();
         }
 
@@ -630,12 +730,12 @@ namespace LayoutBXLYT
         {
             if (ActiveViewport != null)
             {
-                if (orthographicViewToolStripMenuItem.Checked)
+                if (!orthographicViewToolStripMenuItem.Checked)
                     toolstripOrthoBtn.Image = BitmapExtension.GrayScale(FirstPlugin.Properties.Resources.OrthoView);
                 else
                     toolstripOrthoBtn.Image = FirstPlugin.Properties.Resources.OrthoView;
 
-                ActiveViewport.UseOrtho = orthographicViewToolStripMenuItem.Checked;
+                Runtime.LayoutEditor.UseOrthographicView = orthographicViewToolStripMenuItem.Checked; 
                 ActiveViewport.ResetCamera();
                 ActiveViewport.UpdateViewport();
             }
@@ -654,6 +754,7 @@ namespace LayoutBXLYT
             Runtime.LayoutEditor.DisplayBoundryPane = displayyBoundryPanesToolStripMenuItem.Checked;
             Runtime.LayoutEditor.DisplayPicturePane = displayPicturePanesToolStripMenuItem.Checked;
             Runtime.LayoutEditor.DisplayWindowPane = displayWindowPanesToolStripMenuItem.Checked;
+            Runtime.LayoutEditor.DisplayTextPane = displayTextPanesToolStripMenuItem.Checked;
 
             ActiveViewport?.UpdateViewport();
         }
@@ -668,6 +769,32 @@ namespace LayoutBXLYT
         {
             Runtime.LayoutEditor.DisplayGrid = displayGridToolStripMenuItem.Checked;
             ActiveViewport?.UpdateViewport();
+        }
+
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AnimationPanel?.Reset();
+            ActiveViewport?.UpdateViewport();
+        }
+
+        private void showGameWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (GamePreviewWindow == null || GamePreviewWindow.Disposing || GamePreviewWindow.IsDisposed)
+            {
+                GamePreviewWindow = new LayoutViewer(this,ActiveLayout, Textures);
+                GamePreviewWindow.GameWindow = true;
+                GamePreviewWindow.Dock = DockStyle.Fill;
+                STForm form = new STForm();
+                form.Text = "Game Preview";
+                form.AddControl(GamePreviewWindow);
+                form.Show();
+            }
+        }
+
+        private void LayoutEditor_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GamePreviewWindow?.OnControlClosing();
+            GamePreviewWindow?.Dispose();
         }
     }
 }

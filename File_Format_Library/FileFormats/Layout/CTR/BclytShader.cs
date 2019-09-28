@@ -35,10 +35,22 @@ namespace LayoutBXLYT
             SetVec2("uvScale0", new Vector2(1, 1));
             SetFloat("uvRotate0", 0);
             SetVec2("uvTranslate0", new Vector2(0, 0));
+
+            var rotationMatrix = Matrix4.Identity;
+            SetMatrix("rotationMatrix", ref rotationMatrix);
+            SetInt($"texCoords0GenType", 0);
+            SetInt($"texCoords0Source", 0);
         }
 
-        public void SetMaterials(Dictionary<string, STGenericTexture> textures)
+        public void SetMaterials(BasePane pane, Dictionary<string, STGenericTexture> textures)
         {
+            Matrix4 rotationX = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(pane.Rotate.X));
+            Matrix4 rotationY = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(pane.Rotate.Y));
+            Matrix4 rotationZ = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(pane.Rotate.Z));
+            var rotationMatrix = rotationX * rotationY * rotationZ;
+
+            SetMatrix("rotationMatrix", ref rotationMatrix);
+
             SetColor("whiteColor", material.TevConstantColors[0].Color);
             SetColor("blackColor", material.TevColor.Color);
             SetInt("debugShading", (int)Runtime.LayoutEditor.Shading);
@@ -48,6 +60,8 @@ namespace LayoutBXLYT
             SetVec2("uvTranslate0", new Vector2(0, 0));
             SetInt("flipTexture", 0);
             SetBool("ThresholdingAlphaInterpolation", material.ThresholdingAlphaInterpolation);
+            SetInt($"texCoords0GenType", 0);
+            SetInt($"texCoords0Source", 0);
 
             BindTextureUniforms();
 

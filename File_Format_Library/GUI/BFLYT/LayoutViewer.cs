@@ -16,7 +16,7 @@ using LayoutBXLYT.Cafe;
 
 namespace LayoutBXLYT
 {
-    public partial class LayoutViewer : LayoutDocked
+    public partial class LayoutViewer : LayoutControlDocked
     {
         public List<BasePane> SelectedPanes = new List<BasePane>();
 
@@ -24,12 +24,16 @@ namespace LayoutBXLYT
 
         public class Camera2D
         {
+            public Matrix4 ModelViewMatrix = Matrix4.Identity;
             public float Zoom = 1;
             public Vector2 Position;
         }
 
+        private LayoutEditor ParentEditor;
+
         private RenderableTex backgroundTex;
         public BxlytHeader LayoutFile;
+        public List<BxlytHeader> LayoutFiles = new List<BxlytHeader>();
         private Dictionary<string, STGenericTexture> Textures;
 
         private void glControl1_Load(object sender, EventArgs e)
@@ -47,31 +51,44 @@ namespace LayoutBXLYT
             UpdateViewport();
         }
 
-        public LayoutViewer(BxlytHeader bxlyt, Dictionary<string, STGenericTexture> textures)
+        public GLControl GetGLControl() => glControl1;
+
+        public LayoutViewer(LayoutEditor editor, BxlytHeader bxlyt, Dictionary<string, STGenericTexture> textures)
         {
             InitializeComponent();
-            LayoutFile = bxlyt;
+
+            ParentEditor = editor;
+
             Text = bxlyt.FileName;
 
             Textures = textures;
+            LoadLayout(bxlyt);
+        }
+
+        public void LoadLayout(BxlytHeader bxlyt)
+        {
+            LayoutFile = bxlyt;
+            LayoutFiles.Add(bxlyt);
+
             if (bxlyt.Textures.Count > 0)
             {
-                Textures = bxlyt.GetTextures;
+                var textures = bxlyt.GetTextures;
+                foreach (var tex in textures)
+                    if (!Textures.ContainsKey(tex.Key))
+                        Textures.Add(tex.Key, tex.Value);
             }
         }
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
+        public override void OnControlClosing()
         {
-            base.OnFormClosing(e);
-            return;
-
-            var result = MessageBox.Show("Are you sure you want to close this file? You will lose any unsaved progress!", "Layout Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result != DialogResult.Yes)
-                e.Cancel = true;
-            else
-                LayoutFile.Dispose();
-
-            base.OnFormClosing(e);
+            foreach (var tex in LayoutFile.Textures)
+            {
+                if (Textures.ContainsKey(tex))
+                {
+                    Textures[tex].DisposeRenderable();
+                    Textures.Remove(tex);
+                }
+            }
         }
 
         public void UpdateViewport()
@@ -88,29 +105,81 @@ namespace LayoutBXLYT
             OnRender();
         }
 
-        public bool UseOrtho = true;
+        private BxlytShader GlobalShader;
+        public bool GameWindow = false;
+        public bool UseOrtho => Runtime.LayoutEditor.UseOrthographicView;
         private Color BackgroundColor => Runtime.LayoutEditor.BackgroundColor;
         private void OnRender()
         {
             if (LayoutFile == null) return;
+
+            if (!GameWindow)
+            {
+                if (ParentEditor != null)
+                    ParentEditor.GamePreviewWindow?.UpdateViewport();
+            }
+
+            if (GameWindow)
+                RenderGameWindow();
+            else
+                RenderEditor();
+        }
+
+        private void RenderGameWindow()
+        {
+            int WindowWidth = (int)LayoutFile.RootPane.Width;
+            int WindowHeight = (int)LayoutFile.RootPane.Height;
 
             GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             if (UseOrtho)
             {
-                GL.Ortho(-(glControl1.Width / 2.0f), glControl1.Width / 2.0f, glControl1.Height / 2.0f, -(glControl1.Height / 2.0f), -10000, 10000);
+                float halfW = WindowWidth, halfH = WindowHeight;
+                var orthoMatrix = Matrix4.CreateOrthographic(halfW, halfH, -10000, 10000);
+                GL.LoadMatrix(ref orthoMatrix);
                 GL.MatrixMode(MatrixMode.Modelview);
-                GL.LoadIdentity();
+                Camera.ModelViewMatrix = orthoMatrix;
+            }
+            else
+            {
+                var cameraPosition = new Vector3(0, 0, -600);
+                var perspectiveMatrix = Matrix4.CreateTranslation(cameraPosition) * Matrix4.CreatePerspectiveFieldOfView(1.3f, WindowWidth / WindowHeight, 0.01f, 100000);
+                GL.LoadMatrix(ref perspectiveMatrix);
+                GL.MatrixMode(MatrixMode.Modelview);
+                Camera.ModelViewMatrix = perspectiveMatrix;
+            }
+
+            RenderScene();
+        }
+
+        private void RenderEditor()
+        {
+            GL.Viewport(0, 0, glControl1.Width, glControl1.Height);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            if (UseOrtho)
+            {
+                float halfW = glControl1.Width / 2.0f, halfH = glControl1.Height / 2.0f;
+                var orthoMatrix = Matrix4.CreateOrthographic(halfW, halfH, -10000, 10000);
+                GL.LoadMatrix(ref orthoMatrix);
+                GL.MatrixMode(MatrixMode.Modelview);
+                Camera.ModelViewMatrix = orthoMatrix;
             }
             else
             {
                 var cameraPosition = new Vector3(Camera.Position.X, Camera.Position.Y, -(Camera.Zoom * 500));
-                var perspectiveMatrix = Matrix4.CreateTranslation(cameraPosition) * Matrix4.CreatePerspectiveFieldOfView(1.3f, glControl1.Width / (float)glControl1.Height, 0.01f, 100000);
+                var perspectiveMatrix = Matrix4.CreateTranslation(cameraPosition) * Matrix4.CreatePerspectiveFieldOfView(1.3f, glControl1.Width / glControl1.Height, 0.01f, 100000);
                 GL.LoadMatrix(ref perspectiveMatrix);
                 GL.MatrixMode(MatrixMode.Modelview);
+                Camera.ModelViewMatrix = perspectiveMatrix;
             }
 
+            RenderScene();
+        }
+
+        private void RenderScene()
+        {
             GL.ClearColor(BackgroundColor);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -122,21 +191,32 @@ namespace LayoutBXLYT
             GL.Enable(EnableCap.ColorMaterial);
             GL.Enable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.BlendEquation(BlendEquationMode.FuncAdd);
 
-            if (UseOrtho)
+            if (UseOrtho && !GameWindow)
             {
                 GL.PushMatrix();
-                GL.Scale(1 * Camera.Zoom, -1 * Camera.Zoom, 1);
+                GL.Scale(Camera.Zoom, Camera.Zoom, 1);
                 GL.Translate(Camera.Position.X, Camera.Position.Y, 0);
             }
 
-            DrawRootPane(LayoutFile.RootPane);
-            DrawGrid();
-            DrawXyLines();
+            if (!GameWindow)
+            {
+                DrawRootPane(LayoutFile.RootPane);
+                DrawGrid();
+                DrawXyLines();
+            }
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
-            RenderPanes(LayoutFile.RootPane, true, 255, false, null, 0);
+            if (GlobalShader == null)
+            {
+                GlobalShader = new BxlytShader();
+                GlobalShader.Compile();
+            }
+
+            foreach (var layout in LayoutFiles)
+                RenderPanes(GlobalShader, layout.RootPane, true, 255, false, null, 0);
 
             if (UseOrtho)
                 GL.PopMatrix();
@@ -146,9 +226,10 @@ namespace LayoutBXLYT
             glControl1.SwapBuffers();
         }
 
-        private void RenderPanes(BasePane pane, bool isRoot, byte parentAlpha, bool parentAlphaInfluence, BasePane partPane = null, int stage = 0)
+        private bool test = true;
+        private void RenderPanes(BxlytShader shader, BasePane pane, bool isRoot, byte parentAlpha, bool parentAlphaInfluence, BasePane partPane = null, int stage = 0)
         {
-            if (!pane.DisplayInEditor)
+            if (!pane.DisplayInEditor || !pane.animController.Visibile)
                 return;
 
             GL.PushMatrix();
@@ -162,73 +243,106 @@ namespace LayoutBXLYT
                 GL.Rotate(pane.Rotate.Z, 0, 0, 1);
                 GL.Scale(pane.Scale.X, pane.Scale.Y, 1);
 
-                if (pane is BFLYT.PAN1)
-                    DrawDefaultPane((BFLYT.PAN1)pane);
-                else if (pane is BCLYT.PAN1)
-                    DrawDefaultPane((BCLYT.PAN1)pane);
-                else if (pane is BRLYT.PAN1)
-                    DrawDefaultPane((BRLYT.PAN1)pane);
+                DrawDefaultPane(shader, pane, true);
 
                 GL.PopMatrix();
             }
 
+
+            var translate = pane.Translate;
+            var rotate = pane.Rotate;
+            var scale = pane.Scale;
+
+            foreach (var animItem in pane.animController.PaneSRT)
+            {
+                switch (animItem.Key)
+                {
+                    case LPATarget.RotateX: rotate.X = animItem.Value; break;
+                    case LPATarget.RotateY: rotate.Y = animItem.Value; break;
+                    case LPATarget.RotateZ: rotate.Z = animItem.Value; break;
+                    case LPATarget.ScaleX: scale.X = animItem.Value; break;
+                    case LPATarget.ScaleY: scale.Y = animItem.Value; break;
+                    case LPATarget.TranslateX: translate.X = animItem.Value; break;
+                    case LPATarget.TranslateY: translate.Y = animItem.Value; break;
+                    case LPATarget.TranslateZ: translate.Z = animItem.Value; break;
+                }
+            }
+
             if (partPane != null)
             {
-                var translate = partPane.Translate + pane.Translate;
-                var scale = partPane.Scale * pane.Scale;
-                var rotate = partPane.Rotate + pane.Rotate;
+                translate = translate + pane.Translate;
+                scale = scale * pane.Scale;
+                rotate = rotate + pane.Rotate;
+            }
 
-                GL.Translate(translate.X + translate.X, translate.Y, 0);
+            GL.Translate(translate.X, translate.Y, 0);
+
+            //Rotate normally unless the object uses shaders/materials
+            //Rotation matrix + shaders works accurately with X/Y rotation axis
+            //Todo, do everything by shaders
+            bool HasMaterials = pane is IWindowPane || pane is IPicturePane || pane is BFLYT.PRT1;
+            if (!HasMaterials)
+            {
                 GL.Rotate(rotate.X, 1, 0, 0);
                 GL.Rotate(rotate.Y, 0, 1, 0);
                 GL.Rotate(rotate.Z, 0, 0, 1);
-                GL.Scale(scale.X, scale.Y, 1);
-            }
-            else
-            {
-                /*Matrix4 translate = Matrix4.CreateTranslation(pane.Translate.X, pane.Translate.Y, 0);
-                Matrix4 rotateX = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(pane.Rotate.X));
-                Matrix4 rotateY = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(pane.Rotate.Y));
-                Matrix4 rotateZ = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(pane.Rotate.Z));
-                Matrix4 scale = Matrix4.CreateScale(pane.Scale.X, pane.Scale.Y, 0);
-                Matrix4 transform = scale * (rotateX * rotateY * rotateZ) * translate;*/
-
-                GL.Translate(pane.Translate.X, pane.Translate.Y, 0);
-                GL.Rotate(pane.Rotate.X, 1, 0, 0);
-                GL.Rotate(pane.Rotate.Y, 0, 1, 0);
-                GL.Rotate(pane.Rotate.Z, 0, 0, 1);
-                GL.Scale(pane.Scale.X, pane.Scale.Y, 1);
             }
 
-            byte effectiveAlpha = (byte)(parentAlpha == 255 ? pane.Alpha : (pane.Alpha * parentAlpha) / 255);
+            GL.Scale(scale.X, scale.Y, 1);
+
+            byte alpha = pane.Alpha;
+            if (pane.animController.PaneVertexColors.ContainsKey(LVCTarget.PaneAlpha))
+                alpha = (byte)pane.animController.PaneVertexColors[LVCTarget.PaneAlpha];
+
+            byte effectiveAlpha = (byte)(parentAlpha == 255 ? alpha : (alpha * parentAlpha) / 255);
             if (!parentAlphaInfluence)
-                effectiveAlpha = pane.Alpha;
+                effectiveAlpha = alpha;
 
             parentAlphaInfluence = parentAlphaInfluence || pane.InfluenceAlpha;
 
             if (!isRoot)
             {
-                if (pane is BFLYT.PIC1 || pane is BCLYT.PIC1 || pane is BRLYT.PIC1)
-                    BxlytToGL.DrawPictureBox(pane, effectiveAlpha, Textures);
+                if (pane is IPicturePane)
+                    BxlytToGL.DrawPictureBox(pane, GameWindow, effectiveAlpha, Textures);
                 else if (pane is IWindowPane)
-                    BxlytToGL.DrawWindowPane(pane, effectiveAlpha, Textures);
-                else if (pane is BFLYT.BND1 || pane is BCLYT.BND1 || pane is BRLYT.BND1)
-                    BxlytToGL.DrawBoundryPane(pane, effectiveAlpha, SelectedPanes);
+                    BxlytToGL.DrawWindowPane(pane, GameWindow, effectiveAlpha, Textures);
+                else if (pane is IBoundryPane)
+                    BxlytToGL.DrawBoundryPane(pane, GameWindow, effectiveAlpha, SelectedPanes);
+                else if (pane is ITextPane && Runtime.LayoutEditor.DisplayTextPane)
+                {
+                    var textPane = (ITextPane)pane;
+                    Bitmap bitmap = new Bitmap(32, 32);
+                    if (textPane.RenderableFont == null)
+                    {
+                        if (pane is BFLYT.TXT1)
+                        {
+                            foreach (var fontFile in FirstPlugin.PluginRuntime.BxfntFiles)
+                            {
+                                if (Utils.CompareNoExtension(fontFile.Name, textPane.FontName))
+                                {
+                                    bitmap = fontFile.GetBitmap(textPane.Text, false, pane);
+                                }
+                            }
+                        }
+                    }
+                    if (bitmap != null)
+                        BxlytToGL.DrawTextbox(pane, GameWindow, bitmap, effectiveAlpha, Textures, SelectedPanes, textPane.RenderableFont == null);
+                }
                 else if (pane is BFLYT.SCR1)
-                    BxlytToGL.DrawScissorPane(pane, effectiveAlpha, SelectedPanes);
+                    BxlytToGL.DrawScissorPane(pane, GameWindow, effectiveAlpha, SelectedPanes);
                 else if (pane is BFLYT.ALI1)
-                    BxlytToGL.DrawAlignmentPane(pane, effectiveAlpha, SelectedPanes);
+                    BxlytToGL.DrawAlignmentPane(pane, GameWindow, effectiveAlpha, SelectedPanes);
                 else if (pane is BFLYT.PRT1)
-                    DrawPartsPane((BFLYT.PRT1)pane, effectiveAlpha, parentAlphaInfluence);
+                    DrawPartsPane(shader, (BFLYT.PRT1)pane, effectiveAlpha, parentAlphaInfluence);
                 else
-                    DrawDefaultPane(pane);
+                    DrawDefaultPane(shader, pane);
             }
             else
                 isRoot = false;
 
             byte childAlpha = pane.InfluenceAlpha || parentAlphaInfluence ? effectiveAlpha : byte.MaxValue;
             foreach (var childPane in pane.Childern)
-                RenderPanes(childPane, isRoot, childAlpha, parentAlphaInfluence, partPane);
+                RenderPanes(shader, childPane, isRoot, childAlpha, parentAlphaInfluence, partPane);
 
             GL.PopMatrix();
         }
@@ -262,9 +376,9 @@ namespace LayoutBXLYT
             GL.End();
         }
 
-        private void DrawDefaultPane(BasePane pane)
+        private void DrawDefaultPane(BxlytShader shader, BasePane pane, bool isSelectionBox = false)
         {
-            if (!Runtime.LayoutEditor.DisplayNullPane || Runtime.LayoutEditor.IsGamePreview)
+            if (!Runtime.LayoutEditor.DisplayNullPane && !isSelectionBox || GameWindow || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
             Vector2[] TexCoords = new Vector2[] {
@@ -285,17 +399,17 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            BxlytToGL.DrawRectangle(pane, pane.Rectangle, TexCoords, Colors);
+            BxlytToGL.DrawRectangle(pane, GameWindow, pane.Rectangle, TexCoords, Colors);
         }
 
-        private void DrawPartsPane(BFLYT.PRT1 pane, byte effectiveAlpha, bool parentInfluenceAlpha)
+        private void DrawPartsPane(BxlytShader shader, BFLYT.PRT1 pane, byte effectiveAlpha, bool parentInfluenceAlpha)
         {
             pane.UpdateTextureData(this.Textures);
             var partPane = pane.GetExternalPane();
             if (partPane != null)
-                RenderPanes(partPane, true, effectiveAlpha, parentInfluenceAlpha);
+                RenderPanes(shader,partPane, true, effectiveAlpha, parentInfluenceAlpha);
             else
-                DrawDefaultPane(pane);
+                DrawDefaultPane(shader, pane);
 
             if (pane.Properties != null)
             {
@@ -303,7 +417,7 @@ namespace LayoutBXLYT
                 {
                     if (prop.Property != null)
                     {
-                        RenderPanes(prop.Property, false, effectiveAlpha, parentInfluenceAlpha || pane.InfluenceAlpha);
+                        RenderPanes(shader,prop.Property, false, effectiveAlpha, parentInfluenceAlpha || pane.InfluenceAlpha);
                     }
                 }
             }
@@ -376,7 +490,7 @@ namespace LayoutBXLYT
 
         private void DrawXyLines()
         {
-            if (Runtime.LayoutEditor.IsGamePreview)
+            if (GameWindow || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
             int lineLength = 20;
@@ -505,18 +619,6 @@ namespace LayoutBXLYT
                 originMouse = e.Location;
 
                 glControl1.Invalidate();
-            }
-        }
-
-        protected override void OnClosed(EventArgs e)
-        {
-            foreach (var tex in LayoutFile.Textures)
-            {
-                if (Textures.ContainsKey(tex))
-                {
-                    Textures[tex].DisposeRenderable();
-                    Textures.Remove(tex);
-                }
             }
         }
 

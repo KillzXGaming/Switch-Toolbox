@@ -2,12 +2,8 @@
 
 namespace LayoutBXLYT.Cafe
 {
-    public class IndirectParameter
+    public class IndirectParameter : BxlytIndTextureTransform
     {
-        public float Rotation { get; set; }
-        public float ScaleX { get; set; }
-        public float ScaleY { get; set; }
-
         public IndirectParameter(FileReader reader, BFLYT.Header header)
         {
             Rotation = reader.ReadSingle();

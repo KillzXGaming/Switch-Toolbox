@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
-using System.Threading.Tasks;
+using System.Drawing.Imaging;
 using OpenTK.Graphics.OpenGL;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using Toolbox.Library.Rendering;
 using OpenTK;
 using LayoutBXLYT.Cafe;
 
@@ -44,7 +45,7 @@ namespace LayoutBXLYT
             }
         }
 
-        public static void DrawPictureBox(BasePane pane, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
+        public static void DrawPictureBox(BasePane pane, bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
         {
             if (!Runtime.LayoutEditor.DisplayPicturePane)
                 return;
@@ -60,11 +61,15 @@ namespace LayoutBXLYT
             {
                 var pic1Pane = pane as Cafe.BFLYT.PIC1;
 
+                STColor8[] stColors = SetupVertexColors(pane,
+                     pic1Pane.ColorBottomRight, pic1Pane.ColorBottomLeft,
+                     pic1Pane.ColorTopLeft, pic1Pane.ColorTopRight);
+
                Color[] Colors = new Color[] {
-                    pic1Pane.ColorBottomRight.Color,
-                    pic1Pane.ColorBottomLeft.Color,
-                    pic1Pane.ColorTopLeft.Color,
-                    pic1Pane.ColorTopRight.Color,
+                    stColors[0].Color,
+                    stColors[1].Color,
+                    stColors[2].Color,
+                    stColors[3].Color,
                 };
 
                 var mat = pic1Pane.Material;
@@ -75,7 +80,7 @@ namespace LayoutBXLYT
                 }
 
                 mat.Shader.Enable();
-                ((BflytShader)mat.Shader).SetMaterials(Textures);
+                ((BflytShader)mat.Shader).SetMaterials(pic1Pane,Textures);
 
                 if (pic1Pane.TexCoords.Length > 0)
                 {
@@ -87,7 +92,7 @@ namespace LayoutBXLYT
                    };
                 }
 
-                DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
                 mat.Shader.Disable();
             }
@@ -110,7 +115,7 @@ namespace LayoutBXLYT
                 }
 
                 mat.Shader.Enable();
-                ((BclytShader)mat.Shader).SetMaterials(Textures);
+                ((BclytShader)mat.Shader).SetMaterials(pane,Textures);
 
                 if (pic1Pane.TexCoords.Length > 0)
                 {
@@ -122,7 +127,7 @@ namespace LayoutBXLYT
                    };
                 }
 
-                DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
                 mat.Shader.Disable();
             }
@@ -145,7 +150,7 @@ namespace LayoutBXLYT
                 }
 
                 mat.Shader.Enable();
-                ((BrlytShader)mat.Shader).SetMaterials(Textures);
+                ((BrlytShader)mat.Shader).SetMaterials(pane, Textures);
 
                 if (pic1Pane.TexCoords.Length > 0)
                 {
@@ -157,7 +162,7 @@ namespace LayoutBXLYT
                    };
                 }
 
-                DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
 
                 mat.Shader.Disable();
             }
@@ -168,9 +173,9 @@ namespace LayoutBXLYT
             GL.UseProgram(0);
         }
 
-        public static void DrawBoundryPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
+        public static void DrawBoundryPane(BasePane pane, bool gameWindow, byte effectiveAlpha, List<BasePane> SelectedPanes)
         {
-            if (!Runtime.LayoutEditor.DisplayBoundryPane || Runtime.LayoutEditor.IsGamePreview)
+            if (!Runtime.LayoutEditor.DisplayBoundryPane || gameWindow || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
             Vector2[] TexCoords = new Vector2[] {
@@ -193,13 +198,13 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            BxlytToGL.DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+            BxlytToGL.DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
         }
 
 
-        public static void DrawAlignmentPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
+        public static void DrawAlignmentPane(BasePane pane, bool gameWindow, byte effectiveAlpha, List<BasePane> SelectedPanes)
         {
-            if (!Runtime.LayoutEditor.DisplayAlignmentPane || Runtime.LayoutEditor.IsGamePreview)
+            if (!Runtime.LayoutEditor.DisplayAlignmentPane || gameWindow || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
 
@@ -223,12 +228,12 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            BxlytToGL.DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+            BxlytToGL.DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
         }
 
-        public static void DrawScissorPane(BasePane pane, byte effectiveAlpha, List<BasePane> SelectedPanes)
+        public static void DrawScissorPane(BasePane pane, bool gameWindow, byte effectiveAlpha, List<BasePane> SelectedPanes)
         {
-            if (!Runtime.LayoutEditor.DisplayScissorPane || Runtime.LayoutEditor.IsGamePreview)
+            if (!Runtime.LayoutEditor.DisplayScissorPane || gameWindow || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
             Vector2[] TexCoords = new Vector2[] {
@@ -251,13 +256,165 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            BxlytToGL.DrawRectangle(pane, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+            BxlytToGL.DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+        }
+
+        public static void DrawTextbox(BasePane pane, bool gameWindow, Bitmap fontBitmap, byte effectiveAlpha,
+            Dictionary<string, STGenericTexture> Textures, List<BasePane> SelectedPanes, bool updateBitmap)
+        {
+            var textBox = (ITextPane)pane;
+
+            if (updateBitmap)
+                BindFontBitmap(pane, fontBitmap);
+
+            int width = (int)pane.Width;
+            int height = (int)pane.Height;
+
+            var mat = textBox.Material as BFLYT.Material;
+            if (mat.Shader == null)
+            {
+                mat.Shader = new BflytShader(mat);
+                mat.Shader.Compile();
+            }
+
+            mat.Shader.Enable();
+            ((BflytShader)mat.Shader).SetMaterials(pane, Textures);
+
+            GL.ActiveTexture(TextureUnit.Texture0 + 1);
+            mat.Shader.SetInt($"numTextureMaps", 1);
+            mat.Shader.SetInt($"textures0", 1);
+            mat.Shader.SetInt($"hasTexture0", 1);
+            GL.BindTexture(TextureTarget.Texture2D, textBox.RenderableFont.TexID);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleR, ConvertChannel(STChannelType.Red));
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleG, ConvertChannel(STChannelType.Green));
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleB, ConvertChannel(STChannelType.Blue));
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleA, ConvertChannel(STChannelType.Alpha));
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS,(int)TextureWrapMode.Clamp);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Clamp);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+
+            Vector2[] texCoords = new Vector2[] {
+                new Vector2(0, 1),
+                new Vector2(1, 1),
+                new Vector2(1, 0),
+                new Vector2(0, 0),
+            };
+
+            Color color = Color.White;
+            Color[] Colors = new Color[] {
+                color,
+                color,
+                color,
+                color,
+                };
+
+            DrawRectangle(pane, gameWindow, pane.Rectangle, texCoords, Colors, false, effectiveAlpha);
+
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        private static void BindFontBitmap(BasePane pane, Bitmap fontBitmap)
+        {
+            var textBox = (ITextPane)pane;
+
+            switch ($"{textBox.HorizontalAlignment}_{textBox.VerticalAlignment}")
+            {
+                case "Center_Center":
+                    {
+                        Bitmap b = new Bitmap((int)pane.Width, (int)pane.Height);
+                        using (Graphics g = Graphics.FromImage(b))
+                            g.DrawImage(fontBitmap, b.Width / 2f - fontBitmap.Width / 2f, b.Height / 2f - fontBitmap.Height / 2f);
+
+                        fontBitmap = b;
+                    }
+                    break;
+                case "Left_Center":
+                    {
+                        Bitmap b = new Bitmap((int)pane.Width, (int)pane.Height);
+                        using (Graphics g = Graphics.FromImage(b))
+                            g.DrawImage(fontBitmap, 0, b.Height / 2f - fontBitmap.Height / 2f);
+
+                        fontBitmap = b;
+                    }
+                    break;
+                case "Right_Center":
+                    {
+                        Bitmap b = new Bitmap((int)pane.Width, (int)pane.Height);
+                        using (Graphics g = Graphics.FromImage(b))
+                            g.DrawImage(fontBitmap, 0, b.Height / 2f - fontBitmap.Height / 2f);
+
+                        fontBitmap = b;
+                    }
+                    break;
+                case "Center_Top":
+                    {
+                        Bitmap b = new Bitmap((int)pane.Width, (int)pane.Height);
+                        using (Graphics g = Graphics.FromImage(b))
+                            g.DrawImage(fontBitmap, b.Width - fontBitmap.Width, b.Height / 2f - fontBitmap.Height / 2f);
+
+                        fontBitmap = b;
+                    }
+                    break;
+                case "Center_Bottom":
+                    {
+                        Bitmap b = new Bitmap((int)pane.Width, (int)pane.Height);
+                        using (Graphics g = Graphics.FromImage(b))
+                            g.DrawImage(fontBitmap, b.Width / 2f - fontBitmap.Width / 2f, b.Height - fontBitmap.Height);
+
+                        fontBitmap = b;
+                    }
+                    break;
+                case "Left_Top":
+                    {
+                        Bitmap b = new Bitmap((int)pane.Width, (int)pane.Height);
+                        using (Graphics g = Graphics.FromImage(b))
+                            g.DrawImage(fontBitmap, 0, 0);
+
+                        fontBitmap = b;
+                    }
+                    break;
+                case "Right_Top":
+                    {
+                        Bitmap b = new Bitmap((int)pane.Width, (int)pane.Height);
+                        using (Graphics g = Graphics.FromImage(b))
+                            g.DrawImage(fontBitmap, b.Width - fontBitmap.Width, 0);
+
+                        fontBitmap = b;
+                    }
+                    break;
+                case "Left_Bottom":
+                    {
+                        Bitmap b = new Bitmap((int)pane.Width, (int)pane.Height);
+                        using (Graphics g = Graphics.FromImage(b))
+                            g.DrawImage(fontBitmap, 0, b.Height - fontBitmap.Height);
+
+                        fontBitmap = b;
+                    }
+                    break;
+                case "Right_Bottom":
+                    {
+                        Bitmap b = new Bitmap((int)pane.Width, (int)pane.Height);
+                        using (Graphics g = Graphics.FromImage(b))
+                            g.DrawImage(fontBitmap, b.Width - fontBitmap.Width, b.Height - fontBitmap.Height);
+
+                        fontBitmap = b;
+                    }
+                    break;
+            }
+            if (textBox.RenderableFont == null)
+                textBox.RenderableFont = RenderableTex.FromBitmap(fontBitmap);
+            else
+                textBox.RenderableFont.UpdateFromBitmap(fontBitmap);
+
+            textBox.RenderableFont.TextureWrapS = TextureWrapMode.Clamp;
+            textBox.RenderableFont.TextureWrapT = TextureWrapMode.Clamp;
         }
 
         //Huge thanks to layout studio for the window pane rendering code
         //https://github.com/Treeki/LayoutStudio/blob/master/layoutgl/widget.cpp
         //Note i still need to fix UV coordinates being flips and transformed!
-        public static void DrawWindowPane(BasePane pane, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
+        public static void DrawWindowPane(BasePane pane,bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
         {
             if (!Runtime.LayoutEditor.DisplayWindowPane)
                 return;
@@ -328,8 +485,8 @@ namespace LayoutBXLYT
 
             if (!window.NotDrawnContent && window.WindowKind != WindowKind.HorizontalNoContent)
             {
-                SetupShaders(window.Content.Material, Textures);
-                DrawQuad(dX + frameLeft - window.StretchLeft,
+                SetupShaders(pane, window.Content.Material, Textures);
+                DrawQuad(gameWindow, dX + frameLeft - window.StretchLeft,
                           dY - frameTop + window.StretchTop,
                           contentWidth,
                           contentHeight,
@@ -352,14 +509,17 @@ namespace LayoutBXLYT
 
             switch (window.FrameCount)
             {
+                case 2: //2 frame. 2 textures for corners sides (horizontal)
                 case 1: //1 frame. 1 texture for corners (around) or sides (horizontal)
                     {
                         var windowFrame = window.WindowFrames[0];
-                        SetupShaders(windowFrame.Material, Textures);
+                        SetupShaders(pane, windowFrame.Material, Textures);
 
                         //2 sides, no corners
                         if (window.WindowKind == WindowKind.Horizontal)
                         {
+                            //Left
+
                             texCoords = new Vector2[]
                             {
                                 new Vector2(1, 0),
@@ -368,7 +528,19 @@ namespace LayoutBXLYT
                                 new Vector2(1, 1),
                             };
 
-                            DrawQuad(dX + frameRight + contentWidth, dY, frameRight, pane.Height, texCoords, colors);
+                            colors = new Color[] {
+                                 window.Content.ColorTopRight.Color,
+                                 window.Content.ColorTopRight.Color,
+                                 window.Content.ColorBottomRight.Color,
+                                 window.Content.ColorBottomRight.Color,
+                                };
+
+                            DrawQuad(gameWindow, dX + frameRight + contentWidth, dY, frameRight, pane.Height, texCoords, colors);
+
+                            //Right
+
+                            if (window.FrameCount == 2)
+                                SetupShaders(pane, window.WindowFrames[1].Material, Textures);
 
                             texCoords = new Vector2[]
                             {
@@ -378,10 +550,19 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX, dY, frameLeft, pane.Height, texCoords, colors);
+                            colors = new Color[] {
+                                 window.Content.ColorTopLeft.Color,
+                                 window.Content.ColorTopLeft.Color,
+                                 window.Content.ColorBottomLeft.Color,
+                                 window.Content.ColorBottomLeft.Color,
+                                };
+
+                            DrawQuad(gameWindow, dX, dY, frameLeft, pane.Height, texCoords, colors);
                         }
                         else if (window.WindowKind == WindowKind.HorizontalNoContent)
                         {
+                            //Right
+
                             texCoords = new Vector2[]
                             {
                                 new Vector2((pane.Width - frameRight) / frameRight, 0),
@@ -390,7 +571,47 @@ namespace LayoutBXLYT
                                 new Vector2((pane.Width - frameRight) / frameRight, 1),
                             };
 
-                            DrawQuad(dX + frameLeft, dY, pane.Width - frameLeft, pane.Height, texCoords, colors);
+                            colors = new Color[] {
+                               //Top Right
+                               window.Content.ColorTopRight.Color,
+
+                               //Top Left
+                               VertexColorHelper.Mix(window.Content.ColorTopLeft.Color,
+                                                window.Content.ColorTopRight.Color,
+                                                (frameLeft / frameLeft)),
+
+                                //Bottom Left
+                              VertexColorHelper.Mix(window.Content.ColorBottomLeft.Color,
+                                window.Content.ColorBottomRight.Color,
+                                (frameLeft / frameLeft)),
+
+                              //Bottom Right
+                               window.Content.ColorBottomRight.Color,
+                            };
+
+                            DrawQuad(gameWindow, dX + frameLeft, dY, pane.Width - frameLeft, pane.Height, texCoords, colors);
+
+                            //Left
+
+                            if (window.FrameCount == 2)
+                                SetupShaders(pane, window.WindowFrames[1].Material, Textures);
+
+                            colors = new Color[] {
+                                 //Top Left
+                                 window.Content.ColorTopLeft.Color,
+
+                                 //Top Right
+                                       VertexColorHelper.Mix(window.Content.ColorTopLeft.Color,
+                                                       window.Content.ColorTopRight.Color,
+                                                       1),
+                                 //Bottom Right
+                                 VertexColorHelper.Mix(window.Content.ColorBottomLeft.Color,
+                                                       window.Content.ColorBottomRight.Color,
+                                                        1),
+
+                                //Bottom Left
+                                 window.Content.ColorBottomLeft.Color,
+                            };
 
                             texCoords = new Vector2[]
                             {
@@ -400,7 +621,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX, dY, pane.Width - frameLeft, pane.Height, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY, pane.Width - frameLeft, pane.Height, texCoords, colors);
                         }
                         else if (window.WindowKind == WindowKind.Around)
                         {
@@ -417,7 +638,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX, dY, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY, pieceWidth, pieceHeight, texCoords, colors);
 
                             // top right
                             pieceWidth = frameRight;
@@ -431,7 +652,7 @@ namespace LayoutBXLYT
                                 new Vector2(1,(pane.Height - frameTop) / frameTop),
                             };
 
-                            DrawQuad(dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors);
 
                             // bottom left
                             pieceWidth = frameLeft;
@@ -445,7 +666,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 0),
                            };
 
-                            DrawQuad(dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors);
 
                             // bottom right
                             pieceWidth = pane.Width - frameLeft;
@@ -459,7 +680,7 @@ namespace LayoutBXLYT
                                 new Vector2((pane.Width - frameLeft) / frameLeft, 0),
                             };
 
-                            DrawQuad(dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors);
                         }
                     }
                     break;
@@ -481,7 +702,7 @@ namespace LayoutBXLYT
 
                         if (matTL.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matTL, Textures);
+                            SetupShaders(pane, matTL, Textures);
 
                             matTL.Shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
 
@@ -496,11 +717,11 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX, dY, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY, pieceWidth, pieceHeight, texCoords, colors);
                         }
                         if (matTR.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matTR, Textures);
+                            SetupShaders(pane, matTR, Textures);
 
                             matTR.Shader.SetInt("flipTexture", (int)window.WindowFrames[1].TextureFlip);
 
@@ -515,11 +736,11 @@ namespace LayoutBXLYT
                                 new Vector2(0,(pane.Height - frameTop) / frameTop),
                             };
 
-                            DrawQuad(dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors);
                         }
                         if (matBL.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matBL, Textures);
+                            SetupShaders(pane, matBL, Textures);
 
                             matBL.Shader.SetInt("flipTexture", (int)window.WindowFrames[2].TextureFlip);
 
@@ -534,11 +755,11 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors);
                         }
                         if (matBR.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matBR, Textures);
+                            SetupShaders(pane, matBR, Textures);
 
                             matBR.Shader.SetInt("flipTexture", (int)window.WindowFrames[3].TextureFlip);
 
@@ -553,7 +774,7 @@ namespace LayoutBXLYT
                                 new Vector2(1 - ((pane.Width - frameLeft) / frameLeft), 1),
                             };
 
-                            DrawQuad(dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors);
                         }
                     }
                     break;
@@ -583,7 +804,7 @@ namespace LayoutBXLYT
 
                         if (matTL.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matTL, Textures);
+                            SetupShaders(pane, matTL, Textures);
                             matTL.Shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
 
                             texCoords = new Vector2[]
@@ -594,12 +815,12 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX, dY, frameLeft, frameTop, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY, frameLeft, frameTop, texCoords, colors);
                         }
 
                         if (matTR.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matTR, Textures);
+                            SetupShaders(pane, matTR, Textures);
                             matTR.Shader.SetInt("flipTexture", (int)window.WindowFrames[1].TextureFlip);
 
                             texCoords = new Vector2[]
@@ -610,12 +831,12 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX + pane.Width - frameRight, dY, frameRight, frameTop, texCoords, colors);
+                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, frameRight, frameTop, texCoords, colors);
                         }
 
                         if (matBL.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matBL, Textures);
+                            SetupShaders(pane, matBL, Textures);
                             matBL.Shader.SetInt("flipTexture", (int)window.WindowFrames[2].TextureFlip);
 
                             texCoords = new Vector2[]
@@ -626,12 +847,12 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX, dY - pane.Height + frameTop, frameLeft, frameBottom, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY - pane.Height + frameTop, frameLeft, frameBottom, texCoords, colors);
                         }
 
                         if (matBR.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matBR, Textures);
+                            SetupShaders(pane, matBR, Textures);
                             matBR.Shader.SetInt("flipTexture", (int)window.WindowFrames[3].TextureFlip);
 
                             texCoords = new Vector2[]
@@ -642,12 +863,12 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX + pane.Width - frameLeft, dY - pane.Height + frameBottom, frameRight, frameBottom, texCoords, colors);
+                            DrawQuad(gameWindow, dX + pane.Width - frameLeft, dY - pane.Height + frameBottom, frameRight, frameBottom, texCoords, colors);
                         }
 
                         if (matT.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matT, Textures);
+                            SetupShaders(pane, matT, Textures);
                             matT.Shader.SetInt("flipTexture", (int)window.WindowFrames[4].TextureFlip);
 
                             texCoords = new Vector2[]
@@ -658,12 +879,12 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX + frameLeft, dY, contentWidth, frameTop, texCoords, colors);
+                            DrawQuad(gameWindow, dX + frameLeft, dY, contentWidth, frameTop, texCoords, colors);
                         }
 
                         if (matB.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matB, Textures);
+                            SetupShaders(pane, matB, Textures);
                             matB.Shader.SetInt("flipTexture", (int)window.WindowFrames[5].TextureFlip);
 
                             texCoords = new Vector2[]
@@ -674,12 +895,12 @@ namespace LayoutBXLYT
                                 new Vector2(1-((pane.Width - frameLeft) / frameLeft), 1),
                             };
 
-                            DrawQuad(dX + frameRight, dY - (pane.Height - frameBottom), contentWidth, frameTop, texCoords, colors);
+                            DrawQuad(gameWindow, dX + frameRight, dY - (pane.Height - frameBottom), contentWidth, frameTop, texCoords, colors);
                         }
 
                         if (matL.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matL, Textures);
+                            SetupShaders(pane, matL, Textures);
                             matL.Shader.SetInt("flipTexture", (int)window.WindowFrames[6].TextureFlip);
 
                             texCoords = new Vector2[]
@@ -690,12 +911,12 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(dX, dY - frameTop, frameLeft, contentHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY - frameTop, frameLeft, contentHeight, texCoords, colors);
                         }
 
                         if (matR.TextureMaps.Length > 0)
                         {
-                            SetupShaders(matR, Textures);
+                            SetupShaders(pane, matR, Textures);
                             matR.Shader.SetInt("flipTexture", (int)window.WindowFrames[7].TextureFlip);
 
                             texCoords = new Vector2[]
@@ -706,7 +927,7 @@ namespace LayoutBXLYT
                                 new Vector2(0,(pane.Height - frameBottom) / frameBottom),
                             };
 
-                            DrawQuad(dX + (pane.Width - frameRight), dY - frameTop, frameRight, contentHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX + (pane.Width - frameRight), dY - frameTop, frameRight, contentHeight, texCoords, colors);
                         }
                     }
                     break;
@@ -748,9 +969,9 @@ namespace LayoutBXLYT
             }
         }
 
-        private static void DrawQuad(float x, float y, float w, float h, Vector2[] texCoords, Color[] colors)
+        private static void DrawQuad(bool gameWindow, float x, float y, float w, float h, Vector2[] texCoords, Color[] colors)
         {
-            if (!Runtime.LayoutEditor.IsGamePreview)
+            if (!gameWindow && !Runtime.LayoutEditor.IsGamePreview)
             {
                 GL.Disable(EnableCap.AlphaTest);
                 GL.Disable(EnableCap.Blend);
@@ -811,7 +1032,7 @@ namespace LayoutBXLYT
             return pos;
         }
 
-        private static void SetupShaders(BxlytMaterial mat, Dictionary<string, STGenericTexture> textures)
+        private static void SetupShaders(BasePane pane, BxlytMaterial mat, Dictionary<string, STGenericTexture> textures)
         {
             if (mat.Shader == null)
             {
@@ -824,7 +1045,7 @@ namespace LayoutBXLYT
 
             mat.Shader.Enable();
             if (mat is Cafe.BFLYT.Material)
-                ((BflytShader)mat.Shader).SetMaterials(textures);
+                ((BflytShader)mat.Shader).SetMaterials(pane, textures);
         }
 
         private static void RenderWindowContent(BasePane pane, uint sizeX, uint sizeY, BxlytWindowContent content,
@@ -833,7 +1054,7 @@ namespace LayoutBXLYT
             var mat = content.Material;
             var rect = pane.CreateRectangle(sizeX, sizeY);
 
-            SetupShaders(mat, Textures);
+            SetupShaders(pane, mat, Textures);
 
             Vector2[] texCoords = new Vector2[] {
                 new Vector2(1,1),
@@ -912,7 +1133,7 @@ namespace LayoutBXLYT
         }
 
 
-        private static BlendingFactor ConvertBlendFactor(BlendMode.GX2BlendFactor blendFactor)
+        public static BlendingFactor ConvertBlendFactor(BlendMode.GX2BlendFactor blendFactor)
         {
             switch (blendFactor)
             {
@@ -930,7 +1151,7 @@ namespace LayoutBXLYT
             }
         }
 
-        private static LogicOp ConvertLogicOperation(BlendMode.GX2LogicOp blendOp)
+        public static LogicOp ConvertLogicOperation(BlendMode.GX2LogicOp blendOp)
         {
             switch (blendOp)
             {
@@ -955,7 +1176,23 @@ namespace LayoutBXLYT
             }
         }
 
-        private static BlendEquationMode ConvertBlendOperation(BlendMode.GX2BlendOp blendOp)
+        public static AlphaFunction ConvertAlphaFunc(GfxAlphaFunction alphaFunc)
+        {
+            switch (alphaFunc)
+            {
+                case GfxAlphaFunction.Always: return AlphaFunction.Always;
+                case GfxAlphaFunction.Equal: return AlphaFunction.Equal;
+                case GfxAlphaFunction.Greater: return AlphaFunction.Greater;
+                case GfxAlphaFunction.GreaterOrEqual: return AlphaFunction.Gequal;
+                case GfxAlphaFunction.Less: return AlphaFunction.Less;
+                case GfxAlphaFunction.LessOrEqual: return AlphaFunction.Lequal;
+                case GfxAlphaFunction.Never: return AlphaFunction.Never;
+                case GfxAlphaFunction.NotEqual: return AlphaFunction.Notequal;
+                default: return AlphaFunction.Always;
+            }
+        }
+
+        public static BlendEquationMode ConvertBlendOperation(BlendMode.GX2BlendOp blendOp)
         {
             switch (blendOp)
             {
@@ -981,7 +1218,43 @@ namespace LayoutBXLYT
             Alpha = All.Alpha,
         }
 
-        public static void DrawRectangle(BasePane pane, CustomRectangle rect, Vector2[] texCoords,
+        private static STColor8[] SetupVertexColors(BasePane pane,
+            STColor8 ColorBottomRight, STColor8 ColorBottomLeft, 
+            STColor8 ColorTopLeft, STColor8 ColorTopRight)
+        {
+            STColor8[] outColors = new STColor8[4];
+            outColors[0] = ColorBottomLeft;
+            outColors[1] = ColorBottomRight;
+            outColors[2] = ColorTopRight;
+            outColors[3] = ColorTopLeft;
+
+            foreach (var animItem in pane.animController.PaneVertexColors)
+            {
+                switch (animItem.Key)
+                {
+                    case LVCTarget.LeftBottomRed: outColors[0].R = (byte)animItem.Value; break;
+                    case LVCTarget.LeftBottomGreen: outColors[0].G = (byte)animItem.Value; break;
+                    case LVCTarget.LeftBottomBlue: outColors[0].B = (byte)animItem.Value; break;
+                    case LVCTarget.LeftBottomAlpha: outColors[0].A = (byte)animItem.Value; break;
+                    case LVCTarget.RightBottomRed: outColors[1].R = (byte)animItem.Value; break;
+                    case LVCTarget.RightBottomGreen: outColors[1].G = (byte)animItem.Value; break;
+                    case LVCTarget.RightBottomBlue: outColors[1].B = (byte)animItem.Value; break;
+                    case LVCTarget.RightBottomAlpha: outColors[1].A = (byte)animItem.Value; break;
+                    case LVCTarget.RightTopRed: outColors[2].R = (byte)animItem.Value; break;
+                    case LVCTarget.RightTopGreen: outColors[2].G = (byte)animItem.Value; break;
+                    case LVCTarget.RightTopBlue: outColors[2].B = (byte)animItem.Value; break;
+                    case LVCTarget.RightTopAlpha: outColors[2].A = (byte)animItem.Value; break;
+                    case LVCTarget.LeftTopRed: outColors[3].R = (byte)animItem.Value; break;
+                    case LVCTarget.LeftTopGreen: outColors[3].G = (byte)animItem.Value; break;
+                    case LVCTarget.LeftTopBlue: outColors[3].B = (byte)animItem.Value; break;
+                    case LVCTarget.LeftTopAlpha: outColors[3].A = (byte)animItem.Value; break;
+                }
+            }
+
+            return outColors;
+        }
+
+        public static void DrawRectangle(BasePane pane, bool gameWindow, CustomRectangle rect, Vector2[] texCoords,
            Color[] colors, bool useLines = true, byte alpha = 255)
         {
             for (int i = 0; i < colors.Length; i++)
@@ -1004,7 +1277,7 @@ namespace LayoutBXLYT
                 }
                 else
                 {
-                    if (!Runtime.LayoutEditor.IsGamePreview)
+                    if (!Runtime.LayoutEditor.IsGamePreview && !gameWindow)
                     {
                         GL.Disable(EnableCap.Blend);
                         GL.Disable(EnableCap.AlphaTest);
@@ -1057,7 +1330,7 @@ namespace LayoutBXLYT
                 vertices[3] = new Vector3(rect.LeftPoint, rect.TopPoint, 0);
                 Vector4[] vertexColors = new Vector4[4];
 
-                pane.renderablePane.Render(vertices, vertexColors, texCoords);
+            //    pane.renderablePane.Render(vertices, vertexColors, texCoords);
             }
         }
     }

@@ -107,6 +107,13 @@ namespace Toolbox.Library.Rendering
             return tex;
         }
 
+        public void UpdateFromBitmap(Bitmap bitmap)
+        {
+            width = bitmap.Width;
+            height = bitmap.Height;
+            TexID = GenerateOpenGLTexture(this, bitmap);
+        }
+
         private bool UseMipmaps = false;
         private bool UseOpenGLDecoder = true;
         public void LoadOpenGLTexture(STGenericTexture GenericTexture, int ArrayStartIndex = 0, bool LoadArrayLevels = false)

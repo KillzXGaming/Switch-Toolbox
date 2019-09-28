@@ -223,6 +223,7 @@ namespace LayoutBXLYT
             {
                 IsBigEndian = reader.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian;
 
+                PaneLookup.Clear();
                 LayoutInfo = new LYT1();
                 TextureList = new TXL1();
                 MaterialList = new MAT1();
@@ -276,6 +277,7 @@ namespace LayoutBXLYT
                             break;
                         case "pan1":
                             var panel = new PAN1(reader);
+                            AddPaneToTable(panel);
                             if (!setRoot)
                             {
                                 RootPane = panel;
@@ -287,30 +289,36 @@ namespace LayoutBXLYT
                             break;
                         case "pic1":
                             var picturePanel = new PIC1(reader, this);
+                            AddPaneToTable(picturePanel);
 
                             SetPane(picturePanel, parentPane);
                             currentPane = picturePanel;
                             break;
                         case "txt1":
                             var textPanel = new TXT1(reader);
+                            AddPaneToTable(textPanel);
 
                             SetPane(textPanel, parentPane);
                             currentPane = textPanel;
                             break;
                         case "bnd1":
                             var boundsPanel = new BND1(reader);
+                            AddPaneToTable(boundsPanel);
 
                             SetPane(boundsPanel, parentPane);
                             currentPane = boundsPanel;
                             break;
                         case "prt1":
                             var partsPanel = new PRT1(reader);
+                            AddPaneToTable(partsPanel);
 
                             SetPane(partsPanel, parentPane);
                             currentPane = partsPanel;
                             break;
                         case "wnd1":
                             var windowPanel = new WND1(reader);
+                            AddPaneToTable(windowPanel);
+
                             SetPane(windowPanel, parentPane);
                             currentPane = windowPanel;
                             break;
@@ -554,7 +562,7 @@ namespace LayoutBXLYT
             }
         }
 
-        public class BND1 : PAN1
+        public class BND1 : PAN1, IBoundryPane
         {
             public BND1() : base()
             {
@@ -620,7 +628,7 @@ namespace LayoutBXLYT
             }
         }
 
-        public class PIC1 : PAN1
+        public class PIC1 : PAN1, IPicturePane
         {
             public TexCoord[] TexCoords { get; set; }
 
@@ -701,7 +709,7 @@ namespace LayoutBXLYT
         {
             private byte _flags1;
 
-            public bool Visible
+            public override bool Visible
             {
                 get { return (_flags1 & 0x1) == 0x1; }
                 set {
@@ -868,7 +876,6 @@ namespace LayoutBXLYT
             public STColor8 TevColor3 { get; set; }
             public STColor8 TevColor4 { get; set; }
 
-            public List<TextureRef> TextureMaps { get; set; }
             public List<TextureTransform> TextureTransforms { get; set; }
 
             private uint flags;
@@ -884,7 +891,7 @@ namespace LayoutBXLYT
 
             public Material()
             {
-                TextureMaps = new List<TextureRef>();
+                TextureMaps = new TextureRef[0];
                 TextureTransforms = new List<TextureTransform>();
             }
 
@@ -892,7 +899,6 @@ namespace LayoutBXLYT
             {
                 ParentLayout = header;
 
-                TextureMaps = new List<TextureRef>();
                 TextureTransforms = new List<TextureTransform>();
 
                 Name = reader.ReadString(0x14, true);
@@ -906,12 +912,15 @@ namespace LayoutBXLYT
                 TevColor4 = reader.ReadColor8RGBA();
                 flags = reader.ReadUInt32();
 
+
                 uint indSrtCount = ExtractBits(flags, 2, 17);
                 uint texCoordGenCount = ExtractBits(flags, 4, 20);
                 uint mtxCount = ExtractBits(flags, 4, 24);
                 uint texCount = ExtractBits(flags, 4, 28);
+
+                TextureMaps = new TextureRef[texCount];
                 for (int i = 0; i < texCount; i++)
-                    TextureMaps.Add(new TextureRef(reader, header));
+                    TextureMaps[i] = new TextureRef(reader, header);
 
                 for (int i = 0; i < mtxCount; i++)
                     TextureTransforms.Add(new TextureTransform(reader));
@@ -924,8 +933,8 @@ namespace LayoutBXLYT
             //    writer.Write(BackColor);
                 writer.Write(flags);
 
-                for (int i = 0; i < TextureMaps.Count; i++)
-                    TextureMaps[i].Write(writer);
+                for (int i = 0; i < TextureMaps.Length; i++)
+                    ((TextureRef)TextureMaps[i]).Write(writer);
 
                 for (int i = 0; i < TextureTransforms.Count; i++)
                     TextureTransforms[i].Write(writer);
@@ -984,12 +993,12 @@ namespace LayoutBXLYT
             public TextureRef() {}
 
             public TextureRef(FileReader reader, Header header) {
-                if (header.Textures.Count > 0)
-                    Name = header.Textures[ID];
-
                 ID = reader.ReadInt16();
                 flag1 = reader.ReadByte();
                 flag2 = reader.ReadByte();
+
+                if (header.Textures.Count > 0)
+                    Name = header.Textures[ID];
             }
 
             public void Write(FileWriter writer)

@@ -3,12 +3,8 @@ using Syroot.Maths;
 
 namespace LayoutBXLYT.Cafe
 {
-    public class TextureTransform
+    public class TextureTransform : BxlytTextureTransform
     {
-        public Vector2F Translate { get; set; }
-        public float Rotate { get; set; }
-        public Vector2F Scale { get; set; }
-
         public TextureTransform() { }
 
         public TextureTransform(FileReader reader)

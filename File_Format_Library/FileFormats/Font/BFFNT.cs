@@ -15,7 +15,7 @@ using System.Drawing.Imaging;
 
 namespace FirstPlugin
 {
-    public class BFFNT : IFileFormat, IEditor<BffntEditor>, IConvertableTextFormat
+    public class BFFNT : BXFNT, IFileFormat, IEditor<BffntEditor>, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Font;
 
@@ -76,6 +76,8 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
+            PluginRuntime.BxfntFiles.Add(this);
+
             CanSave = true;
 
             bffnt = new FFNT();
@@ -110,9 +112,22 @@ namespace FirstPlugin
                 //  Nodes.Add(file);
             }
         }
+
+        public override string Name { get { return FileName; } }
+
+        public override BitmapFont GetBitmapFont(bool UseChannelComp = false)
+        {
+            return bffnt.GetBitmapFont(UseChannelComp);
+        }
+
+        public override Bitmap GetBitmap(string text, bool reversewh, LayoutBXLYT.BasePane pane)
+        {
+            return bffnt.GetBitmap(text, reversewh, pane);
+        }
+
         public void Unload()
         {
-
+            PluginRuntime.BxfntFiles.Remove(this);
         }
 
         public void Save(System.IO.Stream stream)
@@ -288,9 +303,21 @@ namespace FirstPlugin
             return Signature;
         }
 
+        private BitmapFont bitmapFont;
+        public Bitmap GetBitmap(string text, bool reversewh, LayoutBXLYT.BasePane pane)
+        {
+            var textPane = (LayoutBXLYT.ITextPane)pane;
+            if (bitmapFont == null)
+                bitmapFont = GetBitmapFont(true);
 
+            return bitmapFont.PrintToBitmap(text, new BitmapFont.FontRenderSettings()
+            {
+                CharSpacing = (int)textPane.CharacterSpace,
+                LineSpacing = (int)textPane.LineSpace,
+            });
+        }
 
-        public BitmapFont GetBitmapFont()
+        public BitmapFont GetBitmapFont(bool UseChannelComp = false)
         {
             var FontInfo = FontSection;
             var TextureGlyph = FontInfo.TextureGlyph;
@@ -306,6 +333,10 @@ namespace FirstPlugin
             for (int sheet = 0; sheet < TextureGlyph.SheetCount; sheet++)
             {
                 Bitmap SheetBM = TextureGlyph.GetImageSheet(sheet).GetBitmap();
+
+                if (UseChannelComp)
+                    SheetBM = TextureGlyph.GetImageSheet(sheet).GetComponentBitmap(SheetBM, true);
+
                 SheetBM.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 BitmapData bd = SheetBM.LockBits(new Rectangle(0, 0, SheetBM.Width, SheetBM.Height), 
                     ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
@@ -431,6 +462,10 @@ namespace FirstPlugin
             Width = TextureTGLP.SheetWidth;
             var BFNTFormat = (Gx2ImageFormats)TextureTGLP.Format;
             Format = ConvertToGeneric(BFNTFormat);
+            if (Format == TEX_FORMAT.BC4_UNORM)
+            {
+                AlphaChannel = STChannelType.Red;
+            }
 
             ImageKey = "Texture";
             SelectedImageKey = "Texture";
@@ -939,6 +974,14 @@ namespace FirstPlugin
             {
                 writer.Write((uint)(SectionEndPosition - pos));
             }
+        }
+
+        public STGenericTexture[] GetImageSheets()
+        {
+            STGenericTexture[] textures = new STGenericTexture[SheetCount];
+            for (int i = 0; i < SheetCount; i++)
+                textures[i] = GetImageSheet(i);
+            return textures;
         }
 
         public STGenericTexture GetImageSheet(int Index)

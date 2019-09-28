@@ -270,6 +270,9 @@ namespace Toolbox.Library
                     case "DisplayWindowPane":
                         bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayWindowPane);
                         break;
+                    case "DisplayTextPane":
+                        bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayTextPane);
+                        break;
                     case "LayoutDisplayGrid":
                         bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayGrid);
                         break;
@@ -404,6 +407,7 @@ namespace Toolbox.Library
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayBoundryPane", Runtime.LayoutEditor.DisplayBoundryPane.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayPicturePane", Runtime.LayoutEditor.DisplayPicturePane.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayWindowPane", Runtime.LayoutEditor.DisplayWindowPane.ToString()));
+            layoutSettingsNode.AppendChild(createNode(doc, "DisplayTextPane", Runtime.LayoutEditor.DisplayTextPane.ToString()));       
         }
 
         private static void AppendDeveloperSettings(XmlDocument doc, XmlNode parentNode)

@@ -12,7 +12,6 @@ namespace Toolbox.Library.IO
         public static uint ExtractBits(uint val, int numBits, int startBit)
         {
             uint mask = 0;
-
             for (int i = startBit; i < startBit + numBits; i++)
                 mask |= (0x80000000 >> i);
 

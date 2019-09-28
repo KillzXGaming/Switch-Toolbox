@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Syroot.Maths;
 using Toolbox.Library.IO;
+using Toolbox.Library.Animations;
 using Toolbox.Library;
 using WeifenLuo.WinFormsUI.Docking;
 using System.ComponentModel;
@@ -13,6 +14,12 @@ namespace LayoutBXLYT
 {
     public class BasePane : SectionCommon
     {
+        [Browsable(false)]
+        public PaneAnimController animController = new PaneAnimController();
+
+        [DisplayName("Is Visible"), CategoryAttribute("Flags")]
+        public virtual bool Visible { get; set; }
+   
         public bool IsRoot = false;
 
         public bool ParentIsRoot
@@ -114,7 +121,15 @@ namespace LayoutBXLYT
         public CustomRectangle CreateRectangle()
         {
             //Do origin transforms
-            var transformed = TransformOrientation((int)Width, (int)Height, originX, originY);
+            var transformed = new Vector4();
+            int paneWidth = (int)Width;
+            int paneHeight = (int)Height;
+            if (animController.PaneSRT.ContainsKey(LPATarget.SizeX))
+                paneWidth = (int)animController.PaneSRT[LPATarget.SizeX];
+            if (animController.PaneSRT.ContainsKey(LPATarget.SizeY))
+                paneHeight = (int)animController.PaneSRT[LPATarget.SizeY];
+
+            transformed = TransformOrientation(paneWidth, paneHeight, originX, originY);
             var parentTransform = ParentOriginTransform(transformed);
 
             return new CustomRectangle(
@@ -218,6 +233,47 @@ namespace LayoutBXLYT
                 return true;
             else
                 return false;
+        }
+
+        public BasePane SearchPane(string name)
+        {
+            if (Name == name)
+                return this;
+
+            foreach (var child in Childern)
+            {
+                var matchPane = child.SearchPane(name);
+                if (matchPane != null) return matchPane;
+            }
+
+            return null;
+        }
+    }
+
+    public class VertexColorHelper
+    {
+        public static System.Drawing.Color Mix(System.Drawing.Color colorA, System.Drawing.Color colorB, float value)
+        {
+            byte R = (byte)InterpolationHelper.Lerp(colorA.R, colorB.R, value);
+            byte G = (byte)InterpolationHelper.Lerp(colorA.G, colorB.G, value);
+            byte B = (byte)InterpolationHelper.Lerp(colorA.B, colorB.B, value);
+            byte A = (byte)InterpolationHelper.Lerp(colorA.A, colorB.A, value);
+            return System.Drawing.Color.FromArgb(A, R, G, B);
+        }
+    }
+
+
+    public class PaneAnimController
+    {
+        public Dictionary<LPATarget, float> PaneSRT = new Dictionary<LPATarget, float>();
+        public Dictionary<LVCTarget, float> PaneVertexColors = new Dictionary<LVCTarget, float>();
+        public bool Visibile = true;
+
+        public void ResetAnim()
+        {
+            Visibile = true;
+            PaneSRT.Clear();
+            PaneVertexColors.Clear();
         }
     }
 
@@ -336,12 +392,6 @@ namespace LayoutBXLYT
         Material = 1
     }
 
-    public enum KeyType : byte
-    {
-        Uin16 = 1,
-        Float = 2,
-    }
-
     public enum LPATarget : byte
     {
         TranslateX = 0x00,
@@ -353,7 +403,7 @@ namespace LayoutBXLYT
         ScaleX = 0x06,
         ScaleY = 0x07,
         SizeX = 0x08,
-        SizeZ = 0x09,
+        SizeY = 0x09,
     }
 
     public enum LTSTarget : byte
@@ -397,7 +447,9 @@ namespace LayoutBXLYT
 
     public enum LTPTarget : byte
     {
-        Image = 0x00,
+        Image1 = 0x00,
+        Image2 = 0x01, //Unsure if mutliple are used but just in case
+        Image3 = 0x02,
     }
 
     public enum LMCTarget : byte
@@ -485,6 +537,18 @@ namespace LayoutBXLYT
         Rotate270 = 5
     }
 
+    public enum GfxAlphaFunction : byte
+    {
+        Never = 0,
+        Less = 1,
+        LessOrEqual = 2,
+        Equal = 3,
+        NotEqual = 4,
+        GreaterOrEqual = 5,
+        Greater = 6,
+        Always = 7,
+    }
+
     public enum TevMode : byte
     {
         Replace,
@@ -499,6 +563,100 @@ namespace LayoutBXLYT
         Indirect,
         BlendIndirect,
         EachIndirect,
+    }
+
+
+    public enum TevScale
+    {
+        Scale1,
+        Scale2,
+        Scale4
+    }
+
+    public enum TevSource
+    {
+        Tex0 = 0,
+        Tex1 = 1,
+        Tex2 = 2,
+        Tex3 = 3,
+        Constant = 4,
+        Primary = 5,
+        Previous = 6,
+        Register = 7
+    }
+    public enum TevColorOp
+    {
+        RGB = 0,
+        InvRGB = 1,
+        Alpha = 2,
+        InvAlpha = 3,
+        RRR = 4,
+        InvRRR = 5,
+        GGG = 6,
+        InvGGG = 7,
+        BBB = 8,
+        InvBBB = 9
+    }
+    public enum TevAlphaOp
+    {
+        Alpha = 0,
+        InvAlpha = 1,
+        R = 2,
+        InvR = 3,
+        G = 4,
+        InvG = 5,
+        B = 6,
+        InvB = 7
+    }
+
+    public interface IPicturePane
+    {
+
+    }
+
+    public interface IBoundryPane
+    {
+
+    }
+
+    public interface ITextPane
+    {
+        string Text { get; set; }
+        OriginX HorizontalAlignment { get; set; }
+        OriginX VerticalAlignment { get; set; }
+
+        ushort TextLength { get; set; }
+        ushort MaxTextLength { get; set; }
+
+        BxlytMaterial Material { get; set; }
+        Toolbox.Library.Rendering.RenderableTex RenderableFont { get; set; }
+
+        byte TextAlignment { get; set; }
+        LineAlign LineAlignment { get; set; }
+
+        float ItalicTilt { get; set; }
+
+        STColor8 FontForeColor { get; set; }
+        STColor8 FontBackColor { get; set; }
+        Vector2F FontSize { get; set; }
+
+        float CharacterSpace { get; set; }
+        float LineSpace { get; set; }
+
+        Vector2F ShadowXY { get; set; }
+        Vector2F ShadowXYSize { get; set; }
+
+        STColor8 ShadowForeColor { get; set; }
+        STColor8 ShadowBackColor { get; set; }
+
+        float ShadowItalic { get; set; }
+
+        string TextBoxName { get; set; }
+
+        bool PerCharTransform { get; set; }
+        bool RestrictedTextLengthEnabled { get; set; }
+        bool ShadowEnabled { get; set; }
+        string FontName { get; set; }
     }
 
     public interface IWindowPane
@@ -521,6 +679,11 @@ namespace LayoutBXLYT
 
         [Browsable(false)]
         List<BxlytWindowFrame> WindowFrames { get; set; }
+    }
+
+    public class BXLAN
+    {
+        public BxlanHeader BxlanHeader;
     }
 
     public class BxlytWindowContent
@@ -637,6 +800,24 @@ namespace LayoutBXLYT
     {
         public BxlanPAT1 AnimationTag;
         public BxlanPAI1 AnimationInfo;
+
+        public virtual void Read(FileReader reader, BXLAN header)
+        {
+
+        }
+
+        public virtual void Write(FileWriter writer)
+        {
+
+        }
+
+        private LytAnimation animation;
+        public LytAnimation ToGenericAnimation(BxlytHeader parentLayout)
+        {
+            if (animation == null)
+                animation = new LytAnimation(this, parentLayout);
+            return animation;
+        }
     }
 
     public class BxlanPAT1 : SectionCommon
@@ -728,6 +909,85 @@ namespace LayoutBXLYT
             };
     }
 
+
+    public class LPATagEntry : BxlanPaiTagEntry
+    {
+        public override string TargetName => Target.ToString();
+        [DisplayName("Target"), CategoryAttribute("Tag")]
+        public LPATarget Target
+        {
+            get { return (LPATarget)AnimationTarget; }
+            set { AnimationTarget = (byte)value; }
+        }
+
+        public LPATagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
+    }
+
+    public class LTSTagEntry : BxlanPaiTagEntry
+    {
+        public override string TargetName => Target.ToString();
+        [DisplayName("Target"), CategoryAttribute("Tag")]
+        public LTSTarget Target
+        {
+            get { return (LTSTarget)AnimationTarget; }
+            set { AnimationTarget = (byte)value; }
+        }
+
+        public LTSTagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
+    }
+
+    public class LVITagEntry : BxlanPaiTagEntry
+    {
+        public override string TargetName => Target.ToString();
+        [DisplayName("Target"), CategoryAttribute("Tag")]
+        public LVITarget Target
+        {
+            get { return (LVITarget)AnimationTarget; }
+            set { AnimationTarget = (byte)value; }
+        }
+
+        public LVITagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
+    }
+
+    public class LVCTagEntry : BxlanPaiTagEntry
+    {
+        public override string TargetName => Target.ToString();
+        [DisplayName("Target"), CategoryAttribute("Tag")]
+        public LVCTarget Target
+        {
+            get { return (LVCTarget)AnimationTarget; }
+            set { AnimationTarget = (byte)value; }
+        }
+
+        public LVCTagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
+    }
+
+    public class LMCTagEntry : BxlanPaiTagEntry
+    {
+        public override string TargetName => Target.ToString();
+        [DisplayName("Target"), CategoryAttribute("Tag")]
+        public LMCTarget Target
+        {
+            get { return (LMCTarget)AnimationTarget; }
+            set { AnimationTarget = (byte)value; }
+        }
+
+        public LMCTagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
+    }
+
+    public class LTPTagEntry : BxlanPaiTagEntry
+    {
+        public override string TargetName => Target.ToString();
+        [DisplayName("Target"), CategoryAttribute("Tag")]
+        public LTPTarget Target
+        {
+            get { return (LTPTarget)AnimationTarget; }
+            set { AnimationTarget = (byte)value; }
+        }
+
+        public LTPTagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
+    }
+
     public class BxlanPaiTagEntry
     {
         [Browsable(false)]
@@ -741,49 +1001,110 @@ namespace LayoutBXLYT
         [DisplayName("Index"), CategoryAttribute("Tag")]
         public byte Index { get; set; }
 
-        [DisplayName("Data Type"), CategoryAttribute("Tag")]
-        public KeyType DataType { get; set; }
+        [DisplayName("Curve Type"), CategoryAttribute("Tag")]
+        public CurveType CurveType { get; set; }
 
         public List<KeyFrame> KeyFrames = new List<KeyFrame>();
+
+
+        public BxlanPaiTagEntry(FileReader reader, BxlanHeader header)
+        {
+            long startPos = reader.Position;
+            Index = reader.ReadByte();
+            AnimationTarget = reader.ReadByte();
+            CurveType = reader.ReadEnum<CurveType>(true);
+            reader.ReadByte(); //padding
+            var KeyFrameCount = reader.ReadUInt16();
+            reader.ReadUInt16(); //Padding
+            uint keyFrameOffset = reader.ReadUInt32();
+
+            reader.SeekBegin(startPos + keyFrameOffset);
+            for (int i = 0; i < KeyFrameCount; i++)
+                KeyFrames.Add(new KeyFrame(reader, CurveType));
+        }
+
+        public void Write(FileWriter writer, LayoutHeader header)
+        {
+            long startPos = writer.Position;
+
+            writer.Write(Index);
+            writer.Write(AnimationTarget);
+            writer.Write(CurveType, true);
+            writer.Write((byte)0); //padding
+            writer.Write((ushort)KeyFrames.Count);
+            writer.Write((ushort)0); //padding
+            writer.Write(0); //key offset
+
+            if (KeyFrames.Count > 0)
+            {
+                writer.WriteUint32Offset(startPos + 8, startPos);
+                for (int i = 0; i < KeyFrames.Count; i++)
+                    KeyFrames[i].Write(writer, CurveType);
+            }
+        }
+    }
+
+    public enum BorderType : byte
+    {
+        Standard = 0,
+        DeleteBorder = 1,
+        RenderTwoCycles = 2,
+    };
+
+    public enum LineAlign : byte
+    {
+        Unspecified = 0,
+        Left = 1,
+        Center = 2,
+        Right = 3,
+    };
+
+    public enum CurveType : byte
+    {
+        Constant,
+        Step,
+        Hermite,
     }
 
     public class KeyFrame
     {
-        [DisplayName("Blend"), CategoryAttribute("Key Frame")]
-        public float Blend { get; set; }
+        [DisplayName("Slope"), CategoryAttribute("Key Frame")]
+        public float Slope { get; set; }
         [DisplayName("Frame"), CategoryAttribute("Key Frame")]
         public float Frame { get; set; }
         [DisplayName("Value"), CategoryAttribute("Key Frame")]
         public float Value { get; set; }
 
-        public KeyFrame(FileReader reader, KeyType DataType)
+        public KeyFrame(FileReader reader, CurveType curveType)
         {
-            Frame = reader.ReadSingle();
-            switch (DataType)
+            switch (curveType)
             {
-                case KeyType.Float:
+                case CurveType.Hermite:
+                    Frame = reader.ReadSingle();
                     Value = reader.ReadSingle();
-                    Blend = reader.ReadSingle();
+                    Slope = reader.ReadSingle();
                     break;
-                case KeyType.Uin16:
-                    Value = (float)reader.ReadInt16();
-                    Blend = (float)reader.ReadInt16();
+                default:
+                    Frame = reader.ReadSingle();
+                    Value = reader.ReadInt16();
+                    reader.ReadInt16(); //padding
                     break;
             }
         }
 
-        public void Write(FileWriter writer, KeyType DataType)
+        public void Write(FileWriter writer, CurveType curveType)
         {
-            writer.Write(Frame);
-            switch (DataType)
+            switch (curveType)
             {
-                case KeyType.Float:
+                case CurveType.Hermite:
+                    writer.Write(Frame);
                     writer.Write(Value);
-                    writer.Write(Blend);
+                    writer.Write(Slope);
                     break;
-                case KeyType.Uin16:
+                default:
+                    writer.Write(Frame);
                     writer.Write((ushort)Value);
-                    writer.Write((ushort)Blend);
+                    writer.Write((ushort)0);
                     break;
             }
         }
@@ -791,6 +1112,9 @@ namespace LayoutBXLYT
 
     public class BxlytHeader : LayoutHeader
     {
+        [Browsable(false)]
+        public Dictionary<string, BasePane> PaneLookup = new Dictionary<string, BasePane>();
+
         [Browsable(false)]
         public BasePane RootPane { get; set; }
 
@@ -811,10 +1135,30 @@ namespace LayoutBXLYT
         {
             return new List<BxlytMaterial>();
         }
+
+        public BxlytMaterial SearchMaterial(string name)
+        {
+            var materials = GetMaterials();
+            for (int i = 0; i < materials.Count; i++)
+            {
+                if (materials[i].Name == name)
+                    return materials[i];
+            }
+            return null;
+        }
+
+        public void AddPaneToTable(BasePane pane)
+        {
+            if (!PaneLookup.ContainsKey(pane.Name))
+                PaneLookup.Add(pane.Name, pane);
+        }
     }
 
     public class BxlytMaterial
     {
+        [Browsable(false)]
+        public MaterialAnimController animController = new MaterialAnimController();
+
         [DisplayName("Name"), CategoryAttribute("General")]
         public virtual string Name { get; set; }
 
@@ -826,6 +1170,36 @@ namespace LayoutBXLYT
 
         [DisplayName("Texture Maps"), CategoryAttribute("Texture")]
         public BxlytTextureRef[] TextureMaps { get; set; }
+    }
+
+    public class MaterialAnimController
+    {
+        public Dictionary<LMCTarget, float> MaterialColors = new Dictionary<LMCTarget, float>();
+        public Dictionary<LTPTarget, string> TexturePatterns = new Dictionary<LTPTarget, string>();
+        public Dictionary<LTSTarget, float> TextureSRTS = new Dictionary<LTSTarget, float>();
+        public Dictionary<LIMTarget, float> IndTextureSRTS = new Dictionary<LIMTarget, float>();
+
+        public void ResetAnim()
+        {
+            MaterialColors.Clear();
+            TexturePatterns.Clear();
+            TextureSRTS.Clear();
+            IndTextureSRTS.Clear();
+        }
+    }
+
+    public class BxlytTextureTransform
+    {
+        public Vector2F Translate { get; set; }
+        public float Rotate { get; set; }
+        public Vector2F Scale { get; set; }
+    }
+
+    public class BxlytIndTextureTransform
+    {
+        public float Rotation { get; set; }
+        public float ScaleX { get; set; }
+        public float ScaleY { get; set; }
     }
 
     public class SectionCommon
@@ -880,7 +1254,12 @@ namespace LayoutBXLYT
         }
     }
 
+    public class LayoutControlDocked : Toolbox.Library.Forms.STUserControl
+    {
+        public DockContent DockContent;
 
+        public DockPane Pane => DockContent?.Pane;
+    }
 
     public class LayoutDocked : DockContent
     {

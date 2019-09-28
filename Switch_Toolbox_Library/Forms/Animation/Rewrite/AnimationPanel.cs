@@ -14,11 +14,37 @@ using Toolbox.Library.Animations;
 
 namespace Toolbox.Library
 {
-    //Thanks to forge! Based on
-    // https://github.com/jam1garner/Smash-Forge/blob/52844da94c7bed830d841e0d7e5d49c3f2c69471/Smash%20Forge/GUI/ModelViewport.cs
-
-    public partial class AnimationPanel : STUserControl
+    public partial class STAnimationPanel : STUserControl
     {
+        private OpenTK.GLControl _viewport;
+        public virtual OpenTK.GLControl Viewport
+        {
+            get
+            {
+                if (_viewport == null)
+                    _viewport = GetActiveViewport();
+
+                return _viewport;
+            }
+        }
+
+        private OpenTK.GLControl GetActiveViewport()
+        {
+            var viewport = LibraryGUI.GetActiveViewport();
+            if (viewport == null)
+                return null;
+
+            if (viewport.GL_ControlModern != null)
+                return viewport.GL_ControlModern;
+            else
+                return viewport.GL_ControlLegacy;
+        }
+
+        public void SetViewport(OpenTK.GLControl control)
+        {
+            _viewport = control;
+        }
+
         public PlayerState AnimationPlayerState = PlayerState.Stop;
 
         public enum PlayerState
@@ -42,8 +68,8 @@ namespace Toolbox.Library
             }
         }
 
-        private static AnimationPanel _instance;
-        public static AnimationPanel Instance { get { return _instance == null ? _instance = new AnimationPanel() : _instance; } }
+        private static STAnimationPanel _instance;
+        public static STAnimationPanel Instance { get { return _instance == null ? _instance = new STAnimationPanel() : _instance; } }
 
         //Animation Functions
         public int AnimationSpeed = 60;
@@ -54,54 +80,64 @@ namespace Toolbox.Library
         private bool renderThreadIsUpdating = false;
         public bool isOpen = true;
 
-        private Animation currentAnimation;
-        public Animation CurrentAnimation
+        public float FrameCount
         {
             get
             {
-                return currentAnimation;
+                float frameCount = 1;
+                for (int i = 0; i < currentAnimations.Count; i++)
+                    frameCount = Math.Max(frameCount, currentAnimations[i].FrameCount);
+
+                return frameCount;
             }
-            set
-            {
-                if (value == null)
-                    return;
+        }
 
-                int frameCount = 1;
+        private List<STAnimation> currentAnimations = new List<STAnimation>();
 
-                if (value.FrameCount != 0)
-                    frameCount = value.FrameCount;
+        public void AddAnimation(STAnimation animation, bool reset = true)
+        {
+            if (animation == null)
+                return;
 
-                ResetModels();
-                currentAnimation = value;
-                totalFrame.Maximum = frameCount;
-                totalFrame.Value = frameCount;
-                currentFrameUpDown.Maximum = frameCount;
-                animationTrackBar.FrameCount = frameCount;
-                currentFrameUpDown.Value = 0;
+            if (reset)
+                Reset();
 
-                SetAnimationsToFrame(0);
-                UpdateViewport();
-            }
+            Console.WriteLine($"Add anim " + animation.Name);
+
+            currentAnimations.Add(animation);
+
+            ResetModels();
+            animation.Reset();
+            totalFrame.Maximum = (decimal)FrameCount;
+            totalFrame.Value = (decimal)FrameCount;
+            currentFrameUpDown.Maximum = (decimal)FrameCount;
+            animationTrackBar.FrameCount = (float)FrameCount;
+            currentFrameUpDown.Value = 0;
+
+            SetAnimationsToFrame(0);
+            UpdateViewport();
+        }
+
+        public void Reset()
+        {
+            currentAnimations.Clear();
+            Frame = 0;
         }
 
         public void ResetModels()
         {
-            var viewport = LibraryGUI.GetActiveViewport();
-            if (viewport == null)
-                return;
-            if (viewport.scene == null)
+            if (Viewport == null)
                 return;
 
-            foreach (var drawable in viewport.scene.objects)
-            {
-                if (drawable is STSkeleton)
+            foreach (var anim in currentAnimations) {
+                if (anim is STSkeletonAnimation)
                 {
-                    ((STSkeleton)drawable).reset();
+                    ((STSkeletonAnimation)anim).GetActiveSkeleton()?.reset();
                 }
             }
         }
 
-        public AnimationPanel()
+        public STAnimationPanel()
         {
             InitializeComponent();
 
@@ -202,7 +238,7 @@ namespace Toolbox.Library
 
         private void animationPlayBtn_Click(object sender, EventArgs e)
         {
-            if (currentAnimation == null || currentAnimation.FrameCount <= 0)
+            if (currentAnimations.Count == 0 || FrameCount <= 0)
                 return;
 
             if (AnimationPlayerState == PlayerState.Playing)
@@ -213,62 +249,31 @@ namespace Toolbox.Library
 
         private void totalFrame_ValueChanged(object sender, EventArgs e)
         {
-            if (currentAnimation == null) return;
+            if (currentAnimations.Count == 0) return;
+
             if (totalFrame.Value < 1)
             {
                 totalFrame.Value = 1;
             }
             else
             {
-                if (currentAnimation.Tag is Animation)
-                    ((Animation)currentAnimation.Tag).FrameCount = (int)totalFrame.Value;
-                currentAnimation.FrameCount = (int)totalFrame.Value;
                 animationTrackBar.CurrentFrame = 0;
-                animationTrackBar.FrameCount = currentAnimation.FrameCount;
+                animationTrackBar.FrameCount = FrameCount;
             }
         }
         private void UpdateViewport()
         {
-            if (IsDisposed)
+            if (IsDisposed || Viewport == null || Viewport.IsDisposed || Viewport.Disposing)
                 return;
 
-            Viewport viewport = LibraryGUI.GetActiveViewport();
-
-            if (viewport == null)
-                return;
-
-            if (viewport.GL_ControlLegacy != null &&
-                !viewport.GL_ControlLegacy.IsDisposed)
-            {
-                if (viewport.GL_ControlLegacy.InvokeRequired)
-                {
-                    viewport.GL_ControlLegacy.Invoke((MethodInvoker)delegate {
-                        // Running on the UI thread
-                        viewport.GL_ControlLegacy.Invalidate();
-                    });
-                }
-                else
-                {
-                    viewport.GL_ControlLegacy.Invalidate();
-                }
+            if (Viewport.InvokeRequired) {
+                Viewport.Invoke((MethodInvoker)delegate {
+                    // Running on the UI thread
+                    Viewport.Invalidate();
+                });
             }
             else
-            {
-                if (viewport.GL_ControlModern == null || viewport.GL_ControlModern.IsDisposed || viewport.GL_ControlModern.Disposing)
-                    return;
-
-                if (viewport.GL_ControlModern.InvokeRequired)
-                {
-                    viewport.GL_ControlModern.Invoke((MethodInvoker)delegate {
-                        // Running on the UI thread
-                        viewport.GL_ControlModern.Invalidate();
-                    });
-                }
-                else
-                {
-                    viewport.GL_ControlModern.Invalidate();
-                }
-            }
+                Viewport.Invalidate();
         }
 
         private void nextButton_Click(object sender, EventArgs e) {
@@ -286,10 +291,10 @@ namespace Toolbox.Library
         }
 
         private void animationTrackBar_ValueChanged(object sender, EventArgs e) {
-            if (currentAnimation == null || totalFrame.Value <= 0)
+            if (currentAnimations.Count == 0 || totalFrame.Value <= 0)
                 return;
 
-            currentFrameUpDown.Value = animationTrackBar.CurrentFrame;
+            currentFrameUpDown.Value = (decimal)animationTrackBar.CurrentFrame;
         }
 
         private void OnFrameAdvanced()
@@ -301,64 +306,29 @@ namespace Toolbox.Library
                 UpdateViewport();
         }
 
-        private void SetAnimationsToFrame(int frameNum)
+        private void SetAnimationsToFrame(float frameNum)
         {
-            if (currentAnimation == null)
+            if (Viewport == null || currentAnimations.Count == 0)
                 return;
 
-            var viewport = LibraryGUI.GetActiveViewport();
-            if (viewport == null || viewport.scene == null)
-                return;
+            foreach (var anim in currentAnimations)
+            {
+                if (frameNum > anim.FrameCount)
+                    continue;
 
-            var anim = currentAnimation.Tag;
+                float animFrameNum = frameNum;
 
-            float animFrameNum = frameNum;
+                anim.SetFrame(animFrameNum);
+                anim.NextFrame();
 
-            if (anim is MaterialAnimation)
-            {
-                ((MaterialAnimation)anim).SetFrame(animFrameNum);
-                ((MaterialAnimation)anim).NextFrame(viewport);
-            }
-            else if (anim is VisibilityAnimation)
-            {
-                ((VisibilityAnimation)anim).SetFrame(animFrameNum);
-                ((VisibilityAnimation)anim).NextFrame(viewport);
-            }
-            else if (anim is CameraAnimation)
-            {
-                ((CameraAnimation)anim).SetFrame(animFrameNum);
-                ((CameraAnimation)anim).NextFrame(viewport);
-            }
-            else if (anim is LightAnimation)
-            {
-                ((LightAnimation)anim).SetFrame(animFrameNum);
-                ((LightAnimation)anim).NextFrame(viewport);
-            }
-            else if (anim is FogAnimation)
-            {
-                ((FogAnimation)anim).SetFrame(animFrameNum);
-                ((FogAnimation)anim).NextFrame(viewport);
-            }
-            else //Play a skeletal animation if it's not the other types
-            {
-                foreach (var drawable in viewport.scene.objects)
+                //Add frames to the playing animation
+                anim.Frame += frameNum;
+
+                //Reset it when it reaches the total frame count
+                if (anim.Frame >= anim.FrameCount && anim.Loop)
                 {
-                    if (drawable is STSkeleton)
-                    {
-                        currentAnimation.SetFrame(animFrameNum);
-                        currentAnimation.NextFrame((STSkeleton)drawable);
-                    }
+                    anim.Frame = 0;
                 }
-            }
-
-
-            //Add frames to the playing animation
-            currentAnimation.Frame += frameNum;
-
-            //Reset it when it reaches the total frame count
-            if (currentAnimation.Frame >= currentAnimation.FrameCount)
-            {
-              currentAnimation.Frame = 0;
             }
         }
 
@@ -383,14 +353,8 @@ namespace Toolbox.Library
 
         private void AnimationPanel_Load(object sender, EventArgs e)
         {
-            Viewport viewport = LibraryGUI.GetActiveViewport();
-            if (viewport != null)
-            {
-                if (viewport.GL_ControlLegacy != null)
-                    viewport.GL_ControlLegacy.VSync = Runtime.enableVSync;
-                else
-                    viewport.GL_ControlModern.VSync = Runtime.enableVSync;
-            }
+            if (Viewport != null)
+                Viewport.VSync = Runtime.enableVSync;
 
             renderThread = new Thread(new ThreadStart(RenderAndAnimationLoop));
             renderThread.Start();
@@ -456,7 +420,7 @@ namespace Toolbox.Library
 
             renderThread.Abort();
             renderThreadIsUpdating = false;
-            currentAnimation = null;
+            currentAnimations.Clear();
             isOpen = false;
             Dispose();
 

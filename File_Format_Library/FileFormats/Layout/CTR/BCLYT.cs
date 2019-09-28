@@ -217,6 +217,7 @@ namespace LayoutBXLYT
             {
                 IsBigEndian = reader.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian;
 
+                PaneLookup.Clear();
                 LayoutInfo = new LYT1();
                 TextureList = new TXL1();
                 MaterialList = new MAT1();
@@ -270,6 +271,8 @@ namespace LayoutBXLYT
                             break;
                         case "pan1":
                             var panel = new PAN1(reader);
+                            AddPaneToTable(panel);
+
                             if (!setRoot)
                             {
                                 RootPane = panel;
@@ -281,30 +284,36 @@ namespace LayoutBXLYT
                             break;
                         case "pic1":
                             var picturePanel = new PIC1(reader, this);
+                            AddPaneToTable(picturePanel);
 
                             SetPane(picturePanel, parentPane);
                             currentPane = picturePanel;
                             break;
                         case "txt1":
                             var textPanel = new TXT1(reader);
+                            AddPaneToTable(textPanel);
 
                             SetPane(textPanel, parentPane);
                             currentPane = textPanel;
                             break;
                         case "bnd1":
                             var boundsPanel = new BND1(reader);
+                            AddPaneToTable(boundsPanel);
 
                             SetPane(boundsPanel, parentPane);
                             currentPane = boundsPanel;
                             break;
                         case "prt1":
                             var partsPanel = new PRT1(reader);
+                            AddPaneToTable(partsPanel);
 
                             SetPane(partsPanel, parentPane);
                             currentPane = partsPanel;
                             break;
                         case "wnd1":
                             var windowPanel = new WND1(reader);
+                            AddPaneToTable(windowPanel);
+
                             SetPane(windowPanel, parentPane);
                             currentPane = windowPanel;
                             break;
@@ -551,7 +560,7 @@ namespace LayoutBXLYT
             }
         }
 
-        public class BND1 : PAN1
+        public class BND1 : PAN1, IBoundryPane
         {
             public BND1() : base()
             {
@@ -625,7 +634,7 @@ namespace LayoutBXLYT
             }
         }
 
-        public class PIC1 : PAN1
+        public class PIC1 : PAN1, IPicturePane
         {
             [DisplayName("Texture Coordinates"), CategoryAttribute("Texture")]
             public TexCoord[] TexCoords { get; set; }
@@ -710,7 +719,7 @@ namespace LayoutBXLYT
         {
             private byte _flags1;
 
-            public bool Visible
+            public override bool Visible
             {
                 get { return (_flags1 & 0x1) == 0x1; }
                 set {

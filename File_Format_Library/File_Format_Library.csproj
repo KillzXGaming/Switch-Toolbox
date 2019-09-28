@@ -220,6 +220,7 @@
     <Compile Include="FileFormats\DKCTF\Common.cs" />
     <Compile Include="FileFormats\DKCTF\MSBT.cs" />
     <Compile Include="FileFormats\DKCTF\PAK.cs" />
+    <Compile Include="FileFormats\Font\BXFNT.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HeaderCommon.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HedgeModel.cs" />
     <Compile Include="FileFormats\HedgehogEngine\PACx.cs" />
@@ -296,6 +297,9 @@
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
+    <Compile Include="FileFormats\Layout\Animation\LytAnimGroup.cs" />
+    <Compile Include="FileFormats\Layout\Animation\LytAnimTrack.cs" />
+    <Compile Include="FileFormats\Layout\Animation\LytKeyFrame.cs" />
     <Compile Include="FileFormats\Layout\BxlytShader.cs" />
     <Compile Include="FileFormats\Layout\BxlytToGL.cs" />
     <Compile Include="FileFormats\Layout\CAFE\FLAN.cs" />
@@ -311,6 +315,8 @@
     <Compile Include="FileFormats\Layout\CTR\BCLYT.cs" />
     <Compile Include="FileFormats\Layout\CAFE\FLYT.cs" />
     <Compile Include="FileFormats\Layout\CTR\BclytShader.cs" />
+    <Compile Include="FileFormats\Layout\Animation\LytAnimation.cs" />
+    <Compile Include="FileFormats\Layout\LayoutCustomPaneMapper.cs" />
     <Compile Include="FileFormats\Layout\LayoutTextureLoader.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
     <Compile Include="FileFormats\Layout\Common.cs" />
@@ -385,7 +391,7 @@
       <DependentUpon>LayoutTextureList.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutViewer.Designer.cs">
       <DependentUpon>LayoutViewer.cs</DependentUpon>

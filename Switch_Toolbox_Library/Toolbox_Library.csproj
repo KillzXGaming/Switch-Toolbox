@@ -199,7 +199,12 @@
   <ItemGroup>
     <Compile Include="Animations\Animation.cs" />
     <Compile Include="Animations\AnimationGroupNode.cs" />
+    <Compile Include="Animations\AnimationRewrite\InterpolationHelper.cs" />
     <Compile Include="Animations\AnimationRewrite\STAnimation.cs" />
+    <Compile Include="Animations\AnimationRewrite\STAnimationTrack.cs" />
+    <Compile Include="Animations\AnimationRewrite\STKeyFrame.cs" />
+    <Compile Include="Animations\AnimationRewrite\STAnimGroup.cs" />
+    <Compile Include="Animations\AnimationRewrite\STSkeletonAnimation.cs" />
     <Compile Include="Animations\ImageKeyFrame.cs" />
     <Compile Include="Animations\VisibilityAnimation.cs" />
     <Compile Include="Animations\BooleanKeyFrame.cs" />
@@ -245,6 +250,12 @@
     <Compile Include="FileFormats\DDS\RGBAPixelDecoder.cs" />
     <Compile Include="FileSystem\VirtualFileTreeNode.cs" />
     <Compile Include="FileSystem\VirtualTreeNode.cs" />
+    <Compile Include="Forms\Animation\Rewrite\AnimationPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Animation\Rewrite\AnimationPanel.Designer.cs">
+      <DependentUpon>AnimationPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ColorAlphaBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -397,7 +408,7 @@
     <Compile Include="Forms\Dialogs\STSaveLogDialog.Designer.cs">
       <DependentUpon>STSaveLogDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Editors\Animation\BoneAnimTimeline.cs">
+    <Compile Include="Forms\Animation\BoneAnimTimeline.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\Custom\DropdownPanel\ExpandCollapseEventArgs.cs" />
@@ -603,10 +614,10 @@
     <Compile Include="Forms\Editors\TextEditor\TextEditorForm.Designer.cs">
       <DependentUpon>TextEditorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Editors\Animation\TimeLine.cs">
+    <Compile Include="Forms\Animation\TimeLine.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Editors\Animation\TimeLine.Designer.cs">
+    <Compile Include="Forms\Animation\TimeLine.Designer.cs">
       <DependentUpon>TimeLine.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Editors\UV\UVEditor2.cs">
@@ -772,10 +783,10 @@
     <Compile Include="IO\STStream.cs" />
     <Compile Include="Maths\Math.cs" />
     <Compile Include="Plugin\GenericPluginLoader.cs" />
-    <Compile Include="Forms\Editors\Animation\AnimationPanel.cs">
+    <Compile Include="Forms\Animation\AnimationPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Editors\Animation\AnimationPanel.Designer.cs">
+    <Compile Include="Forms\Animation\AnimationPanel.Designer.cs">
       <DependentUpon>AnimationPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Editors\AssimpMeshSelector.cs">
@@ -865,6 +876,9 @@
     <Compile Include="XML\XmlDoc.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\Animation\Rewrite\AnimationPanel.resx">
+      <DependentUpon>AnimationPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Archive\ArchiveFilePanel.resx">
       <DependentUpon>ArchiveFilePanel.cs</DependentUpon>
     </EmbeddedResource>
@@ -936,7 +950,7 @@
     <EmbeddedResource Include="Forms\Dialogs\STErrorDialog.resx">
       <DependentUpon>STErrorDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Editors\Animation\AnimationPanel.resx">
+    <EmbeddedResource Include="Forms\Animation\AnimationPanel.resx">
       <DependentUpon>AnimationPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\Assimp Settings.resx">
@@ -1026,7 +1040,7 @@
     <EmbeddedResource Include="Forms\Editors\TextEditor\TextEditorForm.resx">
       <DependentUpon>TextEditorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Editors\Animation\TimeLine.resx">
+    <EmbeddedResource Include="Forms\Animation\TimeLine.resx">
       <DependentUpon>TimeLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\TextureImport\3DS\CTR_3DSTextureImporter.resx">
@@ -1305,6 +1319,7 @@
     <None Include="Resources\Playback\PauseBtn.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Externals\" />
     <Folder Include="FileFormats\Compression\" />
     <Folder Include="FileFormats\DAE\COLLADA\" />
     <Folder Include="FileFormats\DAE\Custom\" />

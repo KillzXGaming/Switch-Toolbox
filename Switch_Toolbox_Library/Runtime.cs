@@ -66,6 +66,7 @@ namespace Toolbox.Library
         {
             public static bool IsGamePreview = false;
             public static bool DisplayNullPane = true;
+            public static bool DisplayTextPane = true;
             public static bool DisplayBoundryPane = true;
             public static bool DisplayPicturePane = true;
             public static bool DisplayWindowPane = true;
@@ -73,6 +74,7 @@ namespace Toolbox.Library
             public static bool DisplayScissorPane = true;
 
             public static bool DisplayGrid = true;
+            public static bool UseOrthographicView = true;
 
             public static Color BackgroundColor = Color.FromArgb(130, 130, 130);
 

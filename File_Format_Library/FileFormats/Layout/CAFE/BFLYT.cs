@@ -267,9 +267,6 @@ namespace LayoutBXLYT.Cafe
             private ushort HeaderSize;
 
             [Browsable(false)]
-            public Dictionary<string, BasePane> PaneLookup = new Dictionary<string, BasePane>();
-
-            [Browsable(false)]
             public LYT1 LayoutInfo { get; set; }
             [Browsable(false)]
             public TXL1 TextureList { get; set; }
@@ -367,6 +364,7 @@ namespace LayoutBXLYT.Cafe
 
             public void Read(FileReader reader, BFLYT bflyt)
             {
+                PaneLookup.Clear();
                 LayoutInfo = new LYT1();
                 TextureList = new TXL1();
                 MaterialList = new MAT1();
@@ -530,12 +528,6 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
-            private void AddPaneToTable(BasePane pane)
-            {
-                if (!PaneLookup.ContainsKey(pane.Name))
-                    PaneLookup.Add(pane.Name, pane);
-            }
-
             private void SetPane(BasePane pane, BasePane parentPane)
             {
                 if (parentPane != null)
@@ -692,7 +684,7 @@ namespace LayoutBXLYT.Cafe
             }
         }
 
-        public class TXT1 : PAN1
+        public class TXT1 : PAN1, ITextPane
         {
             public override string Signature { get; } = "txt1";
 
@@ -701,8 +693,10 @@ namespace LayoutBXLYT.Cafe
          
             }
 
-            public string Text { get; set; }
+            [Browsable(false)]
+            public Toolbox.Library.Rendering.RenderableTex RenderableFont { get; set; }
 
+            [DisplayName("Horizontal Alignment"), CategoryAttribute("Font")]
             public OriginX HorizontalAlignment
             {
                 get { return (OriginX)((TextAlignment >> 2) & 0x3); }
@@ -713,6 +707,7 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
+            [DisplayName("Vertical Alignment"), CategoryAttribute("Font")]
             public OriginX VerticalAlignment
             {
                 get { return (OriginX)((TextAlignment) & 0x3); }
@@ -723,49 +718,83 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
+            [Browsable(false)]
             public ushort TextLength { get; set; }
+            [Browsable(false)]
             public ushort MaxTextLength { get; set; }
+            [Browsable(false)]
             public ushort MaterialIndex { get; set; }
+            [Browsable(false)]
             public ushort FontIndex { get; set; }
 
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public BxlytMaterial Material { get; set; }
+
+            [DisplayName("Text Alignment"), CategoryAttribute("Font")]
             public byte TextAlignment { get; set; }
+
+            [DisplayName("Line Alignment"), CategoryAttribute("Font")]
             public LineAlign LineAlignment { get; set; }
-        
+
+            [DisplayName("Italic Tilt"), CategoryAttribute("Font")]
             public float ItalicTilt { get; set; }
 
+            [DisplayName("Fore Color"), CategoryAttribute("Font")]
             public STColor8 FontForeColor { get; set; }
+
+            [DisplayName("Back Color"), CategoryAttribute("Font")]
             public STColor8 FontBackColor { get; set; }
+
+            [DisplayName("Font Size"), CategoryAttribute("Font")]
             public Vector2F FontSize { get; set; }
 
+            [DisplayName("Character Space"), CategoryAttribute("Font")]
             public float CharacterSpace { get; set; }
+
+            [DisplayName("Line Space"), CategoryAttribute("Font")]
             public float LineSpace { get; set; }
 
+            [DisplayName("Shadow Position"), CategoryAttribute("Shadows")]
             public Vector2F ShadowXY { get; set; }
+
+            [DisplayName("Shadow Size"), CategoryAttribute("Shadows")]
             public Vector2F ShadowXYSize { get; set; }
 
+            [DisplayName("Shadow Fore Color"), CategoryAttribute("Shadows")]
             public STColor8 ShadowForeColor { get; set; }
+
+            [DisplayName("Shadow Back Color"), CategoryAttribute("Shadows")]
             public STColor8 ShadowBackColor { get; set; }
 
+            [DisplayName("Shadow Italic"), CategoryAttribute("Shadows")]
             public float ShadowItalic { get; set; }
 
+            [DisplayName("Text Box Name"), CategoryAttribute("Text Box")]
             public string TextBoxName { get; set; }
 
+            [DisplayName("Text"), CategoryAttribute("Text Box")]
+            public string Text { get; set; }
+
+            [DisplayName("Per Character Transform"), CategoryAttribute("Font")]
             public bool PerCharTransform
             {
                 get { return (_flags & 0x10) != 0; }
                 set { _flags = value ? (byte)(_flags | 0x10) : unchecked((byte)(_flags & (~0x10))); }
             }
+            [DisplayName("Restricted Text Length"), CategoryAttribute("Font")]
             public bool RestrictedTextLengthEnabled
             {
                 get { return (_flags & 0x2) != 0; }
                 set { _flags = value ? (byte)(_flags | 0x2) : unchecked((byte)(_flags & (~0x2))); }
             }
+            [DisplayName("Enable Shadows"), CategoryAttribute("Font")]
             public bool ShadowEnabled
             {
                 get { return (_flags & 1) != 0; }
                 set { _flags = value ? (byte)(_flags | 1) : unchecked((byte)(_flags & (~1))); }
             }
 
+            [DisplayName("Font Name"), CategoryAttribute("Font")]
             public string FontName { get; set; }
 
             private byte _flags;
@@ -796,6 +825,9 @@ namespace LayoutBXLYT.Cafe
                 ShadowBackColor = STColor8.FromBytes(reader.ReadBytes(4));
                 ShadowItalic = reader.ReadSingle();
 
+                if (MaterialIndex != ushort.MaxValue && header.MaterialList.Materials.Count > 0)
+                    Material = header.MaterialList.Materials[MaterialIndex];
+                
                 if (FontIndex != ushort.MaxValue && header.FontList.Fonts.Count > 0)
                     FontName = header.FontList.Fonts[FontIndex];
 
@@ -867,21 +899,6 @@ namespace LayoutBXLYT.Cafe
                     writer.WriteString(TextBoxName);
                 }
             }
-
-            public enum BorderType : byte
-            {
-                Standard = 0,
-                DeleteBorder = 1,
-                RenderTwoCycles = 2,
-            };
-
-            public enum LineAlign : byte
-            {
-                Unspecified = 0,
-                Left = 1,
-                Center = 2,
-                Right = 3,
-            };
         }
 
         public class WND1 : PAN1, IWindowPane
@@ -1161,7 +1178,7 @@ namespace LayoutBXLYT.Cafe
             }
         }
 
-        public class BND1 : PAN1
+        public class BND1 : PAN1, IBoundryPane
         {
             public override string Signature { get; } = "bnd1";
 
@@ -1635,7 +1652,7 @@ namespace LayoutBXLYT.Cafe
             }
         }
 
-        public class PIC1 : PAN1
+        public class PIC1 : PAN1, IPicturePane
         {
             public override string Signature { get; } = "pic1";
 
@@ -1737,7 +1754,7 @@ namespace LayoutBXLYT.Cafe
             private byte origin;
 
             [DisplayName("Is Visible"), CategoryAttribute("Flags")]
-            public bool Visible
+            public override bool Visible
             {
                 get { return (_flags1 & 0x1) == 0x1; }
                 set {
@@ -1958,21 +1975,26 @@ namespace LayoutBXLYT.Cafe
             public TevStage[] TevStages { get; set; }
 
             [DisplayName("Alpha Compare"), CategoryAttribute("Alpha")]
+            [TypeConverter(typeof(ExpandableObjectConverter))]
             public AlphaCompare AlphaCompare { get; set; }
 
             [DisplayName("Blend Mode"), CategoryAttribute("Blend")]
+            [TypeConverter(typeof(ExpandableObjectConverter))]
             public BlendMode BlendMode { get; set; }
 
             [DisplayName("Blend Mode Logic"), CategoryAttribute("Blend")]
+            [TypeConverter(typeof(ExpandableObjectConverter))]
             public BlendMode BlendModeLogic { get; set; }
 
             [DisplayName("Indirect Parameter"), CategoryAttribute("Texture")]
+            [TypeConverter(typeof(ExpandableObjectConverter))]
             public IndirectParameter IndParameter { get; set; }
 
             [DisplayName("Projection Texture Coord Parameters"), CategoryAttribute("Texture")]
             public ProjectionTexGenParam[] ProjTexGenParams { get; set; }
 
             [DisplayName("Font Shadow Parameters"), CategoryAttribute("Font")]
+            [TypeConverter(typeof(ExpandableObjectConverter))]
             public FontShadowParameter FontShadowParameter { get; set; }
 
             private uint flags;

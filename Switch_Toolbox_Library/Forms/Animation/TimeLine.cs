@@ -62,7 +62,7 @@ namespace Toolbox.Library.Forms
             }
         }
 
-        public int CurrentFrame
+        public float CurrentFrame
         {
             get { return currentFrame; }
             set
@@ -81,7 +81,7 @@ namespace Toolbox.Library.Forms
             }
         }
 
-        public int FrameCount
+        public float FrameCount
         {
             get { return lastFrame + 1; }
             set
@@ -107,8 +107,8 @@ namespace Toolbox.Library.Forms
 
         public bool FollowCurrentFrame = true;
 
-        protected int currentFrame = 0;
-        protected int lastFrame = 1000;
+        protected float currentFrame = 0;
+        protected float lastFrame = 1000;
 
         protected double frameLeft = 0;
         protected double frameRight = 200;
@@ -193,6 +193,7 @@ namespace Toolbox.Library.Forms
             e.Graphics.SetClip(new Rectangle(margin, 0, Width - margin, Height));
 
             double currentFrameX = 20 + margin + (currentFrame - frameLeft) * (Width - 40 - margin) / (frameRight - frameLeft);
+
             base.OnPaint(e);
             e.Graphics.DrawLine(pen2, new Point((int)currentFrameX, barHeight), new Point((int)currentFrameX, Height));
 

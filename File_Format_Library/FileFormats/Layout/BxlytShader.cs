@@ -10,6 +10,8 @@ namespace LayoutBXLYT
 {
     public class BxlytShader : IDisposable
     {
+        public bool Compiled = false;
+
         public int program;
         private int vertexShader;
         private int fragmentShader;
@@ -125,14 +127,32 @@ namespace LayoutBXLYT
             GL.GetProgram(program, GetProgramParameterName.ActiveAttributes, out activeAttributeCount);
             for (int i = 0; i < activeAttributeCount; i++)
             {
-                int size = 0;
-                ActiveAttribType type;
-                string name = GL.GetActiveAttrib(program, i, out size, out type);
+                string name = GL.GetActiveAttrib(program, i, out int size, out ActiveAttribType type);
                 int location = GL.GetAttribLocation(program, name);
 
                 // Overwrite existing vertex attributes.
                 attributes[name] = location;
             }
+        }
+
+        public void EnableVertexAttributes()
+        {
+            foreach (KeyValuePair<string, int> attrib in attributes)
+                GL.EnableVertexAttribArray(attrib.Value);
+        }
+
+        public void DisableVertexAttributes()
+        {
+            foreach (KeyValuePair<string, int> attrib in attributes)
+                GL.DisableVertexAttribArray(attrib.Value);
+        }
+
+        public int GetAttribute(string name)
+        {
+            if (string.IsNullOrEmpty(name) || !attributes.ContainsKey(name))
+                return -1;
+            else
+                return attributes[name];
         }
 
         private void LoadUniorms(int program)
@@ -156,8 +176,11 @@ namespace LayoutBXLYT
         {
             program = CompileShaders();
 
+            LoadAttributes(program);
             LoadUniorms(program);
             OnCompiled();
+
+            Compiled = true;
         }
 
         public virtual void OnCompiled() { }
