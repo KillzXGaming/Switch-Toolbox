@@ -127,7 +127,10 @@ namespace LayoutBXLYT
             GL.GetProgram(program, GetProgramParameterName.ActiveAttributes, out activeAttributeCount);
             for (int i = 0; i < activeAttributeCount; i++)
             {
-                string name = GL.GetActiveAttrib(program, i, out int size, out ActiveAttribType type);
+                int size = 0;
+                ActiveAttribType type;
+
+                string name = GL.GetActiveAttrib(program, i, out size, out type);
                 int location = GL.GetAttribLocation(program, name);
 
                 // Overwrite existing vertex attributes.
