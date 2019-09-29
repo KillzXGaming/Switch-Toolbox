@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
@@ -76,8 +75,6 @@ namespace Toolbox.Library
         public float Frame = 0;
 
         // Frame rate control
-        private Thread renderThread;
-        private bool renderThreadIsUpdating = false;
         public bool isOpen = true;
 
         public float FrameCount
@@ -169,6 +166,8 @@ namespace Toolbox.Library
             currentFrameUpDown.ForeColor = FormThemes.BaseTheme.FormForeColor;
             currentFrameUpDown.BackColor = FormThemes.BaseTheme.FormBackColor;
 
+            SetupTimer();
+
             this.LostFocus += new System.EventHandler(AnimationPanel_LostFocus);
         }
 
@@ -177,6 +176,7 @@ namespace Toolbox.Library
             AnimationPlayerState = PlayerState.Playing;
             UpdateAnimationUI();
             animationTrackBar.Play();
+            animationTimer.Start();
         }
 
         private void Pause()
@@ -184,6 +184,7 @@ namespace Toolbox.Library
             AnimationPlayerState = PlayerState.Stop;
             UpdateAnimationUI();
             animationTrackBar.Stop();
+            animationTimer.Stop();
         }
 
         private void Stop()
@@ -191,6 +192,7 @@ namespace Toolbox.Library
             currentFrameUpDown.Value = 0;
             AnimationPlayerState = PlayerState.Stop;
             UpdateAnimationUI();
+            animationTimer.Stop();
         }
 
         private void UpdateAnimationUI()
@@ -215,6 +217,16 @@ namespace Toolbox.Library
                     AdvanceNextFrame();
                 }
             }
+        }
+
+        private Timer animationTimer;
+        private void SetupTimer()
+        {
+            animationTimer = new Timer
+            {
+                Interval = 100 / 60
+            };
+            animationTimer.Tick += new EventHandler(animationTimer_Tick);
         }
 
         private void AdvanceNextFrame()
@@ -302,8 +314,13 @@ namespace Toolbox.Library
             UpdateViewport();
             SetAnimationsToFrame(animationTrackBar.CurrentFrame);
 
-            if (!renderThreadIsUpdating || !IsPlaying)
+            if (!IsPlaying)
                 UpdateViewport();
+        }
+
+        private void animationTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateAnimationFrame();
         }
 
         private void SetAnimationsToFrame(float frameNum)
@@ -356,45 +373,6 @@ namespace Toolbox.Library
         {
             if (Viewport != null)
                 Viewport.VSync = Runtime.enableVSync;
-
-            renderThread = new Thread(new ThreadStart(RenderAndAnimationLoop));
-            renderThread.Start();
-        }
-
-        private void RenderAndAnimationLoop()
-        {
-            if (IsDisposed)
-                return;
-            // TODO: We don't really need two timers.
-            Stopwatch animationStopwatch = Stopwatch.StartNew();
-
-
-            // Wait for UI to load before triggering paint events.
-            //  int waitTimeMs = 500;
-            //  Thread.Sleep(waitTimeMs);
-
-           // UpdateViewport();
-
-            int frameUpdateInterval = 5;
-            int animationUpdateInterval = 16;
-
-            while (isOpen)
-            {
-                // Always refresh the viewport when animations are playing.
-                if (renderThreadIsUpdating || IsPlaying)
-                {
-                    if (animationStopwatch.ElapsedMilliseconds > animationUpdateInterval)
-                    {
-                        UpdateAnimationFrame();
-                        animationStopwatch.Restart();
-                    }
-                }
-                else
-                {
-                    // Avoid wasting the CPU if we don't need to render anything.
-                    Thread.Sleep(1);
-                }
-            }
         }
 
         private void AnimationPanel_Enter(object sender, EventArgs e)
@@ -403,24 +381,18 @@ namespace Toolbox.Library
 
         private void AnimationPanel_LostFocus(object sender, EventArgs e)
         {
-            renderThreadIsUpdating = false;
         }
 
         private void AnimationPanel_Click(object sender, EventArgs e)
         {
-            renderThreadIsUpdating = true;
         }
 
         private void AnimationPanel_Leave(object sender, EventArgs e)
         {
-            renderThreadIsUpdating = false;
         }
         public void ClosePanel()
         {
             ResetModels();
-
-            renderThread.Abort();
-            renderThreadIsUpdating = false;
             currentAnimations.Clear();
             isOpen = false;
             Dispose();
