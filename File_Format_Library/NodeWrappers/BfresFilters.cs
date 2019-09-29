@@ -10,9 +10,9 @@ namespace FirstPlugin
 {
     public class FileFilters
     {
-        public static string BNTX_TEX = GetFilter(".bftex", ".dds",".astc", ".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
-        public static string FTEX = GetFilter(".bftex", ".dds", ".dds2", ".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
-        public static string GTX = GetFilter(".dds", ".dds2", ".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+        public static string BNTX_TEX = GetFilter(".bftex", ".dds",".astc", ".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+        public static string FTEX = GetFilter(".bftex", ".dds", ".dds2", ".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+        public static string GTX = GetFilter(".dds", ".dds2", ".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
 
         public static string FMDL = GetFilter(".bfmdl", ".dae", ".fbx", ".obj", ".csv");
         public static string FMDL_EXPORT = GetFilter(".bfmdl", ".dae");
@@ -41,8 +41,8 @@ namespace FirstPlugin
         public static string FSCN = GetFilter(".bfscn");
         public static string FSHA = GetFilter(".bfspa");
 
-        public static string NUTEXB = GetFilter(".dds",".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
-        public static string XTX = GetFilter(".dds", ".png", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+        public static string NUTEXB = GetFilter(".dds",".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+        public static string XTX = GetFilter(".dds", ".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
 
         public static string GetFilter(Type type, object CheckAnimEffect = null, bool IsExporting = false)
         {
