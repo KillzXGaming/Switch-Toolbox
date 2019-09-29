@@ -345,10 +345,11 @@ namespace Toolbox.Library
             OnFrameAdvanced();
         }
 
-        public void AnimationPanel_FormClosed()
+        public override void OnControlClosing()
         {
             isOpen = false;
             Dispose();
+            ClosePanel();
         }
 
         private void AnimationPanel_Load(object sender, EventArgs e)

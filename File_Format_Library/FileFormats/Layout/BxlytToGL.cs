@@ -267,9 +267,6 @@ namespace LayoutBXLYT
             if (updateBitmap)
                 BindFontBitmap(pane, fontBitmap);
 
-            int width = (int)pane.Width;
-            int height = (int)pane.Height;
-
             var mat = textBox.Material as BFLYT.Material;
             if (mat.Shader == null)
             {
@@ -311,7 +308,11 @@ namespace LayoutBXLYT
 
             DrawRectangle(pane, gameWindow, pane.Rectangle, texCoords, Colors, false, effectiveAlpha);
 
+            mat.Shader.Disable();
+
             GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.PopAttrib();
+            GL.UseProgram(0);
         }
 
         private static void BindFontBitmap(BasePane pane, Bitmap fontBitmap)

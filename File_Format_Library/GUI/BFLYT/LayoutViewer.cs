@@ -311,7 +311,7 @@ namespace LayoutBXLYT
                 else if (pane is ITextPane && Runtime.LayoutEditor.DisplayTextPane)
                 {
                     var textPane = (ITextPane)pane;
-                    Bitmap bitmap = new Bitmap(32, 32);
+                    Bitmap bitmap = null;
                     if (textPane.RenderableFont == null)
                     {
                         if (pane is BFLYT.TXT1)
@@ -327,6 +327,8 @@ namespace LayoutBXLYT
                     }
                     if (bitmap != null)
                         BxlytToGL.DrawTextbox(pane, GameWindow, bitmap, effectiveAlpha, Textures, SelectedPanes, textPane.RenderableFont == null);
+                    else
+                        DrawDefaultPane(shader, pane);
                 }
                 else if (pane is BFLYT.SCR1)
                     BxlytToGL.DrawScissorPane(pane, GameWindow, effectiveAlpha, SelectedPanes);

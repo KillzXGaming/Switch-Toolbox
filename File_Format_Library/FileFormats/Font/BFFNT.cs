@@ -306,6 +306,9 @@ namespace FirstPlugin
         private BitmapFont bitmapFont;
         public Bitmap GetBitmap(string text, bool reversewh, LayoutBXLYT.BasePane pane)
         {
+            var FontInfo = FontSection;
+            var TextureGlyph = FontInfo.TextureGlyph;
+
             var textPane = (LayoutBXLYT.ITextPane)pane;
             if (bitmapFont == null)
                 bitmapFont = GetBitmapFont(true);
@@ -313,6 +316,8 @@ namespace FirstPlugin
             return bitmapFont.PrintToBitmap(text, new BitmapFont.FontRenderSettings()
             {
                 CharSpacing = (int)textPane.CharacterSpace,
+                XScale = (textPane.FontSize.X / TextureGlyph.CellWidth),
+                YScale = (textPane.FontSize.Y / TextureGlyph.CellHeight),
                 LineSpacing = (int)textPane.LineSpace,
             });
         }
@@ -338,7 +343,7 @@ namespace FirstPlugin
                     SheetBM = TextureGlyph.GetImageSheet(sheet).GetComponentBitmap(SheetBM, true);
 
                 SheetBM.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                BitmapData bd = SheetBM.LockBits(new Rectangle(0, 0, SheetBM.Width, SheetBM.Height), 
+                BitmapData bd = SheetBM.LockBits(new Rectangle(0, 0, SheetBM.Width, SheetBM.Height),
                     ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
                 for (int y = 0; y < TextureGlyph.LinesCount; y++)
@@ -346,8 +351,8 @@ namespace FirstPlugin
                     for (int x = 0; x < TextureGlyph.RowCount; x++)
                     {
                         Bitmap b = new Bitmap(TextureGlyph.CellWidth, TextureGlyph.CellHeight);
-                        BitmapData bd2 = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), 
-                            ImageLockMode.WriteOnly,PixelFormat.Format32bppArgb);
+                        BitmapData bd2 = b.LockBits(new Rectangle(0, 0, b.Width, b.Height),
+                            ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
 
                         for (int y2 = 0; y2 < TextureGlyph.CellHeight; y2++)
                         {

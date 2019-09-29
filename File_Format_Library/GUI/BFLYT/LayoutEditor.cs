@@ -812,6 +812,7 @@ namespace LayoutBXLYT
 
         private void LayoutEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
+            AnimationPanel?.OnControlClosing();
             GamePreviewWindow?.OnControlClosing();
             GamePreviewWindow?.Dispose();
         }
