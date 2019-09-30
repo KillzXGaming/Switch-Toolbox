@@ -72,13 +72,12 @@ namespace FirstPlugin
             }
         }
 
+        private ImageEditorBase form;
         public ImageEditorBase OpenForm()
         {
             form = new ImageEditorBase();
             return form;
         }
-
-        private ImageEditorBase form;
 
         public void UpdateForm()
         {
@@ -87,6 +86,7 @@ namespace FirstPlugin
 
         public void FillEditor(UserControl control)
         {
+            form = (ImageEditorBase)control;
             UpdateForm((ImageEditorBase)control);
         }
 
@@ -112,6 +112,8 @@ namespace FirstPlugin
                 form.AddFileContextEvent("Replace", Replace);
                 form.LoadProperties(prop);
                 form.LoadImage(this);
+
+                Console.WriteLine("UpdateForm LoadImage");
             }
         }
 
