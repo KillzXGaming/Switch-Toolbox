@@ -440,6 +440,11 @@ namespace LayoutBXLYT
                 dockContent.Show(dockPanel1, DockState.DockBottom);
         }
 
+        public void UpdateHiearchyTree()
+        {
+            LayoutHierarchy?.UpdateTree();
+        }
+
         private void OnAnimationPlaying(object sender, EventArgs e)
         {
             if (LayoutAnimEditor != null)

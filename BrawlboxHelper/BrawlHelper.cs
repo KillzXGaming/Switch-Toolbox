@@ -36,6 +36,7 @@ namespace BrawlboxHelper
         {
             CLR0Node clr0 = NodeFactory.FromFile(null, FileName) as CLR0Node;
 
+
             ResU.ShaderParamAnim fshu = new ResU.ShaderParamAnim();
             fshu.FrameCount = clr0.FrameCount;
             fshu.Name = clr0.Name;
@@ -48,7 +49,10 @@ namespace BrawlboxHelper
 
             //Set mat anims and then calculate data after
             foreach (var entry in clr0.Children)
-                fshu.ShaderParamMatAnims.Add(Clr0Entry2ShaderMatAnim(clr0, (CLR0MaterialNode)entry));
+            {
+                if (entry is CLR0MaterialNode)
+                    fshu.ShaderParamMatAnims.Add(Clr0Entry2ShaderMatAnim(clr0, (CLR0MaterialNode)entry));
+            }
 
             fshu.BakedSize = CalculateBakeSize(fshu);
             fshu.BindIndices = SetIndices(fshu);

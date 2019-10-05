@@ -1264,6 +1264,35 @@ namespace LayoutBXLYT
             if (!PaneLookup.ContainsKey(pane.Name))
                 PaneLookup.Add(pane.Name, pane);
         }
+
+
+        public void AddPane(BasePane pane, BasePane parent)
+        {
+            if (parent == null) return;
+
+            if (!PaneLookup.ContainsKey(pane.Name))
+                PaneLookup.Add(pane.Name, pane);
+
+            parent.Childern.Add(pane);
+            parent.NodeWrapper.Nodes.Add(pane.NodeWrapper);
+        }
+
+        public void RemovePanes(List<BasePane> panes)
+        {
+            for (int i = 0; i < panes.Count; i++)
+            {
+                if (PaneLookup.ContainsKey(panes[i].Name))
+                    PaneLookup.Remove(panes[i].Name);
+
+                if (panes[i].Parent == null)
+                    continue;
+
+                var parent = panes[i].Parent;
+                parent.Childern.Remove(panes[i]);
+
+                parent.NodeWrapper.Nodes.Remove(panes[i].NodeWrapper);
+            }
+        }
     }
 
     public class BxlytMaterial

@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.glControl1 = new OpenTK.GLControl();
+            this.stContextMenuStrip1 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.SuspendLayout();
             // 
             // glControl1
@@ -48,6 +50,11 @@
             this.glControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl1_MouseUp);
             this.glControl1.Resize += new System.EventHandler(this.glControl1_Resize);
             // 
+            // stContextMenuStrip1
+            // 
+            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // LayoutViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -62,5 +69,6 @@
         #endregion
 
         private OpenTK.GLControl glControl1;
+        private Toolbox.Library.Forms.STContextMenuStrip stContextMenuStrip1;
     }
 }

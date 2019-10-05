@@ -83,6 +83,11 @@ namespace LayoutBXLYT
             treeView1.Refresh();
         }
 
+        public void UpdateTree()
+        {
+            treeView1.Refresh();
+        }
+
         public void Reset()
         {
             treeView1.Nodes.Clear();

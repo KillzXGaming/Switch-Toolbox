@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
+using Toolbox.Library.Forms;
 using Toolbox.Library;
 using Toolbox.Library.Rendering;
 using Toolbox.Library.IO;
@@ -716,17 +717,101 @@ namespace LayoutBXLYT
                     ParentEditor.UpdateHiearchyNodeSelection(hitPane);
 
                     isPicked = true;
-                }
-                else if (!hasEdgeHit)
+                } //Check edge hit and control key (multi selecting panes)
+                else if (!hasEdgeHit && Control.ModifierKeys != Keys.Control)
                     SelectedPanes.Clear();
 
                 pickOriginMouse = e.Location;
 
                 RenderScene();
             }
-     
+            else if (e.Button == MouseButtons.Right)
+            {
+                RenderEditor();
+                var coords = convertScreenToWorldCoords(e.Location.X, e.Location.Y);
+
+                GL.PopMatrix();
+
+                //Add a content menu 
+                var selectOverlapping = new STToolStripItem("Select Overlapping");
+                var createPanes = new STToolStripItem("Create Pane");
+                createPanes.DropDownItems.Add(new STToolStripItem("Null Pane"));
+                createPanes.DropDownItems.Add(new STToolStripItem("Picture Pane"));
+                createPanes.DropDownItems.Add(new STToolStripItem("Text Box Pane "));
+                createPanes.DropDownItems.Add(new STToolStripItem("Window Pane"));
+                createPanes.DropDownItems.Add(new STToolStripItem("Boundry Pane"));
+
+                var hitPanes = GetHitPanes(LayoutFile.RootPane, coords.X, coords.Y, new List<BasePane>());
+                for (int i = 0; i < hitPanes.Count; i++)
+                    selectOverlapping.DropDownItems.Add(
+                        new STToolStripItem(hitPanes[i].Name, SelectOverlappingAction));
+
+                stContextMenuStrip1.Items.Clear();
+                stContextMenuStrip1.Items.Add(createPanes);
+                stContextMenuStrip1.Items.Add(selectOverlapping);
+
+                if (SelectedPanes.Count > 0)
+                {
+                    stContextMenuStrip1.Items.Add(new STToolStripSeparator());
+                    stContextMenuStrip1.Items.Add(new STToolStripItem("Edit Group"));
+                    stContextMenuStrip1.Items.Add(new STToolStripItem("Delete Selected Panes",DeletePaneAction ));
+                    stContextMenuStrip1.Items.Add(new STToolStripItem("Hide Selected Panes", HidePaneAction));
+                    stContextMenuStrip1.Items.Add(new STToolStripItem("Show All Hidden Panes", ShowAllPaneAction));
+                }
+
+                stContextMenuStrip1.Show(Cursor.Position);
+            }
 
             Console.WriteLine("SelectedPanes " + SelectedPanes.Count);
+        }
+
+        private void DeletePaneAction(object sender, EventArgs e) {
+            DeleteSelectedPanes();
+        }
+
+        private void HidePaneAction(object sender, EventArgs e) {
+            HideSelectedPanes();
+        }
+
+        private void ShowAllPaneAction(object sender, EventArgs e) {
+            ShowHiddenPanes();
+        }
+
+        private void HideSelectedPanes()
+        {
+            UndoManger.AddToUndo(new LayoutUndoManager.UndoActionPaneHide(SelectedPanes));
+            ParentEditor?.UpdateHiearchyTree();
+            glControl1.Invalidate();
+        }
+
+        private void ShowHiddenPanes()
+        {
+            UndoManger.AddToUndo(new LayoutUndoManager.UndoActionPaneHide(LayoutFile.PaneLookup.Values.ToList(), false));
+            ParentEditor?.UpdateHiearchyTree();
+            glControl1.Invalidate();
+        }
+
+        private void DeleteSelectedPanes()
+        {
+            UndoManger.AddToUndo(new LayoutUndoManager.UndoActionPaneDelete(SelectedPanes, LayoutFile));
+            LayoutFile.RemovePanes(SelectedPanes);
+            ParentEditor?.UpdateHiearchyTree();
+            glControl1.Invalidate();
+        }
+
+        private void SelectOverlappingAction(object sender, EventArgs e)
+        {
+            var toolMenu = sender as STToolStripItem;
+            if (toolMenu != null)
+            {
+                string name = toolMenu.Text;
+                SelectedPanes.Clear();
+
+                if (LayoutFile.PaneLookup.ContainsKey(name))
+                    SelectedPanes.Add(LayoutFile.PaneLookup[name]);
+
+                glControl1.Invalidate();
+            }
         }
 
         private void SearchHit(BasePane pane, int X, int Y, ref BasePane SelectedPane)
@@ -748,6 +833,29 @@ namespace LayoutBXLYT
             
             foreach (var childPane in pane.Childern)
                 SearchHit(childPane, X, Y, ref SelectedPane);
+        }
+
+        private List<BasePane> GetHitPanes(BasePane pane, int X, int Y, List<BasePane> SelectedPanes)
+        {
+            bool isVisible = pane.Visible;
+            if (!Runtime.LayoutEditor.DisplayPicturePane && pane is IPicturePane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayWindowPane && pane is IWindowPane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayBoundryPane && pane is IBoundryPane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayTextPane && pane is ITextPane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayNullPane && pane.IsNullPane)
+                isVisible = false;
+
+            if (isVisible && pane.DisplayInEditor && pane.IsHit(X, Y) && pane.Name != "RootPane")
+                SelectedPanes.Add(pane);
+
+            foreach (var childPane in pane.Childern)
+                SelectedPanes = GetHitPanes(childPane, X, Y, SelectedPanes);
+
+            return SelectedPanes;
         }
 
         private PickAction SearchEdgePicking(BasePane pane, int X, int Y)
@@ -1022,6 +1130,10 @@ namespace LayoutBXLYT
                 UndoManger.Redo();
                 ParentEditor.UpdateUndo();
                 glControl1.Invalidate();
+            }
+            else if (e.KeyCode == Keys.Delete)
+            {
+                DeleteSelectedPanes();
             }
         }
     }

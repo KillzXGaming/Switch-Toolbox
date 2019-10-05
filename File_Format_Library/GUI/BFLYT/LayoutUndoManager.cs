@@ -38,6 +38,58 @@ namespace LayoutBXLYT
             IRevertAction Revert();
         }
 
+        public class UndoActionPaneHide : IRevertAction
+        {
+            private bool hidePane = true;
+            public List<BasePane> targetPanes = new List<BasePane>();
+            public UndoActionPaneHide(List<BasePane> panes, bool hide = true)
+            {
+                targetPanes = panes;
+                hidePane = hide;
+
+                foreach (var pane in targetPanes)
+                    pane.DisplayInEditor = !hidePane;
+            }
+
+            public IRevertAction Revert()
+            {
+                foreach (var pane in targetPanes)
+                    pane.DisplayInEditor = hidePane;
+                return this;
+            }
+        }
+
+        public class UndoActionPaneDelete : IRevertAction
+        {
+            public BxlytHeader layoutFile;
+            public List<PaneInfo> targetPanes = new List<PaneInfo>();
+            public UndoActionPaneDelete(List<BasePane> panes, BxlytHeader header)
+            {
+                layoutFile = header;
+                for (int i = 0; i < panes.Count; i++)
+                    targetPanes.Add(new PaneInfo(panes[i]));
+            }
+
+            public IRevertAction Revert()
+            {
+                for (int i = 0; i < targetPanes.Count; i++)
+                    layoutFile.AddPane(targetPanes[i].Pane, targetPanes[i].Parent);
+                return this;
+            }
+
+            public class PaneInfo
+            {
+                public BasePane Parent;
+                public BasePane Pane;
+
+                public PaneInfo(BasePane pane)
+                {
+                    Pane = pane;
+                    Parent = pane.Parent;
+                }
+            }
+        }
+
         public class UndoActionTransform : IRevertAction
         {
             public Vector3F Translate;
