@@ -933,6 +933,54 @@ namespace LayoutBXLYT
                     }
                     break;
             }
+
+
+            //Lastly draw a selection box if selected
+
+            if (isSelected)
+            {
+                if (!Runtime.LayoutEditor.IsGamePreview && !gameWindow)
+                {
+                    var rect = pane.CreateRectangle();
+
+                    GL.Disable(EnableCap.Blend);
+                    GL.Disable(EnableCap.AlphaTest);
+                    GL.Disable(EnableCap.Texture2D);
+                    GL.UseProgram(0);
+
+                    GL.Begin(PrimitiveType.LineLoop);
+                    GL.Color4(Color.Red);
+                    GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                    GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                    GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                    GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                    GL.End();
+
+                    var transformed = rect;
+                    var leftTop = new Vector2(transformed.LeftPoint, transformed.TopPoint);
+                    var left = new Vector2(transformed.LeftPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
+                    var leftBottom = new Vector2(transformed.LeftPoint, transformed.BottomPoint);
+                    var rightTop = new Vector2(transformed.RightPoint, transformed.TopPoint);
+                    var right = new Vector2(transformed.RightPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
+                    var rightBottom = new Vector2(transformed.RightPoint, transformed.BottomPoint);
+                    var top = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.TopPoint);
+                    var bottom = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.BottomPoint);
+
+                    DrawEdgeSquare(leftTop);
+                    DrawEdgeSquare(left);
+                    DrawEdgeSquare(leftBottom);
+                    DrawEdgeSquare(rightTop);
+                    DrawEdgeSquare(right);
+                    DrawEdgeSquare(rightBottom);
+                    DrawEdgeSquare(top);
+                    DrawEdgeSquare(bottom);
+
+
+                    GL.Enable(EnableCap.Blend);
+                    GL.Enable(EnableCap.AlphaTest);
+                    GL.Enable(EnableCap.Texture2D);
+                }
+            }
         }
 
         private static void GetTextureSize(BxlytMaterial pane, Dictionary<string, STGenericTexture> Textures, out float width, out float height)
@@ -1269,7 +1317,7 @@ namespace LayoutBXLYT
                 if (useLines)
                 {
                     GL.Begin(PrimitiveType.LineLoop);
-                    GL.Color4(colors[0]);
+                    GL.Color4(selectionOutline ? Color.Red : colors[0]);
                     GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
                     GL.Vertex2(rect.RightPoint, rect.BottomPoint);
                     GL.Vertex2(rect.RightPoint, rect.TopPoint);
@@ -1278,26 +1326,35 @@ namespace LayoutBXLYT
                 }
                 else
                 {
+                    GL.Begin(PrimitiveType.Quads);
+                    GL.Color4(colors[0]);
+                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[0].X, texCoords[0].Y);
+                    GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                    GL.Color4(colors[1]);
+                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[1].X, texCoords[1].Y);
+                    GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                    GL.Color4(colors[2]);
+                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[2].X, texCoords[2].Y);
+                    GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                    GL.Color4(colors[3]);
+                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
+                    GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                    GL.End();
+
                     if (!Runtime.LayoutEditor.IsGamePreview && !gameWindow)
                     {
                         GL.Disable(EnableCap.Blend);
                         GL.Disable(EnableCap.AlphaTest);
+                        GL.Disable(EnableCap.Texture2D);
+                        GL.UseProgram(0);
 
-                        GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
-                        GL.Enable(EnableCap.LineSmooth);
-                        GL.LineWidth(1f);
-                        GL.PolygonOffset(1f, 1f);
-
-                        GL.Begin(PrimitiveType.Quads);
+                        GL.Begin(PrimitiveType.LineLoop);
                         GL.Color4(selectionOutline ? Color.Red : Color.Green);
                         GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
                         GL.Vertex2(rect.RightPoint, rect.BottomPoint);
                         GL.Vertex2(rect.RightPoint, rect.TopPoint);
                         GL.Vertex2(rect.LeftPoint, rect.TopPoint);
                         GL.End();
-
-                        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-                        GL.PolygonOffset(0f, 0f);
 
                         if (selectionOutline)
                         {
@@ -1324,22 +1381,8 @@ namespace LayoutBXLYT
 
                         GL.Enable(EnableCap.Blend);
                         GL.Enable(EnableCap.AlphaTest);
+                        GL.Enable(EnableCap.Texture2D);
                     }
-
-                    GL.Begin(PrimitiveType.Quads);
-                    GL.Color4(colors[0]);
-                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[0].X, texCoords[0].Y);
-                    GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                    GL.Color4(colors[1]);
-                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[1].X, texCoords[1].Y);
-                    GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                    GL.Color4(colors[2]);
-                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[2].X, texCoords[2].Y);
-                    GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                    GL.Color4(colors[3]);
-                    GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
-                    GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                    GL.End();
                 }
             }
             else

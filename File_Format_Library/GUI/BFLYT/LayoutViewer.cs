@@ -258,6 +258,9 @@ namespace LayoutBXLYT
             Vector2 TopLeft = new Vector2();
             Vector2 BottomRight = new Vector2();
 
+            GL.Disable(EnableCap.AlphaTest);
+            GL.Disable(EnableCap.Blend);
+            GL.UseProgram(0);
             foreach (var pane in SelectedPanes)
             {
                 var rect = pane.CreateRectangle();
