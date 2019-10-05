@@ -942,6 +942,7 @@ namespace LayoutBXLYT
                 if (!Runtime.LayoutEditor.IsGamePreview && !gameWindow)
                 {
                     var rect = pane.CreateRectangle();
+                    rect = rect.RotateZ(pane.Rotate.Z);
 
                     GL.Disable(EnableCap.Blend);
                     GL.Disable(EnableCap.AlphaTest);
@@ -974,7 +975,6 @@ namespace LayoutBXLYT
                     DrawEdgeSquare(rightBottom);
                     DrawEdgeSquare(top);
                     DrawEdgeSquare(bottom);
-
 
                     GL.Enable(EnableCap.Blend);
                     GL.Enable(EnableCap.AlphaTest);

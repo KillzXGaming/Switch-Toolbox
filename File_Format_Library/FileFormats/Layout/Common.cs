@@ -103,7 +103,7 @@ namespace LayoutBXLYT
                     return false;
                 else if (this is IBoundryPane)
                     return false;
-                else if (this is IPartPane)
+             else   if (this is IPartPane)
                     return false;
 
                 return true;
@@ -1353,6 +1353,15 @@ namespace LayoutBXLYT
             RightPoint = right;
             TopPoint = top;
             BottomPoint = bottom;
+        }
+
+        public CustomRectangle RotateZ(float rotate)
+        {
+            return new CustomRectangle(
+                LeftPoint,
+                RightPoint,
+                TopPoint,
+                BottomPoint);
         }
 
         public CustomRectangle GetTransformedRectangle(BasePane parent, Vector3F Transform, Vector2F Scale)

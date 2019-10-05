@@ -60,6 +60,10 @@ namespace BrawlboxHelper
         {
             ResU.ShaderParamMatAnim matAnim = new ResU.ShaderParamMatAnim();
             matAnim.Name = clrMaterial.Name;
+            matAnim.Constants = new List<ResU.AnimConstant>();
+            matAnim.Curves = new List<ResU.AnimCurve>();
+            matAnim.ParamAnimInfos = new List<ResU.ParamAnimInfo>();
+
             foreach (var entry in clrMaterial.Children)
             {
                 ushort curveIndex = 0;
