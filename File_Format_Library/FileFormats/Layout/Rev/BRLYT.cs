@@ -610,7 +610,7 @@ namespace LayoutBXLYT
             }
         }
 
-        public class PRT1 : PAN1
+        public class PRT1 : PAN1, IPartPane
         {
             public PRT1() : base()
             {

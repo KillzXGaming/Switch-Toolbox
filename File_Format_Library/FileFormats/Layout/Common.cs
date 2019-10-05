@@ -91,6 +91,25 @@ namespace LayoutBXLYT
             ParentOriginY = OriginY.Center;
         }
 
+        public bool IsNullPane
+        {
+            get
+            {
+                if (this is IPicturePane)
+                    return false;
+                else if (this is IWindowPane)
+                    return false;
+                else if (this is ITextPane)
+                    return false;
+                else if (this is IBoundryPane)
+                    return false;
+                else if (this is IPartPane)
+                    return false;
+
+                return true;
+            }
+        }
+
         public CustomRectangle TransformParent(CustomRectangle rect)
         {
             return rect.GetTransformedRectangle(Parent, Translate, Scale);
@@ -723,6 +742,11 @@ namespace LayoutBXLYT
         bool RestrictedTextLengthEnabled { get; set; }
         bool ShadowEnabled { get; set; }
         string FontName { get; set; }
+    }
+
+    public interface IPartPane
+    {
+
     }
 
     public interface IWindowPane

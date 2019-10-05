@@ -282,6 +282,9 @@ namespace Toolbox.Library
                     case "ProdKeys":
                         Runtime.SwitchKeys.ProdKeys = node.InnerText;
                         break;
+                    case "PartsAsNullPanes":
+                        bool.TryParse(node.InnerText, out Runtime.LayoutEditor.PartsAsNullPanes);
+                        break;
                 }
             }
 
@@ -407,7 +410,8 @@ namespace Toolbox.Library
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayBoundryPane", Runtime.LayoutEditor.DisplayBoundryPane.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayPicturePane", Runtime.LayoutEditor.DisplayPicturePane.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayWindowPane", Runtime.LayoutEditor.DisplayWindowPane.ToString()));
-            layoutSettingsNode.AppendChild(createNode(doc, "DisplayTextPane", Runtime.LayoutEditor.DisplayTextPane.ToString()));       
+            layoutSettingsNode.AppendChild(createNode(doc, "DisplayTextPane", Runtime.LayoutEditor.DisplayTextPane.ToString()));
+            layoutSettingsNode.AppendChild(createNode(doc, "PartsAsNullPanes", Runtime.LayoutEditor.PartsAsNullPanes.ToString()));
         }
 
         private static void AppendDeveloperSettings(XmlDocument doc, XmlNode parentNode)

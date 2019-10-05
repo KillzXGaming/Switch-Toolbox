@@ -1285,7 +1285,7 @@ namespace LayoutBXLYT.Cafe
             }
         }
 
-        public class PRT1 : PAN1
+        public class PRT1 : PAN1, IPartPane
         {
             public override string Signature { get; } = "prt1";
 

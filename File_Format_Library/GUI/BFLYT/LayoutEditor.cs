@@ -892,5 +892,11 @@ namespace LayoutBXLYT
             if (ActiveViewport.UndoManger.HasRedo)
                 redoToolStripMenuItem.Enabled = true;
         }
+
+        private void viewPartsAsNullPanesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Runtime.LayoutEditor.PartsAsNullPanes = viewPartsAsNullPanesToolStripMenuItem.Checked;
+            ActiveViewport?.UpdateViewport();
+        }
     }
 }

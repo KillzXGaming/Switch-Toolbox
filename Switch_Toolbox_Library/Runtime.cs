@@ -64,6 +64,7 @@ namespace Toolbox.Library
 
         public class LayoutEditor
         {
+            public static bool PartsAsNullPanes = false;
             public static bool IsGamePreview = false;
             public static bool DisplayNullPane = true;
             public static bool DisplayTextPane = true;

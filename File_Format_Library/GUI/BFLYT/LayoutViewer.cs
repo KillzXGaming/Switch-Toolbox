@@ -359,7 +359,7 @@ namespace LayoutBXLYT
             //Rotate normally unless the object uses shaders/materials
             //Rotation matrix + shaders works accurately with X/Y rotation axis
             //Todo, do everything by shaders
-            bool HasMaterials = pane is IWindowPane || pane is IPicturePane || pane is BFLYT.PRT1;
+            bool HasMaterials = pane is IWindowPane || pane is IPicturePane;
             if (!HasMaterials)
             {
                 GL.Rotate(rotate.X, 1, 0, 0);
@@ -417,7 +417,7 @@ namespace LayoutBXLYT
                 else if (pane is BFLYT.ALI1)
                     BxlytToGL.DrawAlignmentPane(pane, GameWindow, effectiveAlpha, isSelected);
                 else if (pane is BFLYT.PRT1)
-                    DrawPartsPane(shader, (BFLYT.PRT1)pane, effectiveAlpha, parentAlphaInfluence);
+                    DrawPartsPane(shader, (BFLYT.PRT1)pane, effectiveAlpha, isSelected, parentAlphaInfluence);
                 else
                     DrawDefaultPane(shader, pane);
             }
@@ -486,8 +486,14 @@ namespace LayoutBXLYT
             BxlytToGL.DrawRectangle(pane, GameWindow, pane.Rectangle, TexCoords, Colors);
         }
 
-        private void DrawPartsPane(BxlytShader shader, BFLYT.PRT1 pane, byte effectiveAlpha, bool parentInfluenceAlpha)
+        private void DrawPartsPane(BxlytShader shader, BFLYT.PRT1 pane, byte effectiveAlpha,bool isSelected, bool parentInfluenceAlpha)
         {
+            if (Runtime.LayoutEditor.PartsAsNullPanes)
+            {
+                DrawDefaultPane(shader, pane, isSelected);
+                return;
+            }
+
             pane.UpdateTextureData(this.Textures);
             var partPane = pane.GetExternalPane();
             if (partPane != null)
@@ -722,7 +728,19 @@ namespace LayoutBXLYT
 
         private void SearchHit(BasePane pane, int X, int Y, ref BasePane SelectedPane)
         {
-            if (pane.Visible && pane.DisplayInEditor && pane.IsHit(X, Y) && pane.Name != "RootPane")
+            bool isVisible = pane.Visible;
+            if (!Runtime.LayoutEditor.DisplayPicturePane && pane is IPicturePane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayWindowPane && pane is IWindowPane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayBoundryPane && pane is IBoundryPane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayTextPane && pane is ITextPane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayNullPane && pane.IsNullPane)
+                isVisible = false;
+
+            if (isVisible && pane.DisplayInEditor && pane.IsHit(X, Y) && pane.Name != "RootPane")
                 SelectedPane = pane;
             
             foreach (var childPane in pane.Childern)
