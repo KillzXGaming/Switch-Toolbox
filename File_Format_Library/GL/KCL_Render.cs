@@ -14,6 +14,11 @@ namespace FirstPlugin
 {
     public class KCLRendering : AbstractGlDrawable
     {
+        public bool DrawGlobalOctrees = false;
+
+        public List<KCL.OctreeNode> OctreeNodes = new List<KCL.OctreeNode>();
+
+        public MarioKart.MK7.KCL KclFile;
         public Vector3 Max = new Vector3(0);
         public Vector3 Min = new Vector3(0);
 
@@ -89,18 +94,47 @@ namespace FirstPlugin
             LibraryGUI.UpdateViewport();
         }
 
-        public void DrawGlobalOctree()
+        public void DrawGlobalOctree(ref Matrix4 mvp)
         {
-            var size = Max - Min;
+            var octreeMax = KclFile.GlobalHeader.OctreeMax;
+            var octreeOrigin = KclFile.GlobalHeader.OctreeOrigin;
+            Vector3 max = new Vector3((float)octreeMax.X, (float)octreeMax.Y, (float)octreeMax.Z);
+            Vector3 min = new Vector3((float)octreeOrigin.X, (float)octreeOrigin.Y, (float)octreeOrigin.Z);
+
+            Console.WriteLine("DrawGlobalOctree " + min + " " + max);
+
+            var size = max - min;
             var BoxSize = size / 2f;
-            for (int k = 0; k < 2; k++)
+            var QuarterSize = BoxSize / 2f;
+
+            //  DrawableBoundingBox.DrawBoundingBox(mvp, min, max, new Vector3(0));
+            DrawSubdivision(ref mvp, min, size, OctreeNodes, 0);
+        }
+
+        private void DrawSubdivision(ref Matrix4 mvp, Vector3 min, Vector3 size, List<KCL.OctreeNode> modelOctrees, int subdiv)
+        {
+            var BoxSize = size / 2f;
+            var QuarterSize = BoxSize / 2f;
+
+            int index = 0;
+            for (int z = 0; z < 2; z++)
             {
-                for (int l = 0; l < 2; l++)
+                for (int y = 0; y < 2; y++)
                 {
-                    for (int m = 0; m < 2; m++)
+                    for (int x = 0; x < 2; x++)
                     {
-                        var Boxmin = Min + new Vector3(BoxSize.X * m, BoxSize.Y * l, BoxSize.Z * k);
-                        var pos = new Vector3(BoxSize.X * m, BoxSize.Y * l, BoxSize.Z * k);
+                        var Boxmin = min + BoxSize * new Vector3(x,y,z);
+                        var pos = BoxSize * new Vector3(x, y, z);
+
+                        if (modelOctrees[index].IsSelected)
+                            DrawableBoundingBox.DrawBoundingBox(mvp, QuarterSize, Boxmin + QuarterSize, System.Drawing.Color.Red);
+                        else
+                            DrawableBoundingBox.DrawBoundingBox(mvp, QuarterSize, Boxmin + QuarterSize, System.Drawing.Color.Green);
+
+                        if (modelOctrees[index].Nodes.Count > 0)
+                            DrawSubdivision(ref mvp, Boxmin, BoxSize, modelOctrees[index].Children, subdiv++);
+
+                        index++;
                     }
                 }
             }
@@ -214,6 +248,11 @@ namespace FirstPlugin
             if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
                 return;
 
+            Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
+
+            if (DrawGlobalOctrees)
+                DrawGlobalOctree(ref camMat);
+
             control.CurrentShader = defaultShaderProgram;
 
             control.UpdateModelMatrix(
@@ -221,7 +260,6 @@ namespace FirstPlugin
 
             SetRenderSettings(defaultShaderProgram);
 
-            Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
 
             GL.Disable(EnableCap.CullFace);
 

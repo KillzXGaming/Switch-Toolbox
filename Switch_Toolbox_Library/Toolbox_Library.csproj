@@ -256,11 +256,41 @@
     <Compile Include="Forms\Animation\Rewrite\AnimationPanel.Designer.cs">
       <DependentUpon>AnimationPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ColorAlphaBox.cs">
+    <Compile Include="Forms\Animation\Rewrite\MiniAnimationPlayer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Animation\Rewrite\MiniAnimationPlayer.Designer.cs">
+      <DependentUpon>MiniAnimationPlayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Color\ColorFullAlphaBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\ColorSelector.cs">
+    <Compile Include="Forms\Color\ColorAlphaBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Color\ColorSelector.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Color\AlphaSelectorHorizontalPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Color\AlphaSelectorHorizontalPanel.Designer.cs">
+      <DependentUpon>AlphaSelectorHorizontalPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Color\VertexColorBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Custom\SideMenu\STVerticalNavigationMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Custom\SideMenu\STVerticalNavigationMenu.Designer.cs">
+      <DependentUpon>STVerticalNavigationMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Custom\SideMenu\STVerticalTabMenuItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Custom\SideMenu\STVerticalTabMenuItem.Designer.cs">
+      <DependentUpon>STVerticalTabMenuItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Dialogs\ColorSelectorDropdown.cs">
       <SubType>UserControl</SubType>
@@ -346,6 +376,7 @@
     <Compile Include="IO\Colors\ColorEditor.cs" />
     <Compile Include="IO\Colors\STColor16.cs" />
     <Compile Include="IO\Extensions\ColorExtensions.cs" />
+    <Compile Include="IO\Extensions\Rectangle.cs" />
     <Compile Include="IO\Extensions\StreamExport.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
     <Compile Include="IO\FileStreamStorage.cs" />
@@ -354,6 +385,7 @@
     <Compile Include="IO\Colors\STColor.cs" />
     <Compile Include="IO\Colors\STColor8.cs" />
     <Compile Include="IO\SubStream.cs" />
+    <Compile Include="Rendering\DrawableCircle.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericModelRenderer.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericRenderedObject.cs" />
     <Compile Include="Security\Cryptography\crc32.cs" />
@@ -408,7 +440,7 @@
     <Compile Include="Forms\Dialogs\STSaveLogDialog.Designer.cs">
       <DependentUpon>STSaveLogDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Animation\BoneAnimTimeline.cs">
+    <Compile Include="Forms\Animation\KeyedAnimTimeline.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\Custom\DropdownPanel\ExpandCollapseEventArgs.cs" />
@@ -876,8 +908,14 @@
     <Compile Include="XML\XmlDoc.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\Animation\KeyedAnimTimeline.resx">
+      <DependentUpon>KeyedAnimTimeline.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Animation\Rewrite\AnimationPanel.resx">
       <DependentUpon>AnimationPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Animation\Rewrite\MiniAnimationPlayer.resx">
+      <DependentUpon>MiniAnimationPlayer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Archive\ArchiveFilePanel.resx">
       <DependentUpon>ArchiveFilePanel.cs</DependentUpon>
@@ -888,7 +926,10 @@
     <EmbeddedResource Include="Forms\BatchFormatExport.resx">
       <DependentUpon>BatchFormatExport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ColorSelector.resx">
+    <EmbeddedResource Include="Forms\Color\AlphaSelectorHorizontalPanel.resx">
+      <DependentUpon>AlphaSelectorHorizontalPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Color\ColorSelector.resx">
       <DependentUpon>ColorSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Custom\ColorSlider.resx" />
@@ -902,6 +943,12 @@
       <DependentUpon>STDropDownPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Custom\BarSlider\BarSlider.resx" />
+    <EmbeddedResource Include="Forms\Custom\SideMenu\STVerticalNavigationMenu.resx">
+      <DependentUpon>STVerticalNavigationMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Custom\SideMenu\STVerticalTabMenuItem.resx">
+      <DependentUpon>STVerticalTabMenuItem.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Custom\STCheckBox.resx">
       <DependentUpon>STCheckBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -1398,6 +1445,36 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Font.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimationGroup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimationTrack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimationTrackR.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimationTrackG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimationTrackB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimationTrackA.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimationTrackX.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimationTrackY.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimationTrackZ.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AnimationTrackW.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

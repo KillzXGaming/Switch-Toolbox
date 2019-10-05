@@ -9,6 +9,12 @@ namespace Toolbox.Library.IO
 {
     public static class ColorExtensions
     {
+        public static Color GrayScale(this Color color)
+        {
+            int grayScale = (int)((color.R * 0.3) + (color.G * 0.59) + (color.B * 0.11));
+            return Color.FromArgb(color.A, grayScale, grayScale, grayScale);
+        }
+
         public static Color Inverse(this Color color)
         {
             return Color.FromArgb(color.A, (byte)(255 - color.R), (byte)(255 - color.G), (byte)(255 - color.B));

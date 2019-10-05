@@ -35,7 +35,7 @@
             this.currentFrameUpDown = new System.Windows.Forms.NumericUpDown();
             this.animationPlayBtn = new System.Windows.Forms.Button();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
-            this.animationTrackBar = new Toolbox.Library.Forms.TimeLine();
+            this.animationTrackBar = new Toolbox.Library.Forms.KeyedAnimTimeline();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.totalFrame)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.currentFrameUpDown)).BeginInit();
@@ -170,6 +170,6 @@
         private System.Windows.Forms.NumericUpDown currentFrameUpDown;
         private Forms.STPanel stPanel1;
         private Forms.STCheckBox loopChkBox;
-        private Forms.TimeLine animationTrackBar;
+        private Forms.KeyedAnimTimeline animationTrackBar;
     }
 }

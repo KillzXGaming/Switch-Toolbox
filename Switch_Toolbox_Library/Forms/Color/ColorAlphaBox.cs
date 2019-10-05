@@ -18,7 +18,6 @@ namespace Toolbox.Library.Forms
             this.BackgroundImage = Properties.Resources.CheckerBackground;
             this.BackColor = Color.Transparent;
 
-
             this.SetStyle(
             ControlStyles.AllPaintingInWmPaint |
             ControlStyles.UserPaint |

@@ -385,4 +385,34 @@
   <data name="Font" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Font.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="AnimationGroup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AnimationGroup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AnimationTrack" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AnimationTrack.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AnimationTrackA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AnimationTrackA.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AnimationTrackB" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AnimationTrackB.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AnimationTrackG" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AnimationTrackG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AnimationTrackR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AnimationTrackR.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AnimationTrackW" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AnimationTrackW.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AnimationTrackX" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AnimationTrackX.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AnimationTrackY" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AnimationTrackY.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AnimationTrackZ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AnimationTrackZ.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

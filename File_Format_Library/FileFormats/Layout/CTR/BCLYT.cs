@@ -648,6 +648,17 @@ namespace LayoutBXLYT
             [DisplayName("Vertex Color (Bottom Right)"), CategoryAttribute("Color")]
             public STColor8 ColorBottomRight { get; set; }
 
+            public System.Drawing.Color[] GetVertexColors()
+            {
+                return new System.Drawing.Color[4]
+                {
+                    ColorTopLeft.Color,
+                    ColorTopRight.Color,
+                    ColorBottomLeft.Color,
+                    ColorBottomRight.Color,
+                };
+            }
+
             [Browsable(false)]
             public ushort MaterialIndex { get; set; }
 

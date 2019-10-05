@@ -55,11 +55,13 @@
             this.displayyBoundryPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayWindowPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayPicturePanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayTextPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.animationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGameWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.displayTextPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.stToolStrip1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
@@ -213,6 +215,9 @@
             // 
             // editToolStripMenuItem
             // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.undoToolStripMenuItem,
+            this.redoToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -314,6 +319,16 @@
             this.displayPicturePanesToolStripMenuItem.Text = "Display Picture Panes";
             this.displayPicturePanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
             // 
+            // displayTextPanesToolStripMenuItem
+            // 
+            this.displayTextPanesToolStripMenuItem.Checked = true;
+            this.displayTextPanesToolStripMenuItem.CheckOnClick = true;
+            this.displayTextPanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.displayTextPanesToolStripMenuItem.Name = "displayTextPanesToolStripMenuItem";
+            this.displayTextPanesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.displayTextPanesToolStripMenuItem.Text = "Display Text Panes";
+            this.displayTextPanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
+            // 
             // animationToolStripMenuItem
             // 
             this.animationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -325,7 +340,7 @@
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
@@ -344,15 +359,19 @@
             this.showGameWindowToolStripMenuItem.Text = "Show Game Window";
             this.showGameWindowToolStripMenuItem.Click += new System.EventHandler(this.showGameWindowToolStripMenuItem_Click);
             // 
-            // displayTextPanesToolStripMenuItem
+            // undoToolStripMenuItem
             // 
-            this.displayTextPanesToolStripMenuItem.Checked = true;
-            this.displayTextPanesToolStripMenuItem.CheckOnClick = true;
-            this.displayTextPanesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.displayTextPanesToolStripMenuItem.Name = "displayTextPanesToolStripMenuItem";
-            this.displayTextPanesToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.displayTextPanesToolStripMenuItem.Text = "Display Text Panes";
-            this.displayTextPanesToolStripMenuItem.Click += new System.EventHandler(this.displayPanesToolStripMenuItem_Click);
+            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.undoToolStripMenuItem.Text = "Undo";
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+            // 
+            // redoToolStripMenuItem
+            // 
+            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.redoToolStripMenuItem.Text = "Redo";
+            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
             // LayoutEditor
             // 
@@ -417,5 +436,7 @@
         private System.Windows.Forms.ToolStripMenuItem windowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showGameWindowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem displayTextPanesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
     }
 }

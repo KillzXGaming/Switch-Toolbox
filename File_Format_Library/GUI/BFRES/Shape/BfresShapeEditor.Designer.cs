@@ -264,6 +264,7 @@
             this.lodDisplayCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.lodDisplayCB.ButtonColor = System.Drawing.Color.Empty;
             this.lodDisplayCB.FormattingEnabled = true;
+            this.lodDisplayCB.IsReadOnly = false;
             this.lodDisplayCB.Items.AddRange(new object[] {
             "Euler",
             "Quaternion"});
@@ -398,6 +399,7 @@
             this.measureCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.measureCB.ButtonColor = System.Drawing.Color.Empty;
             this.measureCB.FormattingEnabled = true;
+            this.measureCB.IsReadOnly = false;
             this.measureCB.Items.AddRange(new object[] {
             "Degrees",
             "Radians"});
@@ -421,6 +423,7 @@
             this.rotModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.rotModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.rotModeCB.FormattingEnabled = true;
+            this.rotModeCB.IsReadOnly = false;
             this.rotModeCB.Items.AddRange(new object[] {
             "Euler",
             "Quaternion"});
@@ -863,6 +866,7 @@
             this.materialComboBox1.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.materialComboBox1.ButtonColor = System.Drawing.Color.Empty;
             this.materialComboBox1.FormattingEnabled = true;
+            this.materialComboBox1.IsReadOnly = false;
             this.materialComboBox1.Location = new System.Drawing.Point(77, 7);
             this.materialComboBox1.Name = "materialComboBox1";
             this.materialComboBox1.Size = new System.Drawing.Size(227, 21);
@@ -927,6 +931,7 @@
             this.bonesCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.bonesCB.ButtonColor = System.Drawing.Color.Empty;
             this.bonesCB.FormattingEnabled = true;
+            this.bonesCB.IsReadOnly = false;
             this.bonesCB.Location = new System.Drawing.Point(77, 6);
             this.bonesCB.Name = "bonesCB";
             this.bonesCB.Size = new System.Drawing.Size(227, 21);
@@ -1209,6 +1214,7 @@
             this.lodPrimativeTypeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.lodPrimativeTypeCB.ButtonColor = System.Drawing.Color.Empty;
             this.lodPrimativeTypeCB.FormattingEnabled = true;
+            this.lodPrimativeTypeCB.IsReadOnly = false;
             this.lodPrimativeTypeCB.Location = new System.Drawing.Point(101, 35);
             this.lodPrimativeTypeCB.Name = "lodPrimativeTypeCB";
             this.lodPrimativeTypeCB.Size = new System.Drawing.Size(137, 21);
@@ -1222,6 +1228,7 @@
             this.lodFormatCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.lodFormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.lodFormatCB.FormattingEnabled = true;
+            this.lodFormatCB.IsReadOnly = false;
             this.lodFormatCB.Location = new System.Drawing.Point(101, 5);
             this.lodFormatCB.Name = "lodFormatCB";
             this.lodFormatCB.Size = new System.Drawing.Size(137, 21);

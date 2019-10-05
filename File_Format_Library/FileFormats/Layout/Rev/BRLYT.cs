@@ -637,6 +637,17 @@ namespace LayoutBXLYT
             public STColor8 ColorBottomLeft { get; set; }
             public STColor8 ColorBottomRight { get; set; }
 
+            public System.Drawing.Color[] GetVertexColors()
+            {
+                return new System.Drawing.Color[4]
+                {
+                    ColorTopLeft.Color,
+                    ColorTopRight.Color,
+                    ColorBottomLeft.Color,
+                    ColorBottomRight.Color,
+                };
+            }
+
             public ushort MaterialIndex { get; set; }
 
             public Material GetMaterial()

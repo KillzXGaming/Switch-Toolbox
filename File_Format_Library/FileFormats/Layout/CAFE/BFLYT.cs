@@ -945,6 +945,16 @@ namespace LayoutBXLYT.Cafe
             public byte FrameCount { get; set; }
             private byte _flag;
 
+            public System.Drawing.Color[] GetVertexColors()
+            {
+                return new System.Drawing.Color[4]
+                {
+                    Content.ColorTopLeft.Color,
+                    Content.ColorTopRight.Color,
+                    Content.ColorBottomLeft.Color,
+                    Content.ColorBottomRight.Color,
+                };
+            }
 
             [TypeConverter(typeof(ExpandableObjectConverter))]
             public BxlytWindowContent Content { get; set; }
@@ -1310,6 +1320,13 @@ namespace LayoutBXLYT.Cafe
                 if (ExternalLayout == null)
                     return null;
 
+                //Load all the part panes to the lookup table
+                foreach (var pane in ExternalLayout.header.PaneLookup)
+                    if (!layoutFile.PaneLookup.ContainsKey(pane.Key))
+                        layoutFile.PaneLookup.Add(pane.Key, pane.Value);
+
+                layoutFile.PartsManager.AddLayout(ExternalLayout.header);
+
                 return ExternalLayout.header.RootPane;
             }
 
@@ -1351,11 +1368,23 @@ namespace LayoutBXLYT.Cafe
                             if (Utils.GetExtension(file) == ".szs")
                             {
                                 var openedFile = STFileLoader.OpenFileFormat(file);
+                                if (openedFile == null)
+                                    continue;
 
+                                layoutFile.PartsManager.AddArchive((IArchiveFile)openedFile);
                                 BFLYT bflyt = null;
                                 SearchArchive((IArchiveFile)openedFile, ref bflyt);
                                 if (bflyt != null)
                                     return bflyt;
+                            }
+                            else if (Utils.GetExtension(file) == ".bflan")
+                            {
+                                var openedFile = STFileLoader.OpenFileFormat(file);
+                                if (openedFile == null)
+                                    continue;
+
+                                var bflan = openedFile as BXLAN;
+                                layoutFile.PartsManager.AddAnimation(bflan.BxlanHeader);
                             }
                             else if (Utils.GetExtension(file) == ".bflyt")
                             {
@@ -1668,6 +1697,17 @@ namespace LayoutBXLYT.Cafe
             public STColor8 ColorBottomLeft { get; set; }
             [DisplayName("Vertex Color (Bottom Right)"), CategoryAttribute("Color")]
             public STColor8 ColorBottomRight { get; set; }
+
+            public System.Drawing.Color[] GetVertexColors()
+            {
+                return new System.Drawing.Color[4]
+                {
+                    ColorTopLeft.Color,
+                    ColorTopRight.Color,
+                    ColorBottomLeft.Color,
+                    ColorBottomRight.Color,
+                };
+            }
 
             [Browsable(false)]
             public ushort MaterialIndex { get; set; }

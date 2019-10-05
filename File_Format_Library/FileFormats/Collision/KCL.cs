@@ -350,8 +350,51 @@ namespace FirstPlugin
                 Endianness = Syroot.BinaryData.ByteOrder.BigEndian;
                 kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.BigEndian);
             }
+
+
             Read(kcl);
         }
+
+        private void LoadModelTree(TreeNode parent, MarioKart.ModelOctree[] modelOctrees)
+        {
+            if (modelOctrees == null)
+                return;
+
+            foreach (var model in modelOctrees)
+            {
+                OctreeNode modelNode = new OctreeNode(model, model.Key.ToString("X"));
+                parent.Nodes.Add(modelNode);
+                LoadModelTree(modelNode, model.Children);
+            }
+        }
+
+        public class OctreeNode : TreeNodeCustom
+        {
+            public List<OctreeNode> Children
+            {
+                get
+                {
+                    List<OctreeNode> trees = new List<OctreeNode>();
+                    foreach (var node in Nodes)
+                        trees.Add((OctreeNode)node);
+                    return trees;
+                }
+            }
+
+            MarioKart.ModelOctree Octree;
+
+            public OctreeNode(MarioKart.ModelOctree octree, string name)
+            {
+                Octree = octree;
+                Text = name;
+            }
+
+            public override void OnClick(TreeView treeview)
+            {
+
+            }
+        }
+
 
         private void Read(MarioKart.MK7.KCL kcl)
         {
@@ -359,7 +402,15 @@ namespace FirstPlugin
             Vector3 max = new Vector3();
 
             Nodes.Clear();
+            Renderer.OctreeNodes.Clear();
             Renderer.models.Clear();
+            Renderer.KclFile = kcl;
+
+            TreeNode modelTree = new TreeNode("Model Octree");
+            LoadModelTree(modelTree, kcl.GlobalHeader.ModelOctrees);
+            foreach (var node in modelTree.Nodes)
+                Renderer.OctreeNodes.Add((OctreeNode)node);
+            Nodes.Add(modelTree);
 
             int CurModelIndx = 0;
             foreach (MarioKart.MK7.KCL.KCLModel mdl in kcl.Models)

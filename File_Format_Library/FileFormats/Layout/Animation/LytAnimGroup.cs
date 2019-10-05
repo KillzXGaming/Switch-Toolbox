@@ -25,16 +25,60 @@ namespace LayoutBXLYT
             get { return animEntry.Target;  }
         }
 
+        public void RemoveKey(Type groupType)
+        {
+            var group = SearchGroup(groupType);
+            if (group == null) return;
+
+
+        }
+
+        public void InsertKey(Type groupType)
+        {
+            var group = SearchGroup(groupType);
+            string platform = "F";
+            if (animEntry is BFLAN.PaiEntry)
+
+            //First we find the proper group to insert our key
+            //If it doesn't exist, create it.
+            if (groupType == typeof(LytPaneSRTGroup))
+            {
+                if (group == null) {
+                    var tag = new BxlanPaiTag($"{platform}LPA");
+                    group = new LytPaneSRTGroup(tag);
+                    animEntry.Tags.Add(tag);
+                    SubAnimGroups.Add(group);
+                }
+
+
+            }
+        }
+
+        public STAnimGroup SearchGroup(Type groupType)
+        {
+            for (int i = 0; i < SubAnimGroups.Count; i++)
+            {
+                if (SubAnimGroups[i].GetType() == groupType)
+                    return SubAnimGroups[i];
+            }
+            return null;
+        }
+
         public LytAnimGroup(BxlanPaiEntry entry)
         {
             animEntry = entry;
             Name = entry.Name;
+            if (entry.Target == AnimationTarget.Material)
+                Category = "Materials";
+            else if (entry.Target == AnimationTarget.Pane)
+                Category = "Panes";
+            else
+                Category = "User Data";
 
             //Generate sub groups which contain the track data
             for (int i = 0; i < entry.Tags?.Count; i++)
             {
                 STAnimGroup group = new STAnimGroup();
-
                 string tag = entry.Tags[i].Tag.Remove(0,1);
                 switch (tag)
                 {
@@ -82,6 +126,7 @@ namespace LayoutBXLYT
                     if (targetGroup != null)
                     {
                         targetGroup.LoadKeyFrames(keyGroup.KeyFrames);
+                        targetGroup.Name = keyGroup.TargetName;
 
                         if (keyGroup.CurveType == CurveType.Constant)
                             targetGroup.InterpolationType = STInterpoaltionType.Constant;
@@ -142,6 +187,14 @@ namespace LayoutBXLYT
         public LytAnimTrack SizeX = new LytAnimTrack();
         public LytAnimTrack SizeY = new LytAnimTrack();
 
+        public override List<STAnimationTrack> GetTracks()
+        {
+            List<STAnimationTrack> tracks = new List<STAnimationTrack>();
+            for (int i = 0; i < 10; i++)
+                tracks.Add(GetTrack(i));
+            return tracks;
+        }
+
         public LytAnimTrack GetTrack(int target)
         {
             switch (target)
@@ -172,6 +225,14 @@ namespace LayoutBXLYT
         public LytAnimTrack Tex1AnimTrack = new LytAnimTrack();
         public LytAnimTrack Tex2AnimTrack = new LytAnimTrack();
 
+        public override List<STAnimationTrack> GetTracks()
+        {
+            List<STAnimationTrack> tracks = new List<STAnimationTrack>();
+            for (int i = 0; i < 3; i++)
+                tracks.Add(GetTrack(i));
+            return tracks;
+        }
+
         public LytAnimTrack GetTrack(int target) {
             if (target == 0)
                 return Tex0AnimTrack;
@@ -192,6 +253,14 @@ namespace LayoutBXLYT
     public class LytVisibiltyGroup : STAnimGroup, IAnimationTarget
     {
         public LytAnimTrack AnimTrack = new LytAnimTrack();
+
+        public override List<STAnimationTrack> GetTracks()
+        {
+            List<STAnimationTrack> tracks = new List<STAnimationTrack>();
+            for (int i = 0; i < 1; i++)
+                tracks.Add(GetTrack(i));
+            return tracks;
+        }
 
         public LytAnimTrack GetTrack(int target) {
             return AnimTrack;
@@ -226,6 +295,14 @@ namespace LayoutBXLYT
         public LytAnimTrack BottomRightA = new LytAnimTrack();
 
         public LytAnimTrack Alpha = new LytAnimTrack();
+
+        public override List<STAnimationTrack> GetTracks()
+        {
+            List<STAnimationTrack> tracks = new List<STAnimationTrack>();
+            for (int i = 0; i < 17; i++)
+                tracks.Add(GetTrack(i));
+            return tracks;
+        }
 
         public LytAnimTrack GetTrack(int target)
         {
@@ -269,6 +346,14 @@ namespace LayoutBXLYT
         public LytAnimTrack WhiteColorB = new LytAnimTrack();
         public LytAnimTrack WhiteColorA = new LytAnimTrack();
 
+        public override List<STAnimationTrack> GetTracks()
+        {
+            List<STAnimationTrack> tracks = new List<STAnimationTrack>();
+            for (int i = 0; i < 8; i++)
+                tracks.Add(GetTrack(i));
+            return tracks;
+        }
+
         public LytAnimTrack GetTrack(int target)
         {
             switch (target)
@@ -299,6 +384,14 @@ namespace LayoutBXLYT
         public LytAnimTrack ScaleU = new LytAnimTrack();
         public LytAnimTrack ScaleV = new LytAnimTrack();
 
+        public override List<STAnimationTrack> GetTracks()
+        {
+            List<STAnimationTrack> tracks = new List<STAnimationTrack>();
+            for (int i = 0; i < 5; i++)
+                tracks.Add(GetTrack(i));
+            return tracks;
+        }
+
         public LytAnimTrack GetTrack(int target)
         {
             switch (target)
@@ -323,6 +416,14 @@ namespace LayoutBXLYT
         public LytAnimTrack Rotate = new LytAnimTrack();
         public LytAnimTrack ScaleU = new LytAnimTrack();
         public LytAnimTrack ScaleV = new LytAnimTrack();
+
+        public override List<STAnimationTrack> GetTracks()
+        {
+            List<STAnimationTrack> tracks = new List<STAnimationTrack>();
+            for (int i = 0; i < 3; i++)
+                tracks.Add(GetTrack(i));
+            return tracks;
+        }
 
         public LytAnimTrack GetTrack(int target)
         {

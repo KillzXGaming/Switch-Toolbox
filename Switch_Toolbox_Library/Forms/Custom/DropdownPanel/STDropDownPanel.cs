@@ -115,6 +115,8 @@ namespace Toolbox.Library.Forms
 
             stCollapsePanelButton1.IsExpanded = true;
             stCollapsePanelButton1.ExpandCollapse += BtnExpandCollapseExpandCollapse;
+
+            stCollapsePanelButton1.SetIconColor = FormThemes.BaseTheme.DropdownButtonBackColor;
         }
 
         public bool IsExpanded

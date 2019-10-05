@@ -61,6 +61,7 @@ namespace LayoutBXLYT
 
                 var partPane = (Cafe.BFLYT.PRT1)header.PaneLookup[$"L_Chara_{i.ToString("00")}"];
                 var charPane = partPane.GetExternalPane();
+                if (charPane == null) return;
                 var iconPane = charPane.SearchPane("P_Chara_00");
                 if (iconPane == null) return;
 
@@ -119,7 +120,6 @@ namespace LayoutBXLYT
                     mat.animController.TexturePatterns.Add(LTPTarget.Image1, textureName);
                 else
                     mat.animController.TexturePatterns[LTPTarget.Image1] = textureName;
-
             }
         }
     }

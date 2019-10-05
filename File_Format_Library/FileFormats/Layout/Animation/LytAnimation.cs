@@ -12,7 +12,8 @@ namespace LayoutBXLYT
     /// </summary>
     public class LytAnimation : STAnimation
     {
-        BxlytHeader parentLayout = null;
+        public BxlytHeader parentLayout = null;
+        public BxlanHeader BxlanAnimation = null;
 
         public List<string> Textures = new List<string>();
 
@@ -35,6 +36,7 @@ namespace LayoutBXLYT
         public LytAnimation(BxlanHeader header, BxlytHeader layout)
         {
             parentLayout = layout;
+            BxlanAnimation = header;
 
             Name = header.FileName;
             FrameCount = (uint)header.AnimationTag.EndFrame;

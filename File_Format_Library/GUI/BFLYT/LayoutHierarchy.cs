@@ -77,99 +77,16 @@ namespace LayoutBXLYT
             isLoaded = true;
         }
 
-        public void SearchAnimations(BxlytHeader bxlyt, EventHandler onPropertySelected)
+        public void SelectNode(TreeNode node)
         {
-            OnProperySelected = onPropertySelected;
-
-            isLoaded = false;
-
-            var layoutFile = bxlyt.FileInfo;
-            var parentArchive = layoutFile.IFileInfo.ArchiveParent;
-            if (parentArchive == null) return;
-
-            treeView1.BeginUpdate();
-            foreach (var file in parentArchive.Files)
-            {
-                if (Utils.GetExtension(file.FileName) == ".brlan" ||
-                    Utils.GetExtension(file.FileName) == ".bclan" ||
-                    Utils.GetExtension(file.FileName) == ".bflan") {
-                    LoadAnimation(file);
-                }
-            }
-
-            treeView1.EndUpdate();
-            treeView1.Sort();
-
-            isLoaded = true;
-        }
-
-        public void LoadAnimation(ArchiveFileInfo archiveEntry)
-        {
-            var animNode = new TreeNode(System.IO.Path.GetFileName(archiveEntry.FileName)) { Tag = archiveEntry };
-            animNode.Nodes.Add("<dummy>");
-            treeView1.Nodes.Add(animNode);
-        }
-
-        public void LoadAnimation(BxlanHeader bxlan, EventHandler onPropertySelected)
-        {
-            isLoaded = false;
-            OnProperySelected = onPropertySelected;
-
-            treeView1.BeginUpdate();
-            LoadAnimations(bxlan,new TreeNode(bxlan.FileName) { Tag = bxlan });
-            treeView1.EndUpdate();
-            isLoaded = true;
+            treeView1.SelectedNode = node;
+            treeView1.Refresh();
         }
 
         public void Reset()
         {
             treeView1.Nodes.Clear();
             isLoaded = false;
-        }
-
-        public void LoadAnimations(BxlanHeader bxlan, TreeNode root, bool LoadRoot = true)
-        {
-            if (LoadRoot)
-                treeView1.Nodes.Add(root);
-
-            if (bxlan is BxlanHeader)
-            {
-                var header = bxlan as BxlanHeader;
-                var pat1 = new TreeNode("Tag Info") { Tag = header.AnimationTag };
-                var pai1 = new TreeNode("Animation Info") { Tag = header.AnimationInfo };
-
-                for (int i = 0; i < header.AnimationInfo.Entries.Count; i++)
-                    LoadAnimationEntry(header.AnimationInfo.Entries[i], pai1);
-
-                root.Nodes.Add(pat1);
-                root.Nodes.Add(pai1);
-            }
-        }
-
-        private void LoadAnimationEntry(BxlanPaiEntry entry, TreeNode root)
-        {
-            var nodeEntry = new TreeNode(entry.Name) { Tag = entry };
-            root.Nodes.Add(nodeEntry);
-
-            for (int i = 0;i < entry.Tags.Count; i++)
-            {
-                var nodeTag = new TreeNode(entry.Tags[i].Type) { Tag = entry.Tags[i] };
-                nodeEntry.Nodes.Add(nodeTag);
-                for (int j = 0; j < entry.Tags[i].Entries.Count; j++)
-                    LoadTagEntry(entry.Tags[i].Entries[j], nodeTag, j);
-            }
-        }
-
-        private void LoadTagEntry(BxlanPaiTagEntry entry, TreeNode root, int index)
-        {
-            var nodeEntry = new TreeNode(entry.TargetName) { Tag = entry };
-            root.Nodes.Add(nodeEntry);
-
-            for (int i = 0; i < entry.KeyFrames.Count; i++)
-            {
-                var keyNode = new TreeNode($"Key Frame {i}") { Tag = entry.KeyFrames[i] };
-                nodeEntry.Nodes.Add(keyNode);
-            }
         }
 
         private void LoadTextures(List<string> textures)
@@ -336,6 +253,8 @@ namespace LayoutBXLYT
         private void LoadPane(BasePane pane, TreeNode parent = null)
         {
             var paneNode = CreatePaneWrapper(pane);
+            pane.NodeWrapper = paneNode;
+
             if (parent == null)
                 treeView1.Nodes.Add(paneNode);
             else
@@ -424,6 +343,22 @@ namespace LayoutBXLYT
             if (e.Node.Tag is ArchiveFileInfo)
             {
 
+            }
+        }
+
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Tag == null)
+                return;
+
+            if (e.Button == MouseButtons.Left)
+            {
+            /*    if (e.Node.Tag is BasePane)
+                {
+                    PaneEditor editor = new PaneEditor();
+                    editor.LoadPane((BasePane)e.Node.Tag);
+                    editor.Show();
+                }*/
             }
         }
     }

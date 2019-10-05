@@ -17,6 +17,9 @@ namespace LayoutBXLYT
         [Browsable(false)]
         public PaneAnimController animController = new PaneAnimController();
 
+        [Browsable(false)]
+        public TreeNodeCustom NodeWrapper;
+
         [DisplayName("Is Visible"), CategoryAttribute("Flags")]
         public virtual bool Visible { get; set; }
    
@@ -88,6 +91,11 @@ namespace LayoutBXLYT
             ParentOriginY = OriginY.Center;
         }
 
+        public CustomRectangle TransformParent(CustomRectangle rect)
+        {
+            return rect.GetTransformedRectangle(Parent, Translate, Scale);
+        }
+
         private CustomRectangle rectangle;
 
         [Browsable(false)]
@@ -116,6 +124,61 @@ namespace LayoutBXLYT
                 parentTransform.Y,
                 parentTransform.Z,
                 parentTransform.W);
+        }
+
+        public void TransformRectangle(LayoutViewer.PickAction pickAction, float pickMouseX, float pickMouseY)
+        {
+            float posX = Translate.X;
+            float posY = Translate.Y;
+            float posZ = Translate.Z;
+
+            Console.WriteLine("pickMouseX " + pickMouseX);
+
+            switch (pickAction)
+            {
+                case LayoutViewer.PickAction.DragLeft:
+                    Width += pickMouseX;
+                    posX = Translate.X - (pickMouseX / 2);
+                    break;
+                case LayoutViewer.PickAction.DragRight:
+                    Width -= pickMouseX;
+                    posX = Translate.X - (pickMouseX / 2);
+                    break;
+                case LayoutViewer.PickAction.DragTop:
+                    Height -= pickMouseY;
+                    posY = Translate.Y - (pickMouseY / 2);
+                    break;
+                case LayoutViewer.PickAction.DragBottom:
+                    Height += pickMouseY;
+                    posY = Translate.Y - (pickMouseY / 2);
+                    break;
+                case LayoutViewer.PickAction.DragTopLeft:
+                    Width += pickMouseX;
+                    Height -= pickMouseY;
+                    posX = Translate.X - (pickMouseX / 2);
+                    posY = Translate.Y - (pickMouseY / 2);
+                    break;
+                case LayoutViewer.PickAction.DragBottomLeft:
+                    Width += pickMouseX;
+                    Height += pickMouseY;
+                    posX = Translate.X - (pickMouseX / 2);
+                    posY = Translate.Y - (pickMouseY / 2);
+                    break;
+                case LayoutViewer.PickAction.DragBottomRight:
+                    Width -= pickMouseX;
+                    Height += pickMouseY;
+                    posX = Translate.X - (pickMouseX / 2);
+                    posY = Translate.Y - (pickMouseY / 2);
+                    break;
+                case LayoutViewer.PickAction.DragTopRight:
+                    Width -= pickMouseX;
+                    Height -= pickMouseY;
+                    posX = Translate.X - (pickMouseX / 2);
+                    posY = Translate.Y - (pickMouseY / 2);
+                    break;
+            }
+
+            Translate = new Vector3F(posX, posY, posZ);
         }
 
         public CustomRectangle CreateRectangle()
@@ -228,8 +291,11 @@ namespace LayoutBXLYT
 
         public bool IsHit(int X, int Y)
         {
-            if ((X > Translate.X) && (X < Translate.X + Width) &&
-                (Y > Translate.Y) && (Y < Translate.Y + Height))
+            var rect = CreateRectangle();
+            var transformed = rect.GetTransformedRectangle(Parent, Translate, Scale);
+
+            if ((X > transformed.LeftPoint) && (X < transformed.RightPoint) &&
+                (Y > transformed.BottomPoint) && (Y < transformed.TopPoint))
                 return true;
             else
                 return false;
@@ -611,7 +677,7 @@ namespace LayoutBXLYT
 
     public interface IPicturePane
     {
-
+        System.Drawing.Color[] GetVertexColors();
     }
 
     public interface IBoundryPane
@@ -661,6 +727,8 @@ namespace LayoutBXLYT
 
     public interface IWindowPane
     {
+        System.Drawing.Color[] GetVertexColors();
+
         bool UseOneMaterialForAll { get; set; }
         bool UseVertexColorForAll { get; set; }
         WindowKind WindowKind { get; set; }
@@ -728,6 +796,8 @@ namespace LayoutBXLYT
 
     public class LayoutHeader : IDisposable
     {
+        public PartsManager PartsManager = new PartsManager();
+
         [Browsable(false)]
         public string FileName
         {
@@ -792,6 +862,7 @@ namespace LayoutBXLYT
 
         public void Dispose()
         {
+            PartsManager?.Dispose();
             FileInfo.Unload();
         }
     }
@@ -809,6 +880,11 @@ namespace LayoutBXLYT
         public virtual void Write(FileWriter writer)
         {
 
+        }
+
+        public LytAnimation GetGenericAnimation()
+        {
+            return animation;
         }
 
         private LytAnimation animation;
@@ -865,6 +941,16 @@ namespace LayoutBXLYT
 
     public class BxlanPaiTag
     {
+        public BxlanPaiTag()
+        {
+
+        }
+
+        public BxlanPaiTag(string tag)
+        {
+            Tag = tag;
+        }
+
         public List<BxlanPaiTagEntry> Entries = new List<BxlanPaiTagEntry>();
 
         public string Tag;
@@ -1243,6 +1329,20 @@ namespace LayoutBXLYT
             RightPoint = right;
             TopPoint = top;
             BottomPoint = bottom;
+        }
+
+        public CustomRectangle GetTransformedRectangle(BasePane parent, Vector3F Transform, Vector2F Scale)
+        {
+            var rect = new CustomRectangle(
+                (int)(LeftPoint + Transform.X * Scale.X),
+                (int)(RightPoint + Transform.X * Scale.X),
+                (int)(TopPoint + Transform.Y * Scale.Y),
+                (int)(BottomPoint + Transform.Y * Scale.Y));
+
+            if (parent != null)
+                return parent.TransformParent(rect);
+            else
+                return rect;
         }
 
         public float Width

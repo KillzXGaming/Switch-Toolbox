@@ -8,11 +8,19 @@ namespace Toolbox.Library.Animations
 {
     public class STAnimationTrack
     {
+        public string Name { get; set; }
+
         public STInterpoaltionType InterpolationType { get; set; }
 
         public List<STKeyFrame> KeyFrames = new List<STKeyFrame>();
 
         public bool HasKeys =>  KeyFrames.Count > 0;
+
+        public bool IsKeyed(float frame)
+        {
+            var matches = KeyFrames.Where(p => p.Frame == frame);
+            return matches != null && matches.Count() > 0;
+        }
 
         //Key frame setup based on
         //https://github.com/gdkchan/SPICA/blob/42c4181e198b0fd34f0a567345ee7e75b54cb58b/SPICA/Formats/CtrH3D/Animation/H3DFloatKeyFrameGroup.cs

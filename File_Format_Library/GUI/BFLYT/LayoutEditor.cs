@@ -33,6 +33,7 @@ namespace LayoutBXLYT
 
         public List<BxlytHeader> LayoutFiles = new List<BxlytHeader>();
         public List<BxlanHeader> AnimationFiles = new List<BxlanHeader>();
+        public List<BxlanHeader> SelectedAnimations = new List<BxlanHeader>();
 
         private BxlytHeader ActiveLayout;
         private BxlanHeader ActiveAnimation;
@@ -57,6 +58,9 @@ namespace LayoutBXLYT
             this.dockPanel1.Theme = theme;
             this.dockPanel1.BackColor = FormThemes.BaseTheme.FormBackColor;
             this.BackColor = FormThemes.BaseTheme.FormBackColor;
+
+            redoToolStripMenuItem.Enabled = false;
+            undoToolStripMenuItem.Enabled = false;
 
             viewportBackColorCB.Items.Add("Back Color : Default");
             viewportBackColorCB.Items.Add("Back Color : Custom");
@@ -84,9 +88,10 @@ namespace LayoutBXLYT
         }
 
         private List<LayoutViewer> Viewports = new List<LayoutViewer>();
+        private LayoutAnimEditor LayoutAnimEditor;
         private LayoutViewer ActiveViewport;
         private LayoutHierarchy LayoutHierarchy;
-        private LayoutHierarchy AnimLayoutHierarchy;
+        private LayoutAnimList LayoutAnimList;
         private LayoutTextureList LayoutTextureList;
         private LayoutProperties LayoutProperties;
         private LayoutTextDocked TextConverter;
@@ -136,6 +141,7 @@ namespace LayoutBXLYT
             Viewports.Add(Viewport);
             ActiveViewport = Viewport;
 
+            UpdateUndo();
             /*    if (ActiveViewport == null)
                 {
                     LayoutViewer Viewport = new LayoutViewer(this,header, Textures);
@@ -155,7 +161,7 @@ namespace LayoutBXLYT
             if (!isLoaded)
                 InitializeDockPanels();
 
-            AnimLayoutHierarchy?.SearchAnimations(header, ObjectSelected);
+            LayoutAnimList?.SearchAnimations(header);
 
             CustomMapper.LoadMK8DCharaSelect(Textures, header);
 
@@ -169,7 +175,7 @@ namespace LayoutBXLYT
 
             ShowAnimationHierarchy();
             ShowPropertiesPanel();
-            AnimLayoutHierarchy.LoadAnimation(ActiveAnimation, ObjectSelected);
+            LayoutAnimList.LoadAnimation(ActiveAnimation);
 
             isLoaded = true;
         }
@@ -237,15 +243,20 @@ namespace LayoutBXLYT
 
             if (AnimationPanel != null)
             {
-                if (e is TreeViewEventArgs)
+                if (e is ListViewItemSelectionChangedEventArgs)
                 {
-                    var node = ((TreeViewEventArgs)e).Node;
-                    if (node.Tag is ArchiveFileInfo) {
+                    var node = ((ListViewItemSelectionChangedEventArgs)e).Item;
+                    if (node.Tag is ArchiveFileInfo)
+                    {
                         UpdateAnimationNode(node);
                     }
 
                     if (node.Tag is BxlanHeader)
-                        UpdateAnimationPlayer((BxlanHeader)node.Tag);
+                    {
+                        AnimationPanel?.Reset();
+                        foreach (ListViewItem item in LayoutAnimList.GetSelectedAnimations)
+                            UpdateAnimationPlayer((BxlanHeader)item.Tag);
+                    }
                 }
             }
             if (LayoutProperties != null && (string)sender == "Select")
@@ -278,10 +289,16 @@ namespace LayoutBXLYT
             }
         }
 
-        private void UpdateAnimationNode(TreeNode node)
+        public void UpdateHiearchyNodeSelection(BasePane pane)
         {
-            node.Nodes.Clear();
+            var nodeWrapper = pane.NodeWrapper;
+            if (nodeWrapper == null) return;
 
+            LayoutHierarchy?.SelectNode(nodeWrapper);
+        }
+
+        private void UpdateAnimationNode(ListViewItem node)
+        {
             var archiveNode = node.Tag as ArchiveFileInfo;
             var fileFormat = archiveNode.OpenFile();
 
@@ -291,8 +308,6 @@ namespace LayoutBXLYT
             if (fileFormat != null && fileFormat is BXLAN)
             {
                 node.Tag = ((BXLAN)fileFormat).BxlanHeader;
-
-                LayoutHierarchy.LoadAnimations(((BXLAN)fileFormat).BxlanHeader, node, false);
                 AnimationFiles.Add(((BXLAN)fileFormat).BxlanHeader);
             }
         }
@@ -313,8 +328,7 @@ namespace LayoutBXLYT
 
             if (ActiveLayout != null)
             {
-                AnimationPanel.Reset();
-                AnimationPanel.AddAnimation(animHeader.ToGenericAnimation(ActiveLayout), true);
+                AnimationPanel.AddAnimation(animHeader.ToGenericAnimation(ActiveLayout), false);
                 //   foreach (var anim in AnimationFiles)
                 //     AnimationPanel.AddAnimation(anim.ToGenericAnimation(ActiveLayout), false);
             }
@@ -339,6 +353,32 @@ namespace LayoutBXLYT
             LayoutPartsEditor.Show(dockPanel1, DockState.DockLeft);
         }
 
+        public void ShowBxlanEditor(BxlanHeader bxlan)
+        {
+            LayoutAnimEditorBasic editor = new LayoutAnimEditorBasic();
+            editor.LoadAnim(bxlan);
+            editor.OnPropertyChanged += AnimPropertyChanged;
+            editor.Show(this);
+
+        /*    if (LayoutAnimEditor != null) {
+                LayoutAnimEditor.LoadFile(bxlan.GetGenericAnimation());
+                return;
+            }
+
+            LayoutAnimEditor = new LayoutAnimEditor();
+            AnimationPanel.OnNodeSelected = LayoutAnimEditor.OnNodeSelected;
+            LayoutAnimEditor.LoadFile(bxlan.GetGenericAnimation());
+            if (LayoutHierarchy != null)
+                LayoutAnimEditor.Show(LayoutHierarchy.Pane, DockAlignment.Bottom, 0.5);
+            else
+                LayoutAnimEditor.Show(dockPanel1, DockState.DockRight);*/
+        }
+
+        private void AnimPropertyChanged(object sender, EventArgs e)
+        {
+            ActiveViewport?.UpdateViewport();
+        }
+
         private void ShowPropertiesPanel()
         {
             if (LayoutProperties != null)
@@ -354,12 +394,12 @@ namespace LayoutBXLYT
 
         public void ShowAnimationHierarchy()
         {
-            if (AnimLayoutHierarchy != null)
+            if (LayoutAnimList != null)
                 return;
 
-            AnimLayoutHierarchy = new LayoutHierarchy(this);
-            AnimLayoutHierarchy.Text = "Animation Hierarchy";
-            AnimLayoutHierarchy.Show(dockPanel1, DockState.DockLeft);
+            LayoutAnimList = new LayoutAnimList(this, ObjectSelected);
+            LayoutAnimList.Text = "Animation Hierarchy";
+            LayoutAnimList.Show(dockPanel1, DockState.DockLeft);
         }
 
         private void ShowPaneHierarchy()
@@ -389,6 +429,7 @@ namespace LayoutBXLYT
             DockContent dockContent = new DockContent();
             AnimationPanel = new STAnimationPanel();
             AnimationPanel.Dock = DockStyle.Fill;
+            AnimationPanel.AnimationPlaying += OnAnimationPlaying;
             AnimationPanel.SetViewport(ActiveViewport.GetGLControl());
             dockContent.Controls.Add(AnimationPanel);
             LayoutTextureList.Show(dockPanel1, DockState.DockRight);
@@ -397,6 +438,12 @@ namespace LayoutBXLYT
                 dockContent.Show(ActiveViewport.Pane, DockAlignment.Bottom, 0.2);
             else
                 dockContent.Show(dockPanel1, DockState.DockBottom);
+        }
+
+        private void OnAnimationPlaying(object sender, EventArgs e)
+        {
+            if (LayoutAnimEditor != null)
+                LayoutAnimEditor.OnAnimationPlaying();
         }
 
         private void stComboBox1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -469,6 +516,7 @@ namespace LayoutBXLYT
                 ActiveLayout = file;
                 ReloadEditors(file);
                 ActiveViewport = viewer;
+                UpdateUndo();
                 viewer.UpdateViewport();
 
                 Console.WriteLine("changed " + ActiveLayout.FileName);
@@ -806,7 +854,7 @@ namespace LayoutBXLYT
                 STForm form = new STForm();
                 form.Text = "Game Preview";
                 form.AddControl(GamePreviewWindow);
-                form.Show();
+                form.Show(this);
             }
         }
 
@@ -815,6 +863,34 @@ namespace LayoutBXLYT
             AnimationPanel?.OnControlClosing();
             GamePreviewWindow?.OnControlClosing();
             GamePreviewWindow?.Dispose();
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e) {
+            ActiveViewport?.UndoManger.Undo();
+            ActiveViewport?.UpdateViewport();
+
+            UpdateUndo();
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e) {
+            ActiveViewport?.UndoManger.Redo();
+            ActiveViewport?.UpdateViewport();
+
+            UpdateUndo();
+        }
+
+        public void UpdateUndo()
+        {
+            if (ActiveViewport == null)
+                return;
+
+            redoToolStripMenuItem.Enabled = false;
+            undoToolStripMenuItem.Enabled = false;
+
+            if (ActiveViewport.UndoManger.HasUndo)
+                undoToolStripMenuItem.Enabled = true;
+            if (ActiveViewport.UndoManger.HasRedo)
+                redoToolStripMenuItem.Enabled = true;
         }
     }
 }

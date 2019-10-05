@@ -8,18 +8,14 @@ namespace Toolbox.Library.Animations
 {
     public class STKeyFrame
     {
-        public virtual float Slope { get; set; }
         public virtual float Frame { get; set; }
         public virtual float Value { get; set; }
-    }
 
-    public class STHermiteKeyFrame : STKeyFrame
-    {
-        public float Slope { get; set; }
-    }
+        public virtual float Slope { get; set; }
 
-    public class STLinearKeyFrame : STKeyFrame
-    {
-        public float Delta { get; set; }
+        public virtual float Coef0 { get; set; }
+        public virtual float Coef1 { get; set; }
+        public virtual float Coef2 { get; set; }
+        public virtual float Coef3 { get; set; }
     }
 }

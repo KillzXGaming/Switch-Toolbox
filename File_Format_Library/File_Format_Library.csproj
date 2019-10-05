@@ -217,9 +217,11 @@
     <Compile Include="FileFormats\Archives\PKZ.cs" />
     <Compile Include="FileFormats\Archives\VIBS.cs" />
     <Compile Include="FileFormats\Audio\Archives\AudioCommon.cs" />
+    <Compile Include="FileFormats\Collision\KclMonoscript.cs" />
     <Compile Include="FileFormats\DKCTF\Common.cs" />
     <Compile Include="FileFormats\DKCTF\MSBT.cs" />
     <Compile Include="FileFormats\DKCTF\PAK.cs" />
+    <Compile Include="FileFormats\Effects\ESET.cs" />
     <Compile Include="FileFormats\Font\BXFNT.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HeaderCommon.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HedgeModel.cs" />
@@ -320,13 +322,14 @@
     <Compile Include="FileFormats\Layout\LayoutTextureLoader.cs" />
     <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
     <Compile Include="FileFormats\Layout\Common.cs" />
+    <Compile Include="FileFormats\Layout\PartsManager.cs" />
     <Compile Include="FileFormats\Layout\RenderablePane.cs" />
     <Compile Include="FileFormats\Layout\Rev\BRLAN.cs" />
     <Compile Include="FileFormats\Layout\Rev\BrlytShader.cs" />
     <Compile Include="FileFormats\Layout\Rev\BRLYT.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
-    <Compile Include="FileFormats\MOD.cs" />
+    <Compile Include="FileFormats\Pikmin1\MOD.cs" />
     <Compile Include="FileFormats\Pikmin1\TXE.cs" />
     <Compile Include="FileFormats\Rom\3DS\NCSDStructs.cs" />
     <Compile Include="FileFormats\Rom\3DS\NCSD.cs" />
@@ -348,11 +351,62 @@
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
     <Compile Include="FileFormats\Layout\CAFE\BflytShader.cs" />
+    <Compile Include="GUI\BFLYT\Animations\LayoutAnimEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LayoutAnimEditor.Designer.cs">
+      <DependentUpon>LayoutAnimEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LayoutAnimEditorBasic.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LayoutAnimEditorBasic.Designer.cs">
+      <DependentUpon>LayoutAnimEditorBasic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LytAnimEditorKeyGUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LytKeyPaneSRTPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LytKeyPaneSRTPanel.Designer.cs">
+      <DependentUpon>LytKeyPaneSRTPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LytKeyVisibiltyPane.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LytKeyVisibiltyPane.Designer.cs">
+      <DependentUpon>LytKeyVisibiltyPane.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LytKeyVtxColorPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LytKeyVtxColorPanel.Designer.cs">
+      <DependentUpon>LytKeyVtxColorPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\BasePaneEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\BasePaneEditor.Designer.cs">
+      <DependentUpon>BasePaneEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\PaneEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\PaneEditor.Designer.cs">
+      <DependentUpon>PaneEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\FileSelector.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\FileSelector.Designer.cs">
       <DependentUpon>FileSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LayoutAnimList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\LayoutAnimList.Designer.cs">
+      <DependentUpon>LayoutAnimList.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutHierarchy.cs">
       <SubType>Form</SubType>
@@ -390,6 +444,7 @@
     <Compile Include="GUI\BFLYT\LayoutTextureList.Designer.cs">
       <DependentUpon>LayoutTextureList.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFLYT\LayoutUndoManager.cs" />
     <Compile Include="GUI\BFLYT\LayoutViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1175,8 +1230,32 @@
     <EmbeddedResource Include="GUI\BFFNT\BffntEditor.resx">
       <DependentUpon>BffntEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Animations\LayoutAnimEditor.resx">
+      <DependentUpon>LayoutAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Animations\LayoutAnimEditorBasic.resx">
+      <DependentUpon>LayoutAnimEditorBasic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Animations\LytKeyPaneSRTPanel.resx">
+      <DependentUpon>LytKeyPaneSRTPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Animations\LytKeyVisibiltyPane.resx">
+      <DependentUpon>LytKeyVisibiltyPane.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Animations\LytKeyVtxColorPanel.resx">
+      <DependentUpon>LytKeyVtxColorPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\BasePaneEditor.resx">
+      <DependentUpon>BasePaneEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\PaneEditor.resx">
+      <DependentUpon>PaneEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\FileSelector.resx">
       <DependentUpon>FileSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Animations\LayoutAnimList.resx">
+      <DependentUpon>LayoutAnimList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\LayoutEditor.resx">
       <DependentUpon>LayoutEditor.cs</DependentUpon>
@@ -1598,6 +1677,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Layout\OrthoView.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LayoutAnimation.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

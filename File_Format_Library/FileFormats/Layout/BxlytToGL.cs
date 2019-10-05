@@ -45,7 +45,7 @@ namespace LayoutBXLYT
             }
         }
 
-        public static void DrawPictureBox(BasePane pane, bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
+        public static void DrawPictureBox(BasePane pane, bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures, bool isSelected)
         {
             if (!Runtime.LayoutEditor.DisplayPicturePane)
                 return;
@@ -92,7 +92,7 @@ namespace LayoutBXLYT
                    };
                 }
 
-                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
 
                 mat.Shader.Disable();
             }
@@ -127,7 +127,7 @@ namespace LayoutBXLYT
                    };
                 }
 
-                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
 
                 mat.Shader.Disable();
             }
@@ -162,7 +162,7 @@ namespace LayoutBXLYT
                    };
                 }
 
-                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
 
                 mat.Shader.Disable();
             }
@@ -173,7 +173,7 @@ namespace LayoutBXLYT
             GL.UseProgram(0);
         }
 
-        public static void DrawBoundryPane(BasePane pane, bool gameWindow, byte effectiveAlpha, List<BasePane> SelectedPanes)
+        public static void DrawBoundryPane(BasePane pane, bool gameWindow, byte effectiveAlpha, bool isSelected)
         {
             if (!Runtime.LayoutEditor.DisplayBoundryPane || gameWindow || Runtime.LayoutEditor.IsGamePreview)
                 return;
@@ -186,7 +186,7 @@ namespace LayoutBXLYT
                 };
 
             Color color = Color.DarkGreen;
-            if (SelectedPanes.Contains(pane))
+            if (isSelected)
                 color = Color.Red;
 
             color = Color.FromArgb(70, color);
@@ -202,7 +202,7 @@ namespace LayoutBXLYT
         }
 
 
-        public static void DrawAlignmentPane(BasePane pane, bool gameWindow, byte effectiveAlpha, List<BasePane> SelectedPanes)
+        public static void DrawAlignmentPane(BasePane pane, bool gameWindow, byte effectiveAlpha, bool isSelected)
         {
             if (!Runtime.LayoutEditor.DisplayAlignmentPane || gameWindow || Runtime.LayoutEditor.IsGamePreview)
                 return;
@@ -216,7 +216,7 @@ namespace LayoutBXLYT
                 };
 
             Color color = Color.Orange;
-            if (SelectedPanes.Contains(pane))
+            if (isSelected)
                 color = Color.Red;
 
             color = Color.FromArgb(70, color);
@@ -231,7 +231,7 @@ namespace LayoutBXLYT
             BxlytToGL.DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
         }
 
-        public static void DrawScissorPane(BasePane pane, bool gameWindow, byte effectiveAlpha, List<BasePane> SelectedPanes)
+        public static void DrawScissorPane(BasePane pane, bool gameWindow, byte effectiveAlpha, bool isSelected)
         {
             if (!Runtime.LayoutEditor.DisplayScissorPane || gameWindow || Runtime.LayoutEditor.IsGamePreview)
                 return;
@@ -244,7 +244,7 @@ namespace LayoutBXLYT
                 };
 
             Color color = Color.Yellow;
-            if (SelectedPanes.Contains(pane))
+            if (isSelected)
                 color = Color.Red;
 
             color = Color.FromArgb(70, color);
@@ -260,7 +260,7 @@ namespace LayoutBXLYT
         }
 
         public static void DrawTextbox(BasePane pane, bool gameWindow, Bitmap fontBitmap, byte effectiveAlpha,
-            Dictionary<string, STGenericTexture> Textures, List<BasePane> SelectedPanes, bool updateBitmap)
+            Dictionary<string, STGenericTexture> Textures, List<BasePane> SelectedPanes, bool updateBitmap, bool isSelected)
         {
             var textBox = (ITextPane)pane;
 
@@ -306,7 +306,7 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            DrawRectangle(pane, gameWindow, pane.Rectangle, texCoords, Colors, false, effectiveAlpha);
+            DrawRectangle(pane, gameWindow, pane.Rectangle, texCoords, Colors, false, effectiveAlpha, isSelected);
 
             mat.Shader.Disable();
 
@@ -415,7 +415,7 @@ namespace LayoutBXLYT
         //Huge thanks to layout studio for the window pane rendering code
         //https://github.com/Treeki/LayoutStudio/blob/master/layoutgl/widget.cpp
         //Note i still need to fix UV coordinates being flips and transformed!
-        public static void DrawWindowPane(BasePane pane,bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures)
+        public static void DrawWindowPane(BasePane pane,bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures, bool isSelected)
         {
             if (!Runtime.LayoutEditor.DisplayWindowPane)
                 return;
@@ -1256,7 +1256,7 @@ namespace LayoutBXLYT
         }
 
         public static void DrawRectangle(BasePane pane, bool gameWindow, CustomRectangle rect, Vector2[] texCoords,
-           Color[] colors, bool useLines = true, byte alpha = 255)
+           Color[] colors, bool useLines = true, byte alpha = 255, bool selectionOutline = false)
         {
             for (int i = 0; i < colors.Length; i++)
             {
@@ -1289,7 +1289,7 @@ namespace LayoutBXLYT
                         GL.PolygonOffset(1f, 1f);
 
                         GL.Begin(PrimitiveType.Quads);
-                        GL.Color4(Color.Green);
+                        GL.Color4(selectionOutline ? Color.Red : Color.Green);
                         GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
                         GL.Vertex2(rect.RightPoint, rect.BottomPoint);
                         GL.Vertex2(rect.RightPoint, rect.TopPoint);
@@ -1298,6 +1298,29 @@ namespace LayoutBXLYT
 
                         GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
                         GL.PolygonOffset(0f, 0f);
+
+                        if (selectionOutline)
+                        {
+                            var transformed = rect;
+                            var leftTop = new Vector2(transformed.LeftPoint, transformed.TopPoint);
+                            var left = new Vector2(transformed.LeftPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
+                            var leftBottom = new Vector2(transformed.LeftPoint, transformed.BottomPoint);
+                            var rightTop = new Vector2(transformed.RightPoint, transformed.TopPoint);
+                            var right = new Vector2(transformed.RightPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
+                            var rightBottom = new Vector2(transformed.RightPoint, transformed.BottomPoint);
+                            var top = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.TopPoint);
+                            var bottom = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.BottomPoint);
+
+                            DrawEdgeSquare(leftTop);
+                            DrawEdgeSquare(left);
+                            DrawEdgeSquare(leftBottom);
+                            DrawEdgeSquare(rightTop);
+                            DrawEdgeSquare(right);
+                            DrawEdgeSquare(rightBottom);
+                            DrawEdgeSquare(top);
+                            DrawEdgeSquare(bottom);
+                        }
+
 
                         GL.Enable(EnableCap.Blend);
                         GL.Enable(EnableCap.AlphaTest);
@@ -1333,6 +1356,19 @@ namespace LayoutBXLYT
 
             //    pane.renderablePane.Render(vertices, vertexColors, texCoords);
             }
+        }
+
+        private static void DrawEdgeSquare(Vector2 position)
+        {
+            float scale = 5;
+
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color4(Color.Red);
+            GL.Vertex2(position.X + -1 * scale, position.Y + -1 * scale);
+            GL.Vertex2(position.X + 1 * scale, position.Y + -1 * scale);
+            GL.Vertex2(position.X + 1 * scale, position.Y + 1 * scale);
+            GL.Vertex2(position.X + -1 * scale, position.Y + 1 * scale);
+            GL.End();
         }
     }
 }

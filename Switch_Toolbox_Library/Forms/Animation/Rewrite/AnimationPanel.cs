@@ -13,8 +13,27 @@ using Toolbox.Library.Animations;
 
 namespace Toolbox.Library
 {
+    public enum AnimPlayerState
+    {
+        Playing,
+        Pause,
+        Stop,
+    }
+
     public partial class STAnimationPanel : STUserControl
     {
+        public EventHandler OnNodeSelected
+        {
+            get { return animationTrackBar.OnNodeSelected; }
+            set { animationTrackBar.OnNodeSelected = value; }
+        }
+
+        public bool DisplayKeys
+        {
+            get { return animationTrackBar.DisplayKeys; }
+            set { animationTrackBar.DisplayKeys = value; }
+        }
+
         private OpenTK.GLControl _viewport;
         public virtual OpenTK.GLControl Viewport
         {
@@ -44,14 +63,9 @@ namespace Toolbox.Library
             _viewport = control;
         }
 
-        public PlayerState AnimationPlayerState = PlayerState.Stop;
+        public EventHandler AnimationPlaying;
 
-        public enum PlayerState
-        {
-            Playing,
-            Pause,
-            Stop,
-        }
+        public AnimPlayerState AnimationPlayerState = AnimPlayerState.Stop;
 
         public bool IsLooping
         {
@@ -63,7 +77,7 @@ namespace Toolbox.Library
         {
             get
             {
-                return AnimationPlayerState == PlayerState.Playing;
+                return AnimationPlayerState == AnimPlayerState.Playing;
             }
         }
 
@@ -108,6 +122,7 @@ namespace Toolbox.Library
             totalFrame.Maximum = (decimal)FrameCount;
             totalFrame.Value = (decimal)FrameCount;
             currentFrameUpDown.Maximum = (decimal)FrameCount;
+            animationTrackBar.ActiveAnimation = animation;
             animationTrackBar.FrameCount = (float)FrameCount;
             currentFrameUpDown.Value = 0;
 
@@ -141,6 +156,8 @@ namespace Toolbox.Library
             BackColor = FormThemes.BaseTheme.FormBackColor;
             ForeColor = FormThemes.BaseTheme.FormForeColor;
 
+            DisplayKeys = false;
+
             animationTrackBar.BackColor = FormThemes.BaseTheme.FormBackColor;
             animationTrackBar.ForeColor = FormThemes.BaseTheme.FormForeColor;
             animationTrackBar.FrameChanged += new EventHandler(animationTrackBar_ValueChanged);
@@ -173,7 +190,7 @@ namespace Toolbox.Library
 
         private void Play()
         {
-            AnimationPlayerState = PlayerState.Playing;
+            AnimationPlayerState = AnimPlayerState.Playing;
             UpdateAnimationUI();
             animationTrackBar.Play();
             animationTimer.Start();
@@ -181,7 +198,7 @@ namespace Toolbox.Library
 
         private void Pause()
         {
-            AnimationPlayerState = PlayerState.Stop;
+            AnimationPlayerState = AnimPlayerState.Stop;
             UpdateAnimationUI();
             animationTrackBar.Stop();
             animationTimer.Stop();
@@ -190,7 +207,7 @@ namespace Toolbox.Library
         private void Stop()
         {
             currentFrameUpDown.Value = 0;
-            AnimationPlayerState = PlayerState.Stop;
+            AnimationPlayerState = AnimPlayerState.Stop;
             UpdateAnimationUI();
             animationTimer.Stop();
         }
@@ -253,7 +270,7 @@ namespace Toolbox.Library
             if (currentAnimations.Count == 0 || FrameCount <= 0)
                 return;
 
-            if (AnimationPlayerState == PlayerState.Playing)
+            if (AnimationPlayerState == AnimPlayerState.Playing)
                 Pause();
             else
                 Play();
@@ -336,6 +353,7 @@ namespace Toolbox.Library
                 float animFrameNum = frameNum;
 
                 anim.SetFrame(animFrameNum);
+                AnimationPlaying?.Invoke(anim, new EventArgs());
                 anim.NextFrame();
 
                 //Add frames to the playing animation
