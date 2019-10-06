@@ -298,17 +298,16 @@ namespace LayoutBXLYT
                 new Vector2(0, 0),
             };
 
-            Color color = Color.White;
             Color[] Colors = new Color[] {
-                color,
-                color,
-                color,
-                color,
+                textBox.FontBottomColor.Color,
+                textBox.FontBottomColor.Color,
+                textBox.FontTopColor.Color,
+                textBox.FontTopColor.Color,
                 };
 
             DrawRectangle(pane, gameWindow, pane.Rectangle, texCoords, Colors, false, effectiveAlpha, isSelected);
 
-            mat.Shader.Disable();
+         //   mat.Shader.Disable();
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.PopAttrib();

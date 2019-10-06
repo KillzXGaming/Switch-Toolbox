@@ -738,11 +738,11 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("Italic Tilt"), CategoryAttribute("Font")]
             public float ItalicTilt { get; set; }
 
-            [DisplayName("Fore Color"), CategoryAttribute("Font")]
-            public STColor8 FontForeColor { get; set; }
+            [DisplayName("Top Color"), CategoryAttribute("Font")]
+            public STColor8 FontTopColor { get; set; }
 
-            [DisplayName("Back Color"), CategoryAttribute("Font")]
-            public STColor8 FontBackColor { get; set; }
+            [DisplayName("Bottom Color"), CategoryAttribute("Font")]
+            public STColor8 FontBottomColor { get; set; }
 
             [DisplayName("Font Size"), CategoryAttribute("Font")]
             public Vector2F FontSize { get; set; }
@@ -812,8 +812,8 @@ namespace LayoutBXLYT.Cafe
                 reader.Seek(1); //padding
                 ItalicTilt = reader.ReadSingle();
                 uint textOffset = reader.ReadUInt32();
-                FontForeColor = STColor8.FromBytes(reader.ReadBytes(4));
-                FontBackColor = STColor8.FromBytes(reader.ReadBytes(4));
+                FontTopColor = STColor8.FromBytes(reader.ReadBytes(4));
+                FontBottomColor = STColor8.FromBytes(reader.ReadBytes(4));
                 FontSize = reader.ReadVec2SY();
                 CharacterSpace = reader.ReadSingle();
                 LineSpace = reader.ReadSingle();
@@ -863,8 +863,8 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(ItalicTilt);
                 long _ofsTextPos = writer.Position;
                 writer.Write(0); //text offset
-                writer.Write(FontForeColor.ToBytes());
-                writer.Write(FontBackColor.ToBytes());
+                writer.Write(FontTopColor.ToBytes());
+                writer.Write(FontBottomColor.ToBytes());
                 writer.Write(FontSize);
                 writer.Write(CharacterSpace);
                 writer.Write(LineSpace);

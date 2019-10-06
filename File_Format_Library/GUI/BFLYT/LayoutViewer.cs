@@ -396,19 +396,18 @@ namespace LayoutBXLYT
                 {
                     var textPane = (ITextPane)pane;
                     Bitmap bitmap = null;
-                    if (textPane.RenderableFont == null)
+
+                    if (pane is BFLYT.TXT1)
                     {
-                        if (pane is BFLYT.TXT1)
+                        foreach (var fontFile in FirstPlugin.PluginRuntime.BxfntFiles)
                         {
-                            foreach (var fontFile in FirstPlugin.PluginRuntime.BxfntFiles)
+                            if (Utils.CompareNoExtension(fontFile.Name, textPane.FontName))
                             {
-                                if (Utils.CompareNoExtension(fontFile.Name, textPane.FontName))
-                                {
-                                    bitmap = fontFile.GetBitmap(textPane.Text, false, pane);
-                                }
+                                bitmap = fontFile.GetBitmap(textPane.Text, false, pane);
                             }
                         }
                     }
+
                     if (bitmap != null)
                         BxlytToGL.DrawTextbox(pane, GameWindow, bitmap, effectiveAlpha,
                             Textures, SelectedPanes, textPane.RenderableFont == null, isSelected);

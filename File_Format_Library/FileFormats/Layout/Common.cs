@@ -126,7 +126,7 @@ namespace LayoutBXLYT
                     return false;
                 else if (this is IBoundryPane)
                     return false;
-             else   if (this is IPartPane)
+                else if (this is IPartPane)
                     return false;
 
                 return true;
@@ -749,8 +749,8 @@ namespace LayoutBXLYT
 
         float ItalicTilt { get; set; }
 
-        STColor8 FontForeColor { get; set; }
-        STColor8 FontBackColor { get; set; }
+        STColor8 FontTopColor { get; set; }
+        STColor8 FontBottomColor { get; set; }
         Vector2F FontSize { get; set; }
 
         float CharacterSpace { get; set; }
