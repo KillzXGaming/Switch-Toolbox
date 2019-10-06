@@ -62,7 +62,7 @@ namespace LayoutBXLYT
 
                 name = value;
 
-                if (LayoutFile != null)
+                if (LayoutFile != null && !LayoutFile.PaneLookup.ContainsKey(name))
                     LayoutFile.PaneLookup.Add(name, this);
             }
         }
