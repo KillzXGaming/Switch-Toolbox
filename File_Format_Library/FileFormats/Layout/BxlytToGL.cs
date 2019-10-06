@@ -940,47 +940,54 @@ namespace LayoutBXLYT
             if (isSelected)
             {
                 if (!Runtime.LayoutEditor.IsGamePreview && !gameWindow)
-                {
-                    var rect = pane.CreateRectangle();
-                    rect = rect.RotateZ(pane.Rotate.Z);
-
-                    GL.Disable(EnableCap.Blend);
-                    GL.Disable(EnableCap.AlphaTest);
-                    GL.Disable(EnableCap.Texture2D);
-                    GL.UseProgram(0);
-
-                    GL.Begin(PrimitiveType.LineLoop);
-                    GL.Color4(Color.Red);
-                    GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                    GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                    GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                    GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                    GL.End();
-
-                    var transformed = rect;
-                    var leftTop = new Vector2(transformed.LeftPoint, transformed.TopPoint);
-                    var left = new Vector2(transformed.LeftPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
-                    var leftBottom = new Vector2(transformed.LeftPoint, transformed.BottomPoint);
-                    var rightTop = new Vector2(transformed.RightPoint, transformed.TopPoint);
-                    var right = new Vector2(transformed.RightPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
-                    var rightBottom = new Vector2(transformed.RightPoint, transformed.BottomPoint);
-                    var top = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.TopPoint);
-                    var bottom = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.BottomPoint);
-
-                    DrawEdgeSquare(leftTop);
-                    DrawEdgeSquare(left);
-                    DrawEdgeSquare(leftBottom);
-                    DrawEdgeSquare(rightTop);
-                    DrawEdgeSquare(right);
-                    DrawEdgeSquare(rightBottom);
-                    DrawEdgeSquare(top);
-                    DrawEdgeSquare(bottom);
-
-                    GL.Enable(EnableCap.Blend);
-                    GL.Enable(EnableCap.AlphaTest);
-                    GL.Enable(EnableCap.Texture2D);
-                }
+                    DrawSelectionBox(pane, isSelected);
             }
+        }
+
+        public static void DrawSelectionBox(BasePane pane, bool isSelected)
+        {
+            var rect = pane.CreateRectangle();
+            rect = rect.RotateZ(pane.Rotate.Z);
+
+            GL.Disable(EnableCap.Blend);
+            GL.Disable(EnableCap.AlphaTest);
+            GL.Disable(EnableCap.Texture2D);
+            GL.UseProgram(0);
+
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color4(isSelected ? Color.Red : Color.Green);
+            GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+            GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+            GL.Vertex2(rect.RightPoint, rect.TopPoint);
+            GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+            GL.End();
+
+            if (isSelected)
+            {
+                var transformed = rect;
+                var leftTop = new Vector2(transformed.LeftPoint, transformed.TopPoint);
+                var left = new Vector2(transformed.LeftPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
+                var leftBottom = new Vector2(transformed.LeftPoint, transformed.BottomPoint);
+                var rightTop = new Vector2(transformed.RightPoint, transformed.TopPoint);
+                var right = new Vector2(transformed.RightPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
+                var rightBottom = new Vector2(transformed.RightPoint, transformed.BottomPoint);
+                var top = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.TopPoint);
+                var bottom = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.BottomPoint);
+
+                DrawEdgeSquare(leftTop);
+                DrawEdgeSquare(left);
+                DrawEdgeSquare(leftBottom);
+                DrawEdgeSquare(rightTop);
+                DrawEdgeSquare(right);
+                DrawEdgeSquare(rightBottom);
+                DrawEdgeSquare(top);
+                DrawEdgeSquare(bottom);
+            }
+
+
+            GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.AlphaTest);
+            GL.Enable(EnableCap.Texture2D);
         }
 
         private static void GetTextureSize(BxlytMaterial pane, Dictionary<string, STGenericTexture> Textures, out float width, out float height)
@@ -1340,49 +1347,11 @@ namespace LayoutBXLYT
                     GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
                     GL.Vertex2(rect.LeftPoint, rect.TopPoint);
                     GL.End();
+                }
 
-                    if (!Runtime.LayoutEditor.IsGamePreview && !gameWindow)
-                    {
-                        GL.Disable(EnableCap.Blend);
-                        GL.Disable(EnableCap.AlphaTest);
-                        GL.Disable(EnableCap.Texture2D);
-                        GL.UseProgram(0);
-
-                        GL.Begin(PrimitiveType.LineLoop);
-                        GL.Color4(selectionOutline ? Color.Red : Color.Green);
-                        GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                        GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                        GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                        GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-                        GL.End();
-
-                        if (selectionOutline)
-                        {
-                            var transformed = rect;
-                            var leftTop = new Vector2(transformed.LeftPoint, transformed.TopPoint);
-                            var left = new Vector2(transformed.LeftPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
-                            var leftBottom = new Vector2(transformed.LeftPoint, transformed.BottomPoint);
-                            var rightTop = new Vector2(transformed.RightPoint, transformed.TopPoint);
-                            var right = new Vector2(transformed.RightPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
-                            var rightBottom = new Vector2(transformed.RightPoint, transformed.BottomPoint);
-                            var top = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.TopPoint);
-                            var bottom = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.BottomPoint);
-
-                            DrawEdgeSquare(leftTop);
-                            DrawEdgeSquare(left);
-                            DrawEdgeSquare(leftBottom);
-                            DrawEdgeSquare(rightTop);
-                            DrawEdgeSquare(right);
-                            DrawEdgeSquare(rightBottom);
-                            DrawEdgeSquare(top);
-                            DrawEdgeSquare(bottom);
-                        }
-
-
-                        GL.Enable(EnableCap.Blend);
-                        GL.Enable(EnableCap.AlphaTest);
-                        GL.Enable(EnableCap.Texture2D);
-                    }
+                if (!Runtime.LayoutEditor.IsGamePreview && !gameWindow)
+                {
+                    DrawSelectionBox(pane, selectionOutline);
                 }
             }
             else

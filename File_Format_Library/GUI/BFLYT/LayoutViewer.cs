@@ -227,7 +227,6 @@ namespace LayoutBXLYT
                 GlobalShader.Compile();
             }
 
-
             bool PreviewHitbox = false;
             if (PreviewHitbox)
             {
@@ -240,10 +239,10 @@ namespace LayoutBXLYT
 
                         //Hitbox debug
                         var hitbox = pane.CreateRectangle();
-                        hitbox = hitbox.GetTransformedRectangle(pane.Parent, pane.Translate, pane.Scale);
+                        hitbox = hitbox.GetTransformedRectangle(pane.Parent, pane.Translate, pane.Rotate, pane.Scale);
 
                         GL.Begin(PrimitiveType.Quads);
-                        GL.Color4(Color.FromArgb(28, 255, 0, 0));
+                        GL.Color4(Color.FromArgb(128, 255, 0, 0));
                         GL.Vertex2(hitbox.LeftPoint, hitbox.BottomPoint);
                         GL.Vertex2(hitbox.RightPoint, hitbox.BottomPoint);
                         GL.Vertex2(hitbox.RightPoint, hitbox.TopPoint);
@@ -325,7 +324,7 @@ namespace LayoutBXLYT
                 GL.Rotate(pane.Rotate.Z, 0, 0, 1);
                 GL.Scale(pane.Scale.X, pane.Scale.Y, 1);
 
-                DrawDefaultPane(shader, pane, true);
+                DrawDefaultPane(shader, pane, false);
 
                 GL.PopMatrix();
             }
@@ -414,7 +413,7 @@ namespace LayoutBXLYT
                         BxlytToGL.DrawTextbox(pane, GameWindow, bitmap, effectiveAlpha,
                             Textures, SelectedPanes, textPane.RenderableFont == null, isSelected);
                     else
-                        DrawDefaultPane(shader, pane);
+                        DrawDefaultPane(shader, pane, isSelected);
                 }
                 else if (pane is BFLYT.SCR1)
                     BxlytToGL.DrawScissorPane(pane, GameWindow, effectiveAlpha, isSelected);
@@ -423,7 +422,7 @@ namespace LayoutBXLYT
                 else if (pane is BFLYT.PRT1)
                     DrawPartsPane(shader, (BFLYT.PRT1)pane, effectiveAlpha, isSelected, parentAlphaInfluence);
                 else
-                    DrawDefaultPane(shader, pane);
+                    DrawDefaultPane(shader, pane, isSelected);
             }
             else
                 isRoot = false;
@@ -466,7 +465,7 @@ namespace LayoutBXLYT
 
         private void DrawDefaultPane(BxlytShader shader, BasePane pane, bool isSelectionBox = false)
         {
-            if (!Runtime.LayoutEditor.DisplayNullPane && !isSelectionBox || GameWindow || Runtime.LayoutEditor.IsGamePreview)
+            if (!Runtime.LayoutEditor.DisplayNullPane || GameWindow || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
             Vector2[] TexCoords = new Vector2[] {
@@ -487,7 +486,7 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            BxlytToGL.DrawRectangle(pane, GameWindow, pane.Rectangle, TexCoords, Colors);
+            BxlytToGL.DrawRectangle(pane, GameWindow, pane.Rectangle, TexCoords, Colors, true, 255, isSelectionBox);
         }
 
         private void DrawPartsPane(BxlytShader shader, BFLYT.PRT1 pane, byte effectiveAlpha,bool isSelected, bool parentInfluenceAlpha)
@@ -729,13 +728,14 @@ namespace LayoutBXLYT
             {
                 RenderEditor();
                 var coords = convertScreenToWorldCoords(e.Location.X, e.Location.Y);
+                pickOriginMouse = coords;
 
                 GL.PopMatrix();
 
                 //Add a content menu 
                 var selectOverlapping = new STToolStripItem("Select Overlapping");
                 var createPanes = new STToolStripItem("Create Pane");
-                createPanes.DropDownItems.Add(new STToolStripItem("Null Pane"));
+                createPanes.DropDownItems.Add(new STToolStripItem("Null Pane", CreateNullPaneAction));
                 createPanes.DropDownItems.Add(new STToolStripItem("Picture Pane"));
                 createPanes.DropDownItems.Add(new STToolStripItem("Text Box Pane "));
                 createPanes.DropDownItems.Add(new STToolStripItem("Window Pane"));
@@ -763,6 +763,21 @@ namespace LayoutBXLYT
             }
 
             Console.WriteLine("SelectedPanes " + SelectedPanes.Count);
+        }
+
+        private void CreateNullPaneAction(object sender, EventArgs e) {
+            var pane = ParentEditor.AddNewNullPane();
+            SetupNewPane(pane);
+        }
+
+        private void SetupNewPane(BasePane pane)
+        {
+            if (pane == null) return;
+
+            pane.Translate = new Syroot.Maths.Vector3F(pickOriginMouse.X, pickOriginMouse.Y, 0);
+            SelectedPanes.Add(pane);
+
+            glControl1.Invalidate();
         }
 
         private void DeletePaneAction(object sender, EventArgs e) {
@@ -795,6 +810,7 @@ namespace LayoutBXLYT
         {
             UndoManger.AddToUndo(new LayoutUndoManager.UndoActionPaneDelete(SelectedPanes, LayoutFile));
             LayoutFile.RemovePanes(SelectedPanes);
+            SelectedPanes.Clear();
             ParentEditor?.UpdateHiearchyTree();
             glControl1.Invalidate();
         }
@@ -805,7 +821,8 @@ namespace LayoutBXLYT
             if (toolMenu != null)
             {
                 string name = toolMenu.Text;
-                SelectedPanes.Clear();
+                if (Control.ModifierKeys != Keys.Control)
+                    SelectedPanes.Clear();
 
                 if (LayoutFile.PaneLookup.ContainsKey(name))
                     SelectedPanes.Add(LayoutFile.PaneLookup[name]);
@@ -828,9 +845,12 @@ namespace LayoutBXLYT
             if (!Runtime.LayoutEditor.DisplayNullPane && pane.IsNullPane)
                 isVisible = false;
 
-            if (isVisible && pane.DisplayInEditor && pane.IsHit(X, Y) && pane.Name != "RootPane")
+            if (isVisible && pane.DisplayInEditor && pane.IsHit(X, Y) && !pane.IsRoot)
+            {
                 SelectedPane = pane;
-            
+                return;
+            }
+
             foreach (var childPane in pane.Childern)
                 SearchHit(childPane, X, Y, ref SelectedPane);
         }
@@ -850,17 +870,18 @@ namespace LayoutBXLYT
                 isVisible = false;
 
             if (isVisible && pane.DisplayInEditor && pane.IsHit(X, Y) && pane.Name != "RootPane")
-                SelectedPanes.Add(pane);
+                if (!SelectedPanes.Contains(pane))
+                    SelectedPanes.Add(pane);
 
             foreach (var childPane in pane.Childern)
-                SelectedPanes = GetHitPanes(childPane, X, Y, SelectedPanes);
+                 GetHitPanes(childPane, X, Y, SelectedPanes);
 
             return SelectedPanes;
         }
 
         private PickAction SearchEdgePicking(BasePane pane, int X, int Y)
         {
-            var transformed = pane.CreateRectangle().GetTransformedRectangle(pane.Parent, pane.Translate, pane.Scale);
+            var transformed = pane.CreateRectangle().GetTransformedRectangle(pane.Parent, pane.Translate, pane.Rotate, pane.Scale);
             var leftTop = new Point(transformed.LeftPoint, transformed.TopPoint);
             var left = new Point(transformed.LeftPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
             var leftBottom = new Point(transformed.LeftPoint, transformed.BottomPoint);

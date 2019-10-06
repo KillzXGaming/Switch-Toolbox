@@ -67,7 +67,7 @@ namespace LayoutBXLYT
             {
                 layoutFile = header;
                 for (int i = 0; i < panes.Count; i++)
-                    targetPanes.Add(new PaneInfo(panes[i]));
+                    targetPanes.Add(new PaneInfo(panes[i], header.PaneLookup[panes[i].Parent.Name]));
             }
 
             public IRevertAction Revert()
@@ -82,10 +82,10 @@ namespace LayoutBXLYT
                 public BasePane Parent;
                 public BasePane Pane;
 
-                public PaneInfo(BasePane pane)
+                public PaneInfo(BasePane pane, BasePane parent)
                 {
                     Pane = pane;
-                    Parent = pane.Parent;
+                    Parent = parent;
                 }
             }
         }

@@ -227,7 +227,7 @@ namespace LayoutBXLYT
                 GetPanes(childPane,ref panes);
         }
 
-        private PaneTreeWrapper CreatePaneWrapper(BasePane pane)
+        public static PaneTreeWrapper CreatePaneWrapper(BasePane pane)
         {
             PaneTreeWrapper paneNode = new PaneTreeWrapper();
             paneNode.Text = pane.Name;

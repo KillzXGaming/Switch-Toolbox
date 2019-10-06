@@ -903,5 +903,24 @@ namespace LayoutBXLYT
             Runtime.LayoutEditor.PartsAsNullPanes = viewPartsAsNullPanesToolStripMenuItem.Checked;
             ActiveViewport?.UpdateViewport();
         }
+
+        #region Pane Adding
+
+        public BasePane AddNewNullPane()
+        {
+            BasePane pane = null;
+            if (ActiveLayout is BFLYT.Header)
+                pane = new BFLYT.PAN1((BFLYT.Header)ActiveLayout, "N_null");
+
+            if (pane != null)
+            {
+                pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
+                ActiveLayout.AddPane(pane, ActiveLayout.RootPane);
+            }
+
+            return pane;
+        }
+
+        #endregion
     }
 }

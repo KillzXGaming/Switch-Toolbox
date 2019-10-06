@@ -15,6 +15,9 @@ namespace LayoutBXLYT
     public class BasePane : SectionCommon
     {
         [Browsable(false)]
+        public BxlytHeader LayoutFile;
+
+        [Browsable(false)]
         public PaneAnimController animController = new PaneAnimController();
 
         [Browsable(false)]
@@ -22,9 +25,14 @@ namespace LayoutBXLYT
 
         [DisplayName("Is Visible"), CategoryAttribute("Flags")]
         public virtual bool Visible { get; set; }
-   
-        public bool IsRoot = false;
 
+        [Browsable(false)]
+        public bool IsRoot
+        {
+            get { return Parent == null; }
+        }
+
+        [Browsable(false)]
         public bool ParentIsRoot
         {
             get { return Parent != null && Parent.IsRoot; }
@@ -41,8 +49,23 @@ namespace LayoutBXLYT
         [Browsable(false)]
         public virtual bool DisplayInEditor { get; set; } = true;
 
+        private string name;
+
         [DisplayName("Name"), CategoryAttribute("Pane")]
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                if (name != null && LayoutFile != null && LayoutFile.PaneLookup.ContainsKey(name))
+                    LayoutFile.PaneLookup.Remove(name);
+
+                name = value;
+
+                if (LayoutFile != null)
+                    LayoutFile.PaneLookup.Add(name, this);
+            }
+        }
 
         [DisplayName("Translate"), CategoryAttribute("Pane")]
         public Vector3F Translate { get; set; }
@@ -112,7 +135,7 @@ namespace LayoutBXLYT
 
         public CustomRectangle TransformParent(CustomRectangle rect)
         {
-            return rect.GetTransformedRectangle(Parent, Translate, Scale);
+            return rect.GetTransformedRectangle(Parent, Translate,Rotate, Scale);
         }
 
         private CustomRectangle rectangle;
@@ -311,10 +334,15 @@ namespace LayoutBXLYT
         public bool IsHit(int X, int Y)
         {
             var rect = CreateRectangle();
-            var transformed = rect.GetTransformedRectangle(Parent, Translate, Scale);
+            var transformed = rect.GetTransformedRectangle(Parent, Translate, Rotate, Scale);
 
-            if ((X > transformed.LeftPoint) && (X < transformed.RightPoint) &&
-                (Y > transformed.BottomPoint) && (Y < transformed.TopPoint))
+            bool isInBetweenX = (X > transformed.LeftPoint) && (X < transformed.RightPoint) ||
+                                (X < transformed.LeftPoint) && (X > transformed.RightPoint);
+
+            bool isInBetweenY = (Y > transformed.BottomPoint) && (Y < transformed.TopPoint) ||
+                                (Y < transformed.BottomPoint) && (Y > transformed.TopPoint);
+
+            if (isInBetweenX && isInBetweenY)
                 return true;
             else
                 return false;
@@ -1265,14 +1293,20 @@ namespace LayoutBXLYT
                 PaneLookup.Add(pane.Name, pane);
         }
 
+        public void AddPane(BasePane pane, string parent)
+        {
+            if (PaneLookup.ContainsKey(parent))
+                AddPane(pane, PaneLookup[parent]);
+            else
+                throw new Exception($"Failed to find parent pane! [{parent}]");
+        }
 
         public void AddPane(BasePane pane, BasePane parent)
         {
-            if (parent == null) return;
-
             if (!PaneLookup.ContainsKey(pane.Name))
                 PaneLookup.Add(pane.Name, pane);
 
+            pane.Parent = parent;
             parent.Childern.Add(pane);
             parent.NodeWrapper.Nodes.Add(pane.NodeWrapper);
         }
@@ -1283,9 +1317,6 @@ namespace LayoutBXLYT
             {
                 if (PaneLookup.ContainsKey(panes[i].Name))
                     PaneLookup.Remove(panes[i].Name);
-
-                if (panes[i].Parent == null)
-                    continue;
 
                 var parent = panes[i].Parent;
                 parent.Childern.Remove(panes[i]);
@@ -1386,20 +1417,39 @@ namespace LayoutBXLYT
 
         public CustomRectangle RotateZ(float rotate)
         {
+            var topLeft = RotateZPoint(LeftPoint, TopPoint, rotate);
+            var bottomRight = RotateZPoint(RightPoint, BottomPoint, rotate);
+
             return new CustomRectangle(
-                LeftPoint,
-                RightPoint,
-                TopPoint,
-                BottomPoint);
+                (int)topLeft.X,
+                (int)bottomRight.X,
+                (int)topLeft.Y,
+                (int)bottomRight.Y);
         }
 
-        public CustomRectangle GetTransformedRectangle(BasePane parent, Vector3F Transform, Vector2F Scale)
+        private OpenTK.Vector2 RotateZPoint(float p1, float p2,  float rotate)
         {
-            var rect = new CustomRectangle(
-                (int)(LeftPoint + Transform.X * Scale.X),
-                (int)(RightPoint + Transform.X * Scale.X),
-                (int)(TopPoint + Transform.Y * Scale.Y),
-                (int)(BottomPoint + Transform.Y * Scale.Y));
+            double angleInRadians = rotate * (Math.PI / 180);
+            double cosTheta = Math.Cos(angleInRadians);
+            double sinTheta = Math.Sin(angleInRadians);
+            var centerPoint = new OpenTK.Vector2(0,0);
+            return new OpenTK.Vector2(
+                (int)
+            (cosTheta * (p1 - centerPoint.X) -
+            sinTheta * (p2 - centerPoint.Y) + centerPoint.X),
+                (int)
+            (sinTheta * (p1 - centerPoint.X) +
+            cosTheta * (p2 - centerPoint.Y) + centerPoint.Y));
+        }
+
+        public CustomRectangle GetTransformedRectangle(BasePane parent, Vector3F Transform, Vector3F Rotate, Vector2F Scale)
+        {
+            var rect = this.RotateZ(Rotate.Z);
+            rect = new CustomRectangle(
+                (int)(rect.LeftPoint + Transform.X * Scale.X),
+                (int)(rect.RightPoint + Transform.X * Scale.X),
+                (int)(rect.TopPoint + Transform.Y * Scale.Y),
+                (int)(rect.BottomPoint + Transform.Y * Scale.Y));
 
             if (parent != null)
                 return parent.TransformParent(rect);

@@ -419,11 +419,10 @@ namespace LayoutBXLYT.Cafe
                             MaterialList = new MAT1(reader, this);
                             break;
                         case "pan1":
-                            var panel = new PAN1(reader);
+                            var panel = new PAN1(reader, this);
                             AddPaneToTable(panel);
                             if (!setRoot)
                             {
-                                panel.IsRoot = true;
                                 RootPane = panel;
                                 setRoot = true;
                             }
@@ -799,7 +798,7 @@ namespace LayoutBXLYT.Cafe
 
             private byte _flags;
 
-            public TXT1(FileReader reader, Header header) : base(reader)
+            public TXT1(FileReader reader, Header header) : base(reader, header)
             {
                 long startPos = reader.Position - 84;
 
@@ -1010,7 +1009,7 @@ namespace LayoutBXLYT.Cafe
                 get { return WindowFrames.Count >= 8 ? WindowFrames[7] : null; }
             }
 
-            public WND1(FileReader reader, Header header) : base(reader)
+            public WND1(FileReader reader, Header header) : base(reader, header)
             {
                 WindowFrames = new List<BxlytWindowFrame>();
 
@@ -1157,7 +1156,7 @@ namespace LayoutBXLYT.Cafe
 
             }
 
-            public ALI1(FileReader reader, Header header) : base(reader)
+            public ALI1(FileReader reader, Header header) : base(reader, header)
             {
 
             }
@@ -1177,7 +1176,7 @@ namespace LayoutBXLYT.Cafe
 
             }
 
-            public SCR1(FileReader reader, Header header) : base(reader)
+            public SCR1(FileReader reader, Header header) : base(reader, header)
             {
 
             }
@@ -1197,7 +1196,7 @@ namespace LayoutBXLYT.Cafe
 
             }
 
-            public BND1(FileReader reader, Header header) : base(reader)
+            public BND1(FileReader reader, Header header) : base(reader, header)
             {
 
             }
@@ -1285,7 +1284,7 @@ namespace LayoutBXLYT.Cafe
             }
         }
 
-        public class PRT1 : PAN1, IPartPane
+        public class PRT1 : PAN1,IPartPane
         {
             public override string Signature { get; } = "prt1";
 
@@ -1441,7 +1440,7 @@ namespace LayoutBXLYT.Cafe
             }
 
             private Header layoutFile;
-            public PRT1(FileReader reader, Header header) : base(reader)
+            public PRT1(FileReader reader, Header header) : base(reader, header)
             {
                 layoutFile = header;
 
@@ -1741,7 +1740,7 @@ namespace LayoutBXLYT.Cafe
                 TexCoords[0] = new TexCoord();
             }
 
-            public PIC1(FileReader reader, BFLYT.Header header) : base(reader)
+            public PIC1(FileReader reader, BFLYT.Header header) : base(reader, header)
             {
                 ParentLayout = header;
 
@@ -1872,18 +1871,28 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("User Data"), CategoryAttribute("User Data")]
             public UserData UserData { get; set; }
 
-            public PAN1() : base()
+            public PAN1() : base() {
+                LoadDefaults();
+            }
+
+            public PAN1(Header header, string name) : base() {
+                LoadDefaults();
+                List<string> names = header.PaneLookup.Values.ToList().Select(o => o.Name).ToList();
+                Name = Utils.RenameDuplicateString(names, name);
+            }
+
+            public void LoadDefaults()
             {
                 Alpha = 255;
                 PaneMagFlags = 0;
                 Name = "";
-                Translate = new Vector3F(0,0,0);
-                Rotate = new Vector3F(0,0,0);
-                Scale = new Vector2F(1,1);
-                Width = 0;
-                Height = 0;
+                Translate = new Vector3F(0, 0, 0);
+                Rotate = new Vector3F(0, 0, 0);
+                Scale = new Vector2F(1, 1);
+                Width = 30;
+                Height = 40;
                 UserDataInfo = "";
-                UserData = new UserData();
+                UserData = null;
 
                 originX = OriginX.Center;
                 originY = OriginY.Center;
@@ -1893,8 +1902,9 @@ namespace LayoutBXLYT.Cafe
                 Visible = true;
             }
 
-            public PAN1(FileReader reader) : base()
+            public PAN1(FileReader reader, BxlytHeader header) : base()
             {
+                LayoutFile = header;
                 _flags1 = reader.ReadByte();
                 origin = reader.ReadByte();
                 Alpha = reader.ReadByte();
