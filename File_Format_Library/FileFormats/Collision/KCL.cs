@@ -126,10 +126,23 @@ namespace FirstPlugin
                         var model = new STGenericModel();
                         var mesh = new STGenericObject();
                         mesh.faces = new List<int>();
-                        model.Objects = new List<STGenericObject>() { mesh };
+                        var meshes = new List<STGenericObject>();
+                        model.Objects = meshes;
+
+                        List<uint> Attributes = new List<uint>();
+
+
                         int ft = 0;
                         foreach (var prisim in monscript.Prisims)
                         {
+                            if (!Attributes.Contains(prisim.CollisionType))
+                            {
+                                Attributes.Add(prisim.CollisionType);
+                                mesh = new STGenericObject();
+                                mesh.Text = prisim.CollisionType.ToString("X");
+                                meshes.Add(mesh);
+                            }
+
                             var triangle = monscript.GetTriangle(prisim);
                             var normal = triangle.Normal;
                             var pointA = triangle.PointA;
@@ -153,6 +166,7 @@ namespace FirstPlugin
                             mesh.vertices.Add(vtx);
                             mesh.vertices.Add(vtx2);
                             mesh.vertices.Add(vtx3);
+
 
                             ft += 3;
                         }
