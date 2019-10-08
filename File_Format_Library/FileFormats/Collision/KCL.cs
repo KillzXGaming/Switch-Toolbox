@@ -93,7 +93,7 @@ namespace FirstPlugin
         {
             public STToolStripItem[] NewFileMenuExtensions => null;
             public STToolStripItem[] NewFromFileMenuExtensions => newFileExt;
-            public STToolStripItem[] ToolsMenuExtensions => null;
+            public STToolStripItem[] ToolsMenuExtensions => toolExt;
             public STToolStripItem[] TitleBarExtensions => null;
             public STToolStripItem[] CompressionMenuExtensions => null;
             public STToolStripItem[] ExperimentalMenuExtensions => null;
@@ -101,11 +101,65 @@ namespace FirstPlugin
             public ToolStripButton[] IconButtonMenuExtensions => null;
 
             STToolStripItem[] newFileExt = new STToolStripItem[2];
+            STToolStripItem[] toolExt = new STToolStripItem[1];
 
             public MenuExt()
             {
                 newFileExt[0] = new STToolStripItem("KCL (Switch)", CreateNew);
                 newFileExt[1] = new STToolStripItem("KCL (Wii U)", CreateNew);
+
+                toolExt[0] = new STToolStripItem("KCL (Monoscript MKT) to OBJ", MontoscriptToOBJ);
+            }
+
+            public void MontoscriptToOBJ(object sender, EventArgs args)
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = "All files(*.*)|*.*";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    KclMonoscript monscript = new KclMonoscript();
+                    monscript.ReadKCL(ofd.FileName);
+
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        var model = new STGenericModel();
+                        var mesh = new STGenericObject();
+                        mesh.faces = new List<int>();
+                        model.Objects = new List<STGenericObject>() { mesh };
+                        int ft = 0;
+                        foreach (var prisim in monscript.Prisims)
+                        {
+                            var triangle = monscript.GetTriangle(prisim);
+                            var normal = triangle.Normal;
+                            var pointA = triangle.PointA;
+                            var pointB = triangle.PointB;
+                            var pointC = triangle.PointC;
+
+                            Vertex vtx = new Vertex();
+                            Vertex vtx2 = new Vertex();
+                            Vertex vtx3 = new Vertex();
+
+                            vtx.pos = pointA;
+                            vtx2.pos = pointB;
+                            vtx3.pos = pointC;
+                            vtx.nrm = normal;
+                            vtx2.nrm = normal;
+                            vtx3.nrm = normal;
+
+                            mesh.faces.Add(ft);
+                            mesh.faces.Add(ft + 1);
+                            mesh.faces.Add(ft + 2);
+                            mesh.vertices.Add(vtx);
+                            mesh.vertices.Add(vtx2);
+                            mesh.vertices.Add(vtx3);
+
+                            ft += 3;
+                        }
+
+                        OBJ.ExportModel(sfd.FileName, model, new List<STGenericTexture>());
+                    }
+                }
             }
 
             public void CreateNew(object sender, EventArgs args)

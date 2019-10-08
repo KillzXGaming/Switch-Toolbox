@@ -20,7 +20,7 @@ namespace Toolbox.Library
 
             //Write materials
             StringBuilder writerMtl = new StringBuilder();
-            SaveMaterials(writerMtl, Model);
+      //      SaveMaterials(writerMtl, Model);
             File.WriteAllText(fileMtlPath, writerMtl.ToString());
         }
 
@@ -40,10 +40,9 @@ namespace Toolbox.Library
             writer.AppendLine($"mtllib {MtlName}");
 
             int VertexCount = 1;
-            foreach (STGenericObject mesh in Model.Nodes[0].Nodes)
+            foreach (STGenericObject mesh in Model.Objects)
             {
-                var mat = GetMaterial(mesh.MaterialIndex, Model);
-                SaveMesh(writer, mesh, mat, VertexCount);
+                SaveMesh(writer, mesh, null, VertexCount);
             }
         }
 
@@ -81,7 +80,11 @@ namespace Toolbox.Library
 
         private static STGenericMaterial GetMaterial(int MaterialIndex, STGenericModel Model)
         {
-            if (MaterialIndex < Model.Nodes[1].Nodes.Count)
+            int numMaterials = 0;
+            foreach (var mat in Model.Materials)
+                numMaterials++;
+
+            if (MaterialIndex < numMaterials)
                 return (STGenericMaterial)Model.Nodes[1].Nodes[MaterialIndex];
             else
                 return null;
