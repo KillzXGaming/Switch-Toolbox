@@ -54,6 +54,10 @@ namespace LayoutBXLYT
             UpdateViewport();
         }
 
+        public Dictionary<string, STGenericTexture> GetTextures() {
+            return Textures;
+        }
+
         public GLControl GetGLControl() => glControl1;
 
         public LayoutViewer(LayoutEditor editor, BxlytHeader bxlyt, Dictionary<string, STGenericTexture> textures)
@@ -307,7 +311,6 @@ namespace LayoutBXLYT
 
         }
 
-        private bool test = true;
         private void RenderPanes(BxlytShader shader, BasePane pane, bool isRoot, byte parentAlpha, bool parentAlphaInfluence, BasePane partPane = null, int stage = 0)
         {
             if (!pane.DisplayInEditor || !pane.animController.Visibile)
@@ -386,7 +389,9 @@ namespace LayoutBXLYT
             {
                 bool isSelected = SelectedPanes.Contains(pane);
 
-                if (pane is IPicturePane)
+                if (!pane.Visible)
+                    DrawDefaultPane(shader, pane, isSelected);
+                else if (pane is IPicturePane)
                     BxlytToGL.DrawPictureBox(pane, GameWindow, effectiveAlpha, Textures, isSelected);
                 else if (pane is IWindowPane)
                     BxlytToGL.DrawWindowPane(pane, GameWindow, effectiveAlpha, Textures, isSelected);
@@ -402,9 +407,7 @@ namespace LayoutBXLYT
                         foreach (var fontFile in FirstPlugin.PluginRuntime.BxfntFiles)
                         {
                             if (Utils.CompareNoExtension(fontFile.Name, textPane.FontName))
-                            {
                                 bitmap = fontFile.GetBitmap(textPane.Text, false, pane);
-                            }
                         }
                     }
 
@@ -832,7 +835,7 @@ namespace LayoutBXLYT
 
         private void SearchHit(BasePane pane, int X, int Y, ref BasePane SelectedPane)
         {
-            bool isVisible = pane.Visible;
+            bool isVisible = true;
             if (!Runtime.LayoutEditor.DisplayPicturePane && pane is IPicturePane)
                 isVisible = false;
             if (!Runtime.LayoutEditor.DisplayWindowPane && pane is IWindowPane)
@@ -846,10 +849,14 @@ namespace LayoutBXLYT
 
             if (isVisible && pane.DisplayInEditor && pane.IsHit(X, Y) && !pane.IsRoot)
             {
-                SelectedPane = pane;
-                return;
+                //Select the first possible pane
+                //If the pane is selected already, pick that instead
+                //This is useful if the selected pane wants to be moved already
+                if (SelectedPane == null || SelectedPanes.Contains(pane))
+                    SelectedPane = pane;
             }
 
+            //Keep searching even if we found our pane so we can find any that's selected
             foreach (var childPane in pane.Childern)
                 SearchHit(childPane, X, Y, ref SelectedPane);
         }
