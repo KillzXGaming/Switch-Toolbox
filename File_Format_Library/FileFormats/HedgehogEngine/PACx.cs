@@ -105,8 +105,7 @@ namespace HedgehogLibrary
                         PacNodeTree tree = new PacNodeTree();
                         tree.Read(reader, header3);
 
-                        var rootNode = tree.RootNode;
-                        LoadTree(rootNode);
+                        LoadTree(tree);
                     }
                     else
                     {
@@ -172,8 +171,7 @@ namespace HedgehogLibrary
                 PacNodeTree tree = new PacNodeTree();
                 tree.Read(reader, header3);
 
-                var rootNode = tree.RootNode;
-                LoadTree(rootNode, splitName);
+                LoadTree(tree);
 
                 if (header3.SplitCount != 0)
                 {
@@ -307,23 +305,33 @@ namespace HedgehogLibrary
             // PAC has splits
             HasSplit = 5
         }
-
-        public void LoadTree(PacNode node, string fullPath = "")
+        
+        private void LoadNode(PacNode node, string fullPath)
         {
-            bool IsFile = node.HasData && node.Data != null;
+            if (!string.IsNullOrEmpty(node.Name))
+                fullPath += node.Name;
 
-            if (IsFile)
+            if (node.HasData && node.Data is byte[])
             {
-                FileEntry newNode = new FileEntry(node);
-                newNode.FileName = $"{fullPath}.{newNode.Name}";
-                files.Add(newNode);
+                var fileEntry = new FileEntry(node);
+                fileEntry.FileName = $"{fullPath}.{node.Extension}";
+                fileEntry.Name = fileEntry.FileName;
+                files.Add(fileEntry);
             }
+            else if (node.HasData && node.Data is PacNodeTree)
+            {
+                LoadTree((PacNodeTree)node.Data);
+            }
+            else
+            {
+                foreach (var childNode in node.Children)
+                    LoadNode(childNode, fullPath);
+            }
+        }
 
-            if (node.Name != "Node" && node.Name != null)
-                fullPath += $"/{node.Name}";
-
-            for (int i = 0; i < node.Children.Count; i++)
-                LoadTree(node.Children[i], fullPath);
+        public void LoadTree(PacNodeTree nodeTree)
+        {
+            LoadNode(nodeTree.RootNode, string.Empty);
         }
 
         public class FileEntry : ArchiveFileInfo
@@ -331,7 +339,7 @@ namespace HedgehogLibrary
             public FileEntry(PacNode node)
             {
                 Name = node.Name;
-                FileData = node.Data;
+                FileData = node.Data as byte[];
                 if (node.Name == null) Name = "File Node";
                 if (FileData == null) FileData = new byte[0];
             }
@@ -360,11 +368,12 @@ namespace HedgehogLibrary
         {
             public HeaderV3 PacFile;
 
-            public byte[] Data;
+            public object Data;
 
             public PacNodeTree ParentTree;
             public string Name { get; set; }
             public bool HasData { get; set; }
+            public string Extension { get; set; }
             public List<PacNode> Children = new List<PacNode>();
             public DataType DataType;
 
@@ -421,8 +430,7 @@ namespace HedgehogLibrary
                         if (extensionOffset != 0)
                         {
                             reader.SeekBegin((long)extensionOffset);
-                            string extension = reader.ReadZeroTerminatedString();
-                            Name += extension;
+                            Extension = reader.ReadZeroTerminatedString();
                         }
 
                         if (dataBlockOffset != 0)
@@ -436,7 +444,7 @@ namespace HedgehogLibrary
                         reader.SeekBegin((long)dataOffset);
                         PacNodeTree tree = new PacNodeTree();
                         tree.Read(reader, PacFile);
-                        Children.Add(tree.RootNode);
+                        Data = tree;
                     }
                 }
                 if (childIndicesOffset != 0)
