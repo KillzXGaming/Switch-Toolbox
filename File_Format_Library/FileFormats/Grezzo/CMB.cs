@@ -13,7 +13,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace FirstPlugin
 {
-    public class CMB : TreeNodeFile, IFileFormat
+    public class CMB : TreeNodeFile, IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
@@ -55,6 +55,34 @@ namespace FirstPlugin
             }
         }
 
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
+            return Items.ToArray();
+        }
+
+        private void ExportAction(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Supported Formats|*.dae;";
+            if (sfd.ShowDialog() == DialogResult.OK) {
+                ExportModel(sfd.FileName);
+            }
+        }
+
+        private void ExportModel(string FileName)
+        {
+            AssimpSaver assimp = new AssimpSaver();
+            ExportModelSettings settings = new ExportModelSettings();
+
+            var model = new STGenericModel();
+            model.Materials = Materials;
+            model.Objects = Renderer.Meshes;
+
+            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
+        }
+
         bool DrawablesLoaded = false;
         public override void OnClick(TreeView treeView)
         {
@@ -81,6 +109,7 @@ namespace FirstPlugin
 
         public CMB_Renderer Renderer;
         public DrawableContainer DrawableContainer = new DrawableContainer();
+        List<STGenericMaterial> Materials = new List<STGenericMaterial>();
 
         public Header header;
         STTextureFolder texFolder;
@@ -111,8 +140,6 @@ namespace FirstPlugin
                 TreeNode meshFolder = new TreeNode("Meshes");
                 TreeNode materialFolder = new TreeNode("Materials");
                 TreeNode skeletonFolder = new TreeNode("Skeleton");
-
-                List<STGenericMaterial> materials = new List<STGenericMaterial>();
 
                 bool HasTextures = header.SectionData.TextureChunk != null &&
                      header.SectionData.TextureChunk.Textures.Count != 0;
@@ -196,7 +223,7 @@ namespace FirstPlugin
                         CMBMaterialWrapper material = new CMBMaterialWrapper(mat);
                         material.Text = $"Material {materialIndex++}";
                         materialFolder.Nodes.Add(material);
-                        materials.Add(material);
+                        Materials.Add(material);
 
                         bool HasDiffuse = false;
                         foreach (var tex in mat.TextureMaps)
@@ -229,8 +256,8 @@ namespace FirstPlugin
                     foreach (var mesh in header.SectionData.SkeletalMeshChunk.MeshChunk.Meshes)
                     {
                         STGenericMaterial mat = new STGenericMaterial();
-                        if (materials.Count > mesh.MaterialIndex) //Incase materials for some reason are in a seperate file, check this
-                            mat = materials[mesh.MaterialIndex];
+                        if (Materials.Count > mesh.MaterialIndex) //Incase materials for some reason are in a seperate file, check this
+                            mat = Materials[mesh.MaterialIndex];
 
                         CmbMeshWrapper genericMesh = new CmbMeshWrapper(mat);
                         genericMesh.Text = $"Mesh {MeshIndex++}";
@@ -354,8 +381,6 @@ namespace FirstPlugin
 
                 if (texFolder.Nodes.Count > 0)
                     Nodes.Add(texFolder);
-
-                materials.Clear();
             }
         }
 
