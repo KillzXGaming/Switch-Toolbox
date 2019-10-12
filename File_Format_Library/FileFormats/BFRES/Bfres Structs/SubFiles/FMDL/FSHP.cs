@@ -964,22 +964,6 @@ namespace Bfres.Structs
         }
         public void CreateBoneList(STGenericObject ob, FMDL mdl, bool ForceSkinCount, int ForcedSkinAmount = 4)
         {
-            if (mdl.Skeleton.Node_Array == null)
-                mdl.Skeleton.Node_Array = new int[0];
-
-            string[] nodeArrStrings = new string[mdl.Skeleton.Node_Array.Length];
-            short[] nodeRigidIndex = new short[mdl.Skeleton.Node_Array.Length];
-                
-            int CurNode = 0;
-            foreach (int thing in mdl.Skeleton.Node_Array)
-            {
-                nodeArrStrings[CurNode] = mdl.Skeleton.bones[thing].Text;
-                nodeRigidIndex[CurNode] = mdl.Skeleton.bones[thing].RigidMatrixIndex;
-                CurNode++;
-            }
-
-            List<string> BonesNotMatched = new List<string>();
-
             if (ForceSkinCount && !ob.HasIndices && VertexSkinCount != 0)
             {
                 var attributeIndex = new FSHP.VertexAttribute();
@@ -1009,47 +993,66 @@ namespace Bfres.Structs
 
             bool UseRigidSkinning = ob.VertexSkinCount == 1;
 
-            int vtxIndex = 0;
+            var bones = new Dictionary<string, STBone>();
+            foreach (var bone in mdl.Skeleton.bones)
+            {
+                if (bones.ContainsKey(bone.Text))
+                {
+                    STConsole.WriteLine($"There are multiple bones named {bone.Text}. Using the first one.", System.Drawing.Color.Red);
+                }
+                else
+                {
+                    bones.Add(bone.Text, bone);
+                }
+            }
+
+            List<string> BonesNotMatched = new List<string>();
             foreach (Vertex v in ob.vertices)
             {
                 List<int> RigidIds = new List<int>();
                 foreach (string bn in v.boneNames)
                 {
-                    bool HasMatch = false;
-
-                    //Generate a list of smooth indicies from the node array
-                    int i = 0;
-                    foreach (var defBn in nodeArrStrings.Select((Value, Index) => new { Value, Index }))
+                    STBone bone;
+                    bool hasMatch = bones.TryGetValue(bn, out bone);
+                    if (hasMatch)
                     {
-                        if (bn == defBn.Value)
+                        if (!UseRigidSkinning && bone.SmoothMatrixIndex != -1)
                         {
-                            HasMatch = true;
-
-                            //Add these after smooth matrices
-                            if (nodeRigidIndex[i] != -1)
+                            if (v.boneIds.Count < ForcedSkinAmount)
                             {
-                                if (UseRigidSkinning)
-                                    RigidIds.Add(nodeRigidIndex[i]);
-                                else
-                                    RigidIds.Add(defBn.Index);
+                                STConsole.WriteLine(bone.SmoothMatrixIndex + " mesh " + Text + " bone " + bn);
+                                v.boneIds.Add(bone.SmoothMatrixIndex);
+                            }
+                        }
+                        else if (bone.RigidMatrixIndex != -1)
+                        {
+                            RigidIds.Add(bone.RigidMatrixIndex);
+                        }
+                        else if (bone.SmoothMatrixIndex != -1)
+                        {
+                            STConsole.WriteLine(bone.SmoothMatrixIndex + " mesh " + Text + " bone " + bn);
+                            v.boneIds.Add(bone.SmoothMatrixIndex);
+                        }
+                        else
+                        {
+                            // last-ditch effort if no rigid or smooth index
+                            var index = Array.FindIndex(mdl.Skeleton.Node_Array, boneIndex => mdl.Skeleton.bones[boneIndex].Text == bn);
+                            if (index != -1)
+                            {
+                                v.boneIds.Add(index);
                             }
                             else
                             {
-                                if (v.boneIds.Count < 4)
-                                {
-                                    STConsole.WriteLine(defBn.Index + " mesh " + Text + " bone " + bn);
-                                    v.boneIds.Add(defBn.Index);
-                                }
+                                BonesNotMatched.Add(bn);
+                                STConsole.WriteLine($"Bone {bn} is not skinnable. Vertices will remain unmapped for this bone!", System.Drawing.Color.Red);
                             }
                         }
-                        i++;
                     }
-
-                    if (!HasMatch && !BonesNotMatched.Contains(bn))
+                    else if (!BonesNotMatched.Contains(bn))
                     {
                         BonesNotMatched.Add(bn);
                         STConsole.WriteLine($"No bone matches {bn}. Vertices will remain unmapped for this bone!", System.Drawing.Color.Red);
-                    }
+                    } // else bone not matched but already generated warning for it
                 }
 
                 //Sort smooth bones
@@ -1104,15 +1107,9 @@ namespace Bfres.Structs
                         }
                     }
                 }
-
-                vtxIndex++;
             }
-
-            nodeArrStrings.Clone();
-            nodeRigidIndex.Clone();
-
-            BonesNotMatched.Clear();
         }
+
         public void CreateNewBoundingBoxes()
         {
             boundingBoxes.Clear();

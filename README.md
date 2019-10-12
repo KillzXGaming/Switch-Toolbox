@@ -122,6 +122,7 @@ In the event that the tool cannot compile, check references. All the libraries a
 - Sage of Mirrors for SuperBMDLib. 
 - Ambrosia for BTI and TXE support.
 - Kuriimu for some IO and file parsing help
+- Skyth and Radfordhound for PAC documentation
 
 ##  Resources
 - [Treeview Icons by icons8](https://icons8.com/)
