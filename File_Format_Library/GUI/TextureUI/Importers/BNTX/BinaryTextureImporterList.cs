@@ -323,5 +323,13 @@ namespace FirstPlugin
                 SetupSettings(SelectedTexSettings);
             }
         }
+
+        private void cnkGammaFix_CheckedChanged(object sender, EventArgs e) {
+            if (SelectedTexSettings != null)
+            {
+                SelectedTexSettings.GammaFix = cnkGammaFix.Checked;
+                SetupSettings(SelectedTexSettings);
+            }
+        }
     }
 }

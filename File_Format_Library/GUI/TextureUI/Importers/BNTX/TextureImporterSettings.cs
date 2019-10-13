@@ -22,6 +22,7 @@ namespace FirstPlugin
         {
         }
 
+        public bool GammaFix = false;
         public string TexName;
         public uint AccessFlags = 0x20;
         public uint MipCount;
@@ -161,6 +162,8 @@ namespace FirstPlugin
         public List<byte[]> GenerateMipList(STCompressionMode CompressionMode, int SurfaceLevel = 0)
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
+            if (GammaFix)
+                Image = BitmapExtension.AdjustGamma(Image, 2.2f);
 
             List<byte[]> mipmaps = new List<byte[]>();
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
@@ -182,6 +185,8 @@ namespace FirstPlugin
         public byte[] GenerateMips(STCompressionMode CompressionMode, int SurfaceLevel = 0)
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
+            if (GammaFix)
+                Image = BitmapExtension.AdjustGamma(Image, 2.2f);
 
             List<byte[]> mipmaps = new List<byte[]>();
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)

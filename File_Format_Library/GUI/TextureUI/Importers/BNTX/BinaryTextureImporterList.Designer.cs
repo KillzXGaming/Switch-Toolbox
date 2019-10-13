@@ -50,6 +50,7 @@
             this.compressionModeCB = new Toolbox.Library.Forms.STComboBox();
             this.compModeLbl = new Toolbox.Library.Forms.STLabel();
             this.dataSizeLbl = new Toolbox.Library.Forms.STLabel();
+            this.cnkGammaFix = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SwizzleNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).BeginInit();
@@ -58,6 +59,7 @@
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.cnkGammaFix);
             this.contentContainer.Controls.Add(this.dataSizeLbl);
             this.contentContainer.Controls.Add(this.compressionModeCB);
             this.contentContainer.Controls.Add(this.compModeLbl);
@@ -97,6 +99,7 @@
             this.contentContainer.Controls.SetChildIndex(this.compModeLbl, 0);
             this.contentContainer.Controls.SetChildIndex(this.compressionModeCB, 0);
             this.contentContainer.Controls.SetChildIndex(this.dataSizeLbl, 0);
+            this.contentContainer.Controls.SetChildIndex(this.cnkGammaFix, 0);
             // 
             // button2
             // 
@@ -159,7 +162,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(754, 184);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(42, 13);
+            this.label5.Size = new System.Drawing.Size(45, 13);
             this.label5.TabIndex = 27;
             this.label5.Text = "Swizzle:";
             // 
@@ -169,6 +172,7 @@
             this.tileModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.tileModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.tileModeCB.FormattingEnabled = true;
+            this.tileModeCB.IsReadOnly = false;
             this.tileModeCB.Location = new System.Drawing.Point(851, 114);
             this.tileModeCB.Name = "tileModeCB";
             this.tileModeCB.Size = new System.Drawing.Size(230, 21);
@@ -179,7 +183,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(754, 117);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(54, 13);
+            this.label4.Size = new System.Drawing.Size(57, 13);
             this.label4.TabIndex = 25;
             this.label4.Text = "Tile Mode:";
             // 
@@ -189,6 +193,7 @@
             this.ImgDimComb.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.ImgDimComb.ButtonColor = System.Drawing.Color.Empty;
             this.ImgDimComb.FormattingEnabled = true;
+            this.ImgDimComb.IsReadOnly = false;
             this.ImgDimComb.Location = new System.Drawing.Point(851, 87);
             this.ImgDimComb.Name = "ImgDimComb";
             this.ImgDimComb.Size = new System.Drawing.Size(232, 21);
@@ -200,7 +205,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(754, 90);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(96, 13);
+            this.label3.Size = new System.Drawing.Size(99, 13);
             this.label3.TabIndex = 23;
             this.label3.Text = "Surface Dimension:";
             // 
@@ -209,7 +214,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(754, 63);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(39, 13);
+            this.label2.Size = new System.Drawing.Size(42, 13);
             this.label2.TabIndex = 22;
             this.label2.Text = "Format:";
             // 
@@ -235,7 +240,7 @@
             this.WidthLabel.AutoSize = true;
             this.WidthLabel.Location = new System.Drawing.Point(754, 260);
             this.WidthLabel.Name = "WidthLabel";
-            this.WidthLabel.Size = new System.Drawing.Size(35, 13);
+            this.WidthLabel.Size = new System.Drawing.Size(38, 13);
             this.WidthLabel.TabIndex = 19;
             this.WidthLabel.Text = "Width:";
             // 
@@ -244,7 +249,7 @@
             this.HeightLabel.AutoSize = true;
             this.HeightLabel.Location = new System.Drawing.Point(754, 224);
             this.HeightLabel.Name = "HeightLabel";
-            this.HeightLabel.Size = new System.Drawing.Size(38, 13);
+            this.HeightLabel.Size = new System.Drawing.Size(41, 13);
             this.HeightLabel.TabIndex = 18;
             this.HeightLabel.Text = "Height:";
             // 
@@ -266,6 +271,7 @@
             this.formatComboBox.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.formatComboBox.ButtonColor = System.Drawing.Color.Empty;
             this.formatComboBox.FormattingEnabled = true;
+            this.formatComboBox.IsReadOnly = false;
             this.formatComboBox.Location = new System.Drawing.Point(851, 60);
             this.formatComboBox.Name = "formatComboBox";
             this.formatComboBox.Size = new System.Drawing.Size(233, 21);
@@ -278,6 +284,7 @@
             this.compressionModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.compressionModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.compressionModeCB.FormattingEnabled = true;
+            this.compressionModeCB.IsReadOnly = false;
             this.compressionModeCB.Location = new System.Drawing.Point(851, 33);
             this.compressionModeCB.Name = "compressionModeCB";
             this.compressionModeCB.Size = new System.Drawing.Size(232, 21);
@@ -301,6 +308,17 @@
             this.dataSizeLbl.Size = new System.Drawing.Size(56, 13);
             this.dataSizeLbl.TabIndex = 31;
             this.dataSizeLbl.Text = "Data Size:";
+            // 
+            // cnkGammaFix
+            // 
+            this.cnkGammaFix.AutoSize = true;
+            this.cnkGammaFix.Location = new System.Drawing.Point(757, 345);
+            this.cnkGammaFix.Name = "cnkGammaFix";
+            this.cnkGammaFix.Size = new System.Drawing.Size(160, 17);
+            this.cnkGammaFix.TabIndex = 32;
+            this.cnkGammaFix.Text = "Gamma Fix (Smash Ultimate)";
+            this.cnkGammaFix.UseVisualStyleBackColor = true;
+            this.cnkGammaFix.CheckedChanged += new System.EventHandler(this.cnkGammaFix_CheckedChanged);
             // 
             // BinaryTextureImporterList
             // 
@@ -342,5 +360,6 @@
         private Toolbox.Library.Forms.STComboBox compressionModeCB;
         private Toolbox.Library.Forms.STLabel dataSizeLbl;
         private Toolbox.Library.Forms.STLabel compModeLbl;
+        private Toolbox.Library.Forms.STCheckBox cnkGammaFix;
     }
 }

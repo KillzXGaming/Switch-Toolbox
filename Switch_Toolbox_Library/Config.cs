@@ -282,6 +282,9 @@ namespace Toolbox.Library
                     case "ProdKeys":
                         Runtime.SwitchKeys.ProdKeys = node.InnerText;
                         break;
+                    case "PreviewGammaFix":
+                        bool.TryParse(node.InnerText, out Runtime.ImageEditor.PreviewGammaFix);
+                        break;
                     case "PartsAsNullPanes":
                         bool.TryParse(node.InnerText, out Runtime.LayoutEditor.PartsAsNullPanes);
                         break;
@@ -449,6 +452,7 @@ namespace Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "EnablePixelGrid", Runtime.ImageEditor.EnablePixelGrid.ToString()));
             PathsNode.AppendChild(createNode(doc, "EnableImageZoom", Runtime.ImageEditor.EnableImageZoom.ToString()));
             parentNode.AppendChild(createNode(doc, "CustomPicureBoxBGColor", ColorTranslator.ToHtml(Runtime.CustomPicureBoxBGColor)));
+            PathsNode.AppendChild(createNode(doc, "PreviewGammaFix", Runtime.ImageEditor.PreviewGammaFix.ToString()));
         }
 
         private static void AppendPathSettings(XmlDocument doc, XmlNode parentNode)

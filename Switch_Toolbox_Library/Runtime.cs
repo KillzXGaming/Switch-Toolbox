@@ -74,6 +74,14 @@ namespace Toolbox.Library
             public static bool DisplayAlignmentPane = true;
             public static bool DisplayScissorPane = true;
 
+            //Index for which tab to choose when selected
+            //Defaults to last tab used
+            public static int PicturePaneTabIndex = 0;
+            public static int NullPaneTabIndex = 0;
+            public static int WindowPaneTabIndex = 0;
+            public static int TextPaneTabIndex = 0;
+            public static int MaterialTabIndex = 0;
+
             public static bool DisplayGrid = true;
             public static bool UseOrthographicView = true;
 
@@ -93,6 +101,8 @@ namespace Toolbox.Library
 
         public class ImageEditor
         {
+            public static bool PreviewGammaFix = false;
+
             public static bool ShowPropertiesPanel = true;
             public static bool DisplayVertical = false;
 
