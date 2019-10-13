@@ -20,23 +20,28 @@ namespace LayoutBXLYT
             listViewCustom1.HeaderStyle = ColumnHeaderStyle.Nonclickable;
         }
 
-        List<UserDataEntry> ActiveUserData;
+        BasePane activePane;
+        UserData ActiveUserData;
         UserDataEntry SelectedEntry;
 
         public void Reset()
         {
-            ActiveUserData = new List<UserDataEntry>();
+            ActiveUserData = new UserData();
             SelectedEntry = null;
             listViewCustom1.Items.Clear();
         }
 
-        public void LoadUserData(List<UserDataEntry> UserDataList)
+        public void LoadUserData(BasePane pane, UserData UserData)
         {
-            listViewCustom1.Items.Clear();
+            activePane = pane;
+            if (UserData != null)
+            {
+                listViewCustom1.Items.Clear();
 
-            ActiveUserData = UserDataList;
-            foreach (var item in ActiveUserData)
-                LoadUserData(item);
+                ActiveUserData = UserData;
+                foreach (var item in ActiveUserData.Entries)
+                    LoadUserData(item);
+            }
         }
 
         private void LoadUserData(UserDataEntry item)
@@ -84,7 +89,7 @@ namespace LayoutBXLYT
                 btnEdit.Enabled = true;
                 btnRemove.Enabled = true;
 
-                SelectedEntry = ActiveUserData[listViewCustom1.SelectedIndices[0]];
+                SelectedEntry = ActiveUserData.Entries[listViewCustom1.SelectedIndices[0]];
             }
             else
             {
@@ -103,17 +108,20 @@ namespace LayoutBXLYT
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
+            if (activePane == null) return;
+
             UserDataEntry userDataNew = new UserDataEntry();
             userDataNew.SetValue(new int[0]);
             SelectedEntry = userDataNew;
             bool IsEdited = EditData();
             if (IsEdited)
             {
-                ActiveUserData.Add(userDataNew);
+                ActiveUserData.Entries.Add(userDataNew);
                 LoadUserData(userDataNew);
             }
         }
         private bool EditData()
+
         {
             if (SelectedEntry != null)
             {
@@ -147,7 +155,10 @@ namespace LayoutBXLYT
                     if (parser.Type == UserDataType.String)
                         SelectedEntry.SetValue(parser.GetStringASCII());
 
-                    LoadUserData(ActiveUserData);
+                    if (ActiveUserData == null)
+                        ActiveUserData = activePane.CreateUserData();
+
+                    LoadUserData(activePane, ActiveUserData);
                     return true;
                 }
             }
@@ -162,7 +173,7 @@ namespace LayoutBXLYT
                 listViewCustom1.Items.RemoveAt(index);
 
                 if (ActiveUserData != null)
-                    ActiveUserData.RemoveAt(index);
+                    ActiveUserData.Entries.RemoveAt(index);
             }
         }
 

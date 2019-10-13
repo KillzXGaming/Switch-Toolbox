@@ -40,6 +40,8 @@ namespace FirstPlugin
             assimp.SaveFromModel(model, FileName, BcresParent.GetTextures(), Skeleton.Renderable);
         }
 
+        public override string ExportFilter => FileFilters.CMDL;
+
         public CMDLWrapper(Model model, BCRES bcres) : base()
         {
             BcresParent = bcres;

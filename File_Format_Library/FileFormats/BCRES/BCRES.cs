@@ -47,8 +47,7 @@ namespace FirstPlugin
 
         private List<STGenericTexture> Textures = new List<STGenericTexture>();
 
-        public List<STGenericTexture> GetTextures()
-        {
+        public List<STGenericTexture> GetTextures() {
             return Textures;
         }
 
