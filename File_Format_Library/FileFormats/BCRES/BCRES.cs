@@ -45,6 +45,13 @@ namespace FirstPlugin
         public BCRES_Render RenderedBcres;
         public DrawableContainer DrawableContainer = new DrawableContainer();
 
+        private List<STGenericTexture> Textures = new List<STGenericTexture>();
+
+        public List<STGenericTexture> GetTextures()
+        {
+            return Textures;
+        }
+
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
@@ -93,7 +100,9 @@ namespace FirstPlugin
                         RenderedBcres.Models.Add(CMDLWrapper);
                         break;
                     case BCRESGroupType.Textures:
-                        Folder.AddNode(new TXOBWrapper((Texture)section, this));
+                        var wrapper = new TXOBWrapper((Texture)section, this);
+                        Folder.AddNode(wrapper);
+                        Textures.Add(wrapper);
                         PluginRuntime.bcresTexContainers.Add(Folder);
                         break;
                 }
@@ -171,6 +180,9 @@ namespace FirstPlugin
         public void Unload()
         {
             ObjectEditor.RemoveContainer(DrawableContainer);
+            foreach (var tex in Textures)
+                tex?.DisposeRenderable();
+            Textures.Clear();
         }
 
         public void Save(System.IO.Stream stream)

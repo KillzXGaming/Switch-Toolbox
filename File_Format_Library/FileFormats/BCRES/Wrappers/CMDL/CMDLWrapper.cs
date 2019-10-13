@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library;
 using BcresLibrary;
+using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
@@ -24,6 +25,19 @@ namespace FirstPlugin
         {
             ImageKey = "Model";
             SelectedImageKey = "Model";
+        }
+
+        public override void Export(string FileName)
+        {
+            AssimpSaver assimp = new AssimpSaver();
+            ExportModelSettings settings = new ExportModelSettings();
+
+            var model = new STGenericModel();
+            model.Materials = Materials;
+            model.Objects = Shapes;
+          
+
+            assimp.SaveFromModel(model, FileName, BcresParent.GetTextures(), Skeleton.Renderable);
         }
 
         public CMDLWrapper(Model model, BCRES bcres) : base()
