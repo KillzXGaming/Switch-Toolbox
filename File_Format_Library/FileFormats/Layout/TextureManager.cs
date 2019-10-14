@@ -11,12 +11,17 @@ namespace LayoutBXLYT
 {
     public class TextureManager : IDisposable
     {
+        public BxlytHeader LayoutFile;
+
         public Dictionary<string, BNTX> BinaryContainers = new Dictionary<string, BNTX>();
 
         //The archive to put textures in if necessary
         public Dictionary<string, IArchiveFile> ArchiveFile = new Dictionary<string, IArchiveFile>();
 
-        public IArchiveFile ArchiveParent;
+        public IArchiveFile ArchiveParent
+        {
+            get { return LayoutFile.FileInfo.IFileInfo.ArchiveParent; }
+        }
 
         public PlatformType Platform = PlatformType.WiiU;
 
@@ -55,6 +60,8 @@ namespace LayoutBXLYT
                     break;
                 case PlatformType.WiiU:
                     {
+                        if (ArchiveParent == null) return null;
+
                         foreach (var file in ArchiveParent.Files)
                         {
                             if (file.FileName == name)
@@ -92,6 +99,8 @@ namespace LayoutBXLYT
                 case PlatformType.WiiU:
                     {
                         var archive = ArchiveParent;
+                        if (archive == null) return null;
+
                         var bflim = BFLIM.CreateNewFromImage();
                         if (bflim == null)
                             return textures;

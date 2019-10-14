@@ -504,7 +504,7 @@ namespace LayoutBXLYT.Cafe
                 else
                     TextureManager.Platform = TextureManager.PlatformType.WiiU;
 
-                TextureManager.ArchiveParent = FileInfo.IFileInfo.ArchiveParent;
+                TextureManager.LayoutFile = this;
 
                 bool setRoot = false;
                 bool setGroupRoot = false;
