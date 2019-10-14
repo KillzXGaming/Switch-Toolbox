@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LayoutTextureList));
             this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.btnAdd = new System.Windows.Forms.ToolStripButton();
+            this.btnEdit = new System.Windows.Forms.ToolStripButton();
+            this.btnRemove = new System.Windows.Forms.ToolStripButton();
             this.listViewTpyeCB = new Toolbox.Library.Forms.STComboBox();
             this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -43,32 +45,46 @@
             // 
             // stToolStrip1
             // 
+            this.stToolStrip1.HighlightSelectedTab = false;
             this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripButton2});
+            this.btnAdd,
+            this.btnEdit,
+            this.btnRemove});
             this.stToolStrip1.Location = new System.Drawing.Point(0, 0);
             this.stToolStrip1.Name = "stToolStrip1";
             this.stToolStrip1.Size = new System.Drawing.Size(533, 25);
             this.stToolStrip1.TabIndex = 11;
             this.stToolStrip1.Text = "stToolStrip1";
             // 
-            // toolStripButton1
+            // btnAdd
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = global::FirstPlugin.Properties.Resources.AddIcon;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
+            this.btnAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnAdd.Image = global::FirstPlugin.Properties.Resources.AddIcon;
+            this.btnAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(23, 22);
+            this.btnAdd.Text = "Add Texture";
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
-            // toolStripButton2
+            // btnEdit
             // 
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = global::FirstPlugin.Properties.Resources.RemoveIcon;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton2.Text = "toolStripButton2";
+            this.btnEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnEdit.Image = ((System.Drawing.Image)(resources.GetObject("btnEdit.Image")));
+            this.btnEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(23, 22);
+            this.btnEdit.Text = "Edit Texture";
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRemove.Image = global::FirstPlugin.Properties.Resources.RemoveIcon;
+            this.btnRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(23, 22);
+            this.btnRemove.Text = "Remove Texture";
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // listViewTpyeCB
             // 
@@ -101,7 +117,10 @@
             this.listViewCustom1.TabIndex = 13;
             this.listViewCustom1.UseCompatibleStateImageBehavior = false;
             this.listViewCustom1.View = System.Windows.Forms.View.Details;
+            this.listViewCustom1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.listViewCustom1_ItemDrag);
+            this.listViewCustom1.SelectedIndexChanged += new System.EventHandler(this.listViewCustom1_SelectedIndexChanged);
             this.listViewCustom1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewCustom1_DragEnter);
+            this.listViewCustom1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewCustom1_KeyDown);
             this.listViewCustom1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewCustom1_MouseClick);
             // 
             // columnHeader1
@@ -147,8 +166,8 @@
         #endregion
 
         private Toolbox.Library.Forms.STToolStrip stToolStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton btnAdd;
+        private System.Windows.Forms.ToolStripButton btnRemove;
         private Toolbox.Library.Forms.STComboBox listViewTpyeCB;
         private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
@@ -156,5 +175,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.ToolStripButton btnEdit;
     }
 }

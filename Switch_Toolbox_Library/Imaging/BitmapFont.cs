@@ -131,6 +131,9 @@ namespace LibEveryFileExplorer.GFX
                 VAlignment = YAlignment.Top;
             }
 
+            public Color BottomColor;
+            public Color TopColor;
+
             public int CharSpacing { get; set; }
             public int LineSpacing { get; set; }
 

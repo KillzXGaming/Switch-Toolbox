@@ -209,7 +209,6 @@ namespace LayoutBXLYT.Cafe
                         if (!textures.ContainsKey(bflim.FileName))
                             textures.Add(bflim.FileName, bflim);
                     }
-                    Console.WriteLine("file " + file);
                     if (Utils.GetExtension(file) == ".bntx")
                     {
                         BNTX bntx = (BNTX)STFileLoader.OpenFileFormat(file);
@@ -218,6 +217,10 @@ namespace LayoutBXLYT.Cafe
                             if (!textures.ContainsKey(tex.Key))
                                 textures.Add(tex.Key, tex.Value);
                         }
+
+                        string fileName = Path.GetFileName(file);
+                        if (!header.TextureManager.BinaryContainers.ContainsKey(fileName))
+                            header.TextureManager.BinaryContainers.Add(fileName, bntx);
                     }
                 }
             }
@@ -233,6 +236,9 @@ namespace LayoutBXLYT.Cafe
                         foreach (var tex in bntx.Textures)
                             if (!textures.ContainsKey(tex.Key))
                                 textures.Add(tex.Key, tex.Value);
+
+                        if (!header.TextureManager.BinaryContainers.ContainsKey($"{archive.FileName}.bntx"))
+                            header.TextureManager.BinaryContainers.Add($"{archive.FileName}.bntx", bntx);
                     }
                     if (Utils.GetExtension(file.FileName) == ".bflim")
                     {
@@ -242,6 +248,9 @@ namespace LayoutBXLYT.Cafe
                             textures.Add(bflim.FileName, bflim);
                     }
                 }
+
+                if (!header.TextureManager.ArchiveFile.ContainsKey(archive.FileName))
+                    header.TextureManager.ArchiveFile.Add(archive.FileName, archive);
             }
 
             return textures;
@@ -276,6 +285,105 @@ namespace LayoutBXLYT.Cafe
             public FNL1 FontList { get; set; }
             [Browsable(false)]
             public CNT1 Container { get; set; }
+
+            public override short AddMaterial(BxlytMaterial material, ushort index)
+            {
+                if (material == null) return -1;
+
+                if (MaterialList.Materials.Count > index)
+                    MaterialList.Materials.Insert(index, (Material)material);
+                else
+                    MaterialList.Materials.Add((Material)material);
+
+                if (material.NodeWrapper == null)
+                    material.NodeWrapper = new MatWrapper(material.Name)
+                    {
+                        Tag = material,
+                        ImageKey = "material",
+                        SelectedImageKey = "material",
+                    };
+
+                MaterialFolder.Nodes.Insert(index, material.NodeWrapper);
+
+                return (short)MaterialList.Materials.IndexOf((Material)material);
+            }
+
+            public override int AddFont(string name)
+            {
+                if (!FontList.Fonts.Contains(name))
+                    FontList.Fonts.Add(name);
+
+                return FontList.Fonts.IndexOf(name);
+            }
+
+            /// <summary>
+            /// Adds the given texture if not found. Returns the index of the texture
+            /// </summary>
+            /// <param name="name"></param>
+            /// <returns></returns>
+            public override int AddTexture(string name)
+            {
+                if (!TextureList.Textures.Contains(name))
+                    TextureList.Textures.Add(name);
+
+                return TextureList.Textures.IndexOf(name);
+            }
+
+            public override void RemoveTexture(string name)
+            {
+                if (!TextureList.Textures.Contains(name))
+                    TextureList.Textures.Remove(name);
+            }
+
+            public override short AddMaterial(BxlytMaterial material)
+            {
+                if (material == null) return -1;
+
+                if (!MaterialList.Materials.Contains((Material)material))
+                    MaterialList.Materials.Add((Material)material);
+
+                if (material.NodeWrapper == null)
+                    material.NodeWrapper = new MatWrapper(material.Name)
+                    {
+                        Tag = material,
+                        ImageKey = "material",
+                        SelectedImageKey = "material",
+                    };
+
+                if (!MaterialFolder.Nodes.Contains(material.NodeWrapper))
+                MaterialFolder.Nodes.Add(material.NodeWrapper);
+
+                return (short)MaterialList.Materials.IndexOf((Material)material);
+            }
+
+            public override List<int> AddMaterial(List<BxlytMaterial> materials)
+            {
+                List<int> indices = new List<int>();
+                foreach (var material in materials)
+                    indices.Add(AddMaterial(material));
+                return indices;
+            }
+
+            public override void TryRemoveMaterial(BxlytMaterial material)
+            {
+                if (material == null) return;
+                material.RemoveNodeWrapper();
+
+                if (MaterialList.Materials.Contains((Material)material))
+                    MaterialList.Materials.Remove((Material)material);
+            }
+
+            public override void TryRemoveMaterial(List<BxlytMaterial> materials)
+            {
+                foreach (var material in materials)
+                {
+                    if (material == null) continue;
+                    material.RemoveNodeWrapper();
+
+                    if (MaterialList.Materials.Contains((Material)material))
+                        MaterialList.Materials.Remove((Material)material);
+                }
+            }
 
             //As of now this should be empty but just for future proofing
             private List<SectionCommon> UnknownSections = new List<SectionCommon>();
@@ -385,6 +493,18 @@ namespace LayoutBXLYT.Cafe
                 reader.ReadUInt16(); //Padding
 
                 IsBigEndian = reader.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian;
+
+                if (!IsBigEndian)
+                {
+                    if (VersionMajor == 3)
+                        TextureManager.Platform = TextureManager.PlatformType.ThreeDS;
+                    else
+                        TextureManager.Platform = TextureManager.PlatformType.Switch;
+                }
+                else
+                    TextureManager.Platform = TextureManager.PlatformType.WiiU;
+
+                TextureManager.ArchiveParent = FileInfo.IFileInfo.ArchiveParent;
 
                 bool setRoot = false;
                 bool setGroupRoot = false;
@@ -685,11 +805,57 @@ namespace LayoutBXLYT.Cafe
 
         public class TXT1 : PAN1, ITextPane
         {
+            private Header layoutFile;
+
             public override string Signature { get; } = "txt1";
+
+            public List<string> GetFonts
+            {
+                get
+                {
+                    return layoutFile.Fonts;
+                }
+            }
 
             public TXT1() : base()
             {
          
+            }
+
+            public TXT1(BFLYT.Header header, string name) {
+                LoadDefaults();
+                Name = name;
+                layoutFile = header;
+                //Add new material
+                var mat = new Material(this.Name, header);
+                header.MaterialList.Materials.Add(mat);
+                MaterialIndex = (ushort)header.MaterialList.Materials.IndexOf(mat);
+                Material = mat;
+
+                FontIndex = 0;
+                FontName = "";
+                TextLength = 4;
+                MaxTextLength = 4;
+                TextAlignment = 0;
+                LineAlignment = LineAlign.Unspecified;
+                ItalicTilt = 0;
+                FontTopColor = STColor8.White;
+                FontBottomColor = STColor8.White;
+                FontSize = new Vector2F(92,101);
+                CharacterSpace = 0;
+                LineSpace = 0;
+                ShadowXY = new Vector2F(1, -1);
+                ShadowXYSize = new Vector2F(1,1);
+                ShadowBackColor = STColor8.Black;
+                ShadowForeColor = STColor8.Black;
+                ShadowItalic = 0;
+            }
+
+            public void LoadFontData(FFNT bffnt)
+            {
+                FontSize = new Vector2F(
+                    bffnt.FontSection.Width,
+                    bffnt.FontSection.Height);
             }
 
             [Browsable(false)]
@@ -707,13 +873,26 @@ namespace LayoutBXLYT.Cafe
             }
 
             [DisplayName("Vertical Alignment"), CategoryAttribute("Font")]
-            public OriginX VerticalAlignment
+            public OriginY VerticalAlignment
             {
-                get { return (OriginX)((TextAlignment) & 0x3); }
+                get { return (OriginY)((TextAlignment) & 0x3); }
                 set
                 {
                     TextAlignment &= unchecked((byte)(~0x3));
                     TextAlignment |= (byte)(value);
+                }
+            }
+
+            [Browsable(false)]
+            public ushort RestrictedLength
+            {
+                get { //Divide by 2 due to 2 characters taking up 2 bytes
+                      //Subtract 1 due to padding
+                    return (ushort)((TextLength / 2) - 1);
+                }
+                set
+                {
+                    TextLength = (ushort)((value * 2) + 1);
                 }
             }
 
@@ -771,8 +950,18 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("Text Box Name"), CategoryAttribute("Text Box")]
             public string TextBoxName { get; set; }
 
+            private string text;
+
             [DisplayName("Text"), CategoryAttribute("Text Box")]
-            public string Text { get; set; }
+            public string Text
+            {
+                get { return text; }
+                set
+                {
+                    text = value;
+                    UpdateTextRender();
+                }
+            }
 
             [DisplayName("Per Character Transform"), CategoryAttribute("Font")]
             public bool PerCharTransform
@@ -797,6 +986,21 @@ namespace LayoutBXLYT.Cafe
             public string FontName { get; set; }
 
             private byte _flags;
+
+            private void UpdateTextRender()
+            {
+                if (RenderableFont == null) return;
+
+                System.Drawing.Bitmap bitmap = null;
+                foreach (var fontFile in FirstPlugin.PluginRuntime.BxfntFiles)
+                {
+                    if (Utils.CompareNoExtension(fontFile.Name, FontName))
+                        bitmap = fontFile.GetBitmap(Text, false, this);
+                }
+
+                if (bitmap != null)
+                    RenderableFont.UpdateFromBitmap(bitmap);
+            }
 
             public TXT1(FileReader reader, Header header) : base(reader, header)
             {
@@ -851,9 +1055,16 @@ namespace LayoutBXLYT.Cafe
             {
                 long pos = writer.Position - 8;
 
+                var textLength = TextLength;
+                if (!RestrictedTextLengthEnabled && text != null)
+                    textLength = (ushort)((text.Length * 2) + 2);
+
                 base.Write(writer, header);
-                writer.Write(TextLength);
-                writer.Write(MaxTextLength);
+                writer.Write(textLength);
+                if (!RestrictedTextLengthEnabled)
+                    writer.Write(textLength);
+                else
+                    writer.Write(MaxTextLength);
                 writer.Write(MaterialIndex);
                 writer.Write(FontIndex);
                 writer.Write(TextAlignment);
@@ -875,7 +1086,7 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(ShadowForeColor.ToBytes());
                 writer.Write(ShadowBackColor.ToBytes());
                 writer.Write(ShadowItalic);
-                if (header.VersionMajor == 9)
+                if (header.VersionMajor == 8)
                 {
                     writer.Write(0);
                     writer.Write(0);
@@ -885,9 +1096,9 @@ namespace LayoutBXLYT.Cafe
                 {
                     writer.WriteUint32Offset(_ofsTextPos, pos);
                     if (RestrictedTextLengthEnabled)
-                        writer.WriteString(Text, MaxTextLength, Encoding.BigEndianUnicode);
+                        writer.WriteString(Text, MaxTextLength, Encoding.Unicode);
                     else
-                        writer.WriteString(Text, TextLength, Encoding.BigEndianUnicode);
+                        writer.WriteString(Text, TextLength, Encoding.Unicode);
 
                     writer.Align(4);
                 }
@@ -902,11 +1113,104 @@ namespace LayoutBXLYT.Cafe
 
         public class WND1 : PAN1, IWindowPane
         {
+            public Header layoutHeader;
+
             public override string Signature { get; } = "wnd1";
 
             public WND1() : base()
             {
 
+            }
+
+            public WND1(Header header, string name)
+            {
+                layoutHeader = header;
+                LoadDefaults();
+                Name = name;
+
+                Content = new WindowContent(header, this.Name);
+                UseOneMaterialForAll = true;
+                UseVertexColorForAll = true;
+                WindowKind = WindowKind.Around;
+                NotDrawnContent = false;
+
+                StretchLeft = 0;
+                StretchRight = 0;
+                StretchTop = 0;
+                StretchBottm = 0;
+
+                Width = 70;
+                Height = 80;
+
+                FrameElementLeft = 16;
+                FrameElementRight = 16;
+                FrameElementTop = 16;
+                FrameElementBottm = 16;
+                FrameCount = 1;
+
+                WindowFrames = new List<BxlytWindowFrame>();
+                SetFrames(header);
+            }
+
+            public void ReloadFrames() {
+                SetFrames(layoutHeader);
+            }
+
+            public void SetFrames(Header header)
+            {
+                if (WindowFrames == null)
+                    WindowFrames = new List<BxlytWindowFrame>();
+
+                switch (FrameCount)
+                {
+                    case 1:
+                        if (WindowFrames.Count == 0)
+                            WindowFrames.Add(new WindowFrame(header,$"{Name}_LT"));
+                        break;
+                    case 2:
+                        if (WindowFrames.Count == 0)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_L"));
+                        if (WindowFrames.Count == 1)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_R"));
+                        break;
+                    case 4:
+                        if (WindowFrames.Count == 0)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_LT"));
+                        if (WindowFrames.Count == 1)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_RT"));
+                        if (WindowFrames.Count == 2)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_LB"));
+                        if (WindowFrames.Count == 3)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_RB"));
+                        break;
+                    case 8:
+                        if (WindowFrames.Count == 0)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_LT"));
+                        if (WindowFrames.Count == 1)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_RT"));
+                        if (WindowFrames.Count == 2)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_LB"));
+                        if (WindowFrames.Count == 3)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_RB"));
+                        if (WindowFrames.Count == 4)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_T"));
+                        if (WindowFrames.Count == 5)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_B"));
+                        if (WindowFrames.Count == 6)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_R"));
+                        if (WindowFrames.Count == 7)
+                            WindowFrames.Add(new WindowFrame(header, $"{Name}_L"));
+                        break;
+                }
+
+                //Now search for invalid unused materials and remove them
+                for (int i = 0; i < WindowFrames.Count; i++)
+                {
+                    if (i >= FrameCount)
+                        layoutHeader.TryRemoveMaterial(WindowFrames[i].Material);
+                    else if (!layoutHeader.MaterialList.ContainsMat((Material)WindowFrames[i].Material))
+                        layoutHeader.AddMaterial(WindowFrames[i].Material);
+                }
             }
 
             public bool UseOneMaterialForAll
@@ -921,15 +1225,11 @@ namespace LayoutBXLYT.Cafe
                 set { }
             }
 
-            public WindowKind WindowKind
-            {
-                get { return (WindowKind)((_flag >> 2) & 3); }
-                set { }
-            }
-
+            public WindowKind WindowKind { get; set; }
+     
             public bool NotDrawnContent
             {
-                get { return Convert.ToBoolean((_flag >> 4) & 1); }
+                get { return (_flag & 8) == 16; }
                 set { }
             }
 
@@ -941,8 +1241,17 @@ namespace LayoutBXLYT.Cafe
             public ushort FrameElementRight { get; set; }
             public ushort FrameElementTop { get; set; }
             public ushort FrameElementBottm { get; set; }
-            public byte FrameCount { get; set; }
             private byte _flag;
+
+            private byte frameCount;
+            public byte FrameCount
+            {
+                get { return frameCount; }
+                set
+                {
+                    frameCount = value;
+                }
+            }
 
             public System.Drawing.Color[] GetVertexColors()
             {
@@ -1011,6 +1320,7 @@ namespace LayoutBXLYT.Cafe
 
             public WND1(FileReader reader, Header header) : base(reader, header)
             {
+                layoutHeader = header;
                 WindowFrames = new List<BxlytWindowFrame>();
 
                 long pos = reader.Position - 0x54;
@@ -1028,6 +1338,8 @@ namespace LayoutBXLYT.Cafe
                 reader.ReadUInt16();//padding
                 uint contentOffset = reader.ReadUInt32();
                 uint frameOffsetTbl = reader.ReadUInt32();
+
+                WindowKind = (WindowKind)((_flag >> 2) & 3);
 
                 reader.SeekBegin(pos + contentOffset);
                 Content = new WindowContent(reader, header);
@@ -1071,8 +1383,8 @@ namespace LayoutBXLYT.Cafe
                     writer.WriteUint32Offset(_ofsContentPos + 4, pos);
                     //Reserve space for frame offsets
                     long _ofsFramePos = writer.Position;
-                    writer.Write(new uint[WindowFrames.Count]);
-                    for (int i = 0; i < WindowFrames.Count; i++)
+                    writer.Write(new uint[FrameCount]);
+                    for (int i = 0; i < FrameCount; i++)
                     {
                         writer.WriteUint32Offset(_ofsFramePos + (i * 4), pos);
                         ((WindowFrame)WindowFrames[i]).Write(writer);
@@ -1083,6 +1395,20 @@ namespace LayoutBXLYT.Cafe
             public class WindowContent : BxlytWindowContent
             {
                 private Header LayoutFile;
+
+                public WindowContent(Header header, string name) {
+                    LayoutFile = header;
+                    ColorTopLeft = STColor8.White;
+                    ColorTopRight = STColor8.White;
+                    ColorBottomLeft = STColor8.White;
+                    ColorBottomRight = STColor8.White;
+
+                    TexCoords.Add(new TexCoord());
+
+                    //Add new material
+                    Material = new Material($"{name}_C", header);
+                    MaterialIndex = (ushort)header.AddMaterial(Material);
+                }
 
                 public WindowContent(FileReader reader, Header header)
                 {
@@ -1129,6 +1455,15 @@ namespace LayoutBXLYT.Cafe
 
             public class WindowFrame : BxlytWindowFrame
             {
+                public WindowFrame(Header header, string materialName)
+                {
+                    TextureFlip = WindowFrameTexFlip.None;
+
+                    var mat = new Material(materialName, header);
+                    MaterialIndex = (ushort)header.AddMaterial(mat);
+                    Material = mat;
+                }
+
                 public WindowFrame(FileReader reader, Header header)
                 {
                     MaterialIndex = reader.ReadUInt16();
@@ -1191,9 +1526,13 @@ namespace LayoutBXLYT.Cafe
         {
             public override string Signature { get; } = "bnd1";
 
-            public BND1() : base()
-            {
+            public BND1() : base() {
+                LoadDefaults();
+            }
 
+            public BND1(Header header, string name) : base() {
+                LoadDefaults();
+                Name = name;
             }
 
             public BND1(FileReader reader, Header header) : base(reader, header)
@@ -1284,7 +1623,7 @@ namespace LayoutBXLYT.Cafe
             }
         }
 
-        public class PRT1 : PAN1,IPartPane
+        public class PRT1 : PAN1, IPartPane
         {
             public override string Signature { get; } = "prt1";
 
@@ -1305,7 +1644,7 @@ namespace LayoutBXLYT.Cafe
             public List<PartProperty> Properties { get; set; }
 
             [DisplayName("External Layout File"), CategoryAttribute("Parts")]
-            public string LayoutFile { get; set; }
+            public string LayoutFileName { get; set; }
 
             private BFLYT ExternalLayout;
 
@@ -1362,7 +1701,7 @@ namespace LayoutBXLYT.Cafe
                     string folder = Path.GetDirectoryName(path);
                     foreach (var file in Directory.GetFiles(folder))
                     {
-                        if (file.Contains(LayoutFile))
+                        if (file.Contains(LayoutFileName))
                         {
                             if (Utils.GetExtension(file) == ".szs")
                             {
@@ -1421,7 +1760,7 @@ namespace LayoutBXLYT.Cafe
                         if (openedFile is IArchiveFile)
                             SearchArchive((IArchiveFile)openedFile, ref layoutFile);
                     }
-                    else if (file.FileName.Contains(LayoutFile))
+                    else if (file.FileName.Contains(LayoutFileName))
                     {
                         var openedFile = file.OpenFile();
                         if (openedFile is IArchiveFile)
@@ -1453,7 +1792,7 @@ namespace LayoutBXLYT.Cafe
                 for (int i = 0; i < properyCount; i++)
                     Properties.Add(new PartProperty(reader, header, StartPosition));
 
-                LayoutFile = reader.ReadZeroTerminatedString();
+                LayoutFileName = reader.ReadZeroTerminatedString();
             }
 
             public override void Write(FileWriter writer, LayoutHeader header)
@@ -1467,7 +1806,7 @@ namespace LayoutBXLYT.Cafe
                 for (int i = 0; i < Properties.Count; i++)
                     Properties[i].Write(writer, header, startPos);
 
-                writer.WriteString(LayoutFile);
+                writer.WriteString(LayoutFileName);
                 writer.Align(4);
 
                 for (int i = 0; i < Properties.Count; i++)
@@ -1571,6 +1910,11 @@ namespace LayoutBXLYT.Cafe
 
         public class USD1 : UserData
         {
+            public USD1()
+            {
+                Entries = new List<UserDataEntry>();
+            }
+
             public USD1(FileReader reader, Header header) : base()
             {
                 long startPos = reader.Position - 8;
@@ -1712,13 +2056,7 @@ namespace LayoutBXLYT.Cafe
             public ushort MaterialIndex { get; set; }
 
             [TypeConverter(typeof(ExpandableObjectConverter))]
-            public Material Material
-            {
-                get
-                {
-                    return ParentLayout.MaterialList.Materials[MaterialIndex];
-                }
-            }
+            public BxlytMaterial Material { get; set; }
 
             [Browsable(false)]
             public string GetTexture(int index)
@@ -1728,16 +2066,24 @@ namespace LayoutBXLYT.Cafe
 
             private BFLYT.Header ParentLayout;
 
-            public PIC1(BFLYT.Header header) : base() {
+            public PIC1() : base() {
+                LoadDefaults();
+            }
+
+            public PIC1(Header header, string name) : base() {
+                LoadDefaults();
+                Name = name;
+
                 ParentLayout = header;
 
                 ColorTopLeft = STColor8.White;
                 ColorTopRight = STColor8.White;
                 ColorBottomLeft = STColor8.White;
                 ColorBottomRight = STColor8.White;
-                MaterialIndex = 0;
                 TexCoords = new TexCoord[1];
                 TexCoords[0] = new TexCoord();
+
+                Material = new Material(name, header);
             }
 
             public PIC1(FileReader reader, BFLYT.Header header) : base(reader, header)
@@ -1763,6 +2109,8 @@ namespace LayoutBXLYT.Cafe
                         BottomRight = reader.ReadVec2SY(),
                     };
                 }
+
+                Material = header.MaterialList.Materials[MaterialIndex];
             }
 
             public override void Write(FileWriter writer, LayoutHeader header)
@@ -1821,10 +2169,10 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("Origin X"), CategoryAttribute("Origin")]
             public override OriginX originX
             {
-                get { return (OriginX)(origin & 3); }
+                get { return (OriginX)(origin & 0x3); }
                 set
                 {
-                    origin &= unchecked((byte)(~3));
+                    origin &= unchecked((byte)(~0x3));
                     origin |= (byte)value;
                 }
             }
@@ -1832,11 +2180,11 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("Origin Y"), CategoryAttribute("Origin")]
             public override OriginY originY
             {
-                get { return (OriginY)((origin >> 2) & 3); }
+                get => (OriginY)((origin & 0xC0) >> 6);
                 set
                 {
-                    origin |= (byte)((byte)value << 2);
-                    origin &= unchecked((byte)(~3));
+                    origin &= unchecked((byte)(~0xC0));
+                    origin |= (byte)((byte)value << 6);
                 }
             }
 
@@ -1846,8 +2194,8 @@ namespace LayoutBXLYT.Cafe
                 get { return (OriginX)((origin >> 4) & 3); }
                 set
                 {
-                    origin |= (byte)((byte)value << 4);
                     origin &= unchecked((byte)(~3));
+                    origin |= (byte)((byte)value << 4);
                 }
             }
 
@@ -1857,8 +2205,8 @@ namespace LayoutBXLYT.Cafe
                 get { return (OriginY)((origin >> 6) & 3); }
                 set
                 {
-                    origin |= (byte)((byte)value << 6);
                     origin &= unchecked((byte)(~3));
+                    origin |= (byte)((byte)value << 6);
                 }
             }
 
@@ -1877,8 +2225,12 @@ namespace LayoutBXLYT.Cafe
 
             public PAN1(Header header, string name) : base() {
                 LoadDefaults();
-                List<string> names = header.PaneLookup.Values.ToList().Select(o => o.Name).ToList();
-                Name = Utils.RenameDuplicateString(names, name);
+                Name = name;
+            }
+
+            public override UserData CreateUserData()
+            {
+                return new USD1();
             }
 
             public void LoadDefaults()
@@ -1959,6 +2311,15 @@ namespace LayoutBXLYT.Cafe
                 Materials = new List<Material>();
             }
 
+            public bool ContainsMat(Material material)
+            {
+                var matches = Materials.Any(p => p.Name == material.Name);
+                if (Materials.Contains(material) || matches)
+                    return true;
+                else
+                    return false;
+            }
+
             public MAT1(FileReader reader, Header header) : base()
             {
                 Materials = new List<Material>();
@@ -2001,8 +2362,30 @@ namespace LayoutBXLYT.Cafe
         //https://github.com/shibbo/flyte/blob/master/flyte/lyt/common/MAT1.cs
         public class Material : BxlytMaterial
         {
+            private string name;
             [DisplayName("Name"), CategoryAttribute("General")]
-            public override string Name { get; set; }
+            public override string Name
+            {
+                get { return name; }
+                set
+                {
+                    name = value;
+                    if (NodeWrapper != null)
+                        NodeWrapper.Text = name;
+                }
+            }
+
+            public override void AddTexture(string texture)
+            {
+                Console.WriteLine("TextureMaps AddTexture");
+
+                int index = ParentLayout.AddTexture(texture);
+                TextureRef textureRef = new TextureRef();
+                textureRef.ID = (short)index;
+                textureRef.Name = texture;
+                TextureMaps = TextureMaps.AddToArray(textureRef);
+                TextureTransforms = TextureTransforms.AddToArray(new TextureTransform());
+            }
 
             [DisplayName("Thresholding Alpha Interpolation"), CategoryAttribute("Alpha")]
             public override bool ThresholdingAlphaInterpolation
@@ -2011,31 +2394,16 @@ namespace LayoutBXLYT.Cafe
             }
 
             [DisplayName("Black Color"), CategoryAttribute("Color")]
-            public STColor8 BlackColor { get; set; }
+            public override STColor8 BlackColor { get; set; }
 
             [DisplayName("White Color"), CategoryAttribute("Color")]
-            public STColor8 WhiteColor { get; set; }
-
-            [DisplayName("Texture Transforms"), CategoryAttribute("Texture")]
-            public TextureTransform[] TextureTransforms { get; set; }
+            public override STColor8 WhiteColor { get; set; }
 
             [DisplayName("Texture Coordinate Params"), CategoryAttribute("Texture")]
             public TexCoordGen[] TexCoords { get; set; }
 
             [DisplayName("Tev Stages"), CategoryAttribute("Tev")]
             public TevStage[] TevStages { get; set; }
-
-            [DisplayName("Alpha Compare"), CategoryAttribute("Alpha")]
-            [TypeConverter(typeof(ExpandableObjectConverter))]
-            public AlphaCompare AlphaCompare { get; set; }
-
-            [DisplayName("Blend Mode"), CategoryAttribute("Blend")]
-            [TypeConverter(typeof(ExpandableObjectConverter))]
-            public BlendMode BlendMode { get; set; }
-
-            [DisplayName("Blend Mode Logic"), CategoryAttribute("Blend")]
-            [TypeConverter(typeof(ExpandableObjectConverter))]
-            public BlendMode BlendModeLogic { get; set; }
 
             [DisplayName("Indirect Parameter"), CategoryAttribute("Texture")]
             [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -2051,19 +2419,26 @@ namespace LayoutBXLYT.Cafe
             private uint flags;
             private int unknown;
 
-            private BFLYT.Header ParentLayout;
             public string GetTexture(int index)
             {
                 if (TextureMaps[index].ID != -1)
-                    return ParentLayout.TextureList.Textures[TextureMaps[index].ID];
+                    return ((Header)ParentLayout).TextureList.Textures[TextureMaps[index].ID];
                 else
                     return "";
             }
 
-            public Material()
+            public Material(string name, BxlytHeader header)
             {
+                ParentLayout = header;
+                Name = name;
                 TextureMaps = new TextureRef[0];
                 TextureTransforms = new TextureTransform[0];
+                TexCoords = new TexCoordGen[0];
+                TevStages = new TevStage[0];
+                ProjTexGenParams = new ProjectionTexGenParam[0];
+
+                BlackColor = new STColor8(0, 0, 0, 0);
+                WhiteColor = STColor8.White;
             }
 
             public Material(FileReader reader, Header header) : base()
@@ -2088,6 +2463,8 @@ namespace LayoutBXLYT.Cafe
                     flags = reader.ReadUInt32();
                 }
 
+                Bit.ExtractBits(1, 2, 30);
+
                 uint texCount = Convert.ToUInt32(flags & 3);
                 uint mtxCount = Convert.ToUInt32(flags >> 2) & 3;
                 uint texCoordGenCount = Convert.ToUInt32(flags >> 4) & 3;
@@ -2099,6 +2476,12 @@ namespace LayoutBXLYT.Cafe
                 var hasIndParam = Convert.ToBoolean((flags >> 14) & 0x1);
                 var projTexGenParamCount = Convert.ToUInt32((flags >> 15) & 0x3);
                 var hasFontShadowParam = Convert.ToBoolean((flags >> 17) & 0x1);
+
+                EnableAlphaCompare = hasAlphaCompare;
+                EnableBlend = hasBlendMode;
+                EnableBlendLogic = seperateBlendMode;
+                EnableIndParams = hasIndParam;
+                EnableFontShadowParams = hasFontShadowParam;
 
                 TextureMaps = new TextureRef[texCount];
                 TextureTransforms = new TextureTransform[mtxCount];
@@ -2119,11 +2502,11 @@ namespace LayoutBXLYT.Cafe
                     TevStages[i] = new TevStage(reader, header);
 
                 if (hasAlphaCompare)
-                    AlphaCompare = new AlphaCompare(reader, header);
+                    AlphaCompare = new BxlytAlphaCompare(reader, header);
                 if (hasBlendMode)
-                    BlendMode = new BlendMode(reader, header);
+                    BlendMode = new BxlytBlendMode(reader, header);
                 if (seperateBlendMode)
-                    BlendModeLogic = new BlendMode(reader, header);
+                    BlendModeLogic = new BxlytBlendMode(reader, header);
                 if (hasIndParam)
                     IndParameter = new IndirectParameter(reader, header);
 
@@ -2136,9 +2519,11 @@ namespace LayoutBXLYT.Cafe
 
             public void Write(FileWriter writer, LayoutHeader header)
             {
+                long flagPos = 0;
                 writer.WriteString(Name, 0x1C);
                 if (header.VersionMajor >= 8)
                 {
+                    flagPos = writer.Position;
                     writer.Write(flags);
                     writer.Write(unknown);
                     writer.Write(BlackColor);
@@ -2148,35 +2533,73 @@ namespace LayoutBXLYT.Cafe
                 {
                     writer.Write(BlackColor);
                     writer.Write(WhiteColor);
+
+                    flagPos = writer.Position;
                     writer.Write(flags);
                 }
 
+                flags = 0;
                 for (int i = 0; i < TextureMaps.Length; i++)
+                {
+                    flags += Bit.BitInsert(1,1,2,30);
                     ((TextureRef)TextureMaps[i]).Write(writer);
+                }
 
                 for (int i = 0; i < TextureTransforms.Length; i++)
-                    TextureTransforms[i].Write(writer);
+                {
+                    flags += Bit.BitInsert(1, 1, 2, 28);
+                    ((TextureTransform)TextureTransforms[i]).Write(writer);
+                }
 
                 for (int i = 0; i < TexCoords.Length; i++)
+                {
+                    flags += Bit.BitInsert(1, 1, 2, 26);
                     TexCoords[i].Write(writer);
+                }
 
                 for (int i = 0; i < TevStages.Length; i++)
+                {
+                    flags += Bit.BitInsert(1, 1, 2, 24);
                     TevStages[i].Write(writer);
+                }
 
-                if (AlphaCompare != null)
+                if (AlphaCompare != null && EnableAlphaCompare)
+                {
+                    flags += Bit.BitInsert(1, 1, 2, 22);
                     AlphaCompare.Write(writer);
-                if (BlendMode != null)
+                }
+                if (BlendMode != null && EnableBlend)
+                {
+                    flags += Bit.BitInsert(1, 1, 2, 20);
                     BlendMode.Write(writer);
-                if (BlendModeLogic != null)
+                }
+                if (BlendModeLogic != null && EnableBlendLogic)
+                {
+                    flags += Bit.BitInsert(1, 1, 2, 18);
                     BlendModeLogic.Write(writer);
-                if (IndParameter != null)
+                }
+                if (IndParameter != null && EnableIndParams)
+                {
+                    flags += Bit.BitInsert(1, 1, 1, 17);
                     IndParameter.Write(writer);
+                }
 
                 for (int i = 0; i < ProjTexGenParams.Length; i++)
+                {
+                    flags += Bit.BitInsert(1, 1, 2, 15);
                     ProjTexGenParams[i].Write(writer);
+                }
 
-                if (FontShadowParameter != null)
+                if (FontShadowParameter != null && EnableFontShadowParams)
+                {
+                    flags += Bit.BitInsert(1, 1, 1, 14);
                     FontShadowParameter.Write(writer);
+                }
+
+                using (writer.TemporarySeek(flagPos, SeekOrigin.Begin))
+                {
+                    writer.Write(flags);
+                }
             }
         }
 

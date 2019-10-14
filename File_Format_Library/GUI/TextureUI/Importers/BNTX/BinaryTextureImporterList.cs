@@ -83,8 +83,8 @@ namespace FirstPlugin
             formatComboBox.Items.Add(SurfaceFormat.BC7_UNORM);
             formatComboBox.Items.Add(SurfaceFormat.BC7_SRGB);
 
-            compressionModeCB.Items.Add("Fast (Lower Qaulity)");
-            compressionModeCB.Items.Add("Normal (Good Qaulity)");
+            compressionModeCB.Items.Add("Fast (Lower Quality)");
+            compressionModeCB.Items.Add("Normal (Good Quality)");
 
             compressionModeCB.SelectedIndex = 0;
             compressionModeCB.Visible = false;

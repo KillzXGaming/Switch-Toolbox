@@ -8,7 +8,7 @@ namespace Toolbox.Library.IO
 {
     public class Bit
     {
-        //From https://github.com/shibbo/flyte/blob/337383c01c50dff155e4b4e170d248118db0c0aa/flyte/utils/Bit.cs
+        //From https://github.com/AustinHasten/BenzinNX/blob/06a5a600748696beac3555cd48a5837b22b0b026/include/ReadTypes.py#L33
         public static uint ExtractBits(uint val, int numBits, int startBit)
         {
             uint mask = 0;
@@ -16,6 +16,17 @@ namespace Toolbox.Library.IO
                 mask |= (0x80000000 >> i);
 
             return (val & mask) >> (32 - (startBit + numBits));
+        }
+
+        public static uint BitInsert(uint value, int newValue, int numBits, int startBit)
+        {
+            uint mask = 0;
+            for (int i = startBit; i < startBit + numBits; i++)
+                mask |= (0x80000000 >> i);
+
+            value &= mask == 0 ? (uint)1 : (uint)0;
+            value |= (uint)(newValue << (32 - (startBit + numBits))) & mask;
+            return value;
         }
     }
 }

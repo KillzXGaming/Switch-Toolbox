@@ -10,11 +10,19 @@ namespace LayoutBXLYT.Cafe
         public override WrapMode WrapModeU
         {
             get { return (WrapMode)(flag1 & 0x3); }
+            set {
+                flag1 &= unchecked((byte)(~0x3));
+                flag1 |= (byte)value;
+            }
         }
 
         public override WrapMode WrapModeV
         {
             get { return (WrapMode)(flag2 & 0x3); }
+            set {
+                flag2 &= unchecked((byte)(~0x3));
+                flag2 |= (byte)value;
+            }
         }
 
         public override FilterMode MinFilterMode
@@ -27,7 +35,9 @@ namespace LayoutBXLYT.Cafe
             get { return (FilterMode)((flag2 >> 2) & 0x3); }
         }
 
-        public TextureRef() { }
+        public TextureRef() : base()
+        {
+        }
 
         public TextureRef(FileReader reader, BFLYT.Header header)
         {

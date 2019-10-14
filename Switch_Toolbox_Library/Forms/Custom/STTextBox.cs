@@ -45,6 +45,8 @@ namespace Toolbox.Library.Forms
 
         private void STTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (this.Text.Length == 0) return;
+
             foreach (Binding data in DataBindings)
             {
                 data.WriteValue();

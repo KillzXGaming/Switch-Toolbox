@@ -12,6 +12,8 @@ namespace Toolbox.Library.Forms
 {
     public partial class STColorDialog : Form
     {
+        private bool CanCloseOnLostFocus= false;
+
         public EventHandler ColorChanged;
 
         public STColorDialog(Color color)
@@ -22,9 +24,35 @@ namespace Toolbox.Library.Forms
             colorSelector1.Color = color;
             colorSelector1.DisplayAlpha = true;
             colorSelector1.Alpha = color.A;
+
+            //Wait until the user can lose focus for closing control
+            //This prevents window from popping up and closing instantly
+            Utils.DelayAction(2000,delegate
+            {
+                CanCloseOnLostFocus = true;
+            });
+        }
+
+        public int Alpha
+        {
+            get { return colorSelector1.Alpha; }
+            set { colorSelector1.Alpha = value; }
         }
 
         public Color NewColor
+        {
+            get
+            {
+                return Color.FromArgb(Alpha, colorSelector1.Color);
+            }
+            set
+            {
+                colorSelector1.Alpha = value.A;
+                colorSelector1.Color = Color.FromArgb(255, value);
+            }
+        }
+
+        public Color ColorRGB
         {
             get
             {
@@ -38,11 +66,26 @@ namespace Toolbox.Library.Forms
 
         private void colorSelector1_ColorChanged(object sender, EventArgs e)
         {
-            colorPB.BackColor = NewColor;
+            colorPB.BackColor = ColorRGB;
             alphaPB.BackColor = colorSelector1.AlphaColor;
 
             if (ColorChanged != null)
                 ColorChanged.Invoke(sender, e);
+        }
+
+        private void STColorDialog_Deactivate(object sender, EventArgs e)
+        {
+            if (CanCloseOnLostFocus)
+                this.Close();
+        }
+
+        private void STColorDialog_FormClosed(object sender, FormClosedEventArgs e)
+        {
+        }
+
+        private void STColorDialog_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

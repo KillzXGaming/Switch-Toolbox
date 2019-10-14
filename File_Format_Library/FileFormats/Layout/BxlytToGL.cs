@@ -72,7 +72,7 @@ namespace LayoutBXLYT
                     stColors[3].Color,
                 };
 
-                var mat = pic1Pane.Material;
+                var mat = pic1Pane.Material as BFLYT.Material;
                 if (mat.Shader == null)
                 {
                     mat.Shader = new BflytShader(mat);
@@ -107,7 +107,7 @@ namespace LayoutBXLYT
                     pic1Pane.ColorTopLeft.Color,
                 };
 
-                var mat = pic1Pane.Material;
+                var mat = pic1Pane.Material as BCLYT.Material;
                 if (mat.Shader == null)
                 {
                     mat.Shader = new BclytShader(mat);
@@ -142,7 +142,7 @@ namespace LayoutBXLYT
                     pic1Pane.ColorTopLeft.Color,
                 };
 
-                var mat = pic1Pane.Material;
+                var mat = pic1Pane.Material as BRLYT.Material;
                 if (mat.Shader == null)
                 {
                     mat.Shader = new BrlytShader(mat);
@@ -167,7 +167,7 @@ namespace LayoutBXLYT
                 mat.Shader.Disable();
             }
 
-
+            GL.Disable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.PopAttrib();
             GL.UseProgram(0);
@@ -198,7 +198,7 @@ namespace LayoutBXLYT
                 color,
                 };
 
-            BxlytToGL.DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
+            BxlytToGL.DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
         }
 
 
@@ -262,6 +262,8 @@ namespace LayoutBXLYT
         public static void DrawTextbox(BasePane pane, bool gameWindow, Bitmap fontBitmap, byte effectiveAlpha,
             Dictionary<string, STGenericTexture> Textures, List<BasePane> SelectedPanes, bool updateBitmap, bool isSelected)
         {
+            GL.Enable(EnableCap.Texture2D);
+
             var textBox = (ITextPane)pane;
 
             if (updateBitmap)
@@ -299,16 +301,17 @@ namespace LayoutBXLYT
             };
 
             Color[] Colors = new Color[] {
-                textBox.FontBottomColor.Color,
-                textBox.FontBottomColor.Color,
-                textBox.FontTopColor.Color,
-                textBox.FontTopColor.Color,
+                Color.White,
+                Color.White,
+                Color.White,
+                Color.White,
                 };
 
             DrawRectangle(pane, gameWindow, pane.Rectangle, texCoords, Colors, false, effectiveAlpha, isSelected);
 
-         //   mat.Shader.Disable();
+            //   mat.Shader.Disable();
 
+            GL.Disable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.PopAttrib();
             GL.UseProgram(0);
@@ -475,6 +478,8 @@ namespace LayoutBXLYT
 
             float contentWidth = ((window.StretchLeft + (pane.Width - frameLeft)) - frameRight) + window.StretchRight;
             float contentHeight = ((window.StretchTop + (pane.Height - frameTop)) - frameBottom) + window.StretchBottm;
+            if (window.WindowKind == WindowKind.Horizontal)
+                contentHeight = pane.Height;
 
             //Apply pane alpha
             for (int i = 0; i < colors.Length; i++)
@@ -486,11 +491,22 @@ namespace LayoutBXLYT
             if (!window.NotDrawnContent && window.WindowKind != WindowKind.HorizontalNoContent)
             {
                 SetupShaders(pane, window.Content.Material, Textures);
-                DrawQuad(gameWindow, dX + frameLeft - window.StretchLeft,
-                          dY - frameTop + window.StretchTop,
-                          contentWidth,
-                          contentHeight,
-                          texCoords, colors);
+                if (window.WindowKind == WindowKind.Horizontal)
+                {
+                    DrawQuad(gameWindow, dX + frameLeft - window.StretchLeft,
+                              dY,
+                              contentWidth,
+                              contentHeight,
+                              texCoords, colors);
+                }
+                else
+                {
+                    DrawQuad(gameWindow, dX + frameLeft - window.StretchLeft,
+                              dY - frameTop + window.StretchTop,
+                              contentWidth,
+                              contentHeight,
+                              texCoords, colors);
+                }
             }
 
             //After the content is draw, check this
@@ -505,7 +521,7 @@ namespace LayoutBXLYT
                 };
             }
 
-
+            bool hasTextures = true;
 
             switch (window.FrameCount)
             {
@@ -514,6 +530,10 @@ namespace LayoutBXLYT
                     {
                         var windowFrame = window.WindowFrames[0];
                         SetupShaders(pane, windowFrame.Material, Textures);
+
+                        windowFrame.Material.Shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
+
+                        hasTextures = windowFrame.Material.TextureMaps?.Length > 0;
 
                         //2 sides, no corners
                         if (window.WindowKind == WindowKind.Horizontal)
@@ -535,12 +555,16 @@ namespace LayoutBXLYT
                                  window.Content.ColorBottomRight.Color,
                                 };
 
-                            DrawQuad(gameWindow, dX + frameRight + contentWidth, dY, frameRight, pane.Height, texCoords, colors);
+                            DrawQuad(gameWindow, dX + frameRight + contentWidth, dY, frameRight, pane.Height, texCoords, colors, hasTextures);
 
                             //Right
 
                             if (window.FrameCount == 2)
+                            {
                                 SetupShaders(pane, window.WindowFrames[1].Material, Textures);
+                                hasTextures = windowFrame.Material.TextureMaps?.Length > 0;
+                            }
+
 
                             texCoords = new Vector2[]
                             {
@@ -557,11 +581,13 @@ namespace LayoutBXLYT
                                  window.Content.ColorBottomLeft.Color,
                                 };
 
-                            DrawQuad(gameWindow, dX, dY, frameLeft, pane.Height, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY, frameLeft, pane.Height, texCoords, colors, hasTextures);
                         }
                         else if (window.WindowKind == WindowKind.HorizontalNoContent)
                         {
                             //Right
+
+                            hasTextures = windowFrame.Material.TextureMaps?.Length > 0;
 
                             texCoords = new Vector2[]
                             {
@@ -589,12 +615,15 @@ namespace LayoutBXLYT
                                window.Content.ColorBottomRight.Color,
                             };
 
-                            DrawQuad(gameWindow, dX + frameLeft, dY, pane.Width - frameLeft, pane.Height, texCoords, colors);
+                            DrawQuad(gameWindow, dX + frameLeft, dY, pane.Width - frameLeft, pane.Height, texCoords, colors, hasTextures);
 
                             //Left
 
                             if (window.FrameCount == 2)
+                            {
                                 SetupShaders(pane, window.WindowFrames[1].Material, Textures);
+                                hasTextures = window.WindowFrames[1].Material.TextureMaps?.Length > 0;
+                            }
 
                             colors = new Color[] {
                                  //Top Left
@@ -621,10 +650,11 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX, dY, pane.Width - frameLeft, pane.Height, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY, pane.Width - frameLeft, pane.Height, texCoords, colors, hasTextures);
                         }
                         else if (window.WindowKind == WindowKind.Around)
                         {
+                            hasTextures = windowFrame.Material.TextureMaps?.Length > 0;
 
                             // top left
                             float pieceWidth = pane.Width - frameRight;
@@ -638,7 +668,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX, dY, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY, pieceWidth, pieceHeight, texCoords, colors, hasTextures);
 
                             // top right
                             pieceWidth = frameRight;
@@ -652,7 +682,7 @@ namespace LayoutBXLYT
                                 new Vector2(1,(pane.Height - frameTop) / frameTop),
                             };
 
-                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors, hasTextures);
 
                             // bottom left
                             pieceWidth = frameLeft;
@@ -666,7 +696,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 0),
                            };
 
-                            DrawQuad(gameWindow, dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors, hasTextures);
 
                             // bottom right
                             pieceWidth = pane.Width - frameLeft;
@@ -680,7 +710,7 @@ namespace LayoutBXLYT
                                 new Vector2((pane.Width - frameLeft) / frameLeft, 0),
                             };
 
-                            DrawQuad(gameWindow, dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors, hasTextures);
                         }
                     }
                     break;
@@ -941,6 +971,10 @@ namespace LayoutBXLYT
                 if (!Runtime.LayoutEditor.IsGamePreview && !gameWindow)
                     DrawSelectionBox(pane, isSelected);
             }
+
+            GL.Disable(EnableCap.Texture2D);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.UseProgram(0);
         }
 
         public static void DrawSelectionBox(BasePane pane, bool isSelected)
@@ -1024,10 +1058,11 @@ namespace LayoutBXLYT
             }
         }
 
-        private static void DrawQuad(bool gameWindow, float x, float y, float w, float h, Vector2[] texCoords, Color[] colors)
+        private static void DrawQuad(bool gameWindow, float x, float y, float w, float h, Vector2[] texCoords, Color[] colors, bool hasTextures = true)
         {
             if (!gameWindow && !Runtime.LayoutEditor.IsGamePreview)
             {
+                GL.Disable(EnableCap.Texture2D);
                 GL.Disable(EnableCap.AlphaTest);
                 GL.Disable(EnableCap.Blend);
 
@@ -1043,22 +1078,35 @@ namespace LayoutBXLYT
 
                 GL.Enable(EnableCap.AlphaTest);
                 GL.Enable(EnableCap.Blend);
+                GL.Enable(EnableCap.Texture2D);
             }
 
-            GL.Begin(PrimitiveType.Quads);
-            GL.Color4(colors[0]);
-            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[0].X, texCoords[0].Y);
-            GL.Vertex2(x, y);
-            GL.Color4(colors[1]);
-            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[1].X, texCoords[1].Y);
-            GL.Vertex2(x + w, y);
-            GL.Color4(colors[2]);
-            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[2].X, texCoords[2].Y);
-            GL.Vertex2(x + w, y - h);
-            GL.Color4(colors[3]);
-            GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
-            GL.Vertex2(x, y - h);
-            GL.End();
+            if (!hasTextures && !gameWindow)
+            {
+                GL.Begin(PrimitiveType.LineLoop);
+                GL.Vertex2(x, y);
+                GL.Vertex2(x + w, y);
+                GL.Vertex2(x + w, y - h);
+                GL.Vertex2(x, y - h);
+                GL.End();
+            }
+            else
+            {
+                GL.Begin(PrimitiveType.Quads);
+                GL.Color4(colors[0]);
+                GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[0].X, texCoords[0].Y);
+                GL.Vertex2(x, y);
+                GL.Color4(colors[1]);
+                GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[1].X, texCoords[1].Y);
+                GL.Vertex2(x + w, y);
+                GL.Color4(colors[2]);
+                GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[2].X, texCoords[2].Y);
+                GL.Vertex2(x + w, y - h);
+                GL.Color4(colors[3]);
+                GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
+                GL.Vertex2(x, y - h);
+                GL.End();
+            }
         }
 
         enum FrameType
@@ -1188,42 +1236,42 @@ namespace LayoutBXLYT
         }
 
 
-        public static BlendingFactor ConvertBlendFactor(BlendMode.GX2BlendFactor blendFactor)
+        public static BlendingFactor ConvertBlendFactor(BxlytBlendMode.GX2BlendFactor blendFactor)
         {
             switch (blendFactor)
             {
-                case BlendMode.GX2BlendFactor.DestAlpha: return BlendingFactor.DstAlpha;
-                case BlendMode.GX2BlendFactor.DestColor: return BlendingFactor.DstColor;
-                case BlendMode.GX2BlendFactor.DestInvAlpha: return BlendingFactor.OneMinusDstAlpha;
-                case BlendMode.GX2BlendFactor.DestInvColor: return BlendingFactor.OneMinusDstColor;
-                case BlendMode.GX2BlendFactor.Factor0: return BlendingFactor.Zero;
-                case BlendMode.GX2BlendFactor.Factor1: return BlendingFactor.One;
-                case BlendMode.GX2BlendFactor.SourceAlpha: return BlendingFactor.SrcAlpha;
-                case BlendMode.GX2BlendFactor.SourceColor: return BlendingFactor.SrcColor;
-                case BlendMode.GX2BlendFactor.SourceInvAlpha: return BlendingFactor.OneMinusSrcAlpha;
-                case BlendMode.GX2BlendFactor.SourceInvColor: return BlendingFactor.OneMinusSrcColor;
+                case BxlytBlendMode.GX2BlendFactor.DestAlpha: return BlendingFactor.DstAlpha;
+                case BxlytBlendMode.GX2BlendFactor.DestColor: return BlendingFactor.DstColor;
+                case BxlytBlendMode.GX2BlendFactor.DestInvAlpha: return BlendingFactor.OneMinusDstAlpha;
+                case BxlytBlendMode.GX2BlendFactor.DestInvColor: return BlendingFactor.OneMinusDstColor;
+                case BxlytBlendMode.GX2BlendFactor.Factor0: return BlendingFactor.Zero;
+                case BxlytBlendMode.GX2BlendFactor.Factor1: return BlendingFactor.One;
+                case BxlytBlendMode.GX2BlendFactor.SourceAlpha: return BlendingFactor.SrcAlpha;
+                case BxlytBlendMode.GX2BlendFactor.SourceColor: return BlendingFactor.SrcColor;
+                case BxlytBlendMode.GX2BlendFactor.SourceInvAlpha: return BlendingFactor.OneMinusSrcAlpha;
+                case BxlytBlendMode.GX2BlendFactor.SourceInvColor: return BlendingFactor.OneMinusSrcColor;
                 default: return BlendingFactor.Zero;
             }
         }
 
-        public static LogicOp ConvertLogicOperation(BlendMode.GX2LogicOp blendOp)
+        public static LogicOp ConvertLogicOperation(BxlytBlendMode.GX2LogicOp blendOp)
         {
             switch (blendOp)
             {
-                case BlendMode.GX2LogicOp.And: return LogicOp.And;
-                case BlendMode.GX2LogicOp.Clear: return LogicOp.Clear;
-                case BlendMode.GX2LogicOp.Copy: return LogicOp.Copy;
-                case BlendMode.GX2LogicOp.Equiv: return LogicOp.Equiv;
-                case BlendMode.GX2LogicOp.Inv: return LogicOp.Invert;
-                case BlendMode.GX2LogicOp.Nand: return LogicOp.Nand;
-                case BlendMode.GX2LogicOp.NoOp: return LogicOp.Noop;
-                case BlendMode.GX2LogicOp.Nor: return LogicOp.Nor;
-                case BlendMode.GX2LogicOp.Or: return LogicOp.Or;
-                case BlendMode.GX2LogicOp.RevAnd: return LogicOp.AndReverse;
-                case BlendMode.GX2LogicOp.RevOr: return LogicOp.OrReverse;
-                case BlendMode.GX2LogicOp.Set: return LogicOp.Set;
-                case BlendMode.GX2LogicOp.Xor: return LogicOp.Xor;
-                case BlendMode.GX2LogicOp.Disable:
+                case BxlytBlendMode.GX2LogicOp.And: return LogicOp.And;
+                case BxlytBlendMode.GX2LogicOp.Clear: return LogicOp.Clear;
+                case BxlytBlendMode.GX2LogicOp.Copy: return LogicOp.Copy;
+                case BxlytBlendMode.GX2LogicOp.Equiv: return LogicOp.Equiv;
+                case BxlytBlendMode.GX2LogicOp.Inv: return LogicOp.Invert;
+                case BxlytBlendMode.GX2LogicOp.Nand: return LogicOp.Nand;
+                case BxlytBlendMode.GX2LogicOp.NoOp: return LogicOp.Noop;
+                case BxlytBlendMode.GX2LogicOp.Nor: return LogicOp.Nor;
+                case BxlytBlendMode.GX2LogicOp.Or: return LogicOp.Or;
+                case BxlytBlendMode.GX2LogicOp.RevAnd: return LogicOp.AndReverse;
+                case BxlytBlendMode.GX2LogicOp.RevOr: return LogicOp.OrReverse;
+                case BxlytBlendMode.GX2LogicOp.Set: return LogicOp.Set;
+                case BxlytBlendMode.GX2LogicOp.Xor: return LogicOp.Xor;
+                case BxlytBlendMode.GX2LogicOp.Disable:
                     GL.Disable(EnableCap.ColorLogicOp);
                     return LogicOp.Noop;
                 default: return LogicOp.Noop;
@@ -1247,16 +1295,16 @@ namespace LayoutBXLYT
             }
         }
 
-        public static BlendEquationMode ConvertBlendOperation(BlendMode.GX2BlendOp blendOp)
+        public static BlendEquationMode ConvertBlendOperation(BxlytBlendMode.GX2BlendOp blendOp)
         {
             switch (blendOp)
             {
-                case BlendMode.GX2BlendOp.Add: return BlendEquationMode.FuncAdd;
-                case BlendMode.GX2BlendOp.ReverseSubtract: return BlendEquationMode.FuncReverseSubtract;
-                case BlendMode.GX2BlendOp.SelectMax: return BlendEquationMode.Max;
-                case BlendMode.GX2BlendOp.SelectMin: return BlendEquationMode.Min;
-                case BlendMode.GX2BlendOp.Subtract: return BlendEquationMode.FuncSubtract;
-                case BlendMode.GX2BlendOp.Disable:
+                case BxlytBlendMode.GX2BlendOp.Add: return BlendEquationMode.FuncAdd;
+                case BxlytBlendMode.GX2BlendOp.ReverseSubtract: return BlendEquationMode.FuncReverseSubtract;
+                case BxlytBlendMode.GX2BlendOp.SelectMax: return BlendEquationMode.Max;
+                case BxlytBlendMode.GX2BlendOp.SelectMin: return BlendEquationMode.Min;
+                case BxlytBlendMode.GX2BlendOp.Subtract: return BlendEquationMode.FuncSubtract;
+                case BxlytBlendMode.GX2BlendOp.Disable:
                     GL.Disable(EnableCap.Blend);
                     return BlendEquationMode.FuncAdd;
                 default: return BlendEquationMode.FuncAdd;
@@ -1348,7 +1396,7 @@ namespace LayoutBXLYT
                     GL.End();
                 }
 
-                if (!Runtime.LayoutEditor.IsGamePreview && !gameWindow)
+                if (!gameWindow)
                 {
                     DrawSelectionBox(pane, selectionOutline);
                 }

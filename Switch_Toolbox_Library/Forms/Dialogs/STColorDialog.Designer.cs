@@ -29,19 +29,18 @@
         private void InitializeComponent()
         {
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.numericUpDownUint3 = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.numericUpDownUint2 = new Toolbox.Library.Forms.NumericUpDownUint();
+            this.numericUpDownUint1 = new Toolbox.Library.Forms.NumericUpDownUint();
             this.alphaPB = new System.Windows.Forms.PictureBox();
             this.colorPB = new System.Windows.Forms.PictureBox();
             this.colorSelector1 = new Toolbox.Library.Forms.ColorSelector();
-            this.stButton1 = new Toolbox.Library.Forms.STButton();
-            this.numericUpDownUint1 = new Toolbox.Library.Forms.NumericUpDownUint();
-            this.numericUpDownUint2 = new Toolbox.Library.Forms.NumericUpDownUint();
-            this.numericUpDownUint3 = new Toolbox.Library.Forms.NumericUpDownUint();
             this.stPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.alphaPB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorPB)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint3)).BeginInit();
             this.SuspendLayout();
             // 
             // stPanel1
@@ -49,7 +48,6 @@
             this.stPanel1.Controls.Add(this.numericUpDownUint3);
             this.stPanel1.Controls.Add(this.numericUpDownUint2);
             this.stPanel1.Controls.Add(this.numericUpDownUint1);
-            this.stPanel1.Controls.Add(this.stButton1);
             this.stPanel1.Controls.Add(this.alphaPB);
             this.stPanel1.Controls.Add(this.colorPB);
             this.stPanel1.Controls.Add(this.colorSelector1);
@@ -58,6 +56,42 @@
             this.stPanel1.Name = "stPanel1";
             this.stPanel1.Size = new System.Drawing.Size(350, 259);
             this.stPanel1.TabIndex = 1;
+            // 
+            // numericUpDownUint3
+            // 
+            this.numericUpDownUint3.Location = new System.Drawing.Point(257, 159);
+            this.numericUpDownUint3.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownUint3.Name = "numericUpDownUint3";
+            this.numericUpDownUint3.Size = new System.Drawing.Size(93, 20);
+            this.numericUpDownUint3.TabIndex = 6;
+            // 
+            // numericUpDownUint2
+            // 
+            this.numericUpDownUint2.Location = new System.Drawing.Point(257, 133);
+            this.numericUpDownUint2.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownUint2.Name = "numericUpDownUint2";
+            this.numericUpDownUint2.Size = new System.Drawing.Size(93, 20);
+            this.numericUpDownUint2.TabIndex = 5;
+            // 
+            // numericUpDownUint1
+            // 
+            this.numericUpDownUint1.Location = new System.Drawing.Point(257, 107);
+            this.numericUpDownUint1.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownUint1.Name = "numericUpDownUint1";
+            this.numericUpDownUint1.Size = new System.Drawing.Size(93, 20);
+            this.numericUpDownUint1.TabIndex = 4;
             // 
             // alphaPB
             // 
@@ -92,66 +126,23 @@
             this.colorSelector1.TabIndex = 0;
             this.colorSelector1.ColorChanged += new System.EventHandler(this.colorSelector1_ColorChanged);
             // 
-            // stButton1
-            // 
-            this.stButton1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton1.Location = new System.Drawing.Point(272, 233);
-            this.stButton1.Name = "stButton1";
-            this.stButton1.Size = new System.Drawing.Size(75, 23);
-            this.stButton1.TabIndex = 3;
-            this.stButton1.Text = "Ok";
-            this.stButton1.UseVisualStyleBackColor = false;
-            // 
-            // numericUpDownUint1
-            // 
-            this.numericUpDownUint1.Location = new System.Drawing.Point(257, 107);
-            this.numericUpDownUint1.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericUpDownUint1.Name = "numericUpDownUint1";
-            this.numericUpDownUint1.Size = new System.Drawing.Size(93, 20);
-            this.numericUpDownUint1.TabIndex = 4;
-            // 
-            // numericUpDownUint2
-            // 
-            this.numericUpDownUint2.Location = new System.Drawing.Point(257, 133);
-            this.numericUpDownUint2.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericUpDownUint2.Name = "numericUpDownUint2";
-            this.numericUpDownUint2.Size = new System.Drawing.Size(93, 20);
-            this.numericUpDownUint2.TabIndex = 5;
-            // 
-            // numericUpDownUint3
-            // 
-            this.numericUpDownUint3.Location = new System.Drawing.Point(257, 159);
-            this.numericUpDownUint3.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericUpDownUint3.Name = "numericUpDownUint3";
-            this.numericUpDownUint3.Size = new System.Drawing.Size(93, 20);
-            this.numericUpDownUint3.TabIndex = 6;
-            // 
             // STColorDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(350, 259);
             this.Controls.Add(this.stPanel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "STColorDialog";
+            this.Deactivate += new System.EventHandler(this.STColorDialog_Deactivate);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.STColorDialog_FormClosed);
+            this.Load += new System.EventHandler(this.STColorDialog_Load);
             this.stPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.alphaPB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorPB)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUint3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -162,7 +153,6 @@
         private STPanel stPanel1;
         private System.Windows.Forms.PictureBox colorPB;
         private System.Windows.Forms.PictureBox alphaPB;
-        private STButton stButton1;
         private NumericUpDownUint numericUpDownUint3;
         private NumericUpDownUint numericUpDownUint2;
         private NumericUpDownUint numericUpDownUint1;

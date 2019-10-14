@@ -9,13 +9,41 @@ using System.Drawing.Drawing2D;
 
 namespace Toolbox.Library.Forms
 {
+    public class STToolStipMenuButton : ToolStripButton
+    {
+        public STToolStipMenuButton(string name, Image image, EventHandler eventHandler)
+        {
+            Text = name;
+            Image = image;
+            Click += eventHandler;
+        }
+    }
+
     public class STToolStrip : ToolStrip
     {
+        public int SelectedTabIndex = -1;
+
         private static Color titlebarBackColor = FormThemes.BaseTheme.FormContextMenuBackColor;
         private static Color titlebarForeColor = FormThemes.BaseTheme.FormContextMenuForeColor;
         private static Color borderColor = FormThemes.BaseTheme.FormContextMenuForeColor;
         private static Color borderItemColor = Color.Black;
         private static Color menuSelectItemColor = FormThemes.BaseTheme.FormContextMenuSelectColor;
+
+        public bool HighlightSelectedTab
+        {
+            get
+            {
+                if (Renderer == null)
+                    return false;
+
+                return ((MenuRenderer)this.Renderer).HighlightMenuBar;
+            }
+            set
+            {
+                if (Renderer != null)
+                    ((MenuRenderer)this.Renderer).HighlightMenuBar = value;
+            }
+        }
 
         public STToolStrip()
         {
@@ -28,8 +56,35 @@ namespace Toolbox.Library.Forms
                 this.Renderer = new MenuRenderer();
             }
         }
+
+        protected override void OnItemClicked(ToolStripItemClickedEventArgs e)
+        {
+            if (HighlightSelectedTab)
+            {
+                foreach (var item in Items)
+                {
+                    var toolStripBtn = item as ToolStripButton;
+                    if (toolStripBtn != null)
+                    {
+                        if (toolStripBtn != e.ClickedItem)
+                            toolStripBtn.Checked = false;
+                        else
+                            toolStripBtn.Checked = true;
+                    }
+                }
+            }
+
+            SelectedTabIndex = Items.IndexOf(e.ClickedItem);
+        }
+
         public class MenuRenderer : ToolStripProfessionalRenderer
         {
+            public bool HighlightMenuBar
+            {
+                get { return ((ColorTable)ColorTable).HighlightMenuBar; }
+                set { ((ColorTable)ColorTable).HighlightMenuBar = value; }
+            }
+
             public MenuRenderer() : base(new ColorTable())
             {
 
@@ -56,6 +111,11 @@ namespace Toolbox.Library.Forms
         }
         public class ColorTable : ProfessionalColorTable
         {
+            public bool HighlightMenuBar = false;
+
+            private static Color checkedHighlightBackColor = FormThemes.BaseTheme.FormContextMenuSelectColor;
+            private static Color uncheckedHighlightBackColor = FormThemes.BaseTheme.CheckBoxBackColor;
+
             public override Color ToolStripDropDownBackground
             {
                 get
@@ -64,101 +124,28 @@ namespace Toolbox.Library.Forms
                 }
             }
 
-            public override Color ImageMarginGradientBegin
-            {
-                get
-                {
-                    return titlebarBackColor;
-                }
-            }
+            public override Color ImageMarginGradientBegin => HighlightMenuBar ? uncheckedHighlightBackColor : titlebarBackColor;
+            public override Color ImageMarginGradientMiddle => HighlightMenuBar ? uncheckedHighlightBackColor : titlebarBackColor;
+            public override Color ImageMarginGradientEnd => HighlightMenuBar ? uncheckedHighlightBackColor : titlebarBackColor;
+            public override Color MenuBorder => HighlightMenuBar ? uncheckedHighlightBackColor : borderItemColor;
+            public override Color MenuItemBorder => HighlightMenuBar ? uncheckedHighlightBackColor : borderItemColor;
 
-            public override Color ImageMarginGradientMiddle
-            {
-                get
-                {
-                    return titlebarBackColor;
-                }
-            }
+            public override Color MenuStripGradientBegin => HighlightMenuBar ? uncheckedHighlightBackColor : titlebarBackColor;
+            public override Color MenuStripGradientEnd => HighlightMenuBar ? uncheckedHighlightBackColor : titlebarBackColor;
 
-            public override Color ImageMarginGradientEnd
-            {
-                get
-                {
-                    return titlebarBackColor;
-                }
-            }
+            public override Color MenuItemSelected => HighlightMenuBar ? checkedHighlightBackColor : menuSelectItemColor;
 
-            public override Color MenuBorder
-            {
-                get
-                {
-                    return borderColor;
-                }
-            }
+            public override Color ButtonSelectedBorder => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
 
-            public override Color MenuItemBorder
-            {
-                get
-                {
-                    return borderItemColor;
-                }
-            }
+            public override Color MenuItemSelectedGradientBegin => HighlightMenuBar ? checkedHighlightBackColor : menuSelectItemColor;
+            public override Color MenuItemSelectedGradientEnd => HighlightMenuBar ? checkedHighlightBackColor : menuSelectItemColor;
 
-            public override Color MenuItemSelected
-            {
-                get
-                {
-                    return menuSelectItemColor;
-                }
-            }
+            public override Color MenuItemPressedGradientBegin => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
+            public override Color MenuItemPressedGradientEnd => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
 
-            public override Color MenuStripGradientBegin
-            {
-                get
-                {
-                    return titlebarBackColor;
-                }
-            }
-
-            public override Color MenuStripGradientEnd
-            {
-                get
-                {
-                    return titlebarBackColor;
-                }
-            }
-
-            public override Color MenuItemSelectedGradientBegin
-            {
-                get
-                {
-                    return menuSelectItemColor;
-                }
-            }
-
-            public override Color MenuItemSelectedGradientEnd
-            {
-                get
-                {
-                    return menuSelectItemColor;
-                }
-            }
-
-            public override Color MenuItemPressedGradientBegin
-            {
-                get
-                {
-                    return titlebarBackColor;
-                }
-            }
-
-            public override Color MenuItemPressedGradientEnd
-            {
-                get
-                {
-                    return titlebarBackColor;
-                }
-            }
+            public override Color ButtonCheckedGradientBegin => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
+            public override Color ButtonCheckedGradientEnd => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
+            public override Color ButtonCheckedGradientMiddle => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
         }
     }
 }

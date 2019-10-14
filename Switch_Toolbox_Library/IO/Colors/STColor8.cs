@@ -83,6 +83,12 @@ namespace Toolbox.Library
             return String.Format("R:{0:X2} G:{1:X2} B:{2:X2} A:{3:X2}", R, G, B, A);
         }
 
+
+        public static STColor8 Black
+        {
+            get { return new STColor8(0, 0, 0, 255); }
+        }
+
         public static STColor8 White
         {
             get { return new STColor8(255, 255, 255, 255); }

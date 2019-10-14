@@ -112,8 +112,17 @@ namespace LayoutBXLYT
             SetInt("tevTexMode", 0);
             SetInt($"texCoords0GenType", 0);
             SetInt($"texCoords0Source", 0);
+            SetInt("hasTexture0", 0);
+            SetInt("hasTexture1", 0);
+            SetInt("hasTexture2", 0);
+            SetInt("textures0", 0);
+            SetInt("textures1", 0);
+            SetInt("textures2", 0);
 
             BindTextureUniforms();
+
+            if (material.TextureMaps.Length > 0 || Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.UVTestPattern)
+                GL.Enable(EnableCap.Texture2D);
 
             int id = 1;
             for (int i = 0; i < material.TextureMaps.Length; i++)
@@ -180,7 +189,7 @@ namespace LayoutBXLYT
             GL.Disable(EnableCap.ColorLogicOp);
             GL.LogicOp(LogicOp.Noop);
 
-            if (material.BlendMode != null)
+            if (material.BlendMode != null && material.EnableBlend)
             {
                 var srcFactor = BxlytToGL.ConvertBlendFactor(material.BlendMode.SourceFactor);
                 var destFactor = BxlytToGL.ConvertBlendFactor(material.BlendMode.DestFactor);
@@ -193,7 +202,7 @@ namespace LayoutBXLYT
                 GL.BlendEquation(blendOp);
                 GL.LogicOp(logicOp);
             }
-            if (material.BlendModeLogic != null)
+            if (material.BlendModeLogic != null && material.EnableBlendLogic)
             {
                 var srcFactor = BxlytToGL.ConvertBlendFactor(material.BlendModeLogic.SourceFactor);
                 var destFactor = BxlytToGL.ConvertBlendFactor(material.BlendModeLogic.DestFactor);
@@ -207,7 +216,7 @@ namespace LayoutBXLYT
                 GL.LogicOp(logicOp);
             }
 
-            if (material.AlphaCompare != null)
+            if (material.AlphaCompare != null && material.EnableAlphaCompare)
             {
                 var alphaFunc = BxlytToGL.ConvertAlphaFunc(material.AlphaCompare.CompareMode);
                 GL.AlphaFunc(alphaFunc, material.AlphaCompare.Value);
@@ -228,6 +237,13 @@ namespace LayoutBXLYT
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, BxlytToGL.ConvertTextureWrap(tex.WrapModeV));
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, BxlytToGL.ConvertMagFilterMode(tex.MaxFilterMode));
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, BxlytToGL.ConvertMinFilterMode(tex.MinFilterMode));
+            }
+            else
+            {
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureParameterName.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureParameterName.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             }
         }
 

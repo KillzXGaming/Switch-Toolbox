@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <!-- TODO try and make this smarter, at least pick x86/x64, maybe see which MSVC redist is available -->
+        <Content Include="$(MSBuildThisFileDirectory)..\bin\msvc10\x86\freetype6.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+</Project>

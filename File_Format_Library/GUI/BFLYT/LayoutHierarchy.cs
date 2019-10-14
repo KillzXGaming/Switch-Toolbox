@@ -96,8 +96,8 @@ namespace LayoutBXLYT
 
         private void LoadTextures(List<string> textures)
         {
-            TreeNode node = new TreeNode("Textures");
-            treeView1.Nodes.Add(node);
+            ActiveLayout.TextureFolder = new TreeNode("Textures");
+            treeView1.Nodes.Add(ActiveLayout.TextureFolder);
             for (int i = 0; i < textures.Count; i++)
             {
                 TreeNode matNode = new TreeNode(textures[i]);
@@ -108,7 +108,7 @@ namespace LayoutBXLYT
                 matNode.ContextMenuStrip.Items.Add(menu);
                 matNode.ImageKey = "texture";
                 matNode.SelectedImageKey = "texture";
-                node.Nodes.Add(matNode);
+                ActiveLayout.TextureFolder.Nodes.Add(matNode);
             }
         }
 
@@ -132,30 +132,33 @@ namespace LayoutBXLYT
 
         private void LoadFonts(List<string> fonts)
         {
-            TreeNode node = new TreeNode("Fonts");
-            treeView1.Nodes.Add(node);
+            ActiveLayout.FontFolder = new TreeNode("Fonts");
+            treeView1.Nodes.Add(ActiveLayout.FontFolder);
             for (int i = 0; i < fonts.Count; i++)
             {
                 TreeNode matNode = new TreeNode(fonts[i]);
                 matNode.ImageKey = "font";
                 matNode.SelectedImageKey = "font";
-                node.Nodes.Add(matNode);
+                ActiveLayout.FontFolder.Nodes.Add(matNode);
             }
         }
 
         private void LoadMaterials(List<BxlytMaterial> materials)
         {
-            TreeNode node = new TreeNode("Materials");
-            treeView1.Nodes.Add(node);
+            ActiveLayout.MaterialFolder = new TreeNode("Materials");
+            treeView1.Nodes.Add(ActiveLayout.MaterialFolder);
             for (int i = 0; i < materials.Count; i++)
             {
-                TreeNode matNode = new TreeNode(materials[i].Name);
+                MatWrapper matNode = new MatWrapper(materials[i].Name);
+                materials[i].NodeWrapper = matNode;
                 matNode.Tag = materials[i];
                 matNode.ImageKey = "material";
                 matNode.SelectedImageKey = "material";
-                node.Nodes.Add(matNode);
+                ActiveLayout.MaterialFolder.Nodes.Add(matNode);
             }
         }
+
+  
 
         private void CreateQuickAccess(BxlytHeader bxlyt)
         {
@@ -356,14 +359,9 @@ namespace LayoutBXLYT
             if (e.Node.Tag == null)
                 return;
 
-            if (e.Button == MouseButtons.Left)
-            {
-            /*    if (e.Node.Tag is BasePane)
-                {
-                    PaneEditor editor = new PaneEditor();
-                    editor.LoadPane((BasePane)e.Node.Tag);
-                    editor.Show();
-                }*/
+            if (e.Button == MouseButtons.Left) {
+                if (e.Node.Tag is BasePane)
+                    ParentEditor.ShowPaneEditor(e.Node.Tag as BasePane);
             }
         }
     }

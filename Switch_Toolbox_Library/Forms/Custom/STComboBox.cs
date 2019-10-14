@@ -82,6 +82,14 @@ namespace Toolbox.Library.Forms
             SelectedIndex = FindStringExact(text);
         }
 
+        public void ResetBind()
+        {
+            DataBindings.Clear();
+            DataSource = null;
+
+            Items.Clear();
+        }
+
         public void Bind(Type EnumType, object Object, string PropertyName, bool IsReset = true)
         {
             if (IsReset)

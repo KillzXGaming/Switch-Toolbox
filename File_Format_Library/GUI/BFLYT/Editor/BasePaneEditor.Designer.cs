@@ -50,26 +50,37 @@
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.stLabel6 = new Toolbox.Library.Forms.STLabel();
             this.stDropDownPanel3 = new Toolbox.Library.Forms.STDropDownPanel();
-            this.stCheckBox2 = new Toolbox.Library.Forms.STCheckBox();
-            this.stCheckBox1 = new Toolbox.Library.Forms.STCheckBox();
+            this.alphaChildrenChk = new Toolbox.Library.Forms.STCheckBox();
+            this.paneVisibleChk = new Toolbox.Library.Forms.STCheckBox();
             this.alphaUD = new BarSlider.BarSlider();
             this.alphaSelectorHorizontalPanel1 = new Toolbox.Library.Forms.AlphaSelectorHorizontalPanel();
             this.stLabel7 = new Toolbox.Library.Forms.STLabel();
             this.stDropDownPanel4 = new Toolbox.Library.Forms.STDropDownPanel();
-            this.radioButton7 = new System.Windows.Forms.RadioButton();
-            this.radioButton8 = new System.Windows.Forms.RadioButton();
-            this.radioButton9 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
-            this.radioButton5 = new System.Windows.Forms.RadioButton();
-            this.radioButton6 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioBottomLeftBtn = new Toolbox.Library.Forms.STRadioButton();
+            this.radioTopLeftBtn = new Toolbox.Library.Forms.STRadioButton();
+            this.radioLeftBtn = new Toolbox.Library.Forms.STRadioButton();
+            this.radioBottomRightBtn = new Toolbox.Library.Forms.STRadioButton();
+            this.radioTopRightBtn = new Toolbox.Library.Forms.STRadioButton();
+            this.radioRightBtn = new Toolbox.Library.Forms.STRadioButton();
+            this.radioBottomBtn = new Toolbox.Library.Forms.STRadioButton();
+            this.radioTopBtn = new Toolbox.Library.Forms.STRadioButton();
+            this.radioCenterBtn = new Toolbox.Library.Forms.STRadioButton();
+            this.stDropDownPanel5 = new Toolbox.Library.Forms.STDropDownPanel();
+            this.radioBottomLeftBtnParent = new Toolbox.Library.Forms.STRadioButton();
+            this.radioTopLeftBtnParent = new Toolbox.Library.Forms.STRadioButton();
+            this.radioLeftBtnParent = new Toolbox.Library.Forms.STRadioButton();
+            this.radioBottomRightBtnParent = new Toolbox.Library.Forms.STRadioButton();
+            this.radioTopRightBtnParent = new Toolbox.Library.Forms.STRadioButton();
+            this.radioRightBtnParent = new Toolbox.Library.Forms.STRadioButton();
+            this.radioBottomBtnParent = new Toolbox.Library.Forms.STRadioButton();
+            this.radioTopBtnParent = new Toolbox.Library.Forms.STRadioButton();
+            this.radioCenterBtnParent = new Toolbox.Library.Forms.STRadioButton();
             this.stFlowLayoutPanel1.SuspendLayout();
             this.stDropDownPanel1.SuspendLayout();
             this.stDropDownPanel2.SuspendLayout();
             this.stDropDownPanel3.SuspendLayout();
             this.stDropDownPanel4.SuspendLayout();
+            this.stDropDownPanel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // stFlowLayoutPanel1
@@ -79,13 +90,14 @@
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel2);
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel3);
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel4);
+            this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel5);
             this.stFlowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stFlowLayoutPanel1.FixedHeight = false;
             this.stFlowLayoutPanel1.FixedWidth = true;
             this.stFlowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.stFlowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.stFlowLayoutPanel1.Name = "stFlowLayoutPanel1";
-            this.stFlowLayoutPanel1.Size = new System.Drawing.Size(477, 554);
+            this.stFlowLayoutPanel1.Size = new System.Drawing.Size(477, 665);
             this.stFlowLayoutPanel1.TabIndex = 0;
             // 
             // stDropDownPanel1
@@ -132,6 +144,7 @@
             this.nameTB.Name = "nameTB";
             this.nameTB.Size = new System.Drawing.Size(230, 20);
             this.nameTB.TabIndex = 2;
+            this.nameTB.TextChanged += new System.EventHandler(this.nameTB_TextChanged);
             // 
             // stLabel1
             // 
@@ -661,8 +674,8 @@
             // stDropDownPanel3
             // 
             this.stDropDownPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.stDropDownPanel3.Controls.Add(this.stCheckBox2);
-            this.stDropDownPanel3.Controls.Add(this.stCheckBox1);
+            this.stDropDownPanel3.Controls.Add(this.alphaChildrenChk);
+            this.stDropDownPanel3.Controls.Add(this.paneVisibleChk);
             this.stDropDownPanel3.Controls.Add(this.alphaUD);
             this.stDropDownPanel3.Controls.Add(this.alphaSelectorHorizontalPanel1);
             this.stDropDownPanel3.Controls.Add(this.stLabel7);
@@ -679,25 +692,26 @@
             this.stDropDownPanel3.Size = new System.Drawing.Size(477, 105);
             this.stDropDownPanel3.TabIndex = 5;
             // 
-            // stCheckBox2
+            // alphaChildrenChk
             // 
-            this.stCheckBox2.AutoSize = true;
-            this.stCheckBox2.Location = new System.Drawing.Point(136, 32);
-            this.stCheckBox2.Name = "stCheckBox2";
-            this.stCheckBox2.Size = new System.Drawing.Size(186, 17);
-            this.stCheckBox2.TabIndex = 55;
-            this.stCheckBox2.Text = "Influence transparency to children";
-            this.stCheckBox2.UseVisualStyleBackColor = true;
+            this.alphaChildrenChk.AutoSize = true;
+            this.alphaChildrenChk.Location = new System.Drawing.Point(136, 32);
+            this.alphaChildrenChk.Name = "alphaChildrenChk";
+            this.alphaChildrenChk.Size = new System.Drawing.Size(186, 17);
+            this.alphaChildrenChk.TabIndex = 55;
+            this.alphaChildrenChk.Text = "Influence transparency to children";
+            this.alphaChildrenChk.UseVisualStyleBackColor = true;
             // 
-            // stCheckBox1
+            // paneVisibleChk
             // 
-            this.stCheckBox1.AutoSize = true;
-            this.stCheckBox1.Location = new System.Drawing.Point(24, 32);
-            this.stCheckBox1.Name = "stCheckBox1";
-            this.stCheckBox1.Size = new System.Drawing.Size(88, 17);
-            this.stCheckBox1.TabIndex = 54;
-            this.stCheckBox1.Text = "Pane visibile:";
-            this.stCheckBox1.UseVisualStyleBackColor = true;
+            this.paneVisibleChk.AutoSize = true;
+            this.paneVisibleChk.Location = new System.Drawing.Point(24, 32);
+            this.paneVisibleChk.Name = "paneVisibleChk";
+            this.paneVisibleChk.Size = new System.Drawing.Size(88, 17);
+            this.paneVisibleChk.TabIndex = 54;
+            this.paneVisibleChk.Text = "Pane visibile:";
+            this.paneVisibleChk.UseVisualStyleBackColor = true;
+            this.paneVisibleChk.CheckedChanged += new System.EventHandler(this.paneVisibleChk_CheckedChanged);
             // 
             // alphaUD
             // 
@@ -764,15 +778,15 @@
             // stDropDownPanel4
             // 
             this.stDropDownPanel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.stDropDownPanel4.Controls.Add(this.radioButton7);
-            this.stDropDownPanel4.Controls.Add(this.radioButton8);
-            this.stDropDownPanel4.Controls.Add(this.radioButton9);
-            this.stDropDownPanel4.Controls.Add(this.radioButton4);
-            this.stDropDownPanel4.Controls.Add(this.radioButton5);
-            this.stDropDownPanel4.Controls.Add(this.radioButton6);
-            this.stDropDownPanel4.Controls.Add(this.radioButton3);
-            this.stDropDownPanel4.Controls.Add(this.radioButton2);
-            this.stDropDownPanel4.Controls.Add(this.radioButton1);
+            this.stDropDownPanel4.Controls.Add(this.radioBottomLeftBtn);
+            this.stDropDownPanel4.Controls.Add(this.radioTopLeftBtn);
+            this.stDropDownPanel4.Controls.Add(this.radioLeftBtn);
+            this.stDropDownPanel4.Controls.Add(this.radioBottomRightBtn);
+            this.stDropDownPanel4.Controls.Add(this.radioTopRightBtn);
+            this.stDropDownPanel4.Controls.Add(this.radioRightBtn);
+            this.stDropDownPanel4.Controls.Add(this.radioBottomBtn);
+            this.stDropDownPanel4.Controls.Add(this.radioTopBtn);
+            this.stDropDownPanel4.Controls.Add(this.radioCenterBtn);
             this.stDropDownPanel4.ExpandedHeight = 0;
             this.stDropDownPanel4.IsExpanded = true;
             this.stDropDownPanel4.Location = new System.Drawing.Point(0, 376);
@@ -786,104 +800,228 @@
             this.stDropDownPanel4.Size = new System.Drawing.Size(477, 109);
             this.stDropDownPanel4.TabIndex = 54;
             // 
-            // radioButton7
+            // radioBottomLeftBtn
             // 
-            this.radioButton7.AutoSize = true;
-            this.radioButton7.Location = new System.Drawing.Point(47, 81);
-            this.radioButton7.Name = "radioButton7";
-            this.radioButton7.Size = new System.Drawing.Size(79, 17);
-            this.radioButton7.TabIndex = 9;
-            this.radioButton7.TabStop = true;
-            this.radioButton7.Text = "Bottom Left";
-            this.radioButton7.UseVisualStyleBackColor = true;
+            this.radioBottomLeftBtn.AutoSize = true;
+            this.radioBottomLeftBtn.Location = new System.Drawing.Point(47, 81);
+            this.radioBottomLeftBtn.Name = "radioBottomLeftBtn";
+            this.radioBottomLeftBtn.Size = new System.Drawing.Size(79, 17);
+            this.radioBottomLeftBtn.TabIndex = 9;
+            this.radioBottomLeftBtn.TabStop = true;
+            this.radioBottomLeftBtn.Text = "Bottom Left";
+            this.radioBottomLeftBtn.UseVisualStyleBackColor = true;
             // 
-            // radioButton8
+            // radioTopLeftBtn
             // 
-            this.radioButton8.AutoSize = true;
-            this.radioButton8.Location = new System.Drawing.Point(47, 35);
-            this.radioButton8.Name = "radioButton8";
-            this.radioButton8.Size = new System.Drawing.Size(65, 17);
-            this.radioButton8.TabIndex = 8;
-            this.radioButton8.TabStop = true;
-            this.radioButton8.Text = "Top Left";
-            this.radioButton8.UseVisualStyleBackColor = true;
+            this.radioTopLeftBtn.AutoSize = true;
+            this.radioTopLeftBtn.Location = new System.Drawing.Point(47, 35);
+            this.radioTopLeftBtn.Name = "radioTopLeftBtn";
+            this.radioTopLeftBtn.Size = new System.Drawing.Size(65, 17);
+            this.radioTopLeftBtn.TabIndex = 8;
+            this.radioTopLeftBtn.TabStop = true;
+            this.radioTopLeftBtn.Text = "Top Left";
+            this.radioTopLeftBtn.UseVisualStyleBackColor = true;
             // 
-            // radioButton9
+            // radioLeftBtn
             // 
-            this.radioButton9.AutoSize = true;
-            this.radioButton9.Location = new System.Drawing.Point(47, 58);
-            this.radioButton9.Name = "radioButton9";
-            this.radioButton9.Size = new System.Drawing.Size(43, 17);
-            this.radioButton9.TabIndex = 7;
-            this.radioButton9.TabStop = true;
-            this.radioButton9.Text = "Left";
-            this.radioButton9.UseVisualStyleBackColor = true;
+            this.radioLeftBtn.AutoSize = true;
+            this.radioLeftBtn.Location = new System.Drawing.Point(47, 58);
+            this.radioLeftBtn.Name = "radioLeftBtn";
+            this.radioLeftBtn.Size = new System.Drawing.Size(43, 17);
+            this.radioLeftBtn.TabIndex = 7;
+            this.radioLeftBtn.TabStop = true;
+            this.radioLeftBtn.Text = "Left";
+            this.radioLeftBtn.UseVisualStyleBackColor = true;
             // 
-            // radioButton4
+            // radioBottomRightBtn
             // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(217, 81);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(86, 17);
-            this.radioButton4.TabIndex = 6;
-            this.radioButton4.TabStop = true;
-            this.radioButton4.Text = "Bottom Right";
-            this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioBottomRightBtn.AutoSize = true;
+            this.radioBottomRightBtn.Location = new System.Drawing.Point(217, 81);
+            this.radioBottomRightBtn.Name = "radioBottomRightBtn";
+            this.radioBottomRightBtn.Size = new System.Drawing.Size(86, 17);
+            this.radioBottomRightBtn.TabIndex = 6;
+            this.radioBottomRightBtn.TabStop = true;
+            this.radioBottomRightBtn.Text = "Bottom Right";
+            this.radioBottomRightBtn.UseVisualStyleBackColor = true;
             // 
-            // radioButton5
+            // radioTopRightBtn
             // 
-            this.radioButton5.AutoSize = true;
-            this.radioButton5.Location = new System.Drawing.Point(217, 35);
-            this.radioButton5.Name = "radioButton5";
-            this.radioButton5.Size = new System.Drawing.Size(72, 17);
-            this.radioButton5.TabIndex = 5;
-            this.radioButton5.TabStop = true;
-            this.radioButton5.Text = "Top Right";
-            this.radioButton5.UseVisualStyleBackColor = true;
+            this.radioTopRightBtn.AutoSize = true;
+            this.radioTopRightBtn.Location = new System.Drawing.Point(217, 35);
+            this.radioTopRightBtn.Name = "radioTopRightBtn";
+            this.radioTopRightBtn.Size = new System.Drawing.Size(72, 17);
+            this.radioTopRightBtn.TabIndex = 5;
+            this.radioTopRightBtn.TabStop = true;
+            this.radioTopRightBtn.Text = "Top Right";
+            this.radioTopRightBtn.UseVisualStyleBackColor = true;
             // 
-            // radioButton6
+            // radioRightBtn
             // 
-            this.radioButton6.AutoSize = true;
-            this.radioButton6.Location = new System.Drawing.Point(217, 58);
-            this.radioButton6.Name = "radioButton6";
-            this.radioButton6.Size = new System.Drawing.Size(50, 17);
-            this.radioButton6.TabIndex = 4;
-            this.radioButton6.TabStop = true;
-            this.radioButton6.Text = "Right";
-            this.radioButton6.UseVisualStyleBackColor = true;
+            this.radioRightBtn.AutoSize = true;
+            this.radioRightBtn.Location = new System.Drawing.Point(217, 58);
+            this.radioRightBtn.Name = "radioRightBtn";
+            this.radioRightBtn.Size = new System.Drawing.Size(50, 17);
+            this.radioRightBtn.TabIndex = 4;
+            this.radioRightBtn.TabStop = true;
+            this.radioRightBtn.Text = "Right";
+            this.radioRightBtn.UseVisualStyleBackColor = true;
             // 
-            // radioButton3
+            // radioBottomBtn
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(136, 81);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(58, 17);
-            this.radioButton3.TabIndex = 3;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "Bottom";
-            this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioBottomBtn.AutoSize = true;
+            this.radioBottomBtn.Location = new System.Drawing.Point(136, 81);
+            this.radioBottomBtn.Name = "radioBottomBtn";
+            this.radioBottomBtn.Size = new System.Drawing.Size(58, 17);
+            this.radioBottomBtn.TabIndex = 3;
+            this.radioBottomBtn.TabStop = true;
+            this.radioBottomBtn.Text = "Bottom";
+            this.radioBottomBtn.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // radioTopBtn
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(136, 35);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(44, 17);
-            this.radioButton2.TabIndex = 2;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Top";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioTopBtn.AutoSize = true;
+            this.radioTopBtn.Location = new System.Drawing.Point(136, 35);
+            this.radioTopBtn.Name = "radioTopBtn";
+            this.radioTopBtn.Size = new System.Drawing.Size(44, 17);
+            this.radioTopBtn.TabIndex = 2;
+            this.radioTopBtn.TabStop = true;
+            this.radioTopBtn.Text = "Top";
+            this.radioTopBtn.UseVisualStyleBackColor = true;
             // 
-            // radioButton1
+            // radioCenterBtn
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(136, 58);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(56, 17);
-            this.radioButton1.TabIndex = 1;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Center";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioCenterBtn.AutoSize = true;
+            this.radioCenterBtn.Location = new System.Drawing.Point(136, 58);
+            this.radioCenterBtn.Name = "radioCenterBtn";
+            this.radioCenterBtn.Size = new System.Drawing.Size(56, 17);
+            this.radioCenterBtn.TabIndex = 1;
+            this.radioCenterBtn.TabStop = true;
+            this.radioCenterBtn.Text = "Center";
+            this.radioCenterBtn.UseVisualStyleBackColor = true;
+            // 
+            // stDropDownPanel5
+            // 
+            this.stDropDownPanel5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.stDropDownPanel5.Controls.Add(this.radioBottomLeftBtnParent);
+            this.stDropDownPanel5.Controls.Add(this.radioTopLeftBtnParent);
+            this.stDropDownPanel5.Controls.Add(this.radioLeftBtnParent);
+            this.stDropDownPanel5.Controls.Add(this.radioBottomRightBtnParent);
+            this.stDropDownPanel5.Controls.Add(this.radioTopRightBtnParent);
+            this.stDropDownPanel5.Controls.Add(this.radioRightBtnParent);
+            this.stDropDownPanel5.Controls.Add(this.radioBottomBtnParent);
+            this.stDropDownPanel5.Controls.Add(this.radioTopBtnParent);
+            this.stDropDownPanel5.Controls.Add(this.radioCenterBtnParent);
+            this.stDropDownPanel5.ExpandedHeight = 0;
+            this.stDropDownPanel5.IsExpanded = true;
+            this.stDropDownPanel5.Location = new System.Drawing.Point(0, 485);
+            this.stDropDownPanel5.Margin = new System.Windows.Forms.Padding(0);
+            this.stDropDownPanel5.Name = "stDropDownPanel5";
+            this.stDropDownPanel5.PanelName = "Parent Orientation";
+            this.stDropDownPanel5.PanelValueName = "";
+            this.stDropDownPanel5.SetIcon = null;
+            this.stDropDownPanel5.SetIconAlphaColor = System.Drawing.SystemColors.Control;
+            this.stDropDownPanel5.SetIconColor = System.Drawing.SystemColors.Control;
+            this.stDropDownPanel5.Size = new System.Drawing.Size(477, 109);
+            this.stDropDownPanel5.TabIndex = 55;
+            // 
+            // radioBottomLeftBtnParent
+            // 
+            this.radioBottomLeftBtnParent.AutoSize = true;
+            this.radioBottomLeftBtnParent.Location = new System.Drawing.Point(47, 81);
+            this.radioBottomLeftBtnParent.Name = "radioBottomLeftBtnParent";
+            this.radioBottomLeftBtnParent.Size = new System.Drawing.Size(79, 17);
+            this.radioBottomLeftBtnParent.TabIndex = 9;
+            this.radioBottomLeftBtnParent.TabStop = true;
+            this.radioBottomLeftBtnParent.Text = "Bottom Left";
+            this.radioBottomLeftBtnParent.UseVisualStyleBackColor = true;
+            // 
+            // radioTopLeftBtnParent
+            // 
+            this.radioTopLeftBtnParent.AutoSize = true;
+            this.radioTopLeftBtnParent.Location = new System.Drawing.Point(47, 35);
+            this.radioTopLeftBtnParent.Name = "radioTopLeftBtnParent";
+            this.radioTopLeftBtnParent.Size = new System.Drawing.Size(65, 17);
+            this.radioTopLeftBtnParent.TabIndex = 8;
+            this.radioTopLeftBtnParent.TabStop = true;
+            this.radioTopLeftBtnParent.Text = "Top Left";
+            this.radioTopLeftBtnParent.UseVisualStyleBackColor = true;
+            // 
+            // radioLeftBtnParent
+            // 
+            this.radioLeftBtnParent.AutoSize = true;
+            this.radioLeftBtnParent.Location = new System.Drawing.Point(47, 58);
+            this.radioLeftBtnParent.Name = "radioLeftBtnParent";
+            this.radioLeftBtnParent.Size = new System.Drawing.Size(43, 17);
+            this.radioLeftBtnParent.TabIndex = 7;
+            this.radioLeftBtnParent.TabStop = true;
+            this.radioLeftBtnParent.Text = "Left";
+            this.radioLeftBtnParent.UseVisualStyleBackColor = true;
+            // 
+            // radioBottomRightBtnParent
+            // 
+            this.radioBottomRightBtnParent.AutoSize = true;
+            this.radioBottomRightBtnParent.Location = new System.Drawing.Point(217, 81);
+            this.radioBottomRightBtnParent.Name = "radioBottomRightBtnParent";
+            this.radioBottomRightBtnParent.Size = new System.Drawing.Size(86, 17);
+            this.radioBottomRightBtnParent.TabIndex = 6;
+            this.radioBottomRightBtnParent.TabStop = true;
+            this.radioBottomRightBtnParent.Text = "Bottom Right";
+            this.radioBottomRightBtnParent.UseVisualStyleBackColor = true;
+            // 
+            // radioTopRightBtnParent
+            // 
+            this.radioTopRightBtnParent.AutoSize = true;
+            this.radioTopRightBtnParent.Location = new System.Drawing.Point(217, 35);
+            this.radioTopRightBtnParent.Name = "radioTopRightBtnParent";
+            this.radioTopRightBtnParent.Size = new System.Drawing.Size(72, 17);
+            this.radioTopRightBtnParent.TabIndex = 5;
+            this.radioTopRightBtnParent.TabStop = true;
+            this.radioTopRightBtnParent.Text = "Top Right";
+            this.radioTopRightBtnParent.UseVisualStyleBackColor = true;
+            // 
+            // radioRightBtnParent
+            // 
+            this.radioRightBtnParent.AutoSize = true;
+            this.radioRightBtnParent.Location = new System.Drawing.Point(217, 58);
+            this.radioRightBtnParent.Name = "radioRightBtnParent";
+            this.radioRightBtnParent.Size = new System.Drawing.Size(50, 17);
+            this.radioRightBtnParent.TabIndex = 4;
+            this.radioRightBtnParent.TabStop = true;
+            this.radioRightBtnParent.Text = "Right";
+            this.radioRightBtnParent.UseVisualStyleBackColor = true;
+            // 
+            // radioBottomBtnParent
+            // 
+            this.radioBottomBtnParent.AutoSize = true;
+            this.radioBottomBtnParent.Location = new System.Drawing.Point(136, 81);
+            this.radioBottomBtnParent.Name = "radioBottomBtnParent";
+            this.radioBottomBtnParent.Size = new System.Drawing.Size(58, 17);
+            this.radioBottomBtnParent.TabIndex = 3;
+            this.radioBottomBtnParent.TabStop = true;
+            this.radioBottomBtnParent.Text = "Bottom";
+            this.radioBottomBtnParent.UseVisualStyleBackColor = true;
+            // 
+            // radioTopBtnParent
+            // 
+            this.radioTopBtnParent.AutoSize = true;
+            this.radioTopBtnParent.Location = new System.Drawing.Point(136, 35);
+            this.radioTopBtnParent.Name = "radioTopBtnParent";
+            this.radioTopBtnParent.Size = new System.Drawing.Size(44, 17);
+            this.radioTopBtnParent.TabIndex = 2;
+            this.radioTopBtnParent.TabStop = true;
+            this.radioTopBtnParent.Text = "Top";
+            this.radioTopBtnParent.UseVisualStyleBackColor = true;
+            // 
+            // radioCenterBtnParent
+            // 
+            this.radioCenterBtnParent.AutoSize = true;
+            this.radioCenterBtnParent.Location = new System.Drawing.Point(136, 58);
+            this.radioCenterBtnParent.Name = "radioCenterBtnParent";
+            this.radioCenterBtnParent.Size = new System.Drawing.Size(56, 17);
+            this.radioCenterBtnParent.TabIndex = 1;
+            this.radioCenterBtnParent.TabStop = true;
+            this.radioCenterBtnParent.Text = "Center";
+            this.radioCenterBtnParent.UseVisualStyleBackColor = true;
             // 
             // BasePaneEditor
             // 
@@ -891,7 +1029,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.stFlowLayoutPanel1);
             this.Name = "BasePaneEditor";
-            this.Size = new System.Drawing.Size(477, 554);
+            this.Size = new System.Drawing.Size(477, 665);
+            this.Enter += new System.EventHandler(this.BasePaneEditor_Enter);
+            this.MouseEnter += new System.EventHandler(this.BasePaneEditor_MouseEnter);
             this.stFlowLayoutPanel1.ResumeLayout(false);
             this.stDropDownPanel1.ResumeLayout(false);
             this.stDropDownPanel1.PerformLayout();
@@ -901,6 +1041,8 @@
             this.stDropDownPanel3.PerformLayout();
             this.stDropDownPanel4.ResumeLayout(false);
             this.stDropDownPanel4.PerformLayout();
+            this.stDropDownPanel5.ResumeLayout(false);
+            this.stDropDownPanel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -933,16 +1075,26 @@
         private Toolbox.Library.Forms.AlphaSelectorHorizontalPanel alphaSelectorHorizontalPanel1;
         private Toolbox.Library.Forms.STLabel stLabel7;
         private Toolbox.Library.Forms.STDropDownPanel stDropDownPanel4;
-        private System.Windows.Forms.RadioButton radioButton7;
-        private System.Windows.Forms.RadioButton radioButton8;
-        private System.Windows.Forms.RadioButton radioButton9;
-        private System.Windows.Forms.RadioButton radioButton4;
-        private System.Windows.Forms.RadioButton radioButton5;
-        private System.Windows.Forms.RadioButton radioButton6;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private Toolbox.Library.Forms.STCheckBox stCheckBox2;
-        private Toolbox.Library.Forms.STCheckBox stCheckBox1;
+        private Toolbox.Library.Forms.STRadioButton radioBottomLeftBtn;
+        private Toolbox.Library.Forms.STRadioButton radioTopLeftBtn;
+        private Toolbox.Library.Forms.STRadioButton radioLeftBtn;
+        private Toolbox.Library.Forms.STRadioButton radioBottomRightBtn;
+        private Toolbox.Library.Forms.STRadioButton radioTopRightBtn;
+        private Toolbox.Library.Forms.STRadioButton radioRightBtn;
+        private Toolbox.Library.Forms.STRadioButton radioBottomBtn;
+        private Toolbox.Library.Forms.STRadioButton radioTopBtn;
+        private Toolbox.Library.Forms.STRadioButton radioCenterBtn;
+        private Toolbox.Library.Forms.STCheckBox alphaChildrenChk;
+        private Toolbox.Library.Forms.STCheckBox paneVisibleChk;
+        private Toolbox.Library.Forms.STDropDownPanel stDropDownPanel5;
+        private Toolbox.Library.Forms.STRadioButton radioBottomLeftBtnParent;
+        private Toolbox.Library.Forms.STRadioButton radioTopLeftBtnParent;
+        private Toolbox.Library.Forms.STRadioButton radioLeftBtnParent;
+        private Toolbox.Library.Forms.STRadioButton radioBottomRightBtnParent;
+        private Toolbox.Library.Forms.STRadioButton radioTopRightBtnParent;
+        private Toolbox.Library.Forms.STRadioButton radioRightBtnParent;
+        private Toolbox.Library.Forms.STRadioButton radioBottomBtnParent;
+        private Toolbox.Library.Forms.STRadioButton radioCenterBtnParent;
+        private Toolbox.Library.Forms.STRadioButton radioTopBtnParent;
     }
 }

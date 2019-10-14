@@ -1290,7 +1290,7 @@ namespace FirstPlugin
                         HasTextures = true;
                 }
             }
- 
+
             if (IsTex1 && HasTextures)
             {
                 STFileSaver.SaveFileFormat(this, FileName);
@@ -1345,8 +1345,12 @@ namespace FirstPlugin
 
                     foreach (FTEX tex in ((BFRESGroupNode)group).Nodes)
                     {
+                        Console.WriteLine("tex " + tex.Text + (resFileTex2.Textures.ContainsKey(tex.Text))) ;
+
                         if (resFileTex2.Textures.ContainsKey(tex.Text))
                         {
+                            Console.WriteLine("NoMips " + tex.texture.MipData == null || tex.texture.MipData.Length <= 0);
+
                             if (tex.texture.MipData == null || tex.texture.MipData.Length <= 0)
                             {
                                 progressBar.Task = $"Generating Mipmaps for {tex.Text}";

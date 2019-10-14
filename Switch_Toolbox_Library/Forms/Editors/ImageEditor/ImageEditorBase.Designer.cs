@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Toolbox.Library.Forms.STPanel();
@@ -40,6 +41,7 @@
             this.stContextMenuStrip2 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel3 = new Toolbox.Library.Forms.STPanel();
+            this.gammaLbl = new Toolbox.Library.Forms.STLabel();
             this.alphaBtn = new Toolbox.Library.Forms.STButton();
             this.editBtn = new Toolbox.Library.Forms.STButton();
             this.saveBtn = new Toolbox.Library.Forms.STButton();
@@ -72,6 +74,7 @@
             this.useComponentSelectorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.previewCubemapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.previewCubemap3DToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previewGammaFixSmashUltimateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,7 +87,7 @@
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.gammaFixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stContextMenuStrip3 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -196,6 +199,7 @@
             // 
             // stPanel3
             // 
+            this.stPanel3.Controls.Add(this.gammaLbl);
             this.stPanel3.Controls.Add(this.alphaBtn);
             this.stPanel3.Controls.Add(this.editBtn);
             this.stPanel3.Controls.Add(this.saveBtn);
@@ -209,6 +213,15 @@
             this.stPanel3.Name = "stPanel3";
             this.stPanel3.Size = new System.Drawing.Size(520, 51);
             this.stPanel3.TabIndex = 3;
+            this.stPanel3.Paint += new System.Windows.Forms.PaintEventHandler(this.stPanel3_Paint);
+            // 
+            // gammaLbl
+            // 
+            this.gammaLbl.AutoSize = true;
+            this.gammaLbl.Location = new System.Drawing.Point(111, 8);
+            this.gammaLbl.Name = "gammaLbl";
+            this.gammaLbl.Size = new System.Drawing.Size(0, 13);
+            this.gammaLbl.TabIndex = 18;
             // 
             // alphaBtn
             // 
@@ -326,6 +339,7 @@
             this.imageBGComboBox.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.imageBGComboBox.ButtonColor = System.Drawing.Color.Empty;
             this.imageBGComboBox.FormattingEnabled = true;
+            this.imageBGComboBox.IsReadOnly = false;
             this.imageBGComboBox.Location = new System.Drawing.Point(262, 2);
             this.imageBGComboBox.Name = "imageBGComboBox";
             this.imageBGComboBox.Size = new System.Drawing.Size(95, 21);
@@ -335,6 +349,7 @@
             // 
             // stContextMenuStrip1
             // 
+            this.stContextMenuStrip1.HighlightSelectedTab = false;
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
@@ -458,7 +473,8 @@
             this.displayAlphaToolStripMenuItem,
             this.useComponentSelectorToolStripMenuItem,
             this.previewCubemapToolStripMenuItem,
-            this.previewCubemap3DToolStripMenuItem});
+            this.previewCubemap3DToolStripMenuItem,
+            this.previewGammaFixSmashUltimateToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -466,7 +482,7 @@
             // enableZoomToolStripMenuItem
             // 
             this.enableZoomToolStripMenuItem.Name = "enableZoomToolStripMenuItem";
-            this.enableZoomToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.enableZoomToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
             this.enableZoomToolStripMenuItem.Text = "Enable Zoom";
             this.enableZoomToolStripMenuItem.Click += new System.EventHandler(this.enableZoomToolStripMenuItem_Click);
             // 
@@ -476,7 +492,7 @@
             this.propertyGridToolStripMenuItem.CheckOnClick = true;
             this.propertyGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.propertyGridToolStripMenuItem.Name = "propertyGridToolStripMenuItem";
-            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.propertyGridToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
             this.propertyGridToolStripMenuItem.Text = "Property Grid";
             this.propertyGridToolStripMenuItem.CheckedChanged += new System.EventHandler(this.propertyGridToolStripMenuItem_CheckedChanged);
             this.propertyGridToolStripMenuItem.Click += new System.EventHandler(this.propertyGridToolStripMenuItem_Click);
@@ -484,37 +500,45 @@
             // displayVerticalToolStripMenuItem
             // 
             this.displayVerticalToolStripMenuItem.Name = "displayVerticalToolStripMenuItem";
-            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.displayVerticalToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
             this.displayVerticalToolStripMenuItem.Text = "Display Vertical";
             this.displayVerticalToolStripMenuItem.Click += new System.EventHandler(this.displayVerticalToolStripMenuItem_Click);
             // 
             // displayAlphaToolStripMenuItem
             // 
             this.displayAlphaToolStripMenuItem.Name = "displayAlphaToolStripMenuItem";
-            this.displayAlphaToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.displayAlphaToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
             this.displayAlphaToolStripMenuItem.Text = "Display Alpha";
             this.displayAlphaToolStripMenuItem.Click += new System.EventHandler(this.displayAlphaToolStripMenuItem_Click);
             // 
             // useComponentSelectorToolStripMenuItem
             // 
             this.useComponentSelectorToolStripMenuItem.Name = "useComponentSelectorToolStripMenuItem";
-            this.useComponentSelectorToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.useComponentSelectorToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
             this.useComponentSelectorToolStripMenuItem.Text = "Use Component Selector";
             this.useComponentSelectorToolStripMenuItem.Click += new System.EventHandler(this.useComponentSelectorToolStripMenuItem_Click);
             // 
             // previewCubemapToolStripMenuItem
             // 
             this.previewCubemapToolStripMenuItem.Name = "previewCubemapToolStripMenuItem";
-            this.previewCubemapToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.previewCubemapToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
             this.previewCubemapToolStripMenuItem.Text = "Preview Cubemap";
             this.previewCubemapToolStripMenuItem.Click += new System.EventHandler(this.previewCubemapToolStripMenuItem_Click);
             // 
             // previewCubemap3DToolStripMenuItem
             // 
             this.previewCubemap3DToolStripMenuItem.Name = "previewCubemap3DToolStripMenuItem";
-            this.previewCubemap3DToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.previewCubemap3DToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
             this.previewCubemap3DToolStripMenuItem.Text = "Preview Cubemap (3D)";
             this.previewCubemap3DToolStripMenuItem.Click += new System.EventHandler(this.previewCubemap3DToolStripMenuItem_Click);
+            // 
+            // previewGammaFixSmashUltimateToolStripMenuItem
+            // 
+            this.previewGammaFixSmashUltimateToolStripMenuItem.CheckOnClick = true;
+            this.previewGammaFixSmashUltimateToolStripMenuItem.Name = "previewGammaFixSmashUltimateToolStripMenuItem";
+            this.previewGammaFixSmashUltimateToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.previewGammaFixSmashUltimateToolStripMenuItem.Text = "Preview Gamma Fix (Smash Ultimate)";
+            this.previewGammaFixSmashUltimateToolStripMenuItem.Click += new System.EventHandler(this.GammaFixPreviewAction);
             // 
             // imageToolStripMenuItem
             // 
@@ -591,7 +615,8 @@
             // 
             this.adjustmentsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hueToolStripMenuItem,
-            this.brightnessContrastToolStripMenuItem});
+            this.brightnessContrastToolStripMenuItem,
+            this.gammaFixToolStripMenuItem});
             this.adjustmentsToolStripMenuItem.Name = "adjustmentsToolStripMenuItem";
             this.adjustmentsToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
             this.adjustmentsToolStripMenuItem.Text = "Adjustments";
@@ -610,6 +635,13 @@
             this.brightnessContrastToolStripMenuItem.Name = "brightnessContrastToolStripMenuItem";
             this.brightnessContrastToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.brightnessContrastToolStripMenuItem.Text = "Brightness / Contrast";
+            // 
+            // gammaFixToolStripMenuItem
+            // 
+            this.gammaFixToolStripMenuItem.Name = "gammaFixToolStripMenuItem";
+            this.gammaFixToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.gammaFixToolStripMenuItem.Text = "Gamma Correct";
+            this.gammaFixToolStripMenuItem.Click += new System.EventHandler(this.gammaFixToolStripMenuItem_Click);
             // 
             // stContextMenuStrip3
             // 
@@ -697,5 +729,8 @@
         private System.Windows.Forms.ToolStripMenuItem previewCubemapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem previewCubemap3DToolStripMenuItem;
         private STContextMenuStrip stContextMenuStrip3;
+        private System.Windows.Forms.ToolStripMenuItem previewGammaFixSmashUltimateToolStripMenuItem;
+        private STLabel gammaLbl;
+        private System.Windows.Forms.ToolStripMenuItem gammaFixToolStripMenuItem;
     }
 }

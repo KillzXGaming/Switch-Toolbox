@@ -61,7 +61,7 @@ namespace Toolbox
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to get latest update\n{ex.ToString()}");
+                Toolbox.Library.Forms.STErrorDialog.Show($"Failed to get latest update", "Updater", ex.ToString());
             }
         }
 

@@ -310,11 +310,54 @@ namespace FirstPlugin
             var TextureGlyph = FontInfo.TextureGlyph;
 
             var textPane = (LayoutBXLYT.ITextPane)pane;
+
+            int fontWidth = (int)textPane.FontSize.X;
+            int fontHeight = (int)textPane.FontSize.Y;
+            if (textPane.FontSize.X > 2)
+            {
+                fontWidth = (int)textPane.FontSize.X - 2;
+                fontHeight = (int)textPane.FontSize.Y - 2;
+            }
+
+            float XScale = (fontWidth / TextureGlyph.CellWidth);
+            float YScale = (fontHeight / TextureGlyph.CellWidth);
+            float height = (TextureGlyph.SheetHeight - 2) / TextureGlyph.LinesCount;
+
+         /*   int pos = 0;
+            for (int i = 0; i < text.Length; i++)
+            {
+                char character = text[i];
+
+                int charWidth = (int)FontInfo.DefaultCharWidth;
+                int glyphWidth = (int)FontInfo.DefaultGlyphWidth;
+                int leftWidth = (int)FontInfo.DefaultLeftWidth;
+
+                if (FontInfo.CodeMapDictionary.ContainsKey(character))
+                {
+                    var idx = FontInfo.CodeMapDictionary[character];
+                    if (idx == 0xFFFF) continue;
+                    var charWidthInfo = GetCharWidthInfoByIndex(FontInfo, (ushort)idx);
+
+                    charWidth = charWidthInfo.CharWidth;
+                    glyphWidth = charWidthInfo.GlyphWidth;
+                    leftWidth = charWidthInfo.Left;
+                }
+
+
+              /*  Bitmap b = new Bitmap(width, height);
+                using (Graphics g = Graphics.FromImage(b))
+                {
+                    g.DrawImage();
+                }
+            }*/
+
             if (bitmapFont == null)
                 bitmapFont = GetBitmapFont(true);
 
             return bitmapFont.PrintToBitmap(text, new BitmapFont.FontRenderSettings()
             {
+                TopColor = textPane.FontTopColor.Color,
+                BottomColor = textPane.FontBottomColor.Color,
                 CharSpacing = (int)textPane.CharacterSpace,
                 XScale = (textPane.FontSize.X / TextureGlyph.CellWidth),
                 YScale = (textPane.FontSize.Y / TextureGlyph.CellHeight),

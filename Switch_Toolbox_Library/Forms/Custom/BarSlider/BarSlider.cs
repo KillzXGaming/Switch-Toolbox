@@ -163,7 +163,12 @@ namespace BarSlider
             ActiveEditColor = FormThemes.BaseTheme.TextEditorBackColor;
         }
 
-        protected override void OnMouseDoubleClick(MouseEventArgs e)
+        protected override void OnLeave(EventArgs e)
+        {
+            DisableTextEditor();
+        }
+
+        protected override void OnMouseClick(MouseEventArgs e)
         {
             TextEditorActive = true;
 
@@ -1081,6 +1086,9 @@ namespace BarSlider
         {
             get
             {
+                if (!this.Enabled)
+                    return FormThemes.BaseTheme.DisabledItemColor;
+
                 return base.ForeColor;
             }
             set
@@ -1611,6 +1619,8 @@ namespace BarSlider
         {
             if (TextEditorActive)
                 return;
+            
+            return;
 
             int currentPositionX = 0;
             int direction = 0;

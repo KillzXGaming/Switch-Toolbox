@@ -11,7 +11,29 @@ namespace Toolbox.Library.Forms
 {
     public class ColorAlphaBox : STPanel
     {
-        public Color Color { get; set; }
+        private Color color;
+        public Color Color
+        {
+            get { return color; }
+            set
+            {
+                color = value;
+                this.Invalidate();
+            }
+        }
+
+        private bool displayAlphaSolid;
+        public bool DisplayAlphaSolid
+        {
+            get { return displayAlphaSolid; }
+            set
+            {
+                displayAlphaSolid = true;
+                this.BackgroundImage = null;
+                this.BackColor = Color.Black;
+                this.Invalidate();
+            }
+        }
 
         public ColorAlphaBox()
         {
@@ -32,6 +54,10 @@ namespace Toolbox.Library.Forms
 
             Brush RGBColor = new SolidBrush(Color.FromArgb(255, Color.R, Color.G, Color.B));
             Brush AlphaColor = new SolidBrush(Color.FromArgb(Color.A, Color.R, Color.G, Color.B));
+
+            if (DisplayAlphaSolid)
+                AlphaColor = new SolidBrush(Color.FromArgb(255, Color.A, Color.A, Color.A));
+
 
             Point rgbPos = new Point(ClientRectangle.X, ClientRectangle.Y);
             Point alphaPos = new Point(ClientRectangle.X + ClientRectangle.Width / 2, ClientRectangle.Y);

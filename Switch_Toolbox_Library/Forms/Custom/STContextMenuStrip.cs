@@ -34,6 +34,20 @@ namespace Toolbox.Library.Forms
         private static Color borderItemColor = Color.Black;
         private static Color menuSelectItemColor = FormThemes.BaseTheme.FormContextMenuSelectColor;
 
+        public bool HighlightSelectedTab
+        {
+            get {
+                if (Renderer == null)
+                    return false;
+
+                return ((MenuRenderer)this.Renderer).HighlightMenuBar;
+            }
+            set {
+                if (Renderer != null)
+                    ((MenuRenderer)this.Renderer).HighlightMenuBar = value;
+            }
+        }
+
         public STMenuStrip()
         {
             if (FormThemes.ActivePreset != FormThemes.Preset.White)
@@ -42,6 +56,11 @@ namespace Toolbox.Library.Forms
                 this.ForeColor = titlebarForeColor;
                 this.Renderer = new MenuRenderer();
             }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
         }
     }
 
@@ -80,9 +99,14 @@ namespace Toolbox.Library.Forms
     {
         private static Color titlebarForeColor = FormThemes.BaseTheme.FormContextMenuForeColor;
 
+        public bool HighlightMenuBar
+        {
+            get { return ((ColorTable)ColorTable).HighlightMenuBar; }
+            set { ((ColorTable)ColorTable).HighlightMenuBar = value; }
+        }
+
         public MenuRenderer() : base(new ColorTable())
         {
-
         }
 
         protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
@@ -115,11 +139,14 @@ namespace Toolbox.Library.Forms
 
     public class ColorTable : ProfessionalColorTable
     {
+        public bool HighlightMenuBar = false;
+
         private static Color titlebarBackColor = FormThemes.BaseTheme.FormContextMenuBackColor;
         private static Color titlebarForeColor = FormThemes.BaseTheme.FormContextMenuForeColor;
         private static Color borderColor = FormThemes.BaseTheme.FormContextMenuForeColor;
         private static Color borderItemColor = Color.Black;
         private static Color menuSelectItemColor = FormThemes.BaseTheme.FormContextMenuSelectColor;
+        private static Color checkedHighlightBackColor = FormThemes.BaseTheme.CheckBoxEnabledBackColor;
 
 
         public override Color ToolStripDropDownBackground => titlebarBackColor;
@@ -143,11 +170,15 @@ namespace Toolbox.Library.Forms
         public override Color MenuStripGradientBegin => titlebarBackColor;
         public override Color MenuStripGradientEnd => titlebarBackColor;
 
-        public override Color MenuItemSelectedGradientBegin => menuSelectItemColor;
-        public override Color MenuItemSelectedGradientEnd => menuSelectItemColor;
+        public override Color MenuItemSelectedGradientBegin => HighlightMenuBar ? checkedHighlightBackColor : menuSelectItemColor;
+        public override Color MenuItemSelectedGradientEnd => HighlightMenuBar ? checkedHighlightBackColor : menuSelectItemColor;
 
-        public override Color MenuItemPressedGradientBegin => titlebarBackColor;
-        public override Color MenuItemPressedGradientEnd => titlebarBackColor;
 
+        public override Color MenuItemPressedGradientBegin => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
+        public override Color MenuItemPressedGradientEnd => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
+
+        public override Color ButtonCheckedGradientBegin => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
+        public override Color ButtonCheckedGradientEnd => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
+        public override Color ButtonCheckedGradientMiddle => HighlightMenuBar ? checkedHighlightBackColor : titlebarBackColor;
     }
 }

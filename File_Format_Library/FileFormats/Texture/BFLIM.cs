@@ -243,39 +243,47 @@ namespace FirstPlugin
 
             public void CreateNew(object sender, EventArgs args)
             {
-                BFLIM bflim = new BFLIM();
-                bflim.CanSave = true;
-                bflim.IFileInfo = new IFileInfo();
-                bflim.header = new Header();
+                BFLIM bflim = CreateNewFromImage();
+                if (bflim == null) return;
 
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Multiselect = false;
-                ofd.Filter = FileFilters.GTX;
-                if (ofd.ShowDialog() != DialogResult.OK) return;
-
-                FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(ofd.FileName, TEX_FORMAT.BC3_UNORM_SRGB, 1, 0, bflim.SupportedFormats, false, true, false);
-                if (ftex.texture != null)
-                {
-                    bflim.Text = ftex.texture.Name;
-                    bflim.image = new Image();
-                    bflim.image.Swizzle = (byte)ftex.texture.Swizzle;
-                    bflim.image.BflimFormat = FormatsWiiU.FirstOrDefault(x => x.Value == ftex.Format).Key;
-                    bflim.image.Height = (ushort)ftex.texture.Height;
-                    bflim.image.Width = (ushort)ftex.texture.Width;
-
-                    bflim.Format = FormatsWiiU[bflim.image.BflimFormat];
-                    bflim.Width = bflim.image.Width;
-                    bflim.Height = bflim.image.Height;
-
-
-                    bflim.ImageData = ftex.texture.Data;
-                    var form = new GenericEditorForm(false, bflim.OpenForm());
-                    LibraryGUI.CreateMdiWindow(form);
-
-                    bflim.UpdateForm();
-                }
+                var form = new GenericEditorForm(false, bflim.OpenForm());
+                LibraryGUI.CreateMdiWindow(form);
+                bflim.UpdateForm();
             }
+        }
+
+
+        public static BFLIM CreateNewFromImage()
+        {
+            BFLIM bflim = new BFLIM();
+            bflim.CanSave = true;
+            bflim.IFileInfo = new IFileInfo();
+            bflim.header = new Header();
+
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = false;
+            ofd.Filter = FileFilters.GTX;
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return null;
+
+            FTEX ftex = new FTEX();
+            ftex.ReplaceTexture(ofd.FileName, TEX_FORMAT.BC3_UNORM_SRGB, 1, 0, bflim.SupportedFormats, false, true, false);
+            if (ftex.texture != null)
+            {
+                bflim.Text = ftex.texture.Name;
+                bflim.image = new Image();
+                bflim.image.Swizzle = (byte)ftex.texture.Swizzle;
+                bflim.image.BflimFormat = FormatsWiiU.FirstOrDefault(x => x.Value == ftex.Format).Key;
+                bflim.image.Height = (ushort)ftex.texture.Height;
+                bflim.image.Width = (ushort)ftex.texture.Width;
+
+                bflim.Format = FormatsWiiU[bflim.image.BflimFormat];
+                bflim.Width = bflim.image.Width;
+                bflim.Height = bflim.image.Height;
+                bflim.ImageData = ftex.texture.Data;
+            }
+
+            return bflim;
         }
 
         public override string ExportFilter => FileFilters.GTX;

@@ -17,7 +17,13 @@ namespace LayoutBXLYT
 {
     public partial class LayoutTextureList : LayoutDocked
     {
-        ImageList imgList = new ImageList();
+        private LayoutEditor ParentEditor;
+        private BxlytHeader ActiveLayout;
+        private Dictionary<string, STGenericTexture> TextureList;
+
+        ImageList imgListSmall = new ImageList();
+        ImageList imgListBig = new ImageList();
+
         public LayoutTextureList()
         {
             InitializeComponent();
@@ -29,11 +35,17 @@ namespace LayoutBXLYT
             listViewTpyeCB.Items.Add(View.Tile);
             listViewTpyeCB.SelectedIndex = 0;
             listViewCustom1.FullRowSelect = true;
+            btnEdit.Enabled = false;
 
-            imgList = new ImageList()
+            imgListSmall = new ImageList()
+            {
+                ImageSize = new Size(30, 30),
+                ColorDepth = ColorDepth.Depth32Bit,
+            };
+            imgListBig = new ImageList()
             {
                 ColorDepth = ColorDepth.Depth32Bit,
-                ImageSize = new Size(30, 30),
+                ImageSize = new Size(80, 80),
             };
         }
 
@@ -42,10 +54,14 @@ namespace LayoutBXLYT
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
-            for (int i = 0; i < imgList.Images.Count; i++)
-                imgList.Images[i].Dispose();
+            for (int i = 0; i < imgListBig.Images.Count; i++)
+                imgListBig.Images[i].Dispose();
 
-            imgList.Images.Clear();
+            for (int i = 0; i < imgListSmall.Images.Count; i++)
+                imgListSmall.Images[i].Dispose();
+
+            imgListBig.Images.Clear();
+            imgListSmall.Images.Clear();
             listViewCustom1.Items.Clear();
 
             isLoaded = false;
@@ -53,17 +69,21 @@ namespace LayoutBXLYT
 
         private bool isLoaded = false;
         private Thread Thread;
-        public void LoadTextures(BxlytHeader header)
+        public void LoadTextures(LayoutEditor parentEditor, BxlytHeader header, 
+            Dictionary<string, STGenericTexture> textureList)
         {
+            ParentEditor = parentEditor;
+            TextureList = textureList;
+            ActiveLayout = header;
             listViewCustom1.Items.Clear();
-            imgList.Images.Clear();
-            imgList.Images.Add(new Bitmap(30, 30));
+            imgListSmall.Images.Clear();
+            imgListSmall.Images.Add(new Bitmap(30, 30));
+            imgListBig.Images.Clear();
+            imgListBig.Images.Add(new Bitmap(60, 60));
 
-            listViewCustom1.LargeImageList = imgList;
-            listViewCustom1.SmallImageList = imgList;
-
-            var textureList = header.GetTextures;
-
+            listViewCustom1.LargeImageList = imgListBig;
+            listViewCustom1.SmallImageList = imgListSmall;
+            
             listViewCustom1.BeginUpdate();
             foreach (var texture in header.Textures)
             {
@@ -118,15 +138,18 @@ namespace LayoutBXLYT
             {
                 listViewCustom1.Invoke((MethodInvoker)delegate {
                     var item = listViewCustom1.Items[index];
-                    item.ImageIndex = imgList.Images.Count;
+                    item.ImageIndex = imgListBig.Images.Count;
                     item.SubItems.Add(texture.Format.ToString());
                     item.SubItems.Add(texture.Width.ToString());
                     item.SubItems.Add(texture.Height.ToString());
                     item.SubItems.Add(texture.DataSize);
-                   
+
                     // Running on the UI thread
-                    imgList.Images.Add(temp);
-                    var dummy = imgList.Handle;
+                    imgListBig.Images.Add(temp);
+                    imgListSmall.Images.Add(temp);
+
+                    var dummy = imgListBig.Handle;
+                    var dummy2 = imgListSmall.Handle;
                 });
             }
 
@@ -170,6 +193,115 @@ namespace LayoutBXLYT
             {
                 
             }
+        }
+
+        private void listViewCustom1_ItemDrag(object sender, ItemDragEventArgs e)  {
+            DoDragDrop(e.Item, DragDropEffects.Move);
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e) {
+            RemoveSelectedTextures();
+        }
+
+        private void RemoveSelectedTextures()
+        {
+            var result = MessageBox.Show("Are you sure you want to remove these textures?",
+                "Layout Edtior", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                foreach (ListViewItem item in listViewCustom1.SelectedItems)
+                {
+                    var texture = item.Text;
+                    if (TextureList.ContainsKey(texture))
+                        TextureList.Remove(texture);
+
+                    ActiveLayout.RemoveTexture(texture);
+                    listViewCustom1.Items.Remove(item);
+                    ParentEditor.UpdateViewport();
+                }
+            }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            var textures = ActiveLayout.TextureManager.AddTextures();
+            if (textures == null) return;
+
+            foreach (var tex in textures)
+            {
+                if (tex == null)
+                    continue;
+
+                ActiveLayout.AddTexture(tex.Text);
+                if (TextureList.ContainsKey(tex.Text))
+                    TextureList.Remove(tex.Text);
+
+                TextureList.Add(tex.Text, tex);
+
+                ListViewItem item = new ListViewItem();
+                item.Text = tex.Text;
+                item.ImageIndex = 0;
+
+                listViewCustom1.BeginUpdate();
+                listViewCustom1.Items.Add(item);
+
+                //Add icon
+
+                if (Thread != null && Thread.IsAlive)
+                    Thread.Abort();
+
+                int index = listViewCustom1.Items.IndexOf(item);
+                Thread = new Thread((ThreadStart)(() =>
+                {
+                    LoadTextureIcon(index, tex);
+                }));
+                Thread.Start();
+
+
+                listViewCustom1.SelectedItems.Clear();
+                if (listViewCustom1.Items.ContainsKey(tex.Text))
+                {
+                    listViewCustom1.Items[tex.Text].Selected = true;
+                    listViewCustom1.Select();
+                }
+
+                listViewCustom1.EndUpdate();
+                ParentEditor.UpdateViewport();
+            }
+        }
+
+        private void listViewCustom1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && listViewCustom1.SelectedItems.Count > 0) {
+                RemoveSelectedTextures();
+            }
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            if (listViewCustom1.SelectedItems.Count == 0)
+                return;
+
+            string textName = listViewCustom1.SelectedItems[0].Text;
+            if (TextureList.ContainsKey(textName))
+            {
+                var texture = ActiveLayout.TextureManager.EditTexture(textName);
+                if (texture == null)
+                    return;
+
+                TextureList[textName] = texture;
+                //Update the icon by reloading all of them
+                LoadTextures(ParentEditor, ActiveLayout, TextureList);
+            }
+        }
+
+        private void listViewCustom1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listViewCustom1.SelectedItems.Count > 0)
+                btnEdit.Enabled = true;
+            else
+                btnEdit.Enabled = false;
         }
     }
 }

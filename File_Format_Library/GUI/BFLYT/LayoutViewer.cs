@@ -204,7 +204,7 @@ namespace LayoutBXLYT
             }
         }
 
-        private void RenderScene()
+        private void RenderScene(bool showSelectionBox = false)
         {
             //  GL.Disable(EnableCap.CullFace);
             GL.Enable(EnableCap.Blend);
@@ -289,6 +289,18 @@ namespace LayoutBXLYT
                     GL.Vertex2(99999, pane.Translate.Y);
                     GL.End();
                 }
+            }
+
+
+            if (showSelectionBox)
+            {
+                GL.Begin(PrimitiveType.LineLoop);
+                GL.Color4(Color.Red);
+                GL.Vertex2(SelectionBox.LeftPoint, SelectionBox.BottomPoint);
+                GL.Vertex2(SelectionBox.RightPoint, SelectionBox.BottomPoint);
+                GL.Vertex2(SelectionBox.RightPoint, SelectionBox.TopPoint);
+                GL.Vertex2(SelectionBox.LeftPoint, SelectionBox.TopPoint);
+                GL.End();
             }
 
             //Create a bounding box for all selected panes
@@ -640,7 +652,11 @@ namespace LayoutBXLYT
             GL.PopAttrib();
         }
 
-        private bool mouseHeldDown = false;
+        private bool mouseCameraDown = false;
+        private bool mouseDown = false;
+
+        private List<BasePane> SelectionBoxPanes = new List<BasePane>();
+        private bool showSelectionBox = false;
         private bool isPicked = false;
         private bool mouseMoving = false;
         private Point originMouse;
@@ -663,12 +679,14 @@ namespace LayoutBXLYT
                e.Button == MouseButtons.Middle)
             {
                 originMouse = e.Location;
-                mouseHeldDown = true;
+                mouseCameraDown = true;
                 glControl1.Invalidate();
             }
             //Pick an object for moving
             else if (e.Button == MouseButtons.Left)
             {
+                mouseDown = true;
+
                 RenderEditor();
                 var coords = convertScreenToWorldCoords(e.Location.X, e.Location.Y);
 
@@ -738,10 +756,10 @@ namespace LayoutBXLYT
                 var selectOverlapping = new STToolStripItem("Select Overlapping");
                 var createPanes = new STToolStripItem("Create Pane");
                 createPanes.DropDownItems.Add(new STToolStripItem("Null Pane", CreateNullPaneAction));
-                createPanes.DropDownItems.Add(new STToolStripItem("Picture Pane"));
-                createPanes.DropDownItems.Add(new STToolStripItem("Text Box Pane "));
-                createPanes.DropDownItems.Add(new STToolStripItem("Window Pane"));
-                createPanes.DropDownItems.Add(new STToolStripItem("Boundry Pane"));
+                createPanes.DropDownItems.Add(new STToolStripItem("Picture Pane", CreatePicturePaneAction));
+                createPanes.DropDownItems.Add(new STToolStripItem("Text Box Pane", CreateTextPaneAction));
+                createPanes.DropDownItems.Add(new STToolStripItem("Window Pane", CreateWindowPaneAction));
+                createPanes.DropDownItems.Add(new STToolStripItem("Boundry Pane", CreateBoundryPaneAction));
 
                 var hitPanes = GetHitPanes(LayoutFile.RootPane, coords.X, coords.Y, new List<BasePane>());
                 for (int i = 0; i < hitPanes.Count; i++)
@@ -769,15 +787,36 @@ namespace LayoutBXLYT
 
         private void CreateNullPaneAction(object sender, EventArgs e) {
             var pane = ParentEditor.AddNewNullPane();
-            SetupNewPane(pane);
+            SetupNewPane(pane, pickOriginMouse);
         }
 
-        private void SetupNewPane(BasePane pane)
+        private void CreatePicturePaneAction(object sender, EventArgs e) {
+            var pane = ParentEditor.AddNewPicturePane();
+            SetupNewPane(pane, pickOriginMouse);
+        }
+
+        private void CreateWindowPaneAction(object sender, EventArgs e) {
+            var pane = ParentEditor.AddNewWindowPane();
+            SetupNewPane(pane, pickOriginMouse);
+        }
+
+        private void CreateTextPaneAction(object sender, EventArgs e) {
+            var pane = ParentEditor.AddNewTextPane();
+            SetupNewPane(pane, pickOriginMouse);
+        }
+
+        private void CreateBoundryPaneAction(object sender, EventArgs e) {
+            var pane = ParentEditor.AddNewBoundryPane();
+            SetupNewPane(pane, pickOriginMouse);
+        }
+
+        private void SetupNewPane(BasePane pane, Point point)
         {
             if (pane == null) return;
 
-            pane.Translate = new Syroot.Maths.Vector3F(pickOriginMouse.X, pickOriginMouse.Y, 0);
-            SelectedPanes.Add(pane);
+            SelectedPanes.Clear();
+            pane.Translate = new Syroot.Maths.Vector3F(point.X, point.Y, 0);
+            ParentEditor.LoadPaneEditorOnSelect(pane);
 
             glControl1.Invalidate();
         }
@@ -810,11 +849,26 @@ namespace LayoutBXLYT
 
         private void DeleteSelectedPanes()
         {
+            if (SelectedPanes.Count == 0) return;
+            //Make sure to fill all the children in selected panes!
+            for (int i = 0; i < SelectedPanes.Count; i++)
+                SelectedPanes.AddRange(GetChildren(SelectedPanes, new List<BasePane>(), SelectedPanes[i]));
+
             UndoManger.AddToUndo(new LayoutUndoManager.UndoActionPaneDelete(SelectedPanes, LayoutFile));
-            LayoutFile.RemovePanes(SelectedPanes);
+            LayoutFile.RemovePanes(SelectedPanes, LayoutFile.RootPane);
             SelectedPanes.Clear();
             ParentEditor?.UpdateHiearchyTree();
             glControl1.Invalidate();
+        }
+
+        private List<BasePane> GetChildren(List<BasePane> selectedPanes, List<BasePane> childrenPanes, BasePane parent)
+        {
+            if (!selectedPanes.Contains(parent))
+                childrenPanes.Add(parent);
+
+            foreach (var child in parent.Childern)
+                GetChildren(selectedPanes, childrenPanes, child);
+            return childrenPanes;
         }
 
         private void SelectOverlappingAction(object sender, EventArgs e)
@@ -859,6 +913,30 @@ namespace LayoutBXLYT
             //Keep searching even if we found our pane so we can find any that's selected
             foreach (var childPane in pane.Childern)
                 SearchHit(childPane, X, Y, ref SelectedPane);
+        }
+
+        private List<BasePane> GetHitPanes(BasePane pane, CustomRectangle rect, List<BasePane> SelectedPanes)
+        {
+            bool isVisible = pane.Visible;
+            if (!Runtime.LayoutEditor.DisplayPicturePane && pane is IPicturePane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayWindowPane && pane is IWindowPane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayBoundryPane && pane is IBoundryPane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayTextPane && pane is ITextPane)
+                isVisible = false;
+            if (!Runtime.LayoutEditor.DisplayNullPane && pane.IsNullPane)
+                isVisible = false;
+
+            if (isVisible && pane.DisplayInEditor && pane.IsHit(rect) && pane.Name != "RootPane")
+                if (!SelectedPanes.Contains(pane))
+                    SelectedPanes.Add(pane);
+
+            foreach (var childPane in pane.Childern)
+                GetHitPanes(childPane, rect, SelectedPanes);
+
+            return SelectedPanes;
         }
 
         private List<BasePane> GetHitPanes(BasePane pane, int X, int Y, List<BasePane> SelectedPanes)
@@ -923,9 +1001,19 @@ namespace LayoutBXLYT
             if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle)
             {
                 pickAxis = PickAxis.All;
-                mouseHeldDown = false;
+                mouseCameraDown = false;
+                mouseDown = false;
                 isPicked = false;
                 mouseMoving = false;
+                showSelectionBox = false;
+
+                foreach (var pane in SelectionBoxPanes)
+                    if (!SelectedPanes.Contains(pane))
+                        SelectedPanes.Add(pane);
+
+                SelectionBoxPanes.Clear();
+
+                ParentEditor.RefreshEditors();
                 glControl1.Invalidate();
             }
         }
@@ -962,7 +1050,7 @@ namespace LayoutBXLYT
             if (UseOrtho)
                 GL.PopMatrix();
 
-            if (SelectedPanes.Count > 0)
+            if (SelectedPanes.Count > 0 && !showSelectionBox)
             {
                 RenderEditor();
                 var posWorld = convertScreenToWorldCoords(e.Location.X, e.Location.Y);
@@ -970,7 +1058,7 @@ namespace LayoutBXLYT
                 GL.PopMatrix();
 
                 //Setup edge picking with move event
-                bool isEdge = false;
+                bool hasPick = false;
                 foreach (var pane in SelectedPanes)
                 {
                     var pickState = SearchEdgePicking(pane, posWorld.X, posWorld.Y);
@@ -993,15 +1081,26 @@ namespace LayoutBXLYT
                         if (pickState == PickAction.DragTopRight)
                             Cursor.Current = Cursors.SizeNESW;
 
-                        isEdge = true;
+                        hasPick = true;
+                    }
+                    else if (isPicked && pickAction != PickAction.None)
+                    {
+                        if (pickAction == PickAction.Translate)
+                            Cursor.Current = Cursors.SizeAll;
+                        if (pickAction == PickAction.Rotate)
+                            Cursor.Current = Cursors.SizeAll;
+                        if (pickAction == PickAction.Scale)
+                            Cursor.Current = Cursors.SizeAll;
+
+                        hasPick = true;
                     }
                 }
 
-                if (!isEdge)
+                if (!hasPick)
                     Cursor.Current = Cursors.Default;
             }
 
-            if (isPicked)
+            if (isPicked && !showSelectionBox)
             {
                 RenderEditor();
                 var temp = e.Location;
@@ -1045,7 +1144,7 @@ namespace LayoutBXLYT
                         }
                     }
                 }
-                else
+                else if (!showSelectionBox)
                 {
                     //Setup edge picking with move event
                     foreach (var pane in SelectedPanes)
@@ -1057,7 +1156,16 @@ namespace LayoutBXLYT
                 RenderScene();
             }
 
-            if (mouseHeldDown)
+            if (mouseDown && !isPicked)
+            {
+                RenderEditor();
+                var temp = e.Location;
+                var curPos = convertScreenToWorldCoords(temp.X, temp.Y);
+                var prevPos = convertScreenToWorldCoords(pickOriginMouse.X, pickOriginMouse.Y);
+                DrawSelectionBox(prevPos, curPos);
+            }
+
+            if (mouseCameraDown)
             {
                 var pos = new Vector2(e.Location.X - originMouse.X, e.Location.Y - originMouse.Y);
                 Camera.Position.X += pos.X;
@@ -1067,6 +1175,38 @@ namespace LayoutBXLYT
 
                 glControl1.Invalidate();
             }
+        }
+
+        private CustomRectangle SelectionBox;
+
+        private void DrawSelectionBox(Point point1, Point point2)
+        {
+            SelectionBoxPanes.Clear();
+
+            int left = point1.X;
+            int right = point2.X;
+            int top = point1.Y;
+            int bottom = point2.Y;
+            //Determine each point direction to see what is left/right/top/bottom
+            if (bottom > top)
+            {
+                top = point2.Y;
+                bottom = point1.Y;
+            }
+            if (left > right)
+            {
+                right = point1.X;
+                left = point2.X;
+            }
+
+            showSelectionBox = true;
+            SelectionBox = new CustomRectangle(left, right, top, bottom);
+            var hitPanes = GetHitPanes(LayoutFile.RootPane, SelectionBox, new List<BasePane>());
+            foreach (var pane in hitPanes)
+                if (!SelectionBoxPanes.Contains(pane))
+                    SelectionBoxPanes.Add(pane);
+
+            RenderScene(true);
         }
 
         public static Point convertScreenToWorldCoords(int x, int y)
@@ -1161,6 +1301,35 @@ namespace LayoutBXLYT
             else if (e.KeyCode == Keys.Delete)
             {
                 DeleteSelectedPanes();
+            }
+        }
+
+        private void glControl1_DragEnter(object sender, DragEventArgs e) {
+            if (e.Data.GetDataPresent(typeof(ListViewItem)))
+            {
+                e.Effect = DragDropEffects.Move;
+            }
+        }
+
+        private void glControl1_DragDrop(object sender, DragEventArgs e) {
+            if (e.Data.GetDataPresent(typeof(ListViewItem)))
+            {
+                var item = e.Data.GetData(typeof(ListViewItem)) as ListViewItem;
+                string texture = item.Text;
+                if (Textures.ContainsKey(texture))
+                {
+                    var point = this.PointToClient(new Point(e.X, e.Y));
+
+                    RenderEditor();
+                    var coords = convertScreenToWorldCoords(point.X, point.Y);
+                    GL.PopMatrix();
+
+                    var pane = ParentEditor.AddNewPicturePane();
+                    pane.Width = Textures[texture].Width;
+                    pane.Height = Textures[texture].Height;
+                    ((IPicturePane)pane).Material.AddTexture(texture);
+                    SetupNewPane(pane, coords);
+                }
             }
         }
     }

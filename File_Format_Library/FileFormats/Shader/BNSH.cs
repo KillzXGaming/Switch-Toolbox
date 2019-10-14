@@ -290,7 +290,8 @@ namespace FirstPlugin
                 {
                     using (reader.TemporarySeek(Offsets[i], SeekOrigin.Begin))
                     {
-                        Code[i] = reader.ReadString((int)Sizes[i]);
+                        byte[] data = reader.ReadBytes((int)Sizes[i]);
+                        Code[i] = Encoding.GetEncoding(932).GetString(data);
                     }
                 }
             }

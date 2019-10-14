@@ -612,6 +612,8 @@ namespace LayoutBXLYT
 
         public class PRT1 : PAN1, IPartPane
         {
+            public string LayoutFileName { get; set; }
+
             public PRT1() : base()
             {
 
@@ -650,21 +652,16 @@ namespace LayoutBXLYT
 
             public ushort MaterialIndex { get; set; }
 
-            public Material GetMaterial()
-            {
-                return ParentLayout.MaterialList.Materials[MaterialIndex];
-            }
-
             public string GetTexture(int index)
             {
-                var mat = GetMaterial();
-                return ParentLayout.TextureList.Textures[mat.TextureMaps[index].ID];
+                return ParentLayout.TextureList.Textures[Material.TextureMaps[index].ID];
             }
 
             [TypeConverter(typeof(ExpandableObjectConverter))]
-            public Material Material
+            public BxlytMaterial Material
             {
                 get { return ParentLayout.MaterialList.Materials[MaterialIndex]; }
+                set { }
             }
 
             private BRLYT.Header ParentLayout;
@@ -878,8 +875,20 @@ namespace LayoutBXLYT
 
         public class Material : BxlytMaterial
         {
-            public STColor16 WhiteColor { get; set; }
-            public STColor16 BlackColor { get; set; }
+            public override STColor8 BlackColor
+            {
+                get { return new STColor8((byte)BlackColor16.R, (byte)BlackColor16.G, (byte)BlackColor16.B, (byte)BlackColor16.A); }
+                set { BlackColor16 = new STColor16(value.R, value.G, value.B,value.A); }
+            }
+
+            public override STColor8 WhiteColor
+            {
+                get { return new STColor8((byte)WhiteColor16.R, (byte)WhiteColor16.G, (byte)WhiteColor16.B, (byte)WhiteColor16.A); }
+                set { WhiteColor16 = new STColor16(value.R, value.G, value.B, value.A); }
+            }
+
+            public STColor16 WhiteColor16 { get; set; }
+            public STColor16 BlackColor16 { get; set; }
             public STColor16 ColorRegister3  { get; set; }
 
             public STColor8 TevColor1 { get; set; }
@@ -914,8 +923,8 @@ namespace LayoutBXLYT
 
                 Name = reader.ReadString(0x14, true);
 
-                BlackColor = reader.ReadColor16RGBA();
-                WhiteColor = reader.ReadColor16RGBA();
+                BlackColor16 = reader.ReadColor16RGBA();
+                WhiteColor16 = reader.ReadColor16RGBA();
                 ColorRegister3 = reader.ReadColor16RGBA();
                 TevColor1 = reader.ReadColor8RGBA();
                 TevColor2 = reader.ReadColor8RGBA();

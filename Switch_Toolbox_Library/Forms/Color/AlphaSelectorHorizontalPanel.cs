@@ -13,6 +13,12 @@ namespace Toolbox.Library.Forms
         public AlphaSelectorHorizontalPanel()
         {
             InitializeComponent();
+
+            this.SetStyle(
+            ControlStyles.AllPaintingInWmPaint |
+            ControlStyles.UserPaint |
+            ControlStyles.DoubleBuffer,
+            true);
         }
 
         public event EventHandler AlphaChanged;

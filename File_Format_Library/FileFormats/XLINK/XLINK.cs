@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Library.IO;
 using Toolbox.Library;
 using System.Windows.Forms;
+using Toolbox.Library.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace FirstPlugin
 {
-    public class XLINK : TreeNodeFile, IFileFormat
+    public class XLINK : IEditor<TextEditor>, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Effect;
 
@@ -28,6 +32,16 @@ namespace FirstPlugin
             }
         }
 
+        public TextEditor OpenForm()
+        {
+            return new TextEditor();
+        }
+
+        public void FillEditor(UserControl control)
+        {
+            ((TextEditor)control).FillEditor(ToText());
+        }
+
         public Type[] Types
         {
             get
@@ -37,32 +51,57 @@ namespace FirstPlugin
             }
         }
 
+        public string ToText()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Encoding = Encoding.UTF8,
+                Indent = true,
+                IndentChars = "  ",
+            };
+
+
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+
+            XmlDocument doc = new XmlDocument();
+            XmlDeclaration xmldecl = doc.CreateXmlDeclaration("1.0", null, null);
+            xmldecl.Encoding = "UTF-8";
+            xmldecl.Standalone = "yes";
+
+            var stringWriter = new StringWriter();
+            XmlSerializer serializer = new XmlSerializer(typeof(Header));
+            XmlWriter output = XmlWriter.Create(stringWriter, settings);
+            serializer.Serialize(output, header, ns);
+            return stringWriter.ToString();
+        }
+
+        private Header header;
+
         public void Load(System.IO.Stream stream)
         {
             CanSave = false;
 
-            Text = FileName;
-
-            Header Header = new Header();
-            Header.Read(new FileReader(stream));
+            header = new Header();
+            header.Read(new FileReader(stream));
 
             var userData = new TreeNode("User Data");
-            Nodes.Add(userData);
+        //    Nodes.Add(userData);
 
             var hashes = new TreeNode("Hashes");
             userData.Nodes.Add(hashes);
 
-            foreach (var hash in Header.UserDataTable.CRC32Hashes)
+            foreach (var hash in header.UserDataTable.CRC32Hashes)
                 hashes.Nodes.Add(new TreeNode(hash.ToString("x")));
 
             var paramDefines = new TreeNode("Param Defines");
-            Nodes.Add(paramDefines);
+       //     Nodes.Add(paramDefines);
 
-            foreach (var param in Header.ParamDefineTable.UserParams)
+            foreach (var param in header.ParamDefineTable.UserParams)
                 paramDefines.Nodes.Add(param.Name);
-            foreach (var param in Header.ParamDefineTable.TriggerParams)
+            foreach (var param in header.ParamDefineTable.TriggerParams)
                 paramDefines.Nodes.Add(param.Name);
-            foreach (var param in Header.ParamDefineTable.UserParams)
+            foreach (var param in header.ParamDefineTable.UserParams)
                 paramDefines.Nodes.Add(param.Name);
         }
 
@@ -85,6 +124,14 @@ namespace FirstPlugin
             public UserDataTable UserDataTable;
             public ParamDefineTable ParamDefineTable;
 
+            public List<ResourceAssetParamTable> ResourceAssetParamTables = new List<ResourceAssetParamTable>();
+            public List<TriggerOverwriteParamTable> TriggerOverwriteParamTables = new List<TriggerOverwriteParamTable>();
+
+            public List<LocalNameProperty> LocalNameProperties = new List<LocalNameProperty>();
+            public List<LocalNameProperty> LocalNameEnumProperties = new List<LocalNameProperty>();
+
+            internal uint nameTablePos;
+
             public void Read(FileReader reader)
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
@@ -105,13 +152,60 @@ namespace FirstPlugin
                 uint exRegionPos = reader.ReadUInt32();
                 uint numUser = reader.ReadUInt32();
                 uint conditionTablePos = reader.ReadUInt32();
-                uint nameTablePos = reader.ReadUInt32();
+                nameTablePos = reader.ReadUInt32();
 
                 UserDataTable = new UserDataTable();
                 UserDataTable.Read(reader, (int)numUser);
 
                 ParamDefineTable = new ParamDefineTable();
-                ParamDefineTable.Read(reader);
+                ParamDefineTable.Read(reader, this);
+
+                for (int i = 0; i < numResAssetParam; i++)
+                {
+                    var resAssetsParam = new ResourceAssetParamTable();
+                    resAssetsParam.Read(reader);
+                    ResourceAssetParamTables.Add(resAssetsParam);
+                }
+
+                reader.SeekBegin(triggerOverwriteParamTablePos);
+                for (int i = 0; i < numResTriggerOverwriteParam; i++)
+                {
+                    var triggerOverwriteParamTbl = new TriggerOverwriteParamTable();
+                    triggerOverwriteParamTbl.Read(reader);
+                    TriggerOverwriteParamTables.Add(triggerOverwriteParamTbl);
+                }
+
+                reader.SeekBegin(localPropertyNameRefTablePos);
+                for (int i = 0; i < numLocalPropertyNameRefTable; i++)
+                {
+                    var localNameProp = new LocalNameProperty();
+                    localNameProp.Read(reader, nameTablePos);
+                    LocalNameProperties.Add(localNameProp);
+                }
+
+                for (int i = 0; i < numLocalPropertyEnumNameRefTable; i++)
+                {
+                    var localNameProp = new LocalNameProperty();
+                    localNameProp.Read(reader, nameTablePos);
+                    LocalNameEnumProperties.Add(localNameProp);
+                }
+            }
+        }
+
+        public class LocalNameProperty
+        {
+            [XmlAttribute]
+            public string Name;
+
+            public void Read(FileReader reader, uint nameTableOffset)
+            {
+                uint offset = reader.ReadUInt32();
+                long pos = reader.Position;
+
+                reader.SeekBegin(offset + nameTableOffset);
+                Name = reader.ReadZeroTerminatedString(Encoding.GetEncoding(932));
+
+                reader.SeekBegin(pos);
             }
         }
 
@@ -133,7 +227,7 @@ namespace FirstPlugin
             public List<ParamDefineEntry> AssetParams = new List<ParamDefineEntry>();
             public List<ParamDefineEntry> TriggerParams = new List<ParamDefineEntry>();
 
-            public void Read(FileReader reader)
+            public void Read(FileReader reader, Header header)
             {
                 uint SectionSize = reader.ReadUInt32();
                 uint numUserParams = reader.ReadUInt32();
@@ -141,62 +235,111 @@ namespace FirstPlugin
                 uint unknown = reader.ReadUInt32();
                 uint numTriggerParams = reader.ReadUInt32();
 
+                uint nameTblPos = (uint)reader.Position + ((numUserParams + numAssetParams + numTriggerParams) * 12);
+
                 for (int i = 0; i < numUserParams; i++)
                 {
                     var entry = new ParamDefineEntry();
-                    entry.Read(reader);
+                    entry.Read(reader, nameTblPos);
                     UserParams.Add(entry);
                 }
                 for (int i = 0; i < numAssetParams; i++)
                 {
                     var entry = new ParamDefineEntry();
-                    entry.Read(reader);
+                    entry.Read(reader, nameTblPos);
                     AssetParams.Add(entry);
                 }
                 for (int i = 0; i < numTriggerParams; i++)
                 {
                     var entry = new ParamDefineEntry();
-                    entry.Read(reader);
+                    entry.Read(reader, nameTblPos);
                     TriggerParams.Add(entry);
                 }
-
-                List<byte> StringTable = new List<byte>();
-
-                long StringTablePosition = reader.Position;
-
-                foreach (var param in UserParams)
-                    param.ReadString(reader, StringTablePosition);
-
-                foreach (var param in AssetParams)
-                    param.ReadString(reader, StringTablePosition);
-
-                foreach (var param in TriggerParams)
-                    param.ReadString(reader, StringTablePosition);
             }
         }
 
         public class ParamDefineEntry
         {
-            internal uint NamePos;
-
+            [XmlAttribute]
             public string Name { get; set; }
+
+            [XmlAttribute]
             public uint Type { get; set; }
-            public byte[] DefaultValue { get; set; }
+
+            [XmlElement("int", typeof(int))]
+            [XmlElement("str", typeof(string))]
+            [XmlElement("uint", typeof(uint))]
+            [XmlElement("float", typeof(float))]
+            public object DefaultValue { get; set; }
+
+            public void Read(FileReader reader, uint nameTblPos)
+            {
+                long pos = reader.Position;
+
+                uint NamePos = reader.ReadUInt32(); //Offset from string table
+                Type = reader.ReadUInt32();
+
+                Console.WriteLine("Type " + Type);
+
+                if (Type == 0)
+                {
+                    uint defaultPos = reader.ReadUInt32();
+                    reader.SeekBegin(nameTblPos + defaultPos);
+                    DefaultValue = reader.ReadZeroTerminatedString();
+
+                    Console.WriteLine("defaultPos " + defaultPos);
+                }
+                else if (Type == 1)
+                    DefaultValue = reader.ReadSingle();
+                else
+                    DefaultValue = reader.ReadInt32();
+
+                reader.SeekBegin(nameTblPos + NamePos);
+                Name = reader.ReadZeroTerminatedString();
+
+                Console.WriteLine("Name " + Name);
+
+                reader.SeekBegin(pos + 12);
+            }
+        }
+
+        public class ResourceAssetParamTable
+        {
+            public ulong Mask;
+
+            public uint FirstReference;
+            public uint SecondReference;
+            public uint ThirdReference;
 
             public void Read(FileReader reader)
             {
-                NamePos = reader.ReadUInt32(); //Offset from string table
-                Type = reader.ReadUInt32();
-                DefaultValue = reader.ReadBytes(4);
+                Mask = reader.ReadUInt64();
+                if ((Mask & 1) != 0)
+                    FirstReference = reader.ReadUInt32();
+                if ((Mask & 2) != 0)
+                    SecondReference = reader.ReadUInt32();
+                if ((Mask & 4) != 0)
+                    ThirdReference = reader.ReadUInt32();
             }
+        }
 
-            public void ReadString(FileReader reader, long TablePosition)
+        public class TriggerOverwriteParamTable
+        {
+            public uint Mask;
+
+            public uint FirstReference;
+            public uint SecondReference;
+            public uint ThirdReference;
+
+            public void Read(FileReader reader)
             {
-                Console.WriteLine("NamePos " + NamePos);
-                reader.Position = TablePosition + NamePos;
-                Name = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
-
-                Console.WriteLine("Name " + Name);
+                Mask = reader.ReadUInt32();
+                if ((Mask & 1) != 0)
+                    FirstReference = reader.ReadUInt32();
+                if ((Mask & 2) != 0)
+                    SecondReference = reader.ReadUInt32();
+                if ((Mask & 4) != 0)
+                    ThirdReference = reader.ReadUInt32();
             }
         }
     }

@@ -119,6 +119,12 @@ namespace Toolbox.Library.Forms
             stCollapsePanelButton1.SetIconColor = FormThemes.BaseTheme.DropdownButtonBackColor;
         }
 
+        public void ResetColors()
+        {
+            stCollapsePanelButton1.SetIconColor = FormThemes.BaseTheme.DropdownButtonBackColor;
+            stCollapsePanelButton1.SetIconAlphaColor = FormThemes.BaseTheme.DropdownButtonBackColor;
+        }
+
         public bool IsExpanded
         {
             get { return stCollapsePanelButton1.IsExpanded; }

@@ -64,5 +64,10 @@ namespace Toolbox.Library.Forms
         {
             ColorApplied?.Invoke(sender,e);
         }
+
+        private void ColorSelectorDropdown_Load(object sender, EventArgs e)
+        {
+       
+        }
     }
 }

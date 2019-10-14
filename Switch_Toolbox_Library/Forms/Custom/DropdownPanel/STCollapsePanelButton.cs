@@ -22,6 +22,7 @@ namespace Toolbox.Library.Forms
 
             BackColor = FormThemes.BaseTheme.DropdownButtonBackColor;
             ForeColor = FormThemes.BaseTheme.FormForeColor;
+            SetIconColor = FormThemes.BaseTheme.DropdownButtonBackColor;
 
             ExpandedImage = pictureBox1.Image;
 

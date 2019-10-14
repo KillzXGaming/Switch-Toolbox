@@ -5,13 +5,27 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
 using OpenTK;
-using System.Reflection;
+using System.Windows.Threading;
 using Toolbox.Library.IO;
 
 namespace Toolbox.Library
 {
    public class Utils
     {
+        public static void DelayAction(int millisecond, Action action)
+        {
+            var timer = new DispatcherTimer();
+            timer.Tick += delegate
+
+            {
+                action.Invoke();
+                timer.Stop();
+            };
+
+            timer.Interval = TimeSpan.FromMilliseconds(millisecond);
+            timer.Start();
+        }
+
         public static bool CompareNoExtension(string a, string b)
         {
             return (Path.GetFileNameWithoutExtension(a) == Path.GetFileNameWithoutExtension(b));

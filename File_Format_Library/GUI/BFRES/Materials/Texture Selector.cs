@@ -29,6 +29,7 @@ namespace FirstPlugin
         {
             IsWIiiU = isWiiU;
 
+            listView1.Items.Clear();
             if (IsWIiiU)
             {
                 foreach (BFRESGroupNode ftexcont in PluginRuntime.ftexContainers)

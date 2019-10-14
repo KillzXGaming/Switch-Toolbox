@@ -35,6 +35,15 @@ namespace Toolbox.Library.Forms
             Text = text;
         }
 
+        public STToolStipMenuItem(string text, Image image, EventHandler onClick)
+        {
+            LoadTheme();
+
+            Text = text;
+            Image = image;
+            Click += new EventHandler(onClick);
+        }
+
         public STToolStipMenuItem(string text, Image image, EventHandler onClick, Keys shortcutKeys)
         {
             LoadTheme();

@@ -18,6 +18,66 @@ namespace Toolbox.Library
 
         }
 
+        public static Bitmap PaintImage(Brush brush, Bitmap input)
+        {
+            return input;
+
+            Bitmap colorBitmap = new Bitmap(input.Width, input.Height);
+            using (var g = Graphics.FromImage(colorBitmap))
+            {
+                Rectangle rect = new Rectangle(0, 0, colorBitmap.Width, colorBitmap.Height);
+                g.FillRectangle(brush, rect);
+
+                return MultiplyImages(input, colorBitmap);
+            }
+        }
+
+        public static Bitmap MultiplyImages(Bitmap input1, Bitmap input2)
+        {
+            BitmapData bmData = input1.LockBits(new Rectangle(0, 0, input1.Width, input1.Height),
+    ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            int stride = bmData.Stride;
+            System.IntPtr Scan0 = bmData.Scan0;
+
+
+
+            BitmapData cmData = input2.LockBits(new Rectangle(0, 0, input2.Width, input2.Height),
+    ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            int cstride = cmData.Stride;
+            System.IntPtr cScan0 = cmData.Scan0;
+
+            unsafe
+            {
+                byte* p = (byte*)(void*)Scan0;
+                byte* p2 = (byte*)(void*)cScan0;
+
+                int nOffset = stride - input1.Width * 4;
+
+                byte red, green, blue, alpha;
+
+                for (int y = 0; y < input1.Height; ++y)
+                {
+                    for (int x = 0; x < input1.Width; ++x)
+                    {
+                        blue = (byte)(p[0] * p2[0] / 255);
+                        green = (byte)(p[1] * p2[1] / 255);
+                        red = (byte)(p[2] * p2[2] / 255);
+                        alpha = (byte)(p[3] * p2[3] / 255);
+
+                        p += 4;
+                        p2 += 4;
+                    }
+                    p += nOffset;
+                    p2 += nOffset;
+                }
+            }
+
+            input1.UnlockBits(bmData);
+            input2.UnlockBits(cmData);
+
+            return input1;
+        }
+
         public static Bitmap FillColor(int Width, int Height, Color color)
         {
             Bitmap Bmp = new Bitmap(Width, Height);
@@ -407,9 +467,12 @@ namespace Toolbox.Library
 
             return true;
         }
-        public static Bitmap GrayScale(Image b) { return GrayScale(new Bitmap(b));
+        public static Bitmap GrayScale(Image b, bool removeAlpha = false)
+        {
+            return GrayScale(new Bitmap(b), removeAlpha);
         }
-        public static Bitmap GrayScale(Bitmap b)
+
+        public static Bitmap GrayScale(Bitmap b, bool removeAlpha = false)
         {
             BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height),
         ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
@@ -431,7 +494,10 @@ namespace Toolbox.Library
                         blue = p[0];
                         green = p[1];
                         red = p[2];
-                        alpha = p[3];
+                        if (removeAlpha)
+                            alpha = 255;
+                        else
+                            alpha = p[3];
 
                         p[0] = p[1] = p[2] = (byte)(.299 * red
                             + .587 * green

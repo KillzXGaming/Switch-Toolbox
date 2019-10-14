@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\SharpFont.4.0.1\build\SharpFont.props" Condition="Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')" />
+  <Import Project="..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props" Condition="Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -111,11 +113,9 @@
     </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\Toolbox\Lib\OpenTK.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="OpenTK.GLControl">
       <HintPath>..\Toolbox\Lib\OpenTK.GLControl.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore">
       <Private>False</Private>
@@ -136,6 +136,9 @@
     <Reference Include="SFGraphics.Utils">
       <HintPath>..\Toolbox\Lib\SFGraphics.Utils.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpFont, Version=4.0.1.200, Culture=neutral, PublicKeyToken=48add4c483071cdf, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpFont.4.0.1\lib\net45\SharpFont.dll</HintPath>
     </Reference>
     <Reference Include="SharpYaml">
       <HintPath>..\Toolbox\Lib\SharpYaml.dll</HintPath>
@@ -305,8 +308,6 @@
     <Compile Include="FileFormats\Layout\BxlytShader.cs" />
     <Compile Include="FileFormats\Layout\BxlytToGL.cs" />
     <Compile Include="FileFormats\Layout\CAFE\FLAN.cs" />
-    <Compile Include="FileFormats\Layout\CAFE\Materials\AlphaCompare.cs" />
-    <Compile Include="FileFormats\Layout\CAFE\Materials\BlendMode.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\FontShadowParameter.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\IndirectParameter.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\ProjectionTexGenParam.cs" />
@@ -320,13 +321,17 @@
     <Compile Include="FileFormats\Layout\Animation\LytAnimation.cs" />
     <Compile Include="FileFormats\Layout\LayoutCustomPaneMapper.cs" />
     <Compile Include="FileFormats\Layout\LayoutTextureLoader.cs" />
-    <Compile Include="FileFormats\Layout\PaneTreeWrapper.cs" />
+    <Compile Include="FileFormats\Layout\TextureManager.cs" />
+    <Compile Include="FileFormats\Layout\Wrappers\PaneTreeWrapper.cs" />
     <Compile Include="FileFormats\Layout\Common.cs" />
     <Compile Include="FileFormats\Layout\PartsManager.cs" />
     <Compile Include="FileFormats\Layout\RenderablePane.cs" />
     <Compile Include="FileFormats\Layout\Rev\BRLAN.cs" />
     <Compile Include="FileFormats\Layout\Rev\BrlytShader.cs" />
     <Compile Include="FileFormats\Layout\Rev\BRLYT.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Materials\TevStage.cs" />
+    <Compile Include="FileFormats\Layout\Rev\WiiLayoutEditor\Shader.cs" />
+    <Compile Include="FileFormats\Layout\Wrappers\MatWrapper.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
     <Compile Include="FileFormats\Pikmin1\MOD.cs" />
@@ -390,11 +395,104 @@
     <Compile Include="GUI\BFLYT\Editor\BasePaneEditor.Designer.cs">
       <DependentUpon>BasePaneEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFLYT\Editor\BasePictureboxEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\BasePictureboxEditor.Designer.cs">
+      <DependentUpon>BasePictureboxEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\EditorPanelBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\PaneMatBlending.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\PaneMatBlending.Designer.cs">
+      <DependentUpon>PaneMatBlending.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\PaneMatTextureCombiner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\PaneMatTextureCombiner.Designer.cs">
+      <DependentUpon>PaneMatTextureCombiner.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\Editor\PaneEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\Editor\PaneEditor.Designer.cs">
       <DependentUpon>PaneEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\PaneMatColorEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\PaneMatColorEditor.Designer.cs">
+      <DependentUpon>PaneMatColorEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\PaneMatTextureMapsEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\PaneMatTextureMapsEditor.Designer.cs">
+      <DependentUpon>PaneMatTextureMapsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Texture_Selector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Texture_Selector.Designer.cs">
+      <DependentUpon>Texture_Selector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Part\PartPaneEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Part\PartPaneEditor.Designer.cs">
+      <DependentUpon>PartPaneEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\TextEditor\NewTextboxDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\TextEditor\NewTextboxDialog.Designer.cs">
+      <DependentUpon>NewTextboxDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\TextEditor\PaneTextBoxEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\TextEditor\PaneTextBoxEditor.Designer.cs">
+      <DependentUpon>PaneTextBoxEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\VertexColorPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\VertexColorPanel.Designer.cs">
+      <DependentUpon>VertexColorPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Window\WindowContentEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Window\WindowContentEditor.Designer.cs">
+      <DependentUpon>WindowContentEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Window\WindowFrameEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Window\WindowFrameEditor.Designer.cs">
+      <DependentUpon>WindowFrameEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Window\WindowPaneEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Window\WindowPaneEditor.Designer.cs">
+      <DependentUpon>WindowPaneEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Window\WindowFrameEditorSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Window\WindowFrameEditorSettings.Designer.cs">
+      <DependentUpon>WindowFrameEditorSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Window\WindowFrameSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Window\WindowFrameSelector.Designer.cs">
+      <DependentUpon>WindowFrameSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\FileSelector.cs">
       <SubType>Form</SubType>
@@ -1191,7 +1289,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="MaterialPresetConfig.cs" />
     <Compile Include="NodeWrappers\Archives\BFRESWrapper.cs" />
-    <Compile Include="NodeWrappers\BfresFilters.cs" />
+    <Compile Include="NodeWrappers\FileFilters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -1207,6 +1305,7 @@
     <Compile Include="YAML\YamlFska.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Resources\InjectTexErrored.dds" />
   </ItemGroup>
@@ -1248,8 +1347,50 @@
     <EmbeddedResource Include="GUI\BFLYT\Editor\BasePaneEditor.resx">
       <DependentUpon>BasePaneEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\BasePictureboxEditor.resx">
+      <DependentUpon>BasePictureboxEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\PaneMatBlending.resx">
+      <DependentUpon>PaneMatBlending.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\Editor\PaneEditor.resx">
       <DependentUpon>PaneEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\PaneMatColorEditor.resx">
+      <DependentUpon>PaneMatColorEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\PaneMatTextureMapsEditor.resx">
+      <DependentUpon>PaneMatTextureMapsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\Texture_Selector.resx">
+      <DependentUpon>Texture_Selector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Part\PartPaneEditor.resx">
+      <DependentUpon>PartPaneEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\TextEditor\NewTextboxDialog.resx">
+      <DependentUpon>NewTextboxDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\TextEditor\PaneTextBoxEditor.resx">
+      <DependentUpon>PaneTextBoxEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\VertexColorPanel.resx">
+      <DependentUpon>VertexColorPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Window\WindowContentEditor.resx">
+      <DependentUpon>WindowContentEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Window\WindowFrameEditor.resx">
+      <DependentUpon>WindowFrameEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Window\WindowPaneEditor.resx">
+      <DependentUpon>WindowPaneEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Window\WindowFrameEditorSettings.resx">
+      <DependentUpon>WindowFrameEditorSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Window\WindowFrameSelector.resx">
+      <DependentUpon>WindowFrameSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\FileSelector.resx">
       <DependentUpon>FileSelector.cs</DependentUpon>
@@ -1682,4 +1823,11 @@
     <None Include="Resources\LayoutAnimation.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props'))" />
+    <Error Condition="!Exists('..\packages\SharpFont.4.0.1\build\SharpFont.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SharpFont.4.0.1\build\SharpFont.props'))" />
+  </Target>
 </Project>

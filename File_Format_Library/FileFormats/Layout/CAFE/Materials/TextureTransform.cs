@@ -5,7 +5,8 @@ namespace LayoutBXLYT.Cafe
 {
     public class TextureTransform : BxlytTextureTransform
     {
-        public TextureTransform() { }
+        public TextureTransform() : base()
+        { }
 
         public TextureTransform(FileReader reader)
         {

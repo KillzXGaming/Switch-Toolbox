@@ -19,7 +19,22 @@ namespace Toolbox.Library.Forms
         private Color BLColor;
         private Color BRColor;
 
-        private Color AllColor = Color.White;
+        private Color AllColor
+        {
+            get
+            {
+                Color[] colors = new Color[4] 
+                { TLColor, TRColor, BLColor, BRColor };
+
+                return Color.FromArgb(
+                    (int)colors.Average(a => a.A),
+                    (int)colors.Average(a => a.R),
+                    (int)colors.Average(a => a.G),
+                    (int)colors.Average(a => a.B));
+            }
+        }
+
+        private bool SuppressChangeEvent = false;
 
         public Color TopLeftColor
         {
@@ -63,7 +78,8 @@ namespace Toolbox.Library.Forms
 
         public void ColorChanged()
         {
-            OnColorChanged?.Invoke(null, new EventArgs());
+            this.Invalidate();
+            OnColorChanged?.Invoke(this, new EventArgs());
         }
 
         public VertexColorBox()
@@ -78,6 +94,17 @@ namespace Toolbox.Library.Forms
             true);
         }
 
+        public void DisposeControl()
+        {
+            if (colorDlg != null)
+            {
+                colorDlg.Close();
+                colorDlg = null;
+            }
+        }
+
+        private bool dialogActive;
+        private STColorDialog colorDlg;
         private void OnMouseClick(object sender, MouseEventArgs e)
         {
             if (TopLeftHit == null) return;
@@ -85,38 +112,73 @@ namespace Toolbox.Library.Forms
             if (e.Button == MouseButtons.Left)
             {
                 if (TopLeftHit.IsHit(e.Location))
-                    TopLeftColor = LoadColorDialog(TopLeftColor);
+                     LoadColorDialog(TopLeftColor, 0);
                 if (TopRightHit.IsHit(e.Location))
-                    TopRightColor = LoadColorDialog(TopRightColor);
+                    LoadColorDialog(TopRightColor, 1);
                 if (BottomLefttHit.IsHit(e.Location))
-                    BottomLeftColor = LoadColorDialog(BottomLeftColor);
+                    LoadColorDialog(BottomLeftColor, 2);
                 if (BottomRightHit.IsHit(e.Location))
-                    BottomRightColor = LoadColorDialog(BottomRightColor);
+                    LoadColorDialog(BottomRightColor, 3);
                 if (AllHit.IsHit(e.Location))
                 {
-                    ColorDialog colorDlg = new ColorDialog();
-                    colorDlg.Color = AllColor;
-                    if (colorDlg.ShowDialog() == DialogResult.OK)
+                    if (dialogActive)
                     {
-                        TopLeftColor = colorDlg.Color;
-                        TopRightColor = colorDlg.Color;
-                        BottomLeftColor = colorDlg.Color;
-                        BottomRightColor = colorDlg.Color;
+                        colorDlg.Focus();
+                        return;
                     }
+
+                    dialogActive = true;
+                    colorDlg = new STColorDialog(AllColor);
+                    colorDlg.Show();
+                    colorDlg.FormClosed += delegate
+                    {
+                        dialogActive = false;
+                    };
+                    colorDlg.ColorChanged += delegate
+                    {
+                        //Update only once!
+                        SuppressChangeEvent = true;
+
+                        TopLeftColor = colorDlg.NewColor;
+                        TopRightColor = colorDlg.NewColor;
+                        BottomLeftColor = colorDlg.NewColor;
+                        BottomRightColor = colorDlg.NewColor;
+
+                        SuppressChangeEvent = false;
+                        ColorChanged();
+                    };
                 }
             }
 
             this.Invalidate();
         }
 
-        private Color LoadColorDialog(Color color)
+        private void LoadColorDialog(Color color, int index)
         {
-            ColorDialog colorDlg = new ColorDialog();
-            colorDlg.Color = color;
-            if (colorDlg.ShowDialog() == DialogResult.OK)
-                return colorDlg.Color;
-            else
-                return color;
+            if (dialogActive)
+            {
+                colorDlg.Focus();
+                return;
+            }
+
+            dialogActive = true;
+            colorDlg = new STColorDialog(color);
+            colorDlg.FormClosed += delegate
+            {
+                dialogActive = false;
+            };
+            colorDlg.Show();
+            colorDlg.ColorChanged += delegate
+            {
+                if (index == 0)
+                    TopLeftColor = colorDlg.NewColor;
+                if (index == 1)
+                    TopRightColor = colorDlg.NewColor;
+                if (index == 2)
+                    BottomLeftColor = colorDlg.NewColor;
+                if (index == 3)
+                    BottomRightColor = colorDlg.NewColor;
+            };
         }
 
         private Rectangle TopLeftHit;
@@ -147,16 +209,30 @@ namespace Toolbox.Library.Forms
             float delta12R = 1f * (c2.R - c1.R) / r.Height;
             float delta12G = 1f * (c2.G - c1.G) / r.Height;
             float delta12B = 1f * (c2.B - c1.B) / r.Height;
+            float delta12A = 1f * (c2.A - c1.A) / r.Height;
             float delta34R = 1f * (c4.R - c3.R) / r.Height;
             float delta34G = 1f * (c4.G - c3.G) / r.Height;
             float delta34B = 1f * (c4.B - c3.B) / r.Height;
+            float delta34A = 1f * (c4.A - c3.A) / r.Height;
+
+            var destRect = ClientRectangle;
+
+            var image = Toolbox.Library.Properties.Resources.CheckerBackground;
+            pe.Graphics.DrawImage(Toolbox.Library.Properties.Resources.CheckerBackground,
+                ClientRectangle, destRect, GraphicsUnit.Pixel);
 
             for (int y = 0; y < r.Height; y++)
             {
-                Color c12 = Color.FromArgb(255, c1.R + (int)(y * delta12R),
-                      c1.G + (int)(y * delta12G), c1.B + (int)(y * delta12B));
-                Color c34 = Color.FromArgb(255, c3.R + (int)(y * delta34R),
-                      c3.G + (int)(y * delta34G), c3.B + (int)(y * delta34B));
+                Color c12 = Color.FromArgb(
+                      c1.A + (int)(y * delta12A),
+                      c1.R + (int)(y * delta12R),
+                      c1.G + (int)(y * delta12G), 
+                      c1.B + (int)(y * delta12B));
+                Color c34 = Color.FromArgb(
+                      c3.A + (int)(y * delta34A),
+                      c3.R + (int)(y * delta34R),
+                      c3.G + (int)(y * delta34G), 
+                      c3.B + (int)(y * delta34B));
                 using (LinearGradientBrush lgBrush = new LinearGradientBrush(
                       new Rectangle(0, y, r.Width, 1), c12, c34, 0f))
                 {
@@ -174,19 +250,19 @@ namespace Toolbox.Library.Forms
 
             var font = new Font(this.Font, FontStyle.Bold);
 
-            using (Brush br = new SolidBrush(c1.GrayScale().Inverse()))
+            using (Brush br = new SolidBrush(AllColor.GrayScale(true).Inverse()))
                 pe.Graphics.DrawString("ALL", font, br, new Point(halfWidth - 10, halfHeight - 10));
 
-            using (Brush br = new SolidBrush(TopLeftColor.GrayScale().Inverse()))
+            using (Brush br = new SolidBrush(TopLeftColor.GrayScale(true).Inverse()))
                 pe.Graphics.DrawString("TL", font, br, new Point(LeftX, topY));
 
-            using (Brush br = new SolidBrush(TopRightColor.GrayScale().Inverse()))
+            using (Brush br = new SolidBrush(TopRightColor.GrayScale(true).Inverse()))
                 pe.Graphics.DrawString("TR", font, br, new Point(RightX, topY));
 
-            using (Brush br = new SolidBrush(BottomLeftColor.GrayScale().Inverse()))
+            using (Brush br = new SolidBrush(BottomLeftColor.GrayScale(true).Inverse()))
                 pe.Graphics.DrawString("BL", font, br, new Point(LeftX, BottomY));
 
-            using (Brush br = new SolidBrush(BottomRightColor.GrayScale().Inverse()))
+            using (Brush br = new SolidBrush(BottomRightColor.GrayScale(true).Inverse()))
                 pe.Graphics.DrawString("BR", font, br, new Point(RightX, BottomY));
             //  pe.Graphics.FillRectangle(linearGradientBrush, ClientRectangle);
 

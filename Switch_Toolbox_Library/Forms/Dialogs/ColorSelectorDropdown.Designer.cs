@@ -104,6 +104,7 @@
             this.Controls.Add(this.colorSelector1);
             this.Name = "ColorSelectorDropdown";
             this.Size = new System.Drawing.Size(310, 244);
+            this.Load += new System.EventHandler(this.ColorSelectorDropdown_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).EndInit();

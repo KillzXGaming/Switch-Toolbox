@@ -280,6 +280,9 @@
     <Compile Include="Forms\Color\VertexColorBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\Color\VertexColorTopBottomBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\Custom\SideMenu\STVerticalNavigationMenu.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -291,6 +294,9 @@
     </Compile>
     <Compile Include="Forms\Custom\SideMenu\STVerticalTabMenuItem.Designer.cs">
       <DependentUpon>STVerticalTabMenuItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Custom\STRadioButton.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Forms\Dialogs\ColorSelectorDropdown.cs">
       <SubType>UserControl</SubType>
@@ -375,6 +381,7 @@
     <Compile Include="IO\Bits\Bit.cs" />
     <Compile Include="IO\Colors\ColorEditor.cs" />
     <Compile Include="IO\Colors\STColor16.cs" />
+    <Compile Include="IO\Extensions\ArrayExtension.cs" />
     <Compile Include="IO\Extensions\ColorExtensions.cs" />
     <Compile Include="IO\Extensions\Rectangle.cs" />
     <Compile Include="IO\Extensions\StreamExport.cs" />

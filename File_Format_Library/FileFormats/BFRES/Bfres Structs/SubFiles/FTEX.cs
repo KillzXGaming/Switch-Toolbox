@@ -417,18 +417,19 @@ namespace Bfres.Structs
         }
 
         //For tex2
-        public static void GenerateMipmaps(uint MipCount, TEX_FORMAT Format, Bitmap bitmap, Texture texture)
+        public static void GenerateMipmaps(uint mipCount, TEX_FORMAT Format, Bitmap bitmap, Texture texture)
         {
             if (bitmap == null)
                 return; //Image is likely disposed and not needed to be applied
 
-            texture.MipCount = MipCount;
-            texture.MipOffsets = new uint[MipCount];
+            Console.WriteLine(texture.Name + " mipCount "+ mipCount);
+            texture.MipCount = mipCount;
+            texture.MipOffsets = new uint[mipCount];
 
             try
             {
                 //Create image block from bitmap first
-                var data = GenerateMipsAndCompress(bitmap, MipCount, Format);
+                var data = GenerateMipsAndCompress(bitmap, mipCount, Format);
 
                 bitmap.Dispose();
 

@@ -36,6 +36,37 @@ namespace Toolbox.Library.Forms
             OnTextureReplaced(this, args);
         }
 
+        private void GammaFixPreviewAction(object sender, EventArgs args) {
+            AdjustGammaImagePreview(previewGammaFixSmashUltimateToolStripMenuItem.Checked);
+        }
+
+        public void AdjustGammaImagePreview(bool preview)
+        {
+            Runtime.ImageEditor.PreviewGammaFix = preview;
+            UpdateGamma();
+        }
+
+        private void UpdateGamma()
+        {
+            if (Runtime.ImageEditor.PreviewGammaFix)
+                pictureBoxCustom1.Image = BitmapExtension.AdjustGamma(pictureBoxCustom1.Image, 1.0f / 2.2f);
+            else
+            {
+                if (ActiveTexture != null)
+                    UpdateImage(ActiveTexture, CurArrayDisplayLevel);
+            }
+
+            UpdateLabel();
+        }
+
+        private void UpdateLabel()
+        {
+            if (Runtime.ImageEditor.PreviewGammaFix)
+                gammaLbl.Text = "Note: Gamma Correction Enabled!";
+            else
+                gammaLbl.Text = "";
+        }
+
         private int _currentCacheIndex = -1;
 
         private int currentCacheIndex
@@ -209,6 +240,8 @@ namespace Toolbox.Library.Forms
 
             SetEditorOrientation(Runtime.ImageEditor.DisplayVertical, true);
 
+            previewGammaFixSmashUltimateToolStripMenuItem.Checked = Runtime.ImageEditor.PreviewGammaFix;
+            UpdateLabel();
 
             propertyGridToolStripMenuItem.Checked = Runtime.ImageEditor.ShowPropertiesPanel;
 
@@ -456,6 +489,9 @@ namespace Toolbox.Library.Forms
                 }
 
                 DecodeProcessFinished = true;
+
+                if (Runtime.ImageEditor.PreviewGammaFix && image != null)
+                    image = BitmapExtension.AdjustGamma(image, 1.0f / 2.2f);
 
                 // BitmapExtension.SetChannels(image, HasRedChannel, HasBlueChannel, HasGreenChannel, HasAlphaChannel);
                 PushImage(image);
@@ -1223,7 +1259,7 @@ namespace Toolbox.Library.Forms
             SetZoomSetting();
             SaveSettings();
         }
-
+            
         private void SetZoomSetting()
         {
             if (pictureBoxCustom1.InvokeRequired)
@@ -1345,6 +1381,18 @@ namespace Toolbox.Library.Forms
                     UpdateBackgroundImage();
                 }
             }
+        }
+
+        private void stPanel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void gammaFixToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Image Image = pictureBoxCustom1.Image;
+            if (Image != null)
+                UpdateEditCached(BitmapExtension.AdjustGamma(Image, 2.2f));
         }
     }
 }

@@ -618,6 +618,8 @@ namespace LayoutBXLYT
 
         public class PRT1 : PAN1, IPartPane
         {
+            public string LayoutFileName { get; set; }
+
             public PRT1() : base()
             {
 
@@ -663,12 +665,13 @@ namespace LayoutBXLYT
             public ushort MaterialIndex { get; set; }
 
             [TypeConverter(typeof(ExpandableObjectConverter))]
-            public Material Material
+            public BxlytMaterial Material
             {
                 get
                 {
                     return ParentLayout.MaterialList.Materials[MaterialIndex];
                 }
+                set { }
             }
 
             [Browsable(false)]

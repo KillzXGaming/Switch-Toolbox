@@ -175,7 +175,12 @@ namespace LayoutBXLYT
                     colors[3] = Color.White;
 
                     if (pane is IPicturePane)
-                        colors =((IPicturePane)pane).GetVertexColors();
+                    {
+                        colors[0] = ((IPicturePane)pane).ColorTopRight.Color;
+                        colors[1] = ((IPicturePane)pane).ColorTopLeft.Color;
+                        colors[2] = ((IPicturePane)pane).ColorBottomRight.Color;
+                        colors[3] = ((IPicturePane)pane).ColorBottomLeft.Color;
+                    }
                     if (pane is IWindowPane)
                         colors = ((IWindowPane)pane).GetVertexColors();
 

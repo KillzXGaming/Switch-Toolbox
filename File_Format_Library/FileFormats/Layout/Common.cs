@@ -57,8 +57,33 @@ namespace LayoutBXLYT
             get { return name; }
             set
             {
-                if (name != null && LayoutFile != null && LayoutFile.PaneLookup.ContainsKey(name))
-                    LayoutFile.PaneLookup.Remove(name);
+                //Adjust necessary parameters if the user changes the name
+                if (name != null && LayoutFile != null)
+                {
+                    //Adjust name table entry
+                    if (LayoutFile != null && LayoutFile.PaneLookup.ContainsKey(name))
+                        LayoutFile.PaneLookup.Remove(name);
+
+                    //Adjust material reference
+                    if (this is IPicturePane)
+                        ((IPicturePane)this).Material.SetName(name, value);
+                    else if (this is ITextPane)
+                        ((ITextPane)this).Material.SetName(name, value);
+                    else if (this is IWindowPane)
+                    {
+                        var wnd = this as IWindowPane;
+                        wnd.Content?.Material?.SetName(name, value);
+
+                        if (wnd.WindowFrames != null)
+                        {
+                            foreach (var frame in wnd.WindowFrames)
+                            {
+                                if (frame.Material == null) continue;
+                                frame.Material.SetName(name, value);
+                            }
+                        }
+                    }
+                }
 
                 name = value;
 
@@ -112,6 +137,11 @@ namespace LayoutBXLYT
             originY = OriginY.Center;
             ParentOriginX = OriginX.Center;
             ParentOriginY = OriginY.Center;
+        }
+
+        public virtual UserData CreateUserData()
+        {
+            return new UserData();
         }
 
         public bool IsNullPane
@@ -176,19 +206,56 @@ namespace LayoutBXLYT
 
             Console.WriteLine("pickMouseX " + pickMouseX);
 
+            float pickWidth = pickMouseX;
+            float pickHeight = pickMouseY;
+
+            Vector2F pos = new Vector2F();
             switch (pickAction)
             {
                 case LayoutViewer.PickAction.DragLeft:
                     Width += pickMouseX;
-                    posX = Translate.X - (pickMouseX / 2);
+
+                    if (originX == OriginX.Left)
+                        posX = Translate.X - pickMouseX;
+                    else if (originX == OriginX.Right)
+                        posX = Translate.X + pickMouseX;
+                    else
+                        posX = Translate.X - (pickMouseX / 2);
                     break;
                 case LayoutViewer.PickAction.DragRight:
-                    Width -= pickMouseX;
-                    posX = Translate.X - (pickMouseX / 2);
+
+                    if (originX == OriginX.Right)
+                    {
+                        Width -= pickMouseX;
+                        posX = Translate.X + pickMouseX;
+                    }
+                    else if (originX == OriginX.Left)
+                    {
+                        Width -= pickMouseX;
+                        posX = Translate.X + pickMouseX;
+                    }
+                    else
+                    {
+                        Width -= pickMouseX;
+                        posX = Translate.X - (pickMouseX / 2);
+                    }
                     break;
                 case LayoutViewer.PickAction.DragTop:
-                    Height -= pickMouseY;
-                    posY = Translate.Y - (pickMouseY / 2);
+                    if (originY == OriginY.Top)
+                    {
+                        Height -= pickMouseY;
+                        posY = Translate.Y - pickMouseY;
+                    }
+                    else if (originY == OriginY.Bottom)
+                    {
+                        Height -= pickMouseY;
+                        posY = Translate.Y - pickMouseY;
+                    }
+                    else
+                    {
+                        Height -= pickMouseY;
+                        posY = Translate.Y - (pickMouseY / 2);
+                    }
                     break;
                 case LayoutViewer.PickAction.DragBottom:
                     Height += pickMouseY;
@@ -221,6 +288,35 @@ namespace LayoutBXLYT
             }
 
             Translate = new Vector3F(posX, posY, posZ);
+        }
+
+        private Vector2F SetOrientation(float pickWidth, float pickHeight)
+        {
+            float posX = 0;
+            float posY = 0;
+            switch (originX)
+            {
+                case OriginX.Left:
+                    Width += pickWidth;
+                    posX = pickWidth;
+                    break;
+                default:
+                    Width += pickWidth;
+                    posX = pickWidth / 2;
+                    break;
+            }
+            switch (originY)
+            {
+                case OriginY.Top:
+                    Height += pickHeight;
+                    posY = pickHeight;
+                    break;
+                default:
+                    Height += pickHeight;
+                    posY = pickHeight / 2;
+                    break;
+            }
+            return new Vector2F(posX, posY);
         }
 
         public CustomRectangle CreateRectangle()
@@ -331,6 +427,20 @@ namespace LayoutBXLYT
             return new Vector4(left, right, top, bottom);
         }
 
+        public bool IsHit(CustomRectangle selectionBox)
+        {
+            var rect = CreateRectangle();
+            var transformed = rect.GetTransformedRectangle(Parent, Translate, Rotate, Scale);
+      
+            if ((selectionBox.LeftPoint < transformed.RightPoint) &&
+                (selectionBox.RightPoint > transformed.LeftPoint) &&
+                (selectionBox.TopPoint > transformed.BottomPoint) &&
+                (selectionBox.BottomPoint < transformed.TopPoint))
+                return true;
+            else
+                return false;
+        }
+
         public bool IsHit(int X, int Y)
         {
             var rect = CreateRectangle();
@@ -432,6 +542,109 @@ namespace LayoutBXLYT
         public virtual WrapMode WrapModeV { get; set; }
         public virtual FilterMode MinFilterMode { get; set; }
         public virtual FilterMode MaxFilterMode { get; set; }
+    }
+
+    public class BxlytAlphaCompare
+    {
+        public GfxAlphaFunction CompareMode { get; set; }
+        public float Value { get; set; }
+
+        public BxlytAlphaCompare()
+        {
+            CompareMode = GfxAlphaFunction.Always;
+            Value = 0;
+        }
+
+        public BxlytAlphaCompare(FileReader reader, BxlytHeader header)
+        {
+            CompareMode = reader.ReadEnum<GfxAlphaFunction>(false);
+            reader.ReadBytes(0x3);
+            Value = reader.ReadSingle();
+        }
+
+        public void Write(FileWriter writer)
+        {
+            writer.Write(CompareMode, false);
+            writer.Seek(3);
+            writer.Write(Value);
+        }
+    }
+
+    public class BxlytBlendMode
+    {
+        public GX2BlendOp BlendOp { get; set; }
+        public GX2BlendFactor SourceFactor { get; set; }
+        public GX2BlendFactor DestFactor { get; set; }
+        public GX2LogicOp LogicOp { get; set; }
+
+        public BxlytBlendMode()
+        {
+            BlendOp = GX2BlendOp.Add;
+            SourceFactor = GX2BlendFactor.SourceAlpha;
+            DestFactor = GX2BlendFactor.SourceInvAlpha;
+            LogicOp = GX2LogicOp.Disable;
+        }
+
+        public BxlytBlendMode(FileReader reader, BxlytHeader header)
+        {
+            BlendOp = (GX2BlendOp)reader.ReadByte();
+            SourceFactor = (GX2BlendFactor)reader.ReadByte();
+            DestFactor = (GX2BlendFactor)reader.ReadByte();
+            LogicOp = (GX2LogicOp)reader.ReadByte();
+        }
+
+        public void Write(FileWriter writer)
+        {
+            writer.Write(BlendOp, false);
+            writer.Write(SourceFactor, false);
+            writer.Write(DestFactor, false);
+            writer.Write(LogicOp, false);
+        }
+
+        public enum GX2BlendFactor : byte
+        {
+            Factor0 = 0,
+            Factor1 = 1,
+            DestColor = 2,
+            DestInvColor = 3,
+            SourceAlpha = 4,
+            SourceInvAlpha = 5,
+            DestAlpha = 6,
+            DestInvAlpha = 7,
+            SourceColor = 8,
+            SourceInvColor = 9
+        }
+
+        public enum GX2BlendOp : byte
+        {
+            Disable = 0,
+            Add = 1,
+            Subtract = 2,
+            ReverseSubtract = 3,
+            SelectMin = 4,
+            SelectMax = 5
+        }
+
+        public enum GX2LogicOp : byte
+        {
+            Disable = 0,
+            NoOp = 1,
+            Clear = 2,
+            Set = 3,
+            Copy = 4,
+            InvCopy = 5,
+            Inv = 6,
+            And = 7,
+            Nand = 8,
+            Or = 9,
+            Nor = 10,
+            Xor = 11,
+            Equiv = 12,
+            RevAnd = 13,
+            InvAd = 14,
+            RevOr = 15,
+            InvOr = 16
+        }
     }
 
     public class UserData : SectionCommon
@@ -724,7 +937,16 @@ namespace LayoutBXLYT
 
     public interface IPicturePane
     {
-        System.Drawing.Color[] GetVertexColors();
+        ushort MaterialIndex { get; set; }
+
+        BxlytMaterial Material { get; set; }
+
+        TexCoord[] TexCoords { get; set; }
+
+        STColor8 ColorTopLeft { get; set; }
+        STColor8 ColorTopRight { get; set; }
+        STColor8 ColorBottomLeft { get; set; }
+        STColor8 ColorBottomRight { get; set; }
     }
 
     public interface IBoundryPane
@@ -734,12 +956,17 @@ namespace LayoutBXLYT
 
     public interface ITextPane
     {
+        ushort MaterialIndex { get; set; }
+
         string Text { get; set; }
         OriginX HorizontalAlignment { get; set; }
-        OriginX VerticalAlignment { get; set; }
+        OriginY VerticalAlignment { get; set; }
+
+        List<string> GetFonts { get; }
 
         ushort TextLength { get; set; }
         ushort MaxTextLength { get; set; }
+        ushort RestrictedLength { get; }
 
         BxlytMaterial Material { get; set; }
         Toolbox.Library.Rendering.RenderableTex RenderableFont { get; set; }
@@ -770,17 +997,19 @@ namespace LayoutBXLYT
         bool RestrictedTextLengthEnabled { get; set; }
         bool ShadowEnabled { get; set; }
         string FontName { get; set; }
+        ushort FontIndex { get; set; }
     }
 
     public interface IPartPane
     {
-
+        string LayoutFileName { get; set; }
     }
 
     public interface IWindowPane
     {
         System.Drawing.Color[] GetVertexColors();
 
+        void ReloadFrames();
         bool UseOneMaterialForAll { get; set; }
         bool UseVertexColorForAll { get; set; }
         WindowKind WindowKind { get; set; }
@@ -848,6 +1077,9 @@ namespace LayoutBXLYT
 
     public class LayoutHeader : IDisposable
     {
+        [Browsable(false)]
+        public TextureManager TextureManager = new TextureManager();
+
         public PartsManager PartsManager = new PartsManager();
 
         [Browsable(false)]
@@ -915,6 +1147,7 @@ namespace LayoutBXLYT
         public void Dispose()
         {
             PartsManager?.Dispose();
+            TextureManager?.Dispose();
             FileInfo.Unload();
         }
     }
@@ -1253,6 +1486,15 @@ namespace LayoutBXLYT
     public class BxlytHeader : LayoutHeader
     {
         [Browsable(false)]
+        public System.Windows.Forms.TreeNode MaterialFolder;
+
+        [Browsable(false)]
+        public System.Windows.Forms.TreeNode TextureFolder;
+
+        [Browsable(false)]
+        public System.Windows.Forms.TreeNode FontFolder;
+
+        [Browsable(false)]
         public Dictionary<string, BasePane> PaneLookup = new Dictionary<string, BasePane>();
 
         [Browsable(false)]
@@ -1276,6 +1518,13 @@ namespace LayoutBXLYT
             return new List<BxlytMaterial>();
         }
 
+        public virtual short AddMaterial(BxlytMaterial material, ushort index) { return -1; }
+        public virtual short AddMaterial(BxlytMaterial material) { return -1; }
+        public virtual List<int> AddMaterial(List<BxlytMaterial> materials) { return new List<int>(); }
+
+        public virtual void TryRemoveMaterial(BxlytMaterial material) { }
+        public virtual void TryRemoveMaterial(List<BxlytMaterial> materials) { }
+
         public BxlytMaterial SearchMaterial(string name)
         {
             var materials = GetMaterials();
@@ -1285,6 +1534,21 @@ namespace LayoutBXLYT
                     return materials[i];
             }
             return null;
+        }
+
+        public virtual int AddFont(string name)
+        {
+            return -1;
+        }
+
+        public virtual void RemoveTexture(string name)
+        {
+
+        }
+
+        public virtual int AddTexture(string name)
+        {
+            return -1;
         }
 
         public void AddPaneToTable(BasePane pane)
@@ -1309,30 +1573,152 @@ namespace LayoutBXLYT
             pane.Parent = parent;
             parent.Childern.Add(pane);
             parent.NodeWrapper.Nodes.Add(pane.NodeWrapper);
+
+            Console.WriteLine("newpane " + pane.Name + " " + pane.Parent.Name);
         }
 
-        public void RemovePanes(List<BasePane> panes)
+        public void RemovePanes(List<BasePane> panes, BasePane rootPane)
         {
+            Console.WriteLine("RemovePanes num " + panes.Count);
+
+            for (int i = 0; i < panes.Count; i++)
+            {
+                Console.WriteLine($"RemovePanes {panes[i].Name} {panes[i]}");
+
+                //We need to remove any materials that the material referenced
+                if (panes[i] is IPicturePane)
+                    TryRemoveMaterial(((IPicturePane)panes[i]).Material);
+                if (panes[i] is ITextPane)
+                    TryRemoveMaterial(((ITextPane)panes[i]).Material);
+                if (panes[i] is IWindowPane)
+                {
+                    var wnd = panes[i] as IWindowPane;
+
+                    List<BxlytMaterial> materials = new List<BxlytMaterial>();
+                    var matC = wnd.Content.Material;
+                    materials.Add(matC);
+                    foreach (var windowFrame in wnd.WindowFrames)
+                        materials.Add(windowFrame.Material);
+
+                    TryRemoveMaterial(materials);
+                    materials.Clear();
+                }
+            }
+
+            List<BasePane> topMostPanes = new List<BasePane>();
+            GetTopMostPanes(panes, topMostPanes, rootPane);
+
+            foreach (var pane in topMostPanes)
+            {
+                pane.Parent.NodeWrapper.Nodes.Remove(pane.NodeWrapper);
+                pane.Parent.Childern.Remove(pane);
+            }
+
             for (int i = 0; i < panes.Count; i++)
             {
                 if (PaneLookup.ContainsKey(panes[i].Name))
                     PaneLookup.Remove(panes[i].Name);
+            }
+        }
 
-                var parent = panes[i].Parent;
-                parent.Childern.Remove(panes[i]);
+        //Loop through each pane in the heiarchy until it finds the first set of panes
+        //The topmost panes are only going to be removed for adding with redo to be easier
+        private void GetTopMostPanes(List<BasePane> panes, List<BasePane> topMost, BasePane root)
+        {
+            foreach (var child in root.Childern)
+            {
+                if (panes.Contains(child))
+                    topMost.Add(child);
+            }
 
-                parent.NodeWrapper.Nodes.Remove(panes[i].NodeWrapper);
+            if (topMost.Count == 0)
+            {
+                foreach (var child in root.Childern)
+                    GetTopMostPanes(panes, topMost, child);
             }
         }
     }
 
     public class BxlytMaterial
     {
+        //Setup some enable booleans
+        //These determine wether to switch to default values or not
+        //While i could null out the instances of each, it's best to keep those intact
+        //incase the settings get renabled, which keeps the previous data
+
+        [Browsable(false)]
+        public bool EnableAlphaCompare { get; set; }
+
+        [Browsable(false)]
+        public bool EnableBlend { get; set; }
+
+        [Browsable(false)]
+        public bool EnableBlendLogic { get; set; }
+
+        [Browsable(false)]
+        public bool EnableIndParams { get; set; }
+
+        [Browsable(false)]
+        public bool EnableFontShadowParams { get; set; }
+
+        [Browsable(false)]
+        public TreeNodeCustom NodeWrapper;
+
+        public void RemoveNodeWrapper()
+        {
+            if (NodeWrapper.Parent != null)
+            {
+                var parent = NodeWrapper.Parent;
+                parent.Nodes.Remove(NodeWrapper);
+            }
+        }
+
+        public virtual void AddTexture(string texture)
+        {
+            int index = ParentLayout.AddTexture(texture);
+            BxlytTextureRef textureRef = new BxlytTextureRef();
+            textureRef.ID = (short)index;
+            textureRef.Name = texture;
+            TextureMaps = TextureMaps.AddToArray(textureRef);
+            TextureTransforms = TextureTransforms.AddToArray(new BxlytTextureTransform());
+        }
+
+        [DisplayName("Texture Transforms"), CategoryAttribute("Texture")]
+        public BxlytTextureTransform[] TextureTransforms { get; set; }
+
         [Browsable(false)]
         public MaterialAnimController animController = new MaterialAnimController();
 
         [DisplayName("Name"), CategoryAttribute("General")]
         public virtual string Name { get; set; }
+
+        [Browsable(false)]
+        public BxlytHeader ParentLayout;
+
+        public void SetName(string oldName, string newName)
+        {
+            if (Name == null) return;
+
+            Name = Name.Replace(oldName, newName);
+        }
+
+        [DisplayName("Black Color"), CategoryAttribute("Color")]
+        public virtual STColor8 WhiteColor { get; set; } = STColor8.White;
+
+        [DisplayName("White Color"), CategoryAttribute("Color")]
+        public virtual STColor8 BlackColor { get; set; } = STColor8.Black;
+
+        [DisplayName("Blend Mode"), CategoryAttribute("Blend")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public BxlytBlendMode BlendMode { get; set; }
+
+        [DisplayName("Blend Mode Logic"), CategoryAttribute("Blend")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public BxlytBlendMode BlendModeLogic { get; set; }
+
+        [DisplayName("Alpha Compare"), CategoryAttribute("Alpha")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public BxlytAlphaCompare AlphaCompare { get; set; }
 
         [DisplayName("Thresholding Alpha Interpolation"), CategoryAttribute("Alpha")]
         public virtual bool ThresholdingAlphaInterpolation { get; set; }
@@ -1365,6 +1751,13 @@ namespace LayoutBXLYT
         public Vector2F Translate { get; set; }
         public float Rotate { get; set; }
         public Vector2F Scale { get; set; }
+
+        public BxlytTextureTransform()
+        {
+            Translate = new Vector2F(0,0);
+            Scale = new Vector2F(1, 1);
+            Rotate = 0;
+        }
     }
 
     public class BxlytIndTextureTransform
