@@ -2169,7 +2169,7 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("Origin X"), CategoryAttribute("Origin")]
             public override OriginX originX
             {
-                get { return (OriginX)(origin & 0x3); }
+                get { return (OriginX)(origin & 3); }
                 set
                 {
                     origin &= unchecked((byte)(~0x3));
@@ -2180,11 +2180,11 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("Origin Y"), CategoryAttribute("Origin")]
             public override OriginY originY
             {
-                get => (OriginY)((origin & 0xC0) >> 6);
+                get { return (OriginY)((origin >> 2) & 3); }
                 set
                 {
-                    origin &= unchecked((byte)(~0xC0));
-                    origin |= (byte)((byte)value << 6);
+                    origin |= (byte)((byte)value << 2);
+                    origin &= unchecked((byte)(~3));
                 }
             }
 
