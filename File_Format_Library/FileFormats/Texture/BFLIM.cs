@@ -270,7 +270,7 @@ namespace FirstPlugin
             ftex.ReplaceTexture(ofd.FileName, TEX_FORMAT.BC3_UNORM_SRGB, 1, 0, bflim.SupportedFormats, false, true, false);
             if (ftex.texture != null)
             {
-                bflim.Text = ftex.texture.Name;
+                bflim.Text = $"{Path.GetFileNameWithoutExtension(ofd.FileName)}.bflim";
                 bflim.image = new Image();
                 bflim.image.Swizzle = (byte)ftex.texture.Swizzle;
                 bflim.image.BflimFormat = FormatsWiiU.FirstOrDefault(x => x.Value == ftex.Format).Key;

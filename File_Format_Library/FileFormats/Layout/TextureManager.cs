@@ -79,6 +79,7 @@ namespace LayoutBXLYT
                                     if (ofd.ShowDialog() == DialogResult.OK)
                                     {
                                         ((BFLIM)fileFormat).Replace(ofd.FileName);
+                                        ((BFLIM)fileFormat).Text = name;
                                         return (BFLIM)fileFormat;
                                     }
                                 }
@@ -102,6 +103,7 @@ namespace LayoutBXLYT
                         if (archive == null) return null;
 
                         var bflim = BFLIM.CreateNewFromImage();
+
                         if (bflim == null)
                             return textures;
 
@@ -112,7 +114,7 @@ namespace LayoutBXLYT
                         archive.AddFile(new ArchiveFileInfo()
                         {
                             FileData = mem.ToArray(),
-                            FileName = bflim.FileName,
+                            FileName = bflim.Text,
                         });
                     }
                     break;
