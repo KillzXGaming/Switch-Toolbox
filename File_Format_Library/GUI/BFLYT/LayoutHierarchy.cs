@@ -364,5 +364,79 @@ namespace LayoutBXLYT
                     ParentEditor.ShowPaneEditor(e.Node.Tag as BasePane);
             }
         }
+
+        private void treeView1_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(PaneTreeWrapper)))
+            {
+                Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
+
+                TreeNode targetNode = treeView1.GetNodeAt(targetPoint);
+                TreeNode draggedNode = (PaneTreeWrapper)e.Data.GetData(typeof(PaneTreeWrapper));
+
+                Console.WriteLine("draggedPane " + draggedNode.Text);
+                Console.WriteLine("draggedPane is pane? " + (draggedNode.Tag is BasePane));
+
+                var draggedPane = draggedNode.Tag as BasePane;
+                if (draggedPane == null || draggedPane.IsRoot)
+                    return;
+
+                TreeNode parentNode = targetNode;
+
+                if (targetNode != null && targetNode.Parent != null)
+                {
+                    bool canDrop = true;
+                    while (canDrop && (parentNode != null))
+                    {
+                        canDrop = !Object.ReferenceEquals(draggedNode, parentNode);
+                        parentNode = parentNode.Parent;
+                    }
+
+                    if (!canDrop) return;
+
+                    bool isTargetParent = targetNode.Equals(draggedNode.Parent);
+
+                    //Remove it's previous parent
+                    draggedPane.Parent.Childern.Remove(draggedPane);
+                    draggedNode.Remove();
+
+                    //Adjust the parent to the parent's parent
+                    Console.WriteLine("isTargetParent " + isTargetParent);
+                    if (isTargetParent)
+                    {
+                        var parentPane = targetNode.Tag as BasePane;
+                        if (parentPane.IsRoot) return;
+
+                        var upperParentNode = targetNode.Parent;
+                        var upperParentPane = upperParentNode.Tag as BasePane;
+
+                        draggedPane.Parent = upperParentPane;
+                        upperParentPane.Childern.Add(draggedPane);
+
+                        upperParentNode.Nodes.Add(draggedNode);
+                        upperParentNode.Expand();
+                    }
+                    else //Set the target node as the parent
+                    {
+                        var parentPane = targetNode.Tag as BasePane;
+                        draggedPane.Parent = parentPane;
+                        parentPane.Childern.Add(draggedPane);
+
+                        targetNode.Nodes.Add(draggedNode);
+                        targetNode.Expand();
+                    }
+                }
+            }
+        }
+
+        private void treeView1_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void treeView1_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            DoDragDrop(e.Item, DragDropEffects.Move);
+        }
     }
 }
