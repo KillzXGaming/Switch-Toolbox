@@ -26,7 +26,7 @@ namespace FirstPlugin.Turbo
             InitializeComponent();
         }
 
-        Course_MapCamera_bin activeCameraFile;
+        private Course_MapCamera_bin activeCameraFile;
         public void LoadFile(Course_MapCamera_bin mapCamera)
         {
             activeCameraFile = mapCamera;
@@ -40,10 +40,7 @@ namespace FirstPlugin.Turbo
 
             stPropertyGrid1.LoadProperty(activeCameraFile.cameraData, OnPropertyChanged);
 
-            glControl2D1.AddCircle(new OpenTK.Vector2(cam.PositionX, cam.PositionZ));
-            glControl2D1.AddCircle(new OpenTK.Vector2(cam.TargetX, cam.TargetZ));
-
-            glControl2D1.AddRectangle(cam.BoundingWidth, cam.BoundingHeight, new OpenTK.Vector2(cam.PositionX, cam.PositionZ));
+            mapCameraViewer1.LoadCameraFile(mapCamera);
         }
 
         public void OnPropertyChanged() { }
@@ -56,6 +53,34 @@ namespace FirstPlugin.Turbo
         private void beBtnRadio_CheckedChanged(object sender, EventArgs e)
         {
             activeCameraFile.BigEndian = beBtnRadio.Checked;
+        }
+
+        private void mapCameraViewer1_MouseDown(object sender, MouseEventArgs e)
+        {
+          
+        }
+
+        private void loadKCLFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = Utils.GetAllFilters(typeof(KCL));
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                var fileFormat = Toolbox.Library.IO.STFileLoader.OpenFileFormat(ofd.FileName);
+                if (fileFormat != null && fileFormat is KCL)
+                {
+                    var kcl = fileFormat as KCL;
+                    mapCameraViewer1.LoadCollision(kcl);
+                }
+            }
+        }
+
+        private void MK8MapCameraEditor_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                stContextMenuStrip1.Show(Cursor.Position);
+            }
         }
     }
 }

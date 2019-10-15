@@ -396,7 +396,7 @@ namespace FirstPlugin
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)
             {
-                Formats.Add(typeof(XLINK));
+                Formats.Add(typeof(XLINK)); 
                 Formats.Add(typeof(BFSAR));
                 Formats.Add(typeof(GFA));
                 Formats.Add(typeof(HyruleWarriors.G1M.G1M));

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -113,7 +113,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolbox\Lib\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK.GLControl">
+    <Reference Include="OpenTK.GLControl, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolbox\Lib\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore">
@@ -352,6 +353,7 @@
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
     <Compile Include="FileFormats\Layout\CAFE\BflytShader.cs" />
+    <Compile Include="GL\Custom2D\KCLRendering2D.cs" />
     <Compile Include="GUI\BFLYT\Animations\LayoutAnimEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -645,6 +647,9 @@
     </Compile>
     <Compile Include="GUI\BFRES\SmoothNormalsMultiMeshForm.Designer.cs">
       <DependentUpon>SmoothNormalsMultiMeshForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\MK8TrackEditor\MapCameraViewer.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\Editors\PTCL\Color8KeySlider.cs">
       <SubType>Component</SubType>
@@ -1819,4 +1824,3 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
-

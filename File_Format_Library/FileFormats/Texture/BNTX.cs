@@ -382,14 +382,21 @@ namespace FirstPlugin
         {
             long StartPos = reader.Position;
 
+            Console.WriteLine("StartPos " + StartPos);
+
             uint TotalSize = (uint)reader.BaseStream.Length;
+
+            Console.WriteLine("TotalSize " + TotalSize);
 
             //Get file size in header
             reader.SeekBegin(StartPos + 28);
             uint FileSize = reader.ReadUInt32();
 
+            Console.WriteLine("FileSize " + FileSize);
+
             //Create bntx for array
             BNTX bntx = new BNTX();
+
             bntx.IFileInfo = new IFileInfo();
             bntx.Text = "Sheet " + Containers.Count;
 
@@ -398,6 +405,8 @@ namespace FirstPlugin
             byte[] Data = reader.ReadBytes((int)FileSize);
             bntx.Load(new MemoryStream(Data));
             Containers.Add(bntx);
+
+            Console.WriteLine("File Container " + bntx.Text + " " + StartPos);
 
             reader.SeekBegin(StartPos + FileSize);
             if (TotalSize > FileSize)
@@ -1616,7 +1625,7 @@ namespace FirstPlugin
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
             int target = 1;
-            if (Parent != null && Parent is BNTX)
+            if (Parent != null && Parent is BNTX && ((BNTX)Parent).BinaryTexFile != null)
             {
                 bool IsNX = ((BNTX)Parent).BinaryTexFile.PlatformTarget == "NX  ";
                 if (!IsNX)

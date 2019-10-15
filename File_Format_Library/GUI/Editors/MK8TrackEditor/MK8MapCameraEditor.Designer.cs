@@ -28,30 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.leBtnRadio = new System.Windows.Forms.RadioButton();
             this.beBtnRadio = new System.Windows.Forms.RadioButton();
-            this.glControl2D1 = new Toolbox.Library.Forms.GLControl2D();
+            this.mapCameraViewer1 = new MapCameraViewer();
+            this.stContextMenuStrip1 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
+            this.loadKCLFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            this.Controls.Add(this.glControl2D1);
-            this.Controls.Add(this.beBtnRadio);
-            this.Controls.Add(this.leBtnRadio);
-            this.Controls.Add(this.stPropertyGrid1);
             // 
             // stPropertyGrid1
             // 
             this.stPropertyGrid1.AutoScroll = true;
-            this.stPropertyGrid1.ShowHintDisplay = true;
             this.stPropertyGrid1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.stPropertyGrid1.Location = new System.Drawing.Point(272, 25);
+            this.stPropertyGrid1.Location = new System.Drawing.Point(503, 0);
             this.stPropertyGrid1.Name = "stPropertyGrid1";
-            this.stPropertyGrid1.Size = new System.Drawing.Size(298, 372);
+            this.stPropertyGrid1.ShowHintDisplay = true;
+            this.stPropertyGrid1.Size = new System.Drawing.Size(217, 437);
             this.stPropertyGrid1.TabIndex = 11;
             // 
             // leBtnRadio
             // 
             this.leBtnRadio.AutoSize = true;
-            this.leBtnRadio.Location = new System.Drawing.Point(154, 31);
+            this.leBtnRadio.Location = new System.Drawing.Point(85, 3);
             this.leBtnRadio.Name = "leBtnRadio";
             this.leBtnRadio.Size = new System.Drawing.Size(83, 17);
             this.leBtnRadio.TabIndex = 13;
@@ -62,7 +62,7 @@
             // beBtnRadio
             // 
             this.beBtnRadio.AutoSize = true;
-            this.beBtnRadio.Location = new System.Drawing.Point(72, 31);
+            this.beBtnRadio.Location = new System.Drawing.Point(3, 3);
             this.beBtnRadio.Name = "beBtnRadio";
             this.beBtnRadio.Size = new System.Drawing.Size(76, 17);
             this.beBtnRadio.TabIndex = 14;
@@ -71,25 +71,47 @@
             this.beBtnRadio.UseVisualStyleBackColor = true;
             this.beBtnRadio.CheckedChanged += new System.EventHandler(this.beBtnRadio_CheckedChanged);
             // 
-            // glControl2D1
+            // mapCameraViewer1
             // 
-            this.glControl2D1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.mapCameraViewer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.glControl2D1.BackColor = System.Drawing.Color.Black;
-            this.glControl2D1.Location = new System.Drawing.Point(3, 54);
-            this.glControl2D1.Name = "glControl2D1";
-            this.glControl2D1.Size = new System.Drawing.Size(263, 343);
-            this.glControl2D1.TabIndex = 15;
-            this.glControl2D1.VSync = false;
+            this.mapCameraViewer1.Location = new System.Drawing.Point(3, 26);
+            this.mapCameraViewer1.Name = "mapCameraViewer1";
+            this.mapCameraViewer1.Size = new System.Drawing.Size(494, 408);
+            this.mapCameraViewer1.TabIndex = 15;
+            this.mapCameraViewer1.UseGrid = true;
+            this.mapCameraViewer1.UseOrtho = true;
+            this.mapCameraViewer1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapCameraViewer1_MouseDown);
+            // 
+            // stContextMenuStrip1
+            // 
+            this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadKCLFileToolStripMenuItem});
+            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(145, 26);
+            // 
+            // loadKCLFileToolStripMenuItem
+            // 
+            this.loadKCLFileToolStripMenuItem.Name = "loadKCLFileToolStripMenuItem";
+            this.loadKCLFileToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.loadKCLFileToolStripMenuItem.Text = "Load KCL File";
+            this.loadKCLFileToolStripMenuItem.Click += new System.EventHandler(this.loadKCLFileToolStripMenuItem_Click);
             // 
             // MK8MapCameraEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(576, 402);
+            this.Controls.Add(this.mapCameraViewer1);
+            this.Controls.Add(this.beBtnRadio);
+            this.Controls.Add(this.leBtnRadio);
+            this.Controls.Add(this.stPropertyGrid1);
             this.Name = "MK8MapCameraEditor";
+            this.Size = new System.Drawing.Size(720, 437);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MK8MapCameraEditor_MouseDown);
+            this.stContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -98,6 +120,8 @@
         private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
         private System.Windows.Forms.RadioButton beBtnRadio;
         private System.Windows.Forms.RadioButton leBtnRadio;
-        private Toolbox.Library.Forms.GLControl2D glControl2D1;
+        private MapCameraViewer mapCameraViewer1;
+        private Toolbox.Library.Forms.STContextMenuStrip stContextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem loadKCLFileToolStripMenuItem;
     }
 }

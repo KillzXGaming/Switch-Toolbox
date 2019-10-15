@@ -281,12 +281,14 @@ namespace FirstPlugin
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
         }
+
         private void SetRenderSettings(ShaderProgram shader)
         {
             shader.SetBoolToInt("renderVertColor", Runtime.renderVertColor);
             GL.Uniform1(defaultShaderProgram["renderType"], (int)Runtime.viewportShading);
 
         }
+
         private void DrawModel(KCL.KCLModel m, ShaderProgram shader, bool drawSelection = false)
         {
             if (m.faces.Count <= 3)
@@ -314,6 +316,7 @@ namespace FirstPlugin
                 }
             }
         }
+
         private static void DrawModelSelection(KCL.KCLModel p, ShaderProgram shader)
         {
             //This part needs to be reworked for proper outline. Currently would make model disappear

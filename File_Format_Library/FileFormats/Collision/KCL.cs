@@ -71,7 +71,7 @@ namespace FirstPlugin
             }
         }
 
-        private DrawableContainer DrawableContainer = new DrawableContainer();
+        public DrawableContainer DrawableContainer = new DrawableContainer();
 
         public void Load(System.IO.Stream stream)
         {
@@ -463,6 +463,10 @@ namespace FirstPlugin
             }
         }
 
+        public List<KCLModel> GetKclModels()
+        {
+            return Renderer.models;
+        }
 
         private void Read(MarioKart.MK7.KCL kcl)
         {

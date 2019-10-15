@@ -392,6 +392,12 @@
     <Compile Include="IO\Colors\STColor.cs" />
     <Compile Include="IO\Colors\STColor8.cs" />
     <Compile Include="IO\SubStream.cs" />
+    <Compile Include="OpenGL\GLShaderGeneric.cs" />
+    <Compile Include="OpenGL\Render2D.cs" />
+    <Compile Include="OpenGL\Viewport2D.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OpenGL\OpenGLHelper.cs" />
     <Compile Include="Rendering\DrawableCircle.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericModelRenderer.cs" />
     <Compile Include="Rendering\GenericModelRenderer\GenericRenderedObject.cs" />
