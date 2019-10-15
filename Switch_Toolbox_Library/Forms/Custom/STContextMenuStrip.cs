@@ -43,7 +43,7 @@ namespace Toolbox.Library.Forms
                 return ((MenuRenderer)this.Renderer).HighlightMenuBar;
             }
             set {
-                if (Renderer == null || !(Renderer is MenuRenderer))
+                if (Renderer != null && (Renderer is MenuRenderer))
                     ((MenuRenderer)this.Renderer).HighlightMenuBar = value;
             }
         }

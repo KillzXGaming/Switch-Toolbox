@@ -40,7 +40,7 @@ namespace Toolbox.Library.Forms
             }
             set
             {
-                if (Renderer != null || !(Renderer is MenuRenderer))
+                if (Renderer != null && Renderer is MenuRenderer)
                     ((MenuRenderer)this.Renderer).HighlightMenuBar = value;
             }
         }
@@ -113,8 +113,8 @@ namespace Toolbox.Library.Forms
         {
             public bool HighlightMenuBar = false;
 
-            private static Color checkedHighlightBackColor = FormThemes.BaseTheme.FormContextMenuSelectColor;
-            private static Color uncheckedHighlightBackColor = FormThemes.BaseTheme.CheckBoxBackColor;
+            private static Color checkedHighlightBackColor = FormThemes.BaseTheme.FormBackColor;
+            private static Color uncheckedHighlightBackColor = FormThemes.BaseTheme.FormBackColor;
 
             public override Color ToolStripDropDownBackground
             {
