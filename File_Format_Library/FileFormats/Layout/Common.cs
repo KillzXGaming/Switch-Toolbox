@@ -163,6 +163,34 @@ namespace LayoutBXLYT
             }
         }
 
+        public void ApplyNewParentTransform()
+        {
+            //Get the new transform and apply it
+            var transform = GetParentTransform();
+        //    Translate += transform;
+        }
+
+        public void ResetParentTransform(BasePane newParent)
+        {
+            //We need to get the difference in the parent transform and remove it to the current transform of this pane
+            var transform = GetParentTransform();
+            var newParentTransform = newParent.GetParentTransform();
+            Translate -= transform;
+            Translate += newParentTransform;
+        }
+
+        private Vector3F GetParentTransform() {
+            return GetParentTransform(Vector3F.Zero);
+        }
+
+        private Vector3F GetParentTransform(Vector3F translate)
+        {
+            if (Parent != null)
+                return translate += Parent.GetParentTransform(translate);
+            else
+                return translate;
+        }
+
         public void KeepChildrenTransform(float newTransX, float newTransY)
         {
             Vector2F distance = new Vector2F(newTransX - Translate.X, newTransY - Translate.Y);

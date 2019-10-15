@@ -410,7 +410,9 @@ namespace LayoutBXLYT
                         var upperParentNode = targetNode.Parent;
                         var upperParentPane = upperParentNode.Tag as BasePane;
 
+                        draggedPane.ResetParentTransform(upperParentPane);
                         draggedPane.Parent = upperParentPane;
+
                         upperParentPane.Childern.Add(draggedPane);
 
                         upperParentNode.Nodes.Add(draggedNode);
@@ -419,12 +421,16 @@ namespace LayoutBXLYT
                     else //Set the target node as the parent
                     {
                         var parentPane = targetNode.Tag as BasePane;
+                        draggedPane.ResetParentTransform(parentPane);
                         draggedPane.Parent = parentPane;
+
                         parentPane.Childern.Add(draggedPane);
 
                         targetNode.Nodes.Add(draggedNode);
                         targetNode.Expand();
                     }
+
+                    ParentEditor.UpdateViewport();
                 }
             }
         }
