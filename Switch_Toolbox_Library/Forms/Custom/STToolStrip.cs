@@ -33,14 +33,14 @@ namespace Toolbox.Library.Forms
         {
             get
             {
-                if (Renderer == null)
+                if (Renderer == null || !(Renderer is MenuRenderer))
                     return false;
 
                 return ((MenuRenderer)this.Renderer).HighlightMenuBar;
             }
             set
             {
-                if (Renderer != null)
+                if (Renderer != null || !(Renderer is MenuRenderer))
                     ((MenuRenderer)this.Renderer).HighlightMenuBar = value;
             }
         }
