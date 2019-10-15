@@ -238,7 +238,7 @@ namespace LayoutBXLYT
                 {
                     foreach (var pane in file.PaneLookup.Values)
                     {
-                        if (!pane.Visible || !pane.DisplayInEditor)
+                        if (!pane.Visible || !pane.DisplayInEditor && !pane.IsRoot)
                             continue;
 
                         //Hitbox debug
@@ -306,9 +306,7 @@ namespace LayoutBXLYT
             //Create a bounding box for all selected panes
             //This box will allow resizing of all selected panes
             if (SelectedPanes.Count > 0)
-            {
-            
-            }
+                DrawSelectionBox(SelectedPanes, true);
 
             if (UseOrtho)
                 GL.PopMatrix();
@@ -318,9 +316,91 @@ namespace LayoutBXLYT
             glControl1.SwapBuffers();
         }
 
-        private void DrawRectangle()
+        private static CustomRectangle GetSelectedPanesBounding(List<BasePane> panes)
         {
+            CustomRectangle rect = new CustomRectangle(0, 0, 0, 0);
 
+            List<Vector2> points = new List<Vector2>();
+            foreach (var pane in panes)
+            {
+                var paneRect = pane.CreateRectangle();
+                rect = paneRect.GetTransformedRectangle(pane.Parent, pane.Translate, pane.Rotate, pane.Scale);
+                points.AddRange(new Vector2[4]
+                {
+                     new Vector2(rect.LeftPoint, rect.TopPoint),
+                     new Vector2(rect.RightPoint, rect.TopPoint),
+                     new Vector2(rect.RightPoint, rect.BottomPoint),
+                     new Vector2(rect.LeftPoint, rect.BottomPoint)
+                });
+
+                var minX = (int)points.Min(p => p.X);
+                var maxX = (int)points.Max(p => p.X);
+                var minY = (int)points.Min(p => p.Y);
+                var maxY = (int)points.Max(p => p.Y);
+
+                rect = new CustomRectangle(minX, maxX, maxY, minY);
+            }
+            points.Clear();
+
+            return rect;
+        }
+
+        public static void DrawSelectionBox(List<BasePane> panes, bool isSelected)
+        {
+            //Create a rectangle with the largest points selected
+            CustomRectangle rect = GetSelectedPanesBounding(panes);
+
+            GL.Disable(EnableCap.Blend);
+            GL.Disable(EnableCap.AlphaTest);
+            GL.Disable(EnableCap.Texture2D);
+            GL.UseProgram(0);
+
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color4(isSelected ? Color.Red : Color.Green);
+            GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+            GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+            GL.Vertex2(rect.RightPoint, rect.TopPoint);
+            GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+            GL.End();
+
+            if (isSelected)
+            {
+                var transformed = rect;
+                var leftTop = new Vector2(transformed.LeftPoint, transformed.TopPoint);
+                var left = new Vector2(transformed.LeftPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
+                var leftBottom = new Vector2(transformed.LeftPoint, transformed.BottomPoint);
+                var rightTop = new Vector2(transformed.RightPoint, transformed.TopPoint);
+                var right = new Vector2(transformed.RightPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
+                var rightBottom = new Vector2(transformed.RightPoint, transformed.BottomPoint);
+                var top = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.TopPoint);
+                var bottom = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.BottomPoint);
+
+                DrawEdgeSquare(leftTop);
+                DrawEdgeSquare(left);
+                DrawEdgeSquare(leftBottom);
+                DrawEdgeSquare(rightTop);
+                DrawEdgeSquare(right);
+                DrawEdgeSquare(rightBottom);
+                DrawEdgeSquare(top);
+                DrawEdgeSquare(bottom);
+            }
+
+            GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.AlphaTest);
+            GL.Enable(EnableCap.Texture2D);
+        }
+
+        private static void DrawEdgeSquare(Vector2 position)
+        {
+            float scale = 5;
+
+            GL.Begin(PrimitiveType.LineLoop);
+            GL.Color4(Color.Red);
+            GL.Vertex2(position.X + -1 * scale, position.Y + -1 * scale);
+            GL.Vertex2(position.X + 1 * scale, position.Y + -1 * scale);
+            GL.Vertex2(position.X + 1 * scale, position.Y + 1 * scale);
+            GL.Vertex2(position.X + -1 * scale, position.Y + 1 * scale);
+            GL.End();
         }
 
         private void RenderPanes(BxlytShader shader, BasePane pane, bool isRoot, byte parentAlpha, bool parentAlphaInfluence, BasePane partPane = null, int stage = 0)
@@ -516,7 +596,7 @@ namespace LayoutBXLYT
             if (partPane != null)
                 RenderPanes(shader,partPane, true, effectiveAlpha, parentInfluenceAlpha);
             else
-                DrawDefaultPane(shader, pane);
+                DrawDefaultPane(shader, pane, isSelected);
 
             if (pane.Properties != null)
             {
@@ -688,26 +768,28 @@ namespace LayoutBXLYT
                 mouseDown = true;
 
                 RenderEditor();
-                var coords = convertScreenToWorldCoords(e.Location.X, e.Location.Y);
+                var coords = OpenGLHelper.convertScreenToWorldCoords(e.Location.X, e.Location.Y);
+
+                GL.PopMatrix();
 
                 bool hasEdgeHit = false;
-                foreach (var pane in SelectedPanes)
+
+                var rect = GetSelectedPanesBounding(SelectedPanes);
+                var edgePick = SearchEdgePicking(rect, coords.X, coords.Y);
+                if (edgePick != PickAction.None)
                 {
-                    var edgePick = SearchEdgePicking(pane, coords.X, coords.Y);
-                    if (edgePick != PickAction.None)
-                    {
-                        pickAction = edgePick;
-                        isPicked = true;
-                        hasEdgeHit = true;
-
-                        UndoManger.AddToUndo(new LayoutUndoManager.UndoActionTransform(pane));
-
-                        pickOriginMouse = e.Location;
-
-                        RenderScene();
-                        return;
-                    }
+                    pickAction = edgePick;
+                    isPicked = true;
+                    hasEdgeHit = true;
                 }
+
+                if (hasEdgeHit)
+                {
+                    UndoManger.AddToUndo(new LayoutUndoManager.UndoActionTransform(SelectedPanes));
+                    pickOriginMouse = e.Location;
+                    return;
+                }
+
 
                 BasePane hitPane = null;
                 SearchHit(LayoutFile.RootPane, coords.X, coords.Y, ref hitPane);
@@ -716,38 +798,36 @@ namespace LayoutBXLYT
                     pickAction = PickAction.Translate;
 
                     if (!SelectedPanes.Contains(hitPane))
+                    {
+                        if (Control.ModifierKeys != Keys.Control)
+                            SelectedPanes.Clear();
+
                         SelectedPanes.Add(hitPane);
-
-                    foreach (var pane in SelectedPanes)
-                    {
-                        var edgePick = SearchEdgePicking(pane, coords.X, coords.Y);
-                        if (edgePick != PickAction.None)
-                            pickAction = edgePick;
-
-                        Console.WriteLine(pane.Name + " " + pickAction);
                     }
 
-                    foreach (var pane in SelectedPanes)
-                    {
-                        UndoManger.AddToUndo(new LayoutUndoManager.UndoActionTransform(pane));
-                    }
+
+                    var paneRect = GetSelectedPanesBounding(SelectedPanes);
+                    var paneEdgePick = SearchEdgePicking(paneRect, coords.X, coords.Y);
+                    if (paneEdgePick != PickAction.None)
+                        pickAction = paneEdgePick;
+
+                    UndoManger.AddToUndo(new LayoutUndoManager.UndoActionTransform(SelectedPanes));
 
                     ParentEditor.UpdateUndo();
                     ParentEditor.UpdateHiearchyNodeSelection(hitPane);
 
                     isPicked = true;
-                } //Check edge hit and control key (multi selecting panes)
-                else if (!hasEdgeHit && Control.ModifierKeys != Keys.Control)
+                } //Check control key (multi selecting panes)
+                else if (Control.ModifierKeys != Keys.Control)
                     SelectedPanes.Clear();
 
-                pickOriginMouse = e.Location;
 
-                RenderScene();
+                pickOriginMouse = e.Location;
             }
             else if (e.Button == MouseButtons.Right)
             {
                 RenderEditor();
-                var coords = convertScreenToWorldCoords(e.Location.X, e.Location.Y);
+                var coords = OpenGLHelper.convertScreenToWorldCoords(e.Location.X, e.Location.Y);
                 pickOriginMouse = coords;
 
                 GL.PopMatrix();
@@ -963,9 +1043,8 @@ namespace LayoutBXLYT
             return SelectedPanes;
         }
 
-        private PickAction SearchEdgePicking(BasePane pane, int X, int Y)
+        private PickAction SearchEdgePicking(CustomRectangle transformed, int X, int Y)
         {
-            var transformed = pane.CreateRectangle().GetTransformedRectangle(pane.Parent, pane.Translate, pane.Rotate, pane.Scale);
             var leftTop = new Point(transformed.LeftPoint, transformed.TopPoint);
             var left = new Point(transformed.LeftPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
             var leftBottom = new Point(transformed.LeftPoint, transformed.BottomPoint);
@@ -1053,47 +1132,47 @@ namespace LayoutBXLYT
             if (SelectedPanes.Count > 0 && !showSelectionBox)
             {
                 RenderEditor();
-                var posWorld = convertScreenToWorldCoords(e.Location.X, e.Location.Y);
+                var posWorld = OpenGLHelper.convertScreenToWorldCoords(e.Location.X, e.Location.Y);
 
                 GL.PopMatrix();
 
                 //Setup edge picking with move event
                 bool hasPick = false;
-                foreach (var pane in SelectedPanes)
+
+                var paneRect = GetSelectedPanesBounding(SelectedPanes);
+                var pickState = SearchEdgePicking(paneRect, posWorld.X, posWorld.Y);
+
+                  if (pickState != PickAction.None)
                 {
-                    var pickState = SearchEdgePicking(pane, posWorld.X, posWorld.Y);
-                    if (pickState != PickAction.None)
-                    {
-                        if (pickState == PickAction.DragTop)
-                            Cursor.Current = Cursors.SizeNS;
-                        if (pickState == PickAction.DragBottom)
-                            Cursor.Current = Cursors.SizeNS;
-                        if (pickState == PickAction.DragLeft)
-                            Cursor.Current = Cursors.SizeWE;
-                        if (pickState == PickAction.DragRight)
-                            Cursor.Current = Cursors.SizeWE;
-                        if (pickState == PickAction.DragBottomLeft)
-                            Cursor.Current = Cursors.SizeNESW;
-                        if (pickState == PickAction.DragBottomRight)
-                            Cursor.Current = Cursors.SizeNWSE;
-                        if (pickState == PickAction.DragTopLeft)
-                            Cursor.Current = Cursors.SizeNWSE;
-                        if (pickState == PickAction.DragTopRight)
-                            Cursor.Current = Cursors.SizeNESW;
+                    if (pickState == PickAction.DragTop)
+                        Cursor.Current = Cursors.SizeNS;
+                    if (pickState == PickAction.DragBottom)
+                        Cursor.Current = Cursors.SizeNS;
+                    if (pickState == PickAction.DragLeft)
+                        Cursor.Current = Cursors.SizeWE;
+                    if (pickState == PickAction.DragRight)
+                        Cursor.Current = Cursors.SizeWE;
+                    if (pickState == PickAction.DragBottomLeft)
+                        Cursor.Current = Cursors.SizeNESW;
+                    if (pickState == PickAction.DragBottomRight)
+                        Cursor.Current = Cursors.SizeNWSE;
+                    if (pickState == PickAction.DragTopLeft)
+                        Cursor.Current = Cursors.SizeNWSE;
+                    if (pickState == PickAction.DragTopRight)
+                        Cursor.Current = Cursors.SizeNESW;
 
-                        hasPick = true;
-                    }
-                    else if (isPicked && pickAction != PickAction.None)
-                    {
-                        if (pickAction == PickAction.Translate)
-                            Cursor.Current = Cursors.SizeAll;
-                        if (pickAction == PickAction.Rotate)
-                            Cursor.Current = Cursors.SizeAll;
-                        if (pickAction == PickAction.Scale)
-                            Cursor.Current = Cursors.SizeAll;
+                    hasPick = true;
+                }
+                else if (isPicked && pickAction != PickAction.None)
+                {
+                    if (pickAction == PickAction.Translate)
+                        Cursor.Current = Cursors.SizeAll;
+                    if (pickAction == PickAction.Rotate)
+                        Cursor.Current = Cursors.SizeAll;
+                    if (pickAction == PickAction.Scale)
+                        Cursor.Current = Cursors.SizeAll;
 
-                        hasPick = true;
-                    }
+                    hasPick = true;
                 }
 
                 if (!hasPick)
@@ -1104,8 +1183,8 @@ namespace LayoutBXLYT
             {
                 RenderEditor();
                 var temp = e.Location;
-                var curPos = convertScreenToWorldCoords(temp.X, temp.Y);
-                var prevPos = convertScreenToWorldCoords(pickOriginMouse.X, pickOriginMouse.Y);
+                var curPos = OpenGLHelper.convertScreenToWorldCoords(temp.X, temp.Y);
+                var prevPos = OpenGLHelper.convertScreenToWorldCoords(pickOriginMouse.X, pickOriginMouse.Y);
                 var pickMouse = new Point((int)(prevPos.X - curPos.X), (int)(prevPos.Y - curPos.Y));
 
                 if (pickAction == PickAction.Translate)
@@ -1128,6 +1207,9 @@ namespace LayoutBXLYT
                                 posY = pane.Translate.Y - pickMouse.Y;
                             }
 
+                            if (!Runtime.LayoutEditor.TransformChidlren)
+                                pane.KeepChildrenTransform(posX, posY);
+
                             if (snapToGrid)
                             {
                                 int gridCubeWidth = 16, gridCubeHeight = 16;
@@ -1146,9 +1228,11 @@ namespace LayoutBXLYT
                 }
                 else if (!showSelectionBox)
                 {
+                    var selectionBox = GetSelectedPanesBounding(SelectedPanes);
+
                     //Setup edge picking with move event
                     foreach (var pane in SelectedPanes)
-                        pane.TransformRectangle(pickAction, pickMouse.X, pickMouse.Y);
+                        pane.TransformRectangle(pickAction, selectionBox, pickMouse.X, pickMouse.Y);
                 }
 
                 pickOriginMouse = temp;
@@ -1160,8 +1244,8 @@ namespace LayoutBXLYT
             {
                 RenderEditor();
                 var temp = e.Location;
-                var curPos = convertScreenToWorldCoords(temp.X, temp.Y);
-                var prevPos = convertScreenToWorldCoords(pickOriginMouse.X, pickOriginMouse.Y);
+                var curPos = OpenGLHelper.convertScreenToWorldCoords(temp.X, temp.Y);
+                var prevPos = OpenGLHelper.convertScreenToWorldCoords(pickOriginMouse.X, pickOriginMouse.Y);
                 DrawSelectionBox(prevPos, curPos);
             }
 
@@ -1207,45 +1291,6 @@ namespace LayoutBXLYT
                     SelectionBoxPanes.Add(pane);
 
             RenderScene(true);
-        }
-
-        public static Point convertScreenToWorldCoords(int x, int y)
-        {
-            int[] viewport = new int[4];
-            Matrix4 modelViewMatrix, projectionMatrix;
-            GL.GetFloat(GetPName.ModelviewMatrix, out modelViewMatrix);
-            GL.GetFloat(GetPName.ProjectionMatrix, out projectionMatrix);
-            GL.GetInteger(GetPName.Viewport, viewport);
-            Vector2 mouse;
-            mouse.X = x;
-            mouse.Y = y;
-            Vector4 vector = UnProject(ref projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
-            Point coords = new Point((int)vector.X, (int)vector.Y);
-            return coords;
-        }
-        public static Vector4 UnProject(ref Matrix4 projection, Matrix4 view, Size viewport, Vector2 mouse)
-        {
-            Vector4 vec;
-
-            vec.X = (2.0f * mouse.X / (float)viewport.Width - 1);
-            vec.Y = -(2.0f * mouse.Y / (float)viewport.Height - 1);
-            vec.Z = 0;
-            vec.W = 1.0f;
-
-            Matrix4 viewInv = Matrix4.Invert(view);
-            Matrix4 projInv = Matrix4.Invert(projection);
-
-            Vector4.Transform(ref vec, ref projInv, out vec);
-            Vector4.Transform(ref vec, ref viewInv, out vec);
-
-            if (vec.W > float.Epsilon || vec.W < float.Epsilon)
-            {
-                vec.X /= vec.W;
-                vec.Y /= vec.W;
-                vec.Z /= vec.W;
-            }
-
-            return vec;
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
@@ -1321,7 +1366,7 @@ namespace LayoutBXLYT
                     var point = this.PointToClient(new Point(e.X, e.Y));
 
                     RenderEditor();
-                    var coords = convertScreenToWorldCoords(point.X, point.Y);
+                    var coords = OpenGLHelper.convertScreenToWorldCoords(point.X, point.Y);
                     GL.PopMatrix();
 
                     var pane = ParentEditor.AddNewPicturePane();

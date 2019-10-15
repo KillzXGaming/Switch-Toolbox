@@ -166,7 +166,7 @@ namespace LayoutBXLYT
             expandCB.SelectedItem = texMap.MaxFilterMode;
             shrinkCB.SelectedItem = texMap.MinFilterMode;
 
-            if (ActiveMaterial.TextureTransforms.Length > SelectedIndex)
+            if (ActiveMaterial.TextureTransforms?.Length > SelectedIndex)
             {
                 var transform = ActiveMaterial.TextureTransforms[SelectedIndex];
                 scaleXUD.Value = transform.Scale.X;

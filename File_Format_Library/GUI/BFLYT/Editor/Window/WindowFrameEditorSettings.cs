@@ -125,7 +125,7 @@ namespace LayoutBXLYT
 
             if (isHorizintal)
             {
-                switch (pane.WindowFrames.Count)
+                switch (pane.FrameCount)
                 {
                     case 1:
                         frameNumCB.SelectedIndex = 0;
@@ -137,7 +137,7 @@ namespace LayoutBXLYT
             }
             else
             {
-                switch (pane.WindowFrames.Count)
+                switch (pane.FrameCount)
                 {
                     case 1:
                         frameNumCB.SelectedIndex = 0;
@@ -194,20 +194,37 @@ namespace LayoutBXLYT
         {
             if (!loaded) return;
 
-            switch (frameNumCB.SelectedIndex)
+            if (ActivePane.WindowKind != WindowKind.Around)
             {
-                case 0:
-                    ActivePane.FrameCount = 1;
-                    windowFrameSelector1.FrameCount = 1;
-                    break;
-                case 1:
-                    ActivePane.FrameCount = 4;
-                    windowFrameSelector1.FrameCount = 4;
-                    break;
-                case 2:
-                    ActivePane.FrameCount = 8;
-                    windowFrameSelector1.FrameCount = 8;
-                    break;
+                switch (frameNumCB.SelectedIndex)
+                {
+                    case 0:
+                        ActivePane.FrameCount = 1;
+                        windowFrameSelector1.FrameCount = 1;
+                        break;
+                    case 1:
+                        ActivePane.FrameCount = 2;
+                        windowFrameSelector1.FrameCount = 2;
+                        break;
+                }
+            }
+            else
+            {
+                switch (frameNumCB.SelectedIndex)
+                {
+                    case 0:
+                        ActivePane.FrameCount = 1;
+                        windowFrameSelector1.FrameCount = 1;
+                        break;
+                    case 1:
+                        ActivePane.FrameCount = 4;
+                        windowFrameSelector1.FrameCount = 4;
+                        break;
+                    case 2:
+                        ActivePane.FrameCount = 8;
+                        windowFrameSelector1.FrameCount = 8;
+                        break;
+                }
             }
 
             ActivePane.ReloadFrames();

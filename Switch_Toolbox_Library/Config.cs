@@ -288,6 +288,9 @@ namespace Toolbox.Library
                     case "PartsAsNullPanes":
                         bool.TryParse(node.InnerText, out Runtime.LayoutEditor.PartsAsNullPanes);
                         break;
+                    case "TransformPaneChidlren":
+                        bool.TryParse(node.InnerText, out Runtime.LayoutEditor.TransformChidlren);
+                        break;
                 }
             }
 
@@ -415,6 +418,7 @@ namespace Toolbox.Library
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayWindowPane", Runtime.LayoutEditor.DisplayWindowPane.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "DisplayTextPane", Runtime.LayoutEditor.DisplayTextPane.ToString()));
             layoutSettingsNode.AppendChild(createNode(doc, "PartsAsNullPanes", Runtime.LayoutEditor.PartsAsNullPanes.ToString()));
+            layoutSettingsNode.AppendChild(createNode(doc, "TransformPaneChidlren", Runtime.LayoutEditor.TransformChidlren.ToString()));
         }
 
         private static void AppendDeveloperSettings(XmlDocument doc, XmlNode parentNode)

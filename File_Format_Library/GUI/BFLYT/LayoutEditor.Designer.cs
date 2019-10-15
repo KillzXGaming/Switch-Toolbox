@@ -52,6 +52,7 @@
             this.displayGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textureListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewPartsAsNullPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orthographicViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayNullPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayyBoundryPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,7 +63,8 @@
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGameWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewPartsAsNullPanesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.transformChildrenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.stToolStrip1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
@@ -124,6 +126,7 @@
             // 
             // stToolStrip1
             // 
+            this.stToolStrip1.HighlightSelectedTab = false;
             this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolstripOrthoBtn});
@@ -155,6 +158,7 @@
             // 
             // stMenuStrip1
             // 
+            this.stMenuStrip1.HighlightSelectedTab = false;
             this.stMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
@@ -218,7 +222,8 @@
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.undoToolStripMenuItem,
-            this.redoToolStripMenuItem});
+            this.redoToolStripMenuItem,
+            this.panesToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -226,14 +231,14 @@
             // undoToolStripMenuItem
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.undoToolStripMenuItem.Text = "Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
             // redoToolStripMenuItem
             // 
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.redoToolStripMenuItem.Text = "Redo";
             this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
@@ -284,6 +289,14 @@
             this.textConverterToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.textConverterToolStripMenuItem.Text = "Text Converter";
             this.textConverterToolStripMenuItem.Click += new System.EventHandler(this.textConverterToolStripMenuItem_Click);
+            // 
+            // viewPartsAsNullPanesToolStripMenuItem
+            // 
+            this.viewPartsAsNullPanesToolStripMenuItem.CheckOnClick = true;
+            this.viewPartsAsNullPanesToolStripMenuItem.Name = "viewPartsAsNullPanesToolStripMenuItem";
+            this.viewPartsAsNullPanesToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.viewPartsAsNullPanesToolStripMenuItem.Text = "View Parts As Null Panes";
+            this.viewPartsAsNullPanesToolStripMenuItem.Click += new System.EventHandler(this.viewPartsAsNullPanesToolStripMenuItem_Click);
             // 
             // orthographicViewToolStripMenuItem
             // 
@@ -375,13 +388,21 @@
             this.showGameWindowToolStripMenuItem.Text = "Show Game Window";
             this.showGameWindowToolStripMenuItem.Click += new System.EventHandler(this.showGameWindowToolStripMenuItem_Click);
             // 
-            // viewPartsAsNullPanesToolStripMenuItem
+            // panesToolStripMenuItem
             // 
-            this.viewPartsAsNullPanesToolStripMenuItem.CheckOnClick = true;
-            this.viewPartsAsNullPanesToolStripMenuItem.Name = "viewPartsAsNullPanesToolStripMenuItem";
-            this.viewPartsAsNullPanesToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.viewPartsAsNullPanesToolStripMenuItem.Text = "View Parts As Null Panes";
-            this.viewPartsAsNullPanesToolStripMenuItem.Click += new System.EventHandler(this.viewPartsAsNullPanesToolStripMenuItem_Click);
+            this.panesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.transformChildrenToolStripMenuItem});
+            this.panesToolStripMenuItem.Name = "panesToolStripMenuItem";
+            this.panesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.panesToolStripMenuItem.Text = "Panes";
+            // 
+            // transformChildrenToolStripMenuItem
+            // 
+            this.transformChildrenToolStripMenuItem.CheckOnClick = true;
+            this.transformChildrenToolStripMenuItem.Name = "transformChildrenToolStripMenuItem";
+            this.transformChildrenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.transformChildrenToolStripMenuItem.Text = "Transform Children";
+            this.transformChildrenToolStripMenuItem.Click += new System.EventHandler(this.transformChildrenToolStripMenuItem_Click);
             // 
             // LayoutEditor
             // 
@@ -449,5 +470,7 @@
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewPartsAsNullPanesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem panesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem transformChildrenToolStripMenuItem;
     }
 }

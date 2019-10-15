@@ -250,22 +250,7 @@ namespace FirstPlugin
                 file.SaveFileFormat();
 
                 if (sarcData.HashOnly)
-                {
                     sarcData.Files.Add(file.HashName, file.FileData);
-
-                    /*
-                    uint hash = 0;
-                    bool IsHash = uint.TryParse(file.FileName, out hash);
-                    if (IsHash && file.FileName.Length == 8)
-                    {
-                        sarcData.Files.Add(file.FileName, file.FileData);
-                    }
-                    else
-                    {
-                        string Hash = Crc32.Compute(file.FileName).ToString();
-                        sarcData.Files.Add(Hash, file.FileData);
-                    }*/
-                }
                 else
                     sarcData.Files.Add(file.FileName, file.FileData);
             }
@@ -283,7 +268,54 @@ namespace FirstPlugin
         {
             public SARC sarc; //Sarc file the entry is located in
 
-            public string HashName;
+            public string OriginalFileName;
+
+            private bool NameChanged
+            {
+                get { return OriginalFileName != FileName; }
+            }
+
+
+
+            private string hashName;
+            public string HashName
+            {
+                get
+                {
+                    if (hashName == null || NameChanged)
+                        hashName = NameHash(FileName).ToString("X");
+
+                    return hashName;
+                }
+                set
+                {
+                    hashName = value;
+                }
+            }
+
+            public bool IsHashMatch(string fileName)
+            {
+                uint hash = StringHashToUint(hashName);
+                return hash == NameHash(FileName);
+            }
+
+            static uint NameHash(string name)
+            {
+                uint result = 0;
+                for (int i = 0; i < name.Length; i++)
+                {
+                    result = name[i] + result * 0x00000065;
+                }
+                return result;
+            }
+
+            static uint StringHashToUint(string name)
+            {
+                if (name.Contains("."))
+                    name = name.Split('.')[0];
+                if (name.Length != 8) throw new Exception("Invalid hash length");
+                return Convert.ToUInt32(name, 16);
+            }
 
             public SarcEntry()
             {
@@ -310,6 +342,7 @@ namespace FirstPlugin
         public SarcEntry SetupFileEntry(string fullName, byte[] data, string HashName)
         {
             SarcEntry sarcEntry = new SarcEntry();
+            sarcEntry.OriginalFileName = fullName;
             sarcEntry.FileName = fullName;
             sarcEntry.FileData = data;
             sarcEntry.HashName = HashName;

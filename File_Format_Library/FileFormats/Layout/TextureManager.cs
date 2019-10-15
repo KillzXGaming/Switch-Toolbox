@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Toolbox.Library;
 using FirstPlugin;
@@ -102,6 +102,11 @@ namespace LayoutBXLYT
                         var archive = ArchiveParent;
                         if (archive == null) return null;
 
+                        var matches = archive.Files.Where(p => p.FileName.Contains("bflim")).ToList();
+                        string textureFolder = "timg";
+                        if (matches.Count > 0)
+                            textureFolder = System.IO.Path.GetDirectoryName(matches[0].FileName);
+
                         var bflim = BFLIM.CreateNewFromImage();
 
                         if (bflim == null)
@@ -114,7 +119,7 @@ namespace LayoutBXLYT
                         archive.AddFile(new ArchiveFileInfo()
                         {
                             FileData = mem.ToArray(),
-                            FileName = bflim.Text,
+                            FileName = System.IO.Path.Combine(textureFolder, bflim.Text).Replace('\\','/'),
                         });
                     }
                     break;

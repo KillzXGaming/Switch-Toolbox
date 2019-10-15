@@ -77,6 +77,7 @@ namespace LayoutBXLYT
             renderInGamePreviewToolStripMenuItem.Checked = Runtime.LayoutEditor.IsGamePreview;
             displayGridToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayGrid;
             displayTextPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayTextPane;
+            transformChildrenToolStripMenuItem.Checked = Runtime.LayoutEditor.TransformChidlren;
 
             ObjectSelected += OnObjectSelected;
             ObjectChanged += OnObjectChanged;
@@ -244,6 +245,7 @@ namespace LayoutBXLYT
                 ActiveViewport.UpdateViewport();
         }
 
+        private bool isSelectedInViewer = false;
         private bool isChecked = false;
         private void OnObjectSelected(object sender, EventArgs e)
         {
@@ -269,10 +271,11 @@ namespace LayoutBXLYT
             }
             if (LayoutPaneEditor != null && (string)sender == "Select")
             {
-                ActiveViewport?.SelectedPanes.Clear();
-
                 if (e is TreeViewEventArgs) {
                     var node = ((TreeViewEventArgs)e).Node;
+
+                    if (!isSelectedInViewer)
+                        ActiveViewport?.SelectedPanes.Clear();
 
                     if (node.Tag is BasePane)
                         LoadPaneEditorOnSelect(node.Tag as BasePane);
@@ -321,7 +324,11 @@ namespace LayoutBXLYT
                 LayoutPaneEditor.Text = $"Properties [{pane.Name}]    |    (Null Pane)";
 
             LayoutPaneEditor.LoadPane(pane, this);
-            ActiveViewport?.SelectedPanes.Add(pane);
+
+            if (ActiveViewport == null) return;
+
+            if (!ActiveViewport.SelectedPanes.Contains(pane))
+                ActiveViewport.SelectedPanes.Add(pane);
         }
 
         public void RefreshEditors()
@@ -334,7 +341,9 @@ namespace LayoutBXLYT
             var nodeWrapper = pane.NodeWrapper;
             if (nodeWrapper == null) return;
 
+            isSelectedInViewer = true;
             LayoutHierarchy?.SelectNode(nodeWrapper);
+            isSelectedInViewer = false;
         }
 
         private void UpdateAnimationNode(ListViewItem node)
@@ -1080,5 +1089,9 @@ namespace LayoutBXLYT
         }
 
         #endregion
+
+        private void transformChildrenToolStripMenuItem_Click(object sender, EventArgs e) {
+            Runtime.LayoutEditor.TransformChidlren = transformChildrenToolStripMenuItem.Checked;
+        }
     }
 }

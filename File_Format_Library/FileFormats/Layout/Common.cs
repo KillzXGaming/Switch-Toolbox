@@ -163,6 +163,24 @@ namespace LayoutBXLYT
             }
         }
 
+        public void KeepChildrenTransform(float newTransX, float newTransY)
+        {
+            Vector2F distance = new Vector2F(newTransX - Translate.X, newTransY - Translate.Y);
+            KeepChildrenTransform(distance);
+        }
+
+        private void KeepChildrenTransform(Vector2F distance)
+        {
+            if (HasChildern)
+            {
+                foreach (var child in Childern)
+                {
+                    child.Translate -= new Vector3F(distance.X, distance.Y, 0);
+                    child.KeepChildrenTransform(distance);
+                }
+            }
+        }
+
         public CustomRectangle TransformParent(CustomRectangle rect)
         {
             return rect.GetTransformedRectangle(Parent, Translate,Rotate, Scale);
@@ -198,13 +216,28 @@ namespace LayoutBXLYT
                 parentTransform.W);
         }
 
-        public void TransformRectangle(LayoutViewer.PickAction pickAction, float pickMouseX, float pickMouseY)
+        public void TransformRectangle(LayoutViewer.PickAction pickAction, CustomRectangle selectionBox, float pickMouseX, float pickMouseY)
         {
+            CustomRectangle currentRectangle = this.CreateRectangle();
+            currentRectangle = currentRectangle.GetTransformedRectangle(Parent, Translate, Rotate, Scale);
+
+            //The selection box can have mutlile panes selected in one box
+            //Scaling the edges will have different distances
+            float distanceLeft = selectionBox.LeftPoint - currentRectangle.LeftPoint;
+            float distanceRight = selectionBox.RightPoint - currentRectangle.RightPoint;
+            float distanceTop = selectionBox.TopPoint - currentRectangle.TopPoint;
+            float distanceBottom = selectionBox.BottomPoint - currentRectangle.BottomPoint;
+
+            Console.WriteLine("distanceLeft " + distanceLeft);
+            Console.WriteLine("distanceRight " + distanceRight);
+            Console.WriteLine("distanceTop " + distanceTop);
+            Console.WriteLine("distanceBottom " + distanceBottom);
+
+
             float posX = Translate.X;
             float posY = Translate.Y;
             float posZ = Translate.Z;
 
-            Console.WriteLine("pickMouseX " + pickMouseX);
 
             float pickWidth = pickMouseX;
             float pickHeight = pickMouseY;
@@ -1826,6 +1859,11 @@ namespace LayoutBXLYT
             double cosTheta = Math.Cos(angleInRadians);
             double sinTheta = Math.Sin(angleInRadians);
             var centerPoint = new OpenTK.Vector2(0,0);
+
+            return new OpenTK.Vector2(
+                (int)(p1 * cosTheta - p2 * sinTheta),
+                (int)(p1 * sinTheta + p2 * cosTheta));
+
             return new OpenTK.Vector2(
                 (int)
             (cosTheta * (p1 - centerPoint.X) -
@@ -1835,14 +1873,14 @@ namespace LayoutBXLYT
             cosTheta * (p2 - centerPoint.Y) + centerPoint.Y));
         }
 
-        public CustomRectangle GetTransformedRectangle(BasePane parent, Vector3F Transform, Vector3F Rotate, Vector2F Scale)
+        public CustomRectangle GetTransformedRectangle(BasePane parent, Vector3F Transform, Vector3F Rotate, Vector2F scale)
         {
             var rect = this.RotateZ(Rotate.Z);
             rect = new CustomRectangle(
-                (int)(rect.LeftPoint + Transform.X * Scale.X),
-                (int)(rect.RightPoint + Transform.X * Scale.X),
-                (int)(rect.TopPoint + Transform.Y * Scale.Y),
-                (int)(rect.BottomPoint + Transform.Y * Scale.Y));
+                (int)(((rect.LeftPoint * scale.X) + Transform.X)),
+                (int)(((rect.RightPoint * scale.X) + Transform.X)),
+                (int)(((rect.TopPoint * scale.Y) + Transform.Y)),
+                (int)(((rect.BottomPoint * scale.Y) + Transform.Y)));
 
             if (parent != null)
                 return parent.TransformParent(rect);
@@ -1850,12 +1888,12 @@ namespace LayoutBXLYT
                 return rect;
         }
 
-        public float Width
+        public int Width
         {
             get { return LeftPoint - RightPoint; }
         }
 
-        public float Height
+        public int Height
         {
             get { return TopPoint - BottomPoint; }
         }

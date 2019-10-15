@@ -461,10 +461,10 @@ namespace LayoutBXLYT
             if (window.Content.TexCoords.Count > 0)
             {
                 texCoords = new Vector2[] {
-                        window.Content.TexCoords[0].BottomLeft.ToTKVector2(),
-                        window.Content.TexCoords[0].BottomRight.ToTKVector2(),
-                        window.Content.TexCoords[0].TopRight.ToTKVector2(),
                         window.Content.TexCoords[0].TopLeft.ToTKVector2(),
+                        window.Content.TexCoords[0].TopRight.ToTKVector2(),
+                        window.Content.TexCoords[0].BottomRight.ToTKVector2(),
+                        window.Content.TexCoords[0].BottomLeft.ToTKVector2(),
                    };
             }
 
@@ -963,64 +963,9 @@ namespace LayoutBXLYT
                     break;
             }
 
-
-            //Lastly draw a selection box if selected
-
-            if (isSelected)
-            {
-                if (!Runtime.LayoutEditor.IsGamePreview && !gameWindow)
-                    DrawSelectionBox(pane, isSelected);
-            }
-
             GL.Disable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.UseProgram(0);
-        }
-
-        public static void DrawSelectionBox(BasePane pane, bool isSelected)
-        {
-            var rect = pane.CreateRectangle();
-            rect = rect.RotateZ(pane.Rotate.Z);
-
-            GL.Disable(EnableCap.Blend);
-            GL.Disable(EnableCap.AlphaTest);
-            GL.Disable(EnableCap.Texture2D);
-            GL.UseProgram(0);
-
-            GL.Begin(PrimitiveType.LineLoop);
-            GL.Color4(isSelected ? Color.Red : Color.Green);
-            GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-            GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-            GL.Vertex2(rect.RightPoint, rect.TopPoint);
-            GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-            GL.End();
-
-            if (isSelected)
-            {
-                var transformed = rect;
-                var leftTop = new Vector2(transformed.LeftPoint, transformed.TopPoint);
-                var left = new Vector2(transformed.LeftPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
-                var leftBottom = new Vector2(transformed.LeftPoint, transformed.BottomPoint);
-                var rightTop = new Vector2(transformed.RightPoint, transformed.TopPoint);
-                var right = new Vector2(transformed.RightPoint, (transformed.BottomPoint + transformed.TopPoint) / 2);
-                var rightBottom = new Vector2(transformed.RightPoint, transformed.BottomPoint);
-                var top = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.TopPoint);
-                var bottom = new Vector2((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.BottomPoint);
-
-                DrawEdgeSquare(leftTop);
-                DrawEdgeSquare(left);
-                DrawEdgeSquare(leftBottom);
-                DrawEdgeSquare(rightTop);
-                DrawEdgeSquare(right);
-                DrawEdgeSquare(rightBottom);
-                DrawEdgeSquare(top);
-                DrawEdgeSquare(bottom);
-            }
-
-
-            GL.Enable(EnableCap.Blend);
-            GL.Enable(EnableCap.AlphaTest);
-            GL.Enable(EnableCap.Texture2D);
         }
 
         private static void GetTextureSize(BxlytMaterial pane, Dictionary<string, STGenericTexture> Textures, out float width, out float height)
@@ -1395,11 +1340,6 @@ namespace LayoutBXLYT
                     GL.Vertex2(rect.LeftPoint, rect.TopPoint);
                     GL.End();
                 }
-
-                if (!gameWindow)
-                {
-                    DrawSelectionBox(pane, selectionOutline);
-                }
             }
             else
             {
@@ -1415,19 +1355,6 @@ namespace LayoutBXLYT
 
             //    pane.renderablePane.Render(vertices, vertexColors, texCoords);
             }
-        }
-
-        private static void DrawEdgeSquare(Vector2 position)
-        {
-            float scale = 5;
-
-            GL.Begin(PrimitiveType.LineLoop);
-            GL.Color4(Color.Red);
-            GL.Vertex2(position.X + -1 * scale, position.Y + -1 * scale);
-            GL.Vertex2(position.X + 1 * scale, position.Y + -1 * scale);
-            GL.Vertex2(position.X + 1 * scale, position.Y + 1 * scale);
-            GL.Vertex2(position.X + -1 * scale, position.Y + 1 * scale);
-            GL.End();
         }
     }
 }

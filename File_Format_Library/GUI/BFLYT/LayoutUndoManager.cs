@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Syroot.Maths;
+using Toolbox.Library;
 
 namespace LayoutBXLYT
 {
@@ -178,34 +179,55 @@ namespace LayoutBXLYT
 
         public class UndoActionTransform : IRevertAction
         {
-            public Vector3F Translate;
-            public Vector3F Rotate;
-            public Vector2F Scale;
+            bool TransformChidlren = false;
 
-            public float Width;
-            public float Height;
+            public List<PaneInfo> Panes = new List<PaneInfo>();
 
-            public BasePane targetPane;
-
-
-            public UndoActionTransform(BasePane pane)
+            public UndoActionTransform(List<BasePane> panes)
             {
-                targetPane = pane;
-                Translate = pane.Translate;
-                Scale = pane.Scale;
-                Rotate = pane.Rotate;
-                Width = pane.Width;
-                Height = pane.Height;
+                foreach (var pane in panes)
+                {
+                    TransformChidlren = Runtime.LayoutEditor.TransformChidlren;
+                    Panes.Add(new PaneInfo()
+                    {
+                        targetPane = pane,
+                        Translate = pane.Translate,
+                        Scale = pane.Scale,
+                        Rotate = pane.Rotate,
+                        Width = pane.Width,
+                        Height = pane.Height,
+                    });
+                }
+
             }
 
             public IRevertAction Revert()
             {
-                targetPane.Translate = Translate;
-                targetPane.Scale = Scale;
-                targetPane.Rotate = Rotate;
-                targetPane.Width = Width;
-                targetPane.Height = Height;
+                foreach (var pane in Panes)
+                {
+                    if (!TransformChidlren)
+                        pane.targetPane.KeepChildrenTransform(pane.Translate.X, pane.Translate.Y);
+
+                    pane.targetPane.Translate = pane.Translate;
+                    pane.targetPane.Scale = pane.Scale;
+                    pane.targetPane.Rotate = pane.Rotate;
+                    pane.targetPane.Width = pane.Width;
+                    pane.targetPane.Height = pane.Height;
+                }
+
                 return this;
+            }
+
+            public class PaneInfo
+            {
+                public Vector3F Translate;
+                public Vector3F Rotate;
+                public Vector2F Scale;
+
+                public float Width;
+                public float Height;
+
+                public BasePane targetPane;
             }
         }
     }
