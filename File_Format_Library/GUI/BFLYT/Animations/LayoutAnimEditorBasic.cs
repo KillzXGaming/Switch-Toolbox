@@ -13,6 +13,7 @@ namespace LayoutBXLYT
 {
     public partial class LayoutAnimEditorBasic : LayoutDocked
     {
+        private BxlanHeader ActiveAnim;
         public EventHandler OnPropertyChanged;
 
         public LayoutAnimEditorBasic()
@@ -31,6 +32,8 @@ namespace LayoutBXLYT
 
         public void LoadAnimations(BxlanHeader bxlan, TreeNode root, bool LoadRoot = true)
         {
+            ActiveAnim = bxlan;
+
             if (LoadRoot)
                 treeView1.Nodes.Add(root);
 
@@ -84,6 +87,10 @@ namespace LayoutBXLYT
         private void PropertyChanged()
         {
             OnPropertyChanged?.Invoke(null, new EventArgs());
+
+            //Enable saving if file is edited
+            if (ActiveAnim != null)
+                ActiveAnim.FileInfo.CanSave = true;
         }
     }
 }

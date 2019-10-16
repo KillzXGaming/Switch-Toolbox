@@ -187,6 +187,10 @@ namespace LayoutBXLYT.Cafe
                     if (Utils.GetExtension(file.FileName) == ".bflan")
                     {
                         BFLAN bflan = (BFLAN)file.OpenFile();
+
+                        //Disable saving unless the file gets edited
+                        //Prevents broken files if version is unsupported
+                        bflan.CanSave = false;
                         animations.Add(bflan);
                     }
                 }
@@ -428,6 +432,14 @@ namespace LayoutBXLYT.Cafe
                 List<GRP1> panes = new List<GRP1>();
                 GetGroupChildren(panes, (GRP1)RootGroup);
                 return panes;
+            }
+
+            public override BxlytMaterial GetMaterial(ushort index) {
+                return MaterialList.Materials[index];
+            }
+
+            public override BxlytMaterial CreateNewMaterial(string name) {
+                return new Material(name, this);
             }
 
             public override List<BxlytMaterial> GetMaterials()
@@ -1165,41 +1177,41 @@ namespace LayoutBXLYT.Cafe
                 {
                     case 1:
                         if (WindowFrames.Count == 0)
-                            WindowFrames.Add(new WindowFrame(header,$"{Name}_LT"));
+                            WindowFrames.Add(new BxlytWindowFrame(header,$"{Name}_LT"));
                         break;
                     case 2:
                         if (WindowFrames.Count == 0)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_L"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_L"));
                         if (WindowFrames.Count == 1)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_R"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_R"));
                         break;
                     case 4:
                         if (WindowFrames.Count == 0)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_LT"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_LT"));
                         if (WindowFrames.Count == 1)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_RT"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_RT"));
                         if (WindowFrames.Count == 2)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_LB"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_LB"));
                         if (WindowFrames.Count == 3)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_RB"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_RB"));
                         break;
                     case 8:
                         if (WindowFrames.Count == 0)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_LT"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_LT"));
                         if (WindowFrames.Count == 1)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_RT"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_RT"));
                         if (WindowFrames.Count == 2)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_LB"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_LB"));
                         if (WindowFrames.Count == 3)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_RB"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_RB"));
                         if (WindowFrames.Count == 4)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_T"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_T"));
                         if (WindowFrames.Count == 5)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_B"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_B"));
                         if (WindowFrames.Count == 6)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_R"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_R"));
                         if (WindowFrames.Count == 7)
-                            WindowFrames.Add(new WindowFrame(header, $"{Name}_L"));
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_L"));
                         break;
                 }
 
@@ -1350,7 +1362,7 @@ namespace LayoutBXLYT.Cafe
                 foreach (int offset in offsets)
                 {
                     reader.SeekBegin(pos + offset);
-                    WindowFrames.Add(new WindowFrame(reader, header));
+                    WindowFrames.Add(new BxlytWindowFrame(reader, header));
                 }
             }
 
@@ -1387,7 +1399,7 @@ namespace LayoutBXLYT.Cafe
                     for (int i = 0; i < FrameCount; i++)
                     {
                         writer.WriteUint32Offset(_ofsFramePos + (i * 4), pos);
-                        ((WindowFrame)WindowFrames[i]).Write(writer);
+                        WindowFrames[i].Write(writer);
                     }
                 }
             }
@@ -1450,34 +1462,6 @@ namespace LayoutBXLYT.Cafe
                         writer.Write(texCoord.BottomLeft);
                         writer.Write(texCoord.BottomRight);
                     }
-                }
-            }
-
-            public class WindowFrame : BxlytWindowFrame
-            {
-                public WindowFrame(Header header, string materialName)
-                {
-                    TextureFlip = WindowFrameTexFlip.None;
-
-                    var mat = new Material(materialName, header);
-                    MaterialIndex = (ushort)header.AddMaterial(mat);
-                    Material = mat;
-                }
-
-                public WindowFrame(FileReader reader, Header header)
-                {
-                    MaterialIndex = reader.ReadUInt16();
-                    TextureFlip = (WindowFrameTexFlip)reader.ReadByte();
-                    reader.ReadByte(); //padding
-
-                    Material = header.MaterialList.Materials[MaterialIndex];
-                }
-
-                public void Write(FileWriter writer)
-                {
-                    writer.Write(MaterialIndex);
-                    writer.Write(TextureFlip, false);
-                    writer.Write((byte)0);
                 }
             }
         }
@@ -2228,6 +2212,32 @@ namespace LayoutBXLYT.Cafe
                 Name = name;
             }
 
+            public override BasePane Copy()
+            {
+                PAN1 pan1 = new PAN1();
+                pan1.Alpha = Alpha;
+                pan1.DisplayInEditor = DisplayInEditor;
+                pan1.Childern = Childern;
+                pan1.Parent = Parent;
+                pan1.Name = Name;
+                pan1.LayoutFile = LayoutFile;
+                pan1.NodeWrapper = NodeWrapper;
+                pan1.originX = originX;
+                pan1.originY = originY;
+                pan1.ParentOriginX = ParentOriginX;
+                pan1.ParentOriginY = ParentOriginY;
+                pan1.Rotate = Rotate;
+                pan1.Scale = Scale;
+                pan1.Translate = Translate;
+                pan1.Visible = Visible;
+                pan1.Height = Height;
+                pan1.Width = Width;
+                pan1.UserData = UserData;
+                pan1.UserDataInfo = UserDataInfo;
+                pan1._flags1 = _flags1;
+                return pan1;
+            }
+
             public override UserData CreateUserData()
             {
                 return new USD1();
@@ -2402,9 +2412,6 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("Texture Coordinate Params"), CategoryAttribute("Texture")]
             public TexCoordGen[] TexCoords { get; set; }
 
-            [DisplayName("Tev Stages"), CategoryAttribute("Tev")]
-            public TevStage[] TevStages { get; set; }
-
             [DisplayName("Indirect Parameter"), CategoryAttribute("Texture")]
             [TypeConverter(typeof(ExpandableObjectConverter))]
             public IndirectParameter IndParameter { get; set; }
@@ -2560,7 +2567,7 @@ namespace LayoutBXLYT.Cafe
                 for (int i = 0; i < TevStages.Length; i++)
                 {
                     flags += Bit.BitInsert(1, 1, 2, 24);
-                    TevStages[i].Write(writer);
+                    ((TevStage)TevStages[i]).Write(writer);
                 }
 
                 if (AlphaCompare != null && EnableAlphaCompare)

@@ -139,6 +139,11 @@ namespace LayoutBXLYT
             ParentOriginY = OriginY.Center;
         }
 
+        public virtual BasePane Copy()
+        {
+            return new BasePane();
+        }
+
         public virtual UserData CreateUserData()
         {
             return new UserData();
@@ -956,6 +961,7 @@ namespace LayoutBXLYT
     }
 
 
+
     public enum TevScale
     {
         Scale1,
@@ -1121,6 +1127,31 @@ namespace LayoutBXLYT
 
         public ushort MaterialIndex;
         public WindowFrameTexFlip TextureFlip { get; set; }
+
+        public BxlytWindowFrame(BxlytHeader header, string materialName)
+        {
+            TextureFlip = WindowFrameTexFlip.None;
+
+            var mat = header.CreateNewMaterial(materialName);
+            MaterialIndex = (ushort)header.AddMaterial(mat);
+            Material = mat;
+        }
+
+        public BxlytWindowFrame(FileReader reader, BxlytHeader header)
+        {
+            MaterialIndex = reader.ReadUInt16();
+            TextureFlip = (WindowFrameTexFlip)reader.ReadByte();
+            reader.ReadByte(); //padding
+
+            Material = header.GetMaterial(MaterialIndex);
+        }
+
+        public void Write(FileWriter writer)
+        {
+            writer.Write(MaterialIndex);
+            writer.Write(TextureFlip, false);
+            writer.Write((byte)0);
+        }
     }
 
     public class TexCoord
@@ -1589,6 +1620,16 @@ namespace LayoutBXLYT
         public virtual void TryRemoveMaterial(BxlytMaterial material) { }
         public virtual void TryRemoveMaterial(List<BxlytMaterial> materials) { }
 
+        public virtual BxlytMaterial CreateNewMaterial(string name)
+        {
+            return new BxlytMaterial();
+        }
+
+        public virtual BxlytMaterial GetMaterial(ushort index)
+        {
+            return new BxlytMaterial();
+        }
+
         public BxlytMaterial SearchMaterial(string name)
         {
             var materials = GetMaterials();
@@ -1792,6 +1833,15 @@ namespace LayoutBXLYT
 
         [DisplayName("Texture Maps"), CategoryAttribute("Texture")]
         public BxlytTextureRef[] TextureMaps { get; set; }
+
+        [DisplayName("Tev Stages"), CategoryAttribute("Tev")]
+        public BxlytTevStage[] TevStages { get; set; }
+    }
+
+    public class BxlytTevStage
+    {
+        public TevMode ColorMode { get; set; }
+        public TevMode AlphaMode { get; set; }
     }
 
     public class MaterialAnimController

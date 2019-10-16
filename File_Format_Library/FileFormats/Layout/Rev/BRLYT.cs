@@ -198,6 +198,11 @@ namespace LayoutBXLYT
                 return materials;
             }
 
+            public override BxlytMaterial CreateNewMaterial(string name)
+            {
+                return new Material(name, this);
+            }
+
             public List<GRP1> GetGroupPanes()
             {
                 List<GRP1> panes = new List<GRP1>();
@@ -475,18 +480,12 @@ namespace LayoutBXLYT
                 LineAlignment = (LineAlign)reader.ReadByte();
                 _flags = reader.ReadByte();
                 reader.Seek(1); //padding
-                ItalicTilt = reader.ReadSingle();
                 uint textOffset = reader.ReadUInt32();
                 FontForeColor = STColor8.FromBytes(reader.ReadBytes(4));
                 FontBackColor = STColor8.FromBytes(reader.ReadBytes(4));
                 FontSize = reader.ReadVec2SY();
                 CharacterSpace = reader.ReadSingle();
                 LineSpace = reader.ReadSingle();
-                ShadowXY = reader.ReadVec2SY();
-                ShadowXYSize = reader.ReadVec2SY();
-                ShadowForeColor = STColor8.FromBytes(reader.ReadBytes(4));
-                ShadowBackColor = STColor8.FromBytes(reader.ReadBytes(4));
-                ShadowItalic = reader.ReadSingle();
 
                 if (RestrictedTextLengthEnabled)
                     Text = reader.ReadString(MaxTextLength);
@@ -507,7 +506,6 @@ namespace LayoutBXLYT
                 writer.Write(LineAlignment, false);
                 writer.Write(_flags);
                 writer.Seek(1);
-                writer.Write(ItalicTilt);
                 long _ofsTextPos = writer.Position;
                 writer.Write(0); //text offset
                 writer.Write(FontForeColor.ToBytes());
@@ -515,11 +513,6 @@ namespace LayoutBXLYT
                 writer.Write(FontSize);
                 writer.Write(CharacterSpace);
                 writer.Write(LineSpace);
-                writer.Write(ShadowXY);
-                writer.Write(ShadowXYSize);
-                writer.Write(ShadowForeColor.ToBytes());
-                writer.Write(ShadowBackColor.ToBytes());
-                writer.Write(ShadowItalic);
 
                 writer.WriteUint32Offset(_ofsTextPos, pos);
                 if (RestrictedTextLengthEnabled)
@@ -544,11 +537,162 @@ namespace LayoutBXLYT
             };
         }
 
-        public class WND1 : PAN1
+        public class WND1 : PAN1, IWindowPane
         {
+            public Header layoutHeader;
+
+            public bool UseOneMaterialForAll
+            {
+                get { return Convert.ToBoolean(_flag & 1); }
+                set { }
+            }
+
+            public bool UseVertexColorForAll
+            {
+                get { return Convert.ToBoolean((_flag >> 1) & 1); }
+                set { }
+            }
+
+            public WindowKind WindowKind { get; set; }
+
+            public bool NotDrawnContent
+            {
+                get { return (_flag & 8) == 16; }
+                set { }
+            }
+
+            public ushort StretchLeft { get; set; }
+            public ushort StretchRight { get; set; }
+            public ushort StretchTop { get; set; }
+            public ushort StretchBottm { get; set; }
+            public ushort FrameElementLeft { get; set; }
+            public ushort FrameElementRight { get; set; }
+            public ushort FrameElementTop { get; set; }
+            public ushort FrameElementBottm { get; set; }
+            private byte _flag;
+
+            private byte frameCount;
+            public byte FrameCount
+            {
+                get { return frameCount; }
+                set
+                {
+                    frameCount = value;
+                }
+            }
+
+            public System.Drawing.Color[] GetVertexColors()
+            {
+                return new System.Drawing.Color[4]
+                {
+                    Content.ColorTopLeft.Color,
+                    Content.ColorTopRight.Color,
+                    Content.ColorBottomLeft.Color,
+                    Content.ColorBottomRight.Color,
+                };
+            }
+
+            public void ReloadFrames()
+            {
+                SetFrames(layoutHeader);
+            }
+
+            public void SetFrames(Header header)
+            {
+                if (WindowFrames == null)
+                    WindowFrames = new List<BxlytWindowFrame>();
+
+                switch (FrameCount)
+                {
+                    case 1:
+                        if (WindowFrames.Count == 0)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_LT"));
+                        break;
+                    case 2:
+                        if (WindowFrames.Count == 0)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_L"));
+                        if (WindowFrames.Count == 1)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_R"));
+                        break;
+                    case 4:
+                        if (WindowFrames.Count == 0)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_LT"));
+                        if (WindowFrames.Count == 1)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_RT"));
+                        if (WindowFrames.Count == 2)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_LB"));
+                        if (WindowFrames.Count == 3)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_RB"));
+                        break;
+                    case 8:
+                        if (WindowFrames.Count == 0)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_LT"));
+                        if (WindowFrames.Count == 1)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_RT"));
+                        if (WindowFrames.Count == 2)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_LB"));
+                        if (WindowFrames.Count == 3)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_RB"));
+                        if (WindowFrames.Count == 4)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_T"));
+                        if (WindowFrames.Count == 5)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_B"));
+                        if (WindowFrames.Count == 6)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_R"));
+                        if (WindowFrames.Count == 7)
+                            WindowFrames.Add(new BxlytWindowFrame(header, $"{Name}_L"));
+                        break;
+                }
+
+                //Now search for invalid unused materials and remove them
+                for (int i = 0; i < WindowFrames.Count; i++)
+                {
+                    if (i >= FrameCount)
+                        header.TryRemoveMaterial(WindowFrames[i].Material);
+                    else if (!header.MaterialList.Materials.Contains((Material)WindowFrames[i].Material))
+                        header.AddMaterial(WindowFrames[i].Material);
+                }
+            }
+
+            [TypeConverter(typeof(ExpandableObjectConverter))]
+            public BxlytWindowContent Content { get; set; }
+
+            [Browsable(false)]
+            public List<BxlytWindowFrame> WindowFrames { get; set; }
+
             public WND1() : base()
             {
 
+            }
+
+            public WND1(Header header, string name)
+            {
+                layoutHeader = header;
+                LoadDefaults();
+                Name = name;
+
+                Content = new WindowContent(header, this.Name);
+                UseOneMaterialForAll = true;
+                UseVertexColorForAll = true;
+                WindowKind = WindowKind.Around;
+                NotDrawnContent = false;
+
+                StretchLeft = 0;
+                StretchRight = 0;
+                StretchTop = 0;
+                StretchBottm = 0;
+
+                Width = 70;
+                Height = 80;
+
+                FrameElementLeft = 16;
+                FrameElementRight = 16;
+                FrameElementTop = 16;
+                FrameElementBottm = 16;
+                FrameCount = 1;
+
+                WindowFrames = new List<BxlytWindowFrame>();
+                SetFrames(header);
             }
 
             public WND1(FileReader reader) : base(reader)
@@ -559,6 +703,14 @@ namespace LayoutBXLYT
             public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
+            }
+        }
+
+        public class WindowContent : BxlytWindowContent
+        {
+            public WindowContent(Header header, string name)
+            {
+
             }
         }
 
@@ -758,6 +910,26 @@ namespace LayoutBXLYT
 
             }
 
+            public void LoadDefaults()
+            {
+                Alpha = 255;
+                PaneMagFlags = 0;
+                Name = "";
+                Translate = new Vector3F(0, 0, 0);
+                Rotate = new Vector3F(0, 0, 0);
+                Scale = new Vector2F(1, 1);
+                Width = 30;
+                Height = 40;
+                UserDataInfo = "";
+
+                originX = OriginX.Center;
+                originY = OriginY.Center;
+                ParentOriginX = OriginX.Center;
+                ParentOriginY = OriginY.Center;
+                InfluenceAlpha = false;
+                Visible = true;
+            }
+
             enum OriginType : byte
             {
                 Left = 0,
@@ -909,7 +1081,7 @@ namespace LayoutBXLYT
                     return "";
             }
 
-            public Material()
+            public Material(string name, Header header)
             {
                 TextureMaps = new TextureRef[0];
                 TextureTransforms = new List<TextureTransform>();

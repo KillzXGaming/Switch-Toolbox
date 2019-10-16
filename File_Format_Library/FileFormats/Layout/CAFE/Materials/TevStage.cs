@@ -2,11 +2,8 @@
 
 namespace LayoutBXLYT.Cafe
 {
-    public class TevStage
+    public class TevStage : BxlytTevStage
     {
-        public TevMode ColorMode { get; set; }
-        public TevMode AlphaMode { get; set; }
-
         private byte colorFlags;
         private byte alphaFlags;
 
