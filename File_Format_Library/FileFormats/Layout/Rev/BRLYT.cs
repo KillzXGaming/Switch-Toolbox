@@ -115,16 +115,23 @@ namespace LayoutBXLYT
             {
                 foreach (var file in IFileInfo.ArchiveParent.Files)
                 {
-                    if (Utils.GetExtension(file.FileName) == ".tpl")
+                    try
                     {
-                        TPL tpl = (TPL)file.OpenFile();
-                        file.FileFormat = tpl;
-                        foreach (var tex in tpl.IconTextureList)
+                        if (Utils.GetExtension(file.FileName) == ".tpl")
                         {
-                            //Only need the first texture
-                            if (!textures.ContainsKey(tex.Text))
-                                textures.Add(file.FileName, tex);
+                            TPL tpl = (TPL)file.OpenFile();
+                            file.FileFormat = tpl;
+                            foreach (var tex in tpl.IconTextureList)
+                            {
+                                //Only need the first texture
+                                if (!textures.ContainsKey(tex.Text))
+                                    textures.Add(file.FileName, tex);
+                            }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        STErrorDialog.Show($"Failed to load texture {file.FileName}. ", "Layout Editor", ex.ToString());
                     }
                 }
             }

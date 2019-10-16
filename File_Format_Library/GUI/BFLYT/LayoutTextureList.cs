@@ -77,9 +77,9 @@ namespace LayoutBXLYT
             ActiveLayout = header;
             listViewCustom1.Items.Clear();
             imgListSmall.Images.Clear();
-            imgListSmall.Images.Add(new Bitmap(30, 30));
+            imgListSmall.Images.Add(FirstPlugin.Properties.Resources.MissingTexture);
             imgListBig.Images.Clear();
-            imgListBig.Images.Add(new Bitmap(60, 60));
+            imgListBig.Images.Add(FirstPlugin.Properties.Resources.MissingTexture);
 
             listViewCustom1.LargeImageList = imgListBig;
             listViewCustom1.SmallImageList = imgListSmall;

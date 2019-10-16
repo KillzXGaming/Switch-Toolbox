@@ -207,24 +207,31 @@ namespace LayoutBXLYT.Cafe
                 string folder = Path.GetDirectoryName(FilePath);
                 foreach (var file in Directory.GetFiles(folder))
                 {
-                    if (Utils.GetExtension(file) == ".bflim")
+                    try
                     {
-                        BFLIM bflim = (BFLIM)STFileLoader.OpenFileFormat(file);
-                        if (!textures.ContainsKey(bflim.FileName))
-                            textures.Add(bflim.FileName, bflim);
-                    }
-                    if (Utils.GetExtension(file) == ".bntx")
-                    {
-                        BNTX bntx = (BNTX)STFileLoader.OpenFileFormat(file);
-                        foreach (var tex in bntx.Textures)
+                        if (Utils.GetExtension(file) == ".bflim")
                         {
-                            if (!textures.ContainsKey(tex.Key))
-                                textures.Add(tex.Key, tex.Value);
+                            BFLIM bflim = (BFLIM)STFileLoader.OpenFileFormat(file);
+                            if (!textures.ContainsKey(bflim.FileName))
+                                textures.Add(bflim.FileName, bflim);
                         }
+                        if (Utils.GetExtension(file) == ".bntx")
+                        {
+                            BNTX bntx = (BNTX)STFileLoader.OpenFileFormat(file);
+                            foreach (var tex in bntx.Textures)
+                            {
+                                if (!textures.ContainsKey(tex.Key))
+                                    textures.Add(tex.Key, tex.Value);
+                            }
 
-                        string fileName = Path.GetFileName(file);
-                        if (!header.TextureManager.BinaryContainers.ContainsKey(fileName))
-                            header.TextureManager.BinaryContainers.Add(fileName, bntx);
+                            string fileName = Path.GetFileName(file);
+                            if (!header.TextureManager.BinaryContainers.ContainsKey(fileName))
+                                header.TextureManager.BinaryContainers.Add(fileName, bntx);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        STErrorDialog.Show($"Failed to load texture {file}. ", "Layout Editor", ex.ToString());
                     }
                 }
             }
@@ -233,23 +240,30 @@ namespace LayoutBXLYT.Cafe
             {
                 foreach (var file in archive.Files)
                 {
-                    if (Utils.GetExtension(file.FileName) == ".bntx")
+                    try
                     {
-                        BNTX bntx = (BNTX)file.OpenFile();
-                        file.FileFormat = bntx;
-                        foreach (var tex in bntx.Textures)
-                            if (!textures.ContainsKey(tex.Key))
-                                textures.Add(tex.Key, tex.Value);
+                        if (Utils.GetExtension(file.FileName) == ".bntx")
+                        {
+                            BNTX bntx = (BNTX)file.OpenFile();
+                            file.FileFormat = bntx;
+                            foreach (var tex in bntx.Textures)
+                                if (!textures.ContainsKey(tex.Key))
+                                    textures.Add(tex.Key, tex.Value);
 
-                        if (!header.TextureManager.BinaryContainers.ContainsKey($"{archive.FileName}.bntx"))
-                            header.TextureManager.BinaryContainers.Add($"{archive.FileName}.bntx", bntx);
+                            if (!header.TextureManager.BinaryContainers.ContainsKey($"{archive.FileName}.bntx"))
+                                header.TextureManager.BinaryContainers.Add($"{archive.FileName}.bntx", bntx);
+                        }
+                        if (Utils.GetExtension(file.FileName) == ".bflim")
+                        {
+                            BFLIM bflim = (BFLIM)file.OpenFile();
+                            file.FileFormat = bflim;
+                            if (!textures.ContainsKey(bflim.FileName))
+                                textures.Add(bflim.FileName, bflim);
+                        }
                     }
-                    if (Utils.GetExtension(file.FileName) == ".bflim")
+                    catch (Exception ex)
                     {
-                        BFLIM bflim = (BFLIM)file.OpenFile();
-                        file.FileFormat = bflim;
-                        if (!textures.ContainsKey(bflim.FileName))
-                            textures.Add(bflim.FileName, bflim);
+                        STErrorDialog.Show($"Failed to load texture {file.FileName}. ", "Layout Editor", ex.ToString());
                     }
                 }
 
