@@ -166,29 +166,32 @@ namespace LayoutBXLYT
         public void ApplyNewParentTransform()
         {
             //Get the new transform and apply it
-            var transform = GetParentTransform();
         //    Translate += transform;
         }
 
         public void ResetParentTransform(BasePane newParent)
         {
             //We need to get the difference in the parent transform and remove it to the current transform of this pane
-            var transform = GetParentTransform();
-            var newParentTransform = newParent.GetParentTransform();
-            Translate -= transform;
-            Translate += newParentTransform;
+            var transform = GetParentTransform(Parent);
+            var newParentTransform = GetParentTransform(newParent);
+            Translate += transform;
+            Translate -= newParentTransform;
+
+            Console.WriteLine($"newParentTransform {newParentTransform.X} {newParentTransform.Y} {newParentTransform.Z}");
+            Console.WriteLine($"transform {transform.X} {transform.Y} {transform.Z}");
         }
 
-        private Vector3F GetParentTransform() {
-            return GetParentTransform(Vector3F.Zero);
+        private Vector3F GetParentTransform(BasePane parent) {
+            return GetParentTransform(parent.Translate);
         }
 
         private Vector3F GetParentTransform(Vector3F translate)
         {
             if (Parent != null)
-                return translate += Parent.GetParentTransform(translate);
-            else
-                return translate;
+                translate = Parent.Translate + Parent.GetParentTransform(translate);
+
+            return translate;
+
         }
 
         public void KeepChildrenTransform(float newTransX, float newTransY)
