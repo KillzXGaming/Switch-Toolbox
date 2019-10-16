@@ -153,7 +153,7 @@ namespace FirstPlugin
                             palette.Read(reader);
                             PaletteHeaders.Add(palette);
 
-                            var GXPaletteFormat = (Decode_Gamecube.PaletteFormats)image.Format;
+                            var GXPaletteFormat = (Decode_Gamecube.PaletteFormats)palette.PaletteFormat;
 
                             texWrapper.SetPaletteData(palette.Data, Decode_Gamecube.ToGenericPaletteFormat(GXPaletteFormat));
                         }
@@ -230,6 +230,7 @@ namespace FirstPlugin
             {
                 EntryCount = reader.ReadUInt16();
                 Unpacked = reader.ReadByte();
+                reader.ReadByte();
                 PaletteFormat = reader.ReadUInt32();
                 PaletteDataOffset = reader.ReadUInt32();
 
@@ -243,6 +244,7 @@ namespace FirstPlugin
             {
                 writer.Write(EntryCount);
                 writer.Write(Unpacked);
+                writer.Write((byte)0);
                 writer.Write(PaletteFormat);
                 writer.Write(PaletteDataOffset);
             }
