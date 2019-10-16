@@ -650,9 +650,6 @@ namespace Bfres.Structs
                     if (texture.SamplerName == samplerAnim.Text)
                     {
                         texture.textureState = STGenericMatTexture.TextureState.Animated;
-
-                        Console.WriteLine($"Frame " + Frame);
-
                         texture.animatedTexName = samplerAnim.GetActiveTextureNameByFrame(Frame);
                     }
                 }

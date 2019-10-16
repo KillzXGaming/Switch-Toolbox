@@ -155,6 +155,7 @@ namespace FirstPlugin
 
                             var GXPaletteFormat = (Decode_Gamecube.PaletteFormats)palette.PaletteFormat;
 
+                            Console.WriteLine($"GXPaletteFormat {GXPaletteFormat}");
                             texWrapper.SetPaletteData(palette.Data, Decode_Gamecube.ToGenericPaletteFormat(GXPaletteFormat));
                         }
 
