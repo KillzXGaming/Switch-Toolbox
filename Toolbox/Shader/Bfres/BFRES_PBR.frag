@@ -35,6 +35,8 @@ uniform vec3 light1Pos;
 const float levels = 3.0;
 
 // Viewport Settings
+uniform vec3 specLightDirection;
+
 uniform int uvChannel;
 uniform int renderType;
 uniform int useNormalMap;
@@ -306,16 +308,13 @@ void main()
 		N = CalcBumpedNormal(normal, NormalMap, vert, 0);
 
     vec3 V = normalize(I); // view
-	vec3 L = normalize(objectPosition - I); // Light
-	vec3 H = normalize(objectPosition + I); // half angle
-    vec3 R = reflect(-I, N); // reflection
+	vec3 L = normalize(specLightDirection ); // Light
+	vec3 H = normalize(specLightDirection + I); // half angle
+    vec3 R = reflect(I, N); // reflection
 
     vec3 f0 = mix(vec3(0.04), albedo, metallic); // dialectric
-    vec3 kS = FresnelSchlickRoughness(max(dot(N, V), 0.0), f0, roughness);
+    vec3 kS = FresnelSchlickRoughness(max(dot(N, H), 0.0), f0, roughness);
     
-
-    vec3 kD = 1.0 - kS;
-    kD *= 1.0 - metallic;
 
     BakedData ShadowBake = ShadowMapBaked(BakeShadowMap,BakeLightMap, f_texcoord1, f_texcoord2, int(bake_shadow_type),int(bake_light_type), int(bake_calc_type), N );
 
@@ -332,7 +331,6 @@ void main()
     // Diffuse pass
     vec3 diffuseIblColor = texture(irradianceMap, N).rgb;
     vec3 diffuseTerm = diffuseIblColor * albedo;
-    diffuseTerm *= kD;
     diffuseTerm *= cavity;
     diffuseTerm *= ao;
     diffuseTerm *= shadow;
@@ -350,7 +348,8 @@ void main()
     vec2 envBRDF  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 brdfTerm = (kS * envBRDF.x + envBRDF.y);
    // vec3 specularTerm = specularIblColor * (kS * brdfTerm.x + brdfTerm.y) * specIntensity;
-    vec3 specularTerm = specularIblColor * brdfTerm * specIntensity;
+ //   vec3 specularTerm = specularIblColor * brdfTerm * specIntensity;
+    vec3 specularTerm = specularIblColor * kS;
 
 
     // Add render passes.
@@ -386,7 +385,6 @@ void main()
 	{
 	    diffuseIblColor = texture(irradianceMap, N).rgb;
 	    diffuseTerm = diffuseIblColor * vec3(0.5);
-		diffuseTerm *= kD;
 		diffuseTerm *= cavity;
 		diffuseTerm *= ao;
 		diffuseTerm *= shadow;

@@ -367,6 +367,12 @@ namespace FirstPlugin
             sphereMatrix = invertedCamera;
             sphereMatrix.Transpose();
 
+            invertedCamera = mvpMat.Inverted();
+            Vector3 lightDirection = new Vector3(0f, 0f, -1f);
+
+            shader.SetVector3("specLightDirection", Vector3.TransformNormal(lightDirection, invertedCamera).Normalized());
+            shader.SetVector3("difLightDirection", Vector3.TransformNormal(lightDirection, invertedCamera).Normalized());
+
             shader.SetMatrix4x4("sphereMatrix", ref sphereMatrix);
 
             shader.SetMatrix4x4("mtxCam", ref computedCamMtx);
@@ -379,9 +385,6 @@ namespace FirstPlugin
 
             shader.SetVector3("difLightColor", new Vector3(1));
             shader.SetVector3("ambLightColor", new Vector3(1));
-
-
-            Vector3 lightDirection = new Vector3(0f, 0f, -1f);
 
             GL.Enable(EnableCap.AlphaTest);
             GL.AlphaFunc(AlphaFunction.Gequal, 0.1f);

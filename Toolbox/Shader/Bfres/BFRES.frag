@@ -38,6 +38,7 @@ uniform mat4 mtxMdl;
 uniform vec3 cameraPosition;
 
 // Viewport Settings
+uniform vec3 difLightDirection;
 uniform int uvChannel;
 uniform int renderType;
 uniform int useNormalMap;
@@ -187,8 +188,7 @@ void main()
     vec3 I = vec3(0,0,-1) * mat3(mtxCam);
     vec3 V = normalize(I); // view
     vec3 R = reflect(-I, N); // reflection
-
-    float light = max(dot(N, V), 0.0);
+    float halfLambert = dot(difLightDirection, N) * 0.5 + 0.5;
 
     // Light Map
     vec4 LightMapColor = texture(BakeLightMap, f_texcoord2);
@@ -220,7 +220,7 @@ void main()
         alpha *= 0.5;
     }
 
-	albedo *= light;
+	albedo *= halfLambert;
 
 	vec3 LightingDiffuse = vec3(0);
 	if (HasLightMap == 1)
