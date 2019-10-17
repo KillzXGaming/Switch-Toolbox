@@ -283,7 +283,7 @@ namespace FirstPlugin
                 get
                 {
                     if (hashName == null || NameChanged)
-                        hashName = NameHash(FileName).ToString("X");
+                        hashName = NameHash(FileName).ToString("X8");
 
                     return hashName;
                 }
