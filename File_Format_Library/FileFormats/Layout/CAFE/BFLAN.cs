@@ -199,6 +199,7 @@ namespace LayoutBXLYT
         public class PAT1 : BxlanPAT1
         {
             private byte[] UnknownData;
+
             private byte flags;
 
             public PAT1()
@@ -267,8 +268,6 @@ namespace LayoutBXLYT
 
         public class PAI1 : BxlanPAI1
         {
-
-
             public PAI1()
             {
                 Textures = new List<string>();

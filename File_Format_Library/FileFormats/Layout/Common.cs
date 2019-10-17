@@ -1118,6 +1118,65 @@ namespace LayoutBXLYT
         public virtual BxlytMaterial Material { get; set; }
 
         public List<TexCoord> TexCoords = new List<TexCoord>();
+
+        private BxlytHeader LayoutFile;
+
+        public BxlytWindowContent(BxlytHeader header, string name)
+        {
+            LayoutFile = header;
+            ColorTopLeft = STColor8.White;
+            ColorTopRight = STColor8.White;
+            ColorBottomLeft = STColor8.White;
+            ColorBottomRight = STColor8.White;
+
+            TexCoords.Add(new TexCoord());
+
+            //Add new material
+            Material = header.CreateNewMaterial($"{name}_C");
+            MaterialIndex = (ushort)header.AddMaterial(Material);
+        }
+
+        public BxlytWindowContent(FileReader reader, BxlytHeader header)
+        {
+            LayoutFile = header;
+
+            ColorTopLeft = reader.ReadColor8RGBA();
+            ColorTopRight = reader.ReadColor8RGBA();
+            ColorBottomLeft = reader.ReadColor8RGBA();
+            ColorBottomRight = reader.ReadColor8RGBA();
+            MaterialIndex = reader.ReadUInt16();
+            byte UVCount = reader.ReadByte();
+            reader.ReadByte(); //padding
+
+            for (int i = 0; i < UVCount; i++)
+                TexCoords.Add(new TexCoord()
+                {
+                    TopLeft = reader.ReadVec2SY(),
+                    TopRight = reader.ReadVec2SY(),
+                    BottomLeft = reader.ReadVec2SY(),
+                    BottomRight = reader.ReadVec2SY(),
+                });
+
+            Material = LayoutFile.GetMaterial(MaterialIndex);
+        }
+
+        public void Write(FileWriter writer)
+        {
+            writer.Write(ColorTopLeft);
+            writer.Write(ColorTopRight);
+            writer.Write(ColorBottomLeft);
+            writer.Write(ColorBottomRight);
+            writer.Write(MaterialIndex);
+            writer.Write((byte)TexCoords.Count);
+            writer.Write((byte)0);
+            foreach (var texCoord in TexCoords)
+            {
+                writer.Write(texCoord.TopLeft);
+                writer.Write(texCoord.TopRight);
+                writer.Write(texCoord.BottomLeft);
+                writer.Write(texCoord.BottomRight);
+            }
+        }
     }
 
     public class BxlytWindowFrame

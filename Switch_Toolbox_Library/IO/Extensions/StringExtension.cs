@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.IO;
 
 namespace System
@@ -24,6 +24,12 @@ namespace System
                 .WithEnding("\\"));
 
             return normalizedPath.StartsWith(normalizedBaseDirPath, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static string RemoveNumbersAtEnd(this string str)
+        {
+            Regex rgx = new Regex(@"\d+$");
+            return rgx.Replace(str, string.Empty);
         }
 
         /// <summary>

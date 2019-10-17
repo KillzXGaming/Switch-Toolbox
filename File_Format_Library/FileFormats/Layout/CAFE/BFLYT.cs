@@ -1154,7 +1154,7 @@ namespace LayoutBXLYT.Cafe
                 LoadDefaults();
                 Name = name;
 
-                Content = new WindowContent(header, this.Name);
+                Content = new BxlytWindowContent(header, this.Name);
                 UseOneMaterialForAll = true;
                 UseVertexColorForAll = true;
                 WindowKind = WindowKind.Around;
@@ -1368,7 +1368,7 @@ namespace LayoutBXLYT.Cafe
                 WindowKind = (WindowKind)((_flag >> 2) & 3);
 
                 reader.SeekBegin(pos + contentOffset);
-                Content = new WindowContent(reader, header);
+                Content = new BxlytWindowContent(reader, header);
 
                 reader.SeekBegin(pos + frameOffsetTbl);
 
@@ -1402,7 +1402,7 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(0);
 
                 writer.WriteUint32Offset(_ofsContentPos, pos);
-                ((WindowContent)Content).Write(writer);
+                Content.Write(writer);
 
                 if (WindowFrames.Count > 0)
                 {
@@ -1414,67 +1414,6 @@ namespace LayoutBXLYT.Cafe
                     {
                         writer.WriteUint32Offset(_ofsFramePos + (i * 4), pos);
                         WindowFrames[i].Write(writer);
-                    }
-                }
-            }
-
-            public class WindowContent : BxlytWindowContent
-            {
-                private Header LayoutFile;
-
-                public WindowContent(Header header, string name) {
-                    LayoutFile = header;
-                    ColorTopLeft = STColor8.White;
-                    ColorTopRight = STColor8.White;
-                    ColorBottomLeft = STColor8.White;
-                    ColorBottomRight = STColor8.White;
-
-                    TexCoords.Add(new TexCoord());
-
-                    //Add new material
-                    Material = new Material($"{name}_C", header);
-                    MaterialIndex = (ushort)header.AddMaterial(Material);
-                }
-
-                public WindowContent(FileReader reader, Header header)
-                {
-                    LayoutFile = header;
-
-                    ColorTopLeft = reader.ReadColor8RGBA();
-                    ColorTopRight = reader.ReadColor8RGBA();
-                    ColorBottomLeft = reader.ReadColor8RGBA();
-                    ColorBottomRight = reader.ReadColor8RGBA();
-                    MaterialIndex = reader.ReadUInt16();
-                    byte UVCount = reader.ReadByte();
-                    reader.ReadByte(); //padding
-
-                    for (int i = 0; i < UVCount; i++)
-                        TexCoords.Add(new TexCoord()
-                        {
-                            TopLeft = reader.ReadVec2SY(),
-                            TopRight = reader.ReadVec2SY(),
-                            BottomLeft = reader.ReadVec2SY(),
-                            BottomRight = reader.ReadVec2SY(),
-                        });
-
-                    Material = LayoutFile.MaterialList.Materials[MaterialIndex];
-                }
-
-                public void Write(FileWriter writer)
-                {
-                    writer.Write(ColorTopLeft);
-                    writer.Write(ColorTopRight);
-                    writer.Write(ColorBottomLeft);
-                    writer.Write(ColorBottomRight);
-                    writer.Write(MaterialIndex);
-                    writer.Write((byte)TexCoords.Count);
-                    writer.Write((byte)0);
-                    foreach (var texCoord in TexCoords)
-                    {
-                        writer.Write(texCoord.TopLeft);
-                        writer.Write(texCoord.TopRight);
-                        writer.Write(texCoord.BottomLeft);
-                        writer.Write(texCoord.BottomRight);
                     }
                 }
             }

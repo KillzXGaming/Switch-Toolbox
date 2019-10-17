@@ -34,6 +34,8 @@ namespace LayoutBXLYT
 
         private LayoutEditor ParentEditor;
 
+        private List<BasePane> CopiedPanes = new List<BasePane>();
+
         private RenderableTex backgroundTex;
         public BxlytHeader LayoutFile;
         public List<BxlytHeader> LayoutFiles = new List<BxlytHeader>();
@@ -840,7 +842,6 @@ namespace LayoutBXLYT
                 createPanes.DropDownItems.Add(new STToolStripItem("Text Box Pane", CreateTextPaneAction));
                 createPanes.DropDownItems.Add(new STToolStripItem("Window Pane", CreateWindowPaneAction));
                 createPanes.DropDownItems.Add(new STToolStripItem("Boundry Pane", CreateBoundryPaneAction));
-
                 var hitPanes = GetHitPanes(LayoutFile.RootPane, coords.X, coords.Y, new List<BasePane>());
                 for (int i = 0; i < hitPanes.Count; i++)
                     selectOverlapping.DropDownItems.Add(
@@ -853,6 +854,8 @@ namespace LayoutBXLYT
                 if (SelectedPanes.Count > 0)
                 {
                     stContextMenuStrip1.Items.Add(new STToolStripSeparator());
+                    stContextMenuStrip1.Items.Add(new STToolStripItem("Copy", CopyPaneAction));
+                    stContextMenuStrip1.Items.Add(new STToolStripItem("Paste", PastePaneAction));
                     stContextMenuStrip1.Items.Add(new STToolStripItem("Edit Group"));
                     stContextMenuStrip1.Items.Add(new STToolStripItem("Delete Selected Panes",DeletePaneAction ));
                     stContextMenuStrip1.Items.Add(new STToolStripItem("Hide Selected Panes", HidePaneAction));
@@ -888,6 +891,40 @@ namespace LayoutBXLYT
         private void CreateBoundryPaneAction(object sender, EventArgs e) {
             var pane = ParentEditor.AddNewBoundryPane();
             SetupNewPane(pane, pickOriginMouse);
+        }
+
+        private void CopyPaneAction(object sender, EventArgs e) {
+            CopyPanes();
+        }
+
+        private void PastePaneAction(object sender, EventArgs e) {
+            PastePanes();
+        }
+
+        private void CopyPanes()
+        {
+            return;
+
+            CopiedPanes.Clear();
+            foreach (var pane in SelectedPanes)
+            {
+                var copiedPane = pane.Copy();
+                CopiedPanes.Add(copiedPane);
+            }
+        }
+
+        private void PastePanes()
+        {
+            return;
+
+            SelectedPanes.Clear();
+            foreach (var pane in CopiedPanes)
+            {
+                ParentEditor.AddNewPastedPane(pane);
+                SelectedPanes.Add(pane);
+            }
+
+            glControl1.Invalidate();
         }
 
         private void SetupNewPane(BasePane pane, Point point)
@@ -1341,6 +1378,16 @@ namespace LayoutBXLYT
             {
                 UndoManger.Redo();
                 ParentEditor.UpdateUndo();
+                glControl1.Invalidate();
+            }
+            else if (e.Control && e.KeyCode == Keys.C) // Ctrl + C copy
+            {
+                CopyPanes();
+                glControl1.Invalidate();
+            }
+            else if (e.Control && e.KeyCode == Keys.V) // Ctrl + V paste
+            {
+                PastePanes();
                 glControl1.Invalidate();
             }
             else if (e.KeyCode == Keys.Delete)

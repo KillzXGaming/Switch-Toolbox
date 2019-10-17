@@ -178,14 +178,17 @@ namespace Toolbox.Library
             return data.Skip((int)offset).Take((int)length).ToArray();
         }
 
-        public static string RenameDuplicateString(List<string> strings, string oldString, int index = 0)
+        public static string RenameDuplicateString(List<string> strings, string oldString, int index = 0, int numDigits = 1)
         {
             if (strings.Contains(oldString))
             {
-                string NewString = $"{oldString}_{index++}";
+                string key = $"{index++}";
+                if (numDigits == 2)
+                    key = string.Format("{0:00}", key);
 
+                string NewString = $"{oldString}_{key}";
                 if (strings.Contains(NewString))
-                    return RenameDuplicateString(strings, oldString, index);
+                    return RenameDuplicateString(strings, oldString, index, numDigits);
                 else
                     return NewString;
             }

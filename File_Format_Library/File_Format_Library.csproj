@@ -648,6 +648,16 @@
     <Compile Include="GUI\BFRES\SmoothNormalsMultiMeshForm.Designer.cs">
       <DependentUpon>SmoothNormalsMultiMeshForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Byaml\CourseMuunt2D\MuuntEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Byaml\CourseMuunt2D\MuuntEditor.Designer.cs">
+      <DependentUpon>MuuntEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Byaml\CourseMuunt2D\MuuntEditorDocker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Byaml\CourseMuunt2D\TrackEditor2D.cs" />
     <Compile Include="GUI\Editors\MK8TrackEditor\MapCameraViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1353,6 +1363,9 @@
     <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\PaneMatBlending.resx">
       <DependentUpon>PaneMatBlending.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\PaneMatTextureCombiner.resx">
+      <DependentUpon>PaneMatTextureCombiner.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\Editor\PaneEditor.resx">
       <DependentUpon>PaneEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -1586,6 +1599,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BotwActorEditorControl.resx">
       <DependentUpon>BotwActorEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Byaml\CourseMuunt2D\MuuntEditor.resx">
+      <DependentUpon>MuuntEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.resx">
       <DependentUpon>TurboMunntEditor.cs</DependentUpon>
@@ -1821,6 +1837,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\LayoutAnimation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MissingTexture.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

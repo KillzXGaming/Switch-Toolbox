@@ -1067,6 +1067,18 @@ namespace LayoutBXLYT
             return pane;
         }
 
+        public void AddNewPastedPane(BasePane pane)
+        {
+            string name = pane.Name;
+            string numberedEnd  = pane.Name.Split('_').LastOrDefault().Replace("_", string.Empty);
+            if (numberedEnd.All(char.IsDigit))
+                name = name.Replace(numberedEnd, string.Empty);
+
+            pane.Name = RenamePane(name);
+            pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
+            ActiveLayout.AddPane(pane, pane.Parent);
+        }
+
         public BasePane AddNewNullPane()
         {
             BasePane pane = null;
@@ -1084,8 +1096,8 @@ namespace LayoutBXLYT
 
         private string RenamePane(string name)
         {
-            List<string> names = ActiveLayout.PaneLookup.Values.ToList().Select(o => o.Name).ToList();
-            return Utils.RenameDuplicateString(names, name); ;
+            List<string> names = ActiveLayout.PaneLookup.Keys.ToList();
+            return Utils.RenameDuplicateString(names, name, 0, 2);
         }
 
         #endregion

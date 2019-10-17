@@ -1089,6 +1089,16 @@ namespace LayoutBXLYT
                     mat.Shader = new BflytShader((Cafe.BFLYT.Material)mat);
                     mat.Shader.Compile();
                 }
+                else if (mat is BRLYT.Material)
+                {
+                    mat.Shader = new BrlytShader((BRLYT.Material)mat);
+                    mat.Shader.Compile();
+                }
+                else if (mat is BCLYT.Material)
+                {
+                    mat.Shader = new BclytShader((BCLYT.Material)mat);
+                    mat.Shader.Compile();
+                }
             }
 
             mat.Shader.Enable();

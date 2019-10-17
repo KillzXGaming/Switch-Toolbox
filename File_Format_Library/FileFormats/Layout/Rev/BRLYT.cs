@@ -194,6 +194,10 @@ namespace LayoutBXLYT
                 return panes;
             }
 
+            public override BxlytMaterial GetMaterial(ushort index) {
+                return MaterialList.Materials[index];
+            }
+
             public override List<BxlytMaterial> GetMaterials()
             {
                 List<BxlytMaterial> materials = new List<BxlytMaterial>();
@@ -328,7 +332,7 @@ namespace LayoutBXLYT
                             currentPane = partsPanel;
                             break;
                         case "wnd1":
-                            var windowPanel = new WND1(reader);
+                            var windowPanel = new WND1(this, reader);
                             AddPaneToTable(windowPanel);
 
                             SetPane(windowPanel, parentPane);
@@ -678,7 +682,7 @@ namespace LayoutBXLYT
                 LoadDefaults();
                 Name = name;
 
-                Content = new WindowContent(header, this.Name);
+                Content = new BxlytWindowContent(header, this.Name);
                 UseOneMaterialForAll = true;
                 UseVertexColorForAll = true;
                 WindowKind = WindowKind.Around;
@@ -702,22 +706,45 @@ namespace LayoutBXLYT
                 SetFrames(header);
             }
 
-            public WND1(FileReader reader) : base(reader)
+            public WND1(Header header, FileReader reader) : base(reader)
             {
+                layoutHeader = header;
+                WindowFrames = new List<BxlytWindowFrame>();
 
+                long pos = reader.Position - 0x4C;
+
+                StretchLeft = reader.ReadUInt16();
+                StretchRight = reader.ReadUInt16();
+                StretchTop = reader.ReadUInt16();
+                StretchBottm = reader.ReadUInt16();
+                FrameElementLeft = reader.ReadUInt16();
+                FrameElementRight = reader.ReadUInt16();
+                FrameElementTop = reader.ReadUInt16();
+                FrameElementBottm = reader.ReadUInt16();
+                FrameCount = reader.ReadByte();
+                _flag = reader.ReadByte();
+                reader.ReadUInt16();//padding
+                uint contentOffset = reader.ReadUInt32();
+                uint frameOffsetTbl = reader.ReadUInt32();
+
+                WindowKind = (WindowKind)((_flag >> 2) & 3);
+
+                reader.SeekBegin(pos + contentOffset);
+                Content = new BxlytWindowContent(reader, header);
+
+                reader.SeekBegin(pos + frameOffsetTbl);
+
+                var offsets = reader.ReadUInt32s(FrameCount);
+                foreach (int offset in offsets)
+                {
+                    reader.SeekBegin(pos + offset);
+                    WindowFrames.Add(new BxlytWindowFrame(reader, header));
+                }
             }
 
             public override void Write(FileWriter writer, LayoutHeader header)
             {
                 base.Write(writer, header);
-            }
-        }
-
-        public class WindowContent : BxlytWindowContent
-        {
-            public WindowContent(Header header, string name)
-            {
-
             }
         }
 
