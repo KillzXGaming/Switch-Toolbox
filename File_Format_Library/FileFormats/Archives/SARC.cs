@@ -293,6 +293,23 @@ namespace FirstPlugin
                 }
             }
 
+            public string TryGetHash(List<string> names, string folder)
+            {
+                //Name is not hashed so return
+                if (!FileName.Contains(HashName))
+                    return FileName;
+
+                for (int i = 0; i < names?.Count; i++)
+                {
+                    uint hash = StringHashToUint(hashName);
+                    Console.WriteLine($"{FileName} {hash} {names[i]} {NameHash(names[i])}");
+                    if (hash == NameHash($"{folder}/{names[i]}"))
+                        return names[i];
+                }
+
+                return FileName;
+            }
+
             public bool IsHashMatch(string fileName)
             {
                 uint hash = StringHashToUint(hashName);

@@ -256,9 +256,21 @@ namespace LayoutBXLYT.Cafe
                         if (Utils.GetExtension(file.FileName) == ".bflim")
                         {
                             BFLIM bflim = (BFLIM)file.OpenFile();
+                            string name = bflim.FileName;
+                            if (archive is SARC)
+                            {
+                                if (((SARC)archive).sarcData.HashOnly)
+                                {
+                                    var sarcEntry = file as SARC.SarcEntry;
+
+                                    //Look through all textures and find a hash match
+                                    name = sarcEntry.TryGetHash(header.Textures, "timg");
+                                }
+                            }
+
                             file.FileFormat = bflim;
                             if (!textures.ContainsKey(bflim.FileName))
-                                textures.Add(bflim.FileName, bflim);
+                                textures.Add(name, bflim);
                         }
                     }
                     catch (Exception ex)
