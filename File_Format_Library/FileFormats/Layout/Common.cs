@@ -1842,9 +1842,10 @@ namespace LayoutBXLYT
                 if (TextureMaps[i].Name == name)
                     removeIndex = i;
             }
+
             if (removeIndex != -1)
             {
-                TextureMaps.RemoveAt(removeIndex);
+                TextureMaps = TextureMaps.RemoveAt(removeIndex);
                 return true;
             }
 
