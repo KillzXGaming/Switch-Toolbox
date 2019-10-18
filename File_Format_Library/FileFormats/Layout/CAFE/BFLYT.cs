@@ -349,8 +349,10 @@ namespace LayoutBXLYT.Cafe
 
             public override void RemoveTexture(string name)
             {
-                if (!TextureList.Textures.Contains(name))
+                if (TextureList.Textures.Contains(name))
                     TextureList.Textures.Remove(name);
+
+                RemoveTextureReferences(name);
             }
 
             public override short AddMaterial(BxlytMaterial material)

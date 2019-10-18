@@ -1689,6 +1689,12 @@ namespace LayoutBXLYT
             return new BxlytMaterial();
         }
 
+        public void RemoveTextureReferences(string texture)
+        {
+            foreach (var mat in GetMaterials())
+                mat.TryRemoveTexture(texture);
+        }
+
         public BxlytMaterial SearchMaterial(string name)
         {
             var materials = GetMaterials();
@@ -1827,6 +1833,23 @@ namespace LayoutBXLYT
 
         [Browsable(false)]
         public TreeNodeCustom NodeWrapper;
+
+        public bool TryRemoveTexture(string name)
+        {
+            int removeIndex = -1;
+            for (int i = 0; i < TextureMaps?.Length; i++)
+            {
+                if (TextureMaps[i].Name == name)
+                    removeIndex = i;
+            }
+            if (removeIndex != -1)
+            {
+                TextureMaps.RemoveAt(removeIndex);
+                return true;
+            }
+
+            return false;
+        }
 
         public void RemoveNodeWrapper()
         {
