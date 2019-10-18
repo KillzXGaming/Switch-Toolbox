@@ -12,6 +12,8 @@ namespace Toolbox.Library.Forms
 {
     public partial class STColorDialog : Form
     {
+        private bool loaded = false;
+
         private bool CanCloseOnLostFocus= false;
 
         public EventHandler ColorChanged;
@@ -69,6 +71,16 @@ namespace Toolbox.Library.Forms
             colorPB.BackColor = ColorRGB;
             alphaPB.BackColor = colorSelector1.AlphaColor;
 
+            loaded = false;
+
+            redUD.Value = ColorRGB.R;
+            greenUD.Value = ColorRGB.G;
+            blueUD.Value = ColorRGB.B;
+            alphaUD.Value = ColorRGB.A;
+            hexTB.Text = Utils.ColorToHex(colorSelector1.Color);
+
+            loaded = true;
+
             if (ColorChanged != null)
                 ColorChanged.Invoke(sender, e);
         }
@@ -86,6 +98,28 @@ namespace Toolbox.Library.Forms
         private void STColorDialog_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void UD_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loaded) return;
+            NewColor = Color.FromArgb((byte)alphaUD.Value, (byte)redUD.Value, (byte)greenUD.Value, (byte)blueUD.Value);
+        }
+
+        private void stTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (sender is TextBox && loaded)
+            {
+                ((TextBox)sender).MaxLength = 8;
+
+                if (((TextBox)sender).Text.Length != 8)
+                    return;
+
+                NewColor = Utils.HexToColor(((TextBox)sender).Text);
+
+                if (ColorChanged != null)
+                    ColorChanged.Invoke(sender, e);
+            }
         }
     }
 }
