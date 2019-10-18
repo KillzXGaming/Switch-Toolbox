@@ -214,7 +214,10 @@ namespace LayoutBXLYT
                 {
                     var texture = item.Text;
                     if (TextureList.ContainsKey(texture))
+                    {
+                        ActiveLayout.TextureManager.RemoveTexture(TextureList[texture]);
                         TextureList.Remove(texture);
+                    }
 
                     ActiveLayout.RemoveTexture(texture);
                     listViewCustom1.Items.Remove(item);

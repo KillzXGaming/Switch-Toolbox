@@ -1130,8 +1130,9 @@ namespace LayoutBXLYT
                 SelectionBoxPanes.Clear();
 
                 ParentEditor.RefreshEditors();
-                glControl1.Invalidate();
             }
+
+            glControl1.Invalidate();
         }
 
         public enum PickAction

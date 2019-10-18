@@ -91,7 +91,44 @@ namespace LayoutBXLYT
             return texture;
         }
 
-        public List<STGenericTexture> AddTextures()
+        public void RemoveTextures(List<STGenericTexture> textures) {
+            foreach (var tex in textures)
+                RemoveTexture(tex);
+        }
+
+        public void RemoveTexture(STGenericTexture texture)
+        {
+            switch (Platform)
+            {
+                case PlatformType.WiiU:
+                    {
+                        var archive = ArchiveParent;
+                        if (archive == null) return;
+
+                        ArchiveFileInfo fileInfoDelete = null;
+                        foreach (var file in archive.Files)
+                        {
+                            if (file.FileName.Contains(texture.Text))
+                                fileInfoDelete = file;
+                        }
+
+                        if (fileInfoDelete != null)
+                            archive.DeleteFile(fileInfoDelete);
+                    }
+                    break;
+                case PlatformType.Switch:
+                    {
+                        foreach (var bntx in BinaryContainers.Values)
+                        {
+                            if (bntx.Textures.ContainsKey(texture.Text))
+                                bntx.RemoveTexture(bntx.Textures[texture.Text]);
+                        }
+                    }
+                    break;
+            }
+        }
+
+            public List<STGenericTexture> AddTextures()
         {
             List<STGenericTexture> textures = new List<STGenericTexture>();
 

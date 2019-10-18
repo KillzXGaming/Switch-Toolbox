@@ -54,7 +54,10 @@ namespace LayoutBXLYT
 
             Textures = new Dictionary<string, STGenericTexture>();
 
-            var theme = new VS2015DarkTheme();
+            ThemeBase theme = new VS2015DarkTheme();
+            if (FormThemes.ActivePreset == FormThemes.Preset.White)
+                theme = new VS2015LightTheme();
+
             this.dockPanel1.Theme = theme;
             this.dockPanel1.BackColor = FormThemes.BaseTheme.FormBackColor;
             this.BackColor = FormThemes.BaseTheme.FormBackColor;
