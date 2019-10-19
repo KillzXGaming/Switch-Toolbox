@@ -1104,6 +1104,10 @@ namespace LayoutBXLYT
             mat.Shader.Enable();
             if (mat is Cafe.BFLYT.Material)
                 ((BflytShader)mat.Shader).SetMaterials(pane, textures);
+            else if (mat is BRLYT.Material)
+                ((BrlytShader)mat.Shader).SetMaterials(pane, textures);
+            else if (mat is BCLYT.Material)
+                ((BclytShader)mat.Shader).SetMaterials(pane, textures);
         }
 
         private static void RenderWindowContent(BasePane pane, uint sizeX, uint sizeY, BxlytWindowContent content,
@@ -1116,7 +1120,7 @@ namespace LayoutBXLYT
 
             Vector2[] texCoords = new Vector2[] {
                 new Vector2(1,1),
-                new Vector2(0,1),
+                new Vector2(0,1), 
                 new Vector2(0,0),
                 new Vector2(1,0)
                 };

@@ -168,12 +168,6 @@ namespace LayoutBXLYT
             }
         }
 
-        public void ApplyNewParentTransform()
-        {
-            //Get the new transform and apply it
-        //    Translate += transform;
-        }
-
         public void ResetParentTransform(BasePane newParent)
         {
             //We need to get the difference in the parent transform and remove it to the current transform of this pane
@@ -202,17 +196,17 @@ namespace LayoutBXLYT
         public void KeepChildrenTransform(float newTransX, float newTransY)
         {
             Vector2F distance = new Vector2F(newTransX - Translate.X, newTransY - Translate.Y);
-            KeepChildrenTransform(distance);
+            KeepChildrenTransform(distance, newTransX, newTransY);
         }
 
-        private void KeepChildrenTransform(Vector2F distance)
+        private void KeepChildrenTransform(Vector2F distance, float newTransX, float newTransY)
         {
             if (HasChildern)
             {
                 foreach (var child in Childern)
                 {
                     child.Translate -= new Vector3F(distance.X, distance.Y, 0);
-                    child.KeepChildrenTransform(distance);
+                    child.KeepChildrenTransform(child.Translate.X, child.Translate.Y);
                 }
             }
         }
@@ -278,7 +272,6 @@ namespace LayoutBXLYT
             float pickWidth = pickMouseX;
             float pickHeight = pickMouseY;
 
-            Vector2F pos = new Vector2F();
             switch (pickAction)
             {
                 case LayoutViewer.PickAction.DragLeft:
@@ -355,6 +348,9 @@ namespace LayoutBXLYT
                     posY = Translate.Y - (pickMouseY / 2);
                     break;
             }
+
+            if (!Runtime.LayoutEditor.TransformChidlren)
+                KeepChildrenTransform(posX, posY);
 
             Translate = new Vector3F(posX, posY, posZ);
         }
