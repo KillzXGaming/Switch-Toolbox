@@ -87,6 +87,12 @@ namespace FirstPlugin.Forms
                 case ShaderParamType.Float4:
                     DisplayValue = SetValueToString(prm.ValueFloat);
                     break;
+                case ShaderParamType.TexSrt:
+                    DisplayValue = SetValueToString(prm.ValueTexSrt);
+                    break;
+                case ShaderParamType.TexSrtEx:
+                    DisplayValue = SetValueToString(prm.ValueTexSrtEx);
+                    break;
             }
 
             item.UseItemStyleForSubItems = false;
@@ -135,6 +141,10 @@ namespace FirstPlugin.Forms
         {
             if (values is float[])
                 return string.Join(" , ", values as float[]);
+            else if (values is TexSrt)
+                return TexSrtToString((TexSrt)values);
+            else if (values is TexSrtEx)
+                return TexSrtToString((TexSrtEx)values);
             else if (values is bool[])
                 return string.Join(" , ", values as bool[]);
             else if (values is int[])
@@ -143,6 +153,16 @@ namespace FirstPlugin.Forms
                 return string.Join(" , ", values as uint[]);
             else
                 return "";
+        }
+
+        private string TexSrtToString(TexSrtEx val)
+        {
+            return $"{val.Mode} {val.Scaling.X} {val.Scaling.Y} {val.Rotation} {val.Translation.X} {val.Translation.Y}  ";
+        }
+
+        private string TexSrtToString(TexSrt val)
+        {
+            return $"{val.Mode} {val.Scaling.X} {val.Scaling.Y} {val.Rotation} {val.Translation.X} {val.Translation.Y}  ";
         }
 
         STFlowLayoutPanel stFlowLayoutPanel1;
@@ -160,67 +180,72 @@ namespace FirstPlugin.Forms
                 booleanPanel panel = new booleanPanel(param.ValueBool, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.TexSrt)
+            else if (param.Type == ShaderParamType.TexSrtEx)
+            {
+                TexSrtPanel panel = new TexSrtPanel(param.ValueTexSrtEx, param);
+                LoadDropPanel(panel, param);
+            }
+            else if (param.Type == ShaderParamType.TexSrt)
             {
                 TexSrtPanel panel = new TexSrtPanel(param.ValueTexSrt, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.Float)
+            else if (param.Type == ShaderParamType.Float)
             {
                 vector1SliderPanel panel = new vector1SliderPanel(param.ValueFloat, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.Float2)
+            else if (param.Type == ShaderParamType.Float2)
             {
                 vector2SliderPanel panel = new vector2SliderPanel(param.ValueFloat, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.Float3)
+            else if (param.Type == ShaderParamType.Float3)
             {
                 vector3SliderPanel panel = new vector3SliderPanel(param.Name, param.ValueFloat, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.Float4)
+            else if (param.Type == ShaderParamType.Float4)
             {
                 vector4SliderPanel panel = new vector4SliderPanel(param.Name, param.ValueFloat, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.UInt)
+            else if (param.Type == ShaderParamType.UInt)
             {
                 vector1SliderPanel panel = new vector1SliderPanel(param.ValueUint, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.UInt2)
+            else if (param.Type == ShaderParamType.UInt2)
             {
                 vector2SliderPanel panel = new vector2SliderPanel(param.ValueUint, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.UInt3)
+            else if (param.Type == ShaderParamType.UInt3)
             {
                 vector3SliderPanel panel = new vector3SliderPanel(param.Name, param.ValueUint, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.UInt4)
+            else if (param.Type == ShaderParamType.UInt4)
             {
                 vector4SliderPanel panel = new vector4SliderPanel(param.Name, param.ValueUint, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.Int)
+            else if (param.Type == ShaderParamType.Int)
             {
                 vector1SliderPanel panel = new vector1SliderPanel(param.ValueInt, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.Int2)
+            else if (param.Type == ShaderParamType.Int2)
             {
                 vector2SliderPanel panel = new vector2SliderPanel(param.ValueInt, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.Int3)
+            else if (param.Type == ShaderParamType.Int3)
             {
                 vector3SliderPanel panel = new vector3SliderPanel(param.Name, param.ValueInt, param);
                 LoadDropPanel(panel, param);
             }
-            if (param.Type == ShaderParamType.Int4)
+            else if (param.Type == ShaderParamType.Int4)
             {
                 vector4SliderPanel panel = new vector4SliderPanel(param.Name, param.ValueInt, param);
                 LoadDropPanel(panel, param);
@@ -262,6 +287,7 @@ namespace FirstPlugin.Forms
                 case ShaderParamType.UInt3: panel = new vector3SliderPanel(param.Name, param.ValueUint, param); break;
                 case ShaderParamType.UInt4: panel = new vector4SliderPanel(param.Name, param.ValueUint, param); break;
                 case ShaderParamType.TexSrt: panel = new TexSrtPanel(param.ValueTexSrt,param); break;
+                case ShaderParamType.TexSrtEx: panel = new TexSrtPanel(param.ValueTexSrtEx, param); break;
                 case ShaderParamType.Bool: panel = new booleanPanel(param.ValueBool, param); break;
                 case ShaderParamType.Bool2: panel = new booleanPanel(param.ValueBool, param); break;
                 case ShaderParamType.Bool3: panel = new booleanPanel(param.ValueBool, param); break;

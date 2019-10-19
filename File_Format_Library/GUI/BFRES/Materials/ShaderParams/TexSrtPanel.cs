@@ -15,10 +15,39 @@ namespace FirstPlugin.Forms
 {
     public partial class TexSrtPanel : ParamValueEditorBase
     {
+        private bool isTexSrtEx = false;
+
+        public TexSrtPanel(TexSrtEx TexSrt, BfresShaderParam param)
+        {
+            InitializeComponent();
+
+            isTexSrtEx = true;
+            activeParam = param;
+            stTextBox1.Bind(activeParam, "Name");
+
+            scalingModeCN.Bind(typeof(TexSrtMode), TexSrt, "Mode");
+            scalingModeCN.SelectedItem = TexSrt.Mode;
+
+            scaXUD.DataType = typeof(float);
+            scaYUD.DataType = typeof(float);
+            rotXUD.DataType = typeof(float);
+            transXUD.DataType = typeof(float);
+            transYUD.DataType = typeof(float);
+
+            scaXUD.Value = TexSrt.Scaling.X;
+            scaYUD.Value = TexSrt.Scaling.Y;
+
+            rotXUD.Value = TexSrt.Rotation;
+
+            transXUD.Value = TexSrt.Translation.X;
+            transYUD.Value = TexSrt.Translation.Y;
+        }
+
         public TexSrtPanel(TexSrt TexSrt, BfresShaderParam param)
         {
             InitializeComponent();
 
+            isTexSrtEx = false;
             activeParam = param;
             stTextBox1.Bind(activeParam, "Name");
 
@@ -42,13 +71,26 @@ namespace FirstPlugin.Forms
 
         public void ApplyValues()
         {
-            activeParam.ValueTexSrt = new TexSrt
+            if (isTexSrtEx)
             {
-                Mode = (TexSrtMode)scalingModeCN.SelectedItem,
-                Scaling = new Syroot.Maths.Vector2F(scaXUD.Value, scaYUD.Value),
-                Rotation = rotXUD.Value,
-                Translation = new Syroot.Maths.Vector2F(transXUD.Value, transYUD.Value),
-            };
+                activeParam.ValueTexSrtEx = new TexSrtEx
+                {
+                    Mode = (TexSrtMode)scalingModeCN.SelectedItem,
+                    Scaling = new Syroot.Maths.Vector2F(scaXUD.Value, scaYUD.Value),
+                    Rotation = rotXUD.Value,
+                    Translation = new Syroot.Maths.Vector2F(transXUD.Value, transYUD.Value),
+                };
+            }
+            else
+            {
+                activeParam.ValueTexSrt = new TexSrt
+                {
+                    Mode = (TexSrtMode)scalingModeCN.SelectedItem,
+                    Scaling = new Syroot.Maths.Vector2F(scaXUD.Value, scaYUD.Value),
+                    Rotation = rotXUD.Value,
+                    Translation = new Syroot.Maths.Vector2F(transXUD.Value, transYUD.Value),
+                };
+            }
 
             if (OnPanelChanged != null)
                 OnPanelChanged(activeParam, this);
