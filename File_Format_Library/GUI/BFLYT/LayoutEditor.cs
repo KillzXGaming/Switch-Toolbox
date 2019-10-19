@@ -25,6 +25,8 @@ namespace LayoutBXLYT
         /// </summary>
         public static bool UseLegacyGL = true;
 
+        public bool AnimationMode = false;
+
         public LayoutViewer GamePreviewWindow;
 
         private LayoutCustomPaneMapper CustomMapper;
@@ -50,6 +52,9 @@ namespace LayoutBXLYT
         public LayoutEditor()
         {
             InitializeComponent();
+
+            chkAutoKey.Hide();
+
             CustomMapper = new LayoutCustomPaneMapper();
 
             Textures = new Dictionary<string, STGenericTexture>();
@@ -68,6 +73,10 @@ namespace LayoutBXLYT
             viewportBackColorCB.Items.Add("Back Color : Default");
             viewportBackColorCB.Items.Add("Back Color : Custom");
             orthographicViewToolStripMenuItem.Checked = true;
+
+            editorModeCB.Items.Add("Normal");
+            editorModeCB.Items.Add("Animation");
+            editorModeCB.SelectedIndex = 0;
 
             foreach (var type in Enum.GetValues(typeof(Runtime.LayoutEditor.DebugShading)).Cast<Runtime.LayoutEditor.DebugShading>())
                 debugShading.Items.Add(type);
@@ -1107,6 +1116,18 @@ namespace LayoutBXLYT
 
         private void transformChildrenToolStripMenuItem_Click(object sender, EventArgs e) {
             Runtime.LayoutEditor.TransformChidlren = transformChildrenToolStripMenuItem.Checked;
+        }
+
+        private void editorModeCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AnimationMode = editorModeCB.SelectedIndex == 1;
+            if (AnimationMode)
+                chkAutoKey.Show();
+            else
+                chkAutoKey.Hide();
+
+            if (LayoutPaneEditor != null)
+                LayoutPaneEditor.ReloadEditor();
         }
     }
 }

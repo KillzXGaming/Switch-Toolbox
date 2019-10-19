@@ -14,5 +14,7 @@ namespace LayoutBXLYT
         {
             return DisplayRectangle.Location;
         }
+
+        public virtual void SetUIState() { }
     }
 }

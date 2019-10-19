@@ -1240,6 +1240,17 @@ namespace BarSlider
 
             DisplayInterlapsedBar = true;
 
+            ReloadTheme();
+
+            textBox = new BarTextBox();
+            textBox.Visible = false;
+            textBox.Enabled = true;
+            textBox.KeyUp += new KeyEventHandler(textBox1_KeyUp);
+            Controls.Add(textBox);
+        }
+
+        public void ReloadTheme()
+        {
             BackColor = FormThemes.BaseTheme.ValueBarSliderElapseBottmColor;
 
             ThumbPenColor = FormThemes.BaseTheme.ValueBarSliderElapseBottmColor;
@@ -1253,13 +1264,6 @@ namespace BarSlider
             BarPenColorTop = FormThemes.BaseTheme.ValueBarSliderTopColor;
             BarPenColorMiddle = FormThemes.BaseTheme.ValueBarSliderMiddleColor;
             BarPenColorBottom = FormThemes.BaseTheme.ValueBarSliderBottmColor;
-
-
-            textBox = new BarTextBox();
-            textBox.Visible = false;
-            textBox.Enabled = true;
-            textBox.KeyUp += new KeyEventHandler(textBox1_KeyUp);
-            Controls.Add(textBox);
         }
 
         private void textBox1_KeyUp(object sender, KeyEventArgs e)

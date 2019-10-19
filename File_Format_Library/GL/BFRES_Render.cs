@@ -349,7 +349,7 @@ namespace FirstPlugin
                 shader = OpenTKSharedResources.shaders["BFRES_PBR"];
 
             shader.UseProgram();
-            control.UpdateModelMatrix(Matrix4.CreateScale(Runtime.previewScale) * ModelTransform);
+            control.UpdateModelMatrix(ModelTransform * Matrix4.CreateScale(Runtime.previewScale));
 
             Matrix4 camMat = control.CameraMatrix;
             Matrix4 mdlMat = control.ModelMatrix;

@@ -1307,6 +1307,16 @@ namespace LayoutBXLYT
         public BxlanPAT1 AnimationTag;
         public BxlanPAI1 AnimationInfo;
 
+        public BxlanPaiEntry TryGetTag(string name)
+        {
+            for (int i = 0; i < AnimationInfo.Entries?.Count; i++)
+            {
+                if (AnimationInfo.Entries[i].Name == name)
+                    return AnimationInfo.Entries[i];
+            }
+            return null;
+        }
+
         public virtual void Read(FileReader reader, BXLAN header)
         {
 

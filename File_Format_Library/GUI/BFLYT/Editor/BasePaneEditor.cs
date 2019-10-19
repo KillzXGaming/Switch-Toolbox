@@ -73,6 +73,8 @@ namespace LayoutBXLYT
 
             ActivePane = pane;
 
+            SetUIState();
+
             nameTB.Bind(pane, "Name");
             tranXUD.Value = pane.Translate.X;
             tranYUD.Value = pane.Translate.Y;
@@ -94,6 +96,55 @@ namespace LayoutBXLYT
             SetParentOrientation();
 
             Loaded = true;
+        }
+
+        public override void SetUIState()
+        {
+            if (parentEditor.AnimationMode)
+            {
+                if (parentEditor.ActiveAnimation != null)
+                {
+                    var anim = parentEditor.ActiveAnimation;
+                    var paneAnim = anim.TryGetTag(ActivePane.Name);
+                    if (paneAnim != null)
+                    {
+                        foreach (var tag in paneAnim.Tags)
+                        {
+                            foreach (var entry in tag.Entries)
+                            {
+                            }
+                        }
+                    }
+                }
+
+                //Change any UI that can be keyed or is keyed
+                tranXUD.ReloadTheme();
+                tranYUD.ReloadTheme();
+                tranZUD.ReloadTheme();
+                rotXUD.ReloadTheme();
+                rotYUD.ReloadTheme();
+                rotZUD.ReloadTheme();
+                scaleXUD.ReloadTheme();
+                scaleYUD.ReloadTheme();
+                sizeXUD.ReloadTheme();
+                sizeYUD.ReloadTheme();
+                alphaUD.ReloadTheme();
+            }
+            else
+            {
+                //Set UI to default theme colors
+                tranXUD.ReloadTheme();
+                tranYUD.ReloadTheme();
+                tranZUD.ReloadTheme();
+                rotXUD.ReloadTheme();
+                rotYUD.ReloadTheme();
+                rotZUD.ReloadTheme();
+                scaleXUD.ReloadTheme();
+                scaleYUD.ReloadTheme();
+                sizeXUD.ReloadTheme();
+                sizeYUD.ReloadTheme();
+                alphaUD.ReloadTheme();
+            }
         }
 
         public void RefreshEditor()

@@ -16,6 +16,11 @@ namespace LayoutBXLYT
     {
         public EventHandler PropertyChanged;
 
+        public bool AnimationMode
+        {
+            get { return ParentEditor.AnimationMode; }
+        }
+
         public PaneEditor()
         {
             InitializeComponent();
@@ -34,6 +39,13 @@ namespace LayoutBXLYT
             stPanel1.Controls.Clear();
         }
 
+        public void ReloadEditor()
+        {
+            if (ActivePane != null)
+                LoadPane(ActivePane, ParentEditor);
+        }
+
+        public BxlanHeader ActiveAnimation;
 
         private LayoutEditor ParentEditor;
         private BxlytMaterial ActiveMaterial;
