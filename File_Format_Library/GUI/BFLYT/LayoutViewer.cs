@@ -1391,6 +1391,15 @@ namespace LayoutBXLYT
                 PastePanes();
                 glControl1.Invalidate();
             }
+            else if (e.Control && e.KeyCode == Keys.A) // Ctrl + A select all
+            {
+                SelectedPanes.Clear();
+                foreach (var pane in LayoutFile.PaneLookup.Values)
+                    if (!pane.IsRoot)
+                        SelectedPanes.Add(pane);
+
+                glControl1.Invalidate();
+            }
             else if (e.KeyCode == Keys.Delete)
             {
                 DeleteSelectedPanes();

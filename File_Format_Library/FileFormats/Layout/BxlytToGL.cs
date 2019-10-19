@@ -497,7 +497,7 @@ namespace LayoutBXLYT
                               dY,
                               contentWidth,
                               contentHeight,
-                              texCoords, colors);
+                              texCoords, colors, isSelected);
                 }
                 else
                 {
@@ -505,7 +505,7 @@ namespace LayoutBXLYT
                               dY - frameTop + window.StretchTop,
                               contentWidth,
                               contentHeight,
-                              texCoords, colors);
+                              texCoords, colors, isSelected);
                 }
             }
 
@@ -555,7 +555,7 @@ namespace LayoutBXLYT
                                  window.Content.ColorBottomRight.Color,
                                 };
 
-                            DrawQuad(gameWindow, dX + frameRight + contentWidth, dY, frameRight, pane.Height, texCoords, colors, hasTextures);
+                            DrawQuad(gameWindow, dX + frameRight + contentWidth, dY, frameRight, pane.Height, texCoords, colors, isSelected, hasTextures);
 
                             //Right
 
@@ -581,7 +581,7 @@ namespace LayoutBXLYT
                                  window.Content.ColorBottomLeft.Color,
                                 };
 
-                            DrawQuad(gameWindow, dX, dY, frameLeft, pane.Height, texCoords, colors, hasTextures);
+                            DrawQuad(gameWindow, dX, dY, frameLeft, pane.Height, texCoords, colors, isSelected, hasTextures);
                         }
                         else if (window.WindowKind == WindowKind.HorizontalNoContent)
                         {
@@ -615,7 +615,7 @@ namespace LayoutBXLYT
                                window.Content.ColorBottomRight.Color,
                             };
 
-                            DrawQuad(gameWindow, dX + frameLeft, dY, pane.Width - frameLeft, pane.Height, texCoords, colors, hasTextures);
+                            DrawQuad(gameWindow, dX + frameLeft, dY, pane.Width - frameLeft, pane.Height, texCoords, colors, isSelected, hasTextures);
 
                             //Left
 
@@ -650,7 +650,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX, dY, pane.Width - frameLeft, pane.Height, texCoords, colors, hasTextures);
+                            DrawQuad(gameWindow, dX, dY, pane.Width - frameLeft, pane.Height, texCoords, colors, isSelected, hasTextures);
                         }
                         else if (window.WindowKind == WindowKind.Around)
                         {
@@ -668,7 +668,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX, dY, pieceWidth, pieceHeight, texCoords, colors, hasTextures);
+                            DrawQuad(gameWindow, dX, dY, pieceWidth, pieceHeight, texCoords, colors, isSelected, hasTextures);
 
                             // top right
                             pieceWidth = frameRight;
@@ -682,7 +682,7 @@ namespace LayoutBXLYT
                                 new Vector2(1,(pane.Height - frameTop) / frameTop),
                             };
 
-                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors, hasTextures);
+                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors, isSelected, hasTextures);
 
                             // bottom left
                             pieceWidth = frameLeft;
@@ -696,7 +696,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 0),
                            };
 
-                            DrawQuad(gameWindow, dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors, hasTextures);
+                            DrawQuad(gameWindow, dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors, isSelected, hasTextures);
 
                             // bottom right
                             pieceWidth = pane.Width - frameLeft;
@@ -710,7 +710,7 @@ namespace LayoutBXLYT
                                 new Vector2((pane.Width - frameLeft) / frameLeft, 0),
                             };
 
-                            DrawQuad(gameWindow, dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors, hasTextures);
+                            DrawQuad(gameWindow, dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors, isSelected, hasTextures);
                         }
                     }
                     break;
@@ -747,7 +747,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX, dY, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY, pieceWidth, pieceHeight, texCoords, colors, isSelected);
                         }
                         if (matTR.TextureMaps.Length > 0)
                         {
@@ -766,7 +766,7 @@ namespace LayoutBXLYT
                                 new Vector2(0,(pane.Height - frameTop) / frameTop),
                             };
 
-                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, pieceWidth, pieceHeight, texCoords, colors, isSelected);
                         }
                         if (matBL.TextureMaps.Length > 0)
                         {
@@ -785,7 +785,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY - frameTop, pieceWidth, pieceHeight, texCoords, colors, isSelected);
                         }
                         if (matBR.TextureMaps.Length > 0)
                         {
@@ -804,7 +804,7 @@ namespace LayoutBXLYT
                                 new Vector2(1 - ((pane.Width - frameLeft) / frameLeft), 1),
                             };
 
-                            DrawQuad(gameWindow, dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX + frameLeft, dY - pane.Height + frameBottom, pieceWidth, pieceHeight, texCoords, colors, isSelected);
                         }
                     }
                     break;
@@ -845,7 +845,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX, dY, frameLeft, frameTop, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY, frameLeft, frameTop, texCoords, colors, isSelected);
                         }
 
                         if (matTR.TextureMaps.Length > 0)
@@ -861,7 +861,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, frameRight, frameTop, texCoords, colors);
+                            DrawQuad(gameWindow, dX + pane.Width - frameRight, dY, frameRight, frameTop, texCoords, colors, isSelected);
                         }
 
                         if (matBL.TextureMaps.Length > 0)
@@ -877,7 +877,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX, dY - pane.Height + frameTop, frameLeft, frameBottom, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY - pane.Height + frameTop, frameLeft, frameBottom, texCoords, colors, isSelected);
                         }
 
                         if (matBR.TextureMaps.Length > 0)
@@ -893,7 +893,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX + pane.Width - frameLeft, dY - pane.Height + frameBottom, frameRight, frameBottom, texCoords, colors);
+                            DrawQuad(gameWindow, dX + pane.Width - frameLeft, dY - pane.Height + frameBottom, frameRight, frameBottom, texCoords, colors, isSelected);
                         }
 
                         if (matT.TextureMaps.Length > 0)
@@ -909,7 +909,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX + frameLeft, dY, contentWidth, frameTop, texCoords, colors);
+                            DrawQuad(gameWindow, dX + frameLeft, dY, contentWidth, frameTop, texCoords, colors, isSelected);
                         }
 
                         if (matB.TextureMaps.Length > 0)
@@ -925,7 +925,7 @@ namespace LayoutBXLYT
                                 new Vector2(1-((pane.Width - frameLeft) / frameLeft), 1),
                             };
 
-                            DrawQuad(gameWindow, dX + frameRight, dY - (pane.Height - frameBottom), contentWidth, frameTop, texCoords, colors);
+                            DrawQuad(gameWindow, dX + frameRight, dY - (pane.Height - frameBottom), contentWidth, frameTop, texCoords, colors, isSelected);
                         }
 
                         if (matL.TextureMaps.Length > 0)
@@ -941,7 +941,7 @@ namespace LayoutBXLYT
                                 new Vector2(0, 1),
                             };
 
-                            DrawQuad(gameWindow, dX, dY - frameTop, frameLeft, contentHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX, dY - frameTop, frameLeft, contentHeight, texCoords, colors, isSelected);
                         }
 
                         if (matR.TextureMaps.Length > 0)
@@ -957,7 +957,7 @@ namespace LayoutBXLYT
                                 new Vector2(0,(pane.Height - frameBottom) / frameBottom),
                             };
 
-                            DrawQuad(gameWindow, dX + (pane.Width - frameRight), dY - frameTop, frameRight, contentHeight, texCoords, colors);
+                            DrawQuad(gameWindow, dX + (pane.Width - frameRight), dY - frameTop, frameRight, contentHeight, texCoords, colors, isSelected);
                         }
                     }
                     break;
@@ -1003,7 +1003,7 @@ namespace LayoutBXLYT
             }
         }
 
-        private static void DrawQuad(bool gameWindow, float x, float y, float w, float h, Vector2[] texCoords, Color[] colors, bool hasTextures = true)
+        private static void DrawQuad(bool gameWindow, float x, float y, float w, float h, Vector2[] texCoords, Color[] colors, bool isSelected, bool hasTextures = true)
         {
             if (!gameWindow && !Runtime.LayoutEditor.IsGamePreview)
             {
@@ -1013,7 +1013,7 @@ namespace LayoutBXLYT
 
                 GL.LineWidth(0.5f);
                 GL.Begin(PrimitiveType.LineLoop);
-                GL.Color4(Color.Green);
+                GL.Color4(isSelected ? Color.Red : Color.Green);
                 GL.Vertex2(x, y);
                 GL.Vertex2(x + w, y);
                 GL.Vertex2(x + w, y - h);
