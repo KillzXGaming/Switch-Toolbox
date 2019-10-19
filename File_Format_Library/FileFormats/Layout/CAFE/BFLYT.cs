@@ -265,6 +265,7 @@ namespace LayoutBXLYT.Cafe
 
                                     //Look through all textures and find a hash match
                                     name = sarcEntry.TryGetHash(header.Textures, "timg");
+                                    name = Path.GetFileName(name);
                                 }
                             }
 
@@ -1702,6 +1703,22 @@ namespace LayoutBXLYT.Cafe
             private void SearchArchive(IArchiveFile archiveFile, ref BFLYT layoutFile)
             {
                 layoutFile = null;
+
+                if (archiveFile is  SARC)
+                {
+                    if (((SARC)archiveFile).FileLookup.ContainsKey($"blyt/{LayoutFileName}.bflyt"))
+                    {
+                        var entry = ((SARC)archiveFile).FileLookup[$"blyt/{LayoutFileName}.bflyt"];
+                        var openedFile = entry.OpenFile();
+                        if (openedFile is BFLYT)
+                        {
+                            layoutFile = openedFile as BFLYT;
+                            layoutFile.IFileInfo = new IFileInfo();
+                            layoutFile.IFileInfo.ArchiveParent = layoutFile.IFileInfo.ArchiveParent;
+                            return;
+                        }
+                    }
+                }
 
                 foreach (var file in archiveFile.Files)
                 {

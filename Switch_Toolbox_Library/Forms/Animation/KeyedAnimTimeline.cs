@@ -13,6 +13,7 @@ namespace Toolbox.Library.Forms
     {
         public EventHandler OnNodeSelected;
 
+        public string GroupTarget = "";
         public bool DisplayKeys = true;
 
         private STAnimation activeAnimation;
@@ -44,8 +45,11 @@ namespace Toolbox.Library.Forms
                 ImageSize = new Size(24, 24),
                 ColorDepth = ColorDepth.Depth32Bit,
             };
+        }
 
-        /*    imgList.Images.Add("AnimationGroup", Properties.Resources.AnimationGroup);
+        public void ReloadEditorView()
+        {
+            imgList.Images.Add("AnimationGroup", Properties.Resources.AnimationGroup);
             imgList.Images.Add("AnimationTrack", Properties.Resources.AnimationTrack);
             imgList.Images.Add("AnimationTrackR", Properties.Resources.AnimationTrackR);
             imgList.Images.Add("AnimationTrackG", Properties.Resources.AnimationTrackG);
@@ -59,7 +63,7 @@ namespace Toolbox.Library.Forms
             NodeTree = new TreeView();
             NodeTree.ImageList = imgList;
             NodeTree.Dock = DockStyle.Left;
-        //    NodeTree.Anchor = AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Left;
+            //    NodeTree.Anchor = AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Left;
             NodeTree.Height = this.Height;
             NodeTree.Width = 300;
             NodeTree.BackColor = FormThemes.BaseTheme.FormBackColor;
@@ -76,7 +80,7 @@ namespace Toolbox.Library.Forms
             splitter.LocationChanged += SpitterLocationChanged;
             Controls.Add(splitter);
 
-            margin = NodeTree.Width;*/
+            margin = NodeTree.Width;
         }
 
         private void PopulateTree()
@@ -86,6 +90,9 @@ namespace Toolbox.Library.Forms
             NodeTree.Nodes.Clear();
             foreach (var group in ActiveAnimation.AnimGroups)
             {
+                if (GroupTarget != string.Empty && group.Name != GroupTarget)
+                    continue;
+
                 if (group.Category != string.Empty)
                 {
                     var categoryNode = AddCategoryNode(NodeTree.Nodes, group.Category);

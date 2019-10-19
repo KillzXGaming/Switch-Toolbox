@@ -91,6 +91,8 @@ namespace FirstPlugin
         public bool CanReplaceFiles { get; set; } = true;
         public bool CanDeleteFiles { get; set; } = true;
 
+        public Dictionary<string, SarcEntry> FileLookup = new Dictionary<string, SarcEntry>();
+
         public List<SarcEntry> files = new List<SarcEntry>();
         public IEnumerable<ArchiveFileInfo> Files => files;
 
@@ -120,6 +122,8 @@ namespace FirstPlugin
 
             PluginRuntime.SarcArchives.Add(this);
 
+            FileLookup.Clear();
+
             var SzsFiles = SARCExt.SARC.UnpackRamN(stream);
             sarcData = new SarcData();
             sarcData.HashOnly = SzsFiles.HashOnly;
@@ -135,7 +139,9 @@ namespace FirstPlugin
                     fileName = SARCExt.SARC.TryGetNameFromHashTable(fileName);
                     Hash = file.Key;
                 }
-                files.Add(SetupFileEntry(fileName, file.Value, Hash));
+                var entry = SetupFileEntry(fileName, file.Value, Hash);
+                files.Add(entry);
+                FileLookup.Add(fileName, entry);
             }
 
             sarcData.Files.Clear();

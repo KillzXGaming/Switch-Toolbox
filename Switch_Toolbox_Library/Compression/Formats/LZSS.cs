@@ -16,11 +16,14 @@ namespace Toolbox.Library
         public string[] Description { get; set; } = new string[] { "LZSS Compression" };
         public string[] Extension { get; set; } = new string[] { "*.lzs", "*.lzss" };
 
+        private bool hasMagic = false;
+
         public bool Identify(Stream stream, string fileName)
         {
             using (var reader = new FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "LzS\x01");
+                hasMagic = reader.CheckSignature(4, "LzS\x01");
+                return hasMagic;
             }
         }
 
@@ -30,10 +33,21 @@ namespace Toolbox.Library
         {
             byte[] arcdata = stream.ToArray();
 
-            string tag = Encoding.ASCII.GetString(arcdata, 0, 4);
-            uint unknown = BitConverter.ToUInt32(arcdata, 4);
-            uint decompressedSize = BitConverter.ToUInt32(arcdata, 8);
-            uint compressedSize = BitConverter.ToUInt32(arcdata, 12);
+            uint decompressedSize = 0;
+            uint compressedSize = 0;
+
+            if (hasMagic)
+            {
+                string tag = Encoding.ASCII.GetString(arcdata, 0, 4);
+                uint unknown = BitConverter.ToUInt32(arcdata, 4);
+                decompressedSize = BitConverter.ToUInt32(arcdata, 8);
+                compressedSize = BitConverter.ToUInt32(arcdata, 12);
+            }
+            else
+            {
+                decompressedSize = BitConverter.ToUInt32(arcdata, 0);
+                compressedSize = BitConverter.ToUInt32(arcdata, 4);
+            }
 
             if (arcdata.Length != compressedSize + 0x10) throw new Exception("compressed size mismatch");
 

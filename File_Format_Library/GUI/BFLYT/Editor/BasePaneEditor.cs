@@ -102,21 +102,6 @@ namespace LayoutBXLYT
         {
             if (parentEditor.AnimationMode)
             {
-                if (parentEditor.ActiveAnimation != null)
-                {
-                    var anim = parentEditor.ActiveAnimation;
-                    var paneAnim = anim.TryGetTag(ActivePane.Name);
-                    if (paneAnim != null)
-                    {
-                        foreach (var tag in paneAnim.Tags)
-                        {
-                            foreach (var entry in tag.Entries)
-                            {
-                            }
-                        }
-                    }
-                }
-
                 //Change any UI that can be keyed or is keyed
                 tranXUD.ReloadTheme();
                 tranYUD.ReloadTheme();
@@ -129,6 +114,20 @@ namespace LayoutBXLYT
                 sizeXUD.ReloadTheme();
                 sizeYUD.ReloadTheme();
                 alphaUD.ReloadTheme();
+
+                if (ActivePane.animController.PaneSRT.ContainsKey(LPATarget.TranslateX))
+                    tranXUD.SetKeyedTheme();
+                if (ActivePane.animController.PaneSRT.ContainsKey(LPATarget.TranslateY))
+                    tranYUD.SetKeyedTheme();
+                if (ActivePane.animController.PaneSRT.ContainsKey(LPATarget.TranslateZ))
+                    tranZUD.SetKeyedTheme();
+
+                if (ActivePane.animController.PaneSRT.ContainsKey(LPATarget.RotateX))
+                    rotXUD.SetKeyedTheme();
+                if (ActivePane.animController.PaneSRT.ContainsKey(LPATarget.RotateY))
+                    rotYUD.SetKeyedTheme();
+                if (ActivePane.animController.PaneSRT.ContainsKey(LPATarget.RotateZ))
+                    rotZUD.SetKeyedTheme();
             }
             else
             {
@@ -151,16 +150,33 @@ namespace LayoutBXLYT
         {
             Loaded = false;
 
-            tranXUD.Value = ActivePane.Translate.X;
-            tranYUD.Value = ActivePane.Translate.Y;
-            tranZUD.Value = ActivePane.Translate.Z;
-            rotXUD.Value = ActivePane.Rotate.X;
-            rotYUD.Value = ActivePane.Rotate.Y;
-            rotZUD.Value = ActivePane.Rotate.Z;
-            scaleXUD.Value = ActivePane.Scale.X;
-            scaleYUD.Value = ActivePane.Scale.Y;
-            sizeXUD.Value = ActivePane.Width;
-            sizeYUD.Value = ActivePane.Height;
+            var translate = ActivePane.Translate;
+            var rotate = ActivePane.Rotate;
+            var scale = ActivePane.Scale;
+            var sizeX = ActivePane.Width;
+            var sizeY = ActivePane.Height;
+
+            if (parentEditor.AnimationMode)
+            {
+                translate = ActivePane.GetTranslation();
+                rotate = ActivePane.GetRotation();
+                scale = ActivePane.GetScale();
+                sizeX = ActivePane.GetSize().X;
+                sizeY = ActivePane.GetSize().Y;
+            }
+            else
+            {
+                tranXUD.Value = translate.X;
+                tranYUD.Value = translate.Y;
+                tranZUD.Value = translate.Z;
+                rotXUD.Value = rotate.X;
+                rotYUD.Value = rotate.Y;
+                rotZUD.Value = rotate.Z;
+                scaleXUD.Value = scale.X;
+                scaleYUD.Value = scale.Y;
+                sizeXUD.Value = sizeX;
+                sizeYUD.Value = sizeY;
+            }
 
             Loaded = true;
         }

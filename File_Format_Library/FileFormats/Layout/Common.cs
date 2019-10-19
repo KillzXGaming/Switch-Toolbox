@@ -131,6 +131,56 @@ namespace LayoutBXLYT
             get { return Childern.Count > 0; }
         }
 
+        public Vector3F GetTranslation()
+        {
+            var posX = Translate.X;
+            var posY = Translate.Y;
+            var posZ = Translate.Z;
+            if (animController.PaneSRT.ContainsKey(LPATarget.TranslateX))
+                posX = animController.PaneSRT[LPATarget.TranslateX];
+            if (animController.PaneSRT.ContainsKey(LPATarget.TranslateY))
+                posY = animController.PaneSRT[LPATarget.TranslateY];
+            if (animController.PaneSRT.ContainsKey(LPATarget.TranslateZ))
+                posZ = animController.PaneSRT[LPATarget.TranslateZ];
+            return new Vector3F(posX, posY, posZ);
+        }
+
+        public Vector3F GetRotation()
+        {
+            var rotX = Rotate.X;
+            var rotY = Rotate.Y;
+            var rotZ = Rotate.Z;
+            if (animController.PaneSRT.ContainsKey(LPATarget.RotateX))
+                rotX = animController.PaneSRT[LPATarget.RotateX];
+            if (animController.PaneSRT.ContainsKey(LPATarget.RotateY))
+                rotY = animController.PaneSRT[LPATarget.RotateY];
+            if (animController.PaneSRT.ContainsKey(LPATarget.RotateZ))
+                rotZ = animController.PaneSRT[LPATarget.RotateZ];
+            return new Vector3F(rotX, rotY, rotZ);
+        }
+
+        public Vector2F GetScale()
+        {
+            var scaX = Scale.X;
+            var scaY = Scale.Y;
+            if (animController.PaneSRT.ContainsKey(LPATarget.ScaleX))
+                scaX = animController.PaneSRT[LPATarget.ScaleX];
+            if (animController.PaneSRT.ContainsKey(LPATarget.ScaleY))
+                scaY = animController.PaneSRT[LPATarget.ScaleY];
+            return new Vector2F(scaX, scaY);
+        }
+
+        public Vector2F GetSize()
+        {
+            var scaX = Width;
+            var scaY = Height;
+            if (animController.PaneSRT.ContainsKey(LPATarget.SizeX))
+                scaX = animController.PaneSRT[LPATarget.SizeX];
+            if (animController.PaneSRT.ContainsKey(LPATarget.SizeY))
+                scaY = animController.PaneSRT[LPATarget.SizeY];
+            return new Vector2F(scaX, scaY);
+        }
+
         public BasePane()
         {
             originX = OriginX.Center;
@@ -213,7 +263,7 @@ namespace LayoutBXLYT
 
         public CustomRectangle TransformParent(CustomRectangle rect)
         {
-            return rect.GetTransformedRectangle(Parent, Translate,Rotate, Scale);
+            return rect.GetTransformedRectangle(Parent, GetTranslation(),GetRotation(), GetScale());
         }
 
         private CustomRectangle rectangle;
@@ -249,7 +299,8 @@ namespace LayoutBXLYT
         public void TransformRectangle(LayoutViewer.PickAction pickAction, CustomRectangle selectionBox, float pickMouseX, float pickMouseY)
         {
             CustomRectangle currentRectangle = this.CreateRectangle();
-            currentRectangle = currentRectangle.GetTransformedRectangle(Parent, Translate, Rotate, Scale);
+
+            currentRectangle = currentRectangle.GetTransformedRectangle(Parent, GetTranslation(), GetRotation(), GetScale());
 
             //The selection box can have mutlile panes selected in one box
             //Scaling the edges will have different distances
@@ -495,7 +546,7 @@ namespace LayoutBXLYT
         public bool IsHit(CustomRectangle selectionBox)
         {
             var rect = CreateRectangle();
-            var transformed = rect.GetTransformedRectangle(Parent, Translate, Rotate, Scale);
+            var transformed = rect.GetTransformedRectangle(Parent, GetTranslation(), GetRotation(), GetScale());
       
             if ((selectionBox.LeftPoint < transformed.RightPoint) &&
                 (selectionBox.RightPoint > transformed.LeftPoint) &&
@@ -509,7 +560,7 @@ namespace LayoutBXLYT
         public bool IsHit(int X, int Y)
         {
             var rect = CreateRectangle();
-            var transformed = rect.GetTransformedRectangle(Parent, Translate, Rotate, Scale);
+            var transformed = rect.GetTransformedRectangle(Parent, GetTranslation(), GetRotation(), GetScale());
 
             bool isInBetweenX = (X > transformed.LeftPoint) && (X < transformed.RightPoint) ||
                                 (X < transformed.LeftPoint) && (X > transformed.RightPoint);

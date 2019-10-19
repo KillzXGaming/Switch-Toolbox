@@ -161,7 +161,7 @@ namespace LayoutBXLYT
             else
             {
                 var cameraPosition = new Vector3(0, 0, -600);
-                var perspectiveMatrix = Matrix4.CreateTranslation(cameraPosition) * Matrix4.CreatePerspectiveFieldOfView(1.3f, WindowWidth / WindowHeight, 0.01f, 100000);
+                var perspectiveMatrix = Matrix4.CreateTranslation(cameraPosition) * Matrix4.CreatePerspectiveFieldOfView(0.785398f, WindowWidth / WindowHeight, 0.01f, 100000);
                 GL.LoadMatrix(ref perspectiveMatrix);
                 GL.MatrixMode(MatrixMode.Modelview);
                 Camera.ModelViewMatrix = perspectiveMatrix;
@@ -214,7 +214,7 @@ namespace LayoutBXLYT
             GL.AlphaFunc(AlphaFunction.Always, 0f);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Enable(EnableCap.ColorMaterial);
-            GL.Enable(EnableCap.Texture2D);
+            GL.Disable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.BlendEquation(BlendEquationMode.FuncAdd);
 
@@ -257,6 +257,8 @@ namespace LayoutBXLYT
                     }
                 }
             }
+
+            GL.Enable(EnableCap.Texture2D);
 
             foreach (var layout in LayoutFiles)
                 RenderPanes(GlobalShader, layout.RootPane, true, 255, false, null, 0);
@@ -326,7 +328,9 @@ namespace LayoutBXLYT
             foreach (var pane in panes)
             {
                 var paneRect = pane.CreateRectangle();
-                rect = paneRect.GetTransformedRectangle(pane.Parent, pane.Translate, pane.Rotate, pane.Scale);
+
+                rect = paneRect.GetTransformedRectangle(pane.Parent, 
+                    pane.GetTranslation(), pane.GetRotation(), pane.GetScale());
                 points.AddRange(new Vector2[4]
                 {
                      new Vector2(rect.LeftPoint, rect.TopPoint),

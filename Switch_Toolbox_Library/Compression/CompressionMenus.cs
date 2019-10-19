@@ -21,6 +21,7 @@ namespace Toolbox.Library.IO
 
             items.Add(new ToolStripMenuItem("Yaz0"));
             items.Add(new ToolStripMenuItem("Gzip"));
+            items.Add(new ToolStripMenuItem("LZSS"));
             items.Add(new ToolStripMenuItem("lZMA"));
             items.Add(new ToolStripMenuItem("lZ4"));
             items.Add(new ToolStripMenuItem("lZ4F"));
@@ -68,6 +69,8 @@ namespace Toolbox.Library.IO
                 OpenFileForCompression(new Yaz0(), Compress);
             else if (Name == "Gzip")
                 OpenFileForCompression(new Gzip(), Compress);
+            else if (Name.Contains("LZSS"))
+                OpenFileForCompression(new LZSS(), Compress);
             else if (Name == "lZMA")
                 OpenFileForCompression(new LZMA(), Compress);
             else if (Name == "lZ4")
@@ -80,6 +83,7 @@ namespace Toolbox.Library.IO
                 OpenFileForCompression(new Zlib(), Compress);
             else if (Name.Contains("ZLIB_GZ"))
                 OpenFileForCompression(new ZlibGZ(), Compress);
+
             else throw new Exception("Unimplimented Type! " + Name);
         }
 
