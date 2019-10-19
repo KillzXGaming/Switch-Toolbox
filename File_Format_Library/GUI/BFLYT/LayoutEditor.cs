@@ -536,6 +536,8 @@ namespace LayoutBXLYT
         {
             if (LayoutAnimEditor != null)
                 LayoutAnimEditor.OnAnimationPlaying();
+            if (AnimationMode && LayoutPaneEditor != null)
+                LayoutPaneEditor.ReloadEditor();
         }
 
         private void stComboBox1_MouseDoubleClick(object sender, MouseEventArgs e)

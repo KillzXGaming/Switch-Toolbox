@@ -22,5 +22,5 @@ void main()
         else
             position = bone * rotation * vec4((point.xyz - vec3(0, 1, 0)) * scale, 1);
     }
-	gl_Position =  mtxCam  * ModelMatrix * mtxMdl * vec4(position.xyz, 1);
+	gl_Position =  mtxCam  * mtxMdl * ModelMatrix * vec4(position.xyz, 1);
 }
