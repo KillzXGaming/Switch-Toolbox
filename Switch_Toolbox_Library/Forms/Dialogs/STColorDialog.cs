@@ -76,8 +76,8 @@ namespace Toolbox.Library.Forms
             redUD.Value = ColorRGB.R;
             greenUD.Value = ColorRGB.G;
             blueUD.Value = ColorRGB.B;
-            alphaUD.Value = ColorRGB.A;
-            hexTB.Text = Utils.ColorToHex(colorSelector1.Color);
+            alphaUD.Value = Alpha;
+            hexTB.Text = Utils.ColorToHex(NewColor);
 
             loaded = true;
 
