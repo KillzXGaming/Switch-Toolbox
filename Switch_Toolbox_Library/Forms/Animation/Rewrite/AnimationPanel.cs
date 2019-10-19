@@ -183,6 +183,10 @@ namespace Toolbox.Library
             currentFrameUpDown.ForeColor = FormThemes.BaseTheme.FormForeColor;
             currentFrameUpDown.BackColor = FormThemes.BaseTheme.FormBackColor;
 
+            frameSpeedUD.Minimum = 1;
+            frameSpeedUD.Value = 60;
+            frameSpeedUD.Maximum = 120;
+
             SetupTimer();
 
             this.LostFocus += new System.EventHandler(AnimationPanel_LostFocus);
@@ -241,7 +245,7 @@ namespace Toolbox.Library
         {
             animationTimer = new Timer
             {
-                Interval = 100 / 60
+                Interval = 1000 / 60
             };
             animationTimer.Tick += new EventHandler(animationTimer_Tick);
         }
@@ -425,6 +429,11 @@ namespace Toolbox.Library
         private void colorSlider1_Scroll(object sender, ScrollEventArgs e)
         {
 
+        }
+
+        private void frameSpeedUD_ValueChanged(object sender, EventArgs e) {
+            if (animationTimer != null)
+                animationTimer.Interval = (int)(1000 / frameSpeedUD.Value);
         }
     }
 }

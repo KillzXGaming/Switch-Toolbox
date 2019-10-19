@@ -661,9 +661,9 @@ namespace LayoutBXLYT
                 }
             }
             else if (file is BFLAN)
-            {
-
-            }
+                LoadBxlan(((BFLAN)file).BxlanHeader);
+            else if (file is BRLAN)
+                LoadBxlan(((BRLAN)file).BxlanHeader);
             else if (file is BNTX)
             {
 
