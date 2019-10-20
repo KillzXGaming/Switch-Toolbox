@@ -32,6 +32,7 @@
             this.stFlowLayoutPanel1 = new Toolbox.Library.Forms.STFlowLayoutPanel();
             this.stDropDownPanel1 = new Toolbox.Library.Forms.STDropDownPanel();
             this.btnResetColors = new Toolbox.Library.Forms.STButton();
+            this.vertexColorBox1 = new Toolbox.Library.Forms.VertexColorBox();
             this.stDropDownPanel3 = new Toolbox.Library.Forms.STDropDownPanel();
             this.texCoordIndexCB = new Toolbox.Library.Forms.STComboBox();
             this.bottomRightYUD = new BarSlider.BarSlider();
@@ -46,7 +47,6 @@
             this.topLeftYUD = new BarSlider.BarSlider();
             this.topLeftXUD = new BarSlider.BarSlider();
             this.stLabel6 = new Toolbox.Library.Forms.STLabel();
-            this.vertexColorBox1 = new Toolbox.Library.Forms.VertexColorBox();
             this.stFlowLayoutPanel1.SuspendLayout();
             this.stDropDownPanel1.SuspendLayout();
             this.stDropDownPanel3.SuspendLayout();
@@ -94,6 +94,20 @@
             this.btnResetColors.UseVisualStyleBackColor = false;
             this.btnResetColors.Click += new System.EventHandler(this.btnResetColors_Click);
             // 
+            // vertexColorBox1
+            // 
+            this.vertexColorBox1.BackColor = System.Drawing.Color.Transparent;
+            this.vertexColorBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("vertexColorBox1.BackgroundImage")));
+            this.vertexColorBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.vertexColorBox1.BottomLeftColor = System.Drawing.Color.Empty;
+            this.vertexColorBox1.BottomRightColor = System.Drawing.Color.Empty;
+            this.vertexColorBox1.Location = new System.Drawing.Point(22, 27);
+            this.vertexColorBox1.Name = "vertexColorBox1";
+            this.vertexColorBox1.Size = new System.Drawing.Size(100, 100);
+            this.vertexColorBox1.TabIndex = 1;
+            this.vertexColorBox1.TopLeftColor = System.Drawing.Color.Empty;
+            this.vertexColorBox1.TopRightColor = System.Drawing.Color.Empty;
+            // 
             // stDropDownPanel3
             // 
             this.stDropDownPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -140,18 +154,17 @@
             // 
             this.bottomRightYUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.bottomRightYUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.bottomRightYUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.bottomRightYUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.bottomRightYUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.bottomRightYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.bottomRightYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.bottomRightYUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.bottomRightYUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.bottomRightYUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.bottomRightYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.bottomRightYUD.DataType = null;
             this.bottomRightYUD.DrawSemitransparentThumb = false;
             this.bottomRightYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.bottomRightYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.bottomRightYUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.bottomRightYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.bottomRightYUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.bottomRightYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.bottomRightYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.bottomRightYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.bottomRightYUD.ForeColor = System.Drawing.Color.White;
             this.bottomRightYUD.IncrementAmount = 0.01F;
@@ -185,18 +198,17 @@
             // 
             this.bottomRightXUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.bottomRightXUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.bottomRightXUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.bottomRightXUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.bottomRightXUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.bottomRightXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.bottomRightXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.bottomRightXUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.bottomRightXUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.bottomRightXUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.bottomRightXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.bottomRightXUD.DataType = null;
             this.bottomRightXUD.DrawSemitransparentThumb = false;
             this.bottomRightXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.bottomRightXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.bottomRightXUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.bottomRightXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.bottomRightXUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.bottomRightXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.bottomRightXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.bottomRightXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.bottomRightXUD.ForeColor = System.Drawing.Color.White;
             this.bottomRightXUD.IncrementAmount = 0.01F;
@@ -239,18 +251,17 @@
             // 
             this.bottomLeftYUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.bottomLeftYUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.bottomLeftYUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.bottomLeftYUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.bottomLeftYUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.bottomLeftYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.bottomLeftYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.bottomLeftYUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.bottomLeftYUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.bottomLeftYUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.bottomLeftYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.bottomLeftYUD.DataType = null;
             this.bottomLeftYUD.DrawSemitransparentThumb = false;
             this.bottomLeftYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.bottomLeftYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.bottomLeftYUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.bottomLeftYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.bottomLeftYUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.bottomLeftYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.bottomLeftYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.bottomLeftYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.bottomLeftYUD.ForeColor = System.Drawing.Color.White;
             this.bottomLeftYUD.IncrementAmount = 0.01F;
@@ -284,18 +295,17 @@
             // 
             this.bottomLeftXUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.bottomLeftXUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.bottomLeftXUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.bottomLeftXUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.bottomLeftXUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.bottomLeftXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.bottomLeftXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.bottomLeftXUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.bottomLeftXUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.bottomLeftXUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.bottomLeftXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.bottomLeftXUD.DataType = null;
             this.bottomLeftXUD.DrawSemitransparentThumb = false;
             this.bottomLeftXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.bottomLeftXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.bottomLeftXUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.bottomLeftXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.bottomLeftXUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.bottomLeftXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.bottomLeftXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.bottomLeftXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.bottomLeftXUD.ForeColor = System.Drawing.Color.White;
             this.bottomLeftXUD.IncrementAmount = 0.01F;
@@ -338,18 +348,17 @@
             // 
             this.topRightYUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.topRightYUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.topRightYUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.topRightYUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.topRightYUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.topRightYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.topRightYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.topRightYUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.topRightYUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.topRightYUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.topRightYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.topRightYUD.DataType = null;
             this.topRightYUD.DrawSemitransparentThumb = false;
             this.topRightYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.topRightYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.topRightYUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.topRightYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.topRightYUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.topRightYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.topRightYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.topRightYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.topRightYUD.ForeColor = System.Drawing.Color.White;
             this.topRightYUD.IncrementAmount = 0.01F;
@@ -383,18 +392,17 @@
             // 
             this.topRightXUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.topRightXUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.topRightXUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.topRightXUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.topRightXUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.topRightXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.topRightXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.topRightXUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.topRightXUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.topRightXUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.topRightXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.topRightXUD.DataType = null;
             this.topRightXUD.DrawSemitransparentThumb = false;
             this.topRightXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.topRightXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.topRightXUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.topRightXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.topRightXUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.topRightXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.topRightXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.topRightXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.topRightXUD.ForeColor = System.Drawing.Color.White;
             this.topRightXUD.IncrementAmount = 0.01F;
@@ -437,18 +445,17 @@
             // 
             this.topLeftYUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.topLeftYUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.topLeftYUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.topLeftYUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.topLeftYUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.topLeftYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.topLeftYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.topLeftYUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.topLeftYUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.topLeftYUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.topLeftYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.topLeftYUD.DataType = null;
             this.topLeftYUD.DrawSemitransparentThumb = false;
             this.topLeftYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.topLeftYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.topLeftYUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.topLeftYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.topLeftYUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.topLeftYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.topLeftYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.topLeftYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.topLeftYUD.ForeColor = System.Drawing.Color.White;
             this.topLeftYUD.IncrementAmount = 0.01F;
@@ -482,18 +489,17 @@
             // 
             this.topLeftXUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.topLeftXUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.topLeftXUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.topLeftXUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.topLeftXUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.topLeftXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.topLeftXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.topLeftXUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.topLeftXUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.topLeftXUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.topLeftXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.topLeftXUD.DataType = null;
             this.topLeftXUD.DrawSemitransparentThumb = false;
             this.topLeftXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.topLeftXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.topLeftXUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.topLeftXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.topLeftXUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.topLeftXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.topLeftXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.topLeftXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.topLeftXUD.ForeColor = System.Drawing.Color.White;
             this.topLeftXUD.IncrementAmount = 0.01F;
@@ -531,19 +537,6 @@
             this.stLabel6.Size = new System.Drawing.Size(50, 13);
             this.stLabel6.TabIndex = 47;
             this.stLabel6.Text = "Top Left:";
-            // 
-            // vertexColorBox1
-            // 
-            this.vertexColorBox1.BackColor = System.Drawing.Color.Transparent;
-            this.vertexColorBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("vertexColorBox1.BackgroundImage")));
-            this.vertexColorBox1.BottomLeftColor = System.Drawing.Color.Empty;
-            this.vertexColorBox1.BottomRightColor = System.Drawing.Color.Empty;
-            this.vertexColorBox1.Location = new System.Drawing.Point(22, 27);
-            this.vertexColorBox1.Name = "vertexColorBox1";
-            this.vertexColorBox1.Size = new System.Drawing.Size(100, 100);
-            this.vertexColorBox1.TabIndex = 1;
-            this.vertexColorBox1.TopLeftColor = System.Drawing.Color.Empty;
-            this.vertexColorBox1.TopRightColor = System.Drawing.Color.Empty;
             // 
             // BasePictureboxEditor
             // 

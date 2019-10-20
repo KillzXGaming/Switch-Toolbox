@@ -47,8 +47,6 @@ namespace Toolbox.Library.Forms
 
         public STToolStrip()
         {
-            this.BackColor = titlebarBackColor;
-
             if (FormThemes.ActivePreset != FormThemes.Preset.White)
             {
                 this.BackColor = titlebarBackColor;

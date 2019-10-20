@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using Microsoft.VisualBasic.ApplicationServices;
+using Toolbox.Library;
 
 namespace Toolbox
 {
@@ -31,6 +32,16 @@ namespace Toolbox
             {
                 if (arg != Application.ExecutablePath)
                     Files.Add(arg);
+            }
+
+            try
+            {
+                Config.StartupFromFile(Runtime.ExecutableDir + "\\config.xml");
+                Config.GamePathsFromFile(Runtime.ExecutableDir + "\\config_paths.xml");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load config file! {ex}");
             }
 
             var domain = AppDomain.CurrentDomain;

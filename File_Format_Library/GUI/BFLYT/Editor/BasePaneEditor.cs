@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library.Forms;
+using Toolbox.Library;
 
 namespace LayoutBXLYT
 {
@@ -76,16 +77,8 @@ namespace LayoutBXLYT
             SetUIState();
 
             nameTB.Bind(pane, "Name");
-            tranXUD.Value = pane.Translate.X;
-            tranYUD.Value = pane.Translate.Y;
-            tranZUD.Value = pane.Translate.Z;
-            rotXUD.Value = pane.Rotate.X;
-            rotYUD.Value = pane.Rotate.Y;
-            rotZUD.Value = pane.Rotate.Z;
-            scaleXUD.Value = pane.Scale.X;
-            scaleYUD.Value = pane.Scale.Y;
-            sizeXUD.Value = pane.Width;
-            sizeYUD.Value = pane.Height;
+
+            SetTransform();
 
             alphaChildrenChk.Bind(pane, "InfluenceAlpha");
             paneVisibleChk.Bind(pane, "Visible");
@@ -100,7 +93,7 @@ namespace LayoutBXLYT
 
         public override void SetUIState()
         {
-            if (parentEditor.AnimationMode)
+            if (Runtime.LayoutEditor.AnimationEditMode)
             {
                 //Change any UI that can be keyed or is keyed
                 tranXUD.ReloadTheme();
@@ -149,14 +142,19 @@ namespace LayoutBXLYT
         public void RefreshEditor()
         {
             Loaded = false;
+            SetTransform();
+            Loaded = true;
+        }
 
+        private void SetTransform()
+        {
             var translate = ActivePane.Translate;
             var rotate = ActivePane.Rotate;
             var scale = ActivePane.Scale;
             var sizeX = ActivePane.Width;
             var sizeY = ActivePane.Height;
 
-            if (parentEditor.AnimationMode)
+            if (Runtime.LayoutEditor.AnimationEditMode)
             {
                 translate = ActivePane.GetTranslation();
                 rotate = ActivePane.GetRotation();
@@ -164,21 +162,17 @@ namespace LayoutBXLYT
                 sizeX = ActivePane.GetSize().X;
                 sizeY = ActivePane.GetSize().Y;
             }
-            else
-            {
-                tranXUD.Value = translate.X;
-                tranYUD.Value = translate.Y;
-                tranZUD.Value = translate.Z;
-                rotXUD.Value = rotate.X;
-                rotYUD.Value = rotate.Y;
-                rotZUD.Value = rotate.Z;
-                scaleXUD.Value = scale.X;
-                scaleYUD.Value = scale.Y;
-                sizeXUD.Value = sizeX;
-                sizeYUD.Value = sizeY;
-            }
 
-            Loaded = true;
+            tranXUD.Value = translate.X;
+            tranYUD.Value = translate.Y;
+            tranZUD.Value = translate.Z;
+            rotXUD.Value = rotate.X;
+            rotYUD.Value = rotate.Y;
+            rotZUD.Value = rotate.Z;
+            scaleXUD.Value = scale.X;
+            scaleYUD.Value = scale.Y;
+            sizeXUD.Value = sizeX;
+            sizeYUD.Value = sizeY;
         }
 
         private void OnAlphaSliderChanged(object sender, EventArgs e) {
@@ -309,17 +303,24 @@ namespace LayoutBXLYT
         private void OnTransformChanged(object sender, EventArgs e) {
             if (!Loaded) return;
 
-            ActivePane.Translate = new Syroot.Maths.Vector3F(
-             tranXUD.Value, tranYUD.Value, tranZUD.Value);
+            if (Runtime.LayoutEditor.AnimationEditMode)
+            {
 
-            ActivePane.Rotate = new Syroot.Maths.Vector3F(
-              rotXUD.Value, rotYUD.Value, rotZUD.Value);
+            }
+            else
+            {
+                ActivePane.Translate = new Syroot.Maths.Vector3F(
+                tranXUD.Value, tranYUD.Value, tranZUD.Value);
 
-            ActivePane.Scale = new Syroot.Maths.Vector2F(
-            scaleXUD.Value, scaleYUD.Value);
+                ActivePane.Rotate = new Syroot.Maths.Vector3F(
+                  rotXUD.Value, rotYUD.Value, rotZUD.Value);
 
-            ActivePane.Width = sizeXUD.Value;
-            ActivePane.Height = sizeYUD.Value;
+                ActivePane.Scale = new Syroot.Maths.Vector2F(
+                scaleXUD.Value, scaleYUD.Value);
+
+                ActivePane.Width = sizeXUD.Value;
+                ActivePane.Height = sizeYUD.Value;
+            }
 
             parentEditor.PropertyChanged?.Invoke(sender, e);
         }

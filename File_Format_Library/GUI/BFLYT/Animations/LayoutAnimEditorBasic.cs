@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library.Forms;
+using Toolbox.Library;
 
 namespace LayoutBXLYT
 {
@@ -91,6 +92,116 @@ namespace LayoutBXLYT
             //Enable saving if file is edited
             if (ActiveAnim != null)
                 ActiveAnim.FileInfo.CanSave = true;
+        }
+
+        public class GroupAnimWrapper : TreeNode, IContextMenuNode
+        {
+            public BxlanPaiEntry PaiEntry => (BxlanPaiEntry)Tag;
+
+            public GroupAnimWrapper(string text) {
+                Text = text;
+            }
+
+            public ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new ToolStripMenuItem("Add Animation Group", null, AddGroup, Keys.Control | Keys.A));
+                Items.Add(new ToolStripMenuItem("Clear Groups", null, ClearGroups, Keys.Control | Keys.C));
+                return Items.ToArray();
+            }
+
+            private void AddGroup(object sender, EventArgs e)
+            {
+
+            }
+
+            private void ClearGroups(object sender, EventArgs e)
+            {
+                PaiEntry.Tags.Clear();
+                Nodes.Clear();
+            }
+        }
+
+        public class GroupWrapper : TreeNode, IContextMenuNode
+        {
+            public BxlanPaiTag GroupTag => (BxlanPaiTag)Tag;
+
+            public GroupWrapper(string text) {
+                Text = text;
+            }
+
+            public ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new ToolStripMenuItem("Add Target", null, AddTarget, Keys.Control | Keys.A));
+                Items.Add(new ToolStripMenuItem("Clear Targets", null, ClearTargets, Keys.Control | Keys.C));
+                return Items.ToArray();
+            }
+
+            private void AddTarget(object sender, EventArgs e)
+            {
+
+            }
+
+            private void ClearTargets(object sender, EventArgs e)
+            {
+
+            }
+        }
+
+
+        public class GroupTargetWrapper : TreeNode, IContextMenuNode
+        {
+            public BxlanPaiTagEntry TypeTag => (BxlanPaiTagEntry)Tag;
+
+            public GroupTargetWrapper(string text) {
+                Text = text;
+            }
+
+            public ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new ToolStripMenuItem("Add Keyframe", null, AddeKey, Keys.Control | Keys.A));
+                Items.Add(new ToolStripMenuItem("Remove Target", null, RemoveTarget, Keys.Delete));
+                Items.Add(new ToolStripMenuItem("Clear Keys", null, RemoveKeys, Keys.Control | Keys.C));
+                return Items.ToArray();
+            }
+
+            private void AddeKey(object sender, EventArgs e)
+            {
+
+            }
+
+            private void RemoveKeys(object sender, EventArgs e)
+            {
+
+            }
+
+            private void RemoveTarget(object sender, EventArgs e)
+            {
+
+            }
+        }
+
+        public class KeyNodeWrapper : TreeNode, IContextMenuNode
+        {
+            public KeyFrame KeyFrame => (KeyFrame)Tag;
+
+            public KeyNodeWrapper(string text) {
+                Text = text;
+            }
+
+            public ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new ToolStripMenuItem("Rename Actor Files (Odyssey)", null, RemoveKey, Keys.Delete));
+                return Items.ToArray();
+            }
+
+            private void RemoveKey(object sender, EventArgs e)
+            {
+
+            }
         }
     }
 }

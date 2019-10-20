@@ -25,8 +25,6 @@ namespace LayoutBXLYT
         /// </summary>
         public static bool UseLegacyGL = true;
 
-        public bool AnimationMode = false;
-
         public LayoutViewer GamePreviewWindow;
 
         private LayoutCustomPaneMapper CustomMapper;
@@ -536,7 +534,7 @@ namespace LayoutBXLYT
         {
             if (LayoutAnimEditor != null)
                 LayoutAnimEditor.OnAnimationPlaying();
-            if (AnimationMode && LayoutPaneEditor != null)
+            if (Runtime.LayoutEditor.AnimationEditMode && LayoutPaneEditor != null)
                 LayoutPaneEditor.ReloadEditor();
         }
 
@@ -1122,8 +1120,8 @@ namespace LayoutBXLYT
 
         private void editorModeCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AnimationMode = editorModeCB.SelectedIndex == 1;
-            if (AnimationMode)
+            Runtime.LayoutEditor.AnimationEditMode = editorModeCB.SelectedIndex == 1;
+            if (Runtime.LayoutEditor.AnimationEditMode)
                 chkAutoKey.Show();
             else
                 chkAutoKey.Hide();

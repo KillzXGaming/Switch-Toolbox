@@ -64,6 +64,8 @@ namespace Toolbox.Library
 
         public class LayoutEditor
         {
+            public static bool AnimationEditMode = false;
+
             public static bool TransformChidlren = false;
 
             public static bool PartsAsNullPanes = false;

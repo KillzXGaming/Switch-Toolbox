@@ -70,6 +70,19 @@ namespace Toolbox.Library.Forms
             BaseTheme.TimelineThumbColor = Color.Yellow;
 
             BaseTheme.ComboBoxArrowColor = Color.Black;
+
+            BaseTheme.ValueBarSliderElapseTopColor = Color.FromArgb(140, 140, 140);
+            BaseTheme.ValueBarSliderElapseMiddleColor = Color.FromArgb(140, 140, 140);
+            BaseTheme.ValueBarSliderElapseBottmColor = Color.FromArgb(140, 140, 140);
+
+            BaseTheme.ValueBarSliderTopColor = Color.FromArgb(140, 140, 140);
+            BaseTheme.ValueBarSliderMiddleColor = Color.FromArgb(140, 140, 140);
+            BaseTheme.ValueBarSliderBottmColor = Color.FromArgb(140, 140, 140);
+
+
+            BaseTheme.ValueBarSliderElapseTopColor = Color.FromArgb(140, 140, 140);
+            BaseTheme.ValueBarSliderElapseMiddleColor = Color.FromArgb(140, 140, 140);
+            BaseTheme.ValueBarSliderElapseBottmColor = Color.FromArgb(140, 140, 140);
         }
         private static void SetDarkTheme()
         {

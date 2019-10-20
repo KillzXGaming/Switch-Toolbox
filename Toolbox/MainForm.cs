@@ -49,8 +49,6 @@ namespace Toolbox
 
         public MainForm()
         {
-            FormThemes.ActivePreset = FormThemes.Preset.Dark;
-
             InitializeComponent();
         }
 
@@ -68,8 +66,6 @@ namespace Toolbox
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            FormThemes.ActivePreset = FormThemes.Preset.Dark;
-
             Runtime.MainForm = this;
             compressionToolStripMenuItem.DropDownItems.AddRange(CompressionMenus.GetMenuItems().ToArray());
 
@@ -117,7 +113,6 @@ namespace Toolbox
 
             LoadPLugins();
             UpdateToolbar(HasVersionFile);
-            LoadConfig();
             LoadMDITheme();
             LoadRecentList();
             ReloadFiles();

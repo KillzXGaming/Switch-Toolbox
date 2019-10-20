@@ -431,24 +431,9 @@ namespace LayoutBXLYT
             }
 
 
-            var translate = pane.Translate;
-            var rotate = pane.Rotate;
-            var scale = pane.Scale;
-
-            foreach (var animItem in pane.animController.PaneSRT)
-            {
-                switch (animItem.Key)
-                {
-                    case LPATarget.RotateX: rotate.X = animItem.Value; break;
-                    case LPATarget.RotateY: rotate.Y = animItem.Value; break;
-                    case LPATarget.RotateZ: rotate.Z = animItem.Value; break;
-                    case LPATarget.ScaleX: scale.X = animItem.Value; break;
-                    case LPATarget.ScaleY: scale.Y = animItem.Value; break;
-                    case LPATarget.TranslateX: translate.X = animItem.Value; break;
-                    case LPATarget.TranslateY: translate.Y = animItem.Value; break;
-                    case LPATarget.TranslateZ: translate.Z = animItem.Value; break;
-                }
-            }
+            var translate = pane.GetTranslation();
+            var rotate = pane.GetRotation();
+            var scale = pane.GetScale();
 
             if (partPane != null)
             {

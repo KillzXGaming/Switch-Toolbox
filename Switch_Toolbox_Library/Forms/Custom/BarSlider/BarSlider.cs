@@ -1094,6 +1094,9 @@ namespace BarSlider
             set
             {
                 base.ForeColor = value;
+
+                ReloadTheme();
+
                 Invalidate();
                 OnForeColorChanged(EventArgs.Empty);
             }

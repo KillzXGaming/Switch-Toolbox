@@ -16,11 +16,6 @@ namespace LayoutBXLYT
     {
         public EventHandler PropertyChanged;
 
-        public bool AnimationMode
-        {
-            get { return ParentEditor.AnimationMode; }
-        }
-
         public PaneEditor()
         {
             InitializeComponent();
