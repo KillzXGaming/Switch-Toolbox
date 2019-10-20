@@ -22,7 +22,7 @@ namespace LayoutBXLYT
 
         public void LoadShaders()
         {
-            program = CompileShaders();
+            Compile();
         }
 
         public void Enable()

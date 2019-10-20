@@ -73,14 +73,9 @@ namespace LayoutBXLYT
                 };
 
                 var mat = pic1Pane.Material as BFLYT.Material;
-                if (mat.Shader == null)
-                {
-                    mat.Shader = new BflytShader(mat);
-                    mat.Shader.Compile();
-                }
 
-                mat.Shader.Enable();
-                ((BflytShader)mat.Shader).SetMaterials(pic1Pane,Textures);
+                ShaderLoader.CafeShader.Enable();
+                BflytShader.SetMaterials(ShaderLoader.CafeShader, mat, pane, Textures);
 
                 if (pic1Pane.TexCoords.Length > 0)
                 {
@@ -94,7 +89,7 @@ namespace LayoutBXLYT
 
                 DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
 
-                mat.Shader.Disable();
+                ShaderLoader.CafeShader.Disable();
             }
             else if (pane is BCLYT.PIC1)
             {
@@ -108,14 +103,9 @@ namespace LayoutBXLYT
                 };
 
                 var mat = pic1Pane.Material as BCLYT.Material;
-                if (mat.Shader == null)
-                {
-                    mat.Shader = new BclytShader(mat);
-                    mat.Shader.Compile();
-                }
 
-                mat.Shader.Enable();
-                ((BclytShader)mat.Shader).SetMaterials(pane,Textures);
+                ShaderLoader.CtrShader.Enable();
+                BclytShader.SetMaterials(ShaderLoader.CtrShader, (BCLYT.Material)mat, pane, Textures);
 
                 if (pic1Pane.TexCoords.Length > 0)
                 {
@@ -129,7 +119,7 @@ namespace LayoutBXLYT
 
                 DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
 
-                mat.Shader.Disable();
+                ShaderLoader.CtrShader.Disable();
             }
             else if (pane is BRLYT.PIC1)
             {
@@ -143,14 +133,9 @@ namespace LayoutBXLYT
                 };
 
                 var mat = pic1Pane.Material as BRLYT.Material;
-                if (mat.Shader == null)
-                {
-                    mat.Shader = new BrlytShader(mat);
-                    mat.Shader.Compile();
-                }
 
-                mat.Shader.Enable();
-                ((BrlytShader)mat.Shader).SetMaterials(pane, Textures);
+                ShaderLoader.RevShader.Enable();
+                BrlytShader.SetMaterials(ShaderLoader.RevShader, (BRLYT.Material)mat, pane, Textures);
 
                 if (pic1Pane.TexCoords.Length > 0)
                 {
@@ -164,7 +149,7 @@ namespace LayoutBXLYT
 
                 DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
 
-                mat.Shader.Disable();
+                ShaderLoader.RevShader.Disable();
             }
 
             GL.Disable(EnableCap.Texture2D);
@@ -270,19 +255,16 @@ namespace LayoutBXLYT
                 BindFontBitmap(pane, fontBitmap);
 
             var mat = textBox.Material as BFLYT.Material;
-            if (mat.Shader == null)
-            {
-                mat.Shader = new BflytShader(mat);
-                mat.Shader.Compile();
-            }
 
-            mat.Shader.Enable();
-            ((BflytShader)mat.Shader).SetMaterials(pane, Textures);
+            BxlytShader shader = ShaderLoader.CafeShader;
+
+            ShaderLoader.CafeShader.Enable();
+            BflytShader.SetMaterials(ShaderLoader.CafeShader, mat, pane, Textures);
 
             GL.ActiveTexture(TextureUnit.Texture0 + 1);
-            mat.Shader.SetInt($"numTextureMaps", 1);
-            mat.Shader.SetInt($"textures0", 1);
-            mat.Shader.SetInt($"hasTexture0", 1);
+            shader.SetInt($"numTextureMaps", 1);
+            shader.SetInt($"textures0", 1);
+            shader.SetInt($"hasTexture0", 1);
             GL.BindTexture(TextureTarget.Texture2D, textBox.RenderableFont.TexID);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleR, ConvertChannel(STChannelType.Red));
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleG, ConvertChannel(STChannelType.Green));
@@ -309,7 +291,7 @@ namespace LayoutBXLYT
 
             DrawRectangle(pane, gameWindow, pane.Rectangle, texCoords, Colors, false, effectiveAlpha, isSelected);
 
-            //   mat.Shader.Disable();
+           ShaderLoader.CafeShader.Disable();
 
             GL.Disable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
@@ -422,6 +404,14 @@ namespace LayoutBXLYT
             if (!Runtime.LayoutEditor.DisplayWindowPane)
                 return;
 
+            BxlytShader shader = null;
+            if (pane is BFLYT.PAN1)
+                shader = ShaderLoader.CafeShader;
+            if (pane is BCLYT.PAN1)
+                shader = ShaderLoader.CtrShader;
+            if (pane is BRLYT.PAN1)
+                shader = ShaderLoader.RevShader;
+
             var window = (IWindowPane)pane;
 
             float dX = DrawnVertexX(pane.Width, pane.originX);
@@ -531,7 +521,8 @@ namespace LayoutBXLYT
                         var windowFrame = window.WindowFrames[0];
                         SetupShaders(pane, windowFrame.Material, Textures);
 
-                        windowFrame.Material.Shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
+
+                        shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
 
                         hasTextures = windowFrame.Material.TextureMaps?.Length > 0;
 
@@ -734,7 +725,7 @@ namespace LayoutBXLYT
                         {
                             SetupShaders(pane, matTL, Textures);
 
-                            matTL.Shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
 
                             float pieceWidth = pane.Width - frameRight;
                             float pieceHeight = frameTop;
@@ -753,7 +744,7 @@ namespace LayoutBXLYT
                         {
                             SetupShaders(pane, matTR, Textures);
 
-                            matTR.Shader.SetInt("flipTexture", (int)window.WindowFrames[1].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[1].TextureFlip);
 
                             float pieceWidth = frameRight;
                             float pieceHeight = pane.Height - frameBottom;
@@ -772,7 +763,7 @@ namespace LayoutBXLYT
                         {
                             SetupShaders(pane, matBL, Textures);
 
-                            matBL.Shader.SetInt("flipTexture", (int)window.WindowFrames[2].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[2].TextureFlip);
 
                             float pieceWidth = frameLeft;
                             float pieceHeight = pane.Height - frameTop;
@@ -791,7 +782,7 @@ namespace LayoutBXLYT
                         {
                             SetupShaders(pane, matBR, Textures);
 
-                            matBR.Shader.SetInt("flipTexture", (int)window.WindowFrames[3].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[3].TextureFlip);
 
                             float pieceWidth = pane.Width - frameLeft;
                             float pieceHeight = frameBottom;
@@ -835,7 +826,7 @@ namespace LayoutBXLYT
                         if (matTL.TextureMaps.Length > 0)
                         {
                             SetupShaders(pane, matTL, Textures);
-                            matTL.Shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[0].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
@@ -851,7 +842,7 @@ namespace LayoutBXLYT
                         if (matTR.TextureMaps.Length > 0)
                         {
                             SetupShaders(pane, matTR, Textures);
-                            matTR.Shader.SetInt("flipTexture", (int)window.WindowFrames[1].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[1].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
@@ -867,7 +858,7 @@ namespace LayoutBXLYT
                         if (matBL.TextureMaps.Length > 0)
                         {
                             SetupShaders(pane, matBL, Textures);
-                            matBL.Shader.SetInt("flipTexture", (int)window.WindowFrames[2].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[2].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
@@ -883,7 +874,7 @@ namespace LayoutBXLYT
                         if (matBR.TextureMaps.Length > 0)
                         {
                             SetupShaders(pane, matBR, Textures);
-                            matBR.Shader.SetInt("flipTexture", (int)window.WindowFrames[3].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[3].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
@@ -899,7 +890,7 @@ namespace LayoutBXLYT
                         if (matT.TextureMaps.Length > 0)
                         {
                             SetupShaders(pane, matT, Textures);
-                            matT.Shader.SetInt("flipTexture", (int)window.WindowFrames[4].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[4].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
@@ -915,7 +906,7 @@ namespace LayoutBXLYT
                         if (matB.TextureMaps.Length > 0)
                         {
                             SetupShaders(pane, matB, Textures);
-                            matB.Shader.SetInt("flipTexture", (int)window.WindowFrames[5].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[5].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
@@ -931,7 +922,7 @@ namespace LayoutBXLYT
                         if (matL.TextureMaps.Length > 0)
                         {
                             SetupShaders(pane, matL, Textures);
-                            matL.Shader.SetInt("flipTexture", (int)window.WindowFrames[6].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[6].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
@@ -947,7 +938,7 @@ namespace LayoutBXLYT
                         if (matR.TextureMaps.Length > 0)
                         {
                             SetupShaders(pane, matR, Textures);
-                            matR.Shader.SetInt("flipTexture", (int)window.WindowFrames[7].TextureFlip);
+                            shader.SetInt("flipTexture", (int)window.WindowFrames[7].TextureFlip);
 
                             texCoords = new Vector2[]
                             {
@@ -1082,32 +1073,21 @@ namespace LayoutBXLYT
 
         private static void SetupShaders(BasePane pane, BxlytMaterial mat, Dictionary<string, STGenericTexture> textures)
         {
-            if (mat.Shader == null)
-            {
-                if (mat is Cafe.BFLYT.Material)
-                {
-                    mat.Shader = new BflytShader((Cafe.BFLYT.Material)mat);
-                    mat.Shader.Compile();
-                }
-                else if (mat is BRLYT.Material)
-                {
-                    mat.Shader = new BrlytShader((BRLYT.Material)mat);
-                    mat.Shader.Compile();
-                }
-                else if (mat is BCLYT.Material)
-                {
-                    mat.Shader = new BclytShader((BCLYT.Material)mat);
-                    mat.Shader.Compile();
-                }
-            }
-
-            mat.Shader.Enable();
             if (mat is Cafe.BFLYT.Material)
-                ((BflytShader)mat.Shader).SetMaterials(pane, textures);
+            {
+                ShaderLoader.CafeShader.Enable();
+                BflytShader.SetMaterials(ShaderLoader.CafeShader, (Cafe.BFLYT.Material)mat, pane, textures);
+            }
             else if (mat is BRLYT.Material)
-                ((BrlytShader)mat.Shader).SetMaterials(pane, textures);
+            {
+                ShaderLoader.RevShader.Enable();
+                BrlytShader.SetMaterials(ShaderLoader.RevShader, (BRLYT.Material)mat, pane, textures);
+            }
             else if (mat is BCLYT.Material)
-                ((BclytShader)mat.Shader).SetMaterials(pane, textures);
+            {
+                ShaderLoader.CtrShader.Enable();
+                BclytShader.SetMaterials(ShaderLoader.CtrShader, (BCLYT.Material)mat, pane, textures);
+            }
         }
 
         private static void RenderWindowContent(BasePane pane, uint sizeX, uint sizeY, BxlytWindowContent content,

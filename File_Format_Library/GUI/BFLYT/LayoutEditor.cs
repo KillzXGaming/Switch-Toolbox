@@ -89,6 +89,7 @@ namespace LayoutBXLYT
             displayGridToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayGrid;
             displayTextPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayTextPane;
             transformChildrenToolStripMenuItem.Checked = Runtime.LayoutEditor.TransformChidlren;
+           viewPartsAsNullPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.PartsAsNullPanes;
 
             ObjectSelected += OnObjectSelected;
             ObjectChanged += OnObjectChanged;

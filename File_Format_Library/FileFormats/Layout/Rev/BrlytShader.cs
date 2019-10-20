@@ -11,11 +11,8 @@ namespace LayoutBXLYT
 {
     public class BrlytShader : BxlytShader
     {
-        public BRLYT.Material material;
-
-        public BrlytShader(BRLYT.Material mat) : base()
+        public BrlytShader() : base()
         {
-            material = mat;
             LoadShaders();
         }
         
@@ -44,7 +41,7 @@ namespace LayoutBXLYT
             SetInt($"texCoords0Source", 0);
         }
 
-        public void SetMaterials(BasePane pane, Dictionary<string, STGenericTexture> textures)
+        public static void SetMaterials(BxlytShader shader, BRLYT.Material material, BasePane pane,  Dictionary<string, STGenericTexture> textures)
         {
             var paneRotate = pane.Rotate;
             if (pane.animController.PaneSRT?.Count > 0)
@@ -68,7 +65,7 @@ namespace LayoutBXLYT
             Matrix4 rotationZ = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(paneRotate.Z));
             var rotationMatrix = rotationX * rotationY * rotationZ;
 
-            SetMatrix("rotationMatrix", ref rotationMatrix);
+            shader.SetMatrix("rotationMatrix", ref rotationMatrix);
 
             var WhiteColor = material.WhiteColor;
             var BlackColor = material.BlackColor;
@@ -96,23 +93,23 @@ namespace LayoutBXLYT
                 }
             }
 
-            SetColor("whiteColor", Color.FromArgb(255, WhiteColor.R, WhiteColor.G, WhiteColor.B));
-            SetColor("blackColor", BlackColor.Color);
-            SetInt("debugShading", (int)Runtime.LayoutEditor.Shading);
-            SetInt("numTextureMaps", material.TextureMaps.Length);
-            SetVec2("uvScale0", new Vector2(1, 1));
-            SetFloat("uvRotate0", 0);
-            SetVec2("uvTranslate0", new Vector2(0, 0));
-            SetInt("flipTexture", 0);
-            SetInt("numTevStages", 0);
-            SetBool("ThresholdingAlphaInterpolation", material.ThresholdingAlphaInterpolation);
-            SetVec4("IndirectMat0", new Vector4(1, 1, 0, 0));
-            SetVec4("IndirectMat1", new Vector4(1, 1, 0, 0));
-            SetInt("tevTexMode", 0);
-            SetInt($"texCoords0GenType", 0);
-            SetInt($"texCoords0Source", 0);
+            shader.SetColor("whiteColor", Color.FromArgb(255, WhiteColor.R, WhiteColor.G, WhiteColor.B));
+            shader.SetColor("blackColor", BlackColor.Color);
+            shader.SetInt("debugShading", (int)Runtime.LayoutEditor.Shading);
+            shader.SetInt("numTextureMaps", material.TextureMaps.Length);
+            shader.SetVec2("uvScale0", new Vector2(1, 1));
+            shader.SetFloat("uvRotate0", 0);
+            shader.SetVec2("uvTranslate0", new Vector2(0, 0));
+            shader.SetInt("flipTexture", 0);
+            shader.SetInt("numTevStages", 0);
+            shader.SetBool("ThresholdingAlphaInterpolation", material.ThresholdingAlphaInterpolation);
+            shader.SetVec4("IndirectMat0", new Vector4(1, 1, 0, 0));
+            shader.SetVec4("IndirectMat1", new Vector4(1, 1, 0, 0));
+            shader.SetInt("tevTexMode", 0);
+            shader.SetInt($"texCoords0GenType", 0);
+            shader.SetInt($"texCoords0Source", 0);
 
-            BindTextureUniforms();
+            BindTextureUniforms(shader, material);
 
             int id = 1;
             for (int i = 0; i < material.TextureMaps.Length; i++)
@@ -125,10 +122,10 @@ namespace LayoutBXLYT
                 if (textures.ContainsKey(TexName))
                 {
                     GL.ActiveTexture(TextureUnit.Texture0 + id);
-                    SetInt($"textures{i}", id);
+                    shader.SetInt($"textures{i}", id);
                     bool isBinded = BxlytToGL.BindGLTexture(material.TextureMaps[i], textures[TexName]);
                     if (isBinded)
-                        SetInt($"hasTexture{i}", 1);
+                        shader.SetInt($"hasTexture{i}", 1);
 
                     id++;
                 }
@@ -153,9 +150,9 @@ namespace LayoutBXLYT
                     }
                 }
 
-                SetVec2("uvScale0", new Vector2(scale.X, scale.Y));
-                SetFloat("uvRotate0", rotate);
-                SetVec2("uvTranslate0", new Vector2(translate.X, translate.Y));
+                shader.SetVec2("uvScale0", new Vector2(scale.X, scale.Y));
+                shader.SetFloat("uvRotate0", rotate);
+                shader.SetVec2("uvTranslate0", new Vector2(translate.X, translate.Y));
             }
 
             GL.Enable(EnableCap.Blend);
@@ -167,11 +164,11 @@ namespace LayoutBXLYT
             GL.LogicOp(LogicOp.Noop);
         }
 
-        private void BindTextureUniforms()
+        private static void BindTextureUniforms(BxlytShader shader, BxlytMaterial material)
         {
             //Do uv test pattern
             GL.ActiveTexture(TextureUnit.Texture10);
-            GL.Uniform1(GL.GetUniformLocation(program, "uvTestPattern"), 10);
+            GL.Uniform1(GL.GetUniformLocation(shader.program, "uvTestPattern"), 10);
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
 
             if (material.TextureMaps.Length > 0)

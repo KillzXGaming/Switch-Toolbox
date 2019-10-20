@@ -892,9 +892,6 @@ namespace LayoutBXLYT
             public STColor8 TevColor { get; set; }
             public STColor8[] TevConstantColors { get; set; }
 
-            public List<TextureRef> TextureMaps { get; set; }
-            public List<TextureTransform> TextureTransforms { get; set; }
-
             private uint flags;
 
             private BCLYT.Header ParentLayout;
@@ -908,16 +905,13 @@ namespace LayoutBXLYT
 
             public Material()
             {
-                TextureMaps = new List<TextureRef>();
-                TextureTransforms = new List<TextureTransform>();
+                TextureMaps = new TextureRef[0];
+                TextureTransforms = new TextureTransform[0];
             }
 
             public Material(FileReader reader, Header header) : base()
             {
                 ParentLayout = header;
-
-                TextureMaps = new List<TextureRef>();
-                TextureTransforms = new List<TextureTransform>();
 
                 Name = reader.ReadString(20, true);
                 TevColor = reader.ReadColor8RGBA();
@@ -929,11 +923,14 @@ namespace LayoutBXLYT
                 uint texCoordGens = (flags >> 4) & 3;
                 uint tevStages = (flags >> 6) & 7;
 
+                TextureMaps = new TextureRef[texCount];
+                TextureTransforms = new TextureTransform[mtxCount];
+
                 for (int i = 0; i < texCount; i++)
-                    TextureMaps.Add(new TextureRef(reader, header));
+                    TextureMaps[i] = new TextureRef(reader, header);
 
                 for (int i = 0; i < mtxCount; i++)
-                    TextureTransforms.Add(new TextureTransform(reader));
+                    TextureTransforms[i] = new TextureTransform(reader);
             }
 
             public void Write(FileWriter writer, Header header)
@@ -943,20 +940,16 @@ namespace LayoutBXLYT
                 writer.Write(TevConstantColors);
                 writer.Write(flags);
 
-                for (int i = 0; i < TextureMaps.Count; i++)
-                    TextureMaps[i].Write(writer);
+                for (int i = 0; i < TextureMaps.Length; i++)
+                    ((TextureRef)TextureMaps[i]).Write(writer);
 
-                for (int i = 0; i < TextureTransforms.Count; i++)
-                    TextureTransforms[i].Write(writer);
+                for (int i = 0; i < TextureTransforms.Length; i++)
+                    ((TextureTransform)TextureTransforms[i]).Write(writer);
             }
         }
 
-        public class TextureTransform
+        public class TextureTransform : BxlytTextureTransform
         {
-            public Vector2F Translate;
-            public float Rotate;
-            public Vector2F Scale;
-
             public TextureTransform() { }
 
             public TextureTransform(FileReader reader)

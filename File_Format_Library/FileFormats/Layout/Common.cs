@@ -2065,9 +2065,6 @@ namespace LayoutBXLYT
         [DisplayName("Thresholding Alpha Interpolation"), CategoryAttribute("Alpha")]
         public virtual bool ThresholdingAlphaInterpolation { get; set; }
 
-        [Browsable(false)]
-        public virtual BxlytShader Shader { get; set; }
-
         [DisplayName("Texture Maps"), CategoryAttribute("Texture")]
         public BxlytTextureRef[] TextureMaps { get; set; }
 

@@ -312,6 +312,7 @@
     <Compile Include="FileFormats\Layout\CAFE\Materials\TexCoordGen.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\TextureRef.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\TextureTransform.cs" />
+    <Compile Include="FileFormats\Layout\ShaderLoader.cs" />
     <Compile Include="FileFormats\Layout\CTR\BCLYT.cs" />
     <Compile Include="FileFormats\Layout\CAFE\FLYT.cs" />
     <Compile Include="FileFormats\Layout\CTR\BclytShader.cs" />
