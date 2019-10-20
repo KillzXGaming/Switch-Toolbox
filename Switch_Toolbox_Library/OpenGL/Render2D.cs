@@ -27,11 +27,34 @@ namespace Toolbox.Library
             GL.PopMatrix();
         }
 
-        public static void DrawCircle(Vector2 Position, Color color)
+        public static void DrawFilledCircle(Vector2 Position, Color color, float radius = 300, byte transparency = 255, bool outline = false)
         {
             GL.PushMatrix();
             GL.Translate(Position.X, Position.Y, 0);
-            GL.Scale(300,300,1);
+            GL.Scale(radius, radius, 1);
+
+            GL.Color4(color.R, color.G, color.B, transparency);
+            GL.Begin(PrimitiveType.TriangleFan);
+            for (int i = 0; i <= 300; i++)
+            {
+                double angle = 2 * Math.PI * i / 300;
+                double x = Math.Cos(angle);
+                double y = Math.Sin(angle);
+                GL.Vertex2(x, y);
+            }
+            GL.End();
+
+            GL.PopMatrix();
+
+            if (outline)
+                DrawCircle(Position, color.Darken(20), radius);
+        }
+
+        public static void DrawCircle(Vector2 Position, Color color, float radius = 300)
+        {
+            GL.PushMatrix();
+            GL.Translate(Position.X, Position.Y, 0);
+            GL.Scale(radius, radius, 1);
 
             GL.Color4(color);
             GL.Begin(PrimitiveType.LineLoop);

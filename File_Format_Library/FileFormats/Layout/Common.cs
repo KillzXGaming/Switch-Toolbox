@@ -1420,12 +1420,27 @@ namespace LayoutBXLYT
         public ushort FrameSize;
         public bool Loop;
 
-        public List<string> Textures { get; set; }
+        public bool ContainsEntry(string name)
+        {
+            return Entries.Any(x => x.Name == name);
+        }
+
+        public virtual BxlanPaiEntry AddEntry(string name, byte target)
+        {
+            return new BxlanPaiEntry();
+        }
+
+        public List<string> Textures { get; set; } = new List<string>();
         public List<BxlanPaiEntry> Entries = new List<BxlanPaiEntry>();
     }
 
     public class BxlanPaiEntry
     {
+        public virtual BxlanPaiTag AddEntry(string tag)
+        { 
+            return new BxlanPaiTag();
+        }
+
         [DisplayName("Name"), CategoryAttribute("Animation")]
         public string Name { get; set; }
 
@@ -1447,6 +1462,29 @@ namespace LayoutBXLYT
             Tag = tag;
         }
 
+        public BxlanPaiTagEntry CreateTarget(object TargetType, byte interpolationType)
+        {
+            byte target = (byte)TargetType;
+            string tagType = Tag.Remove(0, 1);
+            switch (Tag)
+            {
+                case "LPA":
+                    return new LPATagEntry(target, interpolationType);
+                case "LTS":
+                    return new LTSTagEntry(target, interpolationType);
+                case "LVI":
+                    return new LVITagEntry(target, interpolationType);
+                case "LVC":
+                    return new LVCTagEntry(target, interpolationType);
+                case "LMC":
+                    return new LMCTagEntry(target, interpolationType);
+                case "LTP":
+                    return new LTPTagEntry(target, interpolationType);
+                default:
+                    return new BxlanPaiTagEntry(target, interpolationType);
+            }
+        }
+
         public List<BxlanPaiTagEntry> Entries = new List<BxlanPaiTagEntry>();
 
         public string Tag;
@@ -1456,7 +1494,7 @@ namespace LayoutBXLYT
             get { return TypeDefine.ContainsKey(Tag) ? TypeDefine[Tag] : Tag; }
         }
 
-        public Dictionary<string, string> TypeDefine = new Dictionary<string, string>()
+        public static Dictionary<string, string> TypeDefine = new Dictionary<string, string>()
             {
                 {"FLPA","PaneSRT" },
                 {"FLVI","Visibility" },
@@ -1504,6 +1542,7 @@ namespace LayoutBXLYT
             set { AnimationTarget = (byte)value; }
         }
 
+        public LPATagEntry(byte target, byte curveType) : base(target, curveType) { }
         public LPATagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
     }
 
@@ -1517,6 +1556,7 @@ namespace LayoutBXLYT
             set { AnimationTarget = (byte)value; }
         }
 
+        public LTSTagEntry(byte target, byte curveType) : base(target, curveType) { }
         public LTSTagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
     }
 
@@ -1530,6 +1570,7 @@ namespace LayoutBXLYT
             set { AnimationTarget = (byte)value; }
         }
 
+        public LVITagEntry(byte target, byte curveType) : base(target, curveType) { }
         public LVITagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
     }
 
@@ -1543,6 +1584,7 @@ namespace LayoutBXLYT
             set { AnimationTarget = (byte)value; }
         }
 
+        public LVCTagEntry(byte target, byte curveType) : base(target, curveType) { }
         public LVCTagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
     }
 
@@ -1556,6 +1598,7 @@ namespace LayoutBXLYT
             set { AnimationTarget = (byte)value; }
         }
 
+        public LMCTagEntry(byte target, byte curveType) : base(target, curveType) { }
         public LMCTagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
     }
 
@@ -1569,6 +1612,7 @@ namespace LayoutBXLYT
             set { AnimationTarget = (byte)value; }
         }
 
+        public LTPTagEntry(byte target, byte curveType) : base(target, curveType) { }
         public LTPTagEntry(FileReader reader, BxlanHeader header) : base(reader, header) { }
     }
 
@@ -1590,6 +1634,11 @@ namespace LayoutBXLYT
 
         public List<KeyFrame> KeyFrames = new List<KeyFrame>();
 
+        public BxlanPaiTagEntry(byte target, byte curveType)
+        {
+            AnimationTarget = target;
+            CurveType = (CurveType)curveType;
+        }
 
         public BxlanPaiTagEntry(FileReader reader, BxlanHeader header)
         {
@@ -1659,6 +1708,13 @@ namespace LayoutBXLYT
         [DisplayName("Value"), CategoryAttribute("Key Frame")]
         public float Value { get; set; }
 
+        public KeyFrame(float frame)
+        {
+            Frame = frame;
+            Value = 0;
+            Slope = 0;
+        }
+
         public KeyFrame(FileReader reader, CurveType curveType)
         {
             switch (curveType)
@@ -1718,7 +1774,7 @@ namespace LayoutBXLYT
         public virtual Dictionary<string, STGenericTexture> GetTextures { get; }
 
         [Browsable(false)]
-        public virtual List<string> Textures { get; }
+        public virtual List<string> Textures { get; } 
 
         [Browsable(false)]
         public virtual List<string> Fonts { get; }

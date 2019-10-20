@@ -273,6 +273,12 @@ namespace LayoutBXLYT
                 Textures = new List<string>();
             }
 
+            public override BxlanPaiEntry AddEntry(string name, byte target) {
+                var entry = new PaiEntry(name, target);
+                Entries.Add(entry);
+                return entry;
+            }
+
             public PAI1(FileReader reader, Header header)
             {
                 long startPos = reader.Position - 8;
@@ -342,6 +348,18 @@ namespace LayoutBXLYT
 
         public class PaiEntry : BxlanPaiEntry
         {
+            public override BxlanPaiTag AddEntry(string tag) {
+                var paiTag = new PaiTag(tag);
+                Tags.Add(paiTag);
+                return paiTag;
+            }
+
+            public PaiEntry(string name, byte target)
+            {
+                Name = name;
+                Target = (AnimationTarget)target;
+            }
+
             public PaiEntry(FileReader reader, Header header)
             {
                 long startPos = reader.Position;
@@ -382,6 +400,11 @@ namespace LayoutBXLYT
         public class PaiTag : BxlanPaiTag
         {
             private uint Unknown {get;set;}
+
+            public PaiTag(string tag)
+            {
+                Tag = tag;
+            }
 
             public PaiTag(FileReader reader, BxlanHeader header, AnimationTarget target)
             {

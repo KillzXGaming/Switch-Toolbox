@@ -354,16 +354,34 @@
     <Compile Include="GL\LM2_Render.cs" />
     <Compile Include="FileFormats\Layout\CAFE\BflytShader.cs" />
     <Compile Include="GL\Custom2D\KCLRendering2D.cs" />
+    <Compile Include="GUI\BFLYT\Animations\Basic\AddAnimGroupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\Basic\AddAnimGroupDialog.Designer.cs">
+      <DependentUpon>AddAnimGroupDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\Basic\AddGroupTypeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\Basic\AddGroupTypeDialog.Designer.cs">
+      <DependentUpon>AddGroupTypeDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\Basic\AddGroupTargetDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Animations\Basic\AddGroupTargetDialog.Designer.cs">
+      <DependentUpon>AddGroupTargetDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\Animations\LayoutAnimEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\Animations\LayoutAnimEditor.Designer.cs">
       <DependentUpon>LayoutAnimEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\BFLYT\Animations\LayoutAnimEditorBasic.cs">
+    <Compile Include="GUI\BFLYT\Animations\Basic\LayoutAnimEditorBasic.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\BFLYT\Animations\LayoutAnimEditorBasic.Designer.cs">
+    <Compile Include="GUI\BFLYT\Animations\Basic\LayoutAnimEditorBasic.Designer.cs">
       <DependentUpon>LayoutAnimEditorBasic.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\Animations\LytAnimEditorKeyGUI.cs">
@@ -648,16 +666,40 @@
     <Compile Include="GUI\BFRES\SmoothNormalsMultiMeshForm.Designer.cs">
       <DependentUpon>SmoothNormalsMultiMeshForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Byaml\CourseMuunt2D\MuuntEditor.cs">
+    <Compile Include="GUI\Byaml\MuuntEditor\Interfaces\IdrawableContainer.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\Interfaces\IDrawableObject.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\Interfaces\IMuuntLoader.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\Plugins\MK8\PathDrawableContainer.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\PropertyObject.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\MapObject.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\ObjectGroup.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\MuuntEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\Byaml\CourseMuunt2D\MuuntEditor.Designer.cs">
+    <Compile Include="GUI\Byaml\MuuntEditor\MuuntEditor.Designer.cs">
       <DependentUpon>MuuntEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Byaml\CourseMuunt2D\MuuntEditorDocker.cs">
+    <Compile Include="GUI\Byaml\MuuntEditor\MuuntEditorDocker.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\Byaml\CourseMuunt2D\TrackEditor2D.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\MuuntEditor2D.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Byaml\MuuntEditor\MuuntObjectList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Byaml\MuuntEditor\MuuntObjectList.Designer.cs">
+      <DependentUpon>MuuntObjectList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Byaml\MuuntEditor\MuuntPropertiesEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Byaml\MuuntEditor\MuuntPropertiesEditor.Designer.cs">
+      <DependentUpon>MuuntPropertiesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Byaml\MuuntEditor\Plugins\MK8\TrackMuuntLoader.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\PropertyGridConverters.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\RenderablePath.cs" />
     <Compile Include="GUI\Editors\MK8TrackEditor\MapCameraViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -853,39 +895,39 @@
     <Compile Include="GUI\BFRES\TexturePattern\TexPatternMaterialEditor.Designer.cs">
       <DependentUpon>TexPatternMaterialEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Byaml\CourseMuunt\Base\BaseControlPoint.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Base\BaseObjPt.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Base\PointID.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Base\RenderableConnectedMapPoints.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\CourseMuuntStructs.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\IObject.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\GravityPaths.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\IntroCamera.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\ItemPaths.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\EnemyPaths.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\GliderPaths.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\JugemPath.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\LapPaths.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Base\RenderablePathPoint.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\ObjPath.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\Paths.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Base\BasePathGroup.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\PullPath.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\RenderableConnectedPaths.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\ReturnPoint.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Base\BasePathPoint.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Paths\SteerAssistPath.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.cs">
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Base\BaseControlPoint.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Base\BaseObjPt.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Base\PointID.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Base\RenderableConnectedMapPoints.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\CourseMuuntStructs.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\IObject.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\GravityPaths.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\IntroCamera.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\ItemPaths.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\EnemyPaths.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\GliderPaths.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\JugemPath.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\LapPaths.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Base\RenderablePathPoint.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\ObjPath.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\Paths.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Base\BasePathGroup.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\PullPath.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\RenderableConnectedPaths.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\ReturnPoint.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Base\BasePathPoint.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Paths\SteerAssistPath.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\TurboMunntEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.Designer.cs">
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\TurboMunntEditor.Designer.cs">
       <DependentUpon>TurboMunntEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathCollectionNode.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathGroupNode.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\PathPointNode.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\ProbeLightingEntryWrapper.cs" />
-    <Compile Include="GUI\Byaml\CourseMuunt\Wrappers\ProbeLightingWrapper.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Wrappers\PathCollectionNode.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Wrappers\PathGroupNode.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Wrappers\PathPointNode.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Wrappers\ProbeLightingEntryWrapper.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Wrappers\ProbeLightingWrapper.cs" />
     <Compile Include="GUI\Editors\EffectTableEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1339,10 +1381,19 @@
     <EmbeddedResource Include="GUI\BFFNT\BffntEditor.resx">
       <DependentUpon>BffntEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Animations\Basic\AddAnimGroupDialog.resx">
+      <DependentUpon>AddAnimGroupDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Animations\Basic\AddGroupTypeDialog.resx">
+      <DependentUpon>AddGroupTypeDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Animations\Basic\AddGroupTargetDialog.resx">
+      <DependentUpon>AddGroupTargetDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\Animations\LayoutAnimEditor.resx">
       <DependentUpon>LayoutAnimEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\BFLYT\Animations\LayoutAnimEditorBasic.resx">
+    <EmbeddedResource Include="GUI\BFLYT\Animations\Basic\LayoutAnimEditorBasic.resx">
       <DependentUpon>LayoutAnimEditorBasic.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\Animations\LytKeyPaneSRTPanel.resx">
@@ -1600,10 +1651,16 @@
     <EmbeddedResource Include="GUI\BotwActorEditorControl.resx">
       <DependentUpon>BotwActorEditorControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Byaml\CourseMuunt2D\MuuntEditor.resx">
+    <EmbeddedResource Include="GUI\Byaml\MuuntEditor\MuuntEditor.resx">
       <DependentUpon>MuuntEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Byaml\CourseMuunt\TurboMunntEditor.resx">
+    <EmbeddedResource Include="GUI\Byaml\MuuntEditor\MuuntObjectList.resx">
+      <DependentUpon>MuuntObjectList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Byaml\MuuntEditor\MuuntPropertiesEditor.resx">
+      <DependentUpon>MuuntPropertiesEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Byaml\TurboCourseMuunt\TurboMunntEditor.resx">
       <DependentUpon>TurboMunntEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\ParamAnim\AnimParamEditor.resx">
@@ -1801,6 +1858,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FileFormats\EvemtFlow\" />
+    <Folder Include="GUI\Byaml\MuuntEditor\Renderables\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ArrowIcon.png" />

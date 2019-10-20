@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using OpenTK;
 using GL_EditorFramework.EditorDrawables;
+using FirstPlugin.MuuntEditor;
+using Toolbox.Library;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
-    public class BasePathPoint : IObject
+    public class BasePathPoint : PropertyObject, IObject, IPickable2DObject
     {
         public Action OnPathMoved;
 
@@ -20,14 +22,50 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             }
         }
 
+        public bool IsSelected { get; set; }
+        public bool IsHovered { get; set; }
+        
+        public bool IsHit(float X, float Y)
+        {
+            return new STRectangle(Translate.X, Translate.Z, 40, 40).IsHit((int)X, (int)Y);
+
+            for (int i = 0; i <= 300; i++)
+            {
+                double angle = 2 * Math.PI * i / 300;
+                double x = Math.Cos(angle);
+                double y = Math.Sin(angle);
+
+                if (angle < 90)
+                {
+
+                }
+                if (angle < 90 && angle < 180)
+                {
+
+                }
+                if (angle < 270)
+                {
+
+                }
+                if (angle < 360)
+                {
+
+                }
+            }
+
+            return false;
+        }
+
+        public void PickTranslate(float X, float Y, float Z)
+        {
+            Translate = new Vector3(X, Y, Z);
+        }
+
         public const string N_Translate = "Translate";
         public const string N_Rotate = "Rotate";
         public const string N_Scale = "Scale";
         public const string N_Id = "UnitIdNum";
         public const string N_ObjectID = "ObjId";
-
-        [Browsable(false)]
-        public Dictionary<string, dynamic> Prop { get; set; } = new Dictionary<string, dynamic>();
 
         public dynamic this[string name]
         {

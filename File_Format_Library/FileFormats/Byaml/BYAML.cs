@@ -10,7 +10,6 @@ using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 using ByamlExt.Byaml;
 using ByamlExt;
-using FirstPlugin.Turbo;
 
 namespace FirstPlugin
 {
@@ -166,6 +165,13 @@ namespace FirstPlugin
             editor.FileFormat = this;
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
+
+           /* if (FileName.Contains("_muunt"))
+            {
+                var muuntEditor = new MuuntEditor.MuuntEditor();
+                muuntEditor.LoadByaml(data.RootNode, FileName);
+                muuntEditor.Show();
+            }*/
             return editor;
         }
 

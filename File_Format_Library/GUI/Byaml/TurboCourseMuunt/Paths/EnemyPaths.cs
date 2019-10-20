@@ -27,9 +27,6 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             }
         }
 
-        [Browsable(false)]
-        public Dictionary<string, dynamic> Prop { get; set; } = new Dictionary<string, dynamic>();
-
         public int EnemyPathGroupId
         {
             get { return this[N_EnemyPathGroup] != null ? this[N_EnemyPathGroup] : -1; }

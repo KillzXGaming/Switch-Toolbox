@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WeifenLuo.WinFormsUI.Docking;
+using OpenTK;
 
-namespace FirstPlugin.Forms
+namespace FirstPlugin.MuuntEditor
 {
-    public class MuuntEditorDocker : DockContent
+    public interface IDrawableObject
     {
+        void Draw(Matrix4 mvp);
     }
 }

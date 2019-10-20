@@ -19,6 +19,8 @@ namespace Toolbox.Library.Forms
 
         public void LoadEditor(List<DrawableContainer> Drawables)
         {
+            if (Drawables == null) return;
+
             uvEditor1.Materials.Clear();
             uvEditor1.Textures.Clear();
             uvEditor1.Objects.Clear();

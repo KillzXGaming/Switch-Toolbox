@@ -7,16 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Toolbox.Library.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 
-namespace FirstPlugin.Forms
+namespace FirstPlugin.MuuntEditor
 {
-    public partial class MuuntEditor : Form
+    public partial class MuuntPropertiesEditor : MuuntEditorDocker
     {
-        public MuuntEditor()
+        private MuuntEditor ParentEditor;
+
+        public MuuntPropertiesEditor(MuuntEditor editor)
         {
             InitializeComponent();
+            ParentEditor = editor;
         }
     }
 }

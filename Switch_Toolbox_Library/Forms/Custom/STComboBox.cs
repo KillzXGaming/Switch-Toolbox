@@ -57,6 +57,12 @@ namespace Toolbox.Library.Forms
             InitializeComponent();
         }
 
+        public void LoadEnum(Type type)
+        {
+            DataBindings.Clear();
+            DataSource = Enum.GetValues(type);
+        }
+
         private bool IsTextReadOnly = true;
 
         public void SetAsReadOnly()

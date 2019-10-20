@@ -15,7 +15,7 @@ namespace Toolbox.Library.Forms
 {
     public class Viewport2D : UserControl
     {
-        public virtual bool UseOrtho { get; set; } = false;
+        public virtual bool UseOrtho { get; set; } = true;
         public virtual bool UseGrid { get; set; } = true;
 
         public Camera2D Camera = new Camera2D();
@@ -39,6 +39,8 @@ namespace Toolbox.Library.Forms
 
         private GLControl glControl1;
         private Color BackgroundColor = Color.FromArgb(40, 40, 40);
+
+        private List<IPickable2DObject> SelectedObjects = new List<IPickable2DObject>();
 
         public Viewport2D()
         {
@@ -109,6 +111,22 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        public virtual List<IPickable2DObject> GetPickableObjects()
+        {
+            return new List<IPickable2DObject>();
+        }
+
+        private List<IPickable2DObject> SearchHit(float X, float Y)
+        {
+            List<IPickable2DObject> picks = new List<IPickable2DObject>();
+            foreach (var pickObj in GetPickableObjects())
+            {
+                if (pickObj.IsHit(X, Y))
+                    picks.Add(pickObj);
+            }
+            return picks;
+        }
+
         private void SetupScene()
         {
             GL.Enable(EnableCap.Blend);
@@ -125,6 +143,17 @@ namespace Toolbox.Library.Forms
 
             RenderSceme();
 
+            if (showSelectionBox)
+            {
+                GL.Begin(PrimitiveType.LineLoop);
+                GL.Color4(Color.Red);
+                GL.Vertex2(SelectionBox.LeftPoint, SelectionBox.BottomPoint);
+                GL.Vertex2(SelectionBox.RightPoint, SelectionBox.BottomPoint);
+                GL.Vertex2(SelectionBox.RightPoint, SelectionBox.TopPoint);
+                GL.Vertex2(SelectionBox.LeftPoint, SelectionBox.TopPoint);
+                GL.End();
+            }
+
             if (UseOrtho)
                 GL.PopMatrix();
 
@@ -132,13 +161,54 @@ namespace Toolbox.Library.Forms
             glControl1.SwapBuffers();
         }
 
+        private STRectangle SelectionBox;
+
+        private bool showSelectionBox = false;
+
+        private void DrawSelectionBox(Point point1, Point point2)
+        {
+            SelectedObjects.Clear();
+
+            int left = point1.X;
+            int right = point2.X;
+            int top = point1.Y;
+            int bottom = point2.Y;
+            //Determine each point direction to see what is left/right/top/bottom
+            if (bottom > top)
+            {
+                top = point2.Y;
+                bottom = point1.Y;
+            }
+            if (left > right)
+            {
+                right = point1.X;
+                left = point2.X;
+            }
+
+            showSelectionBox = true;
+            SelectionBox = new STRectangle(left, right, top, bottom);
+
+            SetupScene();
+        }
+
         public virtual void RenderSceme()
         {
 
         }
 
+        private Point pickOriginMouse;
         private Point originMouse;
         private bool mouseCameraDown;
+        private bool isPicked;
+        private bool mouseDown = false;
+
+        private Vector2 GetMouseCoords(Point screenMouse)
+        {
+            RenderEditor();
+            var coords = OpenGLHelper.convertScreenToWorldCoords(screenMouse.X, screenMouse.Y);
+            GL.PopMatrix();
+            return new Vector2(coords.X, coords.Y);
+        }
 
         private void glControl1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -149,6 +219,33 @@ namespace Toolbox.Library.Forms
                 mouseCameraDown = true;
                 glControl1.Invalidate();
             }
+            else if (e.Button == MouseButtons.Left)
+            {
+                mouseDown = true;
+
+                var mouseCoords = GetMouseCoords(e.Location);
+
+                var picks = SearchHit(mouseCoords.X, mouseCoords.Y);
+                if (picks.Count > 0)
+                {
+                    if (!SelectedObjects.Contains(picks[0]))
+                    {
+                        if (Control.ModifierKeys != Keys.Control)
+                            UnselectAll();
+
+                        SelectedObjects.Add(picks[0]);
+
+                        picks[0].IsSelected = true;
+                    }
+
+                    isPicked = true;
+                }
+                else if (Control.ModifierKeys != Keys.Control)
+                    UnselectAll();
+
+                pickOriginMouse = e.Location;
+                glControl1.Invalidate();
+            }
         }
 
         private void glControl1_MouseUp(object sender, MouseEventArgs e)
@@ -156,20 +253,63 @@ namespace Toolbox.Library.Forms
             if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle)
             {
                 mouseCameraDown = false;
+                mouseDown = false;
+                isPicked = false;
+                showSelectionBox = false;
+
+                glControl1.Invalidate();
             }
+        }
+
+        private void UnselectAll()
+        {
+            foreach (var pick in SelectedObjects)
+                pick.IsSelected = false;
+
+            SelectedObjects.Clear();
         }
 
         private void glControl1_MouseMove(object sender, MouseEventArgs e)
         {
+            var mouseCoords = GetMouseCoords(e.Location);
+            var picks = SearchHit(mouseCoords.X, mouseCoords.Y);
+
+            if (picks.Count > 0)
+            {
+                if (!picks[0].IsSelected)
+                {
+                    picks[0].IsHovered = true;
+
+                    glControl1.Invalidate();
+                }
+            }
+            else
+            {
+                foreach (var obj in GetPickableObjects())
+                    obj.IsHovered = false;
+
+                glControl1.Invalidate();
+            }
+
             if (mouseCameraDown)
             {
                 var pos = new Vector2(e.Location.X - originMouse.X, e.Location.Y - originMouse.Y);
                 Camera.Position.X += pos.X;
-                Camera.Position.Y += pos.Y;
+                Camera.Position.Y -= pos.Y;
 
                 originMouse = e.Location;
 
                 glControl1.Invalidate();
+            }
+
+            if (mouseDown && !isPicked)
+            {
+                RenderEditor();
+                var temp = e.Location;
+                var curPos = OpenGLHelper.convertScreenToWorldCoords(temp.X, temp.Y);
+                var prevPos = OpenGLHelper.convertScreenToWorldCoords(pickOriginMouse.X, pickOriginMouse.Y);
+
+                DrawSelectionBox(prevPos, curPos);
             }
         }
 

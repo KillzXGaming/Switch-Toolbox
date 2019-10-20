@@ -51,7 +51,8 @@ namespace LayoutBXLYT
         {
             InitializeComponent();
 
-            chkAutoKey.Hide();
+            chkAutoKey.Enabled = false;
+            chkAutoKey.ForeColor = FormThemes.BaseTheme.FormForeColor;
 
             CustomMapper = new LayoutCustomPaneMapper();
 
@@ -415,7 +416,7 @@ namespace LayoutBXLYT
         public void ShowBxlanEditor(BxlanHeader bxlan)
         {
             LayoutAnimEditorBasic editor = new LayoutAnimEditorBasic();
-            editor.LoadAnim(bxlan);
+            editor.LoadAnim(bxlan, ActiveLayout);
             editor.OnPropertyChanged += AnimPropertyChanged;
             editor.Show(this);
 
@@ -1122,9 +1123,9 @@ namespace LayoutBXLYT
         {
             Runtime.LayoutEditor.AnimationEditMode = editorModeCB.SelectedIndex == 1;
             if (Runtime.LayoutEditor.AnimationEditMode)
-                chkAutoKey.Show();
+                chkAutoKey.Enabled = true;
             else
-                chkAutoKey.Hide();
+                chkAutoKey.Enabled = false;
 
             if (LayoutPaneEditor != null)
                 LayoutPaneEditor.ReloadEditor();
