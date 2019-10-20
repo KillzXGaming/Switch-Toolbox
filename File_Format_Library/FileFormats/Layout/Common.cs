@@ -1494,6 +1494,34 @@ namespace LayoutBXLYT
             get { return TypeDefine.ContainsKey(Tag) ? TypeDefine[Tag] : Tag; }
         }
 
+        public static Dictionary<string, string> CafeTypeDefine = new Dictionary<string, string>()
+        {
+                {"FLPA","PaneSRT" },
+                {"FLVI","Visibility" },
+                {"FLTS","TextureSRT" },
+                {"FLVC","VertexColor" },
+                {"FLMC","MaterialColor" },
+                {"FLTP","TexturePattern" },
+                {"FLIM","IndTextureSRT" },
+                {"FLAC","AlphaTest" },
+                {"FLCT","FontShadow" },
+                {"FLCC","PerCharacterTransformCurve" },
+        };
+
+        public static Dictionary<string, string> RevTypeDefine = new Dictionary<string, string>()
+        {
+                {"RLPA","PaneSRT" },
+                {"RLVI","Visibility" },
+                {"RLTS","TextureSRT" },
+                {"RLVC","VertexColor" },
+                {"RLMC","MaterialColor" },
+                {"RLTP","TexturePattern" },
+                {"RLIM","IndTextureSRT" },
+                {"RLAC","AlphaTest" },
+                {"RLCT","FontShadow" },
+                {"RLCC","PerCharacterTransformCurve" },
+        };
+
         public static Dictionary<string, string> TypeDefine = new Dictionary<string, string>()
             {
                 {"FLPA","PaneSRT" },
