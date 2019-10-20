@@ -1093,8 +1093,7 @@ namespace BarSlider
             }
             set
             {
-                base.ForeColor = value;
-
+                base.ForeColor = FormThemes.BaseTheme.FormForeColor;
                 ReloadTheme();
 
                 Invalidate();

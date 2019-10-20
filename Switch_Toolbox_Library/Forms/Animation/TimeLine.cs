@@ -116,14 +116,14 @@ namespace Toolbox.Library.Forms
         protected Point lastMousePos;
 
 
-        protected static Brush brush1 = new SolidBrush(Color.FromArgb(255, 255, 20));
-        protected static Brush brush2 = new SolidBrush(Color.FromArgb(20, 20, 20));
-        protected static Brush brush3 = new SolidBrush(Color.FromArgb(50, 50, 50));
+        protected static Brush brush1 = new SolidBrush(FormThemes.BaseTheme.TimelineNumberColor);
+        protected static Brush brush2 = new SolidBrush(FormThemes.BaseTheme.TimelineOverlayColor);
+        protected static Brush brush3 = new SolidBrush(FormThemes.BaseTheme.TimelineBackColor);
         protected static Brush brush4 = new SolidBrush(Color.FromArgb(90, 90, 90));
         protected static Brush brush5 = new SolidBrush(Color.FromArgb(150, 150, 150));
 
-        protected static Pen pen1 = new Pen(new SolidBrush(Color.FromArgb(30, 30, 30)), 2);
-        protected static Pen pen2 = new Pen(new SolidBrush(Color.FromArgb(100, 100, 20)), 2);
+        protected static Pen pen1 = new Pen(new SolidBrush(FormThemes.BaseTheme.TimelineLineColor), 2);
+        protected static Pen pen2 = new Pen(new SolidBrush(FormThemes.BaseTheme.TimelineLine2Color), 2);
         protected static Pen pen3 = new Pen(new SolidBrush(Color.FromArgb(150, 150, 150)), 2);
 
         protected static Font font = new Font(new FontFamily("arial"), 10);

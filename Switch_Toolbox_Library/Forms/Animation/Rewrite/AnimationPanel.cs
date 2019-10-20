@@ -178,6 +178,8 @@ namespace Toolbox.Library
             animationPlayBtn.ForeColor = FormThemes.BaseTheme.FormForeColor;
             button2.ForeColor = FormThemes.BaseTheme.FormForeColor;
 
+            frameSpeedUD.ForeColor = FormThemes.BaseTheme.FormForeColor;
+            frameSpeedUD.BackColor = FormThemes.BaseTheme.FormBackColor;
             totalFrame.ForeColor = FormThemes.BaseTheme.FormForeColor;
             totalFrame.BackColor = FormThemes.BaseTheme.FormBackColor;
             currentFrameUpDown.ForeColor = FormThemes.BaseTheme.FormForeColor;

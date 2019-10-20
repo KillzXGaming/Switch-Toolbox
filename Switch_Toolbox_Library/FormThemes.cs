@@ -67,22 +67,30 @@ namespace Toolbox.Library.Forms
             BaseTheme.ComboBoxBorderColor = Color.White;
             BaseTheme.ComboBoxArrowColor = Color.FromArgb(170, 170, 170);
 
-            BaseTheme.TimelineThumbColor = Color.Yellow;
-
             BaseTheme.ComboBoxArrowColor = Color.Black;
 
-            BaseTheme.ValueBarSliderElapseTopColor = Color.FromArgb(140, 140, 140);
-            BaseTheme.ValueBarSliderElapseMiddleColor = Color.FromArgb(140, 140, 140);
-            BaseTheme.ValueBarSliderElapseBottmColor = Color.FromArgb(140, 140, 140);
+            BaseTheme.ValueBarSliderElapseTopColor = Color.FromArgb(160, 160, 160);
+            BaseTheme.ValueBarSliderElapseMiddleColor = Color.FromArgb(160, 160, 160);
+            BaseTheme.ValueBarSliderElapseBottmColor = Color.FromArgb(160, 160, 160);
 
-            BaseTheme.ValueBarSliderTopColor = Color.FromArgb(140, 140, 140);
-            BaseTheme.ValueBarSliderMiddleColor = Color.FromArgb(140, 140, 140);
-            BaseTheme.ValueBarSliderBottmColor = Color.FromArgb(140, 140, 140);
+            BaseTheme.ValueBarSliderTopColor = Color.FromArgb(160, 160, 160);
+            BaseTheme.ValueBarSliderMiddleColor = Color.FromArgb(160, 160, 160);
+            BaseTheme.ValueBarSliderBottmColor = Color.FromArgb(160, 160, 160);
 
+            BaseTheme.ValueBarSliderElapseTopColor = Color.FromArgb(160, 160, 160);
+            BaseTheme.ValueBarSliderElapseMiddleColor = Color.FromArgb(160, 160, 160);
+            BaseTheme.ValueBarSliderElapseBottmColor = Color.FromArgb(160, 160, 160);
 
-            BaseTheme.ValueBarSliderElapseTopColor = Color.FromArgb(140, 140, 140);
-            BaseTheme.ValueBarSliderElapseMiddleColor = Color.FromArgb(140, 140, 140);
-            BaseTheme.ValueBarSliderElapseBottmColor = Color.FromArgb(140, 140, 140);
+            //Timeline
+
+            BaseTheme.TimelineBackColor = Color.FromArgb(160, 160, 160);
+            BaseTheme.TimelineOverlayColor = Color.FromArgb(140, 140, 140);
+            BaseTheme.TimelineLineColor = Color.FromArgb(110, 110, 110);
+            BaseTheme.TimelineLine2Color = Color.FromArgb(100, 100, 80);
+            BaseTheme.TimelineNumberColor = Color.Black;
+
+            BaseTheme.TimelineThumbColor = Color.Yellow;
+
         }
         private static void SetDarkTheme()
         {
@@ -135,6 +143,12 @@ namespace Toolbox.Library.Forms
 
             BaseTheme.TabPageActive = Color.FromArgb(60, 60, 60);
             BaseTheme.TextForeColor = Color.White;
+
+            BaseTheme.TimelineBackColor = Color.FromArgb(50, 50, 50);
+            BaseTheme.TimelineOverlayColor = Color.FromArgb(20, 20, 20);
+            BaseTheme.TimelineLineColor = Color.FromArgb(30, 30, 30);
+            BaseTheme.TimelineLine2Color = Color.FromArgb(100, 100, 20);
+            BaseTheme.TimelineNumberColor = Color.FromArgb(255, 255, 20);
         }
         private static void SetCustomTheme()
         {
@@ -186,6 +200,12 @@ namespace Toolbox.Library.Forms
             public static Color ValueBarSliderTopColor { get; set; }
             public static Color ValueBarSliderMiddleColor { get; set; }
             public static Color ValueBarSliderBottmColor { get; set; }
+
+            public static Color TimelineBackColor { get; set; }
+            public static Color TimelineOverlayColor { get; set; }
+            public static Color TimelineLineColor { get; set; }
+            public static Color TimelineLine2Color { get; set; }
+            public static Color TimelineNumberColor { get; set; }
 
             public static Font FontType { get; set; }
         }
