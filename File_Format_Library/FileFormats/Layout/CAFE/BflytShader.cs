@@ -47,27 +47,25 @@ namespace LayoutBXLYT
 
         public void SetMaterials(BasePane pane, Dictionary<string, STGenericTexture> textures)
         {
-            var paneRotate = pane.Rotate;
-            if (pane.animController.PaneSRT?.Count > 0)
-            {
-                foreach (var animItem in pane.animController.PaneSRT)
-                {
-                    switch (animItem.Key)
-                    {
-                        case LPATarget.RotateX:
-                            paneRotate.X = animItem.Value; break;
-                        case LPATarget.RotateY:
-                            paneRotate.Y = animItem.Value; break;
-                        case LPATarget.RotateZ:
-                            paneRotate.Z = animItem.Value; break;
-                    }
-                }
-            }
+            var paneRotate = pane.GetRotation();
 
             Matrix4 rotationX = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(paneRotate.X));
             Matrix4 rotationY = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(paneRotate.Y));
             Matrix4 rotationZ = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(paneRotate.Z));
             var rotationMatrix = rotationX * rotationY * rotationZ;
+
+            //Get parent rotation if using material rotation transforms
+            //If it's a null pane, it would rotate automatically with GL.Rotate
+            if (pane.Parent is IPicturePane || pane.Parent is IWindowPane)
+            {
+                var parentRotate = pane.Parent.GetRotation();
+
+                Matrix4 parentRotationX = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(parentRotate.X));
+                Matrix4 parentRotationY = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(parentRotate.Y));
+                Matrix4 parentRotationZ = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(parentRotate.Z));
+                var parentRotationMatrix = parentRotationX * parentRotationY * parentRotationZ;
+                rotationMatrix = parentRotationMatrix * rotationMatrix;
+            }
 
             SetMatrix("rotationMatrix", ref rotationMatrix);
 
