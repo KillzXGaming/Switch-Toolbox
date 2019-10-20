@@ -131,6 +131,19 @@ namespace LayoutBXLYT
             get { return Childern.Count > 0; }
         }
 
+        public OpenTK.Matrix4 GetRotationMatrix()
+        {
+            var paneRotate = GetRotation();
+            OpenTK.Matrix4 rotationX = OpenTK.Matrix4.CreateRotationX(OpenTK.MathHelper.DegreesToRadians(paneRotate.X));
+            OpenTK.Matrix4 rotationY = OpenTK.Matrix4.CreateRotationY(OpenTK.MathHelper.DegreesToRadians(paneRotate.Y));
+            OpenTK.Matrix4 rotationZ = OpenTK.Matrix4.CreateRotationZ(OpenTK.MathHelper.DegreesToRadians(paneRotate.Z));
+            var rotationMatrix = rotationX * rotationY * rotationZ;
+
+            if (Parent != null)
+                rotationMatrix = Parent.GetRotationMatrix() * rotationMatrix;
+            return rotationMatrix;
+        }
+
         public Vector3F GetTranslation()
         {
             var posX = Translate.X;

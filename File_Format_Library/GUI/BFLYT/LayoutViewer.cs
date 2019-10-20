@@ -443,19 +443,9 @@ namespace LayoutBXLYT
             }
 
 
+            //Note rotation matrix done by shaders
+
             GL.Translate(translate.X, translate.Y, 0);
-
-            //Rotate normally unless the object uses shaders/materials
-            //Rotation matrix + shaders works accurately with X/Y rotation axis
-            //Todo, do everything by shaders
-            bool HasMaterials = pane is IWindowPane || pane is IPicturePane;
-            if (!HasMaterials)
-            {
-                GL.Rotate(rotate.X, 1, 0, 0);
-                GL.Rotate(rotate.Y, 0, 1, 0);
-                GL.Rotate(rotate.Z, 0, 0, 1);
-            }
-
             GL.Scale(scale.X, scale.Y, 1);
 
             byte alpha = pane.Alpha;
@@ -479,7 +469,12 @@ namespace LayoutBXLYT
                 else if (pane is IWindowPane)
                     BxlytToGL.DrawWindowPane(pane, GameWindow, effectiveAlpha, Textures, isSelected);
                 else if (pane is IBoundryPane)
+                {
+                    shader.Enable();
+                    shader.SetBasic(pane);
                     BxlytToGL.DrawBoundryPane(pane, GameWindow, effectiveAlpha, isSelected);
+                    shader.Disable();
+                }
                 else if (pane is ITextPane && Runtime.LayoutEditor.DisplayTextPane)
                 {
                     var textPane = (ITextPane)pane;
@@ -553,6 +548,9 @@ namespace LayoutBXLYT
             if (!Runtime.LayoutEditor.DisplayNullPane || GameWindow || Runtime.LayoutEditor.IsGamePreview)
                 return;
 
+            shader.Enable();
+            shader.SetBasic(pane);
+
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
                 new Vector2(0,1),
@@ -572,6 +570,8 @@ namespace LayoutBXLYT
                 };
 
             BxlytToGL.DrawRectangle(pane, GameWindow, pane.Rectangle, TexCoords, Colors, true, 255, isSelectionBox);
+
+            shader.Disable();
         }
 
         private void DrawPartsPane(BxlytShader shader, BFLYT.PRT1 pane, byte effectiveAlpha,bool isSelected, bool parentInfluenceAlpha)

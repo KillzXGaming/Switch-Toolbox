@@ -247,7 +247,7 @@ namespace Toolbox.Library
         {
             animationTimer = new Timer
             {
-                Interval = 1000 / 60
+                Interval = (int)(1000.0f / 60.0f)
             };
             animationTimer.Tick += new EventHandler(animationTimer_Tick);
         }
@@ -434,8 +434,9 @@ namespace Toolbox.Library
         }
 
         private void frameSpeedUD_ValueChanged(object sender, EventArgs e) {
+
             if (animationTimer != null)
-                animationTimer.Interval = (int)(1000 / frameSpeedUD.Value);
+                animationTimer.Interval = (int)(1000.0f / (float)frameSpeedUD.Value);
         }
     }
 }

@@ -47,26 +47,7 @@ namespace LayoutBXLYT
 
         public void SetMaterials(BasePane pane, Dictionary<string, STGenericTexture> textures)
         {
-            var paneRotate = pane.GetRotation();
-
-            Matrix4 rotationX = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(paneRotate.X));
-            Matrix4 rotationY = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(paneRotate.Y));
-            Matrix4 rotationZ = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(paneRotate.Z));
-            var rotationMatrix = rotationX * rotationY * rotationZ;
-
-            //Get parent rotation if using material rotation transforms
-            //If it's a null pane, it would rotate automatically with GL.Rotate
-            if (pane.Parent is IPicturePane || pane.Parent is IWindowPane)
-            {
-                var parentRotate = pane.Parent.GetRotation();
-
-                Matrix4 parentRotationX = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(parentRotate.X));
-                Matrix4 parentRotationY = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(parentRotate.Y));
-                Matrix4 parentRotationZ = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(parentRotate.Z));
-                var parentRotationMatrix = parentRotationX * parentRotationY * parentRotationZ;
-                rotationMatrix = parentRotationMatrix * rotationMatrix;
-            }
-
+            var rotationMatrix = pane.GetRotationMatrix();
             SetMatrix("rotationMatrix", ref rotationMatrix);
 
             STColor8 WhiteColor = material.WhiteColor;

@@ -71,6 +71,13 @@ namespace LayoutBXLYT
             }
         }
 
+        //For non material panes
+        public void SetBasic(BasePane pane)
+        {
+            var rotationMatrix = pane.GetRotationMatrix();
+            SetMatrix("rotationMatrix", ref rotationMatrix);
+        }
+
         public void SetVec4(string name, Vector4 value)
         {
             if (uniforms.ContainsKey(name))
