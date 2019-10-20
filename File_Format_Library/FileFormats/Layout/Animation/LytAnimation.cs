@@ -20,6 +20,22 @@ namespace LayoutBXLYT
         public void UpdateLayout(BxlytHeader heeader)
         {
             parentLayout = heeader;
+
+            ReloadAnimation();
+        }
+
+        private void ReloadAnimation()
+        {
+            FrameCount = (uint)BxlanAnimation.AnimationTag.EndFrame;
+            StartFrame = (uint)BxlanAnimation.AnimationTag.StartFrame;
+
+            Textures.Clear();
+            AnimGroups.Clear();
+            foreach (var tex in BxlanAnimation.AnimationInfo.Textures)
+                Textures.Add(tex);
+
+            foreach (var tag in BxlanAnimation.AnimationInfo.Entries)
+                AnimGroups.Add(new LytAnimGroup(tag));
         }
 
         public override void Reset()
@@ -138,8 +154,6 @@ namespace LayoutBXLYT
                     var track = group.GetTrack(i);
                     var value = track.GetFrameValue(Frame, StartFrame);
                     var target = (LPATarget)i;
-
-                    Console.WriteLine($"{pane.Name} {group.Name} {value} {target}");
 
                     if (!pane.animController.PaneSRT.ContainsKey(target))
                         pane.animController.PaneSRT.Add(target, value);

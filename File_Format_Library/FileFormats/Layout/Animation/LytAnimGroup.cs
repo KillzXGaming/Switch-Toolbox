@@ -114,9 +114,6 @@ namespace LayoutBXLYT
                         break;
                 }
 
-                Console.WriteLine($"tag {tag} {group}");
-
-
                 foreach (var keyGroup in entry.Tags[i].Entries)
                 {
                     if (!(group is IAnimationTarget))
