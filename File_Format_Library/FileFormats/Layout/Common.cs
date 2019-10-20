@@ -1466,7 +1466,7 @@ namespace LayoutBXLYT
         {
             byte target = (byte)TargetType;
             string tagType = Tag.Remove(0, 1);
-            switch (Tag)
+            switch (tagType)
             {
                 case "LPA":
                     return new LPATagEntry(target, interpolationType);

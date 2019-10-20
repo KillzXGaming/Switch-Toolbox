@@ -21,7 +21,7 @@ namespace LayoutBXLYT
             CanResize = false;
             ActiveGroup = animGroup;
 
-            if (animGroup.Target == AnimationTarget.Material)
+            if (animGroup.Target == AnimationTarget.Pane)
             {
                 stComboBox1.Items.Add("PaneSRT");
                 stComboBox1.Items.Add("Visibility");

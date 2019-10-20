@@ -135,6 +135,8 @@ namespace LayoutBXLYT
 
         public class GroupAnimWrapper : TreeNode, IContextMenuNode
         {
+            public BxlanPAI1 AnimInfo => (BxlanPAI1)Parent.Tag;
+
             public BxlanPaiEntry PaiEntry => (BxlanPaiEntry)Tag;
 
             public GroupAnimWrapper(string text) {
@@ -145,8 +147,15 @@ namespace LayoutBXLYT
             {
                 List<ToolStripItem> Items = new List<ToolStripItem>();
                 Items.Add(new ToolStripMenuItem("Add Animation Group", null, AddGroup, Keys.Control | Keys.A));
+                Items.Add(new ToolStripMenuItem("Remove Group", null, RemoveGroup, Keys.Delete));
                 Items.Add(new ToolStripMenuItem("Clear Groups", null, ClearGroups, Keys.Control | Keys.C));
                 return Items.ToArray();
+            }
+
+            private void RemoveGroup(object sender, EventArgs e)
+            {
+                AnimInfo.Entries.Remove(PaiEntry);
+                Parent.Nodes.Remove(this);
             }
 
             private void AddGroup(object sender, EventArgs e)
@@ -181,8 +190,15 @@ namespace LayoutBXLYT
             {
                 List<ToolStripItem> Items = new List<ToolStripItem>();
                 Items.Add(new ToolStripMenuItem("Add Target", null, AddTarget, Keys.Control | Keys.A));
+                Items.Add(new ToolStripMenuItem("Remove Group", null, RemoveGroup, Keys.Delete));
                 Items.Add(new ToolStripMenuItem("Clear Targets", null, ClearTargets, Keys.Control | Keys.C));
                 return Items.ToArray();
+            }
+
+            private void RemoveGroup(object sender, EventArgs e)
+            {
+                ParentPaiEntry.Tags.Remove(GroupTag);
+                Parent.Nodes.Remove(this);
             }
 
             private void AddTarget(object sender, EventArgs e)
