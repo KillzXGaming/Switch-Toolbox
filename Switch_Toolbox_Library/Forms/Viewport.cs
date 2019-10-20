@@ -49,6 +49,10 @@ namespace Toolbox.Library
             this.DoubleBuffered = true;
 
             InitializeComponent();
+
+            BackColor = FormThemes.BaseTheme.FormBackColor;
+            ForeColor = FormThemes.BaseTheme.FormForeColor;
+
             LoadViewport();
             LoadViewportRuntimeValues();
             LoadShadingModes();
@@ -110,7 +114,7 @@ namespace Toolbox.Library
             drawContainersCB.Items.Clear();
             drawContainersCB.Items.Add("All Active Drawables");
 
-            for (int i = 0; i < DrawableContainers.Count;i++)
+            for (int i = 0; i < DrawableContainers.Count; i++)
             {
                 drawContainersCB.Items.Add(DrawableContainers[i].Name);
 
@@ -134,7 +138,7 @@ namespace Toolbox.Library
         {
             if (Drawable is GL_EditorFramework.EditorDrawables.IEditableObject)
             {
-                return scene.staticObjects.Contains(Drawable) || 
+                return scene.staticObjects.Contains(Drawable) ||
                        scene.objects.Contains((GL_EditorFramework.EditorDrawables.IEditableObject)Drawable);
             }
             else
@@ -347,7 +351,7 @@ namespace Toolbox.Library
                 GL_ControlModern.Stereoscopy = Runtime.stereoscopy;
                 GL_ControlModern.ZNear = Runtime.CameraNear;
                 GL_ControlModern.ZFar = Runtime.CameraFar;
-              
+
             }
         }
         public void SetupViewportRuntimeValues()
@@ -422,10 +426,10 @@ namespace Toolbox.Library
 
             bool IsOrtho = orthographicToolStripMenuItem.Checked;
 
-        //    if (GL_ControlModern != null)
-         //       GL_ControlModern.UseOrthographicView = IsOrtho;
-         //   else
-              //  GL_ControlLegacy.UseOrthographicView = IsOrtho;
+            //    if (GL_ControlModern != null)
+            //       GL_ControlModern.UseOrthographicView = IsOrtho;
+            //   else
+            //  GL_ControlLegacy.UseOrthographicView = IsOrtho;
 
             UpdateViewport();
         }
@@ -445,10 +449,10 @@ namespace Toolbox.Library
 
             bool IsOrtho = orthographicToolStripMenuItem.Checked;
 
-       //     if (GL_ControlModern != null)
-       //         GL_ControlModern.UseOrthographicView = IsOrtho;
-       //     else
-       //         GL_ControlLegacy.UseOrthographicView = IsOrtho;
+            //     if (GL_ControlModern != null)
+            //         GL_ControlModern.UseOrthographicView = IsOrtho;
+            //     else
+            //         GL_ControlLegacy.UseOrthographicView = IsOrtho;
 
             UpdateViewport();
         }
@@ -595,7 +599,7 @@ namespace Toolbox.Library
                 return;
 
             var containers = GetActiveContainers();
-            if (containers.Count == 0) return;
+            if (containers?.Count == 0) return;
 
             UVEditorForm uvEditor1 = new UVEditorForm();
             uvEditor1.LoadEditor(containers);

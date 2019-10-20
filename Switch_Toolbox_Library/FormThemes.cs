@@ -49,7 +49,7 @@ namespace Toolbox.Library.Forms
 
             BaseTheme.ListViewBackColor = Color.White;
 
-            BaseTheme.DropdownButtonBackColor = Color.FromArgb(220, 220, 220);
+            BaseTheme.DropdownButtonBackColor = Color.FromArgb(190, 190, 190);
             BaseTheme.DropdownPanelBackColor = Color.White;
 
             BaseTheme.DropdownPanelBackColor = Color.White;
@@ -73,13 +73,15 @@ namespace Toolbox.Library.Forms
             BaseTheme.ValueBarSliderElapseMiddleColor = Color.FromArgb(160, 160, 160);
             BaseTheme.ValueBarSliderElapseBottmColor = Color.FromArgb(160, 160, 160);
 
-            BaseTheme.ValueBarSliderTopColor = Color.FromArgb(160, 160, 160);
-            BaseTheme.ValueBarSliderMiddleColor = Color.FromArgb(160, 160, 160);
-            BaseTheme.ValueBarSliderBottmColor = Color.FromArgb(160, 160, 160);
+            BaseTheme.ValueBarSliderTopColor = Color.FromArgb(190, 190, 190);
+            BaseTheme.ValueBarSliderMiddleColor = Color.FromArgb(190, 190, 190);
+            BaseTheme.ValueBarSliderBottmColor = Color.FromArgb(190, 190, 190);
 
-            BaseTheme.ValueBarSliderElapseTopColor = Color.FromArgb(160, 160, 160);
-            BaseTheme.ValueBarSliderElapseMiddleColor = Color.FromArgb(160, 160, 160);
-            BaseTheme.ValueBarSliderElapseBottmColor = Color.FromArgb(160, 160, 160);
+            BaseTheme.ValueBarSliderElapseTopColor = Color.FromArgb(190, 190, 190);
+            BaseTheme.ValueBarSliderElapseMiddleColor = Color.FromArgb(190, 190, 190);
+            BaseTheme.ValueBarSliderElapseBottmColor = Color.FromArgb(190, 190, 190);
+
+            BaseTheme.KeyFrameColor = Color.FromArgb(222, 222, 18);
 
             //Timeline
 
@@ -144,6 +146,9 @@ namespace Toolbox.Library.Forms
             BaseTheme.TabPageActive = Color.FromArgb(60, 60, 60);
             BaseTheme.TextForeColor = Color.White;
 
+            
+            BaseTheme.KeyFrameColor = Color.FromArgb(150, 106, 18);
+
             BaseTheme.TimelineBackColor = Color.FromArgb(50, 50, 50);
             BaseTheme.TimelineOverlayColor = Color.FromArgb(20, 20, 20);
             BaseTheme.TimelineLineColor = Color.FromArgb(30, 30, 30);
@@ -206,6 +211,8 @@ namespace Toolbox.Library.Forms
             public static Color TimelineLineColor { get; set; }
             public static Color TimelineLine2Color { get; set; }
             public static Color TimelineNumberColor { get; set; }
+
+            public static Color KeyFrameColor { get; set; }
 
             public static Font FontType { get; set; }
         }

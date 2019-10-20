@@ -1253,15 +1253,15 @@ namespace BarSlider
 
         public void SetKeyedTheme()
         {
-            BackColor = Color.FromArgb(255, 150, 106, 18);
-            BarInnerColor = Color.FromArgb(255, 150, 106, 18);
-            BarPenColorBottom = Color.FromArgb(255, 150, 106, 18);
-            BarPenColorMiddle = Color.FromArgb(255, 150, 106, 18);
-            BarPenColorTop = Color.FromArgb(255, 150, 106, 18);
-            ElapsedInnerColor = Color.FromArgb(255, 150, 106, 18);
-            ElapsedPenColorBottom = Color.FromArgb(255, 150, 106, 18);
-            ElapsedPenColorMiddle = Color.FromArgb(255, 150, 106, 18);
-            ElapsedPenColorTop = Color.FromArgb(255, 150, 106, 18);
+            BackColor = FormThemes.BaseTheme.KeyFrameColor;
+            BarInnerColor = FormThemes.BaseTheme.KeyFrameColor;
+            BarPenColorBottom = FormThemes.BaseTheme.KeyFrameColor;
+            BarPenColorMiddle = FormThemes.BaseTheme.KeyFrameColor;
+            BarPenColorTop = FormThemes.BaseTheme.KeyFrameColor;
+            ElapsedInnerColor = FormThemes.BaseTheme.KeyFrameColor;
+            ElapsedPenColorBottom = FormThemes.BaseTheme.KeyFrameColor;
+            ElapsedPenColorMiddle = FormThemes.BaseTheme.KeyFrameColor;
+            ElapsedPenColorTop = FormThemes.BaseTheme.KeyFrameColor;
         }
 
         public void ReloadTheme()

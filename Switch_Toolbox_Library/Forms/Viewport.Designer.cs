@@ -57,11 +57,11 @@
             this.bottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.leftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetPoseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadShadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uVViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel1.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -135,6 +135,7 @@
             this.drawContainersCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.drawContainersCB.ButtonColor = System.Drawing.Color.Empty;
             this.drawContainersCB.FormattingEnabled = true;
+            this.drawContainersCB.IsReadOnly = false;
             this.drawContainersCB.Location = new System.Drawing.Point(93, 0);
             this.drawContainersCB.Name = "drawContainersCB";
             this.drawContainersCB.Size = new System.Drawing.Size(183, 21);
@@ -154,6 +155,7 @@
             // 
             // stContextMenuStrip1
             // 
+            this.stContextMenuStrip1.HighlightSelectedTab = false;
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.viewToolStripMenuItem,
             this.shadingToolStripMenuItem,
@@ -198,7 +200,7 @@
             this.toOriginToolStripMenuItem,
             this.toActiveModelToolStripMenuItem});
             this.resetCameraToolStripMenuItem.Name = "resetCameraToolStripMenuItem";
-            this.resetCameraToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetCameraToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.resetCameraToolStripMenuItem.Text = "Reset";
             // 
             // toOriginToolStripMenuItem
@@ -221,7 +223,7 @@
             this.orbitToolStripMenuItem,
             this.walkToolStripMenuItem});
             this.modeToolStripMenuItem1.Name = "modeToolStripMenuItem1";
-            this.modeToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.modeToolStripMenuItem1.Size = new System.Drawing.Size(169, 22);
             this.modeToolStripMenuItem1.Text = "Mode";
             // 
             // orbitToolStripMenuItem
@@ -244,7 +246,7 @@
             this.orthographicToolStripMenuItem,
             this.perspectiveToolStripMenuItem});
             this.projectionToolStripMenuItem.Name = "projectionToolStripMenuItem";
-            this.projectionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.projectionToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.projectionToolStripMenuItem.Text = "Projection";
             // 
             // orthographicToolStripMenuItem
@@ -271,7 +273,7 @@
             this.rightToolStripMenuItem,
             this.leftToolStripMenuItem});
             this.orientationToolStripMenuItem.Name = "orientationToolStripMenuItem";
-            this.orientationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.orientationToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.orientationToolStripMenuItem.Text = "Orientation";
             // 
             // frontToolStripMenuItem
@@ -316,6 +318,13 @@
             this.leftToolStripMenuItem.Text = "Left";
             this.leftToolStripMenuItem.Click += new System.EventHandler(this.leftToolStripMenuItem_Click);
             // 
+            // createScreenshotToolStripMenuItem
+            // 
+            this.createScreenshotToolStripMenuItem.Name = "createScreenshotToolStripMenuItem";
+            this.createScreenshotToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.createScreenshotToolStripMenuItem.Text = "Create Screenshot";
+            this.createScreenshotToolStripMenuItem.Click += new System.EventHandler(this.createScreenshotToolStripMenuItem_Click);
+            // 
             // resetPoseToolStripMenuItem
             // 
             this.resetPoseToolStripMenuItem.Name = "resetPoseToolStripMenuItem";
@@ -344,13 +353,6 @@
             this.uVViewerToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.uVViewerToolStripMenuItem.Text = "UV Viewer";
             this.uVViewerToolStripMenuItem.Click += new System.EventHandler(this.uVViewerToolStripMenuItem_Click);
-            // 
-            // createScreenshotToolStripMenuItem
-            // 
-            this.createScreenshotToolStripMenuItem.Name = "createScreenshotToolStripMenuItem";
-            this.createScreenshotToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.createScreenshotToolStripMenuItem.Text = "Create Screenshot";
-            this.createScreenshotToolStripMenuItem.Click += new System.EventHandler(this.createScreenshotToolStripMenuItem_Click);
             // 
             // Viewport
             // 

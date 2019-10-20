@@ -58,6 +58,9 @@
             this.stLabel5 = new Toolbox.Library.Forms.STLabel();
             this.scaleYUD = new BarSlider.BarSlider();
             this.scaleXUD = new BarSlider.BarSlider();
+            ((System.ComponentModel.ISupportInitialize)(this.stPanel1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stPanel2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stPanel3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).BeginInit();
             this.stFlowLayoutPanel1.SuspendLayout();
             this.stDropDownPanel1.SuspendLayout();
@@ -124,8 +127,11 @@
             this.stPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.stPanel1.Location = new System.Drawing.Point(82, 57);
             this.stPanel1.Name = "stPanel1";
+            this.stPanel1.Selected = false;
             this.stPanel1.Size = new System.Drawing.Size(56, 55);
+            this.stPanel1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.stPanel1.TabIndex = 0;
+            this.stPanel1.TabStop = false;
             this.stPanel1.Click += new System.EventHandler(this.stPanel1_Click);
             // 
             // stPanel2
@@ -134,8 +140,11 @@
             this.stPanel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.stPanel2.Location = new System.Drawing.Point(147, 57);
             this.stPanel2.Name = "stPanel2";
+            this.stPanel2.Selected = false;
             this.stPanel2.Size = new System.Drawing.Size(56, 55);
+            this.stPanel2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.stPanel2.TabIndex = 1;
+            this.stPanel2.TabStop = false;
             this.stPanel2.Click += new System.EventHandler(this.stPanel2_Click);
             // 
             // stPanel3
@@ -144,14 +153,18 @@
             this.stPanel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.stPanel3.Location = new System.Drawing.Point(209, 57);
             this.stPanel3.Name = "stPanel3";
+            this.stPanel3.Selected = false;
             this.stPanel3.Size = new System.Drawing.Size(56, 55);
+            this.stPanel3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.stPanel3.TabIndex = 2;
+            this.stPanel3.TabStop = false;
             this.stPanel3.Click += new System.EventHandler(this.stPanel3_Click);
             // 
             // pictureBoxCustom1
             // 
             this.pictureBoxCustom1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBoxCustom1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBoxCustom1.BackgroundImage")));
+            this.pictureBoxCustom1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxCustom1.Location = new System.Drawing.Point(14, 30);
             this.pictureBoxCustom1.Name = "pictureBoxCustom1";
             this.pictureBoxCustom1.Size = new System.Drawing.Size(154, 172);
@@ -257,7 +270,6 @@
             this.expandCB.Size = new System.Drawing.Size(142, 21);
             this.expandCB.TabIndex = 12;
             this.expandCB.SelectedIndexChanged += new System.EventHandler(this.textureSettingsCB_SelectedIndexChanged);
-
             // 
             // stLabel4
             // 
@@ -339,20 +351,18 @@
             // rotUD
             // 
             this.rotUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.rotUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.rotUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.rotUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.rotUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.rotUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.rotUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.rotUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.rotUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.rotUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.rotUD.DataType = null;
             this.rotUD.DrawSemitransparentThumb = false;
             this.rotUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.rotUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.rotUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.rotUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.rotUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.rotUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.rotUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.rotUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.rotUD.ForeColor = System.Drawing.Color.White;
             this.rotUD.IncrementAmount = 0.01F;
             this.rotUD.InputName = "";
             this.rotUD.LargeChange = 5F;
@@ -384,20 +394,18 @@
             // transYUD
             // 
             this.transYUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.transYUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.transYUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.transYUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.transYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.transYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.transYUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.transYUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.transYUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.transYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.transYUD.DataType = null;
             this.transYUD.DrawSemitransparentThumb = false;
             this.transYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.transYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.transYUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.transYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.transYUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.transYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.transYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.transYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.transYUD.ForeColor = System.Drawing.Color.White;
             this.transYUD.IncrementAmount = 0.01F;
             this.transYUD.InputName = "V";
             this.transYUD.LargeChange = 5F;
@@ -429,20 +437,18 @@
             // transXUD
             // 
             this.transXUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.transXUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.transXUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.transXUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.transXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.transXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.transXUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.transXUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.transXUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.transXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.transXUD.DataType = null;
             this.transXUD.DrawSemitransparentThumb = false;
             this.transXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.transXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.transXUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.transXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.transXUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.transXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.transXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.transXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.transXUD.ForeColor = System.Drawing.Color.White;
             this.transXUD.IncrementAmount = 0.01F;
             this.transXUD.InputName = "U";
             this.transXUD.LargeChange = 5F;
@@ -501,20 +507,18 @@
             // scaleYUD
             // 
             this.scaleYUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.scaleYUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.scaleYUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.scaleYUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.scaleYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.scaleYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.scaleYUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.scaleYUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.scaleYUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.scaleYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.scaleYUD.DataType = null;
             this.scaleYUD.DrawSemitransparentThumb = false;
             this.scaleYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.scaleYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.scaleYUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.scaleYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.scaleYUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.scaleYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.scaleYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.scaleYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.scaleYUD.ForeColor = System.Drawing.Color.White;
             this.scaleYUD.IncrementAmount = 0.01F;
             this.scaleYUD.InputName = "V";
             this.scaleYUD.LargeChange = 5F;
@@ -546,20 +550,18 @@
             // scaleXUD
             // 
             this.scaleXUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.scaleXUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.scaleXUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.scaleXUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.scaleXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.scaleXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.scaleXUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.scaleXUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.scaleXUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.scaleXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.scaleXUD.DataType = null;
             this.scaleXUD.DrawSemitransparentThumb = false;
             this.scaleXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.scaleXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.scaleXUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.scaleXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.scaleXUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.scaleXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.scaleXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.scaleXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.scaleXUD.ForeColor = System.Drawing.Color.White;
             this.scaleXUD.IncrementAmount = 0.01F;
             this.scaleXUD.InputName = "U";
             this.scaleXUD.LargeChange = 5F;
@@ -595,6 +597,9 @@
             this.Controls.Add(this.stFlowLayoutPanel1);
             this.Name = "PaneMatTextureMapsEditor";
             this.Size = new System.Drawing.Size(408, 668);
+            ((System.ComponentModel.ISupportInitialize)(this.stPanel1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stPanel2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stPanel3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCustom1)).EndInit();
             this.stFlowLayoutPanel1.ResumeLayout(false);
             this.stDropDownPanel1.ResumeLayout(false);
