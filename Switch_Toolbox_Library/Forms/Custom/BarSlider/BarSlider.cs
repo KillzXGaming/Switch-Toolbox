@@ -1251,6 +1251,15 @@ namespace BarSlider
             Controls.Add(textBox);
         }
 
+        private bool ShowUnkeyedBorder = false;
+
+        public void SetUnkeyedTheme()
+        {
+            ReloadTheme();
+
+            ShowUnkeyedBorder = true;
+        }
+
         public void SetKeyedTheme()
         {
             BackColor = FormThemes.BaseTheme.KeyFrameColor;
@@ -1266,6 +1275,8 @@ namespace BarSlider
 
         public void ReloadTheme()
         {
+            ShowUnkeyedBorder = false;
+
             BackColor = FormThemes.BaseTheme.ValueBarSliderElapseBottmColor;
 
             ThumbPenColor = FormThemes.BaseTheme.ValueBarSliderElapseBottmColor;
@@ -1346,6 +1357,15 @@ namespace BarSlider
                                     _barPenColorTop, _barPenColorBottom,
                                     _elapsedInnerColor);
                 }
+            }
+
+            if (ShowUnkeyedBorder)
+            {
+                e.Graphics.DrawRectangle(new Pen(Color.Red), new Rectangle(
+                    ClientRectangle.Location.X,
+                    ClientRectangle.Location.Y, 
+                    ClientRectangle.Width - 1, 
+                    ClientRectangle.Height- 1));
             }
         }
 

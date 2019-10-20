@@ -21,6 +21,12 @@ namespace Toolbox.Library.Forms
         /// </summary>
         private Image TickTock => Properties.Resources.CheckMark;
 
+        public Color BorderColor = Color.Black;
+
+        public int BorderSize = 1;
+
+        public bool ShowBorder = false;
+
         public STCheckBox()
         {
             SetColor();
@@ -58,6 +64,15 @@ namespace Toolbox.Library.Forms
             if (this.Checked)
             {
                 e.Graphics.DrawImage(this.TickTock, 2, 2, 12, 12);
+            }
+
+            if (ShowBorder)
+            {
+                e.Graphics.DrawRectangle(new Pen(BorderColor), new Rectangle(
+                    ClientRectangle.Location.X,
+                    ClientRectangle.Location.Y,
+                    ClientRectangle.Width - BorderSize,
+                    ClientRectangle.Height - BorderSize));
             }
         }
         /// <summary>

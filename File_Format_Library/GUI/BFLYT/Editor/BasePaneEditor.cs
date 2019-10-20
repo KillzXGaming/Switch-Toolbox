@@ -96,17 +96,17 @@ namespace LayoutBXLYT
             if (Runtime.LayoutEditor.AnimationEditMode)
             {
                 //Change any UI that can be keyed or is keyed
-                tranXUD.ReloadTheme();
-                tranYUD.ReloadTheme();
-                tranZUD.ReloadTheme();
-                rotXUD.ReloadTheme();
-                rotYUD.ReloadTheme();
-                rotZUD.ReloadTheme();
-                scaleXUD.ReloadTheme();
-                scaleYUD.ReloadTheme();
-                sizeXUD.ReloadTheme();
-                sizeYUD.ReloadTheme();
-                alphaUD.ReloadTheme();
+                tranXUD.SetUnkeyedTheme();
+                tranYUD.SetUnkeyedTheme();
+                tranZUD.SetUnkeyedTheme();
+                rotXUD.SetUnkeyedTheme();
+                rotYUD.SetUnkeyedTheme();
+                rotZUD.SetUnkeyedTheme();
+                scaleXUD.SetUnkeyedTheme();
+                scaleYUD.SetUnkeyedTheme();
+                sizeXUD.SetUnkeyedTheme();
+                sizeYUD.SetUnkeyedTheme();
+                alphaUD.SetUnkeyedTheme();
 
                 if (ActivePane.animController.PaneSRT.ContainsKey(LPATarget.TranslateX))
                     tranXUD.SetKeyedTheme();
@@ -121,9 +121,16 @@ namespace LayoutBXLYT
                     rotYUD.SetKeyedTheme();
                 if (ActivePane.animController.PaneSRT.ContainsKey(LPATarget.RotateZ))
                     rotZUD.SetKeyedTheme();
+
+                paneVisibleChk.ShowBorder = true;
+                paneVisibleChk.BorderColor = Color.Red;
+                paneVisibleChk.Refresh();
             }
             else
             {
+                paneVisibleChk.ShowBorder = false;
+                paneVisibleChk.Refresh();
+
                 //Set UI to default theme colors
                 tranXUD.ReloadTheme();
                 tranYUD.ReloadTheme();

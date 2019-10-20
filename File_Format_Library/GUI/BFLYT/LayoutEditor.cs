@@ -285,6 +285,9 @@ namespace LayoutBXLYT
                 if (e is TreeViewEventArgs) {
                     var node = ((TreeViewEventArgs)e).Node;
 
+                    if (Runtime.LayoutEditor.AnimationEditMode)
+                        OnSelectedAnimationMode();
+
                     if (!isSelectedInViewer)
                         ActiveViewport?.SelectedPanes.Clear();
 
@@ -313,6 +316,13 @@ namespace LayoutBXLYT
 
                 ActiveViewport.UpdateViewport();
             }
+        }
+
+        private void OnSelectedAnimationMode()
+        {
+            if (AnimationPanel == null) return;
+
+            
         }
 
         public void UpdateViewport() {
@@ -1123,7 +1133,9 @@ namespace LayoutBXLYT
         {
             Runtime.LayoutEditor.AnimationEditMode = editorModeCB.SelectedIndex == 1;
             if (Runtime.LayoutEditor.AnimationEditMode)
+            {
                 chkAutoKey.Enabled = true;
+            }
             else
                 chkAutoKey.Enabled = false;
 

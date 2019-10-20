@@ -411,7 +411,7 @@ namespace LayoutBXLYT
 
         private void RenderPanes(BxlytShader shader, BasePane pane, bool isRoot, byte parentAlpha, bool parentAlphaInfluence, BasePane partPane = null, int stage = 0)
         {
-            if (!pane.DisplayInEditor || !pane.animController.Visibile)
+            if (!pane.DisplayInEditor)
                 return;
 
             GL.PushMatrix();
@@ -472,7 +472,7 @@ namespace LayoutBXLYT
             {
                 bool isSelected = SelectedPanes.Contains(pane);
 
-                if (!pane.Visible)
+                if (!pane.Visible && !pane.animController.Visibile)
                     DrawDefaultPane(shader, pane, isSelected);
                 else if (pane is IPicturePane)
                     BxlytToGL.DrawPictureBox(pane, GameWindow, effectiveAlpha, Textures, isSelected);
@@ -1234,21 +1234,28 @@ namespace LayoutBXLYT
                                 posY = pane.Translate.Y - pickMouse.Y;
                             }
 
-                            if (!Runtime.LayoutEditor.TransformChidlren)
-                                pane.KeepChildrenTransform(posX, posY);
-
-                            if (snapToGrid)
+                            if (Runtime.LayoutEditor.AnimationEditMode)
                             {
-                                int gridCubeWidth = 16, gridCubeHeight = 16;
 
-                                pane.Translate = new Syroot.Maths.Vector3F(
-                                 (float)(Math.Round(posX / gridCubeWidth) * gridCubeWidth),
-                                 (float)(Math.Round(posY / gridCubeHeight) * gridCubeHeight),
-                                 posZ);
                             }
                             else
                             {
-                                pane.Translate = new Syroot.Maths.Vector3F( posX, posY, posZ);
+                                if (!Runtime.LayoutEditor.TransformChidlren)
+                                    pane.KeepChildrenTransform(posX, posY);
+
+                                if (snapToGrid)
+                                {
+                                    int gridCubeWidth = 16, gridCubeHeight = 16;
+
+                                    pane.Translate = new Syroot.Maths.Vector3F(
+                                     (float)(Math.Round(posX / gridCubeWidth) * gridCubeWidth),
+                                     (float)(Math.Round(posY / gridCubeHeight) * gridCubeHeight),
+                                     posZ);
+                                }
+                                else
+                                {
+                                    pane.Translate = new Syroot.Maths.Vector3F(posX, posY, posZ);
+                                }
                             }
                         }
                     }
