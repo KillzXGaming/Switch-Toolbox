@@ -1633,12 +1633,12 @@ namespace LayoutBXLYT.Cafe
 
                     ExternalLayout.header.TextureManager = layoutFile.TextureManager;
 
-                    /*    var textureList = ExternalLayout.GetTextures();
-                        foreach (var tex in textureList)
-                            if (!textures.ContainsKey(tex.Key))
-                                textures.Add(tex.Key, tex.Value);
+                    var textureList = ExternalLayout.GetTextures();
+                    foreach (var tex in textureList)
+                        if (!textures.ContainsKey(tex.Key))
+                            textures.Add(tex.Key, tex.Value);
 
-                        textureList.Clear();*/
+                    textureList.Clear();
                 }
             }
 

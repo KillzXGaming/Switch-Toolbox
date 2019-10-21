@@ -939,9 +939,9 @@ namespace Toolbox.Library
 
             Bitmap bitMap = GetBitmap(SurfaceLevel, MipLevel);
             if (Runtime.ImageEditor.UseComponetSelector)
-            {
-                BitmapExtension.SetChannel(bitMap, RedChannel, GreenChannel, BlueChannel, AlphaChannel);
-            }
+                bitMap = BitmapExtension.SetChannel(bitMap, RedChannel, GreenChannel, BlueChannel, AlphaChannel);
+            if (Runtime.ImageEditor.PreviewGammaFix)
+                bitMap = BitmapExtension.AdjustGamma(bitMap, 1.0f / 2.2f);
 
             if (Parameters.FlipY)
                 bitMap.RotateFlip(RotateFlipType.RotateNoneFlipY);
