@@ -12,7 +12,7 @@ using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class GMX : TreeNodeFile, IFileFormat
+    public class GMX : TreeNodeFile, IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Model;
 
@@ -76,6 +76,35 @@ namespace FirstPlugin
 
                 viewport.Text = Text;
             }
+        }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
+            return Items.ToArray();
+        }
+
+        private void ExportAction(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Supported Formats|*.dae;";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                ExportModel(sfd.FileName);
+            }
+        }
+
+        private void ExportModel(string FileName)
+        {
+            AssimpSaver assimp = new AssimpSaver();
+            ExportModelSettings settings = new ExportModelSettings();
+
+            var model = new STGenericModel();
+            model.Materials = new List<STGenericMaterial>();
+            model.Objects = Renderer.Meshes;
+
+            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
         }
 
         public Header GMXHeader;
