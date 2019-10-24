@@ -27,7 +27,7 @@ namespace Toolbox.Library.IO
             Cursor.Current = Cursors.WaitCursor;
             FileFormat.FilePath = FileName;
 
-            if (FileFormat.IFileInfo.FileIsCompressed || FileFormat.IFileInfo.InArchive)
+            if (FileFormat.IFileInfo.FileIsCompressed || FileFormat.IFileInfo.InArchive || Path.GetExtension(FileName) == ".szs")
             {
                 //Todo find more optmial way to handle memory with files in archives
                 //Also make compression require streams
