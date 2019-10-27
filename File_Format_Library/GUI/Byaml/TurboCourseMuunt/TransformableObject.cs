@@ -132,9 +132,13 @@ namespace FirstPlugin.MuuntEditor
 
         public override void ApplyTransformActionToSelection(AbstractTransformAction transformAction, ref TransformChangeInfos infos)
         {
-            Position = transformAction.NewPos(Position, out Vector3? prevPos);
-            rotation = transformAction.NewRot(rotation, out Quaternion? prevRot);
-            scale = transformAction.NewScale(scale, out Vector3? prevScale);
+            Vector3? prevPos;
+            Quaternion? prevRot;
+            Vector3? prevScale;
+
+            Position = transformAction.NewPos(Position, out prevPos);
+            rotation = transformAction.NewRot(rotation, out prevRot);
+            scale = transformAction.NewScale(scale, out prevScale);
             infos.Add(this, 0, prevPos, prevRot, prevScale);
         }
     }
