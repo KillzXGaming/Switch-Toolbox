@@ -10,15 +10,15 @@ using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using System.Drawing;
 
-namespace FirstPlugin.LuigisMansion.DarkMoon
+namespace FirstPlugin.LuigisMansion3
 {
-    //Parse info based on https://github.com/TheFearsomeDzeraora/LM2L
-    public class LM2_DICT : TreeNodeFile, IFileFormat
+    //Parse info based on https://github.com/TheFearsomeDzeraora/LM3L
+    public class LM3_DICT : TreeNodeFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "Luigi's Mansion 2 Dark Moon Archive Dictionary" };
+        public string[] Description { get; set; } = new string[] { "Luigi's Mansion 3 Dictionary" };
         public string[] Extension { get; set; } = new string[] { "*.dict" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
@@ -34,7 +34,14 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                return reader.ReadUInt32() == 0x5824F3A9;
+                if (reader.ReadUInt32() == 0x5824F3A9)
+                {
+                    //This value seems consistant enough to tell apart from LM3
+                    reader.SeekBegin(12);
+                    return reader.ReadUInt32() == 0x78340300;
+                }
+
+                return false;
             }
         }
 
@@ -56,32 +63,54 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             }
         }
 
+        public static bool DebugMode = false;
+
         public List<ChunkDataEntry> chunkEntries = new List<ChunkDataEntry>();
 
         public bool IsCompressed = false;
 
-        public LM2_ChunkTable ChunkTable;
+        public LM3_ChunkTable ChunkTable;
         public List<FileEntry> fileEntries = new List<FileEntry>();
 
-        public LM2_Renderer Renderer;
+        public LM3_Renderer Renderer;
         public DrawableContainer DrawableContainer = new DrawableContainer();
 
         STTextureFolder textureFolder = new STTextureFolder("Textures");
-        LM2_ModelFolder modelFolder;
+        LM3_ModelFolder modelFolder;
         TreeNode materialNamesFolder = new TreeNode("Material Names");
         TreeNode chunkFolder = new TreeNode("Chunks");
 
-        public byte[] GetFile003Data()
+        public static Dictionary<uint, string> HashNames = new Dictionary<uint, string>();
+
+        private void LoadHashes()
         {
-           return fileEntries[3].GetData(); //Get the fourth file
+         /*   foreach (string hashStr in Properties.Resources.LM3_Hashes.Split('\n'))
+            {
+                uint hash = Toolbox.Library.Security.Cryptography.Crc32.Compute(hashStr);
+                if (!HashNames.ContainsKey(hash))
+                    HashNames.Add(hash, hashStr);
+
+                foreach (string pathStr in hashStr.Split('/'))
+                {
+                    uint hash2 = Toolbox.Library.Security.Cryptography.Crc32.Compute(pathStr);
+                    if (!HashNames.ContainsKey(hash2))
+                        HashNames.Add(hash2, pathStr);
+                }
+            }*/
+        }
+
+        public byte[] GetFileVertexData()
+        {
+           return fileEntries[60].GetData(); //Get the fourth file
         }
 
         public bool DrawablesLoaded = false;
         public void Load(System.IO.Stream stream)
         {
-            modelFolder = new LM2_ModelFolder(this); 
+            LoadHashes();
+            modelFolder = new LM3_ModelFolder(this); 
             DrawableContainer.Name = FileName;
-            Renderer = new LM2_Renderer();
+            Renderer = new LM3_Renderer();
             DrawableContainer.Drawables.Add(Renderer);
             
             Text = FileName;
@@ -93,82 +122,105 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 ushort Unknown = reader.ReadUInt16(); //Could also be 2 bytes, not sure. Always 0x0401
                 IsCompressed = reader.ReadByte() == 1;
                 reader.ReadByte(); //Padding
-                uint FileCount = reader.ReadUInt32();
-                uint LargestCompressedFile = reader.ReadUInt32();
-                reader.SeekBegin(0x2C);
-                byte[] Unknowns = reader.ReadBytes((int)FileCount);
+                uint unk = reader.ReadUInt32();
+                uint unk2 = reader.ReadUInt32();
+
+                //Start of the chunk info. A fixed list of chunk information
+
+                TreeNode chunkNodes = new TreeNode("Chunks Debug");
+
+                for (int i = 0; i < 52; i++)
+                {
+                    ChunkInfo chunk = new ChunkInfo();
+                    chunk.Read(reader);
+                    chunkNodes.Nodes.Add(chunk);
+                }
 
                 TreeNode tableNodes = new TreeNode("File Section Entries");
+
+                if (DebugMode)
+                    Nodes.Add(chunkNodes);
+
+                Nodes.Add(tableNodes);
+
+                var FileCount = 120;
 
                 long FileTablePos = reader.Position;
                 for (int i = 0; i < FileCount; i++)
                 {
                     var file = new FileEntry(this);
-                    file.Text = $"entry {i}";
                     file.Read(reader);
                     fileEntries.Add(file);
-                    tableNodes.Nodes.Add(file);
-                    
+
+                    if (file.DecompressedSize > 0)
+                    {
+                        file.Text = $"entry {i}";
+                        tableNodes.Nodes.Add(file);
+                    }
+
                     //The first file stores a chunk layout
                     //The second one seems to be a duplicate? 
-                    if (i == 0) 
+                    if (i == 0)
                     {
                         using (var tableReader = new FileReader(file.GetData()))
                         {
-                            ChunkTable = new LM2_ChunkTable();
+                            ChunkTable = new LM3_ChunkTable();
                             ChunkTable.Read(tableReader);
 
-                            TreeNode debugFolder = new TreeNode("DEBUG TABLE INFO");
-                            Nodes.Add(debugFolder);
+                            if (DebugMode)
+                            {
+                                TreeNode debugFolder = new TreeNode("DEBUG TABLE INFO");
+                                Nodes.Add(debugFolder);
 
-                            TreeNode list1 = new TreeNode("Entry List 1");
-                            TreeNode list2 = new TreeNode("Entry List 2 ");
-                            debugFolder.Nodes.Add(tableNodes);
-                            debugFolder.Nodes.Add(list1);
-                            debugFolder.Nodes.Add(list2);
-                            debugFolder.Nodes.Add(chunkFolder);
-                            
-                            foreach (var chunk in ChunkTable.ChunkEntries)
-                            {
-                                list1.Nodes.Add($"ChunkType {chunk.ChunkType} ChunkOffset {chunk.ChunkOffset}  Unknown1 {chunk.Unknown1}  ChunkSubCount {chunk.ChunkSubCount}  Unknown3 {chunk.Unknown3}");
-                            }
-                            foreach (var chunk in ChunkTable.ChunkSubEntries)
-                            {
-                                list2.Nodes.Add($"ChunkType {chunk.ChunkType} ChunkSize {chunk.ChunkSize}   Unknown {chunk.ChunkOffset}");
+                                TreeNode list1 = new TreeNode("Entry List 1");
+                                TreeNode list2 = new TreeNode("Entry List 2 ");
+                                debugFolder.Nodes.Add(list1);
+                                debugFolder.Nodes.Add(list2);
+                                debugFolder.Nodes.Add(chunkFolder);
+
+                                foreach (var chunk in ChunkTable.ChunkEntries)
+                                {
+                                    list1.Nodes.Add($"ChunkType {chunk.ChunkType} ChunkOffset {chunk.ChunkOffset}  Unknown1 {chunk.Unknown1}  ChunkSubCount {chunk.ChunkSubCount}  Unknown3 {chunk.Unknown3}");
+                                }
+                                foreach (var chunk in ChunkTable.ChunkSubEntries)
+                                {
+                                    list2.Nodes.Add($"ChunkType 0x{chunk.ChunkType.ToString("X")} Size {chunk.ChunkSize}   Offset {chunk.ChunkOffset}");
+                                }
                             }
                         }
                     }
                 }
 
+
+                //Model data block
+                //Contains texture hash refs and model headers
+                byte[] File052Data = fileEntries[52].GetData();
+
+                //Contains model data
+                byte[] File054Data = fileEntries[54].GetData();
+
+                //Image header block
+                byte[] File063Data = fileEntries[63].GetData();
+
+                //Image data block
+                byte[] File065Data = fileEntries[65].GetData();
+
                 //Set an instance of our current data
                 //Chunks are in order, so you build off of when an instance gets loaded
+                LM3_Model currentModel = new LM3_Model(this);
+
                 TexturePOWE currentTexture = new TexturePOWE();
-                LM2_Model currentModel = new LM2_Model(this);
-
-                //Each part of the file is divided into multiple file/section entries
-                //The first entry being the chunk table parsed before this
-                //The second file being a duplicate (sometimes slightly larger than the first)
-                //The third file stores texture headers, while the fourth one usually has the rest of the main data
-                //Any additional ones currently are unknown how they work. Some of which have unknown compression aswell
-
-                byte[] File002Data = fileEntries[2].GetData(); //Get the third file 
-                byte[] File003Data = fileEntries[3].GetData(); //Get the fourth file
 
                 int chunkId = 0;
-                uint ImageHeaderIndex = 0;
                 uint modelIndex = 0;
+                uint ImageHeaderIndex = 0;
                 foreach (var chunk in ChunkTable.ChunkSubEntries)
                 {
                     var chunkEntry = new ChunkDataEntry(this, chunk);
-                    chunkEntry.DataFile = File003Data;
-                    chunkEntry.Text = $"Chunk {chunk.ChunkType} {chunkId++}";
-                    chunkEntries.Add(chunkEntry);
-                    chunkFolder.Nodes.Add(chunkEntry);
-
                     switch (chunk.ChunkType)
                     {
                         case SubDataType.TextureHeader:
-                            chunkEntry.DataFile = File002Data;
+                            chunkEntry.DataFile = File063Data;
 
                             //Read the info
                             using (var textureReader = new FileReader(chunkEntry.FileData))
@@ -178,7 +230,13 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                 currentTexture.SelectedImageKey = currentTexture.ImageKey;
                                 currentTexture.Index = ImageHeaderIndex;
                                 currentTexture.Read(textureReader);
-                                currentTexture.Text = $"Texture {ImageHeaderIndex}";
+                                if (DebugMode)
+                                    currentTexture.Text = $"Texture {ImageHeaderIndex} {currentTexture.TexFormat.ToString("X")} {currentTexture.Unknown.ToString("X")}";
+                                else
+                                    currentTexture.Text = $"Texture {currentTexture.ID2.ToString("X")}";
+
+                                if (HashNames.ContainsKey(currentTexture.ID2))
+                                    currentTexture.Text = HashNames[currentTexture.ID2];
                                 textureFolder.Nodes.Add(currentTexture);
                                 Renderer.TextureList.Add(currentTexture);
 
@@ -186,21 +244,25 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             }
                             break;
                         case SubDataType.TextureData:
+                            chunkEntry.DataFile = File065Data;
                             currentTexture.ImageData = chunkEntry.FileData;
                             break;
-                        case SubDataType.ModelStart:
-                            currentModel = new LM2_Model(this);
-                            currentModel.ModelInfo = new LM2_ModelInfo();
+                    /*    case SubDataType.ModelStart:
+                            chunkEntry.DataFile = File052Data;
+                            currentModel = new LM3_Model(this);
+                            currentModel.ModelInfo = new LM3_ModelInfo();
                             currentModel.Text = $"Model {modelIndex}";
                             currentModel.ModelInfo.Data = chunkEntry.FileData;
                             modelFolder.Nodes.Add(currentModel);
                             modelIndex++;
                             break;
                         case SubDataType.MeshBuffers:
+                            chunkEntry.DataFile = File054Data;
                             currentModel.BufferStart = chunkEntry.Entry.ChunkOffset;
                             currentModel.BufferSize = chunkEntry.Entry.ChunkSize;
                             break;
                         case SubDataType.VertexStartPointers:
+                            chunkEntry.DataFile = File052Data;
                             using (var vtxPtrReader = new FileReader(chunkEntry.FileData))
                             {
                                 while (!vtxPtrReader.EndOfStream)
@@ -208,12 +270,13 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             }
                             break;
                         case SubDataType.SubmeshInfo:
+                            chunkEntry.DataFile = File052Data;
                             int MeshCount = chunkEntry.FileData.Length / 0x28;
                             using (var meshReader = new FileReader(chunkEntry.FileData))
                             {
                                 for (uint i = 0; i < MeshCount; i++)
                                 {
-                                    LM2_Mesh mesh = new LM2_Mesh();
+                                    LM3_Mesh mesh = new LM3_Mesh();
                                     mesh.Read(meshReader);
                                     currentModel.Meshes.Add(mesh);
                                 }
@@ -221,6 +284,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             currentModel.ModelInfo.Read(new FileReader(currentModel.ModelInfo.Data), currentModel.Meshes);
                             break;
                         case SubDataType.ModelTransform:
+                            chunkEntry.DataFile = File052Data;
                             using (var transformReader = new FileReader(chunkEntry.FileData))
                             {
                                 //This is possibly very wrong
@@ -233,29 +297,30 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             }
                             break;
                         case SubDataType.MaterialName:
-                            using (var matReader = new FileReader(chunkEntry.FileData))
-                            {
-                                materialNamesFolder.Nodes.Add(matReader.ReadZeroTerminatedString());
-                            }
-                            break;
+                               using (var matReader = new FileReader(chunkEntry.FileData))
+                               {
+                                   materialNamesFolder.Nodes.Add(matReader.ReadZeroTerminatedString());
+                               }
+                            break;*/
                         default:
+                            chunkEntry.DataFile = File052Data;
                             break;
                     }
+
+                    chunkEntry.Text = $"{chunk.ChunkType.ToString("X")} {chunk.ChunkType} {chunk.ChunkOffset} {chunk.ChunkSize}";
+                    chunkFolder.Nodes.Add(chunkEntry);
                 }
 
-                foreach (LM2_Model model in modelFolder.Nodes)
+                if (textureFolder.Nodes.Count > 0)
+                    Nodes.Add(textureFolder);
+
+                foreach (LM3_Model model in modelFolder.Nodes)
                 {
                     model.ReadVertexBuffers();
                 }
 
                 if (modelFolder.Nodes.Count > 0)
                     Nodes.Add(modelFolder);
-
-                if (textureFolder.Nodes.Count > 0)
-                    Nodes.Add(textureFolder);
-
-                if (materialNamesFolder.Nodes.Count > 0)
-                    Nodes.Add(materialNamesFolder);
             }
         }
 
@@ -278,13 +343,32 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             return false;
         }
 
+        public class ChunkInfo : TreeNodeCustom
+        {
+            public string Type;
+
+            public void Read(FileReader reader)
+            {
+                uint Unknown1 = reader.ReadUInt32();
+                ushort Unknown2 = reader.ReadUInt16();
+                ushort Unknown3 = reader.ReadUInt16();
+                uint Unknown4 = reader.ReadUInt32();
+                Type = reader.ReadString(3);
+                byte Unknown5 = reader.ReadByte();
+                uint Unknown6 = reader.ReadUInt32();
+                uint Unknown7 = reader.ReadUInt32();
+
+                Text = $" Type: [{Type}]  [{Unknown1} {Unknown2} {Unknown3} {Unknown4} {Unknown5} {Unknown6}] ";
+            }
+        }
+
         public class ChunkDataEntry : TreeNodeFile, IContextMenuNode
         {
             public byte[] DataFile;
-            public LM2_DICT ParentDictionary { get; set; }
+            public LM3_DICT ParentDictionary { get; set; }
             public ChunkSubEntry Entry;
 
-            public ChunkDataEntry(LM2_DICT dict, ChunkSubEntry entry)
+            public ChunkDataEntry(LM3_DICT dict, ChunkSubEntry entry)
             {
                 ParentDictionary = dict;
                 Entry = entry;
@@ -337,7 +421,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
         public class FileEntry : TreeNodeFile, IContextMenuNode
         {
-            public LM2_DICT ParentDictionary { get; set; }
+            public LM3_DICT ParentDictionary { get; set; }
 
             public uint Offset;
             public uint DecompressedSize;
@@ -346,7 +430,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             public byte Unknown2;
             public byte Unknown3; //Possibly the effect? 0 for image block, 1 for info
 
-            public FileEntry(LM2_DICT dict)
+            public FileEntry(LM3_DICT dict)
             {
                 ParentDictionary = dict;
             }
@@ -417,6 +501,9 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 {
                     using (var reader = new FileReader(DataFile))
                     {
+                        if (Offset > reader.BaseStream.Length)
+                            return reader.ReadBytes((int)CompressedSize);
+
                         reader.SeekBegin(Offset);
                         if (ParentDictionary.IsCompressed)
                         {

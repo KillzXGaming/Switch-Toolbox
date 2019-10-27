@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Toolbox.Library.IO;
+
+namespace FirstPlugin.LuigisMansion3
+{
+    public class ChunkEntry
+    {
+        public uint Unknown1;
+        public uint ChunkOffset;
+        public DataType ChunkType;
+        public uint ChunkSubCount;
+        public uint Unknown3;
+    }
+
+    public class ChunkSubEntry
+    {
+        public SubDataType ChunkType;
+        public uint ChunkSize;
+        public uint ChunkOffset;
+    }
+
+    //Table consists of 2 chunk entry lists that define how the .data reads sections
+    public class LM3_ChunkTable
+    {
+        private const int ChunkInfoIdenfier = 0x2001301;
+
+        //I am uncertain how these chunk lists work. There is first a list with an identifier and one extra unknown
+        //The second list can contain the same entries as the other list, however it may include more chunks 
+        //Example, the first list may have image headers, while the second include both image headers and image blocks
+        public List<ChunkEntry> ChunkEntries = new List<ChunkEntry>();
+        public List<ChunkSubEntry> ChunkSubEntries = new List<ChunkSubEntry>();
+
+        public void Read(FileReader tableReader)
+        {
+            tableReader.SetByteOrder(false);
+
+            //Read to the end of the file as the rest of the table are types, offsets, and an unknown value
+            while (!tableReader.EndOfStream && tableReader.Position <= tableReader.BaseStream.Length - 12)
+            {
+                ChunkSubEntry subEntry = new ChunkSubEntry();
+                subEntry.ChunkType = tableReader.ReadEnum<SubDataType>(false); //The type of chunk. 0x8701B5 for example for texture info
+                tableReader.ReadUInt16();
+                subEntry.ChunkSize = tableReader.ReadUInt32(); 
+                subEntry.ChunkOffset = tableReader.ReadUInt32(); 
+                ChunkSubEntries.Add(subEntry);
+            }
+        }
+    }
+}

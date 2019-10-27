@@ -8,6 +8,7 @@ using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 using FirstPlugin.Forms;
 using FirstPlugin.LuigisMansion.DarkMoon;
+using FirstPlugin.LuigisMansion3;
 
 namespace FirstPlugin
 {
@@ -352,6 +353,7 @@ namespace FirstPlugin
             Formats.Add(typeof(NCA));
             Formats.Add(typeof(RARC));
             Formats.Add(typeof(ME01));
+            Formats.Add(typeof(LM3_DICT));
             Formats.Add(typeof(LM2_DICT));
             Formats.Add(typeof(GMX));
             Formats.Add(typeof(BMD));
