@@ -928,7 +928,6 @@ namespace Toolbox.Library
 
                     progressBar.Value = 100;
                     progressBar.Close();
-
                     return;
                 }
             }

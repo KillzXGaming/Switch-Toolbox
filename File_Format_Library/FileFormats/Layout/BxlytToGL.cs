@@ -530,13 +530,12 @@ namespace LayoutBXLYT
                         if (window.WindowKind == WindowKind.Horizontal)
                         {
                             //Left
-
                             texCoords = new Vector2[]
                             {
-                                new Vector2(1, 0),
                                 new Vector2(0, 0),
-                                new Vector2(0, 1),
+                                new Vector2(1, 0),
                                 new Vector2(1, 1),
+                                new Vector2(0, 1),
                             };
 
                             colors = new Color[] {
@@ -546,7 +545,7 @@ namespace LayoutBXLYT
                                  window.Content.ColorBottomRight.Color,
                                 };
 
-                            DrawQuad(gameWindow, dX + frameRight + contentWidth, dY, frameRight, pane.Height, texCoords, colors, isSelected, hasTextures);
+                            DrawQuad(gameWindow, dX, dY, frameLeft, pane.Height, texCoords, colors, isSelected, hasTextures);
 
                             //Right
 
@@ -559,10 +558,10 @@ namespace LayoutBXLYT
 
                             texCoords = new Vector2[]
                             {
-                                new Vector2(0, 0),
                                 new Vector2(1, 0),
-                                new Vector2(1, 1),
+                                new Vector2(0, 0),
                                 new Vector2(0, 1),
+                                new Vector2(1, 1),
                             };
 
                             colors = new Color[] {
@@ -572,7 +571,7 @@ namespace LayoutBXLYT
                                  window.Content.ColorBottomLeft.Color,
                                 };
 
-                            DrawQuad(gameWindow, dX, dY, frameLeft, pane.Height, texCoords, colors, isSelected, hasTextures);
+                            DrawQuad(gameWindow, dX + frameRight + contentWidth, dY, frameRight, pane.Height, texCoords, colors, isSelected, hasTextures);
                         }
                         else if (window.WindowKind == WindowKind.HorizontalNoContent)
                         {
@@ -806,10 +805,10 @@ namespace LayoutBXLYT
                         var matBL = window.WindowFrames[2].Material;
                         var matBR = window.WindowFrames[3].Material;
 
-                        var matT = window.WindowFrames[4].Material;
-                        var matB = window.WindowFrames[5].Material;
-                        var matL = window.WindowFrames[6].Material;
-                        var matR = window.WindowFrames[7].Material;
+                        var matL = window.WindowFrames[4].Material;
+                        var matR = window.WindowFrames[5].Material;
+                        var matT = window.WindowFrames[6].Material;
+                        var matB = window.WindowFrames[7].Material;
 
                         //Todo check this
                         if (window.UseOneMaterialForAll)
@@ -1125,16 +1124,16 @@ namespace LayoutBXLYT
             GL.Begin(PrimitiveType.Quads);
             GL.Color4(colors[0]);
             GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[0].X, texCoords[0].Y);
-            GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+            GL.Vertex2(rect.BottomLeftPoint);
             GL.Color4(colors[1]);
             GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[1].X, texCoords[1].Y);
-            GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+            GL.Vertex2(rect.BottomRightPoint);
             GL.Color4(colors[2]);
             GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[2].X, texCoords[2].Y);
-            GL.Vertex2(rect.RightPoint, rect.TopPoint);
+            GL.Vertex2(rect.TopRightPoint);
             GL.Color4(colors[3]);
             GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
-            GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+            GL.Vertex2(rect.TopLeftPoint);
             GL.End();
         }
 
@@ -1311,10 +1310,10 @@ namespace LayoutBXLYT
                 {
                     GL.Begin(PrimitiveType.LineLoop);
                     GL.Color4(selectionOutline ? Color.Red : colors[0]);
-                    GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-                    GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-                    GL.Vertex2(rect.RightPoint, rect.TopPoint);
-                    GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                    GL.Vertex2(rect.BottomLeftPoint);
+                    GL.Vertex2(rect.BottomRightPoint);
+                    GL.Vertex2(rect.TopRightPoint);
+                    GL.Vertex2(rect.TopLeftPoint);
                     GL.End();
                 }
                 else
@@ -1322,16 +1321,16 @@ namespace LayoutBXLYT
                     GL.Begin(PrimitiveType.Quads);
                     GL.Color4(colors[0]);
                     GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[0].X, texCoords[0].Y);
-                    GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+                    GL.Vertex2(rect.BottomLeftPoint);
                     GL.Color4(colors[1]);
                     GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[1].X, texCoords[1].Y);
-                    GL.Vertex2(rect.RightPoint, rect.BottomPoint);
+                    GL.Vertex2(rect.BottomRightPoint);
                     GL.Color4(colors[2]);
                     GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[2].X, texCoords[2].Y);
-                    GL.Vertex2(rect.RightPoint, rect.TopPoint);
+                    GL.Vertex2(rect.TopRightPoint);
                     GL.Color4(colors[3]);
                     GL.MultiTexCoord2(TextureUnit.Texture0, texCoords[3].X, texCoords[3].Y);
-                    GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+                    GL.Vertex2(rect.TopLeftPoint);
                     GL.End();
                 }
             }
@@ -1341,10 +1340,10 @@ namespace LayoutBXLYT
                     pane.renderablePane = new RenderablePane();
 
                 Vector3[] vertices = new Vector3[4];
-                vertices[0] = new Vector3(rect.LeftPoint, rect.BottomPoint, 0);
-                vertices[1] = new Vector3(rect.RightPoint, rect.BottomPoint, 0);
-                vertices[2] = new Vector3(rect.RightPoint, rect.TopPoint, 0);
-                vertices[3] = new Vector3(rect.LeftPoint, rect.TopPoint, 0);
+                vertices[0] = new Vector3(rect.BottomLeftPoint.X, rect.BottomLeftPoint.Y, 0);
+                vertices[1] = new Vector3(rect.BottomRightPoint.X, rect.BottomRightPoint.Y, 0);
+                vertices[2] = new Vector3(rect.TopRightPoint.X, rect.TopRightPoint.Y, 0);
+                vertices[3] = new Vector3(rect.TopLeftPoint.X, rect.TopLeftPoint.Y, 0);
                 Vector4[] vertexColors = new Vector4[4];
 
             //    pane.renderablePane.Render(vertices, vertexColors, texCoords);

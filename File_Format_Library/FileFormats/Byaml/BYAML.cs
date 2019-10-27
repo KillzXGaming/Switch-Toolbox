@@ -166,7 +166,7 @@ namespace FirstPlugin
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
 
-           /* if (FileName.Contains("_muunt"))
+         /*   if (FileName.Contains("_muunt"))
             {
                 var muuntEditor = new MuuntEditor.MuuntEditor();
                 muuntEditor.LoadByaml(data.RootNode, FileName);

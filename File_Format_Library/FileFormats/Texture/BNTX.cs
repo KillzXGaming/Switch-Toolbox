@@ -597,7 +597,7 @@ namespace FirstPlugin
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = FileFilters.GetFilter(typeof(TextureData));
 
-            ofd.DefaultExt = "bftex";
+            ofd.DefaultExt = "png";
             ofd.Multiselect = true;
 
             if (ofd.ShowDialog() == DialogResult.OK)

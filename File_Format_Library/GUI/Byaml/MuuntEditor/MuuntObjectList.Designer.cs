@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.stComboBox1 = new Toolbox.Library.Forms.STComboBox();
-            this.listViewCustom1 = new Toolbox.Library.Forms.ListViewCustom();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
             // stComboBox1
@@ -43,27 +43,25 @@
             this.stComboBox1.Name = "stComboBox1";
             this.stComboBox1.Size = new System.Drawing.Size(257, 21);
             this.stComboBox1.TabIndex = 0;
+            this.stComboBox1.SelectedIndexChanged += new System.EventHandler(this.stComboBox1_SelectedIndexChanged);
             // 
-            // listViewCustom1
+            // treeView1
             // 
-            this.listViewCustom1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listViewCustom1.HideSelection = false;
-            this.listViewCustom1.Location = new System.Drawing.Point(12, 39);
-            this.listViewCustom1.Name = "listViewCustom1";
-            this.listViewCustom1.OwnerDraw = true;
-            this.listViewCustom1.Size = new System.Drawing.Size(257, 265);
-            this.listViewCustom1.TabIndex = 1;
-            this.listViewCustom1.UseCompatibleStateImageBehavior = false;
+            this.treeView1.Location = new System.Drawing.Point(12, 39);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(257, 274);
+            this.treeView1.TabIndex = 1;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // MuuntObjectList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(281, 316);
-            this.Controls.Add(this.listViewCustom1);
+            this.Controls.Add(this.treeView1);
             this.Controls.Add(this.stComboBox1);
             this.Name = "MuuntObjectList";
             this.Text = "MuuntObjectList";
@@ -74,6 +72,6 @@
         #endregion
 
         private Toolbox.Library.Forms.STComboBox stComboBox1;
-        private Toolbox.Library.Forms.ListViewCustom listViewCustom1;
+        private System.Windows.Forms.TreeView treeView1;
     }
 }

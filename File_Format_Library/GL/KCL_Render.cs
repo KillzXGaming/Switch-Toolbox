@@ -205,7 +205,7 @@ namespace FirstPlugin
         }
         public override void Draw(GL_ControlLegacy control, Pass pass)
         {
-            if (!Runtime.OpenTKInitialized)
+            if (!Runtime.OpenTKInitialized || defaultShaderProgram == null)
                 return;
 
             Matrix4 mvpMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
@@ -245,7 +245,7 @@ namespace FirstPlugin
         {
             CheckBuffers();
 
-            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
+            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT || defaultShaderProgram == null)
                 return;
 
             Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;

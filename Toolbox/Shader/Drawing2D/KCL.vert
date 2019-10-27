@@ -17,5 +17,5 @@ void main()
     color = vColor;
 	position = vPosition;
 
-    gl_Position =  modelMatrix * modelViewMatrix * vec4(vPosition.xyz, 1.0);
+    gl_Position =  modelViewMatrix * vec4(vPosition.xzy, 1.0);
 }

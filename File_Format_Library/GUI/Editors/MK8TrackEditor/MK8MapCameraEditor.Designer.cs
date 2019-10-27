@@ -28,14 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.leBtnRadio = new System.Windows.Forms.RadioButton();
             this.beBtnRadio = new System.Windows.Forms.RadioButton();
-            this.mapCameraViewer1 = new MapCameraViewer();
-            this.stContextMenuStrip1 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
-            this.loadKCLFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stContextMenuStrip1.SuspendLayout();
+            this.mapCameraViewer1 = new Turbo.MapCameraViewer();
+            this.btnCollisionPreview = new Toolbox.Library.Forms.STButton();
             this.SuspendLayout();
             // 
             // stPropertyGrid1
@@ -84,24 +81,22 @@
             this.mapCameraViewer1.UseOrtho = true;
             this.mapCameraViewer1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapCameraViewer1_MouseDown);
             // 
-            // stContextMenuStrip1
+            // btnCollisionPreview
             // 
-            this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadKCLFileToolStripMenuItem});
-            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(145, 26);
-            // 
-            // loadKCLFileToolStripMenuItem
-            // 
-            this.loadKCLFileToolStripMenuItem.Name = "loadKCLFileToolStripMenuItem";
-            this.loadKCLFileToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.loadKCLFileToolStripMenuItem.Text = "Load KCL File";
-            this.loadKCLFileToolStripMenuItem.Click += new System.EventHandler(this.loadKCLFileToolStripMenuItem_Click);
+            this.btnCollisionPreview.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCollisionPreview.Location = new System.Drawing.Point(174, 0);
+            this.btnCollisionPreview.Name = "btnCollisionPreview";
+            this.btnCollisionPreview.Size = new System.Drawing.Size(149, 23);
+            this.btnCollisionPreview.TabIndex = 16;
+            this.btnCollisionPreview.Text = "Open KCL (Mesh Preview)";
+            this.btnCollisionPreview.UseVisualStyleBackColor = false;
+            this.btnCollisionPreview.Click += new System.EventHandler(this.btnCollisionPreview_Click);
             // 
             // MK8MapCameraEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnCollisionPreview);
             this.Controls.Add(this.mapCameraViewer1);
             this.Controls.Add(this.beBtnRadio);
             this.Controls.Add(this.leBtnRadio);
@@ -109,7 +104,6 @@
             this.Name = "MK8MapCameraEditor";
             this.Size = new System.Drawing.Size(720, 437);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MK8MapCameraEditor_MouseDown);
-            this.stContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -121,7 +115,6 @@
         private System.Windows.Forms.RadioButton beBtnRadio;
         private System.Windows.Forms.RadioButton leBtnRadio;
         private MapCameraViewer mapCameraViewer1;
-        private Toolbox.Library.Forms.STContextMenuStrip stContextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem loadKCLFileToolStripMenuItem;
+        private Toolbox.Library.Forms.STButton btnCollisionPreview;
     }
 }

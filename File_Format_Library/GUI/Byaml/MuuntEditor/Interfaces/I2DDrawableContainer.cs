@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FirstPlugin.MuuntEditor
 {
-    public interface IDrawableContainer
+    public interface I2DDrawableContainer
     {
         IDrawableObject Drawable { get; }
     }

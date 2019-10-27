@@ -21,11 +21,23 @@ namespace FirstPlugin.MuuntEditor
 
         public override void RenderSceme()
         {
+            foreach (var col in ParentEditor.CollisionObjects)
+                col.Renderer.Draw(Camera.ModelViewMatrix);
+
             foreach (var group in ParentEditor.Groups)
             {
-                if (group is IDrawableContainer)
-                    ((IDrawableContainer)group).Drawable?.Draw(Camera.ModelMatrix);
+                foreach (var subProp in group.Objects)
+                    RenderGroupChildren(subProp);
             }
+        }
+
+        private void RenderGroupChildren(PropertyObject propertyObject)
+        {
+            if (propertyObject is I2DDrawableContainer)
+                ((I2DDrawableContainer)propertyObject).Drawable?.Draw(Camera.ModelViewMatrix);
+
+            foreach (var subProperty in propertyObject.SubObjects)
+                RenderGroupChildren(subProperty);
         }
 
         public override List<IPickable2DObject> GetPickableObjects()
@@ -34,19 +46,20 @@ namespace FirstPlugin.MuuntEditor
             foreach (var group in ParentEditor.Groups)
             {
                 foreach (var obj in group.Objects)
-                {
-                    if (obj is IPickable2DObject)
-                        picks.Add((IPickable2DObject)obj);
-
-                    foreach (var subobj in obj.SubObjects)
-                    {
-                        if (subobj is IPickable2DObject)
-                            picks.Add((IPickable2DObject)subobj);
-                    }
-                }
+                    GetPickableSubObjects(obj, picks);
             }
 
             return picks;
+        }
+
+        private void GetPickableSubObjects(PropertyObject prob, List<IPickable2DObject> picks)
+        {
+            if (prob is IPickable2DObject)
+                picks.Add((IPickable2DObject)prob);
+
+
+            foreach (var subobj in prob.SubObjects)
+                GetPickableSubObjects(subobj, picks);
         }
     }
 }

@@ -21,14 +21,16 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             if (bymlNode is Dictionary<string, dynamic>) Prop = (Dictionary<string, dynamic>)bymlNode;
             else throw new Exception("Not a dictionary");
 
+            int index = 0;
             foreach (var point in this["PathPt"])
             {
-                PathPoints.Add(new LapPathPoint(point));
+                PathPoints.Add(new LapPathPoint(point) { Name = $"Point [{index++}]" });
             }
 
+            index = 0;
             foreach (var point in this["ReturnPoints"])
             {
-                ReturnPoints.Add(new ReturnPoint(point));
+                ReturnPoints.Add(new ReturnPoint(point) { Name = $"Point [{index++}]" });
             }
         }
 
@@ -41,7 +43,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             set { this[N_LapPathGroup] = value; }
         }
 
-        public int ReturnPointsError
+        public bool ReturnPointsError
         {
             get { return this[N_ReturnPointsError]; }
             set { this[N_ReturnPointsError] = value; }

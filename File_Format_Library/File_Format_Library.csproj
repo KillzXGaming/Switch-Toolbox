@@ -214,6 +214,12 @@
     <Compile Include="FileFormats\Archives\DAT_Bayonetta.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
+    <Compile Include="FileFormats\Archives\LM3\LM3_ChunkTable.cs" />
+    <Compile Include="FileFormats\Archives\LM3\LM3_DICT.cs" />
+    <Compile Include="FileFormats\Archives\LM3\LM3_Enums.cs" />
+    <Compile Include="FileFormats\Archives\LM3\LM3_Material.cs" />
+    <Compile Include="FileFormats\Archives\LM3\LM3_Model.cs" />
+    <Compile Include="FileFormats\Archives\LM3\TexturePOWE.cs" />
     <Compile Include="FileFormats\Archives\PKZ.cs" />
     <Compile Include="FileFormats\Archives\VIBS.cs" />
     <Compile Include="FileFormats\Audio\Archives\AudioCommon.cs" />
@@ -355,6 +361,7 @@
     <Compile Include="GL\LM2_Render.cs" />
     <Compile Include="FileFormats\Layout\CAFE\BflytShader.cs" />
     <Compile Include="GL\Custom2D\KCLRendering2D.cs" />
+    <Compile Include="GL\LM3_Renderer.cs" />
     <Compile Include="GUI\BFLYT\Animations\Basic\AddAnimGroupDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -667,9 +674,15 @@
     <Compile Include="GUI\BFRES\SmoothNormalsMultiMeshForm.Designer.cs">
       <DependentUpon>SmoothNormalsMultiMeshForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Byaml\MuuntEditor\Interfaces\IdrawableContainer.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\Interfaces\I2DDrawableContainer.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\Interfaces\I3DDrawableContainer.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\Interfaces\IDrawableObject.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\Interfaces\IMuuntLoader.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\MuuntCollisionObject.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\MuuntEditor3D.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Byaml\MuuntEditor\Plugins\MK8\PathDoublePointDrawableContainer.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\Plugins\MK8\PathDrawableContainer.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\PropertyObject.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\MapObject.cs" />
@@ -700,10 +713,10 @@
     </Compile>
     <Compile Include="GUI\Byaml\MuuntEditor\Plugins\MK8\TrackMuuntLoader.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\PropertyGridConverters.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\RenderableDoublePointPath.cs" />
     <Compile Include="GUI\Byaml\TurboCourseMuunt\RenderablePath.cs" />
-    <Compile Include="GUI\Editors\MK8TrackEditor\MapCameraViewer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\TransformableObject.cs" />
+    <Compile Include="GUI\Editors\MK8TrackEditor\MapCameraViewer.cs" />
     <Compile Include="GUI\Editors\PTCL\Color8KeySlider.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1899,6 +1912,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\MissingTexture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Hashes\LM3_Hashes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

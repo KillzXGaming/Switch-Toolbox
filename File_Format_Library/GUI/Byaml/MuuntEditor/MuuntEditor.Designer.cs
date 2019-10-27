@@ -39,6 +39,7 @@
             this.toggle3DViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.loadCollisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stMenuStrip1.SuspendLayout();
             this.stToolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -70,6 +71,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
+            this.loadCollisionToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -79,19 +81,19 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAsToolStripMenuItem.Text = "Save As";
             // 
             // editToolStripMenuItem
@@ -133,6 +135,14 @@
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // loadCollisionToolStripMenuItem
+            // 
+            this.loadCollisionToolStripMenuItem.Name = "loadCollisionToolStripMenuItem";
+            this.loadCollisionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadCollisionToolStripMenuItem.Text = "Load Collision";
+            this.loadCollisionToolStripMenuItem.Click += new System.EventHandler(this.loadCollisionToolStripMenuItem_Click);
             // 
             // MuuntEditor
             // 
@@ -168,5 +178,6 @@
         private System.Windows.Forms.ToolStripMenuItem toggle3DViewToolStripMenuItem;
         private Toolbox.Library.Forms.STToolStrip stToolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripMenuItem loadCollisionToolStripMenuItem;
     }
 }

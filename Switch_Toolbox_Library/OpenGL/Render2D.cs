@@ -27,10 +27,10 @@ namespace Toolbox.Library
             GL.PopMatrix();
         }
 
-        public static void DrawFilledCircle(Vector2 Position, Color color, float radius = 300, byte transparency = 255, bool outline = false)
+        public static void DrawFilledCircle(Vector3 Position, Color color, float radius = 300, byte transparency = 255, bool outline = false)
         {
             GL.PushMatrix();
-            GL.Translate(Position.X, Position.Y, 0);
+            GL.Translate(Position.X, Position.Y, Position.Z);
             GL.Scale(radius, radius, 1);
 
             GL.Color4(color.R, color.G, color.B, transparency);
@@ -50,10 +50,10 @@ namespace Toolbox.Library
                 DrawCircle(Position, color.Darken(20), radius);
         }
 
-        public static void DrawCircle(Vector2 Position, Color color, float radius = 300)
+        public static void DrawCircle(Vector3 Position, Color color, float radius = 300)
         {
             GL.PushMatrix();
-            GL.Translate(Position.X, Position.Y, 0);
+            GL.Translate(Position.X, Position.Y, Position.Z);
             GL.Scale(radius, radius, 1);
 
             GL.Color4(color);

@@ -2148,54 +2148,69 @@ namespace LayoutBXLYT
         public int TopPoint;
         public int BottomPoint;
 
+        public OpenTK.Vector2 TopLeftPoint;
+        public OpenTK.Vector2 TopRightPoint;
+        public OpenTK.Vector2 BottomLeftPoint;
+        public OpenTK.Vector2 BottomRightPoint;
+
+        public CustomRectangle(OpenTK.Vector2 topLeft, OpenTK.Vector2 topRight,
+            OpenTK.Vector2 bottomLeft, OpenTK.Vector2 bottomRight)
+        {
+            TopLeftPoint = topLeft;
+            TopRightPoint = topRight;
+            BottomLeftPoint = bottomLeft;
+            BottomRightPoint = bottomRight;
+
+            LeftPoint = (int)topLeft.X;
+            RightPoint = (int)topRight.X;
+            TopPoint = (int)topLeft.Y;
+            BottomPoint = (int)bottomRight.Y;
+        }
+
         public CustomRectangle(int left, int right, int top, int bottom)
         {
             LeftPoint = left;
             RightPoint = right;
             TopPoint = top;
             BottomPoint = bottom;
+
+            TopLeftPoint = new OpenTK.Vector2(left,top);
+            TopRightPoint = new OpenTK.Vector2(right, top);
+            BottomLeftPoint = new OpenTK.Vector2(left, bottom);
+            BottomRightPoint = new OpenTK.Vector2(right, bottom);
         }
 
         public CustomRectangle RotateZ(float rotate)
         {
-            var topLeft = RotateZPoint(LeftPoint, TopPoint, rotate);
-            var bottomRight = RotateZPoint(RightPoint, BottomPoint, rotate);
+            var topLeft = RotateZPoint(TopLeftPoint.X, TopLeftPoint.Y, rotate).Xy;
+            var topRight = RotateZPoint(TopRightPoint.X, TopRightPoint.Y, rotate).Xy;
+            var bottomLeft = RotateZPoint(BottomLeftPoint.X, BottomLeftPoint.Y, rotate).Xy;
+            var bottomRight = RotateZPoint(BottomRightPoint.X, BottomRightPoint.Y, rotate).Xy;
 
             return new CustomRectangle(
-                (int)topLeft.X,
-                (int)bottomRight.X,
-                (int)topLeft.Y,
-                (int)bottomRight.Y);
+                topLeft,
+                topRight,
+                bottomLeft,
+                bottomRight);
         }
 
-        private OpenTK.Vector2 RotateZPoint(float p1, float p2,  float rotate)
+        private OpenTK.Vector3 RotateZPoint(float p1, float p2,  float rotate)
         {
-            double angleInRadians = rotate * (Math.PI / 180);
-            double cosTheta = Math.Cos(angleInRadians);
-            double sinTheta = Math.Sin(angleInRadians);
-            var centerPoint = new OpenTK.Vector2(0,0);
-
-            return new OpenTK.Vector2(
-                (int)(p1 * cosTheta - p2 * sinTheta),
-                (int)(p1 * sinTheta + p2 * cosTheta));
-
-            return new OpenTK.Vector2(
-                (int)
-            (cosTheta * (p1 - centerPoint.X) -
-            sinTheta * (p2 - centerPoint.Y) + centerPoint.X),
-                (int)
-            (sinTheta * (p1 - centerPoint.X) +
-            cosTheta * (p2 - centerPoint.Y) + centerPoint.Y));
+            var rotatioZ = OpenTK.Matrix4.CreateRotationZ(OpenTK.MathHelper.DegreesToRadians(rotate));
+            return OpenTK.Vector3.TransformPosition(new OpenTK.Vector3(p1, p2, 0), rotatioZ);
         }
 
         public CustomRectangle GetTransformedRectangle(BasePane parent, Vector3F Transform, Vector3F Rotate, Vector2F scale)
         {
+            var sca = new OpenTK.Vector2(scale.X, scale.Y);
+            var pos = new OpenTK.Vector2(Transform.X, Transform.Y);
+
             var rect = this.RotateZ(Rotate.Z);
             rect = new CustomRectangle(
-                (int)(((rect.LeftPoint * scale.X) + Transform.X)),
-                (int)(((rect.RightPoint * scale.X) + Transform.X)),
-                (int)(((rect.TopPoint * scale.Y) + Transform.Y)),
-                (int)(((rect.BottomPoint * scale.Y) + Transform.Y)));
+                (rect.TopLeftPoint * sca) + pos,
+                (rect.TopRightPoint * sca) + pos,
+                (rect.BottomLeftPoint * sca) + pos,
+                (rect.BottomRightPoint * sca) + pos);
 
             if (parent != null)
                 return parent.TransformParent(rect);

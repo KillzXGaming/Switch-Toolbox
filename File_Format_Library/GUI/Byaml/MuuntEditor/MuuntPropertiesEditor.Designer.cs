@@ -28,13 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.SuspendLayout();
+            // 
+            // stPropertyGrid1
+            // 
+            this.stPropertyGrid1.AutoScroll = true;
+            this.stPropertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPropertyGrid1.Location = new System.Drawing.Point(0, 0);
+            this.stPropertyGrid1.Name = "stPropertyGrid1";
+            this.stPropertyGrid1.ShowHintDisplay = true;
+            this.stPropertyGrid1.Size = new System.Drawing.Size(395, 314);
+            this.stPropertyGrid1.TabIndex = 0;
             // 
             // MuuntPropertiesEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(395, 314);
+            this.Controls.Add(this.stPropertyGrid1);
             this.Name = "MuuntPropertiesEditor";
             this.Text = "Properties Editor";
             this.ResumeLayout(false);
@@ -42,5 +54,7 @@
         }
 
         #endregion
+
+        private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
     }
 }

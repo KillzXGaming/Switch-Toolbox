@@ -9,5 +9,6 @@ out vec4 FragColor;
 void main()
 {
     vec3 displayNormal = (normal.xyz * 0.5) + 0.5;
-    FragColor = vec4(displayNormal.rgb,1);
+	float shading = max(displayNormal.y,0.5);
+    FragColor = vec4(vec3(shading),1);
 }

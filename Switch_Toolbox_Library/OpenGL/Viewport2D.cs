@@ -10,11 +10,14 @@ using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Toolbox.Library;
+using Toolbox.Library.OpenGL2D;
 
 namespace Toolbox.Library.Forms
 {
     public class Viewport2D : UserControl
     {
+        public virtual float PreviewScale => 1f;
+
         public virtual bool UseOrtho { get; set; } = true;
         public virtual bool UseGrid { get; set; } = true;
 
@@ -23,13 +26,13 @@ namespace Toolbox.Library.Forms
         public class Camera2D
         {
             public Matrix4 ViewMatrix = Matrix4.Identity;
-            public Matrix4 ModelMatrix = Matrix4.Identity;
+            public Matrix4 ProjectionMatrix = Matrix4.Identity;
 
             public Matrix4 ModelViewMatrix
             {
                 get
                 {
-                    return ModelMatrix * ViewMatrix;
+                    return ViewMatrix * ProjectionMatrix;
                 }
             }
 
@@ -41,6 +44,9 @@ namespace Toolbox.Library.Forms
         private Color BackgroundColor = Color.FromArgb(40, 40, 40);
 
         private List<IPickable2DObject> SelectedObjects = new List<IPickable2DObject>();
+
+        private PickAction pickAction = PickAction.None;
+        private PickAxis pickAxis = PickAxis.All;
 
         public Viewport2D()
         {
@@ -83,16 +89,25 @@ namespace Toolbox.Library.Forms
                 var orthoMatrix = Matrix4.CreateOrthographic(halfW, halfH, -10000, 10000);
                 GL.LoadMatrix(ref orthoMatrix);
                 GL.MatrixMode(MatrixMode.Modelview);
-                Camera.ViewMatrix = orthoMatrix;
+                Camera.ProjectionMatrix = orthoMatrix;
+
+                Matrix4 scaleMat = Matrix4.CreateScale(Camera.Zoom * PreviewScale, Camera.Zoom * PreviewScale, 1);
+                Matrix4 transMat = Matrix4.CreateTranslation(Camera.Position.X, Camera.Position.Y, 0);
+
+                Camera.ViewMatrix = scaleMat * transMat;
             }
             else
             {
                 var cameraPosition = new Vector3(Camera.Position.X, Camera.Position.Y, -(Camera.Zoom * 500));
 
-                var perspectiveMatrix = Matrix4.CreateRotationY(90) * Matrix4.CreateTranslation(cameraPosition) * Matrix4.CreatePerspectiveFieldOfView(1.3f, glControl1.Width / glControl1.Height, 0.01f, 100000);
+                var perspectiveMatrix = Matrix4.CreatePerspectiveFieldOfView(1.3f, glControl1.Width / glControl1.Height, 0.01f, 100000);
                 GL.LoadMatrix(ref perspectiveMatrix);
                 GL.MatrixMode(MatrixMode.Modelview);
-                Camera.ViewMatrix = perspectiveMatrix;
+
+                Camera.ViewMatrix =  Matrix4.CreateTranslation(cameraPosition);
+                Camera.ProjectionMatrix = perspectiveMatrix;
+
+                GL.LoadMatrix(ref Camera.ViewMatrix);
             }
 
             GL.ClearColor(BackgroundColor);
@@ -101,13 +116,8 @@ namespace Toolbox.Library.Forms
             if (UseOrtho)
             {
                 GL.PushMatrix();
-                GL.Scale(Camera.Zoom, Camera.Zoom, 1);
+                GL.Scale(Camera.Zoom * PreviewScale, Camera.Zoom * PreviewScale, 1);
                 GL.Translate(Camera.Position.X, Camera.Position.Y, 0);
-
-                Matrix4 scaleMat = Matrix4.CreateScale(Camera.Zoom, Camera.Zoom, 1);
-                Matrix4 transMat = Matrix4.CreateTranslation(Camera.Position.X,  -Camera.Position.Y, 0);
-
-                Camera.ModelMatrix = scaleMat * transMat;
             }
         }
 
@@ -145,6 +155,7 @@ namespace Toolbox.Library.Forms
 
             if (showSelectionBox)
             {
+                GL.Disable(EnableCap.DepthTest);
                 GL.Begin(PrimitiveType.LineLoop);
                 GL.Color4(Color.Red);
                 GL.Vertex2(SelectionBox.LeftPoint, SelectionBox.BottomPoint);
@@ -152,6 +163,7 @@ namespace Toolbox.Library.Forms
                 GL.Vertex2(SelectionBox.RightPoint, SelectionBox.TopPoint);
                 GL.Vertex2(SelectionBox.LeftPoint, SelectionBox.TopPoint);
                 GL.End();
+                GL.Enable(EnableCap.DepthTest);
             }
 
             if (UseOrtho)
@@ -234,10 +246,10 @@ namespace Toolbox.Library.Forms
                             UnselectAll();
 
                         SelectedObjects.Add(picks[0]);
-
                         picks[0].IsSelected = true;
                     }
 
+                    pickAction = PickAction.Translate;
                     isPicked = true;
                 }
                 else if (Control.ModifierKeys != Keys.Control)
@@ -252,6 +264,7 @@ namespace Toolbox.Library.Forms
         {
             if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle)
             {
+                pickAction = PickAction.None;
                 mouseCameraDown = false;
                 mouseDown = false;
                 isPicked = false;
@@ -298,6 +311,51 @@ namespace Toolbox.Library.Forms
                 Camera.Position.Y -= pos.Y;
 
                 originMouse = e.Location;
+
+                glControl1.Invalidate();
+            }
+
+            if (!showSelectionBox && isPicked)
+            {
+                Console.WriteLine(pickAction);
+
+                RenderEditor();
+                var temp = e.Location;
+                var curPos = OpenGLHelper.convertScreenToWorldCoords(temp.X, temp.Y);
+                var prevPos = OpenGLHelper.convertScreenToWorldCoords(pickOriginMouse.X, pickOriginMouse.Y);
+                var pickMouse = new Point((int)(prevPos.X - curPos.X), (int)(prevPos.Y - curPos.Y));
+
+                Console.WriteLine("curPos " + curPos);
+                Console.WriteLine("prevPos " + prevPos);
+
+                GL.PopMatrix();
+
+                if (pickAction == PickAction.Translate)
+                {
+                    foreach (var pickObject in SelectedObjects)
+                    {
+                        if (pickOriginMouse != Point.Empty)
+                        {
+                            float posX = 0;
+                            float posY = 0;
+                            float posZ = 0;
+
+                            if (pickAxis == PickAxis.X)
+                                posX = pickMouse.X;
+                            if (pickAxis == PickAxis.Y)
+                                posY = pickMouse.Y;
+                            if (pickAxis == PickAxis.All)
+                            {
+                                posX = pickMouse.X;
+                                posY = pickMouse.Y;
+                            }
+
+                            pickObject.PickTranslate(posX, posY, posZ);
+                        }
+                    }
+                }
+
+                pickOriginMouse = temp;
 
                 glControl1.Invalidate();
             }

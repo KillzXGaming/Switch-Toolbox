@@ -62,6 +62,11 @@ namespace Toolbox.Library
             public static int FontSize = 12;
         }
 
+        public class MuuntEditor
+        {
+            public static bool Enable3DViewport = false;
+        }
+
         public class LayoutEditor
         {
             public static bool AnimationEditMode = false;

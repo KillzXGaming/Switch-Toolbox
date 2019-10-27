@@ -11,7 +11,7 @@ namespace Toolbox.Library
 {
     public class OpenGLHelper
     {
-        public static Point convertScreenToWorldCoords(int x, int y, bool isTopDown = false)
+        public static Point convertScreenToWorldCoords(int x, int y)
         {
             int[] viewport = new int[4];
             Matrix4 modelViewMatrix, projectionMatrix;
@@ -21,13 +21,13 @@ namespace Toolbox.Library
             Vector2 mouse;
             mouse.X = x;
             mouse.Y = y;
-            Vector4 vector = UnProject(ref projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse, isTopDown);
+            Vector4 vector = UnProject(ref projectionMatrix, modelViewMatrix, new Size(viewport[2], viewport[3]), mouse);
             Point coords = new Point((int)vector.X, (int)vector.Y);
 
             return coords;
         }
 
-        public static Vector4 UnProject(ref Matrix4 projection, Matrix4 view, Size viewport, Vector2 mouse, bool isTopDown)
+        public static Vector4 UnProject(ref Matrix4 projection, Matrix4 view, Size viewport, Vector2 mouse)
         {
             Vector4 vec;
 
@@ -35,12 +35,6 @@ namespace Toolbox.Library
             vec.Y = -(2.0f * mouse.Y / (float)viewport.Height - 1);
             vec.Z = 0;
             vec.W = 1.0f;
-
-            if (isTopDown)
-            {
-                vec.Y = 0;
-                vec.Z = -(2.0f * mouse.Y / (float)viewport.Height - 1); 
-            }
 
             Matrix4 viewInv = Matrix4.Invert(view);
             Matrix4 projInv = Matrix4.Invert(projection);

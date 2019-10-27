@@ -7,11 +7,12 @@ using FirstPlugin.Turbo.CourseMuuntStructs;
 
 namespace FirstPlugin.MuuntEditor
 {
-    public class PathDrawableContainer : PropertyObject, I2DDrawableContainer
+    public class PathDoublePointDrawableContainer : PropertyObject, I2DDrawableContainer
     {
         public Color PathColor;
 
-        public PathDrawableContainer(string name, Color color) {
+        public PathDoublePointDrawableContainer(string name, Color color)
+        {
             Name = name;
             PathColor = color;
         }
@@ -33,7 +34,7 @@ namespace FirstPlugin.MuuntEditor
             get
             {
                 if (drawable == null)
-                    drawable = new RenderablePath(PathGroups, PathColor); 
+                    drawable = new RenderableDoublePointPath(PathGroups, PathColor);
 
                 return drawable;
             }

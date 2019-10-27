@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace GL_EditorFramework.EditorDrawables
 {
-    public class RenderablePathPoint : EditableObject
+    public class RenderablePathPoint : SingleObject
     {
         public bool CanConnect = true;
 
@@ -18,7 +18,6 @@ namespace GL_EditorFramework.EditorDrawables
 
         public bool IsNormalTanTransform = false;
 
-        protected Vector3 position = new Vector3(0, 0, 0);
         protected Vector3 scale = new Vector3(1, 1, 1);
         protected Vector3 rotate = new Vector3(0, 0, 0);
 
@@ -33,10 +32,10 @@ namespace GL_EditorFramework.EditorDrawables
 
         public Vector4 Color = new Vector4(0f, 0.25f, 1f, 1f);
 
-        public Vector3 Position;
-        public Vector3 Scale;
+        public Vector3 Scale = new Vector3(1,1,1);
 
         public RenderablePathPoint(Vector4 color, Vector3 pos, Vector3 rot, Vector3 sca, object nodeObject)
+                  : base(pos)
         {
             NodeObject = nodeObject;
 
@@ -45,13 +44,13 @@ namespace GL_EditorFramework.EditorDrawables
         }
 
         public RenderablePathPoint(Vector3 pos, Vector3 normal, Vector3 tangent, Vector3 sca)
+                  : base(pos)
         {
             UpdateTransform(pos, normal, tangent, sca);
         }
 
         public void UpdateTransform(Vector3 pos, Vector3 rot, Vector3 sca)
         {
-            position = pos;
             rotate = rot;
             scale = new Vector3(sca / 2);
         }
@@ -113,7 +112,7 @@ namespace GL_EditorFramework.EditorDrawables
                 return;
 
             control.UpdateModelMatrix(Matrix4.CreateScale(0.5f) *
-                Matrix4.CreateTranslation(position));
+                Matrix4.CreateTranslation(Position));
 
             Renderers.ColorBlockRenderer.Draw(control, pass, Color, Color, control.NextPickingColor());
 
@@ -127,7 +126,7 @@ namespace GL_EditorFramework.EditorDrawables
             bool hovered = editorScene.Hovered == this;
 
             control.UpdateModelMatrix(Matrix4.CreateScale(0.5f) *
-                Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(position) : position));
+                Matrix4.CreateTranslation(Selected ? editorScene.CurrentAction.NewPos(Position) : Position));
 
             Vector4 blockColor;
             Vector4 lineColor;
@@ -155,7 +154,7 @@ namespace GL_EditorFramework.EditorDrawables
                 return;
 
             control.UpdateModelMatrix(Matrix4.CreateScale(0.5f) *
-                Matrix4.CreateTranslation(position));
+                Matrix4.CreateTranslation(Position));
 
             Renderers.ColorBlockRenderer.Draw(control, pass, Color, Color, control.NextPickingColor());
 
@@ -171,12 +170,12 @@ namespace GL_EditorFramework.EditorDrawables
 
         }
 
-        public virtual void Translate(Vector3 lastPos, Vector3 translate, int subObj)
+        public override void Translate(Vector3 lastPos, Vector3 translate, int subObj)
         {
-            position = lastPos + translate;
+            Position = lastPos + translate;
         }
 
-        public virtual void UpdatePosition(int subObj)
+        public override void UpdatePosition(int subObj)
         {
         }
 
@@ -218,26 +217,21 @@ namespace GL_EditorFramework.EditorDrawables
 
         public override LocalOrientation GetLocalOrientation(int partIndex)
         {
-            return new LocalOrientation(position);
+            return new LocalOrientation(Position);
         }
 
         public override bool TryStartDragging(DragActionType actionType, int hoveredPart, out LocalOrientation localOrientation, out bool dragExclusively)
         {
-            localOrientation = new LocalOrientation(position);
+            localOrientation = new LocalOrientation(Position);
             dragExclusively = false;
             return Selected;
-        }
-
-        public override bool IsInRange(float range, float rangeSquared, Vector3 pos)
-        {
-            return true;
         }
 
         private void UpdateNodePosition()
         {
             if (NodeObject is BasePathPoint)
             {
-                ((BasePathPoint)NodeObject).Translate = position;
+                ((BasePathPoint)NodeObject).Translate = Position;
                 ((BasePathPoint)NodeObject).Scale = scale;
                 ((BasePathPoint)NodeObject).Rotate = rotate;
 
@@ -248,15 +242,15 @@ namespace GL_EditorFramework.EditorDrawables
             {
                 if (Color == new Vector4(1, 0, 0, 1))
                 {
-                    ((Course_MapCamera_bin)NodeObject).cameraData.PositionX = position.X;
-                    ((Course_MapCamera_bin)NodeObject).cameraData.PositionY = position.Y;
-                    ((Course_MapCamera_bin)NodeObject).cameraData.PositionZ = position.Z;
+                    ((Course_MapCamera_bin)NodeObject).cameraData.PositionX = Position.X;
+                    ((Course_MapCamera_bin)NodeObject).cameraData.PositionY = Position.Y;
+                    ((Course_MapCamera_bin)NodeObject).cameraData.PositionZ = Position.Z;
                 }
                 else
                 {
-                    ((Course_MapCamera_bin)NodeObject).cameraData.TargetX = position.X;
-                    ((Course_MapCamera_bin)NodeObject).cameraData.TargetY = position.Y;
-                    ((Course_MapCamera_bin)NodeObject).cameraData.TargetZ = position.Z;
+                    ((Course_MapCamera_bin)NodeObject).cameraData.TargetX = Position.X;
+                    ((Course_MapCamera_bin)NodeObject).cameraData.TargetY = Position.Y;
+                    ((Course_MapCamera_bin)NodeObject).cameraData.TargetZ = Position.Z;
                 }
             }
         }

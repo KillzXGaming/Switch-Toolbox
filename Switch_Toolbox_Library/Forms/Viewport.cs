@@ -281,7 +281,6 @@ namespace Toolbox.Library
                 GL_ControlModern.MainDrawable = scene;
             if (GL_ControlLegacy != null)
                 GL_ControlLegacy.MainDrawable = scene;
-
         }
 
         public void UpdateViewport()

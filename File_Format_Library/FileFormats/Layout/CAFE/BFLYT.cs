@@ -1045,6 +1045,8 @@ namespace LayoutBXLYT.Cafe
 
             public TXT1(FileReader reader, Header header) : base(reader, header)
             {
+                layoutFile = header;
+
                 long startPos = reader.Position - 84;
 
                 TextLength = reader.ReadUInt16();
@@ -1671,12 +1673,19 @@ namespace LayoutBXLYT.Cafe
                             }
                             else if (Utils.GetExtension(file) == ".bflan")
                             {
-                                var openedFile = STFileLoader.OpenFileFormat(file);
-                                if (openedFile == null)
-                                    continue;
+                                try
+                                {
+                                    var openedFile = STFileLoader.OpenFileFormat(file);
+                                    if (openedFile == null)
+                                        continue;
 
-                                var bflan = openedFile as BXLAN;
-                                layoutFile.PartsManager.AddAnimation(bflan.BxlanHeader);
+                                    var bflan = openedFile as BXLAN;
+                                    layoutFile.PartsManager.AddAnimation(bflan.BxlanHeader);
+                                }
+                                catch
+                                {
+
+                                }
                             }
                             else if (Utils.GetExtension(file) == ".bflyt")
                             {
@@ -1732,17 +1741,24 @@ namespace LayoutBXLYT.Cafe
                     }
                     else if (file.FileName.Contains(LayoutFileName))
                     {
-                        var openedFile = file.OpenFile();
-                        if (openedFile is IArchiveFile)
-                            SearchArchive((IArchiveFile)openedFile, ref layoutFile);
-                        else if (openedFile is BFLYT)
+                        try
                         {
-                            Console.WriteLine("Part found! " + file.FileName);
+                            var openedFile = file.OpenFile();
+                            if (openedFile is IArchiveFile)
+                                SearchArchive((IArchiveFile)openedFile, ref layoutFile);
+                            else if (openedFile is BFLYT)
+                            {
+                                Console.WriteLine("Part found! " + file.FileName);
 
-                            layoutFile = openedFile as BFLYT;
-                            layoutFile.IFileInfo = new IFileInfo();
-                            layoutFile.IFileInfo.ArchiveParent = layoutFile.IFileInfo.ArchiveParent;
-                            return;
+                                layoutFile = openedFile as BFLYT;
+                                layoutFile.IFileInfo = new IFileInfo();
+                                layoutFile.IFileInfo.ArchiveParent = layoutFile.IFileInfo.ArchiveParent;
+                                return;
+                            }
+                        }
+                        catch
+                        {
+
                         }
                     }
                 }

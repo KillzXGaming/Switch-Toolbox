@@ -298,6 +298,9 @@
     <Compile Include="Forms\Custom\STRadioButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\Custom\Treeview\TreeviewDragSorter.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\Dialogs\ColorSelectorDropdown.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -394,6 +397,7 @@
     <Compile Include="IO\SubStream.cs" />
     <Compile Include="OpenGL\GLShaderGeneric.cs" />
     <Compile Include="OpenGL\IPickableObject.cs" />
+    <Compile Include="OpenGL\OpenGL2DEnums.cs" />
     <Compile Include="OpenGL\Render2D.cs" />
     <Compile Include="OpenGL\STRectangle.cs" />
     <Compile Include="OpenGL\Viewport2D.cs">
@@ -860,7 +864,7 @@
     <Compile Include="Forms\Custom\PictureBoxCustom.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\Custom\TreeViewCustom.cs" />
+    <Compile Include="Forms\Custom\Treeview\TreeViewCustom.cs" />
     <Compile Include="Forms\Dialogs\FolderSelectDialog.cs">
       <SubType>Component</SubType>
     </Compile>

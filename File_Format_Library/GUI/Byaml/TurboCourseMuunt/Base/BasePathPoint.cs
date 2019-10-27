@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using OpenTK;
 using GL_EditorFramework.EditorDrawables;
+using GL_EditorFramework.Interfaces;
 using FirstPlugin.MuuntEditor;
 using Toolbox.Library;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
-    public class BasePathPoint : PropertyObject, IObject, IPickable2DObject
+    public class BasePathPoint : PropertyObject, IObject, IPickable2DObject, I3DDrawableContainer
     {
         public Action OnPathMoved;
 
@@ -19,6 +20,20 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
             {
                 var point = new RenderablePathPoint(new Vector4(0f, 0.25f, 1f, 1f), Translate, Rotate, Scale, this);
                 return point;
+            }
+        }
+
+        public List<AbstractGlDrawable> Drawables
+        {
+            get
+            {
+                return new List<AbstractGlDrawable>() {
+                    new TransformableObject(Translate, Quaternion.Identity, new Vector3(1))
+                };
+            }
+            set
+            {
+
             }
         }
 
@@ -58,7 +73,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
 
         public void PickTranslate(float X, float Y, float Z)
         {
-            Translate = new Vector3(X, Y, Z);
+            Translate = new Vector3(Translate.X - X, Translate.Y - Z, Translate.Z - Y);
         }
 
         public const string N_Translate = "Translate";

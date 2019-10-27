@@ -365,17 +365,52 @@ namespace LayoutBXLYT
             }
         }
 
+        #region NodeDragDrop
+
+        private string NodeMap;
+
         private void treeView1_DragDrop(object sender, DragEventArgs e)
         {
+            if (e.Data.GetDataPresent(typeof(PaneTreeWrapper)))
+            {
+                Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
+                TreeNode NodeOver = treeView1.GetNodeAt(targetPoint);
+                TreeNode NodeMoving = (PaneTreeWrapper)e.Data.GetData(typeof(PaneTreeWrapper));
+
+                if (NodeOver != null && (NodeOver != NodeMoving || (NodeOver.Parent != null && NodeOver.Index == (NodeOver.Parent.Nodes.Count - 1))))
+                {
+                    int OffsetY = this.treeView1.PointToClient(Cursor.Position).Y - NodeOver.Bounds.Top;
+                    int NodeOverImageWidth = this.treeView1.ImageList.Images[NodeOver.ImageIndex].Size.Width + 8;
+                    Graphics g = this.treeView1.CreateGraphics();
+
+                    //Folder node
+
+                    if (OffsetY < (NodeOver.Bounds.Height / 3))
+                    {
+                        TreeNode tnParadox = NodeOver;
+                        while (tnParadox.Parent != null)
+                        {
+                            if (tnParadox.Parent == NodeMoving)
+                            {
+                                this.NodeMap = "";
+                                return;
+                            }
+
+                            tnParadox = tnParadox.Parent;
+                        }
+                    }
+                }
+            }
+
+            #endregion
+
+            /*
             if (e.Data.GetDataPresent(typeof(PaneTreeWrapper)))
             {
                 Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
 
                 TreeNode targetNode = treeView1.GetNodeAt(targetPoint);
                 TreeNode draggedNode = (PaneTreeWrapper)e.Data.GetData(typeof(PaneTreeWrapper));
-
-                Console.WriteLine("draggedPane " + draggedNode.Text);
-                Console.WriteLine("draggedPane is pane? " + (draggedNode.Tag is BasePane));
 
                 var draggedPane = draggedNode.Tag as BasePane;
                 if (draggedPane == null || draggedPane.IsRoot)
@@ -432,7 +467,7 @@ namespace LayoutBXLYT
 
                     ParentEditor.UpdateViewport();
                 }
-            }
+            }*/
         }
 
         private void treeView1_DragEnter(object sender, DragEventArgs e)

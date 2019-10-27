@@ -69,17 +69,31 @@ namespace LayoutBXLYT
             }
             else
             {
-                switch (windowFrameSelector1.SelectedFrame)
+                if (windowFrameSelector1.FrameCount == 4)
                 {
-                    case FrameSelect.TopLeft: return pane.WindowFrames[0];
-                    case FrameSelect.TopRight: return pane.WindowFrames[1];
-                    case FrameSelect.BottomLeft: return pane.WindowFrames[2];
-                    case FrameSelect.BottomRight: return pane.WindowFrames[3];
-                    case FrameSelect.Top: return pane.WindowFrames[4];
-                    case FrameSelect.Bottom: return pane.WindowFrames[5];
-                    case FrameSelect.Left: return pane.WindowFrames[6];
-                    case FrameSelect.Right: return pane.WindowFrames[7];
-                    default: return null;
+                    switch (windowFrameSelector1.SelectedFrame)
+                    {
+                        case FrameSelect.TopLeft: return pane.WindowFrames[0];
+                        case FrameSelect.TopRight: return pane.WindowFrames[1];
+                        case FrameSelect.BottomLeft: return pane.WindowFrames[2];
+                        case FrameSelect.BottomRight: return pane.WindowFrames[3];
+                        default: return null;
+                    }
+                }
+                else
+                {
+                    switch (windowFrameSelector1.SelectedFrame)
+                    {
+                        case FrameSelect.TopLeft: return pane.WindowFrames[0];
+                        case FrameSelect.TopRight: return pane.WindowFrames[1];
+                        case FrameSelect.BottomLeft: return pane.WindowFrames[2];
+                        case FrameSelect.BottomRight: return pane.WindowFrames[3];
+                        case FrameSelect.Left: return pane.WindowFrames[4];
+                        case FrameSelect.Right: return pane.WindowFrames[5];
+                        case FrameSelect.Top: return pane.WindowFrames[6];
+                        case FrameSelect.Bottom: return pane.WindowFrames[7];
+                        default: return null;
+                    }
                 }
             }
         }

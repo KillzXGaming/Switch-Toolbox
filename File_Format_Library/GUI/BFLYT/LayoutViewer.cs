@@ -249,10 +249,10 @@ namespace LayoutBXLYT
 
                         GL.Begin(PrimitiveType.Quads);
                         GL.Color4(Color.FromArgb(128, 255, 0, 0));
-                        GL.Vertex2(hitbox.LeftPoint, hitbox.BottomPoint);
-                        GL.Vertex2(hitbox.RightPoint, hitbox.BottomPoint);
-                        GL.Vertex2(hitbox.RightPoint, hitbox.TopPoint);
-                        GL.Vertex2(hitbox.LeftPoint, hitbox.TopPoint);
+                        GL.Vertex2(hitbox.BottomLeftPoint);
+                        GL.Vertex2(hitbox.BottomRightPoint);
+                        GL.Vertex2(hitbox.TopRightPoint);
+                        GL.Vertex2(hitbox.TopLeftPoint);
                         GL.End();
                     }
                 }
@@ -300,10 +300,10 @@ namespace LayoutBXLYT
             {
                 GL.Begin(PrimitiveType.LineLoop);
                 GL.Color4(Color.Red);
-                GL.Vertex2(SelectionBox.LeftPoint, SelectionBox.BottomPoint);
-                GL.Vertex2(SelectionBox.RightPoint, SelectionBox.BottomPoint);
-                GL.Vertex2(SelectionBox.RightPoint, SelectionBox.TopPoint);
-                GL.Vertex2(SelectionBox.LeftPoint, SelectionBox.TopPoint);
+                GL.Vertex2(SelectionBox.BottomLeftPoint);
+                GL.Vertex2(SelectionBox.BottomRightPoint);
+                GL.Vertex2(SelectionBox.TopRightPoint);
+                GL.Vertex2(SelectionBox.TopLeftPoint);
                 GL.End();
             }
 
@@ -333,10 +333,10 @@ namespace LayoutBXLYT
                     pane.GetTranslation(), pane.GetRotation(), pane.GetScale());
                 points.AddRange(new Vector2[4]
                 {
-                     new Vector2(rect.LeftPoint, rect.TopPoint),
-                     new Vector2(rect.RightPoint, rect.TopPoint),
-                     new Vector2(rect.RightPoint, rect.BottomPoint),
-                     new Vector2(rect.LeftPoint, rect.BottomPoint)
+                     rect.TopLeftPoint,
+                     rect.TopRightPoint,
+                     rect.BottomRightPoint,
+                     rect.BottomLeftPoint,
                 });
 
                 var minX = (int)points.Min(p => p.X);
@@ -363,10 +363,10 @@ namespace LayoutBXLYT
 
             GL.Begin(PrimitiveType.LineLoop);
             GL.Color4(isSelected ? Color.Red : Color.Green);
-            GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
-            GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-            GL.Vertex2(rect.RightPoint, rect.TopPoint);
-            GL.Vertex2(rect.LeftPoint, rect.TopPoint);
+            GL.Vertex2(rect.BottomLeftPoint);
+            GL.Vertex2(rect.BottomRightPoint);
+            GL.Vertex2(rect.TopRightPoint);
+            GL.Vertex2(rect.TopLeftPoint);
             GL.End();
 
             if (isSelected)
@@ -525,10 +525,10 @@ namespace LayoutBXLYT
             //Draw a quad which is the backcolor but lighter
             GL.Begin(PrimitiveType.Quads);
             GL.Color3(BackgroundColor.Lighten(10));
-            GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-            GL.Vertex2(rect.RightPoint, rect.TopPoint);
-            GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-            GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+            GL.Vertex2(rect.TopLeftPoint);
+            GL.Vertex2(rect.TopRightPoint);
+            GL.Vertex2(rect.BottomRightPoint);
+            GL.Vertex2(rect.BottomLeftPoint);
             GL.End();
 
             //Draw outline of root pane
@@ -536,10 +536,10 @@ namespace LayoutBXLYT
             GL.PolygonOffset(0.5f, 2);
             GL.LineWidth(33);
             GL.Color3(color);
-            GL.Vertex2(rect.LeftPoint, rect.TopPoint);
-            GL.Vertex2(rect.RightPoint, rect.TopPoint);
-            GL.Vertex2(rect.RightPoint, rect.BottomPoint);
-            GL.Vertex2(rect.LeftPoint, rect.BottomPoint);
+            GL.Vertex2(rect.TopLeftPoint);
+            GL.Vertex2(rect.TopRightPoint);
+            GL.Vertex2(rect.BottomRightPoint);
+            GL.Vertex2(rect.BottomLeftPoint);
             GL.End();
         }
 
@@ -839,6 +839,7 @@ namespace LayoutBXLYT
                 stContextMenuStrip1.Items.Clear();
                 stContextMenuStrip1.Items.Add(createPanes);
                 stContextMenuStrip1.Items.Add(selectOverlapping);
+                    stContextMenuStrip1.Items.Add(new STToolStripItem("Show All Hidden Panes", ShowAllPaneAction));
 
                 if (SelectedPanes.Count > 0)
                 {
@@ -848,7 +849,6 @@ namespace LayoutBXLYT
                     stContextMenuStrip1.Items.Add(new STToolStripItem("Edit Group"));
                     stContextMenuStrip1.Items.Add(new STToolStripItem("Delete Selected Panes",DeletePaneAction ));
                     stContextMenuStrip1.Items.Add(new STToolStripItem("Hide Selected Panes", HidePaneAction));
-                    stContextMenuStrip1.Items.Add(new STToolStripItem("Show All Hidden Panes", ShowAllPaneAction));
                 }
 
                 stContextMenuStrip1.Show(Cursor.Position);
@@ -943,6 +943,7 @@ namespace LayoutBXLYT
         {
             UndoManger.AddToUndo(new LayoutUndoManager.UndoActionPaneHide(SelectedPanes));
             ParentEditor?.UpdateHiearchyTree();
+            SelectedPanes.Clear();
             glControl1.Invalidate();
         }
 
@@ -1255,6 +1256,47 @@ namespace LayoutBXLYT
                                 else
                                 {
                                     pane.Translate = new Syroot.Maths.Vector3F(posX, posY, posZ);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (pickAction == PickAction.Scale)
+                {
+                    foreach (var pane in SelectedPanes)
+                    {
+                        if (pickOriginMouse != Point.Empty)
+                        {
+                            float scaX = pane.Scale.X;
+                            float scaY = pane.Scale.Y;
+
+                            if (pickAxis == PickAxis.X)
+                                scaX = pane.Scale.X - pickMouse.X;
+                            if (pickAxis == PickAxis.Y)
+                                scaY = pane.Scale.Y - pickMouse.Y;
+                            if (pickAxis == PickAxis.All)
+                            {
+                                scaX = pane.Scale.X - pickMouse.X;
+                                scaY = pane.Scale.Y - pickMouse.Y;
+                            }
+
+                            if (Runtime.LayoutEditor.AnimationEditMode)
+                            {
+
+                            }
+                            else
+                            {
+                                if (snapToGrid)
+                                {
+                                    int gridCubeWidth = 16, gridCubeHeight = 16;
+
+                                    pane.Scale = new Syroot.Maths.Vector2F(
+                                     (float)(Math.Round(scaX / gridCubeWidth) * gridCubeWidth),
+                                     (float)(Math.Round(scaY / gridCubeHeight) * gridCubeHeight));
+                                }
+                                else
+                                {
+                                    pane.Scale = new Syroot.Maths.Vector2F(scaX, scaY);
                                 }
                             }
                         }

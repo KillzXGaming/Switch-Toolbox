@@ -32,7 +32,8 @@ namespace Toolbox.Library
             GlobalTransform = Matrix4.Identity;
 
             COLLADA collada = COLLADA.Load(FileName);
-        
+
+           
             //Check axis up
             if (collada.asset != null)
             {

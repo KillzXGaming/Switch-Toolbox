@@ -9,13 +9,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library.Forms;
 using Toolbox.Library;
+using Toolbox.Library.IO;
 using ByamlExt.Byaml;
 using ByamlExt;
+using FirstPlugin.MuuntEditor;
 
 namespace FirstPlugin.Turbo
 {
     public partial class MK8MapCameraEditor : UserControl, IFIleEditor
     {
+        public List<MuuntCollisionObject> CollisionObjects = new List<MuuntCollisionObject>();
+
         public List<IFileFormat> GetFileFormats()
         {
             return new List<IFileFormat>() { activeCameraFile };
@@ -40,7 +44,7 @@ namespace FirstPlugin.Turbo
 
             stPropertyGrid1.LoadProperty(activeCameraFile.cameraData, OnPropertyChanged);
 
-            mapCameraViewer1.LoadCameraFile(mapCamera);
+            mapCameraViewer1.LoadCameraFile(mapCamera, this);
         }
 
         public void OnPropertyChanged() { }
@@ -60,27 +64,31 @@ namespace FirstPlugin.Turbo
           
         }
 
-        private void loadKCLFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MK8MapCameraEditor_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+            }
+        }
+
+        private void btnCollisionPreview_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = Utils.GetAllFilters(typeof(KCL));
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                var fileFormat = Toolbox.Library.IO.STFileLoader.OpenFileFormat(ofd.FileName);
+                var fileFormat = STFileLoader.OpenFileFormat(ofd.FileName);
                 if (fileFormat != null && fileFormat is KCL)
-                {
-                    var kcl = fileFormat as KCL;
-                    mapCameraViewer1.LoadCollision(kcl);
-                }
+                    LoadCollision((KCL)fileFormat);
             }
         }
 
-        private void MK8MapCameraEditor_MouseDown(object sender, MouseEventArgs e)
+        private void LoadCollision(KCL kcl)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                stContextMenuStrip1.Show(Cursor.Position);
-            }
+            MuuntCollisionObject col = new MuuntCollisionObject();
+            col.CollisionFile = kcl;
+            col.Renderer = new KCLRendering2D(kcl);
+            CollisionObjects.Add(col);
         }
     }
 }
