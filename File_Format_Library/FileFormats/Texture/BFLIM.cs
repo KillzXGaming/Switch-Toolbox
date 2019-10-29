@@ -267,13 +267,16 @@ namespace FirstPlugin
                 return null;
 
             FTEX ftex = new FTEX();
-            ftex.ReplaceTexture(ofd.FileName, TEX_FORMAT.BC3_UNORM_SRGB, 1, 0, bflim.SupportedFormats, false, true, false);
+            ftex.ReplaceTexture(ofd.FileName, TEX_FORMAT.BC3_UNORM_SRGB, 1, 0, bflim.SupportedFormats, true,  false, true, false);
             if (ftex.texture != null)
             {
                 bflim.Text = $"{Path.GetFileNameWithoutExtension(ofd.FileName)}.bflim";
                 bflim.image = new Image();
                 bflim.image.Swizzle = (byte)ftex.texture.Swizzle;
                 bflim.image.BflimFormat = FormatsWiiU.FirstOrDefault(x => x.Value == ftex.Format).Key;
+                if (ftex.UseBc4Alpha)
+                    bflim.image.BflimFormat = 16;
+
                 bflim.image.Height = (ushort)ftex.texture.Height;
                 bflim.image.Width = (ushort)ftex.texture.Width;
 
@@ -281,6 +284,8 @@ namespace FirstPlugin
                 bflim.Width = bflim.image.Width;
                 bflim.Height = bflim.image.Height;
                 bflim.ImageData = ftex.texture.Data;
+
+                bflim.LoadComponents(bflim.Format, ftex.UseBc4Alpha);
             }
 
             return bflim;
@@ -308,7 +313,7 @@ namespace FirstPlugin
             uint swizzle = (image.Swizzle >> 8) & 7;
 
             FTEX ftex = new FTEX();
-            ftex.ReplaceTexture(FileName, Format, 1, swizzle, SupportedFormats, true, true, false);
+            ftex.ReplaceTexture(FileName, Format, 1, swizzle, SupportedFormats, true, true, true, false);
             if (ftex.texture != null)
             {
                 image.Swizzle = ftex.texture.Swizzle;
@@ -316,11 +321,16 @@ namespace FirstPlugin
                 image.Height = (ushort)ftex.texture.Height;
                 image.Width = (ushort)ftex.texture.Width;
 
+                if (ftex.UseBc4Alpha)
+                    image.BflimFormat = 16;
+
                 Format = FormatsWiiU[image.BflimFormat];
                 Width = image.Width;
                 Height = image.Height;
 
                 ImageData = ftex.texture.Data;
+
+                LoadComponents(Format, ftex.UseBc4Alpha);
 
                 UpdateForm();
             }

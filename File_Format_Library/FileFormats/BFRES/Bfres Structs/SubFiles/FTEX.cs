@@ -197,10 +197,13 @@ namespace Bfres.Structs
             if (texture != null && texture.MipCount == 1)
                 ReplaceTexture(FileName, Format, texture.MipCount);
             else
-                ReplaceTexture(FileName, Format, 0, swizzlePattern, null, false, false, false);
+                ReplaceTexture(FileName, Format, 0, swizzlePattern, null, false, false, false, false);
         }
 
-        public void ReplaceTexture(string FileName, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN, uint MipMapCount = 0, uint swizzlePattern = 0, TEX_FORMAT[] SupportedFormats = null,
+        public bool UseBc4Alpha = false;
+
+        public void ReplaceTexture(string FileName, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN, uint MipMapCount = 0, 
+            uint swizzlePattern = 0, TEX_FORMAT[] SupportedFormats = null, bool DisplayBc4AlphaSetting = false,
             bool IsSwizzleReadOnly = false, bool IsTileModeReadOnly = false, bool IsFormatReadOnly = false)
         {
             string ext = System.IO.Path.GetExtension(FileName);
@@ -224,6 +227,7 @@ namespace Bfres.Structs
 
             GTXTextureImporter importer = new GTXTextureImporter();
 
+            importer.DisplayBC4Alpha = DisplayBc4AlphaSetting;
             importer.ReadOnlySwizzle = IsSwizzleReadOnly;
             importer.ReadOnlyTileMode = IsSwizzleReadOnly;
             importer.ReadOnlyFormat = IsFormatReadOnly;
@@ -258,6 +262,7 @@ namespace Bfres.Structs
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
+                    UseBc4Alpha = setting.UseBc4Alpha;
                     if (setting.GenerateMipmaps && !setting.IsFinishedCompressing)
                     {
                         setting.DataBlockOutput.Clear();

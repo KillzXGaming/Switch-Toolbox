@@ -12,11 +12,15 @@ namespace FirstPlugin
 {
     public partial class GTXTextureImporter : STForm
     {
+        public bool DisplayBC4Alpha = false;
+
         public int SelectedIndex = -1;
 
         public bool OverrideMipCounter = false;
         private STLabel dataSizeLbl;
+        private STCheckBox chkBc4Alpha;
         bool IsLoaded = false;
+
         public GTXTextureImporter()
         {
             InitializeComponent();
@@ -25,6 +29,7 @@ namespace FirstPlugin
 
             listViewCustom1.FullRowSelect = true;
             listViewCustom1.CanResizeList = true;
+            chkBc4Alpha.Visible = false;
 
             formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM);
             formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB);
@@ -159,6 +164,14 @@ namespace FirstPlugin
             {
                 setting.Format = (GX2.GX2SurfaceFormat)formatComboBox.SelectedItem;
 
+                if (setting.Format == GX2.GX2SurfaceFormat.T_BC4_UNORM && DisplayBC4Alpha || 
+                    setting.Format == GX2.GX2SurfaceFormat.T_BC4_SNORM && DisplayBC4Alpha)
+                {
+                    chkBc4Alpha.Visible = true;
+                }
+                else
+                    chkBc4Alpha.Visible = false;
+
                 listViewCustom1.Items[SelectedIndex].SubItems[1].Text = setting.Format.ToString();
             }
             HeightLabel.Text = $"Height: {setting.TexHeight}";
@@ -184,6 +197,11 @@ namespace FirstPlugin
                 bitmap = FTEX.DecodeBlockGetBitmap(mips[0], setting.
                 TexWidth, setting.TexHeight, FTEX.ConvertFromGx2Format(
                     (Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)setting.Format), new byte[0]);
+
+                if (setting.UseBc4Alpha) {
+                    bitmap = BitmapExtension.SetChannel(bitmap, 
+                        STChannelType.Red, STChannelType.Red, STChannelType.Red, STChannelType.Red);
+                }
 
                 if (pictureBox1.InvokeRequired)
                 {
@@ -328,6 +346,7 @@ namespace FirstPlugin
             this.button1 = new Toolbox.Library.Forms.STButton();
             this.pictureBox1 = new Toolbox.Library.Forms.PictureBoxCustom();
             this.dataSizeLbl = new Toolbox.Library.Forms.STLabel();
+            this.chkBc4Alpha = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SwizzleNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).BeginInit();
@@ -336,6 +355,7 @@ namespace FirstPlugin
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.chkBc4Alpha);
             this.contentContainer.Controls.Add(this.dataSizeLbl);
             this.contentContainer.Controls.Add(this.SwizzleNum);
             this.contentContainer.Controls.Add(this.label5);
@@ -371,10 +391,11 @@ namespace FirstPlugin
             this.contentContainer.Controls.SetChildIndex(this.label5, 0);
             this.contentContainer.Controls.SetChildIndex(this.SwizzleNum, 0);
             this.contentContainer.Controls.SetChildIndex(this.dataSizeLbl, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkBc4Alpha, 0);
             // 
             // SwizzleNum
             // 
-            this.SwizzleNum.Location = new System.Drawing.Point(772, 148);
+            this.SwizzleNum.Location = new System.Drawing.Point(772, 177);
             this.SwizzleNum.Maximum = new decimal(new int[] {
             7,
             0,
@@ -388,7 +409,7 @@ namespace FirstPlugin
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(664, 148);
+            this.label5.Location = new System.Drawing.Point(664, 177);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(82, 13);
             this.label5.TabIndex = 43;
@@ -400,7 +421,8 @@ namespace FirstPlugin
             this.tileModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.tileModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.tileModeCB.FormattingEnabled = true;
-            this.tileModeCB.Location = new System.Drawing.Point(772, 85);
+            this.tileModeCB.IsReadOnly = false;
+            this.tileModeCB.Location = new System.Drawing.Point(772, 114);
             this.tileModeCB.Name = "tileModeCB";
             this.tileModeCB.Size = new System.Drawing.Size(172, 21);
             this.tileModeCB.TabIndex = 42;
@@ -409,7 +431,7 @@ namespace FirstPlugin
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(664, 88);
+            this.label4.Location = new System.Drawing.Point(664, 117);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 13);
             this.label4.TabIndex = 41;
@@ -421,7 +443,8 @@ namespace FirstPlugin
             this.ImgDimComb.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.ImgDimComb.ButtonColor = System.Drawing.Color.Empty;
             this.ImgDimComb.FormattingEnabled = true;
-            this.ImgDimComb.Location = new System.Drawing.Point(772, 58);
+            this.ImgDimComb.IsReadOnly = false;
+            this.ImgDimComb.Location = new System.Drawing.Point(772, 87);
             this.ImgDimComb.Name = "ImgDimComb";
             this.ImgDimComb.Size = new System.Drawing.Size(172, 21);
             this.ImgDimComb.TabIndex = 40;
@@ -429,7 +452,7 @@ namespace FirstPlugin
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(666, 61);
+            this.label3.Location = new System.Drawing.Point(666, 90);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 13);
             this.label3.TabIndex = 39;
@@ -447,7 +470,7 @@ namespace FirstPlugin
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(664, 124);
+            this.label1.Location = new System.Drawing.Point(664, 153);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 37;
@@ -455,7 +478,7 @@ namespace FirstPlugin
             // 
             // MipmapNum
             // 
-            this.MipmapNum.Location = new System.Drawing.Point(772, 122);
+            this.MipmapNum.Location = new System.Drawing.Point(772, 151);
             this.MipmapNum.Maximum = new decimal(new int[] {
             13,
             0,
@@ -469,7 +492,7 @@ namespace FirstPlugin
             // WidthLabel
             // 
             this.WidthLabel.AutoSize = true;
-            this.WidthLabel.Location = new System.Drawing.Point(664, 225);
+            this.WidthLabel.Location = new System.Drawing.Point(664, 254);
             this.WidthLabel.Name = "WidthLabel";
             this.WidthLabel.Size = new System.Drawing.Size(35, 13);
             this.WidthLabel.TabIndex = 35;
@@ -478,7 +501,7 @@ namespace FirstPlugin
             // HeightLabel
             // 
             this.HeightLabel.AutoSize = true;
-            this.HeightLabel.Location = new System.Drawing.Point(664, 188);
+            this.HeightLabel.Location = new System.Drawing.Point(664, 217);
             this.HeightLabel.Name = "HeightLabel";
             this.HeightLabel.Size = new System.Drawing.Size(38, 13);
             this.HeightLabel.TabIndex = 34;
@@ -490,6 +513,7 @@ namespace FirstPlugin
             this.formatComboBox.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.formatComboBox.ButtonColor = System.Drawing.Color.Empty;
             this.formatComboBox.FormattingEnabled = true;
+            this.formatComboBox.IsReadOnly = false;
             this.formatComboBox.Location = new System.Drawing.Point(772, 31);
             this.formatComboBox.Name = "formatComboBox";
             this.formatComboBox.Size = new System.Drawing.Size(172, 21);
@@ -503,6 +527,7 @@ namespace FirstPlugin
             this.Name,
             this.Format});
             this.listViewCustom1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.listViewCustom1.HideSelection = false;
             this.listViewCustom1.Location = new System.Drawing.Point(0, 25);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
@@ -559,11 +584,23 @@ namespace FirstPlugin
             // dataSizeLbl
             // 
             this.dataSizeLbl.AutoSize = true;
-            this.dataSizeLbl.Location = new System.Drawing.Point(664, 262);
+            this.dataSizeLbl.Location = new System.Drawing.Point(664, 291);
             this.dataSizeLbl.Name = "dataSizeLbl";
             this.dataSizeLbl.Size = new System.Drawing.Size(56, 13);
             this.dataSizeLbl.TabIndex = 45;
             this.dataSizeLbl.Text = "Data Size:";
+            // 
+            // chkBc4Alpha
+            // 
+            this.chkBc4Alpha.AutoSize = true;
+            this.chkBc4Alpha.Location = new System.Drawing.Point(667, 59);
+            this.chkBc4Alpha.Name = "chkBc4Alpha";
+            this.chkBc4Alpha.Size = new System.Drawing.Size(76, 17);
+            this.chkBc4Alpha.TabIndex = 46;
+            this.chkBc4Alpha.Text = "BC4 Alpha";
+            this.chkBc4Alpha.UseVisualStyleBackColor = true;
+            this.chkBc4Alpha.Visible = false;
+            this.chkBc4Alpha.CheckedChanged += new System.EventHandler(this.chkBc4Alpha_CheckedChanged);
             // 
             // GTXTextureImporter
             // 
@@ -614,6 +651,18 @@ namespace FirstPlugin
 
                 SetupSettings(settings[index]);
             }
+        }
+
+        private void chkBc4Alpha_CheckedChanged(object sender, EventArgs e) {
+            if (!IsLoaded)
+                return;
+
+            foreach (int index in listViewCustom1.SelectedIndices)
+            {
+                settings[index].UseBc4Alpha = chkBc4Alpha.Checked;
+                SetupSettings(settings[index]);
+            }
+            
         }
     }
 }

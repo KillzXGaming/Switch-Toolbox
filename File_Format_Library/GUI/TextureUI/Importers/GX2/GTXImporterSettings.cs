@@ -26,6 +26,8 @@ namespace FirstPlugin
         public bool IsSRGB;
         public uint tileMode = 4;
 
+        public bool UseBc4Alpha;
+
         public uint SwizzlePattern = 0;
         public uint Swizzle = 0;
         public uint MipSwizzle = 0;
