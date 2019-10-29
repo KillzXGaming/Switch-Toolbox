@@ -2008,7 +2008,7 @@ namespace LayoutBXLYT
 
         public void RemoveNodeWrapper()
         {
-            if (NodeWrapper.Parent != null)
+            if (NodeWrapper != null && NodeWrapper.Parent != null)
             {
                 var parent = NodeWrapper.Parent;
                 parent.Nodes.Remove(NodeWrapper);
