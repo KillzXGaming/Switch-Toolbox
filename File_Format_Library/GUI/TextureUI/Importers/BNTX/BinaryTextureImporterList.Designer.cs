@@ -131,6 +131,7 @@
             this.Name,
             this.Format});
             this.listViewCustom1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.listViewCustom1.HideSelection = false;
             this.listViewCustom1.Location = new System.Drawing.Point(0, 25);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;

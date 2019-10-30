@@ -13,7 +13,7 @@ using System.Drawing;
 namespace FirstPlugin.LuigisMansion3
 {
     //Parse info based on https://github.com/TheFearsomeDzeraora/LM3L
-    public class LM3_DICT : TreeNodeFile, IFileFormat
+    public class LM3_DICT : TreeNodeFile, IFileFormat, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -63,7 +63,7 @@ namespace FirstPlugin.LuigisMansion3
             }
         }
 
-        public static bool DebugMode = false;
+        public static bool DebugMode = true;
 
         public List<ChunkDataEntry> chunkEntries = new List<ChunkDataEntry>();
 
@@ -84,22 +84,28 @@ namespace FirstPlugin.LuigisMansion3
 
         private void LoadHashes()
         {
-         /*   foreach (string hashStr in Properties.Resources.LM3_Hashes.Split('\n'))
+            foreach (string hashStr in Properties.Resources.LM3_Hashes.Split('\n'))
             {
-                uint hash = Toolbox.Library.Security.Cryptography.Crc32.Compute(hashStr);
-                if (!HashNames.ContainsKey(hash))
-                    HashNames.Add(hash, hashStr);
+                //This hash txt includes a hash and then the string path after seperated by a comma
+                //The game does not store actual strings in the exefs so it's impossible to get the original names
+                //Instead I use a text file with user generated names based on the texture for easier searching
+                string[] hashes = hashStr.Split(',');
+                if (hashes.Length != 2) continue;
 
-                foreach (string pathStr in hashStr.Split('/'))
-                {
-                    uint hash2 = Toolbox.Library.Security.Cryptography.Crc32.Compute(pathStr);
-                    if (!HashNames.ContainsKey(hash2))
-                        HashNames.Add(hash2, pathStr);
-                }
-            }*/
+                uint hash = 0;
+                uint.TryParse(hashes[0], System.Globalization.NumberStyles.HexNumber, null, out hash);
+                if (!HashNames.ContainsKey(hash))
+                    HashNames.Add(hash, hashes[1]);
+            }
         }
 
-        public byte[] GetFileVertexData()
+        
+        public System.IO.Stream GetFileBufferData()
+        {
+            return fileEntries[54].GetData(); //Get the fourth file
+        }
+
+        public System.IO.Stream GetFileVertexData()
         {
            return fileEntries[60].GetData(); //Get the fourth file
         }
@@ -145,6 +151,9 @@ namespace FirstPlugin.LuigisMansion3
 
                 var FileCount = 120;
 
+                TreeNode chunkTexFolder = new TreeNode("Texture");
+                TreeNode chunkModelFolder = new TreeNode("Model");
+
                 long FileTablePos = reader.Position;
                 for (int i = 0; i < FileCount; i++)
                 {
@@ -180,7 +189,7 @@ namespace FirstPlugin.LuigisMansion3
 
                                 foreach (var chunk in ChunkTable.ChunkEntries)
                                 {
-                                    list1.Nodes.Add($"ChunkType {chunk.ChunkType} ChunkOffset {chunk.ChunkOffset}  Unknown1 {chunk.Unknown1}  ChunkSubCount {chunk.ChunkSubCount}  Unknown3 {chunk.Unknown3}");
+                                    list1.Nodes.Add($"ChunkType {chunk.ChunkType.ToString("X")} ChunkOffset {chunk.ChunkOffset} ChunkSize {chunk.ChunkSize}  ChunkSubCount {chunk.ChunkSubCount}  Unknown3 {chunk.Unknown3}");
                                 }
                                 foreach (var chunk in ChunkTable.ChunkSubEntries)
                                 {
@@ -194,22 +203,28 @@ namespace FirstPlugin.LuigisMansion3
 
                 //Model data block
                 //Contains texture hash refs and model headers
-                byte[] File052Data = fileEntries[52].GetData();
+                var File052Data = fileEntries[52].GetData();
+
+                //Unsure, layout data??
+                var File053Data = fileEntries[53].GetData();
 
                 //Contains model data
-                byte[] File054Data = fileEntries[54].GetData();
+                var File054Data = fileEntries[54].GetData();
 
-                //Image header block
-                byte[] File063Data = fileEntries[63].GetData();
+                //Image header block. Also contains shader data
+                var File063Data = fileEntries[63].GetData();
 
                 //Image data block
-                byte[] File065Data = fileEntries[65].GetData();
+                var File065Data = fileEntries[65].GetData();
 
                 //Set an instance of our current data
                 //Chunks are in order, so you build off of when an instance gets loaded
                 LM3_Model currentModel = new LM3_Model(this);
 
                 TexturePOWE currentTexture = new TexturePOWE();
+                ChunkDataEntry currentVertexPointerList = null;
+
+                List<uint> TextureHashes = new List<uint>();
 
                 int chunkId = 0;
                 uint modelIndex = 0;
@@ -223,7 +238,7 @@ namespace FirstPlugin.LuigisMansion3
                             chunkEntry.DataFile = File063Data;
 
                             //Read the info
-                            using (var textureReader = new FileReader(chunkEntry.FileData))
+                            using (var textureReader = new FileReader(chunkEntry.FileData, true))
                             {
                                 currentTexture = new TexturePOWE();
                                 currentTexture.ImageKey = "texture";
@@ -240,20 +255,21 @@ namespace FirstPlugin.LuigisMansion3
                                 textureFolder.Nodes.Add(currentTexture);
                                 Renderer.TextureList.Add(currentTexture);
 
+                                TextureHashes.Add(currentTexture.ID2);
+
                                 ImageHeaderIndex++;
                             }
                             break;
                         case SubDataType.TextureData:
                             chunkEntry.DataFile = File065Data;
-                            currentTexture.ImageData = chunkEntry.FileData;
+                            currentTexture.ImageData = chunkEntry.FileData.ToBytes();
                             break;
-                    /*    case SubDataType.ModelStart:
+                        case SubDataType.ModelStart:
                             chunkEntry.DataFile = File052Data;
                             currentModel = new LM3_Model(this);
                             currentModel.ModelInfo = new LM3_ModelInfo();
                             currentModel.Text = $"Model {modelIndex}";
-                            currentModel.ModelInfo.Data = chunkEntry.FileData;
-                            modelFolder.Nodes.Add(currentModel);
+                            currentModel.ModelInfo.Data = chunkEntry.FileData.ToBytes();
                             modelIndex++;
                             break;
                         case SubDataType.MeshBuffers:
@@ -263,25 +279,31 @@ namespace FirstPlugin.LuigisMansion3
                             break;
                         case SubDataType.VertexStartPointers:
                             chunkEntry.DataFile = File052Data;
-                            using (var vtxPtrReader = new FileReader(chunkEntry.FileData))
-                            {
-                                while (!vtxPtrReader.EndOfStream)
-                                    currentModel.VertexBufferPointers.Add(vtxPtrReader.ReadUInt32());
-                            }
+                            currentVertexPointerList = chunkEntry;
                             break;
                         case SubDataType.SubmeshInfo:
                             chunkEntry.DataFile = File052Data;
-                            int MeshCount = chunkEntry.FileData.Length / 0x28;
+                            int MeshCount = (int)chunkEntry.FileData.Length / 0x40;
+
+                            using (var vtxPtrReader = new FileReader(currentVertexPointerList.FileData))
                             using (var meshReader = new FileReader(chunkEntry.FileData))
                             {
                                 for (uint i = 0; i < MeshCount; i++)
                                 {
+                                    meshReader.SeekBegin(i * 0x40);
                                     LM3_Mesh mesh = new LM3_Mesh();
                                     mesh.Read(meshReader);
                                     currentModel.Meshes.Add(mesh);
+
+                                    Console.WriteLine($"mesh.Unknown3 {mesh.Unknown3 }");
+
+                                    var buffer = new LM3_Model.PointerInfo();
+                                    buffer.Read(vtxPtrReader, mesh.Unknown3 != 4294967295);
+                                    currentModel.VertexBufferPointers.Add(buffer);
                                 }
                             }
-                            currentModel.ModelInfo.Read(new FileReader(currentModel.ModelInfo.Data), currentModel.Meshes);
+
+                            modelFolder.Nodes.Add(currentModel);
                             break;
                         case SubDataType.ModelTransform:
                             chunkEntry.DataFile = File052Data;
@@ -297,27 +319,41 @@ namespace FirstPlugin.LuigisMansion3
                             }
                             break;
                         case SubDataType.MaterialName:
-                               using (var matReader = new FileReader(chunkEntry.FileData))
+                            chunkEntry.DataFile = File053Data;
+                      /*      using (var matReader = new FileReader(chunkEntry.FileData))
                                {
                                    materialNamesFolder.Nodes.Add(matReader.ReadZeroTerminatedString());
-                               }
-                            break;*/
+                               }*/
+                            break;
+                        case SubDataType.UILayoutMagic:
+                            chunkEntry.DataFile = File053Data;
+                            break;
+                        case SubDataType.UILayout:
+                            chunkEntry.DataFile = File053Data;
+                            break;
                         default:
                             chunkEntry.DataFile = File052Data;
                             break;
                     }
 
-                    chunkEntry.Text = $"{chunk.ChunkType.ToString("X")} {chunk.ChunkType} {chunk.ChunkOffset} {chunk.ChunkSize}";
+                    chunkEntry.Text = $"{chunkId} {chunk.ChunkType.ToString("X")} {chunk.ChunkType} {chunk.ChunkOffset} {chunk.ChunkSize}";
                     chunkFolder.Nodes.Add(chunkEntry);
+
+
+                    //    if (currentModel != null && currentModel.Meshes?.Count > 0)
+                    //       break;
+
+                    chunkId++;
+                }
+
+                foreach (var model in modelFolder.Nodes)
+                {
+                    ((LM3_Model)currentModel).ModelInfo.Read(new FileReader(
+                        currentModel.ModelInfo.Data), currentModel.Meshes, TextureHashes);
                 }
 
                 if (textureFolder.Nodes.Count > 0)
                     Nodes.Add(textureFolder);
-
-                foreach (LM3_Model model in modelFolder.Nodes)
-                {
-                    model.ReadVertexBuffers();
-                }
 
                 if (modelFolder.Nodes.Count > 0)
                     Nodes.Add(modelFolder);
@@ -331,6 +367,7 @@ namespace FirstPlugin.LuigisMansion3
 
         public void Save(System.IO.Stream stream)
         {
+
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
@@ -364,7 +401,7 @@ namespace FirstPlugin.LuigisMansion3
 
         public class ChunkDataEntry : TreeNodeFile, IContextMenuNode
         {
-            public byte[] DataFile;
+            public System.IO.Stream DataFile;
             public LM3_DICT ParentDictionary { get; set; }
             public ChunkSubEntry Entry;
 
@@ -374,15 +411,16 @@ namespace FirstPlugin.LuigisMansion3
                 Entry = entry;
             }
 
-            public byte[] FileData
+            public System.IO.Stream FileData
             {
                 get
                 {
-                    using (var reader = new FileReader(DataFile))
-                    {
-                        reader.SeekBegin(Entry.ChunkOffset);
-                        return reader.ReadBytes((int)Entry.ChunkSize);
-                    }
+                    if (Entry.ChunkSize == 0)
+                        return new System.IO.MemoryStream();
+                    else if (Entry.ChunkOffset + Entry.ChunkSize < DataFile?.Length)
+                        return new SubStream(DataFile, Entry.ChunkOffset, Entry.ChunkSize);
+                    else
+                        return new System.IO.MemoryStream();
                 }
             }
 
@@ -400,9 +438,7 @@ namespace FirstPlugin.LuigisMansion3
                 sfd.Filter = "Raw Data (*.*)|*.*";
 
                 if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    System.IO.File.WriteAllBytes(sfd.FileName, FileData);
-                }
+                    FileData.ExportToFile(sfd.FileName);
             }
 
             public override void OnClick(TreeView treeView)
@@ -447,12 +483,11 @@ namespace FirstPlugin.LuigisMansion3
 
             private bool IsTextureBinary()
             {
-                byte[] Data = GetData();
-
-                if (Data.Length < 4)
+                var stream = GetData();
+                if (stream.Length < 4)
                     return false;
 
-                using (var reader = new FileReader(Data))
+                using (var reader = new FileReader(stream, true))
                 {
                     return reader.ReadUInt32() == 0xE977D350;
                 }
@@ -472,9 +507,7 @@ namespace FirstPlugin.LuigisMansion3
                 sfd.Filter = "Raw Data (*.*)|*.*";
 
                 if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    System.IO.File.WriteAllBytes(sfd.FileName, GetData());
-                }
+                    GetData().ExportToFile(sfd.FileName);
             }
 
             public override void OnClick(TreeView treeView)
@@ -490,19 +523,19 @@ namespace FirstPlugin.LuigisMansion3
                 editor.LoadData(GetData());
             }
 
-            public byte[] GetData()
+            public System.IO.Stream GetData()
             {
-                byte[] Data = new byte[DecompressedSize];
+                System.IO.Stream Data = new System.IO.MemoryStream();
 
                 string FolderPath = System.IO.Path.GetDirectoryName(ParentDictionary.FilePath);
                 string DataFile = System.IO.Path.Combine(FolderPath, $"{ParentDictionary.FileName.Replace(".dict", ".data")}");
 
                 if (System.IO.File.Exists(DataFile))
                 {
-                    using (var reader = new FileReader(DataFile))
+                    using (var reader = new FileReader(DataFile, true))
                     {
                         if (Offset > reader.BaseStream.Length)
-                            return reader.ReadBytes((int)CompressedSize);
+                            return new System.IO.MemoryStream();
 
                         reader.SeekBegin(Offset);
                         if (ParentDictionary.IsCompressed)
@@ -510,16 +543,15 @@ namespace FirstPlugin.LuigisMansion3
                             ushort Magic = reader.ReadUInt16();
                             reader.SeekBegin(Offset);
 
-                            Data = reader.ReadBytes((int)CompressedSize);
                             if (Magic == 0x9C78 || Magic == 0xDA78)
-                                return STLibraryCompression.ZLIB.Decompress(Data);
+                                return new System.IO.MemoryStream(STLibraryCompression.ZLIB.Decompress(reader.ReadBytes((int)CompressedSize)));
                             else //Unknown compression 
                                 return Data;
                         }
-                        else
-                        {
-                            return reader.ReadBytes((int)DecompressedSize);
-                        }
+                        else if (DecompressedSize == 0)
+                            return new System.IO.MemoryStream();
+                        else if (Offset + DecompressedSize < reader.BaseStream.Length)
+                            return new SubStream(reader.BaseStream, Offset, DecompressedSize);
                     }
                 }
 

@@ -30,6 +30,8 @@ namespace Toolbox.Library
             }
         }
 
+        public bool SuppressUpdating = false;
+
         public List<DrawableContainer> DrawableContainers;
 
         public EditorScene scene = new EditorScene();
@@ -285,6 +287,8 @@ namespace Toolbox.Library
 
         public void UpdateViewport()
         {
+            if (SuppressUpdating) return;
+
             if (GL_ControlModern != null)
                 GL_ControlModern.Refresh();
             if (GL_ControlLegacy != null)

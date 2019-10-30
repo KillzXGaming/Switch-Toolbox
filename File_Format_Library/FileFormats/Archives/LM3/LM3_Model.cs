@@ -66,7 +66,7 @@ namespace FirstPlugin.LuigisMansion3
         public LM3_DICT DataDictionary;
         public LM3_ModelInfo ModelInfo;
         public List<LM3_Mesh> Meshes = new List<LM3_Mesh>();
-        public List<uint> VertexBufferPointers = new List<uint>();
+        public List<PointerInfo> VertexBufferPointers = new List<PointerInfo>();
 
         public uint BufferStart;
         public uint BufferSize;
@@ -87,8 +87,12 @@ namespace FirstPlugin.LuigisMansion3
             }
         }
 
+        private bool loaded = false;
         public override void OnClick(TreeView treeView)
         {
+            if (!loaded)
+                UpdateVertexData();
+
             if (Runtime.UseOpenGL)
             {
                 if (viewport == null)
@@ -97,11 +101,34 @@ namespace FirstPlugin.LuigisMansion3
                     viewport.Dock = DockStyle.Fill;
                 }
 
-                viewport.ReloadDrawables(DataDictionary.DrawableContainer);
-                LibraryGUI.LoadEditor(viewport);
+                viewport.SuppressUpdating = true;
 
+                foreach (var mesh in DataDictionary.Renderer.Meshes)
+                    mesh.Checked = false;
+
+                foreach (TreeNode mesh in Nodes)
+                    mesh.Checked = true;
+
+                viewport.SuppressUpdating = false;
+
+                Viewport editor = (Viewport)LibraryGUI.GetActiveContent(typeof(Viewport));
+                if (editor == null)
+                {
+                    editor = viewport;
+                    LibraryGUI.LoadEditor(viewport);
+                }
+
+                viewport.ReloadDrawables(DataDictionary.DrawableContainer);
                 viewport.Text = Text;
             }
+        }
+
+        private void UpdateVertexData()
+        {
+            ReadVertexBuffers();
+            DataDictionary.Renderer.UpdateVertexData();
+
+            loaded = true;
         }
 
         public ToolStripItem[] GetContextMenuItems()
@@ -143,13 +170,35 @@ namespace FirstPlugin.LuigisMansion3
             DataDictionary = dict;
         }
 
+        public class PointerInfo
+        {
+            //Note if a pointer is not used, it will be 0xFFFFF
+
+            public uint WeightTablePointer;
+            public uint VertexBufferPointer;
+            public uint IndexBufferPointer;
+            public uint IndexBufferPointer2;
+
+            public void Read(FileReader reader, bool hasWeightTable = true)
+            {
+                if (hasWeightTable && !reader.EndOfStream)
+                    WeightTablePointer = reader.ReadUInt32();
+                if (!reader.EndOfStream)
+                    VertexBufferPointer = reader.ReadUInt32();
+                if (!reader.EndOfStream)
+                    IndexBufferPointer = reader.ReadUInt32();
+                if (!reader.EndOfStream)
+                    IndexBufferPointer2 = reader.ReadUInt32();
+            }
+        }
+
         public void OnPropertyChanged() { }
 
         public void ReadVertexBuffers()
         {
             Nodes.Clear();
 
-            using (var reader = new FileReader(DataDictionary.GetFileVertexData()))
+            using (var reader = new FileReader(DataDictionary.GetFileBufferData()))
             {
                 for (int i = 0; i < Meshes.Count; i++)
                 {
@@ -157,7 +206,11 @@ namespace FirstPlugin.LuigisMansion3
 
                     RenderableMeshWrapper genericObj = new RenderableMeshWrapper();
                     genericObj.Mesh = mesh;
-                    genericObj.Text = $"Mesh {i}";
+                    genericObj.Checked = true;
+                    genericObj.Text = $"Mesh {i} {mesh.HashID.ToString("X")}";
+                    if (LM3_DICT.HashNames.ContainsKey(mesh.HashID))
+                        genericObj.Text = LM3_DICT.HashNames[mesh.HashID];
+
                     genericObj.SetMaterial(mesh.Material);
                     RenderedMeshes.Add(genericObj);
 
@@ -167,126 +220,140 @@ namespace FirstPlugin.LuigisMansion3
                     STGenericPolygonGroup polyGroup = new STGenericPolygonGroup();
                     genericObj.PolygonGroups.Add(polyGroup);
 
-                    using (reader.TemporarySeek(BufferStart + VertexBufferPointers[i], System.IO.SeekOrigin.Begin))
+                    uint vertexBufferPointer = VertexBufferPointers[i].VertexBufferPointer;
+
+                    using (reader.TemporarySeek(BufferStart + vertexBufferPointer, System.IO.SeekOrigin.Begin))
                     {
-                        var bufferNodeDebug = new DebugVisualBytes(reader.ReadBytes((int)80 * mesh.VertexCount));
+                        var bufferNodeDebug = new DebugVisualBytes(reader.ReadBytes((int)80 * (int)mesh.VertexCount));
                         bufferNodeDebug.Text = $"Buffer {mesh.DataFormat.ToString("x")}";
                         genericObj.Nodes.Add(bufferNodeDebug);
                     }
 
+                    LM3_Mesh.FormatInfo formatInfo;
                     if (!LM3_Mesh.FormatInfos.ContainsKey(mesh.DataFormat))
                     {
                         Console.WriteLine($"Unsupported data format! " + mesh.DataFormat.ToString("x"));
-                        continue;
+                        formatInfo = new LM3_Mesh.FormatInfo(VertexDataFormat.Float32_32_32, 0x30);
+                      //  continue;
                     }
                     else
+                        formatInfo = LM3_Mesh.FormatInfos[mesh.DataFormat];
+
+                    if (formatInfo.BufferLength > 0)
                     {
-                        var formatInfo = LM3_Mesh.FormatInfos[mesh.DataFormat];
-                        if (formatInfo.BufferLength > 0)
+                        Console.WriteLine($"BufferStart {BufferStart} IndexStartOffset {mesh.IndexStartOffset}");
+
+                        reader.BaseStream.Position = BufferStart + mesh.IndexStartOffset;
+                        switch (mesh.IndexFormat)
                         {
-                            reader.BaseStream.Position = BufferStart + mesh.IndexStartOffset;
-                            switch (mesh.IndexFormat)
-                            {
-                                case IndexFormat.Index_8:
-                                    for (int f = 0; f < mesh.IndexCount; f++)
-                                        polyGroup.faces.Add(reader.ReadByte());
-                                    break;
-                                case IndexFormat.Index_16:
-                                    for (int f = 0; f < mesh.IndexCount; f++)
-                                        polyGroup.faces.Add(reader.ReadUInt16());
-                                    break;
-                            }
-
-                            Console.WriteLine($"Mesh {genericObj.Text} Format {formatInfo.Format} BufferLength {formatInfo.BufferLength}");
-
-                            uint bufferOffet = BufferStart + VertexBufferPointers[i];
-                            /*       for (int v = 0; v < mesh.VertexCount; v++)
-                                   {
-                                       reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
-
-                                   }*/
-
-                            switch (formatInfo.Format)
-                            {
-                                case VertexDataFormat.Float16:
-                                    for (int v = 0; v < mesh.VertexCount; v++)
-                                    {
-                                        reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
-
-                                        Vertex vert = new Vertex();
-                                        genericObj.vertices.Add(vert);
-                                        vert.pos = new Vector3(
-                                            UShortToFloatDecode(reader.ReadInt16()),
-                                            UShortToFloatDecode(reader.ReadInt16()),
-                                            UShortToFloatDecode(reader.ReadInt16()));
-
-                                        Vector4 nrm = Read_8_8_8_8_Snorm(reader);
-                                        vert.nrm = nrm.Xyz.Normalized();
-
-                                        vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
-                                        vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-
-                                        if (formatInfo.BufferLength == 22)
-                                        {
-                                            Console.WriteLine("unk 1 " + reader.ReadUInt16());
-                                            Console.WriteLine("unk 2 " + reader.ReadUInt16());
-                                            Console.WriteLine("unk 3 " + reader.ReadUInt16());
-                                            Console.WriteLine("unk 4 " + reader.ReadUInt16());
-                                        }
-                                    }
-                                    break;
-                                case VertexDataFormat.Float32:
-                                    for (int v = 0; v < mesh.VertexCount; v++)
-                                    {
-                                        reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
-
-                                        Vertex vert = new Vertex();
-                                        genericObj.vertices.Add(vert);
-
-                                        vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                                        vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
-                                    }
-                                    break;
-                                case VertexDataFormat.Float32_32:
-                                    reader.BaseStream.Position = BufferStart + VertexBufferPointers[i] + 0x08;
-                                    for (int v = 0; v < mesh.VertexCount; v++)
-                                    {
-                                        reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
-
-                                        Vertex vert = new Vertex();
-                                        genericObj.vertices.Add(vert);
-
-                                        vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                                        vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
-                                        vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-                                        vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-                                        vert.col = Read_8_8_8_8_Unorm(reader);
-                                    }
-                                    break;
-                                case VertexDataFormat.Float32_32_32:
-                                    for (int v = 0; v < mesh.VertexCount; v++)
-                                    {
-                                        reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
-
-                                        Vertex vert = new Vertex();
-                                        genericObj.vertices.Add(vert);
-
-                                        vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                                        vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
-                                        Vector4 nrm = Read_8_8_8_8_Snorm(reader);
-                                        vert.nrm = nrm.Xyz.Normalized();
-                                        vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-                                        vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
-
-                                        if (formatInfo.BufferLength >= 0x1C)
-                                            vert.col = Read_8_8_8_8_Unorm(reader);
-                                    }
-                                    break;
-                            }
-
-                            genericObj.TransformPosition(new Vector3(0), new Vector3(-90, 0, 0), new Vector3(1));
+                            case IndexFormat.Index_8:
+                                for (int f = 0; f < mesh.IndexCount; f++)
+                                    polyGroup.faces.Add(reader.ReadByte());
+                                break;
+                            case IndexFormat.Index_16:
+                                for (int f = 0; f < mesh.IndexCount; f++)
+                                    polyGroup.faces.Add(reader.ReadUInt16());
+                                break;
+                            case IndexFormat.Index_32:
+                                for (int f = 0; f < mesh.IndexCount; f++)
+                                    polyGroup.faces.Add((int)reader.ReadUInt32());
+                                break;
                         }
+
+                        Console.WriteLine($"Mesh {genericObj.Text} Format {formatInfo.Format} BufferLength {formatInfo.BufferLength}");
+
+                        Console.WriteLine($"BufferStart {BufferStart} VertexBufferPointers {vertexBufferPointer}");
+
+                        uint bufferOffet = BufferStart + vertexBufferPointer;
+                        /*       for (int v = 0; v < mesh.VertexCount; v++)
+                               {
+                                   reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
+
+                               }*/
+
+
+                        switch (formatInfo.Format)
+                        {
+                            case VertexDataFormat.Float16:
+                                for (int v = 0; v < mesh.VertexCount; v++)
+                                {
+                                    reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
+
+                                    Vertex vert = new Vertex();
+                                    genericObj.vertices.Add(vert);
+                                    vert.pos = new Vector3(
+                                        UShortToFloatDecode(reader.ReadInt16()),
+                                        UShortToFloatDecode(reader.ReadInt16()),
+                                        UShortToFloatDecode(reader.ReadInt16()));
+
+                                    Vector4 nrm = Read_8_8_8_8_Snorm(reader);
+                                    vert.nrm = nrm.Xyz.Normalized();
+
+                                    vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
+                                    vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+
+                                    if (formatInfo.BufferLength == 22)
+                                    {
+                                        Console.WriteLine("unk 1 " + reader.ReadUInt16());
+                                        Console.WriteLine("unk 2 " + reader.ReadUInt16());
+                                        Console.WriteLine("unk 3 " + reader.ReadUInt16());
+                                        Console.WriteLine("unk 4 " + reader.ReadUInt16());
+                                    }
+                                }
+                                break;
+                            case VertexDataFormat.Float32:
+                                for (int v = 0; v < mesh.VertexCount; v++)
+                                {
+                                    reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
+
+                                    Vertex vert = new Vertex();
+                                    genericObj.vertices.Add(vert);
+
+                                    vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                                    vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
+                                }
+                                break;
+                            case VertexDataFormat.Float32_32:
+                                reader.BaseStream.Position = BufferStart + vertexBufferPointer + 0x08;
+                                for (int v = 0; v < mesh.VertexCount; v++)
+                                {
+                                    reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
+
+                                    Vertex vert = new Vertex();
+                                    genericObj.vertices.Add(vert);
+
+                                    vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                                    vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
+                                    vert.uv0 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+                                    vert.uv1 = NormalizeUvCoordsToFloat(reader.ReadUInt16(), reader.ReadUInt16());
+                                    vert.col = Read_8_8_8_8_Unorm(reader);
+                                }
+                                break;
+                            case VertexDataFormat.Float32_32_32:
+                                for (int v = 0; v < mesh.VertexCount; v++)
+                                {
+                                    reader.SeekBegin(bufferOffet + (v * formatInfo.BufferLength));
+
+                                    Vertex vert = new Vertex();
+                                    genericObj.vertices.Add(vert);
+
+                                    vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                                    vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
+                                    reader.ReadSingle();
+                                    vert.nrm = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()).Normalized();
+
+                                    vert.uv0 = new Vector2(reader.ReadSingle(), reader.ReadSingle());
+                                    vert.uv1 = new Vector2(reader.ReadSingle(), reader.ReadSingle());
+                                    var val = reader.ReadSingle();
+                                    //   if (formatInfo.BufferLength >= 0x1C)
+                                    //        vert.col = Read_8_8_8_8_Unorm(reader);
+                                }
+                                break;
+                        }
+
+                        genericObj.TransformPosition(new Vector3(0), new Vector3(-90, 0, 0), new Vector3(1));
                     }
+
 
                     genericObj.RemoveDuplicateVertices();
                 }
@@ -325,61 +392,34 @@ namespace FirstPlugin.LuigisMansion3
     {
         public byte[] Data;
 
-        public void Read(FileReader reader, List<LM3_Mesh> Meshes)
+        public void Read(FileReader reader, List<LM3_Mesh> Meshes, List<uint> Hashes)
         {
-            // This is very dumb. Just look and try to find the mesh hash and get the texture after
-            int pos = 0;
-            //todo LM3 doesn't work right with this
-      /*      while (!reader.EndOfStream && reader.Position < reader.BaseStream.Length - 5)
+            List<uint> ModelTexHashes = new List<uint>();
+
+            //Read entire section till i find a matching texture hash
+            while (!reader.EndOfStream && reader.Position < reader.BaseStream.Length - 4)
             {
-                reader.Position = pos++;
                 uint HashIDCheck = reader.ReadUInt32();
-                for (int i = 0; i < Meshes.Count; i++)
-                {
-                    if (Meshes[i].HashID == HashIDCheck)
-                    {
-                        uint TextureHashID = reader.ReadUInt32();
+                if (Hashes.Contains(HashIDCheck) && !ModelTexHashes.Contains(HashIDCheck))
+                    ModelTexHashes.Add(HashIDCheck);
+            }
 
-                        Meshes[i].Material = new LM3_Material();
-                        var texUnit = 1;
-                        Meshes[i].Material.TextureMaps.Add(new STGenericMatTexture()
-                        {
-                            textureUnit = texUnit++,
-                            Type = STGenericMatTexture.TextureType.Diffuse,
-                            Name = TextureHashID.ToString("x"),
-                        });
-                    }
-                }
-            }*/
-
-            /*
             for (int i = 0; i < Meshes.Count; i++)
             {
-                //This section keeps varing so just search for mesh hash id and get texture hash after it
-
-
-                uint Unknown = reader.ReadUInt32(); //A81E313F
-                reader.Seek(40);
-
-                //Not sure what this is. Not a transform as the UVs seem fine as is
-                float[] Unknown2 = reader.ReadSingles(5); //0.5, 1, 0.5,0.5, 1
-                reader.Seek(4); //Padding
-                uint MeshHashID = reader.ReadUInt32();
-                uint TextureHashID = reader.ReadUInt32();
-                uint UnknownHashID = reader.ReadUInt32(); //Material hash??
-
-                //Go through each mesh and find a matching hash
-                for (int m = 0; m < Meshes.Count; m++)
+                if (ModelTexHashes.Count > i)
                 {
-                    if (Meshes[m].HashID == MeshHashID)
+                    uint TextureHashID = ModelTexHashes[i];
+
+                    Meshes[i].Material = new LM3_Material();
+                    var texUnit = 1;
+                    Meshes[i].Material.TextureMaps.Add(new STGenericMatTexture()
                     {
-
-                    }
-                };
-
-                if (i != Meshes.Count - 1)
-                    reader.Seek(4); //padding on all but last entry
-            }*/
+                        textureUnit = texUnit++,
+                        Type = STGenericMatTexture.TextureType.Diffuse,
+                        Name = TextureHashID.ToString("x"),
+                    });
+                }
+            }
         }
     }
 
@@ -487,9 +527,10 @@ namespace FirstPlugin.LuigisMansion3
         public ushort Unknown { get; private set; }
         public ulong DataFormat { get; private set; }
         public uint Unknown2 { get; private set; }
-        public uint Unknown3 { get; private set; }
+        public uint Unknown3 { get; private set; } //Possibly contributes to rigged meshes. 0xFFFF if static (no weight table / pointer)
         public uint Unknown4 { get; private set; } //Increases after each mesh. Always 0 for the first mesh (some sort of offset)?
-        public ushort VertexCount { get; private set; }
+        public uint Unknown5 { get; private set; }
+        public uint VertexCount { get; private set; }
         public ushort Unknown7 { get; private set; } //Always 256?
         public uint HashID { get; private set; }
 
@@ -501,19 +542,25 @@ namespace FirstPlugin.LuigisMansion3
         {
             Material = new LM3_Material();
 
+            HashID = reader.ReadUInt32();
             IndexStartOffset = reader.ReadUInt32();
             IndexCount = reader.ReadUInt16();
             IndexFormat = reader.ReadEnum<IndexFormat>(false);
-            IndexFormat = IndexFormat.Index_16;
+            if (IndexFormat != IndexFormat.Index_16)
+                IndexFormat = IndexFormat.Index_8;
+            VertexCount = reader.ReadUInt32(); 
+            reader.ReadUInt32(); //unknown
             BufferPtrOffset = reader.ReadUInt16(); //I believe this might be for the buffer pointers. It shifts by 4 for each mesh
             Unknown = reader.ReadUInt16();
             DataFormat = reader.ReadUInt64();
             Unknown2 = reader.ReadUInt32();
-            Unknown3 = reader.ReadUInt32();
+            Unknown3 = reader.ReadUInt32(); //Sometimes 0xFFFF. 
+             reader.ReadUInt16();
             Unknown4 = reader.ReadUInt32();
-            VertexCount = reader.ReadUInt16();
-            Unknown7 = reader.ReadUInt16(); //0x100
-            HashID = reader.ReadUInt32(); //0x100
+            Unknown5 = reader.ReadUInt32();
+            Unknown7 = reader.ReadUInt16(); 
+            reader.ReadUInt32(); //unknown
+            reader.ReadUInt32(); //unknown
         }
 
         public class FormatInfo
@@ -532,6 +579,25 @@ namespace FirstPlugin.LuigisMansion3
         //These may not be very accurate, i need to look more into these
         public static Dictionary<ulong, FormatInfo> FormatInfos = new Dictionary<ulong, FormatInfo>()
         {
+            { 0xcb418c82ba25920e, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0x4c083342551178ce, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0xa2fdc74f42ce4fdb, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0xcb092e9f8322ba, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0x2031dd4da78347d9, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+
+            { 0x210ed90e5465129a, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0xa86b2280a1500a0c, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0xc5f54a808b32320c, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0x568f92478fa0a2d3, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0xc344835dd398dde9, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0x8d45618da4768c19, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0xd5b9166924e124f5, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+            { 0x5f5227f782c08883, new FormatInfo(VertexDataFormat.Float32_32_32, 0x0C)},
+
+
+
+
+            
             { 0x6350379972D28D0D, new FormatInfo(VertexDataFormat.Float16, 0x46)},
             { 0xDC0291B311E26127, new FormatInfo(VertexDataFormat.Float16, 0x16)},
             { 0x93359708679BEB7C, new FormatInfo(VertexDataFormat.Float16, 0x16)},

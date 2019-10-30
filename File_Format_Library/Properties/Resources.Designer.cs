@@ -201,6 +201,39 @@ namespace FirstPlugin.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to D:\Project\NeoPlum\Out\Dist\NXROM\NeoPlumNX64_dist.nss
+        ///nnSdk.nss
+        ///c:/NXSDK/V7_3_2/NintendoSDK/Libraries/NX-NXFP2-a64/Release/multimedia.nss
+        ///__nnDetailNintendoSdkRuntimeObjectFile
+        ///__nnDetailNintendoSdkRuntimeObjectFileRefer
+        ///__nnmusl_fini_dso
+        ///__nnmusl_init_dso
+        ///__rel_dyn_end
+        ///__rel_dyn_start
+        ///__rel_plt_end
+        ///__rel_plt_start
+        ///nndetailRoGetRoDataEnd
+        ///nndetailRoGetRoDataStart
+        ///nnMain
+        ///nninitStartup
+        ///_ZdlPv
+        ///_ZNSt3__112__next_primeEm
+        ///strtoul
+        ///strtod
+        ///vsnprintf
+        ///vswprintf
+        ///_ZdaPv
+        ///_Znwm
+        ///_Znam
+        ///__cxa_guard_ac [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string LM3_Hashes {
+            get {
+                return ResourceManager.GetString("LM3_Hashes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap MissingTexture {

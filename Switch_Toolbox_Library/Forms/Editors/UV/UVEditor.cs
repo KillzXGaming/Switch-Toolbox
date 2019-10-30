@@ -121,19 +121,31 @@ namespace Toolbox.Library.Forms
                 Color uvColor = Color.LightGreen;
                 Color gridColor = Color.Black;
 
-
-
-                List<int> f = genericObject.lodMeshes[0].getDisplayFace();
-
-                for (int v = 0; v < genericObject.lodMeshes[0].displayFaceSize; v += 3)
+                List<int> f = new List<int>();
+                int displayFaceSize = 0;
+                if (genericObject.lodMeshes.Count > 0)
                 {
-                    if (genericObject.lodMeshes[0].displayFaceSize < 3 ||
+                    f = genericObject.lodMeshes[0].getDisplayFace();
+                    displayFaceSize = genericObject.lodMeshes[0].displayFaceSize;
+                }
+                if (genericObject.PolygonGroups.Count > 0)
+                {
+                    f = genericObject.PolygonGroups[0].GetDisplayFace();
+                    displayFaceSize = genericObject.PolygonGroups[0].displayFaceSize;
+                }
+
+                for (int v = 0; v < displayFaceSize; v += 3)
+                {
+                    if (displayFaceSize < 3 ||
                          genericObject.vertices.Count < 3)
                         return;
 
                     Vector2 v1 = new Vector2(0);
                     Vector2 v2 = new Vector2(0);
                     Vector2 v3 = new Vector2(0);
+
+                    if (f.Count < v + 2)
+                        continue;
 
                     if (UvChannelIndex == 0)
                     {
@@ -552,6 +564,22 @@ namespace Toolbox.Library.Forms
                         for (int m = 0; m < ((IMeshContainer)container.Drawables[i]).Meshes.Count; m++)
                         {
                             var mesh = ((IMeshContainer)container.Drawables[i]).Meshes[m];
+                            if (mesh.GetMaterial() != null)
+                            {
+                                Objects.Add(mesh);
+                                var mat = mesh.GetMaterial();
+                                if (!Materials.Contains(mat))
+                                {
+                                    Materials.Add(mat);
+                                }
+                            }
+                        }
+                    }
+                    if (container.Drawables[i] is Rendering.GenericModelRenderer && container.Drawables[i].Visible)
+                    {
+                        for (int m = 0; m < ((Rendering.GenericModelRenderer)container.Drawables[i]).Meshes.Count; m++)
+                        {
+                            var mesh = ((Rendering.GenericModelRenderer)container.Drawables[i]).Meshes[m];
                             if (mesh.GetMaterial() != null)
                             {
                                 Objects.Add(mesh);

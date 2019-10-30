@@ -9,7 +9,7 @@ namespace FirstPlugin.LuigisMansion3
 {
     public class ChunkEntry
     {
-        public uint Unknown1;
+        public uint ChunkSize;
         public uint ChunkOffset;
         public DataType ChunkType;
         public uint ChunkSubCount;
@@ -26,7 +26,7 @@ namespace FirstPlugin.LuigisMansion3
     //Table consists of 2 chunk entry lists that define how the .data reads sections
     public class LM3_ChunkTable
     {
-        private const int ChunkInfoIdenfier = 0x2001301;
+        private const short ChunkInfoIdenfier = 0x1301;
 
         //I am uncertain how these chunk lists work. There is first a list with an identifier and one extra unknown
         //The second list can contain the same entries as the other list, however it may include more chunks 
@@ -38,7 +38,40 @@ namespace FirstPlugin.LuigisMansion3
         {
             tableReader.SetByteOrder(false);
 
-            //Read to the end of the file as the rest of the table are types, offsets, and an unknown value
+            //Load the first chunk table
+            //These point to sections which usually have magic and a hash
+            //The chunk table afterwards contains the data itself
+            while (tableReader.ReadUInt16() == ChunkInfoIdenfier)
+            {
+                tableReader.ReadUInt16();
+
+                ChunkEntry entry = new ChunkEntry();
+                ChunkEntries.Add(entry);
+
+                entry.ChunkSize = tableReader.ReadUInt32(); //Always 8
+                entry.ChunkOffset = tableReader.ReadUInt32(); //The chunk offset in the file. Relative to the first chunk position in the file
+                entry.ChunkType = tableReader.ReadEnum<DataType>(false); //The type of chunk. 0x8701B5 for example for texture info
+                entry.ChunkSubCount = tableReader.ReadByte(); //Uncertain about this. 2 for textures (info + block). Some sections however use large numbers.
+                tableReader.ReadByte();
+                tableReader.ReadByte();
+                tableReader.ReadByte();
+
+                //This increases by 2 each chunk info, however the starting value is not 0
+                //Note the last entry does not have this
+                entry.Unknown3 = tableReader.ReadUInt32();
+
+                Console.WriteLine("ChunkOffset " + entry.ChunkOffset);
+            }
+
+            if (ChunkEntries.Count > 0)
+                ChunkEntries.LastOrDefault<ChunkEntry>().Unknown3 = 0;
+
+            tableReader.Position -= 2; //Seek 4 back as the last entry lacks unkown 4
+                                       //Check the chunk types
+                                       //This time it includes more chunks (like image blocks)
+
+
+            //Read to the end of the file as the rest of the table are types, offsets, and sizes
             while (!tableReader.EndOfStream && tableReader.Position <= tableReader.BaseStream.Length - 12)
             {
                 ChunkSubEntry subEntry = new ChunkSubEntry();

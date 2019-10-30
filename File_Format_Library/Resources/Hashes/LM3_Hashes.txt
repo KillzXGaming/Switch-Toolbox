@@ -1,0 +1,10 @@
+-- Names here are user generated                                    --
+-- Hashes are in hex format and names go after seperated by a comma --
+-- Names can be paths for multiple folders                          --
+
+9d6bf95e, Body_Diffuse
+9deaa4e5, Body_SSS
+9e5737eb, Body_Normal
+852f0ba7, Cloth_Diffuse
+85adb72e, Cloth_SSS
+861a4a34, Cloth_Normal

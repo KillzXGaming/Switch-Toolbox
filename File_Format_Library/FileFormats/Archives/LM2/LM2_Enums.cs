@@ -22,7 +22,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
     public enum IndexFormat : ushort
     {
         Index_16 = 0x0,
-        Index_8  = 0x8000,
+        Index_8 = 0x8000,
     }
 
     public enum SubDataType : uint

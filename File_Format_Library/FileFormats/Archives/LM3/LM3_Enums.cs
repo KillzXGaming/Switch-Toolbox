@@ -8,7 +8,9 @@ namespace FirstPlugin.LuigisMansion3
 {
     public enum DataType : uint
     {
-        Texture = 0x8701B500,
+        Texture = 0xBA41B500,
+        Model   = 0x8101B000,
+        Unknown = 0x08C17000,
     }
 
     public enum VertexDataFormat
@@ -22,7 +24,9 @@ namespace FirstPlugin.LuigisMansion3
     public enum IndexFormat : ushort
     {
         Index_16 = 0x0,
-        Index_8  = 0x8000,
+        Index_32 = 0x1,
+        Index_32_ = 0x2,
+        Index_8 = 0x8000,
     }
 
     public enum SubDataType2 : uint
