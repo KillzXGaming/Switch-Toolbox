@@ -63,7 +63,7 @@ namespace FirstPlugin.LuigisMansion3
             }
         }
 
-        public static bool DebugMode = true;
+        public static bool DebugMode = false;
 
         public List<ChunkDataEntry> chunkEntries = new List<ChunkDataEntry>();
 
@@ -82,6 +82,7 @@ namespace FirstPlugin.LuigisMansion3
 
         public static Dictionary<uint, string> HashNames = new Dictionary<uint, string>();
 
+        public List<string> StringList = new List<string>();
         private void LoadHashes()
         {
             foreach (string hashStr in Properties.Resources.LM3_Hashes.Split('\n'))
@@ -110,9 +111,15 @@ namespace FirstPlugin.LuigisMansion3
            return fileEntries[60].GetData(); //Get the fourth file
         }
 
+        private ushort Unknown0x4;
+
+        public List<ChunkInfo> ChunkInfos = new List<ChunkInfo>();
+
         public bool DrawablesLoaded = false;
         public void Load(System.IO.Stream stream)
         {
+            CanSave = false;
+
             LoadHashes();
             modelFolder = new LM3_ModelFolder(this); 
             DrawableContainer.Name = FileName;
@@ -125,37 +132,36 @@ namespace FirstPlugin.LuigisMansion3
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
                 uint Identifier = reader.ReadUInt32();
-                ushort Unknown = reader.ReadUInt16(); //Could also be 2 bytes, not sure. Always 0x0401
+                Unknown0x4 = reader.ReadUInt16(); //Could also be 2 bytes, not sure. Always 0x0401
                 IsCompressed = reader.ReadByte() == 1;
                 reader.ReadByte(); //Padding
-                uint unk = reader.ReadUInt32();
-                uint unk2 = reader.ReadUInt32();
+                uint SizeLargestFile = reader.ReadUInt32();
+                byte numFiles = reader.ReadByte();
+                byte numChunkInfos = reader.ReadByte();
+                byte numStrings = reader.ReadByte();
+                reader.ReadByte(); //padding
 
                 //Start of the chunk info. A fixed list of chunk information
 
-                TreeNode chunkNodes = new TreeNode("Chunks Debug");
-
-                for (int i = 0; i < 52; i++)
+                for (int i = 0; i < numChunkInfos; i++)
                 {
                     ChunkInfo chunk = new ChunkInfo();
                     chunk.Read(reader);
-                    chunkNodes.Nodes.Add(chunk);
+                    ChunkInfos.Add(chunk);
                 }
 
                 TreeNode tableNodes = new TreeNode("File Section Entries");
-
-                if (DebugMode)
-                    Nodes.Add(chunkNodes);
+                TreeNode chunkLookupNodes = new TreeNode("Chunk Lookup Files");
+                tableNodes.Nodes.Add(chunkLookupNodes);
 
                 Nodes.Add(tableNodes);
 
-                var FileCount = 120;
-
+                TreeNode stringFolder = new TreeNode("Strings");
                 TreeNode chunkTexFolder = new TreeNode("Texture");
                 TreeNode chunkModelFolder = new TreeNode("Model");
 
                 long FileTablePos = reader.Position;
-                for (int i = 0; i < FileCount; i++)
+                for (int i = 0; i < numFiles; i++)
                 {
                     var file = new FileEntry(this);
                     file.Read(reader);
@@ -164,7 +170,11 @@ namespace FirstPlugin.LuigisMansion3
                     if (file.DecompressedSize > 0)
                     {
                         file.Text = $"entry {i}";
-                        tableNodes.Nodes.Add(file);
+
+                        if (i < 52)
+                            chunkLookupNodes.Nodes.Add(file);
+                        else
+                            tableNodes.Nodes.Add(file);
                     }
 
                     //The first file stores a chunk layout
@@ -200,6 +210,13 @@ namespace FirstPlugin.LuigisMansion3
                     }
                 }
 
+                for (int i = 0; i < numStrings; i++)
+                {
+                    StringList.Add(reader.ReadZeroTerminatedString());
+                    stringFolder.Nodes.Add(StringList[i]);
+                }
+
+                TreeNode havokFolder = new TreeNode("Havok Physics");
 
                 //Model data block
                 //Contains texture hash refs and model headers
@@ -229,11 +246,20 @@ namespace FirstPlugin.LuigisMansion3
                 int chunkId = 0;
                 uint modelIndex = 0;
                 uint ImageHeaderIndex = 0;
+                uint havokFileIndex = 0;
                 foreach (var chunk in ChunkTable.ChunkSubEntries)
                 {
+                    Console.WriteLine($"chunk.ChunkType {chunk.ChunkType}");
                     var chunkEntry = new ChunkDataEntry(this, chunk);
+                    chunkEntry.Text = $"{chunkId} {chunk.ChunkType.ToString("X")} {chunk.ChunkType} {chunk.ChunkOffset} {chunk.ChunkSize}";
+
                     switch (chunk.ChunkType)
                     {
+                        case SubDataType.HavokPhysics:
+                            chunkEntry.DataFile = File052Data;
+                            chunkEntry.Text = $"File_{havokFileIndex++}.hkx";
+                            havokFolder.Nodes.Add(chunkEntry);
+                            break;
                         case SubDataType.TextureHeader:
                             chunkEntry.DataFile = File063Data;
 
@@ -331,17 +357,63 @@ namespace FirstPlugin.LuigisMansion3
                         case SubDataType.UILayout:
                             chunkEntry.DataFile = File053Data;
                             break;
+                        case SubDataType.BoneData:
+                            if (chunk.ChunkSize > 0x40 && currentModel.Skeleton == null)
+                            {
+                                /*     chunkEntry.DataFile = File052Data;
+                                  using (var boneReader = new FileReader(chunkEntry.FileData))
+                                  {
+                                  currentModel.Skeleton = new STSkeleton();
+                                      DrawableContainer.Drawables.Add(currentModel.Skeleton);
+
+                                      uint numBones = chunk.ChunkSize / 0x40;
+                                      for (int i = 0; i < numBones; i++)
+                                      {
+                                          boneReader.SeekBegin(i * 0x40);
+                                          STBone bone = new STBone(currentModel.Skeleton);
+                                          bone.position = new float[3] { 0, 0, 0 };
+                                          bone.rotation = new float[4] { 0, 0, 0, 1 };
+                                          bone.scale = new float[3] { 0.2f, 0.2f, 0.2f };
+
+                                          boneReader.SeekBegin(48 + (i * 0x40));
+                                          var Position = new OpenTK.Vector3(boneReader.ReadSingle(), boneReader.ReadSingle(), boneReader.ReadSingle());
+                                          Position = OpenTK.Vector3.TransformPosition(Position, OpenTK.Matrix4.CreateRotationX(OpenTK.MathHelper.DegreesToRadians(90)));
+                                          bone.position[0] = Position.X;
+                                          bone.position[2] = Position.Y;
+                                          bone.position[1] = Position.Z;
+
+
+                                          bone.RotationType = STBone.BoneRotationType.Euler;
+                                          currentModel.Skeleton.bones.Add(bone);
+                                      }
+
+                                      currentModel.Skeleton.reset();
+                                      currentModel.Skeleton.update();  
+                            }*/
+                            }
+                            break;
+                        case (SubDataType)0x5012:
+                        case (SubDataType)0x5013:
+                        case (SubDataType)0x5014:
+                            chunkEntry.DataFile = File063Data;
+                            break;
+                        case (SubDataType)0x7101:
+                        case (SubDataType)0x7102:
+                        case (SubDataType)0x7103:
+                        case (SubDataType)0x7104:
+                        case (SubDataType)0x7105:
+                        case (SubDataType)0x7106:
+                        case (SubDataType)0x6503:
+                        case (SubDataType)0x6501:
+                            chunkEntry.DataFile = File053Data;
+                            break;
                         default:
                             chunkEntry.DataFile = File052Data;
                             break;
                     }
 
-                    chunkEntry.Text = $"{chunkId} {chunk.ChunkType.ToString("X")} {chunk.ChunkType} {chunk.ChunkOffset} {chunk.ChunkSize}";
-                    chunkFolder.Nodes.Add(chunkEntry);
-
-
-                    //    if (currentModel != null && currentModel.Meshes?.Count > 0)
-                    //       break;
+                    if (chunk.ChunkType != SubDataType.HavokPhysics)
+                        chunkFolder.Nodes.Add(chunkEntry);
 
                     chunkId++;
                 }
@@ -352,11 +424,17 @@ namespace FirstPlugin.LuigisMansion3
                         currentModel.ModelInfo.Data), currentModel.Meshes, TextureHashes);
                 }
 
+                if (havokFolder.Nodes.Count > 0)
+                    Nodes.Add(havokFolder);
+
                 if (textureFolder.Nodes.Count > 0)
                     Nodes.Add(textureFolder);
 
                 if (modelFolder.Nodes.Count > 0)
                     Nodes.Add(modelFolder);
+
+                if (stringFolder.Nodes.Count > 0)
+                    Nodes.Add(stringFolder);
             }
         }
 
@@ -367,7 +445,43 @@ namespace FirstPlugin.LuigisMansion3
 
         public void Save(System.IO.Stream stream)
         {
+            using (var writer = new FileWriter(stream))
+            {
+                writer.SetByteOrder(true);
+                writer.Write(0x78340300);
+                writer.SetByteOrder(false);
+                writer.Write(Unknown0x4);
+                writer.Write(IsCompressed);
+                writer.Write((byte)0); //padding
+                writer.Write(GetLargestFileSize());
+                writer.Write((byte)fileEntries.Count);
+                writer.Write((byte)ChunkInfos.Count);
+                writer.Write((byte)StringList.Count);
+                writer.Write((byte)0); //padding
 
+                for (int i = 0; i < ChunkInfos.Count; i++)
+                {
+                    writer.Write(ChunkInfos[i].Unknown1);
+                    writer.Write(ChunkInfos[i].Unknown2);
+                    writer.Write(ChunkInfos[i].Unknown3);
+                    writer.Write(ChunkInfos[i].Unknown4);
+                    writer.Write(ChunkInfos[i].Unknown5);
+                    writer.Write(ChunkInfos[i].Unknown6);
+                }
+
+                for (int i = 0; i < fileEntries.Count; i++)
+                {
+           
+                }
+
+                for (int i = 0; i < StringList.Count; i++)
+                    writer.WriteString(StringList[i]);
+            }
+        }
+
+        private uint GetLargestFileSize()
+        {
+            return 0;
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
@@ -380,22 +494,23 @@ namespace FirstPlugin.LuigisMansion3
             return false;
         }
 
-        public class ChunkInfo : TreeNodeCustom
+        public class ChunkInfo
         {
-            public string Type;
+            public uint Unknown1;
+            public uint Unknown2;
+            public uint Unknown3;
+            public uint Unknown4;
+            public uint Unknown5;
+            public uint Unknown6;
 
             public void Read(FileReader reader)
             {
                 uint Unknown1 = reader.ReadUInt32();
-                ushort Unknown2 = reader.ReadUInt16();
-                ushort Unknown3 = reader.ReadUInt16();
+                uint Unknown2 = reader.ReadUInt32();
+                uint Unknown3 = reader.ReadUInt32();
                 uint Unknown4 = reader.ReadUInt32();
-                Type = reader.ReadString(3);
-                byte Unknown5 = reader.ReadByte();
+                uint Unknown5 = reader.ReadUInt32();
                 uint Unknown6 = reader.ReadUInt32();
-                uint Unknown7 = reader.ReadUInt32();
-
-                Text = $" Type: [{Type}]  [{Unknown1} {Unknown2} {Unknown3} {Unknown4} {Unknown5} {Unknown6}] ";
             }
         }
 
@@ -479,6 +594,11 @@ namespace FirstPlugin.LuigisMansion3
                 Unknown1 = reader.ReadUInt16();
                 Unknown2 = reader.ReadByte();
                 Unknown3 = reader.ReadByte();
+            }
+
+            public void Write()
+            {
+
             }
 
             private bool IsTextureBinary()

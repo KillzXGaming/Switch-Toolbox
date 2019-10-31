@@ -161,7 +161,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 {
                     var chunkEntry = new ChunkDataEntry(this, chunk);
                     chunkEntry.DataFile = File003Data;
-                    chunkEntry.Text = $"Chunk {chunk.ChunkType} {chunkId++}";
+                    chunkEntry.Text = $"Chunk {chunk.ChunkType.ToString("X")} {chunk.ChunkType} {chunkId++}";
                     chunkEntries.Add(chunkEntry);
                     chunkFolder.Nodes.Add(chunkEntry);
 

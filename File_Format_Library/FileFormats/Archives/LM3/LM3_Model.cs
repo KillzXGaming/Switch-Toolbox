@@ -68,6 +68,8 @@ namespace FirstPlugin.LuigisMansion3
         public List<LM3_Mesh> Meshes = new List<LM3_Mesh>();
         public List<PointerInfo> VertexBufferPointers = new List<PointerInfo>();
 
+        public STSkeleton Skeleton;
+
         public uint BufferStart;
         public uint BufferSize;
 
@@ -102,6 +104,15 @@ namespace FirstPlugin.LuigisMansion3
                 }
 
                 viewport.SuppressUpdating = true;
+
+                for (int i = 0; i < DataDictionary.DrawableContainer.Drawables.Count; i++)
+                {
+                    if (DataDictionary.DrawableContainer.Drawables[i] is STSkeleton)
+                        ((STSkeleton)DataDictionary.DrawableContainer.Drawables[i]).HideSkeleton = true;
+                }
+
+                if (Skeleton != null)
+                    Skeleton.HideSkeleton = false;
 
                 foreach (var mesh in DataDictionary.Renderer.Meshes)
                     mesh.Checked = false;
@@ -339,14 +350,13 @@ namespace FirstPlugin.LuigisMansion3
 
                                     vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                                     vert.pos = Vector3.TransformPosition(vert.pos, mesh.Transform);
-                                    reader.ReadSingle();
-                                    vert.nrm = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()).Normalized();
 
-                                    vert.uv0 = new Vector2(reader.ReadSingle(), reader.ReadSingle());
-                                    vert.uv1 = new Vector2(reader.ReadSingle(), reader.ReadSingle());
-                                    var val = reader.ReadSingle();
-                                    //   if (formatInfo.BufferLength >= 0x1C)
-                                    //        vert.col = Read_8_8_8_8_Unorm(reader);
+                                    //Texture coordinates are stored between normals, WHY NLG
+                                    var texCoordU = reader.ReadSingle();
+                                    vert.nrm = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                                    var texCoordV = reader.ReadSingle();
+                                    vert.tan = new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                                    vert.uv0 = new Vector2(texCoordU, texCoordV);
                                 }
                                 break;
                         }
@@ -375,6 +385,11 @@ namespace FirstPlugin.LuigisMansion3
             return new Vector3(reader.ReadByte() / 255f, reader.ReadByte() / 255f, reader.ReadByte() / 255f );
         }
 
+        public static Vector2 NormalizeUvCoordsToFloat(uint U, uint V)
+        {
+            return new Vector2(U / 1024f, V / 1024f);
+        }
+
         public static Vector2 NormalizeUvCoordsToFloat(ushort U, ushort V)
         {
             return new Vector2( U / 1024f, V / 1024f);
@@ -400,8 +415,17 @@ namespace FirstPlugin.LuigisMansion3
             while (!reader.EndOfStream && reader.Position < reader.BaseStream.Length - 4)
             {
                 uint HashIDCheck = reader.ReadUInt32();
-                if (Hashes.Contains(HashIDCheck) && !ModelTexHashes.Contains(HashIDCheck))
-                    ModelTexHashes.Add(HashIDCheck);
+                if (Hashes.Contains(HashIDCheck))
+                {
+                    using (reader.TemporarySeek(8, System.IO.SeekOrigin.Current))
+                    {
+                        uint unk = reader.ReadUInt32();
+                        if (unk == 0xF880BD9F)
+                        {
+                            ModelTexHashes.Add(HashIDCheck);
+                        }
+                    }
+                }
             }
 
             for (int i = 0; i < Meshes.Count; i++)
@@ -546,8 +570,6 @@ namespace FirstPlugin.LuigisMansion3
             IndexStartOffset = reader.ReadUInt32();
             IndexCount = reader.ReadUInt16();
             IndexFormat = reader.ReadEnum<IndexFormat>(false);
-            if (IndexFormat != IndexFormat.Index_16)
-                IndexFormat = IndexFormat.Index_8;
             VertexCount = reader.ReadUInt32(); 
             reader.ReadUInt32(); //unknown
             BufferPtrOffset = reader.ReadUInt16(); //I believe this might be for the buffer pointers. It shifts by 4 for each mesh
@@ -584,7 +606,6 @@ namespace FirstPlugin.LuigisMansion3
             { 0xa2fdc74f42ce4fdb, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
             { 0xcb092e9f8322ba, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
             { 0x2031dd4da78347d9, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
-
             { 0x210ed90e5465129a, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
             { 0xa86b2280a1500a0c, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
             { 0xc5f54a808b32320c, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
@@ -592,12 +613,11 @@ namespace FirstPlugin.LuigisMansion3
             { 0xc344835dd398dde9, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
             { 0x8d45618da4768c19, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
             { 0xd5b9166924e124f5, new FormatInfo(VertexDataFormat.Float32_32_32, 0x30)},
+
             { 0x5f5227f782c08883, new FormatInfo(VertexDataFormat.Float32_32_32, 0x0C)},
 
 
-
-
-            
+            //Dark moon list just for the sake of having them defined
             { 0x6350379972D28D0D, new FormatInfo(VertexDataFormat.Float16, 0x46)},
             { 0xDC0291B311E26127, new FormatInfo(VertexDataFormat.Float16, 0x16)},
             { 0x93359708679BEB7C, new FormatInfo(VertexDataFormat.Float16, 0x16)},

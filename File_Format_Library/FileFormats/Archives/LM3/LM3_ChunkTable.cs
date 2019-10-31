@@ -38,6 +38,9 @@ namespace FirstPlugin.LuigisMansion3
         {
             tableReader.SetByteOrder(false);
 
+            if (tableReader.BaseStream.Length <= 4)
+                return;
+
             //Load the first chunk table
             //These point to sections which usually have magic and a hash
             //The chunk table afterwards contains the data itself

@@ -183,11 +183,13 @@ namespace Toolbox.Library
             return;
         }
 
+        public bool HideSkeleton;
+
         public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene)
         {
             CheckBuffers();
 
-            if (!Runtime.OpenTKInitialized || !Runtime.renderBones || !Visible)
+            if (!Runtime.OpenTKInitialized || !Runtime.renderBones || !Visible || HideSkeleton)
                 return;
 
             SF.Shader shader = OpenTKSharedResources.shaders["BONE"];

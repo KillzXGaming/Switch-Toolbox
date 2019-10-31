@@ -66,5 +66,10 @@ namespace FirstPlugin.LuigisMansion3
         UILayoutHeader = 0x7001,
         UILayoutData = 0x7002, //Without header
         UILayout = 0x7003, //All parts combined
+
+        HavokPhysics = 0xC900,
+
+        BoneData = 0xB102,
+        BoneHashList = 0xB103,
     }
 }
