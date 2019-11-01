@@ -70,7 +70,9 @@ namespace FirstPlugin.LuigisMansion3
         };
 
         public byte TexFormat;
-        public uint Unknown;
+        public byte Unknown;
+        public byte Unknown2;
+        public ushort Unknown3;
 
         public void Read(FileReader reader)
         {
@@ -86,10 +88,10 @@ namespace FirstPlugin.LuigisMansion3
             var numMips = reader.ReadByte();
             var unk = reader.ReadByte(); //padding?
             var numArray = reader.ReadByte();
-            var unk2 = reader.ReadByte();
+            Unknown = reader.ReadByte();
             TexFormat = reader.ReadByte();
-            var unk3 = reader.ReadByte();
-            Unknown = reader.ReadUInt16();
+            Unknown2 = reader.ReadByte();
+            Unknown3 = reader.ReadUInt16();
 
             if (FormatTable.ContainsKey(TexFormat))
                 Format = FormatTable[TexFormat];
@@ -109,8 +111,6 @@ namespace FirstPlugin.LuigisMansion3
             properties.NumMips = numMips;
             properties.Format = Format;
         }
-
-
 
         public override void OnClick(TreeView treeview)
         {
@@ -138,10 +138,10 @@ namespace FirstPlugin.LuigisMansion3
         {
             uint blkHeight = STGenericTexture.GetBlockHeight(Format);
             uint blkDepth = STGenericTexture.GetBlockDepth(Format);
-            uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(Height, blkHeight));
+            uint  blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(Height, blkHeight));
             uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length;
 
-            if (Format == TEX_FORMAT.ASTC_6x6_UNORM)
+            if (Format == TEX_FORMAT.ASTC_6x6_UNORM || Format == TEX_FORMAT.BC5_SNORM)
                 BlockHeightLog2 -= 1;
 
             Console.WriteLine("blkHeight " + blkHeight);
