@@ -141,7 +141,9 @@ namespace FirstPlugin.LuigisMansion3
             uint  blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(Height, blkHeight));
             uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length;
 
-            if (Format == TEX_FORMAT.ASTC_6x6_UNORM || Format == TEX_FORMAT.BC5_SNORM)
+            //    if (Format == TEX_FORMAT.ASTC_4x4_UNORM || Format == TEX_FORMAT.ASTC_6x6_UNORM || Format == TEX_FORMAT.BC5_SNORM)
+
+            if (Format != TEX_FORMAT.ASTC_8x5_UNORM)
                 BlockHeightLog2 -= 1;
 
             Console.WriteLine("blkHeight " + blkHeight);
