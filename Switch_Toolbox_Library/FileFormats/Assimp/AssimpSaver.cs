@@ -194,7 +194,8 @@ namespace Toolbox.Library
                 {
                     var polygonGroup = genericObj.PolygonGroups[p];
                     for (int f = 0; f < polygonGroup.faces.Count; f++)
-                        mesh.Faces.Add(new Face(new int[] { polygonGroup.faces[f++], polygonGroup.faces[f++], polygonGroup.faces[f] }));
+                        if (f < polygonGroup.faces.Count - 2)
+                            mesh.Faces.Add(new Face(new int[] { polygonGroup.faces[f++], polygonGroup.faces[f++], polygonGroup.faces[f] }));
                 }
             }
 
