@@ -226,6 +226,8 @@ namespace FirstPlugin.LuigisMansion3
                             Tag = tex
                         });
                     }
+                    else
+                        Nodes.Add(TextureHashes[t].ToString("x"));
                 }
 
                 if (texturesList.Nodes.Count > 0)
@@ -428,10 +430,8 @@ namespace FirstPlugin.LuigisMansion3
     {
         public byte[] Data;
 
-        public void Read(FileReader reader, LM3_Model model,  List<LM3_Mesh> Meshes, List<uint> Hashes)
+        public void Read(FileReader reader, LM3_Model model,  List<uint> Hashes)
         {
-            uint meshSize = (uint)(reader.BaseStream.Length / Meshes.Count);
-
             while (!reader.EndOfStream && reader.Position < reader.BaseStream.Length - 4)
             {
                 uint HashIDCheck = reader.ReadUInt32();
@@ -441,9 +441,12 @@ namespace FirstPlugin.LuigisMansion3
                         model.TextureHashes.Add(HashIDCheck);
                 }
             }
-            
 
-        /*    for (int i = 0; i < Meshes.Count; i++)
+            reader.Position = 0;
+
+            var meshSize = reader.BaseStream.Length / model.Meshes.Count;
+
+            for (int i = 0; i < model.Meshes.Count; i++)
             {
                 reader.SeekBegin(i * meshSize);
                 while (!reader.EndOfStream && reader.Position < reader.BaseStream.Length - 4)
@@ -452,9 +455,9 @@ namespace FirstPlugin.LuigisMansion3
                     if (Hashes.Contains(HashIDCheck))
                     {
                         Console.WriteLine("HashCheck " + HashIDCheck);
-                        Meshes[i].Material = new LM3_Material();
+                        model.Meshes[i].Material = new LM3_Material();
                         var texUnit = 1;
-                        Meshes[i].Material.TextureMaps.Add(new STGenericMatTexture()
+                        model.Meshes[i].Material.TextureMaps.Add(new STGenericMatTexture()
                         {
                             textureUnit = texUnit++,
                             Type = STGenericMatTexture.TextureType.Diffuse,
@@ -464,7 +467,7 @@ namespace FirstPlugin.LuigisMansion3
                         break;
                     }
                 }
-            }*/
+            }
         }
     }
 

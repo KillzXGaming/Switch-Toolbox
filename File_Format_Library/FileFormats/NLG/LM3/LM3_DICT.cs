@@ -360,7 +360,7 @@ namespace FirstPlugin.LuigisMansion3
                             chunkEntry.DataFile = File053Data;
                             break;
                         case SubDataType.BoneData:
-                            if (chunk.ChunkSize > 0x40 && currentModel.Skeleton == null)
+                         /*   if (chunk.ChunkSize > 0x40 && currentModel.Skeleton == null)
                             {
                                      chunkEntry.DataFile = File052Data;
                                   using (var boneReader = new FileReader(chunkEntry.FileData))
@@ -392,7 +392,7 @@ namespace FirstPlugin.LuigisMansion3
                                       currentModel.Skeleton.reset();
                                       currentModel.Skeleton.update();  
                                   }
-                            }
+                            }*/
                             break;
                         case (SubDataType)0x5012:
                         case (SubDataType)0x5013:
@@ -422,8 +422,8 @@ namespace FirstPlugin.LuigisMansion3
 
                 foreach (var model in modelFolder.Nodes)
                 {
-                    ((LM3_Model)currentModel).ModelInfo.Read(new FileReader(
-                        currentModel.ModelInfo.Data), currentModel, currentModel.Meshes, TextureHashes);
+                    ((LM3_Model)model).ModelInfo.Read(new FileReader(
+                        ((LM3_Model)model).ModelInfo.Data), ((LM3_Model)model), TextureHashes);
                 }
 
                 if (havokFolder.Nodes.Count > 0)
