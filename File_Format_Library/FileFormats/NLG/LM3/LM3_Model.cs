@@ -63,6 +63,8 @@ namespace FirstPlugin.LuigisMansion3
 
     public class LM3_Model : TreeNodeCustom, IContextMenuNode
     {
+        public List<uint> TextureHashes = new List<uint>();
+
         public LM3_DICT DataDictionary;
         public LM3_ModelInfo ModelInfo;
         public List<LM3_Mesh> Meshes = new List<LM3_Mesh>();
@@ -211,6 +213,24 @@ namespace FirstPlugin.LuigisMansion3
 
             using (var reader = new FileReader(DataDictionary.GetFileBufferData()))
             {
+                TreeNode texturesList = new TreeNode("Texture Maps");
+                for (int t = 0; t < TextureHashes.Count; t++)
+                {
+                    if (DataDictionary.Renderer.TextureList.ContainsKey(TextureHashes[t].ToString("x")))
+                    {
+                        var tex = DataDictionary.Renderer.TextureList[TextureHashes[t].ToString("x")];
+                        texturesList.Nodes.Add(new TreeNode(tex.Text)
+                        {
+                            ImageKey = tex.ImageKey,
+                            SelectedImageKey = tex.ImageKey,
+                            Tag = tex
+                        });
+                    }
+                }
+
+                if (texturesList.Nodes.Count > 0)
+                    Nodes.Add(texturesList);
+
                 for (int i = 0; i < Meshes.Count; i++)
                 {
                     LM3_Mesh mesh = Meshes[i];
@@ -226,6 +246,7 @@ namespace FirstPlugin.LuigisMansion3
                     RenderedMeshes.Add(genericObj);
 
                     Nodes.Add(genericObj);
+
                     DataDictionary.Renderer.Meshes.Add(genericObj);
 
                     STGenericPolygonGroup polyGroup = new STGenericPolygonGroup();
@@ -265,10 +286,10 @@ namespace FirstPlugin.LuigisMansion3
                                 for (int f = 0; f < mesh.IndexCount; f++)
                                     polyGroup.faces.Add(reader.ReadUInt16());
                                 break;
-                            case IndexFormat.Index_32:
+                         /*   case IndexFormat.Index_32:
                                 for (int f = 0; f < mesh.IndexCount; f++)
                                     polyGroup.faces.Add((int)reader.ReadUInt32());
-                                break;
+                                break;*/
                         }
 
                         Console.WriteLine($"Mesh {genericObj.Text} Format {formatInfo.Format} BufferLength {formatInfo.BufferLength}");
@@ -407,43 +428,43 @@ namespace FirstPlugin.LuigisMansion3
     {
         public byte[] Data;
 
-        public void Read(FileReader reader, List<LM3_Mesh> Meshes, List<uint> Hashes)
+        public void Read(FileReader reader, LM3_Model model,  List<LM3_Mesh> Meshes, List<uint> Hashes)
         {
-            List<uint> ModelTexHashes = new List<uint>();
+            uint meshSize = (uint)(reader.BaseStream.Length / Meshes.Count);
 
-            //Read entire section till i find a matching texture hash
             while (!reader.EndOfStream && reader.Position < reader.BaseStream.Length - 4)
             {
                 uint HashIDCheck = reader.ReadUInt32();
                 if (Hashes.Contains(HashIDCheck))
                 {
-                    using (reader.TemporarySeek(8, System.IO.SeekOrigin.Current))
+                    if (!model.TextureHashes.Contains(HashIDCheck))
+                        model.TextureHashes.Add(HashIDCheck);
+                }
+            }
+            
+
+        /*    for (int i = 0; i < Meshes.Count; i++)
+            {
+                reader.SeekBegin(i * meshSize);
+                while (!reader.EndOfStream && reader.Position < reader.BaseStream.Length - 4)
+                {
+                    uint HashIDCheck = reader.ReadUInt32();
+                    if (Hashes.Contains(HashIDCheck))
                     {
-                        uint unk = reader.ReadUInt32();
-                        if (unk == 0xF880BD9F)
+                        Console.WriteLine("HashCheck " + HashIDCheck);
+                        Meshes[i].Material = new LM3_Material();
+                        var texUnit = 1;
+                        Meshes[i].Material.TextureMaps.Add(new STGenericMatTexture()
                         {
-                            ModelTexHashes.Add(HashIDCheck);
-                        }
+                            textureUnit = texUnit++,
+                            Type = STGenericMatTexture.TextureType.Diffuse,
+                            Name = HashIDCheck.ToString("x"),
+                        });
+
+                        break;
                     }
                 }
-            }
-
-            for (int i = 0; i < Meshes.Count; i++)
-            {
-                if (ModelTexHashes.Count > i)
-                {
-                    uint TextureHashID = ModelTexHashes[i];
-
-                    Meshes[i].Material = new LM3_Material();
-                    var texUnit = 1;
-                    Meshes[i].Material.TextureMaps.Add(new STGenericMatTexture()
-                    {
-                        textureUnit = texUnit++,
-                        Type = STGenericMatTexture.TextureType.Diffuse,
-                        Name = TextureHashID.ToString("x"),
-                    });
-                }
-            }
+            }*/
         }
     }
 
@@ -570,6 +591,9 @@ namespace FirstPlugin.LuigisMansion3
             IndexStartOffset = reader.ReadUInt32();
             IndexCount = reader.ReadUInt16();
             IndexFormat = reader.ReadEnum<IndexFormat>(false);
+            if (IndexFormat != (IndexFormat)0x8000 && IndexFormat != 0)
+                IndexFormat = IndexFormat.Index_16;
+
             VertexCount = reader.ReadUInt32(); 
             reader.ReadUInt32(); //unknown
             BufferPtrOffset = reader.ReadUInt16(); //I believe this might be for the buffer pointers. It shifts by 4 for each mesh

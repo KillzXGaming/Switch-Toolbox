@@ -14,7 +14,7 @@ namespace FirstPlugin.LuigisMansion3
 {
     public class LM3_Renderer : GenericModelRenderer
     {
-        public List<TexturePOWE> TextureList = new List<TexturePOWE>();
+        public Dictionary<string, TexturePOWE> TextureList = new Dictionary<string, TexturePOWE>();
 
         public override void OnRender(GLControl control)
         {
@@ -27,12 +27,11 @@ namespace FirstPlugin.LuigisMansion3
             GL.BindTexture(TextureTarget.Texture2D, RenderTools.defaultTex.RenderableTex.TexID);
 
             string activeTex = tex.Name;
-
             foreach (var texture in TextureList)
             {
-                if (texture.ID2.ToString("x") == tex.Name)
+                if (TextureList.ContainsKey(tex.Name))
                 {
-                    BindGLTexture(tex, shader, texture);
+                    BindGLTexture(tex, shader, TextureList[tex.Name]);
                     return tex.textureUnit + 1;
                 }
             }

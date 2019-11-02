@@ -101,7 +101,7 @@ namespace FirstPlugin.LuigisMansion3
                 Console.WriteLine("Unknown Format!" + TexFormat.ToString("X"));
             }
 
-            MipCount = 1;
+            MipCount = numMips;
             ArrayCount = numArray;
 
             properties = new POWEProperties();

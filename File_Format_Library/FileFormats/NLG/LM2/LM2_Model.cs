@@ -68,6 +68,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         public List<LM2_Mesh> Meshes = new List<LM2_Mesh>();
         public List<uint> VertexBufferPointers = new List<uint>();
 
+        public STSkeleton Skeleton;
+
         public uint BufferStart;
         public uint BufferSize;
 

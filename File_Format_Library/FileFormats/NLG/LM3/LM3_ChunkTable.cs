@@ -44,7 +44,7 @@ namespace FirstPlugin.LuigisMansion3
             //Load the first chunk table
             //These point to sections which usually have magic and a hash
             //The chunk table afterwards contains the data itself
-            while (tableReader.ReadUInt16() == ChunkInfoIdenfier)
+            while (!tableReader.EndOfStream && tableReader.ReadUInt16() == ChunkInfoIdenfier)
             {
                 tableReader.ReadUInt16();
 
@@ -62,8 +62,6 @@ namespace FirstPlugin.LuigisMansion3
                 //This increases by 2 each chunk info, however the starting value is not 0
                 //Note the last entry does not have this
                 entry.Unknown3 = tableReader.ReadUInt32();
-
-                Console.WriteLine("ChunkOffset " + entry.ChunkOffset);
             }
 
             if (ChunkEntries.Count > 0)

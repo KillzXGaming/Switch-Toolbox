@@ -222,6 +222,9 @@ namespace Toolbox.Library.Forms
                 ((TreeNodeCustom)node).OnClick(treeViewCustom1);
             }
 
+            if (node.Tag != null && node.Tag is TreeNodeCustom)
+                ((TreeNodeCustom)node.Tag).OnClick(treeViewCustom1);
+
             //Check if it is renderable for updating the viewport
             if (IsRenderable(node))
             {

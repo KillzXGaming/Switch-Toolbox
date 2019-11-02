@@ -24,8 +24,6 @@ namespace FirstPlugin.LuigisMansion3
     public enum IndexFormat : ushort
     {
         Index_16 = 0x0,
-        Index_32 = 0x1,
-        Index_32_ = 0x2,
         Index_8 = 0x8000,
     }
 

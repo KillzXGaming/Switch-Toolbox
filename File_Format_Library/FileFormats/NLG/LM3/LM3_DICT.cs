@@ -272,14 +272,16 @@ namespace FirstPlugin.LuigisMansion3
                                 currentTexture.Index = ImageHeaderIndex;
                                 currentTexture.Read(textureReader);
                                 if (DebugMode)
-                                    currentTexture.Text = $"Texture {ImageHeaderIndex} {currentTexture.TexFormat.ToString("X")} {currentTexture.Unknown.ToString("X")}";
+                                    currentTexture.Text = $"Texture {ImageHeaderIndex} {currentTexture.Unknown} {currentTexture.Unknown2} {currentTexture.Unknown3.ToString("X")}";
                                 else
                                     currentTexture.Text = $"Texture {currentTexture.ID2.ToString("X")}";
 
                                 if (HashNames.ContainsKey(currentTexture.ID2))
                                     currentTexture.Text = HashNames[currentTexture.ID2];
+
                                 textureFolder.Nodes.Add(currentTexture);
-                                Renderer.TextureList.Add(currentTexture);
+                                if (!Renderer.TextureList.ContainsKey(currentTexture.ID2.ToString("x")))
+                                    Renderer.TextureList.Add(currentTexture.ID2.ToString("x"), currentTexture);
 
                                 TextureHashes.Add(currentTexture.ID2);
 
@@ -360,7 +362,7 @@ namespace FirstPlugin.LuigisMansion3
                         case SubDataType.BoneData:
                             if (chunk.ChunkSize > 0x40 && currentModel.Skeleton == null)
                             {
-                                /*     chunkEntry.DataFile = File052Data;
+                                     chunkEntry.DataFile = File052Data;
                                   using (var boneReader = new FileReader(chunkEntry.FileData))
                                   {
                                   currentModel.Skeleton = new STSkeleton();
@@ -389,7 +391,7 @@ namespace FirstPlugin.LuigisMansion3
 
                                       currentModel.Skeleton.reset();
                                       currentModel.Skeleton.update();  
-                            }*/
+                                  }
                             }
                             break;
                         case (SubDataType)0x5012:
@@ -421,7 +423,7 @@ namespace FirstPlugin.LuigisMansion3
                 foreach (var model in modelFolder.Nodes)
                 {
                     ((LM3_Model)currentModel).ModelInfo.Read(new FileReader(
-                        currentModel.ModelInfo.Data), currentModel.Meshes, TextureHashes);
+                        currentModel.ModelInfo.Data), currentModel, currentModel.Meshes, TextureHashes);
                 }
 
                 if (havokFolder.Nodes.Count > 0)
@@ -532,7 +534,7 @@ namespace FirstPlugin.LuigisMansion3
                 {
                     if (Entry.ChunkSize == 0)
                         return new System.IO.MemoryStream();
-                    else if (Entry.ChunkOffset + Entry.ChunkSize < DataFile?.Length)
+                    else if (Entry.ChunkOffset + Entry.ChunkSize <= DataFile?.Length)
                         return new SubStream(DataFile, Entry.ChunkOffset, Entry.ChunkSize);
                     else
                         return new System.IO.MemoryStream();
@@ -670,7 +672,7 @@ namespace FirstPlugin.LuigisMansion3
                         }
                         else if (DecompressedSize == 0)
                             return new System.IO.MemoryStream();
-                        else if (Offset + DecompressedSize < reader.BaseStream.Length)
+                        else if (Offset + DecompressedSize <= reader.BaseStream.Length)
                             return new SubStream(reader.BaseStream, Offset, DecompressedSize);
                     }
                 }

@@ -200,6 +200,40 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             currentModel.BufferStart = chunkEntry.Entry.ChunkOffset;
                             currentModel.BufferSize = chunkEntry.Entry.ChunkSize;
                             break;
+                        case SubDataType.BoneData:
+                            if (chunk.ChunkSize > 0x40 && currentModel.Skeleton == null)
+                            {
+                                using (var boneReader = new FileReader(chunkEntry.FileData))
+                                {
+                                    currentModel.Skeleton = new STSkeleton();
+                                    DrawableContainer.Drawables.Add(currentModel.Skeleton);
+
+                                    uint numBones = chunk.ChunkSize / 68;
+                                    for (int i = 0; i < numBones; i++)
+                                    {
+                                        boneReader.SeekBegin(i * 68);
+                                        STBone bone = new STBone(currentModel.Skeleton);
+                                        bone.position = new float[3] { 0, 0, 0 };
+                                        bone.rotation = new float[4] { 0, 0, 0, 1 };
+                                        bone.scale = new float[3] { 0.2f, 0.2f, 0.2f };
+
+                                        boneReader.SeekBegin(52 + (i * 68));
+                                        var Position = new OpenTK.Vector3(boneReader.ReadSingle(), boneReader.ReadSingle(), boneReader.ReadSingle());
+                                        Position = OpenTK.Vector3.TransformPosition(Position, OpenTK.Matrix4.CreateRotationX(OpenTK.MathHelper.DegreesToRadians(90)));
+                                        bone.position[0] = Position.X;
+                                        bone.position[2] = Position.Y;
+                                        bone.position[1] = Position.Z;
+
+
+                                        bone.RotationType = STBone.BoneRotationType.Euler;
+                                        currentModel.Skeleton.bones.Add(bone);
+                                    }
+
+                                    currentModel.Skeleton.reset();
+                                    currentModel.Skeleton.update();
+                                }
+                            }
+                            break;
                         case SubDataType.VertexStartPointers:
                             using (var vtxPtrReader = new FileReader(chunkEntry.FileData))
                             {
