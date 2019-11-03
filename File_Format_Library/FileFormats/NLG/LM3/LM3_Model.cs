@@ -297,10 +297,6 @@ namespace FirstPlugin.LuigisMansion3
                                 for (int f = 0; f < mesh.IndexCount; f++)
                                     polyGroup.faces.Add(reader.ReadUInt16());
                                 break;
-                            case IndexFormat.Index_16_0x2:
-                                for (int f = 0; f < mesh.IndexCount * 4; f++)
-                                    polyGroup.faces.Add(reader.ReadUInt16());
-                                break;
                                 /*   case IndexFormat.Index_32:
                                        for (int f = 0; f < mesh.IndexCount; f++)
                                            polyGroup.faces.Add((int)reader.ReadUInt32());
@@ -624,10 +620,17 @@ namespace FirstPlugin.LuigisMansion3
 
             HashID = reader.ReadUInt32();
             IndexStartOffset = reader.ReadUInt32();
-            IndexCount = reader.ReadUInt32();
+            uint indexFlags = reader.ReadUInt32();
+            IndexCount = (indexFlags & 0xffffff);
+            uint type = (indexFlags >> 24);
+            if (type == 0x80)
+                IndexFormat = IndexFormat.Index_8;
+            else
+                IndexFormat = IndexFormat.Index_16;
+
+            Console.WriteLine($"type {type} indexFlags {indexFlags} IndexCount {IndexCount}");
             //  IndexFormat = reader.ReadEnum<IndexFormat>(false);
             //  if (IndexFormat != (IndexFormat)0x8000 && IndexFormat != 0 && IndexFormat != IndexFormat.Index_16_0x2)
-            IndexFormat = IndexFormat.Index_16;
 
             VertexCount = reader.ReadUInt32(); 
             reader.ReadUInt32(); //unknown
