@@ -63,7 +63,7 @@ namespace FirstPlugin.LuigisMansion3
             }
         }
 
-        public static bool DebugMode = true;
+        public static bool DebugMode = false;
 
         public List<ChunkDataEntry> chunkEntries = new List<ChunkDataEntry>();
 
@@ -387,7 +387,7 @@ namespace FirstPlugin.LuigisMansion3
                             chunkEntry.DataFile = File053Data;
                             break;
                         case SubDataType.BoneData:
-                            if (chunk.ChunkSize > 0x40 && currentModel.Skeleton == null)
+                       /*     if (chunk.ChunkSize > 0x40 && currentModel.Skeleton == null)
                             {
                                 chunkEntry.DataFile = File052Data;
                                 using (var boneReader = new FileReader(chunkEntry.FileData))
@@ -425,7 +425,7 @@ namespace FirstPlugin.LuigisMansion3
                                     currentModel.Skeleton.reset();
                                     currentModel.Skeleton.update();
                                 }
-                            }
+                            }*/
                             break;
                         case (SubDataType)0x5012:
                         case (SubDataType)0x5013:
