@@ -445,7 +445,7 @@ namespace FirstPlugin.LuigisMansion3
             reader.Position = 0;
 
             var meshSize = reader.BaseStream.Length / model.Meshes.Count;
-
+            Console.WriteLine($"meshSize {meshSize}");
             for (int i = 0; i < model.Meshes.Count; i++)
             {
                 reader.SeekBegin(i * meshSize);
@@ -454,7 +454,6 @@ namespace FirstPlugin.LuigisMansion3
                     uint HashIDCheck = reader.ReadUInt32();
                     if (Hashes.Contains(HashIDCheck))
                     {
-                        Console.WriteLine("HashCheck " + HashIDCheck);
                         model.Meshes[i].Material = new LM3_Material();
                         var texUnit = 1;
                         model.Meshes[i].Material.TextureMaps.Add(new STGenericMatTexture()

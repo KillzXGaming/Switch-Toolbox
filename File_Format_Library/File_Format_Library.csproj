@@ -213,14 +213,15 @@
     <Compile Include="FileFormats\Archives\DARC.cs" />
     <Compile Include="FileFormats\Archives\DAT_Bayonetta.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
-    <Compile Include="FileFormats\Archives\LM2\LM2_Material.cs" />
-    <Compile Include="FileFormats\Archives\LM3\LM3_ChunkTable.cs" />
-    <Compile Include="FileFormats\Archives\LM3\LM3_DICT.cs" />
-    <Compile Include="FileFormats\Archives\LM3\LM3_Enums.cs" />
-    <Compile Include="FileFormats\Archives\LM3\LM3_Material.cs" />
-    <Compile Include="FileFormats\Archives\LM3\LM3_Model.cs" />
-    <Compile Include="FileFormats\Archives\LM3\TexturePOWE.cs" />
+    <Compile Include="FileFormats\NLG\LM2\LM2_Material.cs" />
+    <Compile Include="FileFormats\NLG\LM3\LM3_ChunkTable.cs" />
+    <Compile Include="FileFormats\NLG\LM3\LM3_DICT.cs" />
+    <Compile Include="FileFormats\NLG\LM3\LM3_Enums.cs" />
+    <Compile Include="FileFormats\NLG\LM3\LM3_Material.cs" />
+    <Compile Include="FileFormats\NLG\LM3\LM3_Model.cs" />
+    <Compile Include="FileFormats\NLG\LM3\TexturePOWE.cs" />
     <Compile Include="FileFormats\Archives\PKZ.cs" />
+    <Compile Include="FileFormats\NLG\PunchOutWii\PO_DICT.cs" />
     <Compile Include="FileFormats\Archives\VIBS.cs" />
     <Compile Include="FileFormats\Audio\Archives\AudioCommon.cs" />
     <Compile Include="FileFormats\Collision\KclMonoscript.cs" />
@@ -243,11 +244,11 @@
     <Compile Include="FileFormats\HyruleWarriors\G1T\G1TFile.cs" />
     <Compile Include="FileFormats\HyruleWarriors\HWBinGzResource.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGA_PAK.cs" />
-    <Compile Include="FileFormats\Archives\LM2\LM2_ChunkTable.cs" />
-    <Compile Include="FileFormats\Archives\LM2\LM2_DICT.cs" />
-    <Compile Include="FileFormats\Archives\LM2\LM2_Enums.cs" />
-    <Compile Include="FileFormats\Archives\LM2\LM2_Model.cs" />
-    <Compile Include="FileFormats\Archives\LM2\TexturePOWE.cs" />
+    <Compile Include="FileFormats\NLG\LM2\LM2_ChunkTable.cs" />
+    <Compile Include="FileFormats\NLG\LM2\LM2_DICT.cs" />
+    <Compile Include="FileFormats\NLG\LM2\LM2_Enums.cs" />
+    <Compile Include="FileFormats\NLG\LM2\LM2_Model.cs" />
+    <Compile Include="FileFormats\NLG\LM2\TexturePOWE.cs" />
     <Compile Include="FileFormats\Archives\LZARC.cs" />
     <Compile Include="FileFormats\Archives\ME01.cs" />
     <Compile Include="FileFormats\Archives\MKGPDX_PAC.cs" />
@@ -1872,6 +1873,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FileFormats\EvemtFlow\" />
+    <Folder Include="FileFormats\NLG\MarioStrikers\" />
     <Folder Include="GUI\Byaml\MuuntEditor\Renderables\" />
   </ItemGroup>
   <ItemGroup>
