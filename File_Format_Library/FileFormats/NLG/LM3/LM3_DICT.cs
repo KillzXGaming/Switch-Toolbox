@@ -63,7 +63,7 @@ namespace FirstPlugin.LuigisMansion3
             }
         }
 
-        public static bool DebugMode = false;
+        public static bool DebugMode = true;
 
         public List<ChunkDataEntry> chunkEntries = new List<ChunkDataEntry>();
 
@@ -82,21 +82,24 @@ namespace FirstPlugin.LuigisMansion3
 
         public static Dictionary<uint, string> HashNames = new Dictionary<uint, string>();
 
+
+
         public List<string> StringList = new List<string>();
         private void LoadHashes()
         {
             foreach (string hashStr in Properties.Resources.LM3_Hashes.Split('\n'))
             {
-                //This hash txt includes a hash and then the string path after seperated by a comma
-                //The game does not store actual strings in the exefs so it's impossible to get the original names
-                //Instead I use a text file with user generated names based on the texture for easier searching
-                string[] hashes = hashStr.Split(',');
-                if (hashes.Length != 2) continue;
-
-                uint hash = 0;
-                uint.TryParse(hashes[0], System.Globalization.NumberStyles.HexNumber, null, out hash);
+                uint hash = (uint)NLG_Common.StringToHash(hashStr);
                 if (!HashNames.ContainsKey(hash))
-                    HashNames.Add(hash, hashes[1]);
+                    HashNames.Add(hash, hashStr);
+
+                string[] hashPaths = hashStr.Split('/');
+                for (int i = 0; i < hashPaths?.Length; i++)
+                {
+                    hash = (uint)NLG_Common.StringToHash(hashPaths[i]);
+                    if (!HashNames.ContainsKey(hash))
+                        HashNames.Add(hash, hashStr);
+                }
             }
         }
 
@@ -205,7 +208,7 @@ namespace FirstPlugin.LuigisMansion3
                                 {
                                     list2.Nodes.Add($"ChunkType 0x{chunk.ChunkType.ToString("X")} Size {chunk.ChunkSize}   Offset {chunk.ChunkOffset}");
                                 }
-                            }
+                            }   
                         }
                     }
                 }
@@ -233,6 +236,23 @@ namespace FirstPlugin.LuigisMansion3
 
                 //Image data block
                 var File065Data = fileEntries[65].GetData();
+
+                //Get a list of chunk hashes
+
+                List<uint> ModelHashes = new List<uint>();
+                for (int i = 0; i < ChunkTable.ChunkEntries.Count; i++)
+                {
+                    if (ChunkTable.ChunkEntries[i].ChunkType == DataType.Model)
+                    {
+                        using (var chunkReader = new FileReader(File052Data, true))
+                        {
+                            chunkReader.SeekBegin(ChunkTable.ChunkEntries[i].ChunkOffset);
+                            uint magic = chunkReader.ReadUInt32();
+                            uint hash = chunkReader.ReadUInt32();
+                            ModelHashes.Add(hash);
+                        }
+                    }
+                }
 
                 //Set an instance of our current data
                 //Chunks are in order, so you build off of when an instance gets loaded
@@ -298,6 +318,13 @@ namespace FirstPlugin.LuigisMansion3
                             currentModel.ModelInfo = new LM3_ModelInfo();
                             currentModel.Text = $"Model {modelIndex}";
                             currentModel.ModelInfo.Data = chunkEntry.FileData.ToBytes();
+                            if (ModelHashes.Count > modelIndex)
+                            {
+                                currentModel.Text = $"Model {modelIndex} {ModelHashes[(int)modelIndex].ToString("x")}";
+                                if (HashNames.ContainsKey(ModelHashes[(int)modelIndex]))
+                                    currentModel.Text = HashNames[ModelHashes[(int)modelIndex]];
+                            }
+
                             modelIndex++;
                             break;
                         case SubDataType.MeshBuffers:
@@ -360,39 +387,45 @@ namespace FirstPlugin.LuigisMansion3
                             chunkEntry.DataFile = File053Data;
                             break;
                         case SubDataType.BoneData:
-                         /*   if (chunk.ChunkSize > 0x40 && currentModel.Skeleton == null)
+                            if (chunk.ChunkSize > 0x40 && currentModel.Skeleton == null)
                             {
-                                     chunkEntry.DataFile = File052Data;
-                                  using (var boneReader = new FileReader(chunkEntry.FileData))
-                                  {
-                                  currentModel.Skeleton = new STSkeleton();
-                                      DrawableContainer.Drawables.Add(currentModel.Skeleton);
+                                chunkEntry.DataFile = File052Data;
+                                using (var boneReader = new FileReader(chunkEntry.FileData))
+                                {
+                                    currentModel.Skeleton = new STSkeleton();
+                                    DrawableContainer.Drawables.Add(currentModel.Skeleton);
 
-                                      uint numBones = chunk.ChunkSize / 0x40;
-                                      for (int i = 0; i < numBones; i++)
-                                      {
-                                          boneReader.SeekBegin(i * 0x40);
-                                          STBone bone = new STBone(currentModel.Skeleton);
-                                          bone.position = new float[3] { 0, 0, 0 };
-                                          bone.rotation = new float[4] { 0, 0, 0, 1 };
-                                          bone.scale = new float[3] { 0.2f, 0.2f, 0.2f };
+                                    uint numBones = chunk.ChunkSize / 0x40;
+                                    for (int i = 0; i < numBones; i++)
+                                    {
+                                        boneReader.SeekBegin(i * 0x40);
+                                        uint hash = boneReader.ReadUInt32();
 
-                                          boneReader.SeekBegin(48 + (i * 0x40));
-                                          var Position = new OpenTK.Vector3(boneReader.ReadSingle(), boneReader.ReadSingle(), boneReader.ReadSingle());
-                                          Position = OpenTK.Vector3.TransformPosition(Position, OpenTK.Matrix4.CreateRotationX(OpenTK.MathHelper.DegreesToRadians(90)));
-                                          bone.position[0] = Position.X;
-                                          bone.position[2] = Position.Y;
-                                          bone.position[1] = Position.Z;
+                                        STBone bone = new STBone(currentModel.Skeleton);
+                                        bone.Text = hash.ToString("x");
+                                        if (HashNames.ContainsKey(hash))
+                                            bone.Text = HashNames[hash];
+                                        bone.position = new float[3] { 0, 0, 0 };
+                                        bone.rotation = new float[4] { 0, 0, 0, 1 };
+                                        bone.scale = new float[3] { 0.2f, 0.2f, 0.2f };
 
 
-                                          bone.RotationType = STBone.BoneRotationType.Euler;
-                                          currentModel.Skeleton.bones.Add(bone);
-                                      }
+                                        boneReader.SeekBegin(48 + (i * 0x40));
+                                        var Position = new OpenTK.Vector3(boneReader.ReadSingle(), boneReader.ReadSingle(), boneReader.ReadSingle());
+                                        Position = OpenTK.Vector3.TransformPosition(Position, OpenTK.Matrix4.CreateRotationX(OpenTK.MathHelper.DegreesToRadians(90)));
+                                        bone.position[0] = Position.X;
+                                        bone.position[2] = Position.Y;
+                                        bone.position[1] = Position.Z;
 
-                                      currentModel.Skeleton.reset();
-                                      currentModel.Skeleton.update();  
-                                  }
-                            }*/
+
+                                        bone.RotationType = STBone.BoneRotationType.Euler;
+                                        currentModel.Skeleton.bones.Add(bone);
+                                    }
+
+                                    currentModel.Skeleton.reset();
+                                    currentModel.Skeleton.update();
+                                }
+                            }
                             break;
                         case (SubDataType)0x5012:
                         case (SubDataType)0x5013:

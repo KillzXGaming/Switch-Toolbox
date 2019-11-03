@@ -1337,5 +1337,11 @@ namespace Toolbox
                 STFileSaver.BatchFileTable(folderDlg.SelectedPath);
             }
         }
+
+        private void hashCalculatorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HashCalculatorForm form = new HashCalculatorForm();
+            form.Show(this);
+        }
     }
 }

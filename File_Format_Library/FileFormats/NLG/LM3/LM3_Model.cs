@@ -187,7 +187,7 @@ namespace FirstPlugin.LuigisMansion3
         {
             //Note if a pointer is not used, it will be 0xFFFFF
 
-            public uint WeightTablePointer;
+            public uint WeightTablePointer = uint.MaxValue;
             public uint VertexBufferPointer;
             public uint IndexBufferPointer;
             public uint IndexBufferPointer2;
@@ -214,6 +214,11 @@ namespace FirstPlugin.LuigisMansion3
             using (var reader = new FileReader(DataDictionary.GetFileBufferData()))
             {
                 TreeNode texturesList = new TreeNode("Texture Maps");
+                TreeNode skeletonNode = new TreeNode("Skeleton");
+                for (int t = 0; t < Skeleton?.bones.Count; t++) {
+                    skeletonNode.Nodes.Add(Skeleton.bones[t]);
+                }
+
                 for (int t = 0; t < TextureHashes.Count; t++)
                 {
                     if (DataDictionary.Renderer.TextureList.ContainsKey(TextureHashes[t].ToString("x")))
@@ -229,6 +234,9 @@ namespace FirstPlugin.LuigisMansion3
                     else
                         Nodes.Add(TextureHashes[t].ToString("x"));
                 }
+
+                if (skeletonNode.Nodes.Count > 0)
+                    Nodes.Add(skeletonNode);
 
                 if (texturesList.Nodes.Count > 0)
                     Nodes.Add(texturesList);
@@ -255,6 +263,7 @@ namespace FirstPlugin.LuigisMansion3
                     genericObj.PolygonGroups.Add(polyGroup);
 
                     uint vertexBufferPointer = VertexBufferPointers[i].VertexBufferPointer;
+                    uint weightTablePointer = VertexBufferPointers[i].WeightTablePointer;
 
                     using (reader.TemporarySeek(BufferStart + vertexBufferPointer, System.IO.SeekOrigin.Begin))
                     {
@@ -387,6 +396,26 @@ namespace FirstPlugin.LuigisMansion3
                         genericObj.TransformPosition(new Vector3(0), new Vector3(-90, 0, 0), new Vector3(1));
                     }
 
+                    if (weightTablePointer != uint.MaxValue)
+                    {
+                        using (reader.TemporarySeek(BufferStart + weightTablePointer, System.IO.SeekOrigin.Begin))
+                        {
+                            byte maxIndex = 0;
+                            for (int v = 0; v < genericObj.vertices.Count; v++)
+                            {
+                                byte[] boneIndices = reader.ReadBytes(4);
+                                float[] boneWeights = reader.ReadSingles(4);
+
+                                for (int j = 0; j < 4; j++) {
+                                    maxIndex = Math.Max(maxIndex, boneIndices[j]);
+                                    genericObj.vertices[v].boneIds.Add(boneIndices[j]);
+                                    genericObj.vertices[v].boneWeights.Add(boneWeights[j]);
+                                }
+                            }
+
+                            Console.WriteLine("maxIndex " + maxIndex);
+                        }
+                    }
 
                     genericObj.RemoveDuplicateVertices();
                 }
@@ -435,6 +464,7 @@ namespace FirstPlugin.LuigisMansion3
             while (!reader.EndOfStream && reader.Position < reader.BaseStream.Length - 4)
             {
                 uint HashIDCheck = reader.ReadUInt32();
+
                 if (Hashes.Contains(HashIDCheck))
                 {
                     if (!model.TextureHashes.Contains(HashIDCheck))
@@ -445,7 +475,6 @@ namespace FirstPlugin.LuigisMansion3
             reader.Position = 0;
 
             var meshSize = reader.BaseStream.Length / model.Meshes.Count;
-            Console.WriteLine($"meshSize {meshSize}");
             for (int i = 0; i < model.Meshes.Count; i++)
             {
                 reader.SeekBegin(i * meshSize);

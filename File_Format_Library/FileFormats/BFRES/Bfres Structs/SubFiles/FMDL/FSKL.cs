@@ -300,6 +300,81 @@ namespace Bfres.Structs
                             BfresSwitch.ReadSkeleton(this, Skeleton, fskl);
                         }
                     }
+                    if (extension == ".csv")
+                    {
+                        using (var reader = new System.IO.StringReader(System.IO.File.ReadAllText(ofd.FileName)))
+                        {
+                            string value = reader.ReadLine();
+                            if (value != "Bones Geometry")
+                                return;
+
+                            float X = 0;
+                            float Y = 0;
+                            float Z = 0;
+                            float W = 0;
+                            while (true)
+                            {
+                                string line = reader.ReadLine();
+                                if (line != null)
+                                {
+                                    foreach (BfresBone bone in fskl.bones)
+                                    {
+                                        if (bone.Text == line)
+                                        {
+                                            string name = line;
+                                            string scaleStr = reader.ReadLine();
+                                            string rotationStr = reader.ReadLine();
+                                            string translationStr = reader.ReadLine();
+
+                                            string[] valuesS = scaleStr.Replace("\n", "").Replace("\r", "").Split(',');
+                                            string[] valuesR = rotationStr.Replace("\n", "").Replace("\r", "").Split(',');
+                                            string[] valuesT = translationStr.Replace("\n", "").Replace("\r", "").Split(',');
+
+                                            Syroot.Maths.Vector3F translate;
+                                            Syroot.Maths.Vector3F scale;
+                                            Syroot.Maths.Vector4F rotate;
+
+                                            float.TryParse(valuesT[0], out X);
+                                            float.TryParse(valuesT[1], out Y);
+                                            float.TryParse(valuesT[2], out Z);
+                                            translate = new Syroot.Maths.Vector3F(X,Y,Z);
+
+                                            float.TryParse(valuesR[0], out X);
+                                            float.TryParse(valuesR[1], out Y);
+                                            float.TryParse(valuesR[2], out Z);
+                                            float.TryParse(valuesR[3], out W);
+                                            rotate = new Syroot.Maths.Vector4F(X, Y, Z,W);
+
+                                            float.TryParse(valuesS[0], out X);
+                                            float.TryParse(valuesS[1], out Y);
+                                            float.TryParse(valuesS[2], out Z);
+                                            scale = new Syroot.Maths.Vector3F(X, Y, Z);
+
+                                            if (bone.BoneU != null) {
+                                                bone.BoneU.Position = translate;
+                                                bone.BoneU.Scale = scale;
+                                                bone.BoneU.Rotation = rotate;
+                                            }
+                                            else {
+                                                bone.Bone.Position = translate;
+                                                bone.Bone.Scale = scale;
+                                                bone.Bone.Rotation = rotate;
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                    break;
+                            }
+
+                            if (SkeletonU != null)
+                                BfresWiiU.ReadSkeleton(this, SkeletonU, fskl);
+                            else
+                                BfresSwitch.ReadSkeleton(this, Skeleton, fskl);
+
+                            LibraryGUI.UpdateViewport();
+                        }
+                    }
                 }
             }
 
@@ -369,6 +444,11 @@ namespace Bfres.Structs
                         BfresSwitch.ReadSkeleton(this, Skeleton, fskl);
                     }
                 }
+            }
+
+            private void SwapFromCsv()
+            {
+
             }
 
             public ResFile GetResFile()

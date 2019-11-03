@@ -110,6 +110,12 @@
     <Compile Include="GUI\GithubUpdateDialog.Designer.cs">
       <DependentUpon>GithubUpdateDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\HashCalculatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\HashCalculatorForm.Designer.cs">
+      <DependentUpon>HashCalculatorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\NodeWrappers.cs" />
     <Compile Include="GUI\PluginManager.cs">
       <SubType>Form</SubType>
@@ -151,6 +157,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\GithubUpdateDialog.resx">
       <DependentUpon>GithubUpdateDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\HashCalculatorForm.resx">
+      <DependentUpon>HashCalculatorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PluginManager.resx">
       <DependentUpon>PluginManager.cs</DependentUpon>
