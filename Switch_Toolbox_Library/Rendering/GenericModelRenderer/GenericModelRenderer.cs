@@ -429,6 +429,10 @@ namespace Toolbox.Library.Rendering
                     {
                         DrawModelSelection(group, shader);
                     }
+                    else if (Runtime.RenderModelWireframe)
+                    {
+                        DrawModelWireframe(group, shader);
+                    }
                     else
                     {
                         if (Runtime.RenderModels)
@@ -453,6 +457,10 @@ namespace Toolbox.Library.Rendering
                 {
                     DrawModelSelection(m, shader);
                 }
+                else if (Runtime.RenderModelWireframe)
+                {
+                    DrawModelWireframe(m, shader);
+                }
                 else
                 {
                     if (Runtime.RenderModels)
@@ -462,6 +470,30 @@ namespace Toolbox.Library.Rendering
                 }
             }
 
+        }
+
+        private static void DrawModelWireframe(STGenericObject p, ShaderProgram shader)
+        {
+            // use vertex color for wireframe color
+            shader.SetInt("colorOverride", 1);
+            GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
+            GL.Enable(EnableCap.LineSmooth);
+            GL.LineWidth(1.5f);
+            GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            shader.SetInt("colorOverride", 0);
+        }
+
+        private static void DrawModelWireframe(STGenericPolygonGroup p, ShaderProgram shader)
+        {
+            // use vertex color for wireframe color
+            shader.SetInt("colorOverride", 1);
+            GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
+            GL.Enable(EnableCap.LineSmooth);
+            GL.LineWidth(1.5f);
+            GL.DrawElements(PrimitiveType.Triangles, p.displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            shader.SetInt("colorOverride", 0);
         }
 
 

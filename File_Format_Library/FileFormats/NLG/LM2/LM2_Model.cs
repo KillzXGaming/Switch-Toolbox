@@ -151,6 +151,15 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         {
             Nodes.Clear();
 
+            TreeNode skeletonNode = new TreeNode("Skeleton");
+            for (int t = 0; t < Skeleton?.bones.Count; t++) {
+                if (Skeleton.bones[t].Parent == null)
+                    skeletonNode.Nodes.Add(Skeleton.bones[t]);
+            }
+
+            if (skeletonNode.Nodes.Count > 0)
+                Nodes.Add(skeletonNode);
+
             using (var reader = new FileReader(DataDictionary.GetFile003Data()))
             {
                 for (int i = 0; i < VertexBufferPointers.Count; i++)

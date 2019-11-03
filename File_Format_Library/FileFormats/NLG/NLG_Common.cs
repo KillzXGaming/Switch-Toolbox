@@ -2,12 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
+using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
     public class NLG_Common
     {
+        public static void PrintHashIdBin()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                using (var reader = new FileReader(ofd.FileName))
+                {
+                    reader.SetByteOrder(true);
+                    uint numHashes = reader.ReadUInt32();
+                    uint stringTblPos = (numHashes * 8) + 4;
+                    for (int i = 0; i < numHashes; i++)
+                    {
+                        uint hash = reader.ReadUInt32();
+                        uint offset = reader.ReadUInt32();
+                        using (reader.TemporarySeek(stringTblPos + offset, System.IO.SeekOrigin.Begin))
+                        {
+                            string name = reader.ReadZeroTerminatedString();
+                            Console.WriteLine(name);
+                        }
+                    }
+                }
+            }
+        }
+
         public static uint StringToHash(string name, bool caseSensative = false)
         {
             //From (Works as tested comparing hashbin strings/hashes

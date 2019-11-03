@@ -12,6 +12,8 @@ namespace FirstPlugin.LuigisMansion3
 {
     public class TexturePOWE : STGenericTexture
     {
+        public long DataOffset;
+
         public static readonly uint Identifier = 0xE977D350;
 
         public uint Index { get; set; }
@@ -82,6 +84,10 @@ namespace FirstPlugin.LuigisMansion3
             //         throw new Exception($"Invalid texture header magic! Expected {Identifier.ToString("x")}. Got {Identifier.ToString("x")}");
             //     ID = reader.ReadUInt32();
 
+            CanReplace = true;
+            CanRename = false;
+            CanDelete = false;
+
             ID2 = reader.ReadUInt32();
             Width = reader.ReadUInt16();
             Height = reader.ReadUInt16();
@@ -112,7 +118,11 @@ namespace FirstPlugin.LuigisMansion3
             properties.Format = Format;
         }
 
-        public override void OnClick(TreeView treeview)
+        public override void OnClick(TreeView treeview) {
+            UpdateEditor();
+        }
+
+        private void UpdateEditor()
         {
             ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
             if (editor == null)
@@ -127,11 +137,73 @@ namespace FirstPlugin.LuigisMansion3
             editor.LoadImage(this);
         }
 
-        public override bool CanEdit { get; set; } = false;
+        public override void Replace(string FileName)
+        {
+            var bntxFile = new BNTX();
+            var tex = new TextureData();
+            tex.Replace(FileName, MipCount, 0, Format);
+
+            //If it's null, the operation is cancelled
+            if (tex.Texture == null)
+                return;
+
+            var surfacesNew = tex.GetSurfaces();
+            var surfaces = GetSurfaces();
+
+            if (surfaces[0].mipmaps[0].Length != surfacesNew[0].mipmaps[0].Length)
+                throw new Exception($"Image must be the same size! {surfaces[0].mipmaps[0].Length}");
+
+            if (Width != tex.Texture.Width || Height != tex.Texture.Height)
+                throw new Exception("Image size must be the same!");
+
+            ImageData = tex.Texture.TextureData[0][0];
+
+            Width = tex.Texture.Width;
+            Height = tex.Texture.Height;
+            MipCount = tex.Texture.MipCount;
+
+            surfacesNew.Clear();
+            surfaces.Clear();
+
+            UpdateEditor();
+        }
+
+        public override bool CanEdit { get; set; } = true;
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
         {
-            throw new NotImplementedException();
+            var tex = new Syroot.NintenTools.NSW.Bntx.Texture();
+            tex.Height = (uint)bitmap.Height;
+            tex.Width = (uint)bitmap.Width;
+            tex.Format = TextureData.GenericToBntxSurfaceFormat(Format);
+            tex.Name = Text;
+            tex.Path = "";
+            tex.TextureData = new List<List<byte[]>>();
+
+            STChannelType[] channels = SetChannelsByFormat(Format);
+            tex.sparseBinding = 0; //false
+            tex.sparseResidency = 0; //false
+            tex.Flags = 0;
+            tex.Swizzle = 0;
+            tex.textureLayout = 0;
+            tex.Regs = new uint[0];
+            tex.AccessFlags = 0x20;
+            tex.ArrayLength = (uint)ArrayLevel;
+            tex.MipCount = MipCount;
+            tex.Depth = Depth;
+            tex.Dim = Syroot.NintenTools.NSW.Bntx.GFX.Dim.Dim2D;
+            tex.TileMode = Syroot.NintenTools.NSW.Bntx.GFX.TileMode.Default;
+            tex.textureLayout2 = 0x010007;
+            tex.SurfaceDim = Syroot.NintenTools.NSW.Bntx.GFX.SurfaceDim.Dim2D;
+            tex.SampleCount = 1;
+            tex.Pitch = 32;
+
+            tex.MipOffsets = new long[tex.MipCount];
+
+            var mipmaps = TextureImporterSettings.SwizzleSurfaceMipMaps(tex,
+                GenerateMipsAndCompress(bitmap, MipCount, Format), MipCount);
+
+            ImageData = Utils.CombineByteArray(mipmaps.ToArray());
         }
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
@@ -159,19 +231,25 @@ namespace FirstPlugin.LuigisMansion3
             {
                 return new TEX_FORMAT[]
                 {
-                    TEX_FORMAT.B5G6R5_UNORM,
-                    TEX_FORMAT.R8G8_UNORM,
-                    TEX_FORMAT.B5G5R5A1_UNORM,
-                    TEX_FORMAT.B4G4R4A4_UNORM,
-                    TEX_FORMAT.LA8,
-                    TEX_FORMAT.HIL08,
-                    TEX_FORMAT.L8,
-                    TEX_FORMAT.A8_UNORM,
-                    TEX_FORMAT.LA4,
-                    TEX_FORMAT.A4,
-                    TEX_FORMAT.ETC1_UNORM,
-                    TEX_FORMAT.ETC1_A4,
-            };
+                TEX_FORMAT.R8G8B8A8_UNORM,
+                TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
+                TEX_FORMAT.BC1_UNORM,
+                TEX_FORMAT.BC1_UNORM_SRGB,
+                TEX_FORMAT.BC2_UNORM,
+                TEX_FORMAT.BC3_UNORM,
+                TEX_FORMAT.BC4_UNORM,
+                TEX_FORMAT.BC5_SNORM,
+                TEX_FORMAT.BC6H_UF16,
+                TEX_FORMAT.BC7_UNORM,
+                TEX_FORMAT.ASTC_4x4_UNORM,
+                TEX_FORMAT.ASTC_5x4_UNORM,
+                TEX_FORMAT.ASTC_5x5_UNORM,
+                TEX_FORMAT.ASTC_6x5_UNORM,
+                TEX_FORMAT.ASTC_6x6_UNORM,
+                TEX_FORMAT.ASTC_8x5_UNORM,
+                TEX_FORMAT.ASTC_8x6_UNORM,
+                TEX_FORMAT.ASTC_8x8_UNORM,
+                };
             }
         }
     }

@@ -134,7 +134,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                             }
                             foreach (var chunk in ChunkTable.ChunkSubEntries)
                             {
-                                list2.Nodes.Add($"ChunkType {chunk.ChunkType} ChunkSize {chunk.ChunkSize}   Unknown {chunk.ChunkOffset}");
+                                list2.Nodes.Add($"ChunkType {chunk.ChunkType} ChunkSize {chunk.ChunkSize} ChunkOffset {chunk.ChunkOffset}");
                             }
                         }
                     }
@@ -153,6 +153,8 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
                 byte[] File002Data = fileEntries[2].GetData(); //Get the third file 
                 byte[] File003Data = fileEntries[3].GetData(); //Get the fourth file
+
+                LuigisMansion3.LM3_DICT.LoadHashes();
 
                 int chunkId = 0;
                 uint ImageHeaderIndex = 0;
@@ -212,7 +214,13 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                     for (int i = 0; i < numBones; i++)
                                     {
                                         boneReader.SeekBegin(i * 68);
+                                        uint hash = boneReader.ReadUInt32();
+
                                         STBone bone = new STBone(currentModel.Skeleton);
+                                        bone.Text = hash.ToString("X");
+                                        if (LuigisMansion3.LM3_DICT.HashNames.ContainsKey(hash))
+                                            bone.Text = LuigisMansion3.LM3_DICT.HashNames[hash];
+
                                         bone.position = new float[3] { 0, 0, 0 };
                                         bone.rotation = new float[4] { 0, 0, 0, 1 };
                                         bone.scale = new float[3] { 0.2f, 0.2f, 0.2f };
@@ -265,6 +273,43 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                         currentModel.Meshes[i].Transform = transformReader.ReadMatrix4();
                                 }
                             }
+                            break;
+                        case SubDataType.BoneHashes:
+                            using (var chunkReader = new FileReader(chunkEntry.FileData))
+                            {
+                                while (chunkReader.Position <= chunkReader.BaseStream.Length - 4)
+                                {
+                                    uint hash = chunkReader.ReadUInt32();
+
+                                    string strHash = hash.ToString("X");
+                                    if (LuigisMansion3.LM3_DICT.HashNames.ContainsKey(hash))
+                                        strHash = LuigisMansion3.LM3_DICT.HashNames[hash];
+
+                                    Console.WriteLine("Hash! T " + strHash);
+                                }
+                            }
+                            break;
+                        case (SubDataType)0x12017105:
+                            using (var chunkReader = new FileReader(chunkEntry.FileData))
+                            {
+                                while (chunkReader.Position <= chunkReader.BaseStream.Length - 8)
+                                {
+                                    uint hash = chunkReader.ReadUInt32();
+                                    uint unk = chunkReader.ReadUInt32();
+
+                                    string strHash = hash.ToString("X");
+                                    if (LuigisMansion3.LM3_DICT.HashNames.ContainsKey(hash))
+                                        strHash = LuigisMansion3.LM3_DICT.HashNames[hash];
+
+                                    foreach (var bone in currentModel.Skeleton.bones) {
+                                        if (bone.Text == strHash)
+                                        {
+                                        }
+                                    }
+                                }
+                            }
+                            currentModel.Skeleton.reset();
+                            currentModel.Skeleton.update();
                             break;
                         case SubDataType.MaterialName:
                             using (var matReader = new FileReader(chunkEntry.FileData))

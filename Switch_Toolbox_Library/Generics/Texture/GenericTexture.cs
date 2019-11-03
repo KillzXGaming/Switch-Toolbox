@@ -793,13 +793,12 @@ namespace Toolbox.Library
             {
                 if (IsAtscFormat(Format))
                 {
-                    return "Supported Formats|*.dds; *.png;*.tga;*.jpg;*.tiff;*.astc|" +
-                                "Microsoft DDS |*.dds|" +
+                    return "Supported Formats|*.astc; *.png;*.tga;*.jpg;*.tiff|" +
+                                "ASTC |*.astc|" +
                                 "Portable Network Graphics |*.png|" +
                                 "Joint Photographic Experts Group |*.jpg|" +
                                 "Bitmap Image |*.bmp|" +
                                 "Tagged Image File Format |*.tiff|" +
-                                "ASTC |*.astc|" +
                                 "All files(*.*)|*.*";
                 }
                 else

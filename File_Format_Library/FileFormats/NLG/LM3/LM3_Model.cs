@@ -297,10 +297,14 @@ namespace FirstPlugin.LuigisMansion3
                                 for (int f = 0; f < mesh.IndexCount; f++)
                                     polyGroup.faces.Add(reader.ReadUInt16());
                                 break;
-                         /*   case IndexFormat.Index_32:
-                                for (int f = 0; f < mesh.IndexCount; f++)
-                                    polyGroup.faces.Add((int)reader.ReadUInt32());
-                                break;*/
+                            case IndexFormat.Index_16_0x2:
+                                for (int f = 0; f < mesh.IndexCount * 4; f++)
+                                    polyGroup.faces.Add(reader.ReadUInt16());
+                                break;
+                                /*   case IndexFormat.Index_32:
+                                       for (int f = 0; f < mesh.IndexCount; f++)
+                                           polyGroup.faces.Add((int)reader.ReadUInt32());
+                                       break;*/
                         }
 
                         Console.WriteLine($"Mesh {genericObj.Text} Format {formatInfo.Format} BufferLength {formatInfo.BufferLength}");
@@ -596,7 +600,7 @@ namespace FirstPlugin.LuigisMansion3
     public class LM3_Mesh
     {
         public uint IndexStartOffset { get; private set; } //relative to buffer start
-        public ushort IndexCount { get; private set; } //divide by 3 to get face count
+        public uint IndexCount { get; private set; } //divide by 3 to get face count
         public IndexFormat IndexFormat { get; private set; } //0x0 - ushort, 0x8000 - byte
 
         public ushort BufferPtrOffset { get; private set; }
@@ -620,10 +624,10 @@ namespace FirstPlugin.LuigisMansion3
 
             HashID = reader.ReadUInt32();
             IndexStartOffset = reader.ReadUInt32();
-            IndexCount = reader.ReadUInt16();
-            IndexFormat = reader.ReadEnum<IndexFormat>(false);
-            if (IndexFormat != (IndexFormat)0x8000 && IndexFormat != 0)
-                IndexFormat = IndexFormat.Index_16;
+            IndexCount = reader.ReadUInt32();
+            //  IndexFormat = reader.ReadEnum<IndexFormat>(false);
+            //  if (IndexFormat != (IndexFormat)0x8000 && IndexFormat != 0 && IndexFormat != IndexFormat.Index_16_0x2)
+            IndexFormat = IndexFormat.Index_16;
 
             VertexCount = reader.ReadUInt32(); 
             reader.ReadUInt32(); //unknown

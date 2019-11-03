@@ -33,6 +33,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         ModelTransform        = 0x1301B001, //Matrix4x4. 0x40 in size
         MeshBuffers           = 0x1301B005, //vertex and index buffer
         BoneData              = 0x1201B102,
+        BoneHashes            = 0x1201B103,
         MaterialName          = 0x1201B333,
         MeshIndexTable        = 0x1201B007,
         MessageData           = 0x12027020,
