@@ -221,6 +221,7 @@
     <Compile Include="FileFormats\NLG\LM3\LM3_Model.cs" />
     <Compile Include="FileFormats\NLG\LM3\TexturePOWE.cs" />
     <Compile Include="FileFormats\Archives\PKZ.cs" />
+    <Compile Include="FileFormats\NLG\NLG_Common.cs" />
     <Compile Include="FileFormats\NLG\PunchOutWii\PO_DICT.cs" />
     <Compile Include="FileFormats\Archives\VIBS.cs" />
     <Compile Include="FileFormats\Audio\Archives\AudioCommon.cs" />
