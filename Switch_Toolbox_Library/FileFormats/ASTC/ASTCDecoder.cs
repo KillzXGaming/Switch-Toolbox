@@ -8,7 +8,7 @@ namespace Ryujinx.Graphics.Gal.Texture
 {
     public class ASTCDecoderException : Exception
     {
-        public ASTCDecoderException(string ExMsg) : base(ExMsg) { Toolbox.Library.Forms.STErrorDialog.Show(ExMsg, "", ExMsg); }
+        public ASTCDecoderException(string ExMsg) : base(ExMsg) {/* Toolbox.Library.Forms.STErrorDialog.Show(ExMsg, "", ExMsg);*/ }
     }
 
     //https://github.com/GammaUNC/FasTC/blob/master/ASTCEncoder/src/Decompressor.cpp
@@ -67,12 +67,12 @@ namespace Ryujinx.Graphics.Gal.Texture
 
                 if (BlockX > 12 || BlockY > 12)
                 {
-                    throw new ASTCDecoderException("Block size unsupported!");
+                    throw new Exception("Block size unsupported!");
                 }
 
                 if (BlockZ != 1 || Z != 1)
                 {
-                    throw new ASTCDecoderException("3D compressed textures unsupported!");
+                    throw new Exception("3D compressed textures unsupported!");
                 }
 
                 using (MemoryStream OutputStream = new MemoryStream())
@@ -121,7 +121,7 @@ namespace Ryujinx.Graphics.Gal.Texture
 
             if (TexelParams.Error)
             {
-                throw new ASTCDecoderException("Invalid block mode");
+                throw new Exception("Invalid block mode");
             }
 
           //  Console.WriteLine($"BlockWidth {BlockWidth} {BlockHeight} BlockHeight");
@@ -136,17 +136,17 @@ namespace Ryujinx.Graphics.Gal.Texture
 
             if (TexelParams.VoidExtentHDR)
             {
-                throw new ASTCDecoderException("HDR void extent blocks are unsupported!");
+                throw new Exception("HDR void extent blocks are unsupported!");
             }
 
             if (TexelParams.Width > BlockWidth)
             {
-                throw new ASTCDecoderException("Texel weight grid width should be smaller than block width");
+                throw new Exception("Texel weight grid width should be smaller than block width");
             }
 
             if (TexelParams.Height > BlockHeight)
             {
-                throw new ASTCDecoderException("Texel weight grid height should be smaller than block height");
+                throw new Exception("Texel weight grid height should be smaller than block height");
             }
 
             // Read num partitions
@@ -155,7 +155,7 @@ namespace Ryujinx.Graphics.Gal.Texture
 
             if (NumberPartitions == 4 && TexelParams.DualPlane)
             {
-                throw new ASTCDecoderException("Dual plane mode is incompatible with four partition blocks");
+                throw new Exception("Dual plane mode is incompatible with four partition blocks");
             }
 
             // Based on the number of partitions, read the color endpoint mode for

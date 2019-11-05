@@ -114,11 +114,12 @@ namespace Toolbox.Library.Rendering
             TexID = GenerateOpenGLTexture(this, bitmap);
         }
 
+        private bool IsFailedState = false;
         private bool UseMipmaps = false;
         private bool UseOpenGLDecoder = true;
         public void LoadOpenGLTexture(STGenericTexture GenericTexture, int ArrayStartIndex = 0, bool LoadArrayLevels = false)
         {
-            if (!Runtime.OpenTKInitialized || GLInitialized || Runtime.UseLegacyGL)
+            if (!Runtime.OpenTKInitialized || GLInitialized || Runtime.UseLegacyGL || IsFailedState)
                 return;
 
             width = (int)GenericTexture.Width;
@@ -162,25 +163,27 @@ namespace Toolbox.Library.Rendering
                 GenericTexture.ArrayCount = 1;
 
             List<STGenericTexture.Surface> Surfaces = new List<STGenericTexture.Surface>();
-            if (UseMipmaps && GenericTexture.ArrayCount <= 1)
+            try
             {
-                //Load surfaces with mip maps
-                Surfaces = GenericTexture.GetSurfaces(ArrayStartIndex, false, 6);
-            }
-            else
-            {
-                //Only load first mip level. Will be generated after
-                for (int i = 0; i < GenericTexture.ArrayCount; i++)
+                if (UseMipmaps && GenericTexture.ArrayCount <= 1)
                 {
-                    if (i >= ArrayStartIndex && i <= ArrayStartIndex + 6) //Only load up to 6 faces
+                    //Load surfaces with mip maps
+                    Surfaces = GenericTexture.GetSurfaces(ArrayStartIndex, false, 6);
+                }
+                else
+                {
+                    //Only load first mip level. Will be generated after
+                    for (int i = 0; i < GenericTexture.ArrayCount; i++)
                     {
-                        Surfaces.Add(new STGenericTexture.Surface()
+                        if (i >= ArrayStartIndex && i <= ArrayStartIndex + 6) //Only load up to 6 faces
                         {
-                            mipmaps = new List<byte[]>() { GenericTexture.GetImageData(i, 0) }
-                        });
+                            Surfaces.Add(new STGenericTexture.Surface()
+                            {
+                                mipmaps = new List<byte[]>() { GenericTexture.GetImageData(i, 0) }
+                            });
+                        }
                     }
                 }
-            }
 
             if (Surfaces.Count == 0 || Surfaces[0].mipmaps[0].Length == 0)
                 return;
@@ -238,6 +241,14 @@ namespace Toolbox.Library.Rendering
             }
 
             Surfaces.Clear();
+
+            }
+            catch
+            {
+                IsFailedState = true;
+                GLInitialized = false;
+                return;
+            }
         }
 
         static bool IsPow2(int Value)
