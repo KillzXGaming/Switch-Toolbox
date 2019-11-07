@@ -371,7 +371,7 @@ namespace LayoutBXLYT
 
         private void treeView1_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(PaneTreeWrapper)))
+         /*   if (e.Data.GetDataPresent(typeof(PaneTreeWrapper)))
             {
                 Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
                 TreeNode NodeOver = treeView1.GetNodeAt(targetPoint);
@@ -400,11 +400,11 @@ namespace LayoutBXLYT
                         }
                     }
                 }
-            }
+            }*/
 
             #endregion
 
-            /*
+            
             if (e.Data.GetDataPresent(typeof(PaneTreeWrapper)))
             {
                 Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
@@ -467,7 +467,7 @@ namespace LayoutBXLYT
 
                     ParentEditor.UpdateViewport();
                 }
-            }*/
+            }
         }
 
         private void treeView1_DragEnter(object sender, DragEventArgs e)
