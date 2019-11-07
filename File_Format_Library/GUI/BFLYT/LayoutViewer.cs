@@ -471,7 +471,7 @@ namespace LayoutBXLYT
                 else if (pane is IBoundryPane)
                 {
                     shader.Enable();
-                    shader.SetBasic(pane);
+                    shader.SetBasic(pane, Color.White);
                     BxlytToGL.DrawBoundryPane(pane, GameWindow, effectiveAlpha, isSelected);
                     shader.Disable();
                 }
@@ -549,7 +549,7 @@ namespace LayoutBXLYT
                 return;
 
             shader.Enable();
-            shader.SetBasic(pane);
+            shader.SetBasic(pane, Color.Black);
 
             Vector2[] TexCoords = new Vector2[] {
                 new Vector2(1,1),
@@ -558,7 +558,7 @@ namespace LayoutBXLYT
                 new Vector2(1,0)
                 };
 
-            Color color = Color.White;
+            Color color = Color.Black;
             if (SelectedPanes.Contains(pane))
                 color = Color.Red;
 

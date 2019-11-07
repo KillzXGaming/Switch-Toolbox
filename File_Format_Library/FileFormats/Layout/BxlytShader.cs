@@ -45,12 +45,12 @@ namespace LayoutBXLYT
             get
             {
                 StringBuilder vert = new StringBuilder();
-                vert.AppendLine("uniform mat4 globalTransform;");
+                vert.AppendLine("uniform mat4 rotationMatrix;");
                 vert.AppendLine("void main()");
                 vert.AppendLine("{");
                 {
                     vert.AppendLine("gl_FrontColor = gl_Color;");
-                    vert.AppendLine("gl_Position = gl_ModelViewProjectionMatrix * globalTransform * gl_Vertex;");
+                    vert.AppendLine("gl_Position = gl_ModelViewProjectionMatrix * rotationMatrix * gl_Vertex;");
                 }
                 vert.AppendLine("}");
                 return vert.ToString();
@@ -61,10 +61,11 @@ namespace LayoutBXLYT
             get
             {
                 StringBuilder vert = new StringBuilder();
+                vert.AppendLine("uniform vec4 color");
                 vert.AppendLine("void main()");
                 vert.AppendLine("{");
                 {
-                    vert.AppendLine("gl_FragColor = gl_Color;");
+                    vert.AppendLine("gl_FragColor = gl_Color * color;");
                 }
                 vert.AppendLine("}");
                 return vert.ToString();
@@ -72,10 +73,11 @@ namespace LayoutBXLYT
         }
 
         //For non material panes
-        public void SetBasic(BasePane pane)
+        public void SetBasic(BasePane pane, Color color)
         {
             var rotationMatrix = pane.GetRotationMatrix();
             SetMatrix("rotationMatrix", ref rotationMatrix);
+            SetColor("color", color);
         }
 
         public void SetVec4(string name, Vector4 value)
