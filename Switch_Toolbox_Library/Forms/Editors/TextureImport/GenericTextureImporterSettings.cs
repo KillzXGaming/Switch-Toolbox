@@ -139,7 +139,7 @@ namespace Toolbox.Library.Forms
         }
 
 
-        public List<byte[]> GenerateMipList(STCompressionMode CompressionMode, int SurfaceLevel = 0)
+        public List<byte[]> GenerateMipList(STCompressionMode CompressionMode, bool multiThread, int SurfaceLevel = 0)
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
 
@@ -153,14 +153,14 @@ namespace Toolbox.Library.Forms
                     Image = BitmapExtension.Resize(Image, MipWidth, MipHeight);
 
                 mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
-                    Image.Width, Image.Height, Format, alphaRef, CompressionMode));
+                    Image.Width, Image.Height, Format, alphaRef, multiThread, CompressionMode));
             }
             Image.Dispose();
 
             return mipmaps;
         }
 
-        public byte[] GenerateMips(STCompressionMode CompressionMode, int SurfaceLevel = 0)
+        public byte[] GenerateMips(STCompressionMode CompressionMode, bool multiThread, int SurfaceLevel = 0)
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
 
@@ -174,20 +174,20 @@ namespace Toolbox.Library.Forms
                     Image = BitmapExtension.Resize(Image, MipWidth, MipHeight);
 
                 mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
-                    Image.Width, Image.Height, Format, alphaRef, CompressionMode));
+                    Image.Width, Image.Height, Format, alphaRef, multiThread, CompressionMode));
             }
             Image.Dispose();
 
             return Utils.CombineByteArray(mipmaps.ToArray());
         }
 
-        public void Compress(STCompressionMode CompressionMode)
+        public void Compress(STCompressionMode CompressionMode, bool multiThread)
         {
             DataBlockOutput.Clear();
             foreach (var surface in DecompressedData)
             {
                 DataBlockOutput.Add(STGenericTexture.CompressBlock(surface,
-                    (int)TexWidth, (int)TexHeight, Format, alphaRef, CompressionMode));
+                    (int)TexWidth, (int)TexHeight, Format, alphaRef, multiThread, CompressionMode));
             }
         }
     }

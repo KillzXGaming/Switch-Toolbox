@@ -558,7 +558,7 @@ namespace Toolbox.Library
             }
             catch (Exception ex)
             {
-                Forms.STErrorDialog.Show($"Texture failed to load!", "Texture [GetBitmap({MipLevel},{ArrayLevel})]", DebugInfo() + " \n" + ex);
+         /*       Forms.STErrorDialog.Show($"Texture failed to load!", "Texture [GetBitmap({MipLevel},{ArrayLevel})]", DebugInfo() + " \n" + ex);
 
                 try
                 {
@@ -567,7 +567,7 @@ namespace Toolbox.Library
                 catch
                 {
                     Forms.STErrorDialog.Show($"Texture failed to load!", "Texture [GetBitmap({MipLevel},{ArrayLevel})]", DebugInfo() + " \n" + ex);
-                }
+                }*/
 
                 return null;
             }
@@ -724,7 +724,7 @@ namespace Toolbox.Library
             return MipmapNum;
         }
 
-        public static byte[] GenerateMipsAndCompress(Bitmap bitmap, uint MipCount, TEX_FORMAT Format, float alphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Fast)
+        public static byte[] GenerateMipsAndCompress(Bitmap bitmap, uint MipCount, TEX_FORMAT Format, bool multiThread = false, float alphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Fast)
         {
             byte[] DecompressedData = BitmapExtension.ImageToByte(bitmap);
             DecompressedData = ConvertBgraToRgba(DecompressedData);
@@ -739,20 +739,20 @@ namespace Toolbox.Library
 
                 Image = BitmapExtension.Resize(Image, width, height);
                 mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
-                    Image.Width, Image.Height, Format, alphaRef, CompressionMode));
+                    Image.Width, Image.Height, Format, alphaRef, multiThread, CompressionMode));
             }
             Image.Dispose();
 
             return Utils.CombineByteArray(mipmaps.ToArray());
         }
 
-        public static byte[] CompressBlock(byte[] data, int width, int height, TEX_FORMAT format, float alphaRef, STCompressionMode CompressionMode = STCompressionMode.Fast)
+        public static byte[] CompressBlock(byte[] data, int width, int height, TEX_FORMAT format, float alphaRef, bool multiThread = false, STCompressionMode CompressionMode = STCompressionMode.Fast)
         {
             if (!Runtime.UseDirectXTexDecoder)
                 return data;
 
             if (IsCompressed(format))
-                return DDSCompressor.CompressBlock(data, width, height, (DDS.DXGI_FORMAT)format, alphaRef, CompressionMode);
+                return DDSCompressor.CompressBlock(data, width, height, (DDS.DXGI_FORMAT)format, multiThread, alphaRef, CompressionMode);
             else if (IsAtscFormat(format))
                 return null;
             else

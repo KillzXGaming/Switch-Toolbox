@@ -51,6 +51,7 @@
             this.compModeLbl = new Toolbox.Library.Forms.STLabel();
             this.dataSizeLbl = new Toolbox.Library.Forms.STLabel();
             this.cnkGammaFix = new Toolbox.Library.Forms.STCheckBox();
+            this.chkMultiThreading = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SwizzleNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).BeginInit();
@@ -59,6 +60,7 @@
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.chkMultiThreading);
             this.contentContainer.Controls.Add(this.cnkGammaFix);
             this.contentContainer.Controls.Add(this.dataSizeLbl);
             this.contentContainer.Controls.Add(this.compressionModeCB);
@@ -100,6 +102,7 @@
             this.contentContainer.Controls.SetChildIndex(this.compressionModeCB, 0);
             this.contentContainer.Controls.SetChildIndex(this.dataSizeLbl, 0);
             this.contentContainer.Controls.SetChildIndex(this.cnkGammaFix, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkMultiThreading, 0);
             // 
             // button2
             // 
@@ -321,6 +324,17 @@
             this.cnkGammaFix.UseVisualStyleBackColor = true;
             this.cnkGammaFix.CheckedChanged += new System.EventHandler(this.cnkGammaFix_CheckedChanged);
             // 
+            // chkMultiThreading
+            // 
+            this.chkMultiThreading.AutoSize = true;
+            this.chkMultiThreading.Location = new System.Drawing.Point(754, 322);
+            this.chkMultiThreading.Name = "chkMultiThreading";
+            this.chkMultiThreading.Size = new System.Drawing.Size(124, 17);
+            this.chkMultiThreading.TabIndex = 33;
+            this.chkMultiThreading.Text = "Use Multi Threading ";
+            this.chkMultiThreading.UseVisualStyleBackColor = true;
+            this.chkMultiThreading.CheckedChanged += new System.EventHandler(this.chkMultiThreading_CheckedChanged);
+            // 
             // BinaryTextureImporterList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -362,5 +376,6 @@
         private Toolbox.Library.Forms.STLabel dataSizeLbl;
         private Toolbox.Library.Forms.STLabel compModeLbl;
         private Toolbox.Library.Forms.STCheckBox cnkGammaFix;
+        private Toolbox.Library.Forms.STCheckBox chkMultiThreading;
     }
 }

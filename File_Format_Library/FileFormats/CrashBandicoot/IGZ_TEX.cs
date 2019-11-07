@@ -143,7 +143,7 @@ namespace FirstPlugin
                     if (settings.GenerateMipmaps && !settings.IsFinishedCompressing)
                     {
                         settings.DataBlockOutput.Clear();
-                        settings.DataBlockOutput.Add(settings.GenerateMips(importer.CompressionMode));
+                        settings.DataBlockOutput.Add(settings.GenerateMips(importer.CompressionMode, importer.MultiThreading));
                     }
 
                     ApplySettings(settings);

@@ -21,6 +21,8 @@ namespace FirstPlugin
         public int SelectedIndex = -1;
         public bool ForceMipCount = false;
 
+        public bool MultiThreading => chkMultiThreading.Checked;
+
         public uint SelectedMipCount
         {
             set
@@ -176,7 +178,7 @@ namespace FirstPlugin
 
                 pictureBox1.Image = bitmap;
 
-                var mips = setting.GenerateMipList(CompressionMode);
+                var mips = setting.GenerateMipList(CompressionMode, MultiThreading);
                 setting.DataBlockOutput.Clear();
                 setting.DataBlockOutput.Add(Utils.CombineByteArray(mips.ToArray()));
 
@@ -328,6 +330,12 @@ namespace FirstPlugin
             if (SelectedTexSettings != null)
             {
                 SelectedTexSettings.GammaFix = cnkGammaFix.Checked;
+                SetupSettings(SelectedTexSettings);
+            }
+        }
+
+        private void chkMultiThreading_CheckedChanged(object sender, EventArgs e) {
+            if (SelectedTexSettings != null) {
                 SetupSettings(SelectedTexSettings);
             }
         }

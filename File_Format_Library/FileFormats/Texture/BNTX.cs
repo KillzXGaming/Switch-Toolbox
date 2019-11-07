@@ -673,7 +673,7 @@ namespace FirstPlugin
                 if (setting.GenerateMipmaps && !setting.IsFinishedCompressing)
                 {
                     setting.DataBlockOutput.Clear();
-                    setting.DataBlockOutput.Add(setting.GenerateMips(CompressionMode));
+                    setting.DataBlockOutput.Add(setting.GenerateMips(CompressionMode, false));
                 }
                 if (setting.DataBlockOutput.Count <= 0)
                     throw new Exception("Data block is empty! Failed to compress!");
@@ -902,11 +902,11 @@ namespace FirstPlugin
                                 case ".dds":
                                 case ".dds2":
                                     setting.LoadDDS(file, null, node);
-                                    node.ApplyImportSettings(setting, STCompressionMode.Normal);
+                                    node.ApplyImportSettings(setting, STCompressionMode.Normal, false);
                                     break;
                                 case ".astc":
                                     setting.LoadASTC(file);
-                                    node.ApplyImportSettings(setting, STCompressionMode.Normal);
+                                    node.ApplyImportSettings(setting, STCompressionMode.Normal, false);
                                     break;
                                 case ".png":
                                 case ".tga":
@@ -940,7 +940,7 @@ namespace FirstPlugin
                 if (importer.ShowDialog() == DialogResult.OK)
                 {
                     foreach (TextureData node in TexturesForImportSettings)
-                        node.ApplyImportSettings(settings[settingsIndex++], importer.CompressionMode);
+                        node.ApplyImportSettings(settings[settingsIndex++], importer.CompressionMode, importer.MultiThreading);
                 }
 
                 TexturesForImportSettings.Clear();
@@ -1482,11 +1482,11 @@ namespace FirstPlugin
                     break;
                 case ".dds":
                     setting.LoadDDS(FileName, null, this);
-                    ApplyImportSettings(setting, STCompressionMode.Normal);
+                    ApplyImportSettings(setting, STCompressionMode.Normal, false);
                     break;
                 case ".astc":
                     setting.LoadASTC(FileName);
-                    ApplyImportSettings(setting, STCompressionMode.Normal);
+                    ApplyImportSettings(setting, STCompressionMode.Normal, false);
                     break;
                 default:
                     setting.LoadBitMap(FileName);
@@ -1503,7 +1503,7 @@ namespace FirstPlugin
 
                     if (importer.ShowDialog() == DialogResult.OK)
                     {
-                        ApplyImportSettings(setting, importer.CompressionMode);
+                        ApplyImportSettings(setting, importer.CompressionMode, importer.MultiThreading);
                     }
                     break;
             }
@@ -1519,14 +1519,14 @@ namespace FirstPlugin
                     Texture.TextureData.Add(ImageDataCached[i]);
             }
         }
-        public void ApplyImportSettings(TextureImporterSettings setting,STCompressionMode CompressionMode)
+        public void ApplyImportSettings(TextureImporterSettings setting,STCompressionMode CompressionMode, bool multiThread)
         {
             Cursor.Current = Cursors.WaitCursor;
 
             if (setting.GenerateMipmaps && !setting.IsFinishedCompressing)
             {
                 setting.DataBlockOutput.Clear();
-                setting.DataBlockOutput.Add(setting.GenerateMips(CompressionMode));
+                setting.DataBlockOutput.Add(setting.GenerateMips(CompressionMode, multiThread));
             }
 
             Texture = setting.FromBitMap(setting.DataBlockOutput, setting);

@@ -17,6 +17,8 @@ namespace Toolbox.Library.Forms
         public int SelectedIndex = -1;
         public bool ForceMipCount = false;
 
+        public bool MultiThreading = false;
+
         public uint SelectedMipCount
         {
             set
@@ -126,7 +128,7 @@ namespace Toolbox.Library.Forms
 
                 pictureBox1.Image = bitmap;
 
-                var mips = SelectedTexSettings.GenerateMipList(CompressionMode);
+                var mips = SelectedTexSettings.GenerateMipList(CompressionMode, MultiThreading);
                 SelectedTexSettings.DataBlockOutput.Clear();
                 SelectedTexSettings.DataBlockOutput.Add(Utils.CombineByteArray(mips.ToArray()));
 

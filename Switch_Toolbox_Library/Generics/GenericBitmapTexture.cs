@@ -31,7 +31,7 @@ namespace Toolbox.Library
             Height = (uint)height;
 
             ImageData = DDSCompressor.CompressBlock(FileData, width, height,
-                DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
+                DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, false);
         }
 
         public GenericBitmapTexture(string FileName) {

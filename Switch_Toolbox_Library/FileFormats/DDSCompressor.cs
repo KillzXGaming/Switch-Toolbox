@@ -433,7 +433,7 @@ namespace Toolbox.Library
 
             return BitmapExtension.GetBitmap(Output, W * 4, H * 4);
         }
-        public static unsafe byte[] CompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, float AlphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Normal)
+        public static unsafe byte[] CompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, bool multiThread, float AlphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Normal)
         {
             long inputRowPitch = width * 4;
             long inputSlicePitch = width * height * 4;
@@ -455,7 +455,9 @@ namespace Toolbox.Library
                     new DirectXTexNet.Image[] { inputImage }, texMetadata, null);
 
                 var compFlags = TEX_COMPRESS_FLAGS.DEFAULT;
-              //  compFlags |= TEX_COMPRESS_FLAGS.PARALLEL;
+
+                if (multiThread)
+                    compFlags |= TEX_COMPRESS_FLAGS.PARALLEL;
 
                 if (format == DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM ||
                     format == DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB ||
