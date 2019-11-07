@@ -828,6 +828,7 @@ namespace LayoutBXLYT
                 var createPanes = new STToolStripItem("Create Pane");
                 createPanes.DropDownItems.Add(new STToolStripItem("Null Pane", CreateNullPaneAction));
                 createPanes.DropDownItems.Add(new STToolStripItem("Picture Pane", CreatePicturePaneAction));
+                createPanes.DropDownItems.Add(new STToolStripItem("Part Pane", CreatePartPaneAction));
                 createPanes.DropDownItems.Add(new STToolStripItem("Text Box Pane", CreateTextPaneAction));
                 createPanes.DropDownItems.Add(new STToolStripItem("Window Pane", CreateWindowPaneAction));
                 createPanes.DropDownItems.Add(new STToolStripItem("Boundry Pane", CreateBoundryPaneAction));
@@ -855,6 +856,11 @@ namespace LayoutBXLYT
             }
 
             Console.WriteLine("SelectedPanes " + SelectedPanes.Count);
+        }
+
+        private void CreatePartPaneAction(object sender, EventArgs e) {
+            var pane = ParentEditor.AddNewPartPane();
+            SetupNewPane(pane, pickOriginMouse);
         }
 
         private void CreateNullPaneAction(object sender, EventArgs e) {

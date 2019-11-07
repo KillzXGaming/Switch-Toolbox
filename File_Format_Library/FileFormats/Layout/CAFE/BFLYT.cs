@@ -1588,6 +1588,20 @@ namespace LayoutBXLYT.Cafe
 
             }
 
+            public PRT1(Header header, string name) : base() {
+                LoadDefaults();
+                Name = name;
+
+                layoutFile = header;
+
+                MagnifyX = 1;
+                MagnifyY = 1;
+
+                LayoutFileName = "";
+
+                 Properties = new List<PartProperty>();
+            }
+
             [DisplayName("Magnify X"), CategoryAttribute("Parts")]
             public float MagnifyX { get; set; }
 
@@ -1597,14 +1611,25 @@ namespace LayoutBXLYT.Cafe
             [DisplayName("Properties"), CategoryAttribute("Parts")]
             public List<PartProperty> Properties { get; set; }
 
+           private string layoutFilename;
+
             [DisplayName("External Layout File"), CategoryAttribute("Parts")]
-            public string LayoutFileName { get; set; }
+            public string LayoutFileName
+            {
+                get { return layoutFilename; }
+                set
+                {
+                    layoutFilename = value;
+                    ExternalLayout = null;
+                    hasSearchedParts = false;
+                }
+            }
 
             private BFLYT ExternalLayout;
 
             public BasePane GetExternalPane()
             {
-                if (hasSearchedParts) return null;
+                if (hasSearchedParts || LayoutFileName == string.Empty) return null;
 
                 if (ExternalLayout == null)
                     ExternalLayout = SearchExternalFile();

@@ -27,5 +27,10 @@ namespace LayoutBXLYT
 
             stTextBox1.Bind(pane, "LayoutFileName");
         }
+
+        private void stTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            ParentEditor.PropertyChanged?.Invoke(sender, e);
+        }
     }
 }

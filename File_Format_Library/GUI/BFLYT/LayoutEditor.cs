@@ -1103,6 +1103,21 @@ namespace LayoutBXLYT
             ActiveLayout.AddPane(pane, pane.Parent);
         }
 
+        public BasePane AddNewPartPane()
+        {
+            BasePane pane = null;
+            if (ActiveLayout is BFLYT.Header)
+                pane = new BFLYT.PRT1((BFLYT.Header)ActiveLayout, RenamePane("N_part"));
+
+            if (pane != null)
+            {
+                pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
+                ActiveLayout.AddPane(pane, ActiveLayout.RootPane);
+            }
+
+            return pane;
+        }
+
         public BasePane AddNewNullPane()
         {
             BasePane pane = null;

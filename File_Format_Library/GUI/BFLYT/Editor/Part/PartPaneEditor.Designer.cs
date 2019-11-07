@@ -50,6 +50,7 @@
             this.stTextBox1.Name = "stTextBox1";
             this.stTextBox1.Size = new System.Drawing.Size(186, 20);
             this.stTextBox1.TabIndex = 1;
+            this.stTextBox1.TextChanged += new System.EventHandler(this.stTextBox1_TextChanged);
             // 
             // listViewCustom1
             // 
@@ -57,6 +58,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewCustom1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewCustom1.HideSelection = false;
             this.listViewCustom1.Location = new System.Drawing.Point(3, 85);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
