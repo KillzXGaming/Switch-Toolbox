@@ -143,7 +143,12 @@ namespace Toolbox
 
                         if (hashes.Count == 0)
                         {
-                            progressBar.Close();
+                            if (progressBar.InvokeRequired)
+                            {
+                                progressBar.Invoke((MethodInvoker)delegate {
+                                    progressBar.Close();
+                                });
+                            }
                             return;
                         }
                     }
@@ -154,6 +159,11 @@ namespace Toolbox
                     // Add one: aaa -> aab -> ... aaz -> aba -> ... -> zzz
                     for (int i = length - 1; i >= 0; --i)
                         if (Sb[i] == ' ')
+                        {
+                            Sb[i] = '/';
+                            break;
+                        }
+                        else if (Sb[i] == '/')
                         {
                             if (UseUppercase)
                                 Sb[i] = 'A';
