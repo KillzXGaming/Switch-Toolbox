@@ -522,7 +522,7 @@ namespace FirstPlugin
 
                         subMeshNode.lodMeshes = new List<GenericRenderedObject.LOD_Mesh>();
                         var submsh = new GenericRenderedObject.LOD_Mesh();
-                        submsh.PrimitiveType = STPolygonType.Triangle;
+                        submsh.PrimativeType = STPrimativeType.Triangles;
                         submsh.FirstVertex = 0;
                         submsh.faces = subMesh.Faces;
                         subMeshNode.lodMeshes.Add(submsh);
@@ -717,7 +717,7 @@ namespace FirstPlugin
 
             public bool IsBone
             {
-                get { return Name.Contains("jnt") || Name.Contains("center"); }
+                get { return SubMeshes.Count == 0; }
             }
 
             public bool IsMesh
@@ -748,77 +748,41 @@ namespace FirstPlugin
 
                 if (SubMeshArrayOffsetPtr != 0)
                 {
-                    //4 possible sub meshes
-                    reader.SeekBegin(SubMeshArrayOffsetPtr);
-                    uint SubMeshArrayOffset1 = reader.ReadUInt32();
-                    uint SubMeshArrayOffset2 = reader.ReadUInt32();
-                    uint SubMeshArrayOffset3 = reader.ReadUInt32();
-                    uint SubMeshArrayOffset4 = reader.ReadUInt32();
-                    if (SubMeshArrayOffset1 != 0)
+                    int i = 0;
+                    while (true)
                     {
-                        reader.SeekBegin(SubMeshArrayOffset1);
-                        SubMesh subMesh = new SubMesh(this);
-                        subMesh.Read(reader);
-                        SubMeshes.Add(subMesh);
-                    }
-                    if (SubMeshArrayOffset2 != 0)
-                    {
-                        reader.SeekBegin(SubMeshArrayOffset2);
-                        SubMesh subMesh = new SubMesh(this);
-                        subMesh.Read(reader);
-                        SubMeshes.Add(subMesh);
-                    }
-                    if (SubMeshArrayOffset3 != 0)
-                    {
-                        reader.SeekBegin(SubMeshArrayOffset3);
-                        SubMesh subMesh = new SubMesh(this);
-                        subMesh.Read(reader);
-                        SubMeshes.Add(subMesh);
-                    }
-                    if (SubMeshArrayOffset4 != 0)
-                    {
-                        reader.SeekBegin(SubMeshArrayOffset4);
-                        SubMesh subMesh = new SubMesh(this);
-                        subMesh.Read(reader);
-                        SubMeshes.Add(subMesh);
+                        reader.SeekBegin((int)SubMeshArrayOffsetPtr + i * 4);
+
+                        uint SubMeshArrayOffset1 = reader.ReadUInt32();
+                        if (SubMeshArrayOffset1 == 0) break;
+
+                        if (SubMeshArrayOffset1 != 0)
+                        {
+                            reader.SeekBegin(SubMeshArrayOffset1);
+                            SubMesh subMesh = new SubMesh(this);
+                            subMesh.Read(reader);
+                            SubMeshes.Add(subMesh);
+                        }
+
+                        i++;
                     }
                 }
 
                 if (ChildNodeOffsetPtr != 0)
                 {
-                    //4 possible children
-                    reader.SeekBegin(ChildNodeOffsetPtr);
-                    uint ChildNodeOffset1 = reader.ReadUInt32();
-                    uint ChildNodeOffset2 = reader.ReadUInt32();
-                    uint ChildNodeOffset3 = reader.ReadUInt32();
-                    uint ChildNodeOffset4 = reader.ReadUInt32();
-                    if (ChildNodeOffset1 != 0)
+                    //4 possible sub meshes
+                    for (int i = 0; i < 4; i++)
                     {
-                        reader.SeekBegin(ChildNodeOffset1);
-                        Node ChildNode = new Node();
-                        ChildNode.Read(reader);
-                        Children.Add(ChildNode);
-                    }
-                    if (ChildNodeOffset2 != 0)
-                    {
-                        reader.SeekBegin(ChildNodeOffset2);
-                        Node ChildNode = new Node();
-                        ChildNode.Read(reader);
-                        Children.Add(ChildNode);
-                    }
-                    if (ChildNodeOffset3 != 0)
-                    {
-                        reader.SeekBegin(ChildNodeOffset3);
-                        Node ChildNode = new Node();
-                        ChildNode.Read(reader);
-                        Children.Add(ChildNode);
-                    }
-                    if (ChildNodeOffset4 != 0)
-                    {
-                        reader.SeekBegin(ChildNodeOffset4);
-                        Node ChildNode = new Node();
-                        ChildNode.Read(reader);
-                        Children.Add(ChildNode);
+                        reader.SeekBegin((int)ChildNodeOffsetPtr + i * 4);
+
+                        uint ChildNodeOffset1 = reader.ReadUInt32();
+                        if (ChildNodeOffset1 != 0)
+                        {
+                            reader.SeekBegin(ChildNodeOffset1);
+                            Node ChildNode = new Node();
+                            ChildNode.Read(reader);
+                            Children.Add(ChildNode);
+                        }
                     }
                 }
 

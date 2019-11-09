@@ -68,6 +68,7 @@ namespace Toolbox
         private bool CancelOperation = false;
 
         private bool UseSpeialcase => true;
+        private bool UseNumbered => chkSearchNumbered.Checked;
         private bool UseLowercase => true;
         private bool UseUppercase => searchUppercase.Checked;
 
@@ -135,10 +136,11 @@ namespace Toolbox
                 while (true && CancelOperation == false && hashes.Count > 0)
                 {
                     String value = Sb.ToString();
+
                     uint calculatedHash = StringToHash($"{characterStartTB.Text}{value}");
                     if (hashes.Contains(calculatedHash))
                     {
-                        UpdateTextbox($"[{calculatedHash}] {characterStartTB.Text}{value}");
+                        UpdateTextbox($"{characterStartTB.Text}{value}");
                         hashes.Remove(calculatedHash);
 
                         if (hashes.Count == 0)
@@ -153,6 +155,27 @@ namespace Toolbox
                         }
                     }
 
+                    foreach (var line in characterStartTB.Lines)
+                    {
+                        uint calculatedHash2 = StringToHash($"{line}{value}");
+                        if (hashes.Contains(calculatedHash2))
+                        {
+                            UpdateTextbox($"{line}{value}");
+                            hashes.Remove(calculatedHash2);
+
+                            if (hashes.Count == 0)
+                            {
+                                if (progressBar.InvokeRequired)
+                                {
+                                    progressBar.Invoke((MethodInvoker)delegate {
+                                        progressBar.Close();
+                                    });
+                                }
+                                return;
+                            }
+                        }
+                    }
+
                     if (value.All(item => item == lastChar))
                         break;
 
@@ -164,6 +187,28 @@ namespace Toolbox
                             break;
                         }
                         else if (Sb[i] == '/')
+                        {
+                            if (UseNumbered)
+                                Sb[i] = '0';
+                            else
+                            {
+                                if (UseUppercase)
+                                    Sb[i] = 'A';
+                                else
+                                    Sb[i] = 'a';
+                            }
+                            break;
+                        }
+                        else if (Sb[i] == '0') { Sb[i] = '1'; break; }
+                        else if (Sb[i] == '1') { Sb[i] = '2'; break; }
+                        else if (Sb[i] == '2') { Sb[i] = '3'; break; }
+                        else if (Sb[i] == '3') { Sb[i] = '4'; break; }
+                        else if (Sb[i] == '4') { Sb[i] = '5'; break; }
+                        else if (Sb[i] == '5') { Sb[i] = '6'; break; }
+                        else if (Sb[i] == '6') { Sb[i] = '7'; break; }
+                        else if (Sb[i] == '7') { Sb[i] = '8'; break; }
+                        else if (Sb[i] == '8') { Sb[i] = '9'; break; }
+                        else if (Sb[i] == '9')
                         {
                             if (UseUppercase)
                                 Sb[i] = 'A';
@@ -208,7 +253,10 @@ namespace Toolbox
             if (bruteForceStringTB.InvokeRequired)
             {
                 bruteForceStringTB.Invoke((MethodInvoker)delegate {
-                    bruteForceStringTB.AppendText(text);
+                    if (bruteForceStringTB.Text.Length == 0)
+                        bruteForceStringTB.Text = text;
+                    else
+                        bruteForceStringTB.AppendText("\r\n" + text);
                 });
             }
             else

@@ -36,6 +36,9 @@
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.chkUseHex = new Toolbox.Library.Forms.STCheckBox();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.chkSearchNumbered = new Toolbox.Library.Forms.STCheckBox();
+            this.characterStartTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel8 = new Toolbox.Library.Forms.STLabel();
             this.maxLengthUD = new Toolbox.Library.Forms.NumericUpDownUint();
             this.stLabel7 = new Toolbox.Library.Forms.STLabel();
             this.searchUppercase = new Toolbox.Library.Forms.STCheckBox();
@@ -45,8 +48,6 @@
             this.bruteForceHashTB = new Toolbox.Library.Forms.STTextBox();
             this.stLabel5 = new Toolbox.Library.Forms.STLabel();
             this.stLabel4 = new Toolbox.Library.Forms.STLabel();
-            this.characterStartTB = new Toolbox.Library.Forms.STTextBox();
-            this.stLabel8 = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             this.stPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.maxLengthUD)).BeginInit();
@@ -63,7 +64,7 @@
             this.contentContainer.Controls.Add(this.hashTypeCB);
             this.contentContainer.Controls.Add(this.resultTB);
             this.contentContainer.Controls.Add(this.stringTB);
-            this.contentContainer.Size = new System.Drawing.Size(624, 359);
+            this.contentContainer.Size = new System.Drawing.Size(704, 362);
             this.contentContainer.Controls.SetChildIndex(this.stringTB, 0);
             this.contentContainer.Controls.SetChildIndex(this.resultTB, 0);
             this.contentContainer.Controls.SetChildIndex(this.hashTypeCB, 0);
@@ -143,6 +144,7 @@
             // 
             // stPanel1
             // 
+            this.stPanel1.Controls.Add(this.chkSearchNumbered);
             this.stPanel1.Controls.Add(this.characterStartTB);
             this.stPanel1.Controls.Add(this.stLabel8);
             this.stPanel1.Controls.Add(this.maxLengthUD);
@@ -155,12 +157,40 @@
             this.stPanel1.Controls.Add(this.stLabel5);
             this.stPanel1.Location = new System.Drawing.Point(5, 100);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(610, 250);
+            this.stPanel1.Size = new System.Drawing.Size(690, 250);
             this.stPanel1.TabIndex = 18;
+            // 
+            // chkSearchNumbered
+            // 
+            this.chkSearchNumbered.AutoSize = true;
+            this.chkSearchNumbered.Location = new System.Drawing.Point(554, 188);
+            this.chkSearchNumbered.Name = "chkSearchNumbered";
+            this.chkSearchNumbered.Size = new System.Drawing.Size(112, 17);
+            this.chkSearchNumbered.TabIndex = 30;
+            this.chkSearchNumbered.Text = "Search Numbered";
+            this.chkSearchNumbered.UseVisualStyleBackColor = true;
+            // 
+            // characterStartTB
+            // 
+            this.characterStartTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.characterStartTB.Location = new System.Drawing.Point(381, 49);
+            this.characterStartTB.Multiline = true;
+            this.characterStartTB.Name = "characterStartTB";
+            this.characterStartTB.Size = new System.Drawing.Size(159, 156);
+            this.characterStartTB.TabIndex = 28;
+            // 
+            // stLabel8
+            // 
+            this.stLabel8.AutoSize = true;
+            this.stLabel8.Location = new System.Drawing.Point(378, 32);
+            this.stLabel8.Name = "stLabel8";
+            this.stLabel8.Size = new System.Drawing.Size(81, 13);
+            this.stLabel8.TabIndex = 29;
+            this.stLabel8.Text = "Starting String:s";
             // 
             // maxLengthUD
             // 
-            this.maxLengthUD.Location = new System.Drawing.Point(381, 97);
+            this.maxLengthUD.Location = new System.Drawing.Point(549, 133);
             this.maxLengthUD.Maximum = new decimal(new int[] {
             2147483647,
             0,
@@ -173,7 +203,7 @@
             // stLabel7
             // 
             this.stLabel7.AutoSize = true;
-            this.stLabel7.Location = new System.Drawing.Point(378, 81);
+            this.stLabel7.Location = new System.Drawing.Point(546, 105);
             this.stLabel7.Name = "stLabel7";
             this.stLabel7.Size = new System.Drawing.Size(116, 13);
             this.stLabel7.TabIndex = 26;
@@ -182,7 +212,7 @@
             // searchUppercase
             // 
             this.searchUppercase.AutoSize = true;
-            this.searchUppercase.Location = new System.Drawing.Point(386, 129);
+            this.searchUppercase.Location = new System.Drawing.Point(554, 165);
             this.searchUppercase.Name = "searchUppercase";
             this.searchUppercase.Size = new System.Drawing.Size(115, 17);
             this.searchUppercase.TabIndex = 24;
@@ -245,28 +275,11 @@
             this.stLabel4.TabIndex = 19;
             this.stLabel4.Text = "Brute Force:";
             // 
-            // characterStartTB
-            // 
-            this.characterStartTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.characterStartTB.Location = new System.Drawing.Point(381, 49);
-            this.characterStartTB.Name = "characterStartTB";
-            this.characterStartTB.Size = new System.Drawing.Size(159, 20);
-            this.characterStartTB.TabIndex = 28;
-            // 
-            // stLabel8
-            // 
-            this.stLabel8.AutoSize = true;
-            this.stLabel8.Location = new System.Drawing.Point(378, 32);
-            this.stLabel8.Name = "stLabel8";
-            this.stLabel8.Size = new System.Drawing.Size(76, 13);
-            this.stLabel8.TabIndex = 29;
-            this.stLabel8.Text = "Starting String:";
-            // 
             // HashCalculatorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 364);
+            this.ClientSize = new System.Drawing.Size(710, 367);
             this.Name = "HashCalculatorForm";
             this.Text = "Hash Calculator";
             this.contentContainer.ResumeLayout(false);
@@ -299,5 +312,6 @@
         private Library.Forms.NumericUpDownUint maxLengthUD;
         private Library.Forms.STTextBox characterStartTB;
         private Library.Forms.STLabel stLabel8;
+        private Library.Forms.STCheckBox chkSearchNumbered;
     }
 }
