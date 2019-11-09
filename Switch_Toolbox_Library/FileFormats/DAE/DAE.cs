@@ -16,6 +16,27 @@ namespace Toolbox.Library
 {
     public class DAE : DAEHelper
     {
+        public class ExportSettings
+        {
+            public Version FileVersion = new Version();
+        }
+
+        public class Version
+        {
+            public int Major = 1;
+            public int Minor = 4;
+            public int Micro = 1;
+        }
+
+        public static void Export(string fileName, ExportSettings exportSettings)
+        {
+            using (ColladaWriter writer = new ColladaWriter(fileName, exportSettings))
+            {
+
+            }
+        }
+
+
         public List<STGenericObject> objects = new List<STGenericObject>();
         public List<STGenericMaterial> materials = new List<STGenericMaterial>();
         public STSkeleton skeleton;

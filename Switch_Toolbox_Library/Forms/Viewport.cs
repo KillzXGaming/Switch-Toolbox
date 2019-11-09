@@ -248,11 +248,11 @@ namespace Toolbox.Library
             var skybox = new DrawableSkybox();
             var background = new DrawableBackground();
 
-            scene.staticObjects.Add(floor);
+        /*    scene.staticObjects.Add(floor);
             scene.staticObjects.Add(xyzLnes);
             scene.staticObjects.Add(skybox);
             scene.staticObjects.Add(background);
-
+            */
             //    scene.objects.Add(new SingleObject(new Vector3(0, 0, 0)));
 
             // LoadFog();

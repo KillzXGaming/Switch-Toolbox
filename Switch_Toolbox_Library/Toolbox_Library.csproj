@@ -247,6 +247,7 @@
     <Compile Include="Compression\Formats\Zlib.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Enums\CompressionType.cs" />
+    <Compile Include="FileFormats\DAE\DAE_Writer.cs" />
     <Compile Include="FileFormats\DDS\RGBAPixelDecoder.cs" />
     <Compile Include="FileSystem\VirtualFileTreeNode.cs" />
     <Compile Include="FileSystem\VirtualTreeNode.cs" />
@@ -399,6 +400,7 @@
     <Compile Include="OpenGL\IPickableObject.cs" />
     <Compile Include="OpenGL\OpenGL2DEnums.cs" />
     <Compile Include="OpenGL\Render2D.cs" />
+    <Compile Include="OpenGL\ShaderManager.cs" />
     <Compile Include="OpenGL\STRectangle.cs" />
     <Compile Include="OpenGL\Viewport2D.cs">
       <SubType>UserControl</SubType>
@@ -1389,6 +1391,7 @@
     <Folder Include="FileFormats\Compression\" />
     <Folder Include="FileFormats\DAE\COLLADA\" />
     <Folder Include="FileFormats\DAE\Custom\" />
+    <Folder Include="OpenGL\Engine\Camera\" />
     <Folder Include="Rendering\Shaders\" />
   </ItemGroup>
   <ItemGroup>
@@ -1495,6 +1498,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AnimationTrackW.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MissingTexture.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

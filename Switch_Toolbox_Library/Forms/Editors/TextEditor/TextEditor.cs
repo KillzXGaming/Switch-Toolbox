@@ -12,8 +12,15 @@ using ScintillaNET_FindReplaceDialog;
 
 namespace Toolbox.Library.Forms
 {
-    public partial class TextEditor : UserControl
+    public partial class TextEditor : UserControl, IFIleEditor
     {
+        public IFileFormat FileFormat;
+
+        public List<IFileFormat> GetFileFormats()
+        {
+            return new List<IFileFormat>() { FileFormat };
+        }
+
         FindReplace findReplaceDialog;
 
         private void ResetTypes()

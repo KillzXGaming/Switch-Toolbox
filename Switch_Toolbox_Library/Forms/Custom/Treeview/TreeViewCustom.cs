@@ -117,9 +117,15 @@ namespace Toolbox.Library
                     {
                         if (node is STGenericTexture)
                         {
-                            var image = ((STGenericTexture)node).GetBitmap();
-                            if (image != null)
-                                AddImageOnThread(image, node);
+                            try
+                            {
+                                var image = ((STGenericTexture)node).GetBitmap();
+                                if (image != null)
+                                    AddImageOnThread(image, node);
+                            }
+                            catch
+                            {
+                            }
                         }
                     }
                 }
@@ -129,9 +135,16 @@ namespace Toolbox.Library
                     if (SingleTextureIcons[i] == null || SingleTextureIcons[i].IconTexture == null)
                         continue;
 
-                    var image = SingleTextureIcons[i].IconTexture.GetBitmap();
-                    if (image != null)
-                        AddImageOnThread(image, SingleTextureIcons[i].IconTexture);
+                    try
+                    {
+                        var image = SingleTextureIcons[i].IconTexture.GetBitmap();
+                        if (image != null)
+                            AddImageOnThread(image, SingleTextureIcons[i].IconTexture);
+                    }
+                    catch
+                    {
+
+                    }
                 }
             }));
             Thread.Start();

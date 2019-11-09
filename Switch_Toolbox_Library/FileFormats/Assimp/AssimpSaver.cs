@@ -73,7 +73,9 @@ namespace Toolbox.Library
                 bool ExportSuccessScene = v.ExportFile(scene, FileName, formatID, PostProcessSteps.FlipUVs);
                 if (ExportSuccessScene)
                 {
-                    WriteExtraSkinningInfo(FileName, scene, Meshes);
+                     if (ext == ".dae")
+                        WriteExtraSkinningInfo(FileName, scene, Meshes);
+
                     MessageBox.Show($"Exported {FileName} Successfuly!");
                 }
                 else

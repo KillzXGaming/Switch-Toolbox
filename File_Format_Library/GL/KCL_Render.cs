@@ -140,6 +140,8 @@ namespace FirstPlugin
             }
         }
 
+        public GLShaderGeneric Shader;
+
         public ShaderProgram defaultShaderProgram;
         public ShaderProgram solidColorShaderProgram;
 
@@ -180,6 +182,12 @@ namespace FirstPlugin
 
                     gl_Position = mtxMdl * mtxCam  * vec4(vPosition.xyz, 1.0);
 				}");
+
+            Shader = new GLShaderGeneric()
+            {
+                FragmentShader = File.ReadAllText(pathFrag),
+                VertexShader = File.ReadAllText(pathVert),
+            };
 
             defaultShaderProgram = new ShaderProgram(defaultFrag, defaultVert, control);
             solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert, control);

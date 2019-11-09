@@ -42,6 +42,10 @@ namespace Toolbox.Library
                 uint compressedOffset = reader.ReadUInt32();
                 uint uncompressedOffset = reader.ReadUInt32();
 
+                while (output.Count < decompressedSize)
+                {
+
+                }
             }
 
             return output.ToArray();

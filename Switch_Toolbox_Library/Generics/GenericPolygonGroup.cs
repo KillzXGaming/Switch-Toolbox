@@ -6,6 +6,16 @@ using System.Threading.Tasks;
 
 namespace Toolbox.Library
 {
+    public enum STPrimativeType
+    {
+        Points = 0,
+        Lines = 1,
+        LineStrips = 2,
+        Triangles = 3,
+        TrangleStrips,
+        Quads,
+    }
+
     public class STGenericPolygonGroup
     {
         public int Offset { get; set; }
@@ -13,6 +23,8 @@ namespace Toolbox.Library
         public int Index { get; set; }
 
         public List<int> faces = new List<int>();
+
+        public STPrimativeType PrimativeType = STPrimativeType.Triangles;
 
         public int strip = 0x40;
         public int displayFaceSize = 0;
