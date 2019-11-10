@@ -64,9 +64,6 @@ namespace FirstPlugin
         {
             get
             {
-                if (!LoadIcons)
-                    return new List<STGenericTexture>();
-
                 List<STGenericTexture> textures = new List<STGenericTexture>();
                 foreach (STGenericTexture node in Nodes)
                     textures.Add(node);

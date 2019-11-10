@@ -20,7 +20,7 @@ using OpenTK;
 
 namespace FirstPlugin
 {
-    public class BFRES : BFRESWrapper, IFileFormat
+    public class BFRES : BFRESWrapper, IFileFormat, ITextureContainer
     {
         public FileType FileType { get; set; } = FileType.Resource;
 
@@ -48,6 +48,14 @@ namespace FirstPlugin
                 types.Add(typeof(MenuExt));
                 return types.ToArray();
             }
+        }
+
+        public bool DisplayIcons => false;
+
+        public List<STGenericTexture> TextureList
+        {
+            get { return GetTextures(); }
+            set { }
         }
 
         public override string ExportFilter => Utils.GetAllFilters(new BFRES());
@@ -907,6 +915,22 @@ namespace FirstPlugin
             }
 
             return null;
+        }
+
+        public List<STGenericTexture> GetTextures()
+        {
+            List<STGenericTexture> textures = new List<STGenericTexture>();
+
+            foreach (TreeNode folder in Nodes)
+            {
+                if (folder is BFRESGroupNode && ((BFRESGroupNode)folder).Type == BRESGroupType.Textures)
+                {
+                    foreach (STGenericTexture node in folder.Nodes)
+                        textures.Add(node);
+                }
+            }
+
+            return textures;
         }
 
         public ResFile resFile = null;
