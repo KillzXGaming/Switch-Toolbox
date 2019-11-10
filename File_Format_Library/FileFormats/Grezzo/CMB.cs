@@ -18,8 +18,8 @@ namespace FirstPlugin
         public FileType FileType { get; set; } = FileType.Layout;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "CMB" };
-        public string[] Extension { get; set; } = new string[] { "*CTR Model Binary" };
+        public string[] Description { get; set; } = new string[] { "*CTR Model Binary" };
+        public string[] Extension { get; set; } = new string[] { ".cmb" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -117,6 +117,8 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
+            CanSave = false;
+
             Renderer = new CMB_Renderer();
             DrawableContainer.Drawables.Add(Renderer);
             Skeleton = new STSkeleton();
@@ -391,6 +393,9 @@ namespace FirstPlugin
 
         public void Save(System.IO.Stream stream)
         {
+            using (var writer = new FileWriter(stream)) {
+                header.Write(writer);
+            }
         }
 
         public enum CMBVersion
@@ -724,6 +729,52 @@ namespace FirstPlugin
                     values[3] * VertexAttribute.Scale);
             }
 
+            private static void WriteVertexBufferData(FileWriter writer, BufferSlice Slice, 
+                SepdVertexAttribute VertexAttribute, int elementCount)
+            {
+                int StrideSize = CalculateStrideSize(VertexAttribute.Type, elementCount);
+                int VertexCount = (int)Slice.Size / StrideSize;
+                for (int v = 0; v < VertexCount; v++)
+                {
+                    WriteVertexBufferData(writer, VertexAttribute, VertexAttribute.VertexData[v], elementCount);
+                }
+            }
+
+            private static void WriteVertexBufferData(FileWriter writer, SepdVertexAttribute VertexAttribute,
+                Syroot.Maths.Vector4F value, int elementCount)
+            {
+                float[] values = new float[4] { value.X, value.Y, value.Z, value.W };
+
+                for (int i = 0; i < elementCount; i++)
+                {
+                    switch (VertexAttribute.Type)
+                    {
+                        case CmbDataType.Byte:
+                            writer.Write((sbyte)values[i]);
+                            break;
+                        case CmbDataType.Float:
+                            writer.Write(values[i]);
+                            break;
+                        case CmbDataType.Int:
+                            writer.Write((int)values[i]);
+                            break;
+                        case CmbDataType.Short:
+                            writer.Write((short)values[i]);
+                            break;
+                        case CmbDataType.UByte:
+                            writer.Write((byte)values[i]);
+                            break;
+                        case CmbDataType.UInt:
+                            writer.Write((uint)values[i]);
+                            break;
+                        case CmbDataType.UShort:
+                            writer.Write((ushort)values[i]);
+                            break;
+                        default: throw new Exception("Unknown format! " + VertexAttribute.Type);
+                    }
+                }
+            }
+
             private static int CalculateStrideSize(CmbDataType type, int elementCount)
             {
                 switch (type)
@@ -951,6 +1002,8 @@ namespace FirstPlugin
 
             public ushort boneDimension;
 
+            private byte[] unks;
+
             public void Read(FileReader reader, Header header)
             {
                 long pos = reader.Position;
@@ -960,11 +1013,9 @@ namespace FirstPlugin
                 uint count = reader.ReadUInt16();
 
                 if (header.Version >= CMBVersion.LM3DS)
-                    reader.SeekBegin(pos + 0x3C);
+                    unks = reader.ReadBytes(56);
                 else
-                    reader.SeekBegin(pos + 0x24);
-
-                Console.WriteLine("sepd count " + count);
+                    unks = reader.ReadBytes(26);
 
                 Position = ReadVertexAttrib(reader);
                 Normal = ReadVertexAttrib(reader);
@@ -994,7 +1045,22 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                writer.WriteSignature(Magic);
+                writer.Write(uint.MaxValue); //section size
+                writer.Write(Primatives.Count);
+                writer.Write(unks);
+                WriteVertexAttrib(writer, Position);
+                WriteVertexAttrib(writer, Normal);
+                if (header.Version >= CMBVersion.MM3DS)
+                    WriteVertexAttrib(writer, Tangent);
 
+                WriteVertexAttrib(writer, Color);
+                WriteVertexAttrib(writer, TexCoord0);
+                WriteVertexAttrib(writer, TexCoord1);
+                WriteVertexAttrib(writer, TexCoord2);
+                WriteVertexAttrib(writer, BoneIndices);
+                WriteVertexAttrib(writer, BoneWeights);
+                WriteVertexAttrib(writer, Tangent);
             }
 
             private SepdVertexAttribute ReadVertexAttrib(FileReader reader)
@@ -1015,6 +1081,23 @@ namespace FirstPlugin
                 reader.SeekBegin(pos + 0x1C);
 
                 return att;
+            }
+
+            private void WriteVertexAttrib(FileWriter writer, SepdVertexAttribute attribute)
+            {
+                long pos = writer.Position;
+
+                SepdVertexAttribute att = new SepdVertexAttribute();
+                writer.Write(att.StartPosition);
+                writer.Write(att.Scale);
+                writer.Write(att.Type, true);
+                writer.Write(att.Mode, true);
+                writer.Write(att.Constants[0]);
+                writer.Write(att.Constants[1]);
+                writer.Write(att.Constants[2]);
+                writer.Write(att.Constants[3]);
+
+                writer.SeekBegin(pos + 0x1C);
             }
         }
 

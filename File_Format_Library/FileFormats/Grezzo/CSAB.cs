@@ -11,7 +11,7 @@ using Toolbox.Library.Animations;
 
 namespace FirstPlugin
 {
-    public class CSAB : Animation, IFileFormat
+    public class CSAB : STSkeletonAnimation, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Animation;
 
@@ -46,8 +46,10 @@ namespace FirstPlugin
             header = new Header();
             header.Read(new FileReader(stream));
 
-            ImageKey = "";
+            foreach (var bone in header.Nodes)
+                AnimGroups.Add(bone);
         }
+
         public void Unload()
         {
 
@@ -122,7 +124,7 @@ namespace FirstPlugin
             }
         }
 
-        public class AnimationNode
+        public class AnimationNode : STAnimGroup
         {
             public ushort BoneIndex { get; set; }
 
@@ -135,6 +137,21 @@ namespace FirstPlugin
             public AnimTrack ScaleX { get; set; }
             public AnimTrack ScaleY { get; set; }
             public AnimTrack ScaleZ { get; set; }
+
+            public override List<STAnimationTrack> GetTracks()
+            {
+                List<STAnimationTrack> tracks = new List<STAnimationTrack>();
+                tracks.Add(TranslateX);
+                tracks.Add(TranslateY);
+                tracks.Add(TranslateZ);
+                tracks.Add(RotationX);
+                tracks.Add(RotationY);
+                tracks.Add(RotationZ);
+                tracks.Add(ScaleX);
+                tracks.Add(ScaleY);
+                tracks.Add(ScaleZ);
+                return tracks;
+            }
 
             public void Read(FileReader reader, GameVersion version)
             {
@@ -169,7 +186,7 @@ namespace FirstPlugin
             return track;
         }
 
-        public class AnimTrack
+        public class AnimTrack : STAnimationTrack
         {
             public List<LinearKeyFrame> KeyFramesLinear = new List<LinearKeyFrame>();
             public List<HermiteKeyFrame> KeyFramesHermite = new List<HermiteKeyFrame>();

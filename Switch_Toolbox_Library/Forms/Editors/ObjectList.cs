@@ -34,6 +34,19 @@ namespace Toolbox.Library
             if (viewport == null)
                 return;
 
+            //The new animation player
+            if (e.Node.Tag != null && e.Node.Tag is STAnimation)
+            {
+                var anim = e.Node.Tag as STAnimation;
+
+                if (LibraryGUI.GetAnimationPanel() != null)
+                {
+                    Console.WriteLine("running" + anim.Name);
+                    LibraryGUI.GetAnimationPanel().CurrentSTAnimation = anim;
+                }
+            }
+
+            //The old animation player (will be removed soon)
             if (e.Node is Animation)
             {
                 string AnimName = e.Node.Text;

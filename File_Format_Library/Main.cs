@@ -397,9 +397,10 @@ namespace FirstPlugin
             Formats.Add(typeof(LM2_ARCADE_Model));
             Formats.Add(typeof(NLG_NLOC));
             Formats.Add(typeof(NLG_PCK));
+            Formats.Add(typeof(NLG.StrikersSAnim));
 
 
-            
+
             //   Formats.Add(typeof(MSBP));
             //   Formats.Add(typeof(BFGRP));
 

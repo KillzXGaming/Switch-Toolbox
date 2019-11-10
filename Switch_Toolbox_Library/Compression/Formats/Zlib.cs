@@ -28,14 +28,13 @@ namespace Toolbox.Library
                 reader.SetByteOrder(true);
 
                 bool IsValid = false;
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 8; i++)
                 {
                     ushort magicNumber = reader.ReadUInt16();
-                    reader.ReadUInt16();
 
                     IsValid = magicNumber == 0x789C || magicNumber == 0x78DA;
                     if (IsValid) {
-                        startPosition = reader.Position - 4;
+                        startPosition = reader.Position - 2;
                         break;
                     }
                 }

@@ -224,6 +224,7 @@
     <Compile Include="FileFormats\Archives\PKZ.cs" />
     <Compile Include="FileFormats\NLG\MarioStrikers\StrikersRLG.cs" />
     <Compile Include="FileFormats\NLG\MarioStrikers\StrikersRLT.cs" />
+    <Compile Include="FileFormats\NLG\MarioStrikers\StrikersSAnim.cs" />
     <Compile Include="FileFormats\NLG\NLG_Common.cs" />
     <Compile Include="FileFormats\NLG\NLG_NLOC.cs" />
     <Compile Include="FileFormats\NLG\NLOC_Wrapper.cs" />

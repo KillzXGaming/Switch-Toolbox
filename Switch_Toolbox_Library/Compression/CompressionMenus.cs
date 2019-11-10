@@ -141,7 +141,10 @@ namespace Toolbox.Library.IO
                 if (Compress)
                     stream = compressionFormat.Compress(data);
                 else
+                {
+                    compressionFormat.Identify(data, sfd.FileName);
                     stream = compressionFormat.Decompress(data);
+                }
 
                 if (stream != null)
                 {

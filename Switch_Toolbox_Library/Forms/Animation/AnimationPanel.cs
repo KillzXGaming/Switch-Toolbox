@@ -54,6 +54,36 @@ namespace Toolbox.Library
         private bool renderThreadIsUpdating = false;
         public bool isOpen = true;
 
+        private STAnimation stCurrentAnimation;
+        public STAnimation CurrentSTAnimation
+        {
+            get
+            {
+                return stCurrentAnimation;
+            }
+            set
+            {
+                if (value == null)
+                    return;
+
+                int frameCount = 1;
+
+                if (value.FrameCount != 0)
+                    frameCount = (int)value.FrameCount;
+
+                ResetModels();
+                stCurrentAnimation = value;
+                totalFrame.Maximum = frameCount;
+                totalFrame.Value = frameCount;
+                currentFrameUpDown.Maximum = frameCount;
+                animationTrackBar.FrameCount = frameCount;
+                currentFrameUpDown.Value = 0;
+
+                SetAnimationsToFrame(0);
+                UpdateViewport();
+            }
+        }
+
         private Animation currentAnimation;
         public Animation CurrentAnimation
         {
@@ -202,7 +232,8 @@ namespace Toolbox.Library
 
         private void animationPlayBtn_Click(object sender, EventArgs e)
         {
-            if (currentAnimation == null || currentAnimation.FrameCount <= 0)
+            if (currentAnimation == null || currentAnimation.FrameCount <= 0 &&
+              stCurrentAnimation == null || stCurrentAnimation.FrameCount <= 0)
                 return;
 
             if (AnimationPlayerState == PlayerState.Playing)
@@ -213,18 +244,27 @@ namespace Toolbox.Library
 
         private void totalFrame_ValueChanged(object sender, EventArgs e)
         {
-            if (currentAnimation == null) return;
+            if (currentAnimation == null && stCurrentAnimation == null) return;
             if (totalFrame.Value < 1)
             {
                 totalFrame.Value = 1;
             }
             else
             {
-                if (currentAnimation.Tag is Animation)
-                    ((Animation)currentAnimation.Tag).FrameCount = (int)totalFrame.Value;
-                currentAnimation.FrameCount = (int)totalFrame.Value;
-                animationTrackBar.CurrentFrame = 0;
-                animationTrackBar.FrameCount = currentAnimation.FrameCount;
+                if (stCurrentAnimation != null)
+                {
+                    stCurrentAnimation.FrameCount = (int)totalFrame.Value;
+                    animationTrackBar.CurrentFrame = 0;
+                    animationTrackBar.FrameCount = stCurrentAnimation.FrameCount;
+                }
+                else
+                {
+                    if (currentAnimation.Tag is Animation)
+                        ((Animation)currentAnimation.Tag).FrameCount = (int)totalFrame.Value;
+                    currentAnimation.FrameCount = (int)totalFrame.Value;
+                    animationTrackBar.CurrentFrame = 0;
+                    animationTrackBar.FrameCount = currentAnimation.FrameCount;
+                }
             }
         }
         private void UpdateViewport()
@@ -286,7 +326,7 @@ namespace Toolbox.Library
         }
 
         private void animationTrackBar_ValueChanged(object sender, EventArgs e) {
-            if (currentAnimation == null || totalFrame.Value <= 0)
+            if (currentAnimation == null && stCurrentAnimation == null || totalFrame.Value <= 0)
                 return;
 
             currentFrameUpDown.Value = (decimal)animationTrackBar.CurrentFrame;
@@ -310,55 +350,78 @@ namespace Toolbox.Library
             if (viewport == null || viewport.scene == null)
                 return;
 
-            var anim = currentAnimation.Tag;
+            if (stCurrentAnimation != null)
+            {
+                if (frameNum > stCurrentAnimation.FrameCount)
+                    return;
 
-            float animFrameNum = frameNum;
+                float animFrameNum = frameNum;
 
-            if (anim is MaterialAnimation)
-            {
-                ((MaterialAnimation)anim).SetFrame(animFrameNum);
-                ((MaterialAnimation)anim).NextFrame(viewport);
-            }
-            else if (anim is VisibilityAnimation)
-            {
-                ((VisibilityAnimation)anim).SetFrame(animFrameNum);
-                ((VisibilityAnimation)anim).NextFrame(viewport);
-            }
-            else if (anim is CameraAnimation)
-            {
-                ((CameraAnimation)anim).SetFrame(animFrameNum);
-                ((CameraAnimation)anim).NextFrame(viewport);
-            }
-            else if (anim is LightAnimation)
-            {
-                ((LightAnimation)anim).SetFrame(animFrameNum);
-                ((LightAnimation)anim).NextFrame(viewport);
-            }
-            else if (anim is FogAnimation)
-            {
-                ((FogAnimation)anim).SetFrame(animFrameNum);
-                ((FogAnimation)anim).NextFrame(viewport);
-            }
-            else //Play a skeletal animation if it's not the other types
-            {
-                foreach (var drawable in viewport.scene.objects)
+                stCurrentAnimation.SetFrame(animFrameNum);
+                stCurrentAnimation.NextFrame();
+
+                //Add frames to the playing animation
+                stCurrentAnimation.Frame += frameNum;
+
+                //Reset it when it reaches the total frame count
+                if (stCurrentAnimation.Frame >= stCurrentAnimation.FrameCount && stCurrentAnimation.Loop)
                 {
-                    if (drawable is STSkeleton)
-                    {
-                        currentAnimation.SetFrame(animFrameNum);
-                        currentAnimation.NextFrame((STSkeleton)drawable);
-                    }
+                    stCurrentAnimation.Frame = 0;
                 }
             }
-
-
-            //Add frames to the playing animation
-            currentAnimation.Frame += frameNum;
-
-            //Reset it when it reaches the total frame count
-            if (currentAnimation.Frame >= currentAnimation.FrameCount)
+            else
             {
-              currentAnimation.Frame = 0;
+
+                var anim = currentAnimation.Tag;
+
+                float animFrameNum = frameNum;
+
+                if (anim is MaterialAnimation)
+                {
+                    ((MaterialAnimation)anim).SetFrame(animFrameNum);
+                    ((MaterialAnimation)anim).NextFrame(viewport);
+                }
+                else if (anim is VisibilityAnimation)
+                {
+                    ((VisibilityAnimation)anim).SetFrame(animFrameNum);
+                    ((VisibilityAnimation)anim).NextFrame(viewport);
+                }
+                else if (anim is CameraAnimation)
+                {
+                    ((CameraAnimation)anim).SetFrame(animFrameNum);
+                    ((CameraAnimation)anim).NextFrame(viewport);
+                }
+                else if (anim is LightAnimation)
+                {
+                    ((LightAnimation)anim).SetFrame(animFrameNum);
+                    ((LightAnimation)anim).NextFrame(viewport);
+                }
+                else if (anim is FogAnimation)
+                {
+                    ((FogAnimation)anim).SetFrame(animFrameNum);
+                    ((FogAnimation)anim).NextFrame(viewport);
+                }
+                else //Play a skeletal animation if it's not the other types
+                {
+                    foreach (var drawable in viewport.scene.objects)
+                    {
+                        if (drawable is STSkeleton)
+                        {
+                            currentAnimation.SetFrame(animFrameNum);
+                            currentAnimation.NextFrame((STSkeleton)drawable);
+                        }
+                    }
+                }
+
+
+                //Add frames to the playing animation
+                currentAnimation.Frame += frameNum;
+
+                //Reset it when it reaches the total frame count
+                if (currentAnimation.Frame >= currentAnimation.FrameCount)
+                {
+                    currentAnimation.Frame = 0;
+                }
             }
         }
 
@@ -456,6 +519,7 @@ namespace Toolbox.Library
 
             renderThread.Abort();
             renderThreadIsUpdating = false;
+            stCurrentAnimation = null;
             currentAnimation = null;
             isOpen = false;
             Dispose();
