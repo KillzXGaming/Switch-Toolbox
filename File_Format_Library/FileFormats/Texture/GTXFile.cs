@@ -34,7 +34,7 @@ namespace FirstPlugin
         UserBlock = 0x16,
     }
 
-    public class GTXFile : TreeNodeFile, IFileFormat, IContextMenuNode
+    public class GTXFile : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureContainer
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -61,6 +61,22 @@ namespace FirstPlugin
                 return types.ToArray();
             }
         }
+
+        public bool DisplayIcons => false;
+
+        public List<STGenericTexture> TextureList
+        {
+            get
+            {
+                List<STGenericTexture> texList = new List<STGenericTexture>();
+                foreach (STGenericTexture node in textures)
+                    texList.Add(node);
+
+                return texList;
+            }
+            set { }
+        }
+
         private GTXHeader header;
 
         public List<byte[]> data = new List<byte[]>();

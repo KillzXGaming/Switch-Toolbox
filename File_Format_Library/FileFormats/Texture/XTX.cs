@@ -12,7 +12,7 @@ using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class XTX : TreeNodeFile, IFileFormat, IContextMenuNode
+    public class XTX : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureContainer
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -29,6 +29,21 @@ namespace FirstPlugin
             {
                 return reader.CheckSignature(4, "DFvN");
             }
+        }
+
+        public bool DisplayIcons => true;
+
+        public List<STGenericTexture> TextureList
+        {
+            get
+            {
+                List<STGenericTexture> textures = new List<STGenericTexture>();
+                foreach (STGenericTexture node in Nodes)
+                    textures.Add(node);
+
+                return textures;
+            }
+            set { }
         }
 
         public Type[] Types

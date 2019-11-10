@@ -375,7 +375,7 @@ namespace FirstPlugin.NLG
                                         else if (pointer.Stride == 12)
                                             vert.pos = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
-                                        vert.pos = Vector3.TransformPosition(vert.pos, TransformMatrix);
+                                 //       vert.pos = Vector3.TransformPosition(vert.pos, TransformMatrix);
                                     }
 
                                     if (pointer.Type == 1)
@@ -568,6 +568,8 @@ namespace FirstPlugin.NLG
                                         reader.ReadSingle(),
                                         reader.ReadSingle());
                                     reader.ReadSingle(); //1
+
+                              //      bone.Translate = Vector3.TransformPosition(bone.Translate, TransformMatrix);
 
                                     entry.Bones.Add(bone);
                                 }
