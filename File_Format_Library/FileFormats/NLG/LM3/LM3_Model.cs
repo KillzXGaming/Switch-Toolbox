@@ -211,7 +211,7 @@ namespace FirstPlugin.LuigisMansion3
         {
             Nodes.Clear();
 
-            using (var reader = new FileReader(DataDictionary.GetFileBufferData()))
+            using (var reader = new FileReader(DataDictionary.GetFileBufferData(), true))
             {
                 TreeNode texturesList = new TreeNode("Texture Maps");
                 TreeNode skeletonNode = new TreeNode("Skeleton");
@@ -249,8 +249,8 @@ namespace FirstPlugin.LuigisMansion3
                     genericObj.Mesh = mesh;
                     genericObj.Checked = true;
                     genericObj.Text = $"Mesh {i} {mesh.HashID.ToString("X")}";
-                    if (LM3_DICT.HashNames.ContainsKey(mesh.HashID))
-                        genericObj.Text = LM3_DICT.HashNames[mesh.HashID];
+                    if (NLG_Common.HashNames.ContainsKey(mesh.HashID))
+                        genericObj.Text = NLG_Common.HashNames[mesh.HashID];
 
                     genericObj.SetMaterial(mesh.Material);
                     RenderedMeshes.Add(genericObj);
@@ -474,6 +474,8 @@ namespace FirstPlugin.LuigisMansion3
 
             reader.Position = 0;
 
+            return;
+
             var meshSize = reader.BaseStream.Length / model.Meshes.Count;
             for (int i = 0; i < model.Meshes.Count; i++)
             {
@@ -627,10 +629,6 @@ namespace FirstPlugin.LuigisMansion3
                 IndexFormat = IndexFormat.Index_8;
             else
                 IndexFormat = IndexFormat.Index_16;
-
-            Console.WriteLine($"type {type} indexFlags {indexFlags} IndexCount {IndexCount}");
-            //  IndexFormat = reader.ReadEnum<IndexFormat>(false);
-            //  if (IndexFormat != (IndexFormat)0x8000 && IndexFormat != 0 && IndexFormat != IndexFormat.Index_16_0x2)
 
             VertexCount = reader.ReadUInt32(); 
             reader.ReadUInt32(); //unknown

@@ -9,7 +9,7 @@ namespace FirstPlugin
 {
     public class NLG_Common
     {
-        private static Dictionary<uint, string> hashNames;
+        private static Dictionary<uint, string> hashNames = new Dictionary<uint, string>();
 
         public static Dictionary<uint, string> HashNames
         {

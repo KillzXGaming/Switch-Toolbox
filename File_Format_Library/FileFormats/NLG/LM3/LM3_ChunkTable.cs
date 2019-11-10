@@ -57,7 +57,6 @@ namespace FirstPlugin.LuigisMansion3
                 byte unk = tableReader.ReadByte();
                 byte chunkFlags = tableReader.ReadByte();
                 entry.ChunkSubCount = tableReader.ReadByte(); //Uncertain about this. 2 for textures (info + block). Some sections however use large numbers.
-                Console.WriteLine($"ChunkSubCount {entry.ChunkSubCount} {(entry.ChunkSubCount >> 4)}");
                 tableReader.ReadByte();
                 tableReader.ReadByte();
                 tableReader.ReadByte();
@@ -83,8 +82,6 @@ namespace FirstPlugin.LuigisMansion3
                 var chunkFlags = tableReader.ReadUInt16();
 
                 byte blockFlag = (byte)(chunkFlags >> 12);
-                //Console.WriteLine($"blockFlag {chunkFlags >> 1} {chunkFlags >> 2} {chunkFlags >> 3} {chunkFlags >> 4} {chunkFlags >> 5} {chunkFlags >> 6} {chunkFlags >> 7} {chunkFlags >> 8}");
-                Console.WriteLine($"blockFlag {blockFlag} { subEntry.ChunkType}");
 
                 subEntry.ChunkSize = tableReader.ReadUInt32(); 
                 subEntry.ChunkOffset = tableReader.ReadUInt32(); 

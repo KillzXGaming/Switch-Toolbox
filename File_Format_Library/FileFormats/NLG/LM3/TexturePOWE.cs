@@ -12,6 +12,7 @@ namespace FirstPlugin.LuigisMansion3
 {
     public class TexturePOWE : STGenericTexture
     {
+        public long HeaderOffset;
         public long DataOffset;
 
         public static readonly uint Identifier = 0xE977D350;
@@ -29,6 +30,14 @@ namespace FirstPlugin.LuigisMansion3
         {
             [Browsable(false)]
             public uint ID { get; set; }
+
+            public uint HashIDUint
+            {
+                get
+                {
+                    return ID;
+                }
+            }
 
             public string HashID
             {
@@ -72,9 +81,10 @@ namespace FirstPlugin.LuigisMansion3
         };
 
         public byte TexFormat;
-        public byte Unknown;
+        public ushort Unknown;
         public byte Unknown2;
-        public ushort Unknown3;
+        public byte Unknown3;
+        public ushort Unknown4;
 
         public void Read(FileReader reader)
         {
@@ -91,13 +101,14 @@ namespace FirstPlugin.LuigisMansion3
             ID2 = reader.ReadUInt32();
             Width = reader.ReadUInt16();
             Height = reader.ReadUInt16();
-            var numMips = reader.ReadByte();
-            var unk = reader.ReadByte(); //padding?
+            Unknown = reader.ReadUInt16();
             var numArray = reader.ReadByte();
-            Unknown = reader.ReadByte();
-            TexFormat = reader.ReadByte();
             Unknown2 = reader.ReadByte();
-            Unknown3 = reader.ReadUInt16();
+            TexFormat = reader.ReadByte();
+            Unknown3 = reader.ReadByte();
+            Unknown4 = reader.ReadUInt16();
+
+            Console.WriteLine(ID2);
 
             if (FormatTable.ContainsKey(TexFormat))
                 Format = FormatTable[TexFormat];
@@ -110,11 +121,16 @@ namespace FirstPlugin.LuigisMansion3
             MipCount = 1;
             ArrayCount = numArray;
 
+            UpdateProperties();
+        }
+
+        private void UpdateProperties()
+        {
             properties = new POWEProperties();
             properties.ID = ID2;
             properties.Width = Width;
             properties.Height = Height;
-            properties.NumMips = numMips;
+            properties.NumMips = (byte)MipCount;
             properties.Format = Format;
         }
 
@@ -150,17 +166,20 @@ namespace FirstPlugin.LuigisMansion3
             var surfacesNew = tex.GetSurfaces();
             var surfaces = GetSurfaces();
 
-            if (surfaces[0].mipmaps[0].Length != surfacesNew[0].mipmaps[0].Length)
-                throw new Exception($"Image must be the same size! {surfaces[0].mipmaps[0].Length}");
-
-            if (Width != tex.Texture.Width || Height != tex.Texture.Height)
-                throw new Exception("Image size must be the same!");
+            if (surfaces[0].mipmaps[0].Length > surfacesNew[0].mipmaps[0].Length)
+                throw new Exception($"Image must be the same size or smaller! {surfaces[0].mipmaps[0].Length}");
 
             ImageData = tex.Texture.TextureData[0][0];
 
             Width = tex.Texture.Width;
             Height = tex.Texture.Height;
             MipCount = tex.Texture.MipCount;
+            ArrayCount = tex.Texture.ArrayLength;
+            Format = tex.Format;
+            TexFormat = FormatTable.FirstOrDefault(x => x.Value == tex.Format).Key;
+            UpdateProperties();
+
+            Console.WriteLine($"TexFormat {TexFormat.ToString("X")}");
 
             surfacesNew.Clear();
             surfaces.Clear();
@@ -204,6 +223,9 @@ namespace FirstPlugin.LuigisMansion3
                 GenerateMipsAndCompress(bitmap, MipCount, Format), MipCount);
 
             ImageData = Utils.CombineByteArray(mipmaps.ToArray());
+            ArrayCount = tex.ArrayLength;
+            TexFormat = FormatTable.FirstOrDefault(x => x.Value == Format).Key;
+            UpdateProperties();
         }
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)

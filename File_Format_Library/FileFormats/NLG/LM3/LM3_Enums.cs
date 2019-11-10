@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace FirstPlugin.LuigisMansion3
 {
-    public enum DataType : uint
+    public enum DataType : ushort
     {
-        Texture = 0xBA41B500,
-        Model   = 0x8101B000,
-        Unknown = 0x08C17000,
+        Texture = 0xB500,
+        Model   = 0xB000,
+        Unknown = 0x7000,
     }
 
     public enum VertexDataFormat
@@ -51,10 +51,11 @@ namespace FirstPlugin.LuigisMansion3
     {
         TextureHeader = 0xB501,
         TextureData   = 0xB502,
-        ModelStart    = 0xB006,
+        MaterailData    = 0xB006, //Also marks start of model data
         SubmeshInfo   = 0xB003, //Or polygon groups?
         VertexStartPointers = 0xB004,
         ModelTransform = 0xB001, //Matrix4x4. 0x40 in size
+        ModelInfo = 0xB002, //Contains mesh count and model hash
         MeshBuffers = 0xB005, //vertex and index buffer
         MaterialName = 0xB333,
         MeshIndexTable = 0xB007,
