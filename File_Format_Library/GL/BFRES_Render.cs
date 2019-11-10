@@ -765,18 +765,18 @@ namespace FirstPlugin
 
                         PrimitiveType primitiveType = PrimitiveType.Triangles;
 
-                        switch (m.lodMeshes[m.DisplayLODIndex].PrimitiveType)
+                        switch (m.lodMeshes[m.DisplayLODIndex].PrimativeType)
                         {
-                            case STPolygonType.Line:
+                            case STPrimativeType.Lines:
                                 primitiveType = PrimitiveType.Lines;
                                 break;
-                            case STPolygonType.LineStrip:
+                            case STPrimativeType.LineStrips:
                                 primitiveType = PrimitiveType.LineStrip;
                                 break;
-                            case STPolygonType.Point:
+                            case STPrimativeType.Points:
                                 primitiveType = PrimitiveType.Points;
                                 break;
-                            case STPolygonType.Triangle:
+                            case STPrimativeType.Triangles:
                                 primitiveType = PrimitiveType.Triangles;
                                 break;
                         }

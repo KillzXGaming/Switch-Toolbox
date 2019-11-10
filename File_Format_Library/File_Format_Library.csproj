@@ -213,6 +213,7 @@
     <Compile Include="FileFormats\Archives\DARC.cs" />
     <Compile Include="FileFormats\Archives\DAT_Bayonetta.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
+    <Compile Include="FileFormats\MKAGPDX\LM2_ARCADE_Model.cs" />
     <Compile Include="FileFormats\NLG\LM2\LM2_Material.cs" />
     <Compile Include="FileFormats\NLG\LM3\LM3_ChunkTable.cs" />
     <Compile Include="FileFormats\NLG\LM3\LM3_DICT.cs" />
@@ -221,7 +222,12 @@
     <Compile Include="FileFormats\NLG\LM3\LM3_Model.cs" />
     <Compile Include="FileFormats\NLG\LM3\TexturePOWE.cs" />
     <Compile Include="FileFormats\Archives\PKZ.cs" />
+    <Compile Include="FileFormats\NLG\MarioStrikers\StrikersRLG.cs" />
+    <Compile Include="FileFormats\NLG\MarioStrikers\StrikersRLT.cs" />
     <Compile Include="FileFormats\NLG\NLG_Common.cs" />
+    <Compile Include="FileFormats\NLG\NLG_NLOC.cs" />
+    <Compile Include="FileFormats\NLG\NLOC_Wrapper.cs" />
+    <Compile Include="FileFormats\NLG\NLG_PCK.cs" />
     <Compile Include="FileFormats\NLG\PunchOutWii\PO_DICT.cs" />
     <Compile Include="FileFormats\Archives\VIBS.cs" />
     <Compile Include="FileFormats\Audio\Archives\AudioCommon.cs" />
@@ -340,6 +346,10 @@
     <Compile Include="FileFormats\Layout\Wrappers\MatWrapper.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
+    <Compile Include="FileFormats\NLG\PunchOutWii\PO_Mesh.cs" />
+    <Compile Include="FileFormats\NLG\PunchOutWii\PO_Model.cs" />
+    <Compile Include="FileFormats\NLG\PunchOutWii\PO_Texture.cs" />
+    <Compile Include="FileFormats\NLG\PunchOutWii\PO_VertexAttribute.cs" />
     <Compile Include="FileFormats\Pikmin1\MOD.cs" />
     <Compile Include="FileFormats\Pikmin1\TXE.cs" />
     <Compile Include="FileFormats\Rom\3DS\NCSDStructs.cs" />
@@ -364,6 +374,8 @@
     <Compile Include="FileFormats\Layout\CAFE\BflytShader.cs" />
     <Compile Include="GL\Custom2D\KCLRendering2D.cs" />
     <Compile Include="GL\LM3_Renderer.cs" />
+    <Compile Include="GL\PunchOutWii_Renderer.cs" />
+    <Compile Include="GL\Strikers_Renderer.cs" />
     <Compile Include="GUI\BFLYT\Animations\Basic\AddAnimGroupDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1874,7 +1886,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FileFormats\EvemtFlow\" />
-    <Folder Include="FileFormats\NLG\MarioStrikers\" />
+    <Folder Include="FileFormats\NLG\Common\" />
     <Folder Include="GUI\Byaml\MuuntEditor\Renderables\" />
   </ItemGroup>
   <ItemGroup>

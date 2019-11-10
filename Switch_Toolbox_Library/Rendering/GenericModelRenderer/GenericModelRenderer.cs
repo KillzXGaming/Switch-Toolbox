@@ -437,7 +437,7 @@ namespace Toolbox.Library.Rendering
                     {
                         if (Runtime.RenderModels)
                         {
-                            GL.DrawElements(PrimitiveType.Triangles, group.displayFaceSize, DrawElementsType.UnsignedInt, group.Offset);
+                            GL.DrawElements(GetPrimitiveType(group), group.displayFaceSize, DrawElementsType.UnsignedInt, group.Offset);
                         }
                     }
                 }
@@ -465,7 +465,7 @@ namespace Toolbox.Library.Rendering
                 {
                     if (Runtime.RenderModels)
                     {
-                        GL.DrawElements(PrimitiveType.Triangles, m.lodMeshes[m.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, m.Offset);
+                        GL.DrawElements(GetPrimitiveType(m.lodMeshes[m.DisplayLODIndex]), m.lodMeshes[m.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, m.Offset);
                     }
                 }
             }
@@ -484,6 +484,34 @@ namespace Toolbox.Library.Rendering
             shader.SetInt("colorOverride", 0);
         }
 
+        private static  PrimitiveType GetPrimitiveType(STGenericObject.LOD_Mesh p)
+        {
+            switch (p.PrimativeType)
+            {
+                case STPrimativeType.Triangles: return PrimitiveType.Triangles;
+                case STPrimativeType.TrangleStrips: return PrimitiveType.TriangleStrip;
+                case STPrimativeType.Quads: return PrimitiveType.Quads;
+                case STPrimativeType.Points: return PrimitiveType.Points;
+                case STPrimativeType.LineStrips: return PrimitiveType.LineStrip;
+                case STPrimativeType.Lines: return PrimitiveType.Lines;
+                default: return PrimitiveType.Triangles;
+            }
+        }
+
+        private static PrimitiveType GetPrimitiveType(STGenericPolygonGroup p)
+        {
+            switch (p.PrimativeType)
+            {
+                case STPrimativeType.Triangles: return PrimitiveType.Triangles;
+                case STPrimativeType.TrangleStrips: return PrimitiveType.TriangleStrip;
+                case STPrimativeType.Quads: return PrimitiveType.Quads;
+                case STPrimativeType.Points: return PrimitiveType.Points;
+                case STPrimativeType.LineStrips: return PrimitiveType.LineStrip;
+                case STPrimativeType.Lines: return PrimitiveType.Lines;
+                default: return PrimitiveType.Triangles;
+            }
+        }
+
         private static void DrawModelWireframe(STGenericPolygonGroup p, ShaderProgram shader)
         {
             // use vertex color for wireframe color
@@ -491,7 +519,7 @@ namespace Toolbox.Library.Rendering
             GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
             GL.Enable(EnableCap.LineSmooth);
             GL.LineWidth(1.5f);
-            GL.DrawElements(PrimitiveType.Triangles, p.displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
+            GL.DrawElements(GetPrimitiveType(p), p.displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             shader.SetInt("colorOverride", 0);
         }
@@ -503,11 +531,11 @@ namespace Toolbox.Library.Rendering
             GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
             GL.Enable(EnableCap.LineSmooth);
             GL.LineWidth(1.3f);
-            GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
+            GL.DrawElements(GetPrimitiveType(p.lodMeshes[p.DisplayLODIndex]), p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.Uniform1(shader["colorOverride"], 0);
 
-            GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
+            GL.DrawElements(GetPrimitiveType(p.lodMeshes[p.DisplayLODIndex]), p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
         }
 
         private static void DrawModelSelection(STGenericPolygonGroup p, ShaderProgram shader)
@@ -516,11 +544,11 @@ namespace Toolbox.Library.Rendering
             GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
             GL.Enable(EnableCap.LineSmooth);
             GL.LineWidth(1.3f);
-            GL.DrawElements(PrimitiveType.Triangles, p.displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
+            GL.DrawElements(GetPrimitiveType(p), p.displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             GL.Uniform1(shader["colorOverride"], 0);
 
-            GL.DrawElements(PrimitiveType.Triangles, p.displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
+            GL.DrawElements(GetPrimitiveType(p), p.displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
         }
     }
 }

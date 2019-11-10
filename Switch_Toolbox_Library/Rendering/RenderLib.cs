@@ -11,13 +11,6 @@ using System.Windows.Forms;
 
 namespace Toolbox.Library.Rendering
 {
-    public enum STPolygonType : uint
-    {
-        Point = 0,
-        Line = 1,
-        LineStrip = 2,
-        Triangle = 3
-    }
     public enum STIndexFormat : uint
     {
         UnsignedByte = 0,

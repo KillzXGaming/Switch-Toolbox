@@ -104,7 +104,7 @@ namespace FirstPlugin
                         STobj.ObjectName = model.Name;
                         lod = new STGenericObject.LOD_Mesh();
                         lod.IndexFormat = STIndexFormat.UInt16;
-                        lod.PrimitiveType = STPolygonType.Triangle;
+                        lod.PrimativeType = STPrimativeType.Triangles;
                         STobj.lodMeshes.Add(lod);
                         STobj.VertexBufferIndex = Index;
                         objects.Add(STobj);

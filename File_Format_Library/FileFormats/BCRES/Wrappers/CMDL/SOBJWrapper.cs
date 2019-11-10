@@ -149,7 +149,7 @@ namespace FirstPlugin
                 {
                     foreach (var buffer in faceDescriptors.Buffers)
                     {
-                        msh.PrimitiveType = STPolygonType.Triangle;
+                        msh.PrimativeType = STPrimativeType.Triangles;
                         msh.FirstVertex = 0;
 
                         uint[] indicesArray = buffer.GetIndices().ToArray();

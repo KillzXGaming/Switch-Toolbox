@@ -161,7 +161,7 @@ namespace FirstPlugin
                     lod.subMeshes.Add(sub);
                 }
                 lod.IndexFormat = (STIndexFormat)msh.IndexFormat;
-                lod.PrimitiveType = (STPolygonType)msh.PrimitiveType;
+                lod.PrimativeType = (STPrimativeType)msh.PrimitiveType;
                 lod.FirstVertex = msh.FirstVertex;
 
                 for (int face = 0; face < FaceCount; face++)
@@ -390,18 +390,18 @@ namespace FirstPlugin
             int indx = 0;
             foreach (var mesh in shp.Meshes)
             {
-                switch (s.lodMeshes[indx].PrimitiveType)
+                switch (s.lodMeshes[indx].PrimativeType)
                 {
-                    case STPolygonType.Triangle:
+                    case STPrimativeType.Triangles:
                         mesh.PrimitiveType = GX2PrimitiveType.Triangles;
                         break;
-                    case STPolygonType.Line:
+                    case STPrimativeType.Lines:
                         mesh.PrimitiveType = GX2PrimitiveType.Lines;
                         break;
-                    case STPolygonType.LineStrip:
+                    case STPrimativeType.LineStrips:
                         mesh.PrimitiveType = GX2PrimitiveType.LineStrip;
                         break;
-                    case STPolygonType.Point:
+                    case STPrimativeType.Points:
                         mesh.PrimitiveType = GX2PrimitiveType.Points;
                         break;
                 }
@@ -872,7 +872,7 @@ namespace FirstPlugin
             {
                 Mesh msh = new Mesh();
                 msh.SubMeshes = new List<SubMesh>();
-                msh.PrimitiveType = (GX2PrimitiveType)mesh.PrimitiveType;
+                msh.PrimitiveType = (GX2PrimitiveType)mesh.PrimativeType;
                 msh.FirstVertex = mesh.FirstVertex;
 
                 foreach (FSHP.LOD_Mesh.SubMesh sub in mesh.subMeshes)

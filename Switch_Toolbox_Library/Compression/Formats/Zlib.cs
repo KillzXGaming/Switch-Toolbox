@@ -27,7 +27,7 @@ namespace Toolbox.Library
 
                 ushort magicNumber = reader.ReadUInt16();
 
-            //    reader.Position = stream.Position + 4;
+                reader.Position = startPosition + 4;
                 ushort magicNumber2 = reader.ReadUInt16();
 
                 //Check 2 cases which the file is zlibbed.

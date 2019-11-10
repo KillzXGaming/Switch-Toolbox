@@ -142,7 +142,7 @@ namespace FirstPlugin
                 {
                     renderedMesh.lodMeshes = new List<STGenericObject.LOD_Mesh>();
                     var msh = new STGenericObject.LOD_Mesh();
-                    msh.PrimitiveType = STPolygonType.Triangle;
+                    msh.PrimativeType = STPrimativeType.Triangles;
                     msh.FirstVertex = 0;
 
                   /*  int VertexID = 0;

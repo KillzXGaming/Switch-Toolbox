@@ -287,8 +287,8 @@ namespace FirstPlugin
                 lodFormatCB.Bind(typeof(STIndexFormat), activeLodMesh, "IndexFormat");
                 lodFormatCB.SelectedItem = activeLodMesh.IndexFormat;
 
-                lodPrimativeTypeCB.Bind(typeof(STPolygonType), activeLodMesh, "PrimitiveType");
-                lodPrimativeTypeCB.SelectedItem = activeLodMesh.PrimitiveType;
+                lodPrimativeTypeCB.Bind(typeof(STPrimativeType), activeLodMesh, "PrimitiveType");
+                lodPrimativeTypeCB.SelectedItem = activeLodMesh.PrimativeType;
 
                 lodVertexSkipUD.Value = activeLodMesh.FirstVertex;
                 lodFaceCountUD.Value = activeLodMesh.faces.Count;

@@ -19,6 +19,9 @@ namespace Toolbox.Library
         public class ExportSettings
         {
             public Version FileVersion = new Version();
+
+            public string ImageExtension = ".png";
+            public string ImageFolder = "";
         }
 
         public class Version

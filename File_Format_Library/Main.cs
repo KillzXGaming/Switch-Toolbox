@@ -391,7 +391,15 @@ namespace FirstPlugin
             Formats.Add(typeof(DAT_Bayonetta));
             Formats.Add(typeof(XCI));
             Formats.Add(typeof(VIBS));
+            Formats.Add(typeof(NLG.StrikersRLT));
+            Formats.Add(typeof(NLG.StrikersRLG));
+            Formats.Add(typeof(PunchOutWii.PO_DICT));
+            Formats.Add(typeof(LM2_ARCADE_Model));
+            Formats.Add(typeof(NLG_NLOC));
+            Formats.Add(typeof(NLG_PCK));
 
+
+            
             //   Formats.Add(typeof(MSBP));
             //   Formats.Add(typeof(BFGRP));
 

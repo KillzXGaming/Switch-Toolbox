@@ -709,7 +709,7 @@ namespace FirstPlugin
                         case CmbDataType.UShort:
                             values.Add(reader.ReadUInt16());
                             break;
-                        default: throw new Exception("Unknwon format! " + VertexAttribute.Type);
+                        default: throw new Exception("Unknown format! " + VertexAttribute.Type);
                     }
                 }
 
@@ -1157,13 +1157,15 @@ namespace FirstPlugin
 
             public long StartPosition;
 
+            public uint MaxIndex;
+
             public void Read(FileReader reader, Header header)
             {
                 StartPosition = reader.Position;
 
                 reader.ReadSignature(4, Magic);
                 uint sectionSize = reader.ReadUInt32();
-                uint maxIndex = reader.ReadUInt32();
+                MaxIndex = reader.ReadUInt32();
 
                 PositionSlice = ReadSlice(reader);
                 NormalSlice = ReadSlice(reader);
@@ -1180,8 +1182,32 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
+                writer.Write(MaxIndex);
+                WriteSlice(writer, PositionSlice);
+                WriteSlice(writer, NormalSlice);
+                if (header.Version >= CMBVersion.MM3DS)
+                    WriteSlice(writer, TangentSlice);
+
+                WriteSlice(writer, ColorSlice);
+                WriteSlice(writer, Texcoord0Slice);
+                WriteSlice(writer, Texcoord1Slice);
+                WriteSlice(writer, Texcoord2Slice);
+                WriteSlice(writer, BoneIndicesSlice);
+                WriteSlice(writer, BoneWeightsSlice);
+
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)(endPos - pos));
+                }
+            }
+
+            private void WriteSlice(FileWriter writer, BufferSlice slice) {
+                writer.Write(slice.Size);
+                writer.Write(slice.Offset);
             }
 
             private BufferSlice ReadSlice(FileReader reader)
@@ -1313,8 +1339,18 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
+
+                for (int i = 0; i < Materials.Count; i++)
+                    Materials[i].Write(writer, header);
+
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)(endPos - pos));
+                }
             }
         }
 
@@ -1523,6 +1559,39 @@ namespace FirstPlugin
                 IsTransparent = BlendEnaled;
 
                 Console.WriteLine(ToString());
+            }
+
+            public void Write(FileWriter writer, Header header)
+            {
+                long pos = writer.Position;
+
+                writer.Write(CullMode, true);
+                writer.Write(IsPolygonOffsetEnabled);
+                writer.Write(PolygonOffset);
+
+                writer.SeekBegin(pos + 0x10);
+                for (int j = 0; j < 3; j++)
+                {
+                    writer.Write(TextureMaps[j].TextureIndex);
+                    writer.Write((ushort)0);
+                    writer.Write((ushort)TextureMaps[j].MinFiler);
+                    writer.Write((ushort)TextureMaps[j].MagFiler);
+                    writer.Write((ushort)TextureMaps[j].WrapS);
+                    writer.Write((ushort)TextureMaps[j].WrapT);
+                    writer.Write((ushort)TextureMaps[j].LodBias);
+                    writer.Write(TextureMaps[j].borderColorR);
+                    writer.Write(TextureMaps[j].borderColorG);
+                    writer.Write(TextureMaps[j].borderColorB);
+                    writer.Write(TextureMaps[j].borderColorA);
+                }
+
+                for (int j = 0; j < 3; j++)
+                {
+                    writer.Write(TextureMaticies[j].Flags);
+                    writer.Write(TextureMaticies[j].Scale);
+                    writer.Write(TextureMaticies[j].Translate);
+                    writer.Write(TextureMaticies[j].Rotate);
+                }
             }
 
             public override string ToString()

@@ -132,7 +132,7 @@ namespace FirstPlugin
                 Mesh msh = new Mesh();
                 msh.MemoryPool = new MemoryPool();
                 msh.SubMeshes = new List<SubMesh>();
-                msh.PrimitiveType = (PrimitiveType)mesh.PrimitiveType;
+                msh.PrimitiveType = (PrimitiveType)mesh.PrimativeType;
                 msh.FirstVertex = mesh.FirstVertex;
 
                 foreach (FSHP.LOD_Mesh.SubMesh sub in mesh.subMeshes)
@@ -210,7 +210,7 @@ namespace FirstPlugin
                     lod.subMeshes.Add(sub);
                 }
                 lod.IndexFormat = (STIndexFormat)msh.IndexFormat;
-                lod.PrimitiveType = (STPolygonType)msh.PrimitiveType;
+                lod.PrimativeType = (STPrimativeType)msh.PrimitiveType;
                 lod.FirstVertex = msh.FirstVertex;
 
                 for (int face = 0; face < FaceCount; face++)

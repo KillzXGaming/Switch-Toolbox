@@ -604,7 +604,7 @@ namespace Toolbox.Library
             STGenericObject.LOD_Mesh lod = new STGenericObject.LOD_Mesh();
             lod.faces = GetFaces(msh);
             lod.IndexFormat = STIndexFormat.UInt16;
-            lod.PrimitiveType = STPolygonType.Triangle;
+            lod.PrimativeType = STPrimativeType.Triangles;
             lod.GenerateSubMesh();
             obj.lodMeshes.Add(lod);
             obj.vertices = GetVertices(msh, transform, obj);
