@@ -19,26 +19,29 @@ namespace Toolbox.Library
 
         public bool Identify(Stream stream, string fileName)
         {
+            if (stream.Length < 16) return false;
+
             using (var reader = new FileReader(stream, true))
             {
                 startPosition = stream.Position;
 
                 reader.SetByteOrder(true);
 
-                ushort magicNumber = reader.ReadUInt16();
+                bool IsValid = false;
+                for (int i = 0; i < 4; i++)
+                {
+                    ushort magicNumber = reader.ReadUInt16();
+                    reader.ReadUInt16();
 
-                reader.Position = startPosition + 4;
-                ushort magicNumber2 = reader.ReadUInt16();
+                    IsValid = magicNumber == 0x789C || magicNumber == 0x78DA;
+                    if (IsValid)
+                    {
+                        startPosition = reader.Position - 4;
+                        break;
+                    }
+                }
 
-                //Check 2 cases which the file is zlibbed.
-                //One is that it is compressed with magic at start
-                //Another is a size (uint) then magic
-                bool IsValid = magicNumber == 0x789C || magicNumber == 0x78DA;
-                bool IsValid2 = magicNumber2 == 0x789C || magicNumber2 == 0x78DA;
-                if (IsValid2)
-                    startPosition = stream.Position + 4;
-
-                return IsValid || IsValid2;
+                return IsValid;
             }
         }
 
