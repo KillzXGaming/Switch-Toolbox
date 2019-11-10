@@ -15,7 +15,7 @@ namespace FirstPlugin
         {
             get
             {
-                if (hashNames.Count == 0)
+                if (hashNames?.Count == 0)
                     LoadHashes();
 
                 return hashNames;
