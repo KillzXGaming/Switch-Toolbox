@@ -1013,7 +1013,7 @@ namespace FirstPlugin
                 uint count = reader.ReadUInt16();
 
                 if (header.Version >= CMBVersion.LM3DS)
-                    unks = reader.ReadBytes(56);
+                    unks = reader.ReadBytes(50);
                 else
                     unks = reader.ReadBytes(26);
 
