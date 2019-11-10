@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Octokit;
 using System.IO;
+using System.Net;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using Toolbox.Library;
@@ -24,6 +25,7 @@ namespace Toolbox
         {
             try
             {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 var client = new GitHubClient(new ProductHeaderValue("ST_UpdateTool"));
                 GetReleases(client).Wait();
                 GetCommits(client).Wait();

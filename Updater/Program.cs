@@ -24,6 +24,7 @@ namespace Updater
             execDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             folderDir = execDirectory;
 
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var client = new GitHubClient(new ProductHeaderValue("ST_UpdateTool"));
             GetReleases(client).Wait();
 

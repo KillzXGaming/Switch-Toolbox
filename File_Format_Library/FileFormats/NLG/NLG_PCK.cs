@@ -66,7 +66,7 @@ namespace FirstPlugin
                     uint unk = reader.ReadUInt32();
                     reader.ReadUInt32(); //0
 
-                    entry.Text = entry.HashID.ToString("X") + ".wav";
+                    entry.Text = entry.HashID.ToString("X") + ".wem";
 
                     using (reader.TemporarySeek(audioOffset, System.IO.SeekOrigin.Begin))
                     {
