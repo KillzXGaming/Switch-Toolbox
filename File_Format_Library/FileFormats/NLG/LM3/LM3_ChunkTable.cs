@@ -54,7 +54,10 @@ namespace FirstPlugin.LuigisMansion3
                 entry.ChunkSize = tableReader.ReadUInt32(); //Always 8
                 entry.ChunkOffset = tableReader.ReadUInt32(); //The chunk offset in the file. Relative to the first chunk position in the file
                 entry.ChunkType = tableReader.ReadEnum<DataType>(false); //The type of chunk. 0x8701B5 for example for texture info
+                byte unk = tableReader.ReadByte();
+                byte chunkFlags = tableReader.ReadByte();
                 entry.ChunkSubCount = tableReader.ReadByte(); //Uncertain about this. 2 for textures (info + block). Some sections however use large numbers.
+                Console.WriteLine($"ChunkSubCount {entry.ChunkSubCount} {(entry.ChunkSubCount >> 4)}");
                 tableReader.ReadByte();
                 tableReader.ReadByte();
                 tableReader.ReadByte();
@@ -77,7 +80,12 @@ namespace FirstPlugin.LuigisMansion3
             {
                 ChunkSubEntry subEntry = new ChunkSubEntry();
                 subEntry.ChunkType = tableReader.ReadEnum<SubDataType>(false); //The type of chunk. 0x8701B5 for example for texture info
-                tableReader.ReadUInt16();
+                var chunkFlags = tableReader.ReadUInt16();
+
+                byte blockFlag = (byte)(chunkFlags >> 12);
+                //Console.WriteLine($"blockFlag {chunkFlags >> 1} {chunkFlags >> 2} {chunkFlags >> 3} {chunkFlags >> 4} {chunkFlags >> 5} {chunkFlags >> 6} {chunkFlags >> 7} {chunkFlags >> 8}");
+                Console.WriteLine($"blockFlag {blockFlag} { subEntry.ChunkType}");
+
                 subEntry.ChunkSize = tableReader.ReadUInt32(); 
                 subEntry.ChunkOffset = tableReader.ReadUInt32(); 
                 ChunkSubEntries.Add(subEntry);

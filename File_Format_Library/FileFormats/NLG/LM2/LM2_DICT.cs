@@ -70,6 +70,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         LM2_ModelFolder modelFolder;
         TreeNode materialNamesFolder = new TreeNode("Material Names");
         TreeNode chunkFolder = new TreeNode("Chunks");
+        TreeNode messageFolder = new TreeNode("Message Data");
 
         public byte[] GetFile003Data()
         {
@@ -83,8 +84,10 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             DrawableContainer.Name = FileName;
             Renderer = new LM2_Renderer();
             DrawableContainer.Drawables.Add(Renderer);
-            
+
             Text = FileName;
+
+            var HashNames = NLG_Common.HashNames;
 
             using (var reader = new FileReader(stream))
             {
@@ -154,23 +157,43 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 byte[] File002Data = fileEntries[2].GetData(); //Get the third file 
                 byte[] File003Data = fileEntries[3].GetData(); //Get the fourth file
 
-                LuigisMansion3.LM3_DICT.LoadHashes();
+                List<uint> ModelHashes = new List<uint>();
+                for (int i = 0; i < ChunkTable.ChunkEntries.Count; i++)
+                {
+                    if (ChunkTable.ChunkEntries[i].ChunkType == DataType.Model)
+                    {
+                 
+                    }
+
+                    using (var chunkReader = new FileReader(File002Data))
+                    {
+                        chunkReader.SeekBegin(ChunkTable.ChunkEntries[i].ChunkOffset);
+                        uint magic = chunkReader.ReadUInt32();
+                        uint hash = chunkReader.ReadUInt32();
+                        ModelHashes.Add(hash);
+                        Console.WriteLine($"{ChunkTable.ChunkEntries[i].ChunkType} {hash}");
+                    }
+                }
 
                 int chunkId = 0;
                 uint ImageHeaderIndex = 0;
                 uint modelIndex = 0;
+                uint messageIndex = 0;
                 foreach (var chunk in ChunkTable.ChunkSubEntries)
                 {
                     var chunkEntry = new ChunkDataEntry(this, chunk);
-                    chunkEntry.DataFile = File003Data;
                     chunkEntry.Text = $"Chunk {chunk.ChunkType.ToString("X")} {chunk.ChunkType} {chunkId++}";
                     chunkEntries.Add(chunkEntry);
                     chunkFolder.Nodes.Add(chunkEntry);
 
+                    if (chunk.BlockIndex == 0)
+                        chunkEntry.DataFile = File002Data;
+                    else if (chunk.BlockIndex == 1)
+                        chunkEntry.DataFile = File003Data;
+
                     switch (chunk.ChunkType)
                     {
                         case SubDataType.TextureHeader:
-                            chunkEntry.DataFile = File002Data;
 
                             //Read the info
                             using (var textureReader = new FileReader(chunkEntry.FileData))
@@ -184,19 +207,51 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                 textureFolder.Nodes.Add(currentTexture);
                                 Renderer.TextureList.Add(currentTexture);
 
+                                Console.WriteLine(currentTexture.ID2);
+
                                 ImageHeaderIndex++;
                             }
                             break;
                         case SubDataType.TextureData:
                             currentTexture.ImageData = chunkEntry.FileData;
                             break;
-                        case SubDataType.ModelStart:
+                        case SubDataType.MaterialData:
                             currentModel = new LM2_Model(this);
                             currentModel.ModelInfo = new LM2_ModelInfo();
                             currentModel.Text = $"Model {modelIndex}";
                             currentModel.ModelInfo.Data = chunkEntry.FileData;
                             modelFolder.Nodes.Add(currentModel);
+
+                            if (ModelHashes.Count > modelIndex)
+                            {
+                                currentModel.Text = $"Model {modelIndex} {ModelHashes[(int)modelIndex].ToString("x")}";
+                                if (HashNames.ContainsKey(ModelHashes[(int)modelIndex]))
+                                    currentModel.Text = HashNames[ModelHashes[(int)modelIndex]];
+                            }
+
                             modelIndex++;
+                            break;
+                        case SubDataType.ModelData:
+                            uint numModels = chunk.ChunkSize / 16;
+                            using (var dataReader = new FileReader(chunkEntry.FileData))
+                            {
+                                for (int i = 0; i < numModels; i++)
+                                {
+                                    uint hashID = dataReader.ReadUInt32();
+                                    uint numMeshes = dataReader.ReadUInt32();
+                                    dataReader.ReadUInt32(); 
+                                    dataReader.ReadUInt32(); //0
+
+                                    Console.WriteLine(hashID);
+
+                                    string text = hashID.ToString("X");
+                                    if (HashNames.ContainsKey(hashID))
+                                        text = HashNames[hashID];
+
+                                    if (i == 0)
+                                        currentModel.Text = text;
+                                }
+                            }
                             break;
                         case SubDataType.MeshBuffers:
                             currentModel.BufferStart = chunkEntry.Entry.ChunkOffset;
@@ -214,24 +269,36 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                     for (int i = 0; i < numBones; i++)
                                     {
                                         boneReader.SeekBegin(i * 68);
-                                        uint hash = boneReader.ReadUInt32();
+
+                                        uint HashID = boneReader.ReadUInt32();
+                                        boneReader.ReadUInt32(); //unk
+                                        boneReader.ReadUInt32(); //unk
+                                        boneReader.ReadUInt32(); //unk
+                                        boneReader.ReadSingle(); //0
+                                        var Scale = new OpenTK.Vector3(
+                                           boneReader.ReadSingle(),
+                                           boneReader.ReadSingle(),
+                                           boneReader.ReadSingle());
+                                        boneReader.ReadSingle(); //0
+                                        var Rotate = new OpenTK.Vector3(
+                                           boneReader.ReadSingle(),
+                                           boneReader.ReadSingle(),
+                                           boneReader.ReadSingle());
+                                        boneReader.ReadSingle(); //0
+                                        var Position = new OpenTK.Vector3(
+                                            boneReader.ReadSingle(),
+                                            boneReader.ReadSingle(),
+                                            boneReader.ReadSingle());
+                                        boneReader.ReadSingle(); //1
 
                                         STBone bone = new STBone(currentModel.Skeleton);
-                                        bone.Text = hash.ToString("X");
-                                        if (LuigisMansion3.LM3_DICT.HashNames.ContainsKey(hash))
-                                            bone.Text = LuigisMansion3.LM3_DICT.HashNames[hash];
+                                        bone.Text = HashID.ToString("X");
+                                        if (NLG_Common.HashNames.ContainsKey(HashID))
+                                            bone.Text = NLG_Common.HashNames[HashID];
 
-                                        bone.position = new float[3] { 0, 0, 0 };
-                                        bone.rotation = new float[4] { 0, 0, 0, 1 };
+                                        bone.position = new float[3] { Position.X, Position.Z, -Position.Y };
+                                        bone.rotation = new float[4] { Rotate.X, Rotate.Z, -Rotate.Y, 1 };
                                         bone.scale = new float[3] { 0.2f, 0.2f, 0.2f };
-
-                                        boneReader.SeekBegin(52 + (i * 68));
-                                        var Position = new OpenTK.Vector3(boneReader.ReadSingle(), boneReader.ReadSingle(), boneReader.ReadSingle());
-                                        Position = OpenTK.Vector3.TransformPosition(Position, OpenTK.Matrix4.CreateRotationX(OpenTK.MathHelper.DegreesToRadians(90)));
-                                        bone.position[0] = Position.X;
-                                        bone.position[2] = Position.Y;
-                                        bone.position[1] = Position.Z;
-
 
                                         bone.RotationType = STBone.BoneRotationType.Euler;
                                         currentModel.Skeleton.bones.Add(bone);
@@ -282,40 +349,27 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                     uint hash = chunkReader.ReadUInt32();
 
                                     string strHash = hash.ToString("X");
-                                    if (LuigisMansion3.LM3_DICT.HashNames.ContainsKey(hash))
-                                        strHash = LuigisMansion3.LM3_DICT.HashNames[hash];
-
-                                    Console.WriteLine("Hash! T " + strHash);
+                                    if (NLG_Common.HashNames.ContainsKey(hash))
+                                        strHash = NLG_Common.HashNames[hash];
                                 }
                             }
                             break;
-                        case (SubDataType)0x12017105:
+                        case (SubDataType)0x7105:
                             using (var chunkReader = new FileReader(chunkEntry.FileData))
                             {
-                                while (chunkReader.Position <= chunkReader.BaseStream.Length - 8)
-                                {
-                                    uint hash = chunkReader.ReadUInt32();
-                                    uint unk = chunkReader.ReadUInt32();
-
-                                    string strHash = hash.ToString("X");
-                                    if (LuigisMansion3.LM3_DICT.HashNames.ContainsKey(hash))
-                                        strHash = LuigisMansion3.LM3_DICT.HashNames[hash];
-
-                                    foreach (var bone in currentModel.Skeleton.bones) {
-                                        if (bone.Text == strHash)
-                                        {
-                                        }
-                                    }
-                                }
+                            
                             }
-                            currentModel.Skeleton.reset();
-                            currentModel.Skeleton.update();
                             break;
                         case SubDataType.MaterialName:
                             using (var matReader = new FileReader(chunkEntry.FileData))
                             {
-                                materialNamesFolder.Nodes.Add(matReader.ReadZeroTerminatedString());
+                                string mat = matReader.ReadZeroTerminatedString();
+                                materialNamesFolder.Nodes.Add(mat);
                             }
+                            break;
+                        case SubDataType.MessageData:
+                            messageFolder.Nodes.Add(new NLOC_Wrapper($"Message Data {messageIndex++}",
+                                new System.IO.MemoryStream(chunkEntry.FileData)));
                             break;
                         default:
                             break;
@@ -326,6 +380,9 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 {
                     model.ReadVertexBuffers();
                 }
+
+                if (messageFolder.Nodes.Count > 0)
+                    Nodes.Add(messageFolder);
 
                 if (modelFolder.Nodes.Count > 0)
                     Nodes.Add(modelFolder);

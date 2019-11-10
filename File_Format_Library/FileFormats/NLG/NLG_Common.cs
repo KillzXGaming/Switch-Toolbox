@@ -29,15 +29,15 @@ namespace FirstPlugin
                 string HashString = hashStr.TrimEnd();
 
                 uint hash = (uint)NLG_Common.StringToHash(HashString);
-                if (!HashNames.ContainsKey(hash))
-                    HashNames.Add(hash, HashString);
+                if (!hashNames.ContainsKey(hash))
+                    hashNames.Add(hash, HashString);
 
                 string[] hashPaths = HashString.Split('/');
                 for (int i = 0; i < hashPaths?.Length; i++)
                 {
                     hash = (uint)NLG_Common.StringToHash(hashPaths[i]);
-                    if (!HashNames.ContainsKey(hash))
-                        HashNames.Add(hash, HashString);
+                    if (!hashNames.ContainsKey(hash))
+                        hashNames.Add(hash, HashString);
                 }
             }
         }
