@@ -11,7 +11,7 @@ using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class TPL : TreeNodeFile, IFileFormat, ITextureIconLoader
+    public class TPL : TreeNodeFile, IFileFormat,  ITextureContainer
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -40,7 +40,9 @@ namespace FirstPlugin
             }
         }
 
-        public List<STGenericTexture> IconTextureList
+        public bool DisplayIcons => true;
+
+        public List<STGenericTexture> TextureList
         {
             get
             {

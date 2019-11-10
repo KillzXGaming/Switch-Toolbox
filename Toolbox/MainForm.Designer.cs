@@ -44,6 +44,7 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hashCalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.experimentalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cascadeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,7 +73,7 @@
             this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
             this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.updateToolstrip = new System.Windows.Forms.ToolStripButton();
-            this.hashCalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.batchExportTexturesAllSupportedFormatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.tabControlContextMenuStrip.SuspendLayout();
@@ -185,7 +186,8 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.compressionToolStripMenuItem,
             this.batchToolStripMenuItem,
-            this.hashCalculatorToolStripMenuItem});
+            this.hashCalculatorToolStripMenuItem,
+            this.batchExportTexturesAllSupportedFormatsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 21);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -193,15 +195,22 @@
             // compressionToolStripMenuItem
             // 
             this.compressionToolStripMenuItem.Name = "compressionToolStripMenuItem";
-            this.compressionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.compressionToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
             this.compressionToolStripMenuItem.Text = "Compression";
             // 
             // batchToolStripMenuItem
             // 
             this.batchToolStripMenuItem.Name = "batchToolStripMenuItem";
-            this.batchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.batchToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
             this.batchToolStripMenuItem.Text = "Batch Set File Table";
             this.batchToolStripMenuItem.Click += new System.EventHandler(this.batchToolStripMenuItem_Click);
+            // 
+            // hashCalculatorToolStripMenuItem
+            // 
+            this.hashCalculatorToolStripMenuItem.Name = "hashCalculatorToolStripMenuItem";
+            this.hashCalculatorToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
+            this.hashCalculatorToolStripMenuItem.Text = "Hash Calculator";
+            this.hashCalculatorToolStripMenuItem.Click += new System.EventHandler(this.hashCalculatorToolStripMenuItem_Click);
             // 
             // experimentalToolStripMenuItem
             // 
@@ -465,12 +474,12 @@
             this.updateToolstrip.ToolTipText = "Update Tool";
             this.updateToolstrip.Click += new System.EventHandler(this.updateToolstrip_Click);
             // 
-            // hashCalculatorToolStripMenuItem
+            // batchExportTexturesAllSupportedFormatsToolStripMenuItem
             // 
-            this.hashCalculatorToolStripMenuItem.Name = "hashCalculatorToolStripMenuItem";
-            this.hashCalculatorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.hashCalculatorToolStripMenuItem.Text = "Hash Calculator";
-            this.hashCalculatorToolStripMenuItem.Click += new System.EventHandler(this.hashCalculatorToolStripMenuItem_Click);
+            this.batchExportTexturesAllSupportedFormatsToolStripMenuItem.Name = "batchExportTexturesAllSupportedFormatsToolStripMenuItem";
+            this.batchExportTexturesAllSupportedFormatsToolStripMenuItem.Size = new System.Drawing.Size(315, 22);
+            this.batchExportTexturesAllSupportedFormatsToolStripMenuItem.Text = "Batch Export Textures (All Supported Formats)";
+            this.batchExportTexturesAllSupportedFormatsToolStripMenuItem.Click += new System.EventHandler(this.batchExportTexturesAllSupportedFormatsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -552,5 +561,6 @@
         private System.Windows.Forms.ToolStripMenuItem openFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hashCalculatorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem batchExportTexturesAllSupportedFormatsToolStripMenuItem;
     }
 }

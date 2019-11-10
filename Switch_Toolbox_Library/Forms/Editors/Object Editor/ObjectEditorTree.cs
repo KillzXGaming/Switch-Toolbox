@@ -829,7 +829,7 @@ namespace Toolbox.Library.Forms
                 treeViewCustom1.ReloadTextureIcons(texIcons, false);
         }
 
-        public void LoadGenericTextureIcons(ITextureIconLoader iconList) {
+        public void LoadGenericTextureIcons(ITextureContainer iconList) {
             treeViewCustom1.TextureIcons.Add(iconList);
             treeViewCustom1.ReloadTextureIcons(iconList);
         }
@@ -870,9 +870,9 @@ namespace Toolbox.Library.Forms
         {
             if (e.Node == null) return;
 
-            else if (e.Node is ITextureIconLoader) {
+            else if (e.Node is ITextureContainer) {
                 treeViewCustom1.BeginUpdate();
-                LoadGenericTextureIcons((ITextureIconLoader)e.Node);
+                LoadGenericTextureIcons((ITextureContainer)e.Node);
                 treeViewCustom1.EndUpdate();
             }
             else if (e.Node is ISingleTextureIconLoader) {

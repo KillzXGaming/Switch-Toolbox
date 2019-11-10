@@ -34,8 +34,7 @@ namespace Toolbox.Library
                     reader.ReadUInt16();
 
                     IsValid = magicNumber == 0x789C || magicNumber == 0x78DA;
-                    if (IsValid)
-                    {
+                    if (IsValid) {
                         startPosition = reader.Position - 4;
                         break;
                     }

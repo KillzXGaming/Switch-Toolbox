@@ -121,7 +121,7 @@ namespace LayoutBXLYT
                         {
                             TPL tpl = (TPL)file.OpenFile();
                             file.FileFormat = tpl;
-                            foreach (var tex in tpl.IconTextureList)
+                            foreach (var tex in tpl.TextureList)
                             {
                                 //Only need the first texture
                                 if (!textures.ContainsKey(tex.Text))

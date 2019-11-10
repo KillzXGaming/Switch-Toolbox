@@ -337,10 +337,13 @@ namespace Toolbox.Library.Rendering
 
             foreach (var container in TextureContainers)
             {
-                if (container.Textures.ContainsKey(activeTex))
+                for (int i = 0; i < container.TextureList?.Count; i++)
                 {
-                    BindGLTexture(tex, shader, container.Textures[activeTex]);
-                    return tex.textureUnit + 1;
+                    if (activeTex == container.TextureList[i].Text)
+                    {
+                        BindGLTexture(tex, shader, container.TextureList[i]);
+                        return tex.textureUnit + 1;
+                    }
                 }
             }
 

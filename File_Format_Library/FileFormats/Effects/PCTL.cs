@@ -272,12 +272,14 @@ namespace FirstPlugin
                 }
             }
 
-            public class TextureFolder : TreeNodeCustom, IContextMenuNode, ITextureIconLoader
+            public class TextureFolder : TreeNodeCustom, IContextMenuNode, ITextureContainer
             {
                 public TextureFolder(string text)
                 {
                     Text = text;
                 }
+
+                public bool DisplayIcons => true;
 
                 public ToolStripItem[] GetContextMenuItems()
                 {
@@ -287,7 +289,7 @@ namespace FirstPlugin
                     };
                 }
 
-                public List<STGenericTexture> IconTextureList
+                public List<STGenericTexture> TextureList
                 {
                     get
                     {

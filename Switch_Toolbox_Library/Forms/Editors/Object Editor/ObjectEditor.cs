@@ -100,8 +100,8 @@ namespace Toolbox.Library.Forms
                 AddNode((TreeNode)FileFormat);
             }
 
-            if (FileFormat is ITextureIconLoader) {
-                ObjectTree.LoadGenericTextureIcons((ITextureIconLoader)FileFormat);
+            if (FileFormat is ITextureContainer) {
+                ObjectTree.LoadGenericTextureIcons((ITextureContainer)FileFormat);
             }
         }
 

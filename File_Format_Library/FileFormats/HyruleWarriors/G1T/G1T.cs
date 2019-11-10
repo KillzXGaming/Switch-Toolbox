@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace FirstPlugin
 { 
-    public class G1T : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureIconLoader
+    public class G1T : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureContainer
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -38,8 +38,9 @@ namespace FirstPlugin
             }
         }
 
+        public bool DisplayIcons => true;
 
-        public List<STGenericTexture> IconTextureList
+        public List<STGenericTexture> TextureList
         {
             get
             {

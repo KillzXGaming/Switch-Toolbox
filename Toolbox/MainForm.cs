@@ -1343,5 +1343,89 @@ namespace Toolbox
             HashCalculatorForm form = new HashCalculatorForm();
             form.Show(this);
         }
+
+        private void batchExportTexturesAllSupportedFormatsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                FolderSelectDialog folderDlg = new FolderSelectDialog();
+                if (folderDlg.ShowDialog() == DialogResult.OK) {
+                    BatchExportTextures(ofd.FileNames, folderDlg.SelectedPath);
+                }
+            }
+        }
+
+        private void BatchExportTextures(string[] files, string outputFolder)
+        {
+            List<string> Formats = new List<string>();
+            Formats.Add("Portable Graphics Network (.png)");
+            Formats.Add("Microsoft DDS (.dds)");
+            Formats.Add("Joint Photographic Experts Group (.jpg)");
+            Formats.Add("Bitmap Image (.bmp)");
+            Formats.Add("Tagged Image File Format (.tiff)");
+            Formats.Add("ASTC (.astc)");
+
+            List<string> failedFiles = new List<string>();
+
+            BatchFormatExport form = new BatchFormatExport(Formats);
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                string extension = form.GetSelectedExtension();
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        var fileFormat = STFileLoader.OpenFileFormat(file);
+                        SearchFileFormat(fileFormat, extension, outputFolder);
+                    }
+                    catch   
+                    {
+                        failedFiles.Add(file);
+                    }
+                }
+            }
+
+            if (failedFiles.Count > 0)
+            {
+                string detailList = "";
+                foreach (var file in failedFiles)
+                    detailList += $"{file}\n";
+
+                STErrorDialog.Show("Some files failed to export! See detail list of failed files.", "Switch Toolbox", detailList);
+            }
+            else
+                MessageBox.Show("Files batched successfully!");
+        }
+
+        private void SearchFileFormat(IFileFormat fileFormat, string extension, string outputFolder)
+        {
+            if (fileFormat == null) return;
+
+            if (fileFormat is STGenericTexture) 
+                ExportTexture(((STGenericTexture)fileFormat), $"{outputFolder}/{fileFormat.FileName}.{extension}");
+            else if (fileFormat is IArchiveFile)
+                SearchArchive((IArchiveFile)fileFormat, extension, outputFolder);
+            else if (fileFormat is ITextureContainer)
+            {
+                foreach (STGenericTexture tex in ((ITextureContainer)fileFormat).TextureList) {
+                    ExportTexture(tex, $"{outputFolder}/{tex.Text}.{extension}");
+                }
+            }
+
+            fileFormat.Unload();
+        }
+
+        private void ExportTexture(STGenericTexture tex, string filePath) {
+            tex.Export(filePath);
+        }
+
+        private void SearchArchive(IArchiveFile archiveFile, string extension, string outputFolder)
+        {
+            foreach (var file in archiveFile.Files)
+                SearchFileFormat(file.OpenFile(), extension, outputFolder);
+        }
     }
 }

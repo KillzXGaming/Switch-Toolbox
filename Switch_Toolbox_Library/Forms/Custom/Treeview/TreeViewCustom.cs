@@ -85,7 +85,7 @@ namespace Toolbox.Library
     {
         private readonly Dictionary<int, TreeNode> _treeNodes = new Dictionary<int, TreeNode>();
 
-        public List<ITextureIconLoader> TextureIcons = new List<ITextureIconLoader>();
+        public List<ITextureContainer> TextureIcons = new List<ITextureContainer>();
         public List<ISingleTextureIconLoader> SingleTextureIcons = new List<ISingleTextureIconLoader>();
 
         public TreeViewCustom()
@@ -113,7 +113,10 @@ namespace Toolbox.Library
             {
                 for (int i = 0; i < TextureIcons.Count; i++)
                 {
-                    foreach (TreeNode node in TextureIcons[i].IconTextureList)
+                    if (!TextureIcons[i].DisplayIcons)
+                        continue;
+
+                    foreach (TreeNode node in TextureIcons[i].TextureList)
                     {
                         if (node is STGenericTexture)
                         {
@@ -268,8 +271,11 @@ namespace Toolbox.Library
             Thread.Start();
         }
 
-        public void ReloadTextureIcons(ITextureIconLoader textureIconList)
+        public void ReloadTextureIcons(ITextureContainer textureIconList)
         {
+            if (!textureIconList.DisplayIcons)
+                return;
+
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
@@ -280,7 +286,7 @@ namespace Toolbox.Library
                 List<TreeNode> treeNodes = new List<TreeNode>();
                 List<Image> imageIcons = new List<Image>();
 
-                foreach (TreeNode node in textureIconList.IconTextureList)
+                foreach (TreeNode node in textureIconList.TextureList)
                 {
                     if (node is STGenericTexture)
                     {

@@ -116,9 +116,11 @@ namespace FirstPlugin
             LoadBMD(BMDFile);
         }
 
-        private class BMDTextureFolder : STTextureFolder, ITextureIconLoader
+        private class BMDTextureFolder : STTextureFolder, ITextureContainer
         {
-            public List<STGenericTexture> IconTextureList
+            public bool DisplayIcons => true;
+
+            public List<STGenericTexture> TextureList
             {
                 get
                 {

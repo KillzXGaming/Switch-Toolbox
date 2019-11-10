@@ -8,6 +8,8 @@ namespace Toolbox.Library
 {
     public interface ITextureContainer
     {
-        Dictionary<string, STGenericTexture> Textures { get; set; }
+        List<STGenericTexture> TextureList { get; set; }
+
+        bool DisplayIcons { get; }
     }
 }

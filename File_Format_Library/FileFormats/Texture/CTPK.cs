@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 
 namespace FirstPlugin
 {
-    public class CTPK : TreeNodeFile, IFileFormat, ITextureIconLoader
+    public class CTPK : TreeNodeFile, IFileFormat, ITextureContainer
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
@@ -31,7 +31,9 @@ namespace FirstPlugin
             }
         }
 
-        public List<STGenericTexture> IconTextureList
+        public bool DisplayIcons => true;
+
+        public List<STGenericTexture> TextureList
         {
             get
             {

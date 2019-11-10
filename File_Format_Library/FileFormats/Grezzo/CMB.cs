@@ -496,9 +496,11 @@ namespace FirstPlugin
             }
         }
 
-        private class TextureFolder : STTextureFolder, ITextureIconLoader
+        private class TextureFolder : STTextureFolder, ITextureContainer
         {
-            public List<STGenericTexture> IconTextureList
+            public bool DisplayIcons => true;
+
+            public List<STGenericTexture> TextureList
             {
                 get
                 {

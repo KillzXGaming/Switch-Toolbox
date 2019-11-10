@@ -21,7 +21,7 @@ using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
-    public class BNTX : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureIconLoader
+    public class BNTX : TreeNodeFile, IFileFormat, IContextMenuNode, ITextureContainer
     {
         public bool LoadIcons = false;
 
@@ -58,7 +58,9 @@ namespace FirstPlugin
             }
         }
 
-        public List<STGenericTexture> IconTextureList
+        public bool DisplayIcons => LoadIcons;
+
+        public List<STGenericTexture> TextureList
         {
             get
             {
@@ -563,7 +565,7 @@ namespace FirstPlugin
         public void LoadFile(Stream stream, string Name = "")
         {
             Textures = new Dictionary<string, TextureData>(StringComparer.InvariantCultureIgnoreCase);
-            IconTextureList = new List<STGenericTexture>();
+            TextureList = new List<STGenericTexture>();
 
             BinaryTexFile = new BntxFile(stream);
             Text = BinaryTexFile.Name;

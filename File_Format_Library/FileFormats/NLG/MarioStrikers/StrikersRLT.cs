@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace FirstPlugin.NLG
 {
-    public class StrikersRLT : TreeNodeFile, IFileFormat, ITextureIconLoader
+    public class StrikersRLT : TreeNodeFile, IFileFormat, ITextureContainer
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -37,7 +37,9 @@ namespace FirstPlugin.NLG
             }
         }
 
-        public List<STGenericTexture> IconTextureList
+        public bool DisplayIcons => true;
+
+        public List<STGenericTexture> TextureList
         {
             get
             {
