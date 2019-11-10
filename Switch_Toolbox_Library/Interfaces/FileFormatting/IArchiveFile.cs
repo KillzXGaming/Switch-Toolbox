@@ -75,6 +75,15 @@ namespace Toolbox.Library
         [Browsable(false)]
         public virtual bool CanLoadFile { get; set; } = true;
 
+        [Browsable(false)]
+        public ArchiveFileWrapper FileWrapper;
+
+        public void UpdateWrapper()
+        {
+            if (FileWrapper == null) return;
+
+            FileWrapper.Text = Path.GetFileName(FileName);
+        }
 
         [Browsable(false)]
         public virtual IFileFormat OpenFile()
@@ -276,6 +285,7 @@ namespace Toolbox.Library
         public void AddFileNode(ArchiveFileWrapper fileWrapper)
         {
             FileNodes.Add(Tuple.Create(fileWrapper.ArchiveFileInfo, (TreeNode)fileWrapper));
+            fileWrapper.ArchiveFileInfo.FileWrapper = fileWrapper;
 
             string FullName = SetFullPath(fileWrapper, this);
             if (FullName != string.Empty)

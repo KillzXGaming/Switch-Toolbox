@@ -182,18 +182,9 @@ namespace FirstPlugin
                 string NewActorName = dialog.textBox1.Text;
                 FileName = NewActorName + ".szs";
 
-                foreach (var file in files)
-                {
-                    string NodeName = Path.GetFileNameWithoutExtension(file.FileName);
-                    string ext = Utils.GetExtension(file.FileName);
-                    if (NodeName == ActorName)
-                    {
-                        file.FileName = $"{NewActorName}{ext}";
-                    }
-                    else if (file.FileName.Contains("Attribute.byml"))
-                    {
-                        file.FileName = $"{NewActorName}Attribute.byml";
-                    }
+                foreach (var file in files) {
+                    file.FileName = file.FileName.Replace(ActorName, NewActorName);
+                    file.UpdateWrapper();
                 }
             }
         }
