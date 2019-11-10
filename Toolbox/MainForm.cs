@@ -1379,7 +1379,7 @@ namespace Toolbox
                     try
                     {
                         var fileFormat = STFileLoader.OpenFileFormat(file);
-                        SearchFileFormat(fileFormat, extension, outputFolder);
+                        SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder);
                     }
                     catch   
                     {
@@ -1400,16 +1400,23 @@ namespace Toolbox
                 MessageBox.Show("Files batched successfully!");
         }
 
-        private void SearchFileFormat(IFileFormat fileFormat, string extension, string outputFolder)
+        private void SearchFileFormat(BatchFormatExport.Settings settings, IFileFormat fileFormat, string extension, string outputFolder)
         {
             if (fileFormat == null) return;
 
             if (fileFormat is STGenericTexture) 
                 ExportTexture(((STGenericTexture)fileFormat), $"{outputFolder}/{fileFormat.FileName}.{extension}");
             else if (fileFormat is IArchiveFile)
-                SearchArchive((IArchiveFile)fileFormat, extension, outputFolder);
+                SearchArchive(settings, (IArchiveFile)fileFormat, extension, outputFolder);
             else if (fileFormat is ITextureContainer)
             {
+                if (settings.SeperateTextureContainers)
+                {
+                    outputFolder = Path.Combine(outputFolder, fileFormat.FileName);
+                    if (!Directory.Exists(outputFolder))
+                        Directory.CreateDirectory(outputFolder);
+                }
+
                 foreach (STGenericTexture tex in ((ITextureContainer)fileFormat).TextureList) {
                     ExportTexture(tex, $"{outputFolder}/{tex.Text}.{extension}");
                 }
@@ -1422,10 +1429,16 @@ namespace Toolbox
             tex.Export(filePath);
         }
 
-        private void SearchArchive(IArchiveFile archiveFile, string extension, string outputFolder)
+        private void SearchArchive(BatchFormatExport.Settings settings, IArchiveFile archiveFile, string extension, string outputFolder)
         {
+            string ArchiveFilePath = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(((IFileFormat)archiveFile).FileName));
+            if (!Directory.Exists(ArchiveFilePath))
+                Directory.CreateDirectory(ArchiveFilePath);
+            else
+                ArchiveFilePath = outputFolder;
+
             foreach (var file in archiveFile.Files)
-                SearchFileFormat(file.OpenFile(), extension, outputFolder);
+                SearchFileFormat(settings, file.OpenFile(), extension, ArchiveFilePath);
         }
     }
 }

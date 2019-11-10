@@ -7,12 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Toolbox.Library.Forms;
 
 namespace Toolbox.Library
 {
     public partial class BatchFormatExport : Form
     {
         public int Index = 0;
+
+        public Settings BatchSettings = new Settings();
+
+        public class Settings
+        {
+            public bool SeperateTextureContainers;
+            public bool SeperateArchiveFiles;
+        }
 
         public BatchFormatExport(List<string> Formats)
         {
@@ -22,6 +31,9 @@ namespace Toolbox.Library
                 comboBox1.Items.Add(format);
 
             comboBox1.SelectedIndex = 0;
+
+            BackColor = FormThemes.BaseTheme.FormBackColor;
+            ForeColor = FormThemes.BaseTheme.FormForeColor;
 
             Index = 0;
         }
@@ -47,6 +59,9 @@ namespace Toolbox.Library
 
         private void OkButton_Click(object sender, EventArgs e)
         {
+            BatchSettings.SeperateTextureContainers = chkSeperateTextureContainers.Checked;
+            BatchSettings.SeperateArchiveFiles = chkSeperateArchives.Checked;
+
             this.Close();
         }
 
