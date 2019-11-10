@@ -412,7 +412,7 @@ namespace FirstPlugin.LuigisMansion3
                                 chunkEntry.DataFile = File052Data;
                                 using (var boneReader = new FileReader(chunkEntry.FileData, true))
                                 {
-                                    currentModel.Skeleton = new STSkeleton();
+                                /*    currentModel.Skeleton = new STSkeleton();
                                     DrawableContainer.Drawables.Add(currentModel.Skeleton);
 
                                     uint numBones = chunk.ChunkSize / 0x40;
@@ -454,7 +454,7 @@ namespace FirstPlugin.LuigisMansion3
                                     }
 
                                     currentModel.Skeleton.reset();
-                                    currentModel.Skeleton.update();
+                                    currentModel.Skeleton.update();*/
                                 }
                             }
                             break;

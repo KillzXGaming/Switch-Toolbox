@@ -474,8 +474,6 @@ namespace FirstPlugin.LuigisMansion3
 
             reader.Position = 0;
 
-            return;
-
             var meshSize = reader.BaseStream.Length / model.Meshes.Count;
             for (int i = 0; i < model.Meshes.Count; i++)
             {
