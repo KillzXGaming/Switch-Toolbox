@@ -865,6 +865,16 @@ namespace FirstPlugin
                                 else
                                     throw new Exception($"Unknown Combination! {attribute.Type} {attribute.Format}");
                                 break;
+                            case VertexAttribute.BufferType.Unknown1:
+                            case VertexAttribute.BufferType.Unknown2:
+                                Console.WriteLine($"attribute.Format {attribute.Format}");
+                                if (attribute.Format == VertexAttribute.BufferFormat.HalfFloat)
+                                    VertBufferStride += 0x08;
+                                else if (attribute.Format == VertexAttribute.BufferFormat.Float)
+                                    VertBufferStride += 0x0C;
+                                else
+                                    throw new Exception($"Unknown Combination! {attribute.Type} {attribute.Format}");
+                                break;
                         }
 
                         Console.WriteLine($"{attribute.Format} {attribute.Type} VertBufferStride {VertBufferStride}");
@@ -944,6 +954,12 @@ namespace FirstPlugin
                                 case VertexAttribute.BufferType.Binormal:
                                     var binormals = ParseBuffer(reader, Attributes[att].Format, Attributes[att].Type);
                                     Binormals.Add(new Vector4(binormals.X, binormals.Y, binormals.Z, binormals.W));
+                                    break;
+                                case VertexAttribute.BufferType.Unknown1:
+                                    ParseBuffer(reader, Attributes[att].Format, Attributes[att].Type);
+                                    break;
+                                case VertexAttribute.BufferType.Unknown2:
+                                    ParseBuffer(reader, Attributes[att].Format, Attributes[att].Type);
                                     break;
                             }
                         }
@@ -1047,6 +1063,18 @@ namespace FirstPlugin
                             throw new Exception($"Unknown Combination! {AttributeType} {Format}");
                     }
                 }
+                else if (AttributeType == VertexAttribute.BufferType.Unknown1 ||
+                         AttributeType == VertexAttribute.BufferType.Unknown2)
+                {
+                    switch (Format)
+                    {
+                        case VertexAttribute.BufferFormat.HalfFloat:
+                            return new Vector4(reader.ReadHalfSingle(), reader.ReadHalfSingle(),
+                                               reader.ReadHalfSingle(), reader.ReadHalfSingle());
+                        default:
+                            throw new Exception($"Unknown Combination! {AttributeType} {Format}");
+                    }
+                }
 
                 return new Vector4(0);
             }
@@ -1127,6 +1155,8 @@ namespace FirstPlugin
                 Color2 = 8,
                 BoneIndex = 11,
                 Weights = 12,
+                Unknown1 = 13,
+                Unknown2 = 14,
             }
 
             public enum BufferFormat
