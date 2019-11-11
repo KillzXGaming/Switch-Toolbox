@@ -164,6 +164,10 @@ namespace FirstPlugin
 
                 Version = reader.ReadUInt32();
                 Boundings = reader.ReadSingles(9);
+
+                if (Version >= 32)
+                    reader.ReadUInt32();
+
                 long TextureOffset = reader.ReadOffset(true, typeof(uint));
                 long ShaderNameOffset = reader.ReadOffset(true, typeof(uint));
                 long Unknown1ffset = reader.ReadOffset(true, typeof(uint));
