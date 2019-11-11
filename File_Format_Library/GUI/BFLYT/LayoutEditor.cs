@@ -35,6 +35,11 @@ namespace LayoutBXLYT
         public List<BxlanHeader> AnimationFiles = new List<BxlanHeader>();
         public List<BxlanHeader> SelectedAnimations = new List<BxlanHeader>();
 
+        public List<BasePane> SelectedPanes
+        {
+            get { return ActiveViewport?.SelectedPanes; }
+        }
+
         private BxlytHeader ActiveLayout;
         private BxlanHeader ActiveAnimation;
 

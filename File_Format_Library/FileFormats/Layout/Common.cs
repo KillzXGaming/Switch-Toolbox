@@ -92,6 +92,14 @@ namespace LayoutBXLYT
             }
         }
 
+        public BxlytMaterial TryGetActiveMaterial()
+        {
+            if (this is IPicturePane)
+                return ((IPicturePane)this).Material;
+
+            return null;
+        }
+
         [DisplayName("Translate"), CategoryAttribute("Pane")]
         public Vector3F Translate { get; set; }
 
@@ -2014,6 +2022,8 @@ namespace LayoutBXLYT
                 parent.Nodes.Remove(NodeWrapper);
             }
         }
+
+
 
         public virtual void AddTexture(string texture)
         {

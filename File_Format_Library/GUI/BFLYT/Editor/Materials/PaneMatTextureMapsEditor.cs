@@ -288,6 +288,14 @@ namespace LayoutBXLYT
                 string newTexture = selector.GetSelectedTexture();
                 ActiveMaterial.AddTexture(newTexture);
 
+                //Apply to all selected panes
+                foreach (BasePane pane in ParentEditor.SelectedPanes)
+                {
+                    var mat = pane.TryGetActiveMaterial();
+                    if (mat != null && mat != ActiveMaterial && mat.TextureMaps?.Length != 3)
+                        mat.AddTexture(newTexture);
+                }
+
                 ReloadTexture();
                 ParentEditor.PropertyChanged?.Invoke(sender, e);
             }
@@ -313,6 +321,19 @@ namespace LayoutBXLYT
                     texMap.Name = newTexture;
                     ReloadTexture();
                     ParentEditor.PropertyChanged?.Invoke(sender, e);
+
+                    //Apply to all selected panes
+                    foreach (BasePane pane in ParentEditor.SelectedPanes)
+                    {
+                        var mat = pane.TryGetActiveMaterial();
+                        if (mat != null && mat != ActiveMaterial)
+                        {
+                            if (mat.TextureMaps?.Length > SelectedIndex)
+                                mat.TextureMaps[SelectedIndex] = texMap;
+                            else
+                                mat.AddTexture(newTexture);
+                        }
+                    }
                 }
             }
         }
@@ -320,7 +341,17 @@ namespace LayoutBXLYT
         private void removebtn_Click(object sender, EventArgs e)
         {
             if (ActiveMaterial.TextureMaps.Length > SelectedIndex && SelectedIndex >= 0)
+            {
                 ActiveMaterial.TextureMaps = ActiveMaterial.TextureMaps.RemoveAt(SelectedIndex);
+
+                //Apply to all selected panes
+                foreach (BasePane pane in ParentEditor.SelectedPanes)
+                {
+                    var mat = pane.TryGetActiveMaterial();
+                    if (mat != null && mat != ActiveMaterial && mat.TextureMaps?.Length > SelectedIndex)
+                        mat.TextureMaps = mat.TextureMaps.RemoveAt(SelectedIndex);
+                }
+            }
 
             if (ActiveMaterial.TextureMaps.Length == 0)
             {

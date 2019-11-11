@@ -68,6 +68,17 @@ namespace LayoutBXLYT
             ActivePane.ColorBottomLeft.Color = vertexColorBox1.BottomLeftColor;
             ActivePane.ColorBottomRight.Color = vertexColorBox1.BottomRightColor;
 
+            //Apply to all selected panes
+            foreach (BasePane pane in parentEditor.SelectedPanes)
+            {
+                if (pane is  IPicturePane) {
+                    ((IPicturePane)pane).ColorTopLeft.Color = vertexColorBox1.TopLeftColor;
+                    ((IPicturePane)pane).ColorTopRight.Color = vertexColorBox1.TopRightColor;
+                    ((IPicturePane)pane).ColorBottomLeft.Color = vertexColorBox1.BottomLeftColor;
+                    ((IPicturePane)pane).ColorBottomRight.Color = vertexColorBox1.BottomRightColor;
+                }
+            }
+
             parentEditor.PropertyChanged?.Invoke(sender, e);
         }
 

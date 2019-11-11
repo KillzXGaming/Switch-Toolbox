@@ -28,6 +28,11 @@ namespace LayoutBXLYT
             return ParentEditor.GetTextures();
         }
 
+        public List<BasePane> SelectedPanes
+        {
+            get { return ParentEditor.SelectedPanes; }
+        }
+
         public void Reset()
         {
             stToolStrip1.Items.Clear();

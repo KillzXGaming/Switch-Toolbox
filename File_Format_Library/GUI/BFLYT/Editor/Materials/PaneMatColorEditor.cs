@@ -55,6 +55,15 @@ namespace LayoutBXLYT
             {
                 whiteColorPB.Color = colorDlg.NewColor;
                 ActiveMaterial.WhiteColor.Color = colorDlg.NewColor;
+
+                //Apply to all selected panes
+                foreach (BasePane pane in ParentEditor.SelectedPanes)
+                {
+                    var mat = pane.TryGetActiveMaterial();
+                    if (mat != null)
+                        mat.WhiteColor.Color = colorDlg.NewColor;
+                }
+
                 ParentEditor.PropertyChanged?.Invoke(sender, e);
             };
             colorDlg.Show();
@@ -78,6 +87,15 @@ namespace LayoutBXLYT
             {
                 blackColorBP.Color = colorDlg.NewColor;
                 ActiveMaterial.BlackColor.Color = colorDlg.NewColor;
+
+                //Apply to all selected panes
+                foreach (BasePane pane in ParentEditor.SelectedPanes)
+                {
+                    var mat = pane.TryGetActiveMaterial();
+                    if (mat != null)
+                        mat.BlackColor.Color = colorDlg.NewColor;
+                }
+
                 ParentEditor.PropertyChanged?.Invoke(sender, e);
             };
             colorDlg.Show();

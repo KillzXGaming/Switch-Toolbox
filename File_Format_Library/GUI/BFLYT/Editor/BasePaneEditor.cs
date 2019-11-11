@@ -193,6 +193,11 @@ namespace LayoutBXLYT
             if (!Loaded) return;
             ActivePane.Alpha = (byte)alphaUD.Value;
 
+            //Apply to all selected panes
+            foreach (BasePane pane in parentEditor.SelectedPanes)
+                pane.Alpha = (byte)alphaUD.Value;
+
+
             parentEditor.PropertyChanged?.Invoke(sender, e);
         }
 
@@ -239,6 +244,12 @@ namespace LayoutBXLYT
             else if (radioLeftBtn.Checked) {
                 ActivePane.originX = OriginX.Left;
                 ActivePane.originY = OriginY.Center;
+            }
+
+            //Apply to all selected panes
+            foreach (BasePane pane in parentEditor.SelectedPanes) {
+                pane.originX = ActivePane.originX;
+                pane.originY = ActivePane.originY;
             }
 
             SetOrientation();
@@ -298,6 +309,15 @@ namespace LayoutBXLYT
             {
                 ActivePane.ParentOriginX = OriginX.Left;
                 ActivePane.ParentOriginY = OriginY.Center;
+            }
+
+            //Apply to all selected panes
+            foreach (BasePane pane in parentEditor.SelectedPanes) {
+                if (!pane.IsRoot && !pane.ParentIsRoot)
+                {
+                    pane.ParentOriginX = ActivePane.ParentOriginX;
+                    pane.ParentOriginY = ActivePane.ParentOriginY;
+                }
             }
 
             SetParentOrientation();
