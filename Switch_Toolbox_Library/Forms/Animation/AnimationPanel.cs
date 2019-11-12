@@ -232,8 +232,8 @@ namespace Toolbox.Library
 
         private void animationPlayBtn_Click(object sender, EventArgs e)
         {
-            if (currentAnimation == null || currentAnimation.FrameCount <= 0 &&
-              stCurrentAnimation == null || stCurrentAnimation.FrameCount <= 0)
+            if (currentAnimation?.FrameCount <= 0 &&
+                stCurrentAnimation?.FrameCount <= 0)
                 return;
 
             if (AnimationPlayerState == PlayerState.Playing)

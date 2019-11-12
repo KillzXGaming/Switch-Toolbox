@@ -165,8 +165,10 @@ namespace FirstPlugin
                 Version = reader.ReadUInt32();
                 Boundings = reader.ReadSingles(9);
 
-                if (Version >= 32)
-                    reader.ReadUInt32();
+                //This value is usually 68 for pkmn sw/sh
+                uint check = reader.ReadUInt32(); 
+                if (check > 100)
+                    reader.Seek(-4);
 
                 long TextureOffset = reader.ReadOffset(true, typeof(uint));
                 long ShaderNameOffset = reader.ReadOffset(true, typeof(uint));
@@ -324,8 +326,8 @@ namespace FirstPlugin
                             vertex.boneWeights = new List<float>(Buffer.Weights[v]);
                         if (Buffer.BoneIndex.Count > 0)
                             vertex.boneIds = new List<int>(Buffer.BoneIndex[v]);
-                        if (Buffer.Colors1.Count > 0)
-                            vertex.col = Buffer.Colors1[v] / 255f;
+                     //   if (Buffer.Colors1.Count > 0)
+                          //  vertex.col = Buffer.Colors1[v] / 255f;
                         if (Buffer.Binormals.Count > 0)
                             vertex.bitan = Buffer.Binormals[v];
 

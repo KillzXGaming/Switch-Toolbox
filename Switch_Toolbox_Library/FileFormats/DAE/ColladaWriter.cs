@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
 
-namespace Toolbox.Library
+namespace Toolbox.Library.Collada
 {
     public class ColladaWriter : IDisposable
     {
@@ -84,9 +84,36 @@ namespace Toolbox.Library
             Writer.WriteEndElement();
         }
 
+        public void WriteLibraryMaterials(List<Material> materials)
+        {
+            Writer.WriteStartElement("library_materials");
+            for (int i = 0; i < materials?.Count; i++)
+            {
+                Writer.WriteStartElement("library_effects");
+                Writer.WriteEndElement();
+            }
+            Writer.WriteEndElement();
+        }
+
+        public void WriteLibraryEffects(List<Material> materials)
+        {
+            Writer.WriteStartElement("library_effects");
+            for (int i = 0; i < materials?.Count; i++)
+            {
+                Writer.WriteStartElement("library_effects");
+                Writer.WriteEndElement();
+            }
+            Writer.WriteEndElement();
+        }
+
         public void Dispose()
         {
             Writer.Close();
         }
+    }
+
+    public class Material
+    {
+        public string Name { get; set; }
     }
 }
