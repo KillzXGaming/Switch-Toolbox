@@ -616,14 +616,23 @@ namespace Toolbox.Library
             Node root = new Node("skeleton_root");
             parentNode.Children.Add(root);
 
+            Console.WriteLine($"bones {skeleton.bones.Count}");
+
             if (skeleton.bones.Count > 0)
             {
-                Node boneNode = new Node(skeleton.bones[0].Text);
-                boneNode.Transform = AssimpHelper.GetBoneMatrix(skeleton.bones[0]);
-                root.Children.Add(boneNode);
+                foreach (var bone in skeleton.bones)
+                {
+                    //Get each root bone and find children
+                    if (bone.parentIndex == -1)
+                    {
+                        Node boneNode = new Node(bone.Text);
+                        boneNode.Transform = AssimpHelper.GetBoneMatrix(bone);
+                        root.Children.Add(boneNode);
 
-                foreach (STBone child in skeleton.bones[0].GetChildren())
-                    SaveBones(boneNode, child, skeleton);
+                        foreach (STBone child in bone.GetChildren())
+                            SaveBones(boneNode, child, skeleton);
+                    }
+                }
             }
         }
         private void SaveBones(Node parentBone, STBone bone, STSkeleton skeleton)

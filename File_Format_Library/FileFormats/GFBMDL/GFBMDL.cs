@@ -327,7 +327,7 @@ namespace FirstPlugin
                         if (Buffer.BoneIndex.Count > 0)
                             vertex.boneIds = new List<int>(Buffer.BoneIndex[v]);
                      //   if (Buffer.Colors1.Count > 0)
-                          //  vertex.col = Buffer.Colors1[v] / 255f;
+                      //      vertex.col = Buffer.Colors1[v] / 255f;
                         if (Buffer.Binormals.Count > 0)
                             vertex.bitan = Buffer.Binormals[v];
 
