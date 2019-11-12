@@ -11,6 +11,7 @@ using System.Xml;
 using ColladaHelper;
 using OpenTK;
 using Toolbox.Library.Rendering;
+using Toolbox.Library.Collada;
 
 namespace Toolbox.Library
 {
@@ -22,6 +23,12 @@ namespace Toolbox.Library
 
             public string ImageExtension = ".png";
             public string ImageFolder = "";
+        }
+
+        public class TextureMap
+        {
+            public uint TextureChannel = 0;
+            public string Type = "diffuse";
         }
 
         public class Version
@@ -38,6 +45,7 @@ namespace Toolbox.Library
 
             }
         }
+
 
 
         public List<STGenericObject> objects = new List<STGenericObject>();

@@ -248,6 +248,11 @@ namespace FirstPlugin
                     {
                         var bone = new Bone(Skeleton);
                         bone.Read(reader);
+                        if (i == 0)
+                            bone.parentIndex = -1;
+                        else if (bone.parentIndex == -1)
+                            bone.parentIndex = 0;
+
                         Skeleton.bones.Add(bone);
                     }
 
