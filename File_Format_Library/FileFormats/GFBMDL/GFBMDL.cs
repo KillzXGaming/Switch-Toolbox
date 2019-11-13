@@ -167,7 +167,7 @@ namespace FirstPlugin
                 Version = reader.ReadUInt32();
                 Boundings = reader.ReadSingles(9);
 
-                //Temp check for valid bone header size (does not vary sizes, always 26)
+                //Temp check for valid bone header size
                 using (reader.TemporarySeek(72, SeekOrigin.Begin))
                 {
                     long boneData = reader.ReadOffset(true, typeof(uint));
@@ -180,7 +180,7 @@ namespace FirstPlugin
                         {
                             reader.SeekBegin(offset);
                             uint infoOffset = reader.ReadUInt32();
-                            if (infoOffset == 26)
+                            if (infoOffset == 26 || infoOffset == 24)
                                 IsV2 = true;
                         }
                     }
