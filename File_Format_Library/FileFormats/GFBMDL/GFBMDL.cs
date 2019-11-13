@@ -154,6 +154,8 @@ namespace FirstPlugin
 
             public List<GFBMaterial> GenericMaterials = new List<GFBMaterial>();
 
+            public bool IsV2 = false;
+
             public void Read(FileReader reader, GFBMDL Root)
             {
                 Skeleton = new STSkeleton();
@@ -165,10 +167,27 @@ namespace FirstPlugin
                 Version = reader.ReadUInt32();
                 Boundings = reader.ReadSingles(9);
 
-                //This value is usually 68 for pkmn sw/sh
-                uint check = reader.ReadUInt32(); 
-                if (check > 100)
-                    reader.Seek(-4);
+                //Temp check for valid bone header size (does not vary sizes, always 26)
+                using (reader.TemporarySeek(72, SeekOrigin.Begin))
+                {
+                    long boneData = reader.ReadOffset(true, typeof(uint));
+                    if (boneData < reader.BaseStream.Length - 4)
+                    {
+                        reader.SeekBegin(boneData);
+                        reader.ReadUInt32(); //count
+                        long offset = reader.ReadOffset(true, typeof(uint));
+                        if (offset < reader.BaseStream.Length - 4)
+                        {
+                            reader.SeekBegin(offset);
+                            uint infoOffset = reader.ReadUInt32();
+                            if (infoOffset == 26)
+                                IsV2 = true;
+                        }
+                    }
+                }
+
+                if (IsV2)
+                    reader.ReadUInt32();
 
                 long TextureOffset = reader.ReadOffset(true, typeof(uint));
                 long ShaderNameOffset = reader.ReadOffset(true, typeof(uint));
@@ -497,6 +516,9 @@ namespace FirstPlugin
                     reader.SeekBegin(InfoPosition + ShaderStringNamePosition);
                     ShaderName = reader.ReadNameOffset(true, typeof(uint), true);
                 }
+
+                Console.WriteLine($"MAT Name {Name}");
+                Console.WriteLine($"ShaderName {ShaderName}");
 
                 if (ShaderParamAPosition != 0)
                 {
@@ -1212,6 +1234,8 @@ namespace FirstPlugin
                 {
                     reader.SeekBegin(InfoPosition + LayoutTypePosition);
                     Type = reader.ReadEnum<BufferType>(true);
+
+                    Console.WriteLine($"Type {Type}");
                 }
 
                 //Seek back to next in array
