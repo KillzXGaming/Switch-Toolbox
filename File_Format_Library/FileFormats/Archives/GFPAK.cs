@@ -196,6 +196,32 @@ namespace FirstPlugin
                 FileEntry fileEntry = new FileEntry(this);
                 fileEntry.Read(reader);
                 fileEntry.FileName = GetString(hashes[i], fileEntry.FileData);
+
+                switch (Utils.GetExtension(fileEntry.FileName))
+                {
+                    case ".gfbanm":
+                        fileEntry.FileName = $"Animations/{fileEntry.FileName}";
+                        break;
+                    case ".gfbanmcfg":
+                        fileEntry.FileName = $"AnimationConfigs/{fileEntry.FileName}";
+                        break;
+                    case ".gfbmdl":
+                        fileEntry.FileName = $"Models/{fileEntry.FileName}";
+                        break;
+                    case ".gfbpokecfg":
+                        fileEntry.FileName = $"PokeConfigs/{fileEntry.FileName}";
+                        break;
+                    case ".bntx":
+                        fileEntry.FileName = $"Textures/{fileEntry.FileName}";
+                        break;
+                    case ".bnsh":
+                        fileEntry.FileName = $"Shaders/{fileEntry.FileName}";
+                        break;
+                    default:
+                        fileEntry.FileName = $"OtherFiles/{fileEntry.FileName}";
+                        break;
+                }
+
                 files.Add(fileEntry);
             }
         }
