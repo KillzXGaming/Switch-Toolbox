@@ -47,7 +47,7 @@ namespace Toolbox.Library
         public bool HasTans;
         public bool HasVertColors;
         public string ObjectName;
-        public int BoneIndex;
+        public int BoneIndex = -1;
         public int MaterialIndex;
         public int VertexBufferIndex;
         public int DisplayLODIndex;

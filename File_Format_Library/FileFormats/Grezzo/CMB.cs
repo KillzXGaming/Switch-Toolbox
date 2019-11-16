@@ -349,8 +349,8 @@ namespace FirstPlugin
                                     && shape.BoneIndices.Type == CmbDataType.UByte; //Noclip checks the type for ubyte so do the same
 
                                 bool HasWeights = shape.Primatives[0].SkinningMode == SkinningMode.SMOOTH_SKINNING;
-
-                           /*    if (shape.BoneIndices.VertexData != null && HasSkinning && shape.BoneIndices.VertexData.Length > v)
+/*
+                               if (shape.BoneIndices.VertexData != null && HasSkinning && shape.BoneIndices.VertexData.Length > v)
                                 {
                                     var BoneIndices = shape.BoneIndices.VertexData[v];
                                     for (int j = 0; j < shape.boneDimension; j++)
