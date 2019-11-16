@@ -102,24 +102,28 @@ namespace FirstPlugin.NLG
             sfd.Filter = "Supported Formats|*.dae;";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                ExportModel(sfd.FileName);
+                ExportModelSettings exportDlg = new ExportModelSettings();
+                if (exportDlg.ShowDialog() == DialogResult.OK)
+                    ExportModel(sfd.FileName, exportDlg.Settings);
             }
         }
 
-        private void ExportModel(string FileName)
+        public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
-            AssimpSaver assimp = new AssimpSaver();
-            ExportModelSettings settings = new ExportModelSettings();
-
             List<STGenericMaterial> Materials = new List<STGenericMaterial>();
-            //  foreach (var msh in DataDictionary.Renderer.Meshes)
-            //    Materials.Add(msh.GetMaterial());
+            foreach (var mesh in Renderer.Meshes)
+                if (mesh.GetMaterial() != null)
+                    Materials.Add(mesh.GetMaterial());
+
+            var textures = new List<STGenericTexture>();
+            foreach (var tex in PluginRuntime.stikersTextures)
+                textures.Add(tex);
 
             var model = new STGenericModel();
             model.Materials = Materials;
             model.Objects = Renderer.Meshes;
 
-            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
+            DAE.Export(fileName, settings, model, textures);
         }
 
         public enum SectionMagic : uint

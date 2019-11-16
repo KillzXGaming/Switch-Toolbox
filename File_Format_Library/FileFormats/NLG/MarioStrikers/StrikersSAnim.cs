@@ -21,7 +21,7 @@ namespace FirstPlugin.NLG
 
         public bool Identify(System.IO.Stream stream)
         {
-            return Utils.GetExtension(FileName) == ".sanim";
+            return Utils.GetExtension(FileName) == ".sanim" || FileName.Contains(".sanim.zlib");
         }
 
         public Type[] Types

@@ -58,29 +58,45 @@ namespace FirstPlugin
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
             Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
             return Items.ToArray();
+        }
+
+        private void SaveAction(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Utils.GetAllFilters(this);
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
+            }
         }
 
         private void ExportAction(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Supported Formats|*.dae;";
-            if (sfd.ShowDialog() == DialogResult.OK) {
-                ExportModel(sfd.FileName);
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                ExportModelSettings exportDlg = new ExportModelSettings();
+                if (exportDlg.ShowDialog() == DialogResult.OK)
+                    ExportModel(sfd.FileName, exportDlg.Settings);
             }
         }
 
-        private void ExportModel(string FileName)
+        public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
-            AssimpSaver assimp = new AssimpSaver();
-            ExportModelSettings settings = new ExportModelSettings();
-
             var model = new STGenericModel();
             model.Materials = Materials;
             model.Objects = Renderer.Meshes;
+            var textures = new List<STGenericTexture>();
+            foreach (var tex in Renderer.TextureList)
+                textures.Add(tex);
 
-            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
+            DAE.Export(fileName, settings, model, textures, Skeleton);
         }
 
         bool DrawablesLoaded = false;
@@ -790,11 +806,25 @@ namespace FirstPlugin
                 }
             }
 
+            private uint GetTotalIndexCount()
+            {
+                uint total = 0;
+                foreach (var shape in SkeletalMeshChunk.ShapeChunk.SeperateShapes)
+                {
+                    foreach (var prim in shape.Primatives)
+                    {
+                        foreach (var subprim in prim.Primatives) //Note 3DS usually only has one sub primative
+                            total += (uint)subprim.Indices.Length;
+                    }
+                }
+                return total;
+            }
+
             public void Write(FileWriter writer, Header header)
             {
                 long pos = writer.Position;
 
-                writer.Write(Indices != null ? Indices.Length : 0);
+                writer.Write(GetTotalIndexCount());
                 //Reserve space for all the offses
                 writer.Write(0); //SkeletonChunk
                 if (header.Version >= CMBVersion.MM3DS)
@@ -857,7 +887,38 @@ namespace FirstPlugin
                 if (Indices != null && Indices.Length > 0)
                 {
                     writer.WriteUint32Offset(pos + (_offsetPos += 4));
-                    writer.Write(Indices);
+
+                    long indexBufferPos = writer.Position;
+                    foreach (var shape in SkeletalMeshChunk.ShapeChunk.SeperateShapes)
+                    {
+                        foreach (var prim in shape.Primatives)
+                        {
+                            foreach (var subprim in prim.Primatives) //Note 3DS usually only has one sub primative
+                            {
+                                subprim.Indices = new uint[subprim.IndexCount];
+
+                                writer.SeekBegin(indexBufferPos + subprim.Offset);
+
+                                switch (subprim.IndexType)
+                                {
+                                    case CmbDataType.UByte:
+                                        for (int i = 0; i < subprim.IndexCount; i++)
+                                            writer.Write((byte)subprim.Indices[i]);
+                                        break;
+                                    case CmbDataType.UShort:
+                                        for (int i = 0; i < subprim.IndexCount; i++)
+                                            writer.Write((ushort)subprim.Indices[i]);
+                                        break;
+                                    case CmbDataType.UInt:
+                                        for (int i = 0; i < subprim.IndexCount; i++)
+                                            writer.Write((uint)subprim.Indices[i]);
+                                        break;
+                                    default:
+                                        throw new Exception("Unsupported index type! " + subprim.IndexType);
+                                }
+                            }
+                        }
+                    }
                 }
 
                 if (TextureChunk != null && TextureChunk.Textures.Count > 0)
@@ -894,8 +955,31 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
+                long _offsetPos = writer.Position;
+                writer.Write(uint.MaxValue);//MeshChunk
+                writer.Write(uint.MaxValue);//ShapeChunk
+
+                if (MeshChunk != null)
+                {
+                    writer.WriteUint32Offset(_offsetPos);
+                    MeshChunk.Write(writer, header);
+                }
+
+                if (ShapeChunk != null)
+                {
+                    writer.WriteUint32Offset(_offsetPos + 4);
+                    ShapeChunk.Write(writer, header);
+                }
+
+
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)(endPos - pos));
+                }
             }
         }
 
@@ -905,27 +989,30 @@ namespace FirstPlugin
 
             public List<Mesh> Meshes = new List<Mesh>();
 
+            public uint Unknown;
+
             public void Read(FileReader reader, Header header)
             {
                 reader.ReadSignature(4, Magic);
                 uint sectionSize = reader.ReadUInt32();
                 uint meshCount = reader.ReadUInt32();
-                uint unknown = reader.ReadUInt32();
+                Unknown = reader.ReadUInt32();
 
                 long meshPos = reader.Position;
                 for (int i = 0; i < meshCount; i++)
                 {
-                    if (header.Version == CMBVersion.OOT3DS)
-                        reader.SeekBegin(meshPos + (i * 4));
-                    else if (header.Version == CMBVersion.MM3DS)
-                        reader.SeekBegin(meshPos + (i * 0x0C));
-                    else if (header.Version >= CMBVersion.LM3DS)
-                        reader.SeekBegin(meshPos + (i * 0x58));
-
                     Mesh mesh = new Mesh();
+
                     mesh.SepdIndex = reader.ReadUInt16();
                     mesh.MaterialIndex = reader.ReadByte();
                     Meshes.Add(mesh);
+
+                    if (header.Version == CMBVersion.OOT3DS)
+                        mesh.unks = reader.ReadBytes(4);
+                    else if (header.Version == CMBVersion.MM3DS)
+                        mesh.unks = reader.ReadBytes(0x0C);
+                    else if (header.Version >= CMBVersion.LM3DS)
+                        mesh.unks = reader.ReadBytes(0x58);
 
                     Console.WriteLine($"SepdIndex {mesh.SepdIndex}");
                     Console.WriteLine($"MaterialIndex { mesh.MaterialIndex}");
@@ -934,17 +1021,29 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
                 writer.Write(Meshes.Count);
-                for (int i = 0; i < Meshes.Count; i++)
-                {
+                writer.Write(Unknown);
 
+                for (int i = 0; i < Meshes.Count; i++) {
+                    writer.Write(Meshes[i].unks);
+                    writer.Write(Meshes[i].SepdIndex);
+                    writer.Write(Meshes[i].MaterialIndex);
+                }
+
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)(endPos - pos));
                 }
             }
 
             public class Mesh
             {
+                public byte[] unks;
+
                 public ushort SepdIndex { get; set; }
                 public byte MaterialIndex { get; set; }
             }
@@ -970,7 +1069,7 @@ namespace FirstPlugin
                 for (int i = 0; i < sepdCount; i++)
                 {
                     reader.SeekBegin(pos + offsets[i]);
-                    var sepd= new SeperateShape();
+                    var sepd = new SeperateShape();
                     sepd.Read(reader, header);
                     SeperateShapes.Add(sepd);
                 }
@@ -978,9 +1077,24 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
+                writer.Write(SeperateShapes.Count);
+                writer.Write(Unknown);
+                long offsetPos = writer.Position;
+                writer.Write(new ushort[SeperateShapes.Count]);
+                for (int i = 0; i < SeperateShapes.Count; i++)
+                {
+                    writer.WriteUint16Offset(offsetPos, pos);
+                    SeperateShapes[i].Write(writer, header);
+                }
 
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)(endPos - pos));
+                }
             }
         }
 
@@ -1045,6 +1159,8 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue); //section size
                 writer.Write(Primatives.Count);
@@ -1061,6 +1177,11 @@ namespace FirstPlugin
                 WriteVertexAttrib(writer, BoneIndices);
                 WriteVertexAttrib(writer, BoneWeights);
                 WriteVertexAttrib(writer, Tangent);
+
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)(endPos - pos));
+                }
             }
 
             private SepdVertexAttribute ReadVertexAttrib(FileReader reader)
@@ -1083,11 +1204,10 @@ namespace FirstPlugin
                 return att;
             }
 
-            private void WriteVertexAttrib(FileWriter writer, SepdVertexAttribute attribute)
+            private void WriteVertexAttrib(FileWriter writer, SepdVertexAttribute att)
             {
                 long pos = writer.Position;
 
-                SepdVertexAttribute att = new SepdVertexAttribute();
                 writer.Write(att.StartPosition);
                 writer.Write(att.Scale);
                 writer.Write(att.Type, true);
@@ -1149,8 +1269,32 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
+                writer.Write(Primatives.Count);
+                writer.Write(SkinningMode, true);
+                writer.Write((ushort)BoneIndexTable.Length);
+
+                long boneIndexOfsPos = writer.Position;
+                writer.Write(uint.MaxValue); //bone index offset
+
+                long primativeOfsPos = writer.Position;
+                writer.Write(uint.MaxValue); //primative offset
+
+                writer.WriteUint32Offset(boneIndexOfsPos, pos);
+                writer.Write(BoneIndexTable);
+                writer.Align(4);
+
+                writer.WriteUint32Offset(primativeOfsPos, pos);
+                for (int i = 0; i < Primatives.Count; i++)
+                    Primatives[i].Write(writer, header);
+
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)(endPos - pos));
+                }
             }
         }
 
@@ -1179,14 +1323,17 @@ namespace FirstPlugin
                 }
             }
 
+            public uint Unknown;
+            public uint Unknown2;
+
             public void Read(FileReader reader, Header header)
             {
                 long pos = reader.Position;
 
                 reader.ReadSignature(4, Magic);
                 uint sectionSize = reader.ReadUInt32();
-                uint unknown = reader.ReadUInt32();
-                uint unknown2 = reader.ReadUInt32();
+                Unknown = reader.ReadUInt32();
+                Unknown2 = reader.ReadUInt32();
                 IndexType = reader.ReadEnum<CmbDataType>(true);
                 reader.Seek(2); //padding
 
@@ -1199,8 +1346,21 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
+                writer.Write(Unknown);
+                writer.Write(Unknown2);
+                writer.Write(IndexType, true);
+                writer.Seek(2);
+                writer.Write(IndexCount);
+                writer.Write((ushort)(Offset / sizeof(ushort)));
+
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)(endPos - pos));
+                }
             }
         }
 
@@ -1220,9 +1380,16 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
                 writer.Write(data);
+
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)(endPos - pos));
+                }
             }
         }
 
@@ -1376,16 +1543,29 @@ namespace FirstPlugin
         {
             private const string Magic = "qtrs";
 
+            byte[] data;
+
             public void Read(FileReader reader, Header header)
             {
                 reader.ReadSignature(4, Magic);
                 uint sectionSize = reader.ReadUInt32();
+
+                data = reader.getSection((uint)reader.Position, sectionSize);
             }
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
+                writer.Write(data);
+
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin))
+                {
+                    writer.Write((uint)(endPos - pos));
+                }
             }
         }
 

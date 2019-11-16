@@ -99,33 +99,32 @@ namespace FirstPlugin
             header.Read(new FileReader(stream), this);
 
             ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Model", null, ExportModelAction, Keys.Control | Keys.E));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Model", null, ExportAction, Keys.Control | Keys.E));
         }
 
-        private void ExportModelAction(object sender, EventArgs args) {
-            ExportModel();
-        }
-
-        private void ExportModel()
+        private void ExportAction(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Supported Formats|*.dae;";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                ExportModel(sfd.FileName);
+                ExportModelSettings exportDlg = new ExportModelSettings();
+                if (exportDlg.ShowDialog() == DialogResult.OK)
+                    ExportModel(sfd.FileName, exportDlg.Settings);
             }
         }
 
-        private void ExportModel(string FileName)
+        public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
-            AssimpSaver assimp = new AssimpSaver();
-            ExportModelSettings settings = new ExportModelSettings();
-
             var model = new STGenericModel();
             model.Materials = header.GenericMaterials;
             model.Objects = Renderer.Meshes;
+            var textures = new List<STGenericTexture>();
+            foreach (var bntx in PluginRuntime.bntxContainers)
+                foreach (var tex in bntx.Textures.Values)
+                    textures.Add(tex);
 
-            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), ((STSkeleton)DrawableContainer.Drawables[0]));
+            DAE.Export(fileName, settings, model, textures, ((STSkeleton)DrawableContainer.Drawables[0]));
         }
 
         public void Unload()
@@ -139,6 +138,8 @@ namespace FirstPlugin
         }
 
         //Todo replace tedius offset handling with a class to store necessary data and methods to execute
+        //Structure thanks to RTB's script https://www.vg-resource.com/thread-29836.html
+        //And https://github.com/dragonation/pokemon-switch-model-resolver/blob/master/src/parse.js
         public class Header
         {
             public STSkeleton Skeleton { get; set; }
@@ -156,6 +157,8 @@ namespace FirstPlugin
 
             public bool IsV2 = false;
 
+            public List<int> SkinningIndices = new List<int>();
+
             public void Read(FileReader reader, GFBMDL Root)
             {
                 Skeleton = new STSkeleton();
@@ -165,29 +168,14 @@ namespace FirstPlugin
                 reader.SetByteOrder(false);
 
                 Version = reader.ReadUInt32();
-                Boundings = reader.ReadSingles(9);
-
-                //Temp check for valid bone header size
-                using (reader.TemporarySeek(72, SeekOrigin.Begin))
-                {
-                    long boneData = reader.ReadOffset(true, typeof(uint));
-                    if (boneData < reader.BaseStream.Length - 4)
-                    {
-                        reader.SeekBegin(boneData);
-                        reader.ReadUInt32(); //count
-                        long offset = reader.ReadOffset(true, typeof(uint));
-                        if (offset < reader.BaseStream.Length - 4)
-                        {
-                            reader.SeekBegin(offset);
-                            uint infoOffset = reader.ReadUInt32();
-                            if (infoOffset == 26 || infoOffset == 24)
-                                IsV2 = true;
-                        }
-                    }
-                }
+                ushort v2Check = reader.ReadUInt16();
+                if (v2Check == 0)
+                    IsV2 = true;
 
                 if (IsV2)
-                    reader.ReadUInt32();
+                    reader.SeekBegin(0x28);
+                else
+                    reader.SeekBegin(0x2C);
 
                 long TextureOffset = reader.ReadOffset(true, typeof(uint));
                 long ShaderNameOffset = reader.ReadOffset(true, typeof(uint));
@@ -273,6 +261,9 @@ namespace FirstPlugin
                             bone.parentIndex = 0;
 
                         Skeleton.bones.Add(bone);
+
+                        if (bone.HasSkinning)
+                            SkinningIndices.Add(Skeleton.bones.IndexOf(bone));
                     }
 
                     foreach (var bone in Skeleton.bones)
@@ -349,8 +340,12 @@ namespace FirstPlugin
                         if (Buffer.Weights.Count > 0)
                             vertex.boneWeights = new List<float>(Buffer.Weights[v]);
                         if (Buffer.BoneIndex.Count > 0)
-                            vertex.boneIds = new List<int>(Buffer.BoneIndex[v]);
-                     //   if (Buffer.Colors1.Count > 0)
+                        {
+                            var boneIndexList = Buffer.BoneIndex[v];
+                            for (int j = 0; j < boneIndexList.Length; j++)
+                                vertex.boneIds.Add(SkinningIndices[boneIndexList[j]]);
+                        }
+                        //   if (Buffer.Colors1.Count > 0)
                       //      vertex.col = Buffer.Colors1[v] / 255f;
                         if (Buffer.Binormals.Count > 0)
                             vertex.bitan = Buffer.Binormals[v];
@@ -1249,6 +1244,8 @@ namespace FirstPlugin
 
             public Bone(STSkeleton skeleton) : base(skeleton) { }
 
+            public bool HasSkinning = false;
+
             public void Read(FileReader reader)
             {
                 long DataPosition = reader.Position;
@@ -1264,6 +1261,8 @@ namespace FirstPlugin
 
                 BoneInfo = new BoneInfo();
                 BoneInfo.Read(reader);
+
+                HasSkinning = BoneInfo.BoneRigFlag1 == 4;
 
                 RotationType = BoneRotationType.Euler;
                 Checked = true;
@@ -1326,8 +1325,8 @@ namespace FirstPlugin
             internal ushort ScalePosition { get; set; }
             internal ushort RotationPosition { get; set; }
             internal ushort TranslationPosition { get; set; }
-            internal ushort Unknown4Position { get; set; }
-            internal ushort Unknown5Position { get; set; }
+            internal ushort BoneRigFlag2 { get; set; }
+            internal ushort BoneRigFlag1 { get; set; }
 
             public void Read(FileReader reader)
             {
@@ -1341,8 +1340,8 @@ namespace FirstPlugin
                 ScalePosition = reader.ReadUInt16();
                 RotationPosition = reader.ReadUInt16();
                 TranslationPosition = reader.ReadUInt16();
-                Unknown4Position = reader.ReadUInt16(); //Padding
-                Unknown5Position = reader.ReadUInt16();  //Padding
+                BoneRigFlag2 = reader.ReadUInt16(); 
+                BoneRigFlag1 = reader.ReadUInt16(); 
             }
         }
 

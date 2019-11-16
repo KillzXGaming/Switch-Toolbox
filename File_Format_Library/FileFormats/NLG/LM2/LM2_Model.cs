@@ -46,18 +46,13 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
 
         private void ExportModel(string FileName)
         {
-            AssimpSaver assimp = new AssimpSaver();
-            ExportModelSettings settings = new ExportModelSettings();
-
-            List<STGenericMaterial> Materials = new List<STGenericMaterial>();
-            //  foreach (var msh in DataDictionary.Renderer.Meshes)
-            //    Materials.Add(msh.GetMaterial());
-
             var model = new STGenericModel();
-            model.Materials = Materials;
+            model.Materials = new List<STGenericMaterial>();
             model.Objects = DataDictionary.Renderer.Meshes;
 
-            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
+            ExportModelSettings settings = new ExportModelSettings();
+            if (settings.ShowDialog() == DialogResult.OK)
+                DAE.Export(FileName, settings.Settings, model, new List<STGenericTexture>());
         }
     }
 
@@ -109,34 +104,34 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
-            Items.Add(new ToolStripMenuItem("Export", null, ExportModelAction, Keys.Control | Keys.E));
+            Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
             return Items.ToArray();
         }
 
-        private void ExportModelAction(object sender, EventArgs args)
+
+        private void ExportAction(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Supported Formats|*.dae;";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                ExportModel(sfd.FileName);
+                ExportModelSettings exportDlg = new ExportModelSettings();
+                if (exportDlg.ShowDialog() == DialogResult.OK)
+                    ExportModel(sfd.FileName, exportDlg.Settings);
             }
         }
 
-        private void ExportModel(string FileName)
+        public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
-            AssimpSaver assimp = new AssimpSaver();
-            ExportModelSettings settings = new ExportModelSettings();
-
             List<STGenericMaterial> Materials = new List<STGenericMaterial>();
-            //  foreach (var msh in DataDictionary.Renderer.Meshes)
-            //    Materials.Add(msh.GetMaterial());
+            foreach (STGenericMaterial mat in Nodes[0].Nodes)
+                Materials.Add(mat);
 
             var model = new STGenericModel();
             model.Materials = Materials;
             model.Objects = RenderedMeshes;
 
-            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
+            DAE.Export(fileName, settings, model, new List<STGenericTexture>());
         }
 
 

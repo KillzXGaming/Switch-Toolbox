@@ -91,20 +91,19 @@ namespace FirstPlugin
             sfd.Filter = "Supported Formats|*.dae;";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                ExportModel(sfd.FileName);
+                ExportModelSettings exportDlg = new ExportModelSettings();
+                if (exportDlg.ShowDialog() == DialogResult.OK)
+                    ExportModel(sfd.FileName, exportDlg.Settings);
             }
         }
 
-        private void ExportModel(string FileName)
+        public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
-            AssimpSaver assimp = new AssimpSaver();
-            ExportModelSettings settings = new ExportModelSettings();
-
             var model = new STGenericModel();
-            model.Materials = new List<STGenericMaterial>();
-            model.Objects = Renderer.Meshes;
+            model.Materials = new List<STGenericMaterial>(); 
+            model.Objects = Renderer.Meshes; 
 
-            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
+            DAE.Export(fileName, settings, model, new List<STGenericTexture>(), new STSkeleton());
         }
 
         public Header GMXHeader;

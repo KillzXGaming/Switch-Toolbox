@@ -287,6 +287,16 @@ namespace Toolbox.Library
             return bone;
         }
 
+        public Matrix4 GetBoneTransform(STBone Bone)
+        {
+            if (Bone == null)
+                return Matrix4.Identity;
+            if (Bone.parentIndex == -1)
+                return Bone.GetTransform();
+            else
+                return Bone.GetTransform() * GetBoneTransform(bones[Bone.parentIndex]);
+        }
+
         public int boneIndex(string name)
         {
             for (int i = 0; i < bones.Count; i++)

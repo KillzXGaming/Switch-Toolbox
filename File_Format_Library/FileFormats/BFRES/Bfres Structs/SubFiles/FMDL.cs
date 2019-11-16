@@ -545,22 +545,11 @@ namespace Bfres.Structs
                     OBJ.ExportModel(FileName, this, GetTextures());
                     break;
                 default:
-                    if(Runtime.DEVELOPER_DEBUG_MODE)
-                    {
-                        
-                    }
-                    else
-                    {
-                        AssimpSaver assimp = new AssimpSaver();
-                        ExportModelSettings settings = new ExportModelSettings();
-                        if (settings.ShowDialog() == DialogResult.OK)
-                        {
-                            if (settings.ExportTextures)
-                                assimp.SaveFromModel(this, FileName, GetTextures(), Skeleton, Skeleton.Node_Array.ToList());
-                            else
-                                assimp.SaveFromModel(this, FileName, new List<STGenericTexture>(), Skeleton, Skeleton.Node_Array.ToList());
-                        }
-                    }
+
+                    ExportModelSettings settings = new ExportModelSettings();
+                    if (settings.ShowDialog() == DialogResult.OK)
+                        DAE.Export(FileName, settings.Settings, this, GetTextures(), 
+                            Skeleton, Skeleton.Node_Array.ToList());
 
                     break;
             }

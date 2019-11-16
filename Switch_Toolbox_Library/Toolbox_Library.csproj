@@ -416,11 +416,9 @@
     <Compile Include="FileFormats\Animation\SMD.cs" />
     <Compile Include="FileFormats\APNG\APNG.cs" />
     <Compile Include="FileFormats\APNG\CRC.cs" />
-    <Compile Include="FileFormats\Assimp\AssimpSaver.cs" />
     <Compile Include="FileFormats\Animation\SEANIM.cs" />
     <Compile Include="FileFormats\CSharpImageLibrary\DDS_BlockHelpers.cs" />
     <Compile Include="FileFormats\CSharpImageLibrary\ImageEngine.cs" />
-    <Compile Include="FileFormats\DAE\ColladaHelper.cs" />
     <Compile Include="FileFormats\DAE\collada_schema_1_4.cs" />
     <Compile Include="FileFormats\DAE\DAE.cs" />
     <Compile Include="FileFormats\OBJ.cs" />

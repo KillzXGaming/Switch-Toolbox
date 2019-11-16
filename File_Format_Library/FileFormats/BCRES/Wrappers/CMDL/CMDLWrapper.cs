@@ -29,16 +29,20 @@ namespace FirstPlugin
 
         public override void Export(string FileName)
         {
-            AssimpSaver assimp = new AssimpSaver();
-            ExportModelSettings settings = new ExportModelSettings();
+            ExportModelSettings exportDlg = new ExportModelSettings();
+            if (exportDlg.ShowDialog() == DialogResult.OK)
+                ExportModel(FileName, exportDlg.Settings);
+        }
 
+        public void ExportModel(string fileName, DAE.ExportSettings settings)
+        {
             var model = new STGenericModel();
             model.Materials = Materials;
             model.Objects = Shapes;
-          
 
-            assimp.SaveFromModel(model, FileName, BcresParent.GetTextures(), Skeleton.Renderable);
+            DAE.Export(fileName, settings, model, BcresParent.GetTextures(), Skeleton.Renderable);
         }
+
 
         public override string ExportFilter => FileFilters.CMDL;
 

@@ -12,17 +12,22 @@ namespace Toolbox.Library.Forms
 {
     public partial class ExportModelSettings : STForm
     {
-        public bool ExportTextures
-        {
-            get
-            {
-                return exportTexturesChkBox.Checked;
-            }
-        }
+        public DAE.ExportSettings Settings = new DAE.ExportSettings();
 
         public ExportModelSettings()
         {
             InitializeComponent();
+
+            chkFlipUvsVertical.Checked = Settings.FlipTexCoordsVertical;
+            exportTexturesChkBox.Checked = Settings.ExportTextures;
+        }
+
+        private void exportTexturesChkBox_CheckedChanged(object sender, EventArgs e) {
+            Settings.ExportTextures = exportTexturesChkBox.Checked;
+        }
+
+        private void chkFlipUvsVertical_CheckedChanged(object sender, EventArgs e) {
+            Settings.FlipTexCoordsVertical = chkFlipUvsVertical.Checked;
         }
     }
 }

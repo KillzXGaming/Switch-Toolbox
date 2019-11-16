@@ -100,9 +100,9 @@ namespace FirstPlugin
                         model.Unload();
                     }
 
-                    AssimpSaver assimp = new AssimpSaver();
                     ExportModelSettings settings = new ExportModelSettings();
-                    assimp.SaveFromModel(Objects, Materials, sfd.FileName, new List<STGenericTexture>(), Skeleton);
+                    if (settings.ShowDialog() == DialogResult.OK)
+                        DAE.Export(sfd.FileName, settings.Settings, Objects, Materials, new List<STGenericTexture>(), Skeleton);
                 }
             }
 
@@ -126,7 +126,7 @@ namespace FirstPlugin
                         string Path = System.IO.Path.Combine(folderDlg.SelectedPath,
                                       System.IO.Path.GetFileNameWithoutExtension(file) + ".dae");
 
-                        model.ExportModel(Path);
+                        model.ExportModel(Path, new DAE.ExportSettings());
                         model.Unload();
                     }
                 }
@@ -146,28 +146,23 @@ namespace FirstPlugin
             header.Read(new FileReader(stream), this);
 
             ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Model", null, ExportModelAction, Keys.Control | Keys.E));
+            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Model", null, ExportAction, Keys.Control | Keys.E));
         }
 
-        private void ExportModelAction(object sender, EventArgs args) {
-            ExportModel();
-        }
-
-        private void ExportModel()
+        private void ExportAction(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Supported Formats|*.dae;";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                ExportModel(sfd.FileName);
+                ExportModelSettings exportDlg = new ExportModelSettings();
+                if (exportDlg.ShowDialog() == DialogResult.OK)
+                    ExportModel(sfd.FileName, exportDlg.Settings);
             }
         }
 
-        private void ExportModel(string FileName)
+        public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
-            AssimpSaver assimp = new AssimpSaver();
-            ExportModelSettings settings = new ExportModelSettings();
-
             List<STGenericMaterial> Materials = new List<STGenericMaterial>();
             foreach (STGenericMaterial mat in Nodes[0].Nodes)
                 Materials.Add(mat);
@@ -176,7 +171,7 @@ namespace FirstPlugin
             model.Materials = Materials;
             model.Objects = ((GenericModelRenderer)DrawableContainer.Drawables[1]).Meshes;
 
-            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), ((STSkeleton)DrawableContainer.Drawables[0]));
+            DAE.Export(fileName, settings, model, new List<STGenericTexture>(), ((STSkeleton)DrawableContainer.Drawables[0]));
         }
 
         public void Unload()

@@ -40,24 +40,23 @@ namespace FirstPlugin.LuigisMansion3
             sfd.Filter = "Supported Formats|*.dae;";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                ExportModel(sfd.FileName);
+                ExportModelSettings exportDlg = new ExportModelSettings();
+                if (exportDlg.ShowDialog() == DialogResult.OK)
+                    ExportModel(sfd.FileName, exportDlg.Settings);
             }
         }
 
-        private void ExportModel(string FileName)
+        public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
-            AssimpSaver assimp = new AssimpSaver();
-            ExportModelSettings settings = new ExportModelSettings();
-
             List<STGenericMaterial> Materials = new List<STGenericMaterial>();
-            //  foreach (var msh in DataDictionary.Renderer.Meshes)
-            //    Materials.Add(msh.GetMaterial());
+            foreach (STGenericMaterial mat in Nodes[0].Nodes)
+                Materials.Add(mat);
 
             var model = new STGenericModel();
             model.Materials = Materials;
             model.Objects = DataDictionary.Renderer.Meshes;
 
-            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
+            DAE.Export(fileName, settings, model, new List<STGenericTexture>());
         }
     }
 
@@ -157,26 +156,24 @@ namespace FirstPlugin.LuigisMansion3
             sfd.Filter = "Supported Formats|*.dae;";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                ExportModel(sfd.FileName);
+                ExportModelSettings exportDlg = new ExportModelSettings();
+                if (exportDlg.ShowDialog() == DialogResult.OK)
+                    ExportModel(sfd.FileName, exportDlg.Settings);
             }
         }
 
-        private void ExportModel(string FileName)
+        public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
-            AssimpSaver assimp = new AssimpSaver();
-            ExportModelSettings settings = new ExportModelSettings();
-
             List<STGenericMaterial> Materials = new List<STGenericMaterial>();
-            //  foreach (var msh in DataDictionary.Renderer.Meshes)
-            //    Materials.Add(msh.GetMaterial());
+            foreach (STGenericMaterial mat in Nodes[0].Nodes)
+                Materials.Add(mat);
 
             var model = new STGenericModel();
             model.Materials = Materials;
             model.Objects = RenderedMeshes;
 
-            assimp.SaveFromModel(model, FileName, new List<STGenericTexture>(), new STSkeleton());
+            DAE.Export(fileName, settings, model, new List<STGenericTexture>());
         }
-
 
         public LM3_Model(LM3_DICT dict)
         {

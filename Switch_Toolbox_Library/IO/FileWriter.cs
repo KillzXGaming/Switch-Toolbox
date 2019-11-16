@@ -126,12 +126,21 @@ namespace Toolbox.Library.IO
         //
         // RelativeOffsetPosition controls the relative position the offset starts at
         //
-        public void WriteUint32Offset(long target, long RelativeOffsetPosition = 0) 
+        public void WriteUint32Offset(long target, long relativePosition = 0) 
         {
             long pos = Position;
             using (TemporarySeek(target, SeekOrigin.Begin))
             {
-                Write((uint)(pos - RelativeOffsetPosition));
+                Write((uint)(pos - relativePosition));
+            }
+        }
+
+        public void WriteUint16Offset(long target, long relativePosition)
+        {
+            long pos = Position;
+            using (TemporarySeek(target, SeekOrigin.Begin))
+            {
+                Write((ushort)(pos - relativePosition));
             }
         }
 

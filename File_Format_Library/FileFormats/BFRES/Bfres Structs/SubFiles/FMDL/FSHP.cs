@@ -819,8 +819,7 @@ namespace Bfres.Structs
                         OBJ.ExportMesh(sfd.FileName, this);
                         break;
                     default:
-                        AssimpSaver assimp = new AssimpSaver();
-                        assimp.SaveFromObject(this, sfd.FileName);
+                        DAE.Export(sfd.FileName, new DAE.ExportSettings(), this);
                         break;
                 }
             }

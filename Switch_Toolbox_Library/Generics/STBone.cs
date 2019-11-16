@@ -37,6 +37,22 @@ namespace Toolbox.Library
         public Quaternion rot = Quaternion.FromMatrix(Matrix3.Zero);
         public Matrix4 Transform, invert;
 
+
+        public Matrix4 GetTransform()
+        {
+            Vector3 mPos = new Vector3(position[0], position[1],position[2]);
+
+            Quaternion mRot;
+            if (RotationType == STBone.BoneRotationType.Quaternion)
+                mRot = (STSkeleton.FromQuaternionAngles(rotation[2], rotation[1],rotation[0], rotation[3]));
+            else
+                mRot = (STSkeleton.FromEulerAngles(rotation[2],rotation[1],rotation[0]));
+
+            Vector3 mSca = new Vector3(scale[0], scale[1],scale[2]);
+
+            return Matrix4.CreateScale(mSca) * Matrix4.CreateFromQuaternion(mRot) * Matrix4.CreateTranslation(mPos);
+        }
+
         //Used for shifting models with the bones in the shader
         public Matrix4 ModelMatrix = Matrix4.Identity;
 
