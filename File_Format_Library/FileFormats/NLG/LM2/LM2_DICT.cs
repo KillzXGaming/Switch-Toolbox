@@ -546,33 +546,55 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
             {
                 byte[] Data = new byte[DecompressedSize];
 
+                string DataFile = ParentDictionary.FileName.Replace(".dict", ".data");
+
                 string FolderPath = System.IO.Path.GetDirectoryName(ParentDictionary.FilePath);
-                string DataFile = System.IO.Path.Combine(FolderPath, $"{ParentDictionary.FileName.Replace(".dict", ".data")}");
+                string DataPath = System.IO.Path.Combine(FolderPath, $"{DataFile}");
 
                 if (System.IO.File.Exists(DataFile))
                 {
-                    using (var reader = new FileReader(DataFile))
+                    using (var reader = new FileReader(DataPath)) {
+                        return ReadDataFile(reader);
+                    }
+                }
+                else
+                {
+                    if (ParentDictionary.IFileInfo.ArchiveParent != null)
                     {
-                        reader.SeekBegin(Offset);
-                        if (ParentDictionary.IsCompressed)
-                        {
-                            ushort Magic = reader.ReadUInt16();
-                            reader.SeekBegin(Offset);
-
-                            Data = reader.ReadBytes((int)CompressedSize);
-                            if (Magic == 0x9C78 || Magic == 0xDA78)
-                                return STLibraryCompression.ZLIB.Decompress(Data);
-                            else //Unknown compression 
-                                return Data;
-                        }
-                        else
-                        {
-                            return reader.ReadBytes((int)DecompressedSize);
-                        }
+                        foreach (var file in ParentDictionary.IFileInfo.ArchiveParent.Files)
+                            if (file.FileName == DataFile)
+                            {
+                                using (var reader = new FileReader(file.FileData))
+                                {
+                                    return ReadDataFile(reader);
+                                }
+                            }
                     }
                 }
 
                 return Data;
+            }
+
+            private byte[] ReadDataFile(FileReader reader)
+            {
+                byte[] Data;
+
+                reader.SeekBegin(Offset);
+                if (ParentDictionary.IsCompressed)
+                {
+                    ushort Magic = reader.ReadUInt16();
+                    reader.SeekBegin(Offset);
+
+                    Data = reader.ReadBytes((int)CompressedSize);
+                    if (Magic == 0x9C78 || Magic == 0xDA78)
+                        return STLibraryCompression.ZLIB.Decompress(Data);
+                    else //Unknown compression 
+                        return Data;
+                }
+                else
+                {
+                    return reader.ReadBytes((int)DecompressedSize);
+                }
             }
         }
     }

@@ -49,8 +49,9 @@ namespace FirstPlugin.LuigisMansion3
         public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
             List<STGenericMaterial> Materials = new List<STGenericMaterial>();
-            foreach (STGenericMaterial mat in Nodes[0].Nodes)
-                Materials.Add(mat);
+            foreach (STGenericObject mesh in DataDictionary.Renderer.Meshes)
+                if (mesh.GetMaterial() != null)
+                    Materials.Add(mesh.GetMaterial());
 
             var model = new STGenericModel();
             model.Materials = Materials;
@@ -165,8 +166,9 @@ namespace FirstPlugin.LuigisMansion3
         public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
             List<STGenericMaterial> Materials = new List<STGenericMaterial>();
-            foreach (STGenericMaterial mat in Nodes[0].Nodes)
-                Materials.Add(mat);
+            foreach (STGenericObject mesh in RenderedMeshes)
+                if (mesh.GetMaterial() != null)
+                    Materials.Add(mesh.GetMaterial());
 
             var model = new STGenericModel();
             model.Materials = Materials;
