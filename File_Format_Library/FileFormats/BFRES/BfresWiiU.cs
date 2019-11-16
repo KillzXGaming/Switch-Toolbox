@@ -421,11 +421,7 @@ namespace FirstPlugin
                 mat.ShaderParamData = new byte[0];
 
             byte[] ParamData = WriteShaderParams(m, mat);
-
-            if (ParamData.Length != mat.ShaderParamData.Length)
-                throw new Exception("Param size mis match!");
-            else
-                mat.ShaderParamData = ParamData;
+            mat.ShaderParamData = ParamData;
 
             WriteRenderInfo(m, mat);
             WriteTextureRefs(m, mat, ResFile);
