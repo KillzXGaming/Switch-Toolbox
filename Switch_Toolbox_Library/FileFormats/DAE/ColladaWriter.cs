@@ -46,6 +46,11 @@ namespace Toolbox.Library.Collada
                 Indentation = 2,
             };
 
+            System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+
+            System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+
             WriteDAEHeader();
         }
 
@@ -864,6 +869,10 @@ namespace Toolbox.Library.Collada
             Writer?.Close();
         }
 
+        private static void WriteFloats(object[] values)
+        {
+
+        }
 
         private class ValueContainer<T> : IEquatable<ValueContainer<T>> where T : struct
         {
