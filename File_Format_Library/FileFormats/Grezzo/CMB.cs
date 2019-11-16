@@ -1008,11 +1008,11 @@ namespace FirstPlugin
                     Meshes.Add(mesh);
 
                     if (header.Version == CMBVersion.OOT3DS)
-                        mesh.unks = reader.ReadBytes(4);
+                        mesh.unks = reader.ReadBytes(1);
                     else if (header.Version == CMBVersion.MM3DS)
-                        mesh.unks = reader.ReadBytes(0x0C);
+                        mesh.unks = reader.ReadBytes(9);
                     else if (header.Version >= CMBVersion.LM3DS)
-                        mesh.unks = reader.ReadBytes(0x58);
+                        mesh.unks = reader.ReadBytes(85);
 
                     Console.WriteLine($"SepdIndex {mesh.SepdIndex}");
                     Console.WriteLine($"MaterialIndex { mesh.MaterialIndex}");
