@@ -486,7 +486,8 @@ namespace Toolbox.Library.Collada
         {
             Writer.WriteEndElement();
 
-            CreateControllerSection();
+            if (Joints?.Count > 0)
+                CreateControllerSection();
 
             CreateVisualNodeSection();
         }
@@ -611,6 +612,7 @@ namespace Toolbox.Library.Collada
                         InvBinds[i * 16 + j] = meshJoints[i].BindPose[j];
                     }
                 }
+
                 var Weights = new List<object>();
                 var WeightIndices = new List<int>();
                 foreach (var v in BoneWeight.Item2)

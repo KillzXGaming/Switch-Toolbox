@@ -11,6 +11,7 @@ using System.Xml;
 using OpenTK;
 using Toolbox.Library.Rendering;
 using Toolbox.Library.Collada;
+using Toolbox.Library.IO;
 
 namespace Toolbox.Library
 {
@@ -84,7 +85,22 @@ namespace Toolbox.Library
 
                         if (settings.ExportTextures) {
                             var bitmap = Textures[i].GetBitmap();
-                            bitmap.Save($"{TexturePath}/{Textures[i].Text}.png");
+
+                            string textureName = Textures[i].Text;
+                            if (textureName.RemoveIllegaleFileNameCharacters() != textureName)
+                            {
+                                string properName = textureName.RemoveIllegaleFileNameCharacters();
+                                for (int m = 0; m < Materials?.Count; m++) {
+                                    foreach (var tex in Materials[m].TextureMaps) {
+                                        if (tex.Name == textureName)
+                                            tex.Name = properName;
+                                    }
+                                }
+
+                                textureName = properName;
+                            }
+
+                            bitmap.Save($"{TexturePath}/{textureName}.png");
                             bitmap.Dispose();
 
                             GC.Collect();

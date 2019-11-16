@@ -123,7 +123,11 @@ namespace FirstPlugin.NLG
             model.Materials = Materials;
             model.Objects = Renderer.Meshes;
 
-            DAE.Export(fileName, settings, model, textures);
+            STSkeleton skeleton = null;
+            if (DrawableContainer.Drawables.Count > 1)
+                skeleton = (STSkeleton)DrawableContainer.Drawables[1];
+
+            DAE.Export(fileName, settings, model, textures, skeleton);
         }
 
         public enum SectionMagic : uint
