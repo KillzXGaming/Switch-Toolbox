@@ -247,7 +247,7 @@
     <Compile Include="Compression\Formats\Zlib.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Enums\CompressionType.cs" />
-    <Compile Include="FileFormats\Assimp\AssimpSaver.cs" />
+    <Compile Include="FileFormats\Assimp\AssimpSaverOld.cs" />
     <Compile Include="FileFormats\DAE\ColladaWriter.cs" />
     <Compile Include="FileFormats\DDS\RGBAPixelDecoder.cs" />
     <Compile Include="FileSystem\VirtualFileTreeNode.cs" />
