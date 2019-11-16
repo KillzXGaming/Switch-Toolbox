@@ -319,7 +319,10 @@ namespace FirstPlugin
                     mesh.ImageKey = "model";
                     mesh.SelectedImageKey = "model";
 
-                    mesh.BoneIndex = (int)VisualGroups[i].BoneIndex;
+                    int boneIndex = (int)VisualGroups[i].BoneIndex;
+                    if (boneIndex < Skeleton.bones.Count && boneIndex > 0 && ((Bone)Skeleton.bones[boneIndex]).HasSkinning)
+                        mesh.BoneIndex = boneIndex;
+
                     mesh.Text = Skeleton.bones[(int)VisualGroups[i].MeshIndex].Text;
                     Root.Renderer.Meshes.Add(mesh);
 
