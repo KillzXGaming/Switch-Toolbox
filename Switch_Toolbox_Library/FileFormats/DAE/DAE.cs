@@ -18,6 +18,8 @@ namespace Toolbox.Library
     {
         public class ExportSettings
         {
+            public bool OptmizeZeroWeights = true;
+
             public bool UseOldExporter = false;
 
             public bool FlipTexCoordsVertical = true;
@@ -204,6 +206,40 @@ namespace Toolbox.Library
 
                     foreach (var vertex in mesh.vertices)
                     {
+                        //Remove zero weights
+                        if (settings.OptmizeZeroWeights)
+                        {
+                            float MaxWeight = 1;
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (vertex.boneWeights.Count <= i)
+                                    continue;
+
+                                if (vertex.boneIds.Count < i + 1)
+                                {
+                                    vertex.boneWeights[i] = 0;
+                                    MaxWeight = 0;
+                                }
+                                else
+                                {
+                                    float weight = vertex.boneWeights[i];
+                                    if (vertex.boneWeights.Count == i + 1)
+                                        weight = MaxWeight;
+
+                                    if (weight >= MaxWeight)
+                                    {
+                                        weight = MaxWeight;
+                                        MaxWeight = 0;
+                                    }
+                                    else
+                                        MaxWeight -= weight;
+
+                                    vertex.boneWeights[i] = weight;
+                                }
+                            }
+                        }
+
+
                         if (vertex.nrm != Vector3.Zero) HasNormals = true;
                         if (vertex.col != Vector4.One) HasColors = true;
                         if (vertex.uv0 != Vector2.Zero) HasUV0 = true;
@@ -233,7 +269,11 @@ namespace Toolbox.Library
                         List<float> bWeights = new List<float>();
                         for (int b = 0; b < vertex.boneIds.Count; b++)
                         {
-                            if (vertex.boneWeights.Count > b) {
+                            if (b > mesh.VertexSkinCount - 1)
+                                continue;
+
+                            if (vertex.boneWeights.Count > b)
+                            {
                                 if (vertex.boneWeights[b] == 0)
                                     continue;
                             }
