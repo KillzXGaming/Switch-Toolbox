@@ -323,8 +323,15 @@ namespace Toolbox.Library
                         triangleLists.Add(triangleList);
 
                         var lodMesh = mesh.lodMeshes[mesh.DisplayLODIndex];
-                        for (int i = 0; i < lodMesh.faces.Count; i++)
-                            triangleList.Indices.Add((uint)lodMesh.faces[i]);
+
+                        List<int> faces = new List<int>();
+                        if (lodMesh.PrimativeType == STPrimativeType.TrangleStrips)
+                            faces = STGenericObject.ConvertTriangleStripsToTriangles(lodMesh.faces);
+                        else
+                            faces = lodMesh.faces;
+
+                        for (int i = 0; i < faces.Count; i++)
+                            triangleList.Indices.Add((uint)faces[i]);
                     }
                     if (mesh.PolygonGroups.Count > 0)
                     {
@@ -337,8 +344,14 @@ namespace Toolbox.Library
                             if (group.MaterialIndex != -1)
                                 triangleList.Material = Materials[group.MaterialIndex].Text;
 
-                            for (int i = 0; i < group.faces.Count; i++)
-                                triangleList.Indices.Add((uint)group.faces[i]);
+                            List<int> faces = new List<int>();
+                            if (group.PrimativeType == STPrimativeType.TrangleStrips)
+                                faces = STGenericObject.ConvertTriangleStripsToTriangles(group.faces);
+                            else
+                                faces = group.faces;
+
+                            for (int i = 0; i < faces.Count; i++)
+                                triangleList.Indices.Add((uint)faces[i]);
                         }
                     }
 

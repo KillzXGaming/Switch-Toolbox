@@ -25,6 +25,10 @@ namespace Toolbox.Library
 
         public bool CanCompress { get; } = false;
 
+        //Algorithm from
+        //https://github.com/Daniel-McCarthy/Mr-Peeps-Compressor/blob/master/PeepsCompress/PeepsCompress/Algorithm%20Classes/YAY0.cs
+        //License https://github.com/Daniel-McCarthy/Mr-Peeps-Compressor/blob/master/LICENSE
+
         public Stream Decompress(Stream stream)
         {
             return new MemoryStream(Decompress(stream.ToArray()));
@@ -44,7 +48,7 @@ namespace Toolbox.Library
 
                 while (output.Count < decompressedSize)
                 {
-
+                    break;
                 }
             }
 

@@ -180,6 +180,52 @@ namespace Toolbox.Library
 
         #region Methods
 
+        public static List<int> ConvertTriangleStripsToTriangles(List<int> faces)
+        {
+            List<int> f = new List<int>();
+
+            int startDirection = 1;
+            int p = 0;
+            int f1 = faces[p++];
+            int f2 = faces[p++];
+            int faceDirection = startDirection;
+            int f3;
+            do
+            {
+                f3 = faces[p++];
+                if (f3 == 0xFFFF)
+                {
+                    f1 = faces[p++];
+                    f2 = faces[p++];
+                    faceDirection = startDirection;
+                }
+                else
+                {
+                    faceDirection *= -1;
+                    if ((f1 != f2) && (f2 != f3) && (f3 != f1))
+                    {
+                        if (faceDirection > 0)
+                        {
+                            f.Add(f3);
+                            f.Add(f2);
+                            f.Add(f1);
+                        }
+                        else
+                        {
+                            f.Add(f2);
+                            f.Add(f3);
+                            f.Add(f1);
+                        }
+                    }
+                    f1 = f2;
+                    f2 = f3;
+                }
+            } while (p < faces.Count);
+
+            return f;
+        }
+
+
         public void TransformPosition(Vector3 Position, Vector3 Rotation, Vector3 Scale)
         {
             Matrix4 positionMat = Matrix4.CreateTranslation(Position);
