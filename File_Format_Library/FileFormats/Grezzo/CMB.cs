@@ -278,7 +278,7 @@ namespace FirstPlugin
                             mat = Materials[mesh.MaterialIndex];
 
                         CmbMeshWrapper genericMesh = new CmbMeshWrapper(mat);
-                        genericMesh.Text = $"Mesh {MeshIndex++}";
+                        genericMesh.Text = $"Mesh_{MeshIndex++}";
                         genericMesh.MaterialIndex = mesh.MaterialIndex;
 
                         //Wow this is long
@@ -349,14 +349,14 @@ namespace FirstPlugin
                                     && shape.BoneIndices.Type == CmbDataType.UByte; //Noclip checks the type for ubyte so do the same
 
                                 bool HasWeights = shape.Primatives[0].SkinningMode == SkinningMode.SMOOTH_SKINNING;
-/*
+
                                if (shape.BoneIndices.VertexData != null && HasSkinning && shape.BoneIndices.VertexData.Length > v)
                                 {
                                     var BoneIndices = shape.BoneIndices.VertexData[v];
                                     for (int j = 0; j < shape.boneDimension; j++)
                                     {
-                                        ushort index = shape.Primatives[0].BoneIndexTable[(uint)BoneIndices[j]];
-                                        vert.boneIds.Add((int)index);
+                                    //    ushort index = shape.Primatives[0].BoneIndexTable[(uint)BoneIndices[j]];
+                                        vert.boneIds.Add((int)BoneIndices[j]);
                                     }
                                 }
                                 if (shape.BoneWeights.VertexData != null && HasWeights && shape.BoneWeights.VertexData.Length > v)
@@ -366,7 +366,7 @@ namespace FirstPlugin
                                     {
                                         vert.boneWeights.Add(BoneWeights[j]);
                                     }
-                                }*/
+                                }
 
                                 genericMesh.vertices.Add(vert);
                             }

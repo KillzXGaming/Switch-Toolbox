@@ -852,15 +852,17 @@ namespace Toolbox.Library.Collada
 
         public string GetUniqueID(string id)
         {
-            if (AttributeIdList.ContainsKey(id))
+            string name = id.Replace(" ", string.Empty);
+
+            if (AttributeIdList.ContainsKey(name))
             {
-                AttributeIdList[id]++;
-                return $"{id}_{AttributeIdList[id]}";//
+                AttributeIdList[name]++;
+                return $"{name}_{AttributeIdList[name]}";//
             }
             else
             {
-                AttributeIdList.Add(id, 0);
-                return id;
+                AttributeIdList.Add(name, 0);
+                return name;
             }
         }
 
