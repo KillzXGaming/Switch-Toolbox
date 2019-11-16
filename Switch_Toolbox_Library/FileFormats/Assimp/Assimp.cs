@@ -45,6 +45,8 @@ namespace Toolbox.Library
             //Gets the real node name based on ID
             //Assimp is weird and sometimes uses ID for name so we need to get it manually
             public Dictionary<string, string> IDMapToName = new Dictionary<string, string>();
+
+            public Dictionary<string, string> VisualSceneNodeTypes = new Dictionary<string, string>();
         }
 
         public bool LoadFile(string FileName)
@@ -104,6 +106,24 @@ namespace Toolbox.Library
             XmlNodeList elemList = doc.GetElementsByTagName("node");
             for (int i = 0; i < elemList.Count; i++)
             {
+                if (elemList[i].Name == "node")
+                {
+                    string nodeName = "";
+                    string typeName = "";
+
+                    foreach (XmlAttribute nodeAtt in elemList[i].Attributes)
+                    {
+                        if (nodeAtt.Name == "name")
+                            nodeName = nodeAtt.InnerText;
+
+                        if (nodeAtt.Name == "type")
+                            typeName = nodeAtt.InnerText;
+                    }
+
+                    if (!DaeHelper.VisualSceneNodeTypes.ContainsKey(nodeName))
+                        DaeHelper.VisualSceneNodeTypes.Add(nodeName, typeName);
+                }
+
                 string ID = "";
                 string Name = "";
                 foreach (XmlAttribute att in elemList[i].Attributes)
@@ -435,13 +455,11 @@ namespace Toolbox.Library
             if (DaeHelper.IDMapToName.ContainsKey(node.Name))
                 Name = DaeHelper.IDMapToName[node.Name];
 
-            string ParentArmatureName = node.Parent != null ? node.Parent.Name : "";
-            if (ParentArmatureName != string.Empty && DaeHelper.IDMapToName.ContainsKey(ParentArmatureName))
-                ParentArmatureName = DaeHelper.IDMapToName[ParentArmatureName];
-
-            bool IsBone = boneNames.Contains(Name) && !boneNames.Contains(ParentArmatureName) ||
-                       Name.Contains("Skl_Root") || Name.Contains("nw4f_root") ||
-                       Name.Contains("skl_root") || Name == "Root";
+            bool IsBone = false;
+            if (DaeHelper.VisualSceneNodeTypes.ContainsKey(Name)) {
+                if (DaeHelper.VisualSceneNodeTypes[Name] == "JOINT")
+                    IsBone = true;
+            }
 
             if (IsBone)
                 return node;
@@ -572,6 +590,7 @@ namespace Toolbox.Library
         public STGenericObject CreateGenericObject(Node parentNode,Mesh msh, int Index, Matrix4 transform)
         {
             STGenericObject obj = new STGenericObject();
+            obj.BoneIndex = 0;
 
             if (msh.MaterialIndex != -1)
                 obj.MaterialIndex = msh.MaterialIndex;
