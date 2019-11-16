@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Toolbox.Library
 {
-    public enum STPrimativeType
+    public enum STPrimitiveType
     {
         Points = 0,
         Lines = 1,
@@ -24,7 +24,7 @@ namespace Toolbox.Library
 
         public List<int> faces = new List<int>();
 
-        public STPrimativeType PrimativeType = STPrimativeType.Triangles;
+        public STPrimitiveType PrimativeType = STPrimitiveType.Triangles;
 
         public int strip = 0x40;
         public int displayFaceSize = 0;

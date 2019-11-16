@@ -518,7 +518,7 @@ namespace FirstPlugin
 
                         subMeshNode.lodMeshes = new List<GenericRenderedObject.LOD_Mesh>();
                         var submsh = new GenericRenderedObject.LOD_Mesh();
-                        submsh.PrimativeType = STPrimativeType.Triangles;
+                        submsh.PrimativeType = STPrimitiveType.Triangles;
                         submsh.FirstVertex = 0;
                         submsh.faces = subMesh.Faces;
                         subMeshNode.lodMeshes.Add(submsh);

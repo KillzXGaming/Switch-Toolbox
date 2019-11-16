@@ -134,19 +134,19 @@ namespace FirstPlugin
                 msh.SubMeshes = new List<SubMesh>();
                 switch (mesh.PrimativeType)
                 {
-                    case STPrimativeType.Triangles:
+                    case STPrimitiveType.Triangles:
                         msh.PrimitiveType = PrimitiveType.Triangles;
                         break;
-                    case STPrimativeType.TrangleStrips:
+                    case STPrimitiveType.TrangleStrips:
                         msh.PrimitiveType = PrimitiveType.TriangleStrip;
                         break;
-                    case STPrimativeType.Lines:
+                    case STPrimitiveType.Lines:
                         msh.PrimitiveType = PrimitiveType.Lines;
                         break;
-                    case STPrimativeType.LineStrips:
+                    case STPrimitiveType.LineStrips:
                         msh.PrimitiveType = PrimitiveType.LineStrip;
                         break;
-                    case STPrimativeType.Points:
+                    case STPrimitiveType.Points:
                         msh.PrimitiveType = PrimitiveType.Points;
                         break;
                 }
@@ -232,16 +232,16 @@ namespace FirstPlugin
                 switch (msh.PrimitiveType)
                 {
                     case PrimitiveType.Triangles:
-                        lod.PrimativeType = STPrimativeType.Triangles;
+                        lod.PrimativeType = STPrimitiveType.Triangles;
                         break;
                     case PrimitiveType.TriangleStrip:
-                        lod.PrimativeType = STPrimativeType.TrangleStrips;
+                        lod.PrimativeType = STPrimitiveType.TrangleStrips;
                         break;
                     case PrimitiveType.Lines:
-                        lod.PrimativeType = STPrimativeType.Lines;
+                        lod.PrimativeType = STPrimitiveType.Lines;
                         break;
                     case PrimitiveType.Points:
-                        lod.PrimativeType = STPrimativeType.Points;
+                        lod.PrimativeType = STPrimitiveType.Points;
                         break;
                 }
 

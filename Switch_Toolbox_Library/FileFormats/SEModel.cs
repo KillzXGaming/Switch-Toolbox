@@ -182,7 +182,7 @@ namespace Toolbox.Library
 
             mesh.lodMeshes = new List<STGenericObject.LOD_Mesh>();
             var lodMesh = new STGenericObject.LOD_Mesh();
-            lodMesh.PrimativeType = STPrimativeType.Triangles;
+            lodMesh.PrimativeType = STPrimitiveType.Triangles;
             mesh.lodMeshes.Add(lodMesh);
             for (int f = 0; f < seMesh.FaceCount; f++)
             {

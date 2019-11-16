@@ -164,22 +164,22 @@ namespace FirstPlugin
                 switch (msh.PrimitiveType)
                 {
                     case GX2PrimitiveType.Triangles:
-                        lod.PrimativeType = STPrimativeType.Triangles;
+                        lod.PrimativeType = STPrimitiveType.Triangles;
                         break;
                     case GX2PrimitiveType.TriangleStrip:
-                        lod.PrimativeType = STPrimativeType.TrangleStrips;
+                        lod.PrimativeType = STPrimitiveType.TrangleStrips;
                         break;
                     case GX2PrimitiveType.Quads:
-                        lod.PrimativeType = STPrimativeType.Quads;
+                        lod.PrimativeType = STPrimitiveType.Quads;
                         break;
                     case GX2PrimitiveType.Lines:
-                        lod.PrimativeType = STPrimativeType.Lines;
+                        lod.PrimativeType = STPrimitiveType.Lines;
                         break;
                     case GX2PrimitiveType.LineStrip:
-                        lod.PrimativeType = STPrimativeType.LineStrips;
+                        lod.PrimativeType = STPrimitiveType.LineStrips;
                         break;
                     case GX2PrimitiveType.Points:
-                        lod.PrimativeType = STPrimativeType.Points;
+                        lod.PrimativeType = STPrimitiveType.Points;
                         break;
                 }
 
@@ -413,16 +413,16 @@ namespace FirstPlugin
             {
                 switch (s.lodMeshes[indx].PrimativeType)
                 {
-                    case STPrimativeType.Triangles:
+                    case STPrimitiveType.Triangles:
                         mesh.PrimitiveType = GX2PrimitiveType.Triangles;
                         break;
-                    case STPrimativeType.Lines:
+                    case STPrimitiveType.Lines:
                         mesh.PrimitiveType = GX2PrimitiveType.Lines;
                         break;
-                    case STPrimativeType.LineStrips:
+                    case STPrimitiveType.LineStrips:
                         mesh.PrimitiveType = GX2PrimitiveType.LineStrip;
                         break;
-                    case STPrimativeType.Points:
+                    case STPrimitiveType.Points:
                         mesh.PrimitiveType = GX2PrimitiveType.Points;
                         break;
                 }
@@ -891,22 +891,22 @@ namespace FirstPlugin
                 msh.SubMeshes = new List<SubMesh>();
                 switch (mesh.PrimativeType)
                 {
-                    case STPrimativeType.Triangles:
+                    case STPrimitiveType.Triangles:
                         msh.PrimitiveType = GX2PrimitiveType.Triangles;
                         break;
-                    case STPrimativeType.TrangleStrips:
+                    case STPrimitiveType.TrangleStrips:
                         msh.PrimitiveType = GX2PrimitiveType.TriangleStrip;
                         break;
-                    case STPrimativeType.Quads:
+                    case STPrimitiveType.Quads:
                         msh.PrimitiveType = GX2PrimitiveType.Quads;
                         break;
-                    case STPrimativeType.Lines:
+                    case STPrimitiveType.Lines:
                         msh.PrimitiveType = GX2PrimitiveType.Lines;
                         break;
-                    case STPrimativeType.LineStrips:
+                    case STPrimitiveType.LineStrips:
                         msh.PrimitiveType = GX2PrimitiveType.LineStrip;
                         break;
-                    case STPrimativeType.Points:
+                    case STPrimitiveType.Points:
                         msh.PrimitiveType = GX2PrimitiveType.Points;
                         break;
                 }

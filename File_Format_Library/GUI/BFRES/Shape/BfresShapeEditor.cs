@@ -287,7 +287,7 @@ namespace FirstPlugin
                 lodFormatCB.Bind(typeof(STIndexFormat), activeLodMesh, "IndexFormat");
                 lodFormatCB.SelectedItem = activeLodMesh.IndexFormat;
 
-                lodPrimativeTypeCB.Bind(typeof(STPrimativeType), activeLodMesh, "PrimitiveType");
+                lodPrimativeTypeCB.Bind(typeof(STPrimitiveType), activeLodMesh, "PrimitiveType");
                 lodPrimativeTypeCB.SelectedItem = activeLodMesh.PrimativeType;
 
                 lodVertexSkipUD.Value = activeLodMesh.FirstVertex;

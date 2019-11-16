@@ -767,16 +767,16 @@ namespace FirstPlugin
 
                         switch (m.lodMeshes[m.DisplayLODIndex].PrimativeType)
                         {
-                            case STPrimativeType.Lines:
+                            case STPrimitiveType.Lines:
                                 primitiveType = PrimitiveType.Lines;
                                 break;
-                            case STPrimativeType.LineStrips:
+                            case STPrimitiveType.LineStrips:
                                 primitiveType = PrimitiveType.LineStrip;
                                 break;
-                            case STPrimativeType.Points:
+                            case STPrimitiveType.Points:
                                 primitiveType = PrimitiveType.Points;
                                 break;
-                            case STPrimativeType.Triangles:
+                            case STPrimitiveType.Triangles:
                                 primitiveType = PrimitiveType.Triangles;
                                 break;
                         }

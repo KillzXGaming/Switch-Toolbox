@@ -347,7 +347,7 @@ namespace Toolbox.Library
                         var lodMesh = mesh.lodMeshes[mesh.DisplayLODIndex];
 
                         List<int> faces = new List<int>();
-                        if (lodMesh.PrimativeType == STPrimativeType.TrangleStrips)
+                        if (lodMesh.PrimativeType == STPrimitiveType.TrangleStrips)
                             faces = STGenericObject.ConvertTriangleStripsToTriangles(lodMesh.faces);
                         else
                             faces = lodMesh.faces;
@@ -367,7 +367,7 @@ namespace Toolbox.Library
                                 triangleList.Material = Materials[group.MaterialIndex].Text;
 
                             List<int> faces = new List<int>();
-                            if (group.PrimativeType == STPrimativeType.TrangleStrips)
+                            if (group.PrimativeType == STPrimitiveType.TrangleStrips)
                                 faces = STGenericObject.ConvertTriangleStripsToTriangles(group.faces);
                             else
                                 faces = group.faces;

@@ -491,12 +491,12 @@ namespace Toolbox.Library.Rendering
         {
             switch (p.PrimativeType)
             {
-                case STPrimativeType.Triangles: return PrimitiveType.Triangles;
-                case STPrimativeType.TrangleStrips: return PrimitiveType.TriangleStrip;
-                case STPrimativeType.Quads: return PrimitiveType.Quads;
-                case STPrimativeType.Points: return PrimitiveType.Points;
-                case STPrimativeType.LineStrips: return PrimitiveType.LineStrip;
-                case STPrimativeType.Lines: return PrimitiveType.Lines;
+                case STPrimitiveType.Triangles: return PrimitiveType.Triangles;
+                case STPrimitiveType.TrangleStrips: return PrimitiveType.TriangleStrip;
+                case STPrimitiveType.Quads: return PrimitiveType.Quads;
+                case STPrimitiveType.Points: return PrimitiveType.Points;
+                case STPrimitiveType.LineStrips: return PrimitiveType.LineStrip;
+                case STPrimitiveType.Lines: return PrimitiveType.Lines;
                 default: return PrimitiveType.Triangles;
             }
         }
@@ -505,12 +505,12 @@ namespace Toolbox.Library.Rendering
         {
             switch (p.PrimativeType)
             {
-                case STPrimativeType.Triangles: return PrimitiveType.Triangles;
-                case STPrimativeType.TrangleStrips: return PrimitiveType.TriangleStrip;
-                case STPrimativeType.Quads: return PrimitiveType.Quads;
-                case STPrimativeType.Points: return PrimitiveType.Points;
-                case STPrimativeType.LineStrips: return PrimitiveType.LineStrip;
-                case STPrimativeType.Lines: return PrimitiveType.Lines;
+                case STPrimitiveType.Triangles: return PrimitiveType.Triangles;
+                case STPrimitiveType.TrangleStrips: return PrimitiveType.TriangleStrip;
+                case STPrimitiveType.Quads: return PrimitiveType.Quads;
+                case STPrimitiveType.Points: return PrimitiveType.Points;
+                case STPrimitiveType.LineStrips: return PrimitiveType.LineStrip;
+                case STPrimitiveType.Lines: return PrimitiveType.Lines;
                 default: return PrimitiveType.Triangles;
             }
         }

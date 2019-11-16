@@ -349,9 +349,9 @@ namespace FirstPlugin.PunchOutWii
                                 }
 
                                 if (mesh.FaceType == PO_Mesh.PolygonType.TriangleStrips)
-                                    polyGroup.PrimativeType = STPrimativeType.TrangleStrips;
+                                    polyGroup.PrimativeType = STPrimitiveType.TrangleStrips;
                                 else
-                                    polyGroup.PrimativeType = STPrimativeType.Triangles;
+                                    polyGroup.PrimativeType = STPrimitiveType.Triangles;
 
 
                                 for (int a = 0; a < mesh.NumAttributePointers; a++)

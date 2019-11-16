@@ -91,7 +91,7 @@ namespace Toolbox.Library
         public List<LOD_Mesh> lodMeshes = new List<LOD_Mesh>();
         public class LOD_Mesh
         {
-            public STPrimativeType PrimativeType = STPrimativeType.Triangles;
+            public STPrimitiveType PrimativeType = STPrimitiveType.Triangles;
             public STIndexFormat IndexFormat = STIndexFormat.UInt16;
             public uint FirstVertex;
 

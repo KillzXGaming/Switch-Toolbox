@@ -354,9 +354,9 @@ namespace FirstPlugin.NLG
                             }
 
                             if (model.Meshes[i].FaceType == MeshData.PolygonType.TriangleStrips)
-                                polyGroup.PrimativeType = STPrimativeType.TrangleStrips;
+                                polyGroup.PrimativeType = STPrimitiveType.TrangleStrips;
                             else
-                                polyGroup.PrimativeType = STPrimativeType.Triangles;
+                                polyGroup.PrimativeType = STPrimitiveType.Triangles;
 
                             if (IsGamecube)
                             {
