@@ -217,7 +217,7 @@ namespace Toolbox.Library
 
                     writer.StartGeometry(mesh.Text);
 
-                    if (mesh.MaterialIndex != -1)
+                    if (mesh.MaterialIndex != -1 && Materials.Count > mesh.MaterialIndex)
                     {
                         writer.CurrentMaterial = Materials[mesh.MaterialIndex].Text;
                     }
@@ -365,7 +365,7 @@ namespace Toolbox.Library
                           
                             triangleLists.Add(triangleList);
 
-                            if (group.MaterialIndex != -1)
+                            if (group.MaterialIndex != -1 && Materials.Count > group.MaterialIndex)
                                 triangleList.Material = Materials[group.MaterialIndex].Text;
 
                             List<int> faces = new List<int>();
