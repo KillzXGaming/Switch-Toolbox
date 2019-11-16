@@ -161,7 +161,28 @@ namespace FirstPlugin
                     lod.subMeshes.Add(sub);
                 }
                 lod.IndexFormat = (STIndexFormat)msh.IndexFormat;
-                lod.PrimativeType = (STPrimativeType)msh.PrimitiveType;
+                switch (msh.PrimitiveType)
+                {
+                    case GX2PrimitiveType.Triangles:
+                        lod.PrimativeType = STPrimativeType.Triangles;
+                        break;
+                    case GX2PrimitiveType.TriangleStrip:
+                        lod.PrimativeType = STPrimativeType.TrangleStrips;
+                        break;
+                    case GX2PrimitiveType.Quads:
+                        lod.PrimativeType = STPrimativeType.Quads;
+                        break;
+                    case GX2PrimitiveType.Lines:
+                        lod.PrimativeType = STPrimativeType.Lines;
+                        break;
+                    case GX2PrimitiveType.LineStrip:
+                        lod.PrimativeType = STPrimativeType.LineStrips;
+                        break;
+                    case GX2PrimitiveType.Points:
+                        lod.PrimativeType = STPrimativeType.Points;
+                        break;
+                }
+
                 lod.FirstVertex = msh.FirstVertex;
 
                 for (int face = 0; face < FaceCount; face++)
@@ -868,7 +889,27 @@ namespace FirstPlugin
             {
                 Mesh msh = new Mesh();
                 msh.SubMeshes = new List<SubMesh>();
-                msh.PrimitiveType = (GX2PrimitiveType)mesh.PrimativeType;
+                switch (mesh.PrimativeType)
+                {
+                    case STPrimativeType.Triangles:
+                        msh.PrimitiveType = GX2PrimitiveType.Triangles;
+                        break;
+                    case STPrimativeType.TrangleStrips:
+                        msh.PrimitiveType = GX2PrimitiveType.TriangleStrip;
+                        break;
+                    case STPrimativeType.Quads:
+                        msh.PrimitiveType = GX2PrimitiveType.Quads;
+                        break;
+                    case STPrimativeType.Lines:
+                        msh.PrimitiveType = GX2PrimitiveType.Lines;
+                        break;
+                    case STPrimativeType.LineStrips:
+                        msh.PrimitiveType = GX2PrimitiveType.LineStrip;
+                        break;
+                    case STPrimativeType.Points:
+                        msh.PrimitiveType = GX2PrimitiveType.Points;
+                        break;
+                }
                 msh.FirstVertex = mesh.FirstVertex;
 
                 foreach (FSHP.LOD_Mesh.SubMesh sub in mesh.subMeshes)

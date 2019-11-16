@@ -132,7 +132,25 @@ namespace FirstPlugin
                 Mesh msh = new Mesh();
                 msh.MemoryPool = new MemoryPool();
                 msh.SubMeshes = new List<SubMesh>();
-                msh.PrimitiveType = (PrimitiveType)mesh.PrimativeType;
+                switch (mesh.PrimativeType)
+                {
+                    case STPrimativeType.Triangles:
+                        msh.PrimitiveType = PrimitiveType.Triangles;
+                        break;
+                    case STPrimativeType.TrangleStrips:
+                        msh.PrimitiveType = PrimitiveType.TriangleStrip;
+                        break;
+                    case STPrimativeType.Lines:
+                        msh.PrimitiveType = PrimitiveType.Lines;
+                        break;
+                    case STPrimativeType.LineStrips:
+                        msh.PrimitiveType = PrimitiveType.LineStrip;
+                        break;
+                    case STPrimativeType.Points:
+                        msh.PrimitiveType = PrimitiveType.Points;
+                        break;
+                }
+
                 msh.FirstVertex = mesh.FirstVertex;
 
                 foreach (FSHP.LOD_Mesh.SubMesh sub in mesh.subMeshes)
@@ -210,7 +228,23 @@ namespace FirstPlugin
                     lod.subMeshes.Add(sub);
                 }
                 lod.IndexFormat = (STIndexFormat)msh.IndexFormat;
-                lod.PrimativeType = (STPrimativeType)msh.PrimitiveType;
+
+                switch (msh.PrimitiveType)
+                {
+                    case PrimitiveType.Triangles:
+                        lod.PrimativeType = STPrimativeType.Triangles;
+                        break;
+                    case PrimitiveType.TriangleStrip:
+                        lod.PrimativeType = STPrimativeType.TrangleStrips;
+                        break;
+                    case PrimitiveType.Lines:
+                        lod.PrimativeType = STPrimativeType.Lines;
+                        break;
+                    case PrimitiveType.Points:
+                        lod.PrimativeType = STPrimativeType.Points;
+                        break;
+                }
+
                 lod.FirstVertex = msh.FirstVertex;
 
                 for (int face = 0; face < FaceCount; face++)
