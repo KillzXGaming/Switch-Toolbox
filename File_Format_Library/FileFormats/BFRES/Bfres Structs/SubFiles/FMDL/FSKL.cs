@@ -674,12 +674,13 @@ namespace Bfres.Structs
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
-            Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.I));
-            Items.Add(new ToolStripMenuItem("New Child Bone", null, NewAction, Keys.Control | Keys.I));
+            Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.R));
+            Items.Add(new ToolStripSeparator());
+            Items.Add(new ToolStripMenuItem("New Child Bone", null, NewAction, Keys.Control | Keys.N));
             Items.Add(new ToolStripMenuItem("Import Child Bone", null, ImportAction, Keys.Control | Keys.I));
             Items.Add(new ToolStripSeparator());
-            Items.Add(new ToolStripMenuItem("Export Bone", null, ExportAction, Keys.Control | Keys.I));
-            Items.Add(new ToolStripMenuItem("Replace Bone", null, ReplaceAction, Keys.Control | Keys.I));
+            Items.Add(new ToolStripMenuItem("Export Bone", null, ExportAction, Keys.Control | Keys.E));
+            Items.Add(new ToolStripMenuItem("Replace Bone", null, ReplaceAction, Keys.Control | Keys.R));
             return Items.ToArray();
         }
 

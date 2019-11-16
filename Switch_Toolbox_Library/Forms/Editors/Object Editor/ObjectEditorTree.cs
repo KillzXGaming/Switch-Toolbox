@@ -343,6 +343,23 @@ namespace Toolbox.Library.Forms
                     {
                         treeNodeContextMenu.Items.AddRange(((IContextMenuNode)e.Node).GetContextMenuItems());
                     }
+
+                    bool HasCollpase = false;
+                    bool HasExpand = false;
+                    foreach (var item in ((IContextMenuNode)e.Node).GetContextMenuItems())
+                    {
+                        if (item.Text == "Collapse All")
+                            HasCollpase = true;
+                        if (item.Text == "Expand All")
+                            HasExpand = true;
+                    }
+
+                    if (!HasCollpase)
+                        treeNodeContextMenu.Items.Add(new ToolStripMenuItem("Collapse All", null, CollapseAllAction, Keys.Control | Keys.Q));
+
+                    if (!HasExpand)
+                        treeNodeContextMenu.Items.Add(new ToolStripMenuItem("Expand All", null, ExpandAllAction, Keys.Control | Keys.P));
+
                     treeNodeContextMenu.Show(Cursor.Position);
 
                     //Select the node without the evemt
@@ -356,6 +373,20 @@ namespace Toolbox.Library.Forms
             {
                 OnAnimationSelected(e.Node);
             }
+        }
+
+        private void ExpandAllAction(object sender, EventArgs args)
+        {
+            var node = treeViewCustom1.SelectedNode;
+            if (node != null)
+                node.ExpandAll();
+        }
+
+        private void CollapseAllAction(object sender, EventArgs args)
+        {
+            var node = treeViewCustom1.SelectedNode;
+            if (node != null)
+                node.Collapse();
         }
 
         private void DeleteAction(object sender, EventArgs args)
