@@ -783,6 +783,26 @@ namespace Toolbox.Library.Collada
                     Writer.WriteStartElement("instance_geometry");
                     Writer.WriteAttributeString("url", $"#{m.Key}");
                     Writer.WriteAttributeString("name", MeshIdList[m.Key]);
+
+                    if (MaterialIdList.ContainsKey(m.Key))
+                    {
+                        Writer.WriteStartElement("bind_material");
+                        Writer.WriteStartElement("technique_common");
+                        foreach (var mat in MaterialIdList[m.Key])
+                        {
+                            Writer.WriteStartElement("instance_material");
+                            Writer.WriteAttributeString("symbol", mat);
+                            Writer.WriteAttributeString("target", "#" + mat);
+                            Writer.WriteEndElement();
+
+                            WriteChannel(0);
+                            WriteChannel(1);
+                            WriteChannel(2);
+                        }
+                        Writer.WriteEndElement();
+                        Writer.WriteEndElement();
+                    }
+
                     Writer.WriteEndElement();
                 }
                 else
@@ -792,6 +812,7 @@ namespace Toolbox.Library.Collada
                     Writer.WriteStartElement("skeleton");
                     Writer.WriteString("#Armature_" + Joints[0].Name);
                     Writer.WriteEndElement();
+
                     if (MaterialIdList.ContainsKey(m.Key))
                     {
                         Writer.WriteStartElement("bind_material");
