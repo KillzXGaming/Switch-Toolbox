@@ -36,28 +36,37 @@ namespace FirstPlugin.LuigisMansion3
 
         private void ExportModel()
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Supported Formats|*.dae;";
-            if (sfd.ShowDialog() == DialogResult.OK)
+            FolderSelectDialog folderDlg = new FolderSelectDialog();
+            if (folderDlg.ShowDialog() == DialogResult.OK)
             {
                 ExportModelSettings exportDlg = new ExportModelSettings();
                 if (exportDlg.ShowDialog() == DialogResult.OK)
-                    ExportModel(sfd.FileName, exportDlg.Settings);
+                    ExportModel(folderDlg.SelectedPath, exportDlg.Settings);
             }
         }
 
-        public void ExportModel(string fileName, DAE.ExportSettings settings)
+        public void ExportModel(string folderPath, DAE.ExportSettings settings)
         {
-            List<STGenericMaterial> Materials = new List<STGenericMaterial>();
-            foreach (STGenericObject mesh in DataDictionary.Renderer.Meshes)
-                if (mesh.GetMaterial() != null)
-                    Materials.Add(mesh.GetMaterial());
+            foreach (LM3_Model mdl in Nodes)
+            {
+                List<STGenericMaterial> Materials = new List<STGenericMaterial>();
+                foreach (STGenericObject mesh in mdl.RenderedMeshes)
+                    if (mesh.GetMaterial() != null)
+                        Materials.Add(mesh.GetMaterial());
 
-            var model = new STGenericModel();
-            model.Materials = Materials;
-            model.Objects = DataDictionary.Renderer.Meshes;
+                if (!mdl.loaded)
+                    mdl.UpdateVertexData();
 
-            DAE.Export(fileName, settings, model, new List<STGenericTexture>());
+                var model = new STGenericModel();
+                model.Materials = Materials;
+                model.Objects = mdl.RenderedMeshes;
+
+                settings.SuppressConfirmDialog = true;
+
+                DAE.Export($"{folderPath}/{mdl.Text}.dae", settings, model, new List<STGenericTexture>());
+            }
+
+            System.Windows.Forms.MessageBox.Show($"Exported models Successfuly!");
         }
     }
 
@@ -75,7 +84,7 @@ namespace FirstPlugin.LuigisMansion3
         public uint BufferStart;
         public uint BufferSize;
 
-        private List<RenderableMeshWrapper> RenderedMeshes = new List<RenderableMeshWrapper>();
+        public List<RenderableMeshWrapper> RenderedMeshes = new List<RenderableMeshWrapper>();
 
         Viewport viewport
         {
@@ -91,7 +100,7 @@ namespace FirstPlugin.LuigisMansion3
             }
         }
 
-        private bool loaded = false;
+        public bool loaded = false;
         public override void OnClick(TreeView treeView)
         {
             if (!loaded)
@@ -136,7 +145,7 @@ namespace FirstPlugin.LuigisMansion3
             }
         }
 
-        private void UpdateVertexData()
+        public void UpdateVertexData()
         {
             ReadVertexBuffers();
             DataDictionary.Renderer.UpdateVertexData();

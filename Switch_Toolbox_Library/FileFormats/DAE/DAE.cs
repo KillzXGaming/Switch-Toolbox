@@ -19,6 +19,8 @@ namespace Toolbox.Library
     {
         public class ExportSettings
         {
+            public bool SuppressConfirmDialog = false;
+
             public bool OptmizeZeroWeights = true;
 
             public bool UseOldExporter = false;
@@ -405,7 +407,8 @@ namespace Toolbox.Library
 
             progressBar?.Close();
 
-            System.Windows.Forms.MessageBox.Show($"Exported {FileName} Successfuly!");
+            if (!settings.SuppressConfirmDialog)
+                System.Windows.Forms.MessageBox.Show($"Exported {FileName} Successfuly!");
         }
 
 
