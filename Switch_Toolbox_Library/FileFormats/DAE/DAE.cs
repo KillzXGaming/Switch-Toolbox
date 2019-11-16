@@ -64,6 +64,7 @@ namespace Toolbox.Library
                 model.Objects = Meshes;
                 model.Materials = Materials;
                 saver.SaveFromModel(model, FileName, Textures, skeleton, NodeArray);
+                return;
             }
 
             string TexturePath = System.IO.Path.GetDirectoryName(FileName);
