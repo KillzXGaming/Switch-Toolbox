@@ -148,10 +148,8 @@ namespace Toolbox.Library
                     foreach (var bone in skeleton.bones)
                     {
                         //Set the inverse matrix
-                      //  var inverse = skeleton.GetBoneTransform(bone).Inverted();
+                        var inverse = skeleton.GetBoneTransform(bone).Inverted();
                         var transform = bone.GetTransform();
-
-                        var inverse = Toolbox.Library.IO.MatrixExenstion.CalculateInverseMatrix(bone).inverse;
 
                         float[] Transform = new float[] {
                        transform.M11, transform.M21, transform.M31, transform.M41,

@@ -576,14 +576,34 @@ namespace Toolbox.Library.Collada
                 Writer.WriteString("1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1");
                 Writer.WriteEndElement();
 
-                object[] BoneNames = new string[Joints.Count];
-                object[] InvBinds = new object[Joints.Count * 16];
+                List<Joint> meshJoints = new List<Joint>();
+                List<int> indexTable = new List<int>();
+
+                //Go through each bone index and find each rigged joint the mesh uses
+                for (int i = 0; i < BoneWeight.Item1.Count; i++)
+                {
+                    for (int j = 0; j < BoneWeight.Item1[i].Length; j++)
+                    {
+                        int index = BoneWeight.Item1[i][j];
+                        if (index < Joints.Count && index != -1 && !meshJoints.Contains(Joints[index]))
+                            meshJoints.Add(Joints[index]);
+                    }
+                }
+
+                //Create a lookup table to find the joint list from all the joints that get indexed
+                for (int i = 0; i < Joints.Count; i++)
+                {
+                    indexTable.Add(meshJoints.IndexOf(Joints[i]));
+                }
+
+                object[] BoneNames = new string[meshJoints.Count];
+                object[] InvBinds = new object[meshJoints.Count * 16];
                 for (int i = 0; i < BoneNames.Length; i++)
                 {
-                    BoneNames[i] = Joints[i].Name;
+                    BoneNames[i] = meshJoints[i].Name;
                     for (int j = 0; j < 16; j++)
                     {
-                        InvBinds[i * 16 + j] = Joints[i].BindPose[j];
+                        InvBinds[i * 16 + j] = meshJoints[i].BindPose[j];
                     }
                 }
                 var Weights = new List<object>();
@@ -593,6 +613,7 @@ namespace Toolbox.Library.Collada
                     foreach (var w in v)
                     {
                         int index = Weights.IndexOf(w);
+
                         if (index == -1)
                         {
                             WeightIndices.Add(Weights.Count);
@@ -640,7 +661,7 @@ namespace Toolbox.Library.Collada
                     {
                         for (int j = 0; j < BoneWeight.Item1[i].Length; j++)
                         {
-                            values.Append($"{BoneWeight.Item1[i][j]} {WeightIndices[weightindexcount++]} ");
+                            values.Append($"{indexTable[BoneWeight.Item1[i][j]]} {WeightIndices[weightindexcount++]} ");
                         }
                     }
                     Writer.WriteStartElement("v");
@@ -774,6 +795,10 @@ namespace Toolbox.Library.Collada
                             Writer.WriteAttributeString("symbol", mat);
                             Writer.WriteAttributeString("target", "#" + mat);
                             Writer.WriteEndElement();
+
+                            WriteChannel(0);
+                            WriteChannel(1);
+                            WriteChannel(2);
                         }
                         Writer.WriteEndElement();
                         Writer.WriteEndElement();
@@ -786,6 +811,15 @@ namespace Toolbox.Library.Collada
             }
 
             EndVisualNodeSection();
+        }
+
+        public void WriteChannel(int index)
+        {
+            Writer.WriteStartElement("bind_vertex_input");
+            Writer.WriteAttributeString("semantic", $"CHANNEL{index}");
+            Writer.WriteAttributeString("input_semantic", "TEXCOORD");
+            Writer.WriteAttributeString("input_set", index.ToString());
+            Writer.WriteEndElement();
         }
 
         public void WriteNode(string Name)
