@@ -294,6 +294,7 @@ namespace FirstPlugin
                     v.uv1 = new Vector2(vec4uv1[i].X, vec4uv1[i].Y);
                 if (vec4uv2.Length > 0)
                     v.uv2 = new Vector2(vec4uv2[i].X, vec4uv2[i].Y);
+
                 if (vec4w0.Length > 0)
                 {
                     v.boneWeights.Add(vec4w0[i].X);
@@ -307,7 +308,6 @@ namespace FirstPlugin
                     v.boneIds.Add((int)vec4i0[i].Y);
                     v.boneIds.Add((int)vec4i0[i].Z);
                     v.boneIds.Add((int)vec4i0[i].W);
-
                 }
 
                 if (vec4t0.Length > 0)
@@ -644,10 +644,7 @@ namespace FirstPlugin
 
             byte[] ParamData = WriteShaderParams(m, mat);
 
-            if (ParamData.Length != mat.ShaderParamData.Length)
-                throw new Exception("Param size mis match!");
-            else
-                mat.ShaderParamData = ParamData;
+            mat.ShaderParamData = ParamData;
 
             WriteRenderInfo(m, mat);
             WriteTextureRefs(m, mat);

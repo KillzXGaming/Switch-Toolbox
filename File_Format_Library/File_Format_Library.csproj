@@ -213,6 +213,8 @@
     <Compile Include="FileFormats\Archives\DARC.cs" />
     <Compile Include="FileFormats\Archives\DAT_Bayonetta.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
+    <Compile Include="FileFormats\LM1\LM1_MDL.cs" />
+    <Compile Include="FileFormats\MarioParty\HSF.cs" />
     <Compile Include="FileFormats\MKAGPDX\LM2_ARCADE_Model.cs" />
     <Compile Include="FileFormats\NLG\LM2\LM2_Material.cs" />
     <Compile Include="FileFormats\NLG\LM3\LM3_ChunkTable.cs" />
