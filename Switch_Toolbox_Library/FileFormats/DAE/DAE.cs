@@ -60,6 +60,13 @@ namespace Toolbox.Library
             if (Materials == null)
                 Materials = new List<STGenericMaterial>();
 
+            STProgressBar progressBar = new STProgressBar();
+            progressBar.Task = "Exporting Model...";
+            progressBar.Value = 0;
+            progressBar.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            progressBar.Show();
+            progressBar.Refresh();
+
             if (settings.UseOldExporter)
             {
                 AssimpSaver saver = new AssimpSaver();
@@ -84,6 +91,11 @@ namespace Toolbox.Library
                         textureNames.Add(Textures[i].Text);
 
                         if (settings.ExportTextures) {
+
+                            progressBar.Task = $"Exporting Texture {Textures[i].Text}";
+                            progressBar.Value = ((i * 100) / Textures.Count);
+                            progressBar.Refresh();
+
                             var bitmap = Textures[i].GetBitmap();
 
                             string textureName = Textures[i].Text;
@@ -188,9 +200,15 @@ namespace Toolbox.Library
                     }
                 }
 
+                int meshIndex = 0;
+
                 writer.StartLibraryGeometries();
                 foreach (var mesh in Meshes)
                 {
+                    progressBar.Task = $"Exporting Mesh {mesh.Text}";
+                    progressBar.Value = ((meshIndex++ * 100) / Meshes.Count);
+                    progressBar.Refresh();
+
                     int[] IndexTable = null;
                     if (NodeArray != null)
                         IndexTable = NodeArray.ToArray();
@@ -294,10 +312,14 @@ namespace Toolbox.Library
                                     continue;
                             }
 
+                            int index = -1;
                             if (IndexTable != null)
-                                bIndices.Add((int)IndexTable[vertex.boneIds[b]]);
+                                index = (int)IndexTable[vertex.boneIds[b]];
                             else
-                                bIndices.Add((int)vertex.boneIds[b]);
+                                index = (int)vertex.boneIds[b];
+
+                            if (index != -1 && index < skeleton?.bones.Count)
+                                bIndices.Add(index);
 
                             //Some models may only use indices (single bind, rigid skin)
                             if (vertex.boneWeights.Count > b)
@@ -380,6 +402,10 @@ namespace Toolbox.Library
                 }
                 writer.EndGeometrySection();
             }
+
+            progressBar?.Close();
+
+            System.Windows.Forms.MessageBox.Show($"Exported {FileName} Successfuly!");
         }
 
 
