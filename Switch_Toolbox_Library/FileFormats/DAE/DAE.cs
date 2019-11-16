@@ -18,6 +18,8 @@ namespace Toolbox.Library
     {
         public class ExportSettings
         {
+            public bool UseOldExporter = false;
+
             public bool FlipTexCoordsVertical = true;
 
             public Version FileVersion = new Version();
@@ -54,6 +56,15 @@ namespace Toolbox.Library
         {
             if (Materials == null)
                 Materials = new List<STGenericMaterial>();
+
+            if (settings.UseOldExporter)
+            {
+                AssimpSaver saver = new AssimpSaver();
+                STGenericModel model = new STGenericModel();
+                model.Objects = Meshes;
+                model.Materials = Materials;
+                saver.SaveFromModel(model, FileName, Textures, skeleton, NodeArray);
+            }
 
             string TexturePath = System.IO.Path.GetDirectoryName(FileName);
 

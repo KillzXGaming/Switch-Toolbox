@@ -32,11 +32,13 @@
             this.stButton1 = new Toolbox.Library.Forms.STButton();
             this.stButton2 = new Toolbox.Library.Forms.STButton();
             this.chkFlipUvsVertical = new Toolbox.Library.Forms.STCheckBox();
+            this.chkOldExporter = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.chkOldExporter);
             this.contentContainer.Controls.Add(this.chkFlipUvsVertical);
             this.contentContainer.Controls.Add(this.stButton2);
             this.contentContainer.Controls.Add(this.stButton1);
@@ -46,6 +48,7 @@
             this.contentContainer.Controls.SetChildIndex(this.stButton1, 0);
             this.contentContainer.Controls.SetChildIndex(this.stButton2, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkFlipUvsVertical, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkOldExporter, 0);
             // 
             // exportTexturesChkBox
             // 
@@ -93,6 +96,17 @@
             this.chkFlipUvsVertical.UseVisualStyleBackColor = true;
             this.chkFlipUvsVertical.CheckedChanged += new System.EventHandler(this.chkFlipUvsVertical_CheckedChanged);
             // 
+            // chkOldExporter
+            // 
+            this.chkOldExporter.AutoSize = true;
+            this.chkOldExporter.Location = new System.Drawing.Point(23, 104);
+            this.chkOldExporter.Name = "chkOldExporter";
+            this.chkOldExporter.Size = new System.Drawing.Size(200, 17);
+            this.chkOldExporter.TabIndex = 15;
+            this.chkOldExporter.Text = "Use Old Exporter (If new one breaks)";
+            this.chkOldExporter.UseVisualStyleBackColor = true;
+            this.chkOldExporter.CheckedChanged += new System.EventHandler(this.stCheckBox1_CheckedChanged);
+            // 
             // ExportModelSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -112,5 +126,6 @@
         private STButton stButton2;
         private STButton stButton1;
         private STCheckBox chkFlipUvsVertical;
+        protected STCheckBox chkOldExporter;
     }
 }

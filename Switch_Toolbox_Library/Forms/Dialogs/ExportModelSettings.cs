@@ -29,5 +29,9 @@ namespace Toolbox.Library.Forms
         private void chkFlipUvsVertical_CheckedChanged(object sender, EventArgs e) {
             Settings.FlipTexCoordsVertical = chkFlipUvsVertical.Checked;
         }
+
+        private void stCheckBox1_CheckedChanged(object sender, EventArgs e) {
+            Settings.UseOldExporter = chkOldExporter.Checked;
+        }
     }
 }
