@@ -53,7 +53,7 @@ namespace Toolbox.Library
         public int DisplayLODIndex;
         public int Offset;
 
-        private byte vertexSkinCount;
+        private byte vertexSkinCount = 4;
         public byte VertexSkinCount
         {
             get
