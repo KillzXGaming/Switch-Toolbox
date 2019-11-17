@@ -455,7 +455,14 @@ namespace Toolbox.Library
             if (DaeHelper.IDMapToName.ContainsKey(node.Name))
                 Name = DaeHelper.IDMapToName[node.Name];
 
-            bool IsBone = false;
+            string ParentArmatureName = node.Parent != null ? node.Parent.Name : "";
+            if (ParentArmatureName != string.Empty && DaeHelper.IDMapToName.ContainsKey(ParentArmatureName))
+                ParentArmatureName = DaeHelper.IDMapToName[ParentArmatureName];
+
+            bool IsBone = boneNames.Contains(Name) && !boneNames.Contains(ParentArmatureName) ||
+                       Name.Contains("Skl_Root") || Name.Contains("nw4f_root") ||
+                       Name.Contains("skl_root") || Name == "Root";
+
             if (DaeHelper.VisualSceneNodeTypes.ContainsKey(Name)) {
                 if (DaeHelper.VisualSceneNodeTypes[Name] == "JOINT")
                     IsBone = true;

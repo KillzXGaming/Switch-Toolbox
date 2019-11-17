@@ -62,6 +62,8 @@ namespace Toolbox.Library
             if (Materials == null)
                 Materials = new List<STGenericMaterial>();
 
+            List<string> failedTextureExport = new List<string>();
+
             STProgressBar progressBar = new STProgressBar();
             progressBar.Task = "Exporting Model...";
             progressBar.Value = 0;
@@ -98,26 +100,36 @@ namespace Toolbox.Library
                             progressBar.Value = ((i * 100) / Textures.Count);
                             progressBar.Refresh();
 
-                            var bitmap = Textures[i].GetBitmap();
-
-                            string textureName = Textures[i].Text;
-                            if (textureName.RemoveIllegaleFileNameCharacters() != textureName)
+                            try
                             {
-                                string properName = textureName.RemoveIllegaleFileNameCharacters();
-                                for (int m = 0; m < Materials?.Count; m++) {
-                                    foreach (var tex in Materials[m].TextureMaps) {
-                                        if (tex.Name == textureName)
-                                            tex.Name = properName;
+                                var bitmap = Textures[i].GetBitmap();
+                                if (bitmap != null)
+                                {
+                                    string textureName = Textures[i].Text;
+                                    if (textureName.RemoveIllegaleFileNameCharacters() != textureName)
+                                    {
+                                        string properName = textureName.RemoveIllegaleFileNameCharacters();
+                                        for (int m = 0; m < Materials?.Count; m++)
+                                        {
+                                            foreach (var tex in Materials[m].TextureMaps)
+                                            {
+                                                if (tex.Name == textureName)
+                                                    tex.Name = properName;
+                                            }
+                                        }
+
+                                        textureName = properName;
                                     }
+
+                                    bitmap.Save($"{TexturePath}/{textureName}.png");
+                                    bitmap.Dispose();
+
+                                    GC.Collect();
                                 }
-
-                                textureName = properName;
                             }
-
-                            bitmap.Save($"{TexturePath}/{textureName}.png");
-                            bitmap.Dispose();
-
-                            GC.Collect();
+                            catch (Exception ex) {
+                                failedTextureExport.Add(Textures[i].Text);
+                            }
                         }
                     }
 
