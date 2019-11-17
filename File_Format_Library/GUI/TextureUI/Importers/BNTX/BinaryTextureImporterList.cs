@@ -53,6 +53,8 @@ namespace FirstPlugin
                 //  if (format != SurfaceFormat.Invalid)
             }
 
+            
+            formatComboBox.Items.Add(SurfaceFormat.D32_FLOAT_S8X24_UINT);
             formatComboBox.Items.Add(SurfaceFormat.A1_B5_G5_R5_UNORM);
             formatComboBox.Items.Add(SurfaceFormat.A4_B4_G4_R4_UNORM);
             formatComboBox.Items.Add(SurfaceFormat.B5_G5_R5_A1_UNORM);
