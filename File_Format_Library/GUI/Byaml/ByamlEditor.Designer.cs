@@ -60,6 +60,7 @@
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyDataAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stPanel3 = new Toolbox.Library.Forms.STPanel();
             this.contextMenuStrip1.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.stTabControl1.SuspendLayout();
@@ -226,6 +227,7 @@
             this.columnHeader3});
             this.listViewCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewCustom1.FullRowSelect = true;
+            this.listViewCustom1.HideSelection = false;
             this.listViewCustom1.Location = new System.Drawing.Point(0, 0);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
@@ -252,6 +254,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.stPanel3);
             this.tabPage2.Controls.Add(this.btnToXml);
             this.tabPage2.Controls.Add(this.stPanel2);
             this.tabPage2.Controls.Add(this.btnXmlToByaml);
@@ -305,49 +308,59 @@
             this.copyToolStripMenuItem,
             this.copyDataAsTextToolStripMenuItem});
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(181, 158);
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(166, 136);
             // 
             // addItemToolStripMenuItem
             // 
             this.addItemToolStripMenuItem.Name = "addItemToolStripMenuItem";
-            this.addItemToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addItemToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.addItemToolStripMenuItem.Text = "Add Item";
             this.addItemToolStripMenuItem.Click += new System.EventHandler(this.addNodeToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editValueNodeMenuItem_Click);
             // 
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.renameToolStripMenuItem.Text = "Rename";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.copyToolStripMenuItem.Text = "Copy item as text";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // copyDataAsTextToolStripMenuItem
             // 
             this.copyDataAsTextToolStripMenuItem.Name = "copyDataAsTextToolStripMenuItem";
-            this.copyDataAsTextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyDataAsTextToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.copyDataAsTextToolStripMenuItem.Text = "Copy data as text";
             this.copyDataAsTextToolStripMenuItem.Click += new System.EventHandler(this.copyDataAsTextToolStripMenuItem_Click);
+            // 
+            // stPanel3
+            // 
+            this.stPanel3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stPanel3.Location = new System.Drawing.Point(15, 35);
+            this.stPanel3.Name = "stPanel3";
+            this.stPanel3.Size = new System.Drawing.Size(520, 328);
+            this.stPanel3.TabIndex = 3;
             // 
             // ByamlEditor
             // 
@@ -404,5 +417,6 @@
         private Toolbox.Library.Forms.STButton btnToXml;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyDataAsTextToolStripMenuItem;
+        private Toolbox.Library.Forms.STPanel stPanel3;
     }
 }

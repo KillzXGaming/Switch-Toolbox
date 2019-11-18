@@ -809,7 +809,7 @@ namespace Toolbox.Library
             else if (f.Matches("FLIM")) return ".bclim";
             else if (f.Matches("FLAN")) return ".bflan";
             else if (f.Matches("FSEQ")) return ".bfseq";
-            else if (f.Matches("VFXB")) return ".pctl";
+            else if (f.Matches("VFXB")) return ".ptcl";
             else if (f.Matches("AAHS")) return ".sharc";
             else if (f.Matches("BAHS")) return ".sharcb";
             else if (f.Matches("BNTX")) return ".bntx";

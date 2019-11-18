@@ -63,6 +63,8 @@ namespace FirstPlugin.LuigisMansion3
 
         private void SaveAction(object sender, EventArgs args)
         {
+            return;
+
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = Utils.GetAllFilters(this);
             sfd.FileName = FileName;

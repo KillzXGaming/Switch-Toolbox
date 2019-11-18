@@ -36,7 +36,7 @@ namespace FirstPlugin
             else if (f.Matches("FLIM")) return ".bclim";
             else if (f.Matches("FLAN")) return ".bflan";
             else if (f.Matches("FSEQ")) return ".bfseq";
-            else if (f.Matches("VFXB")) return ".pctl";
+            else if (f.Matches("VFXB")) return ".ptcl";
             else if (f.Matches("AAHS")) return ".sharc";
             else if (f.Matches("BAHS")) return ".sharcb";
             else if (f.Matches("BNTX")) return ".bntx";
@@ -46,7 +46,7 @@ namespace FirstPlugin
             else if (f.Matches("CFNT")) return ".bcfnt";
             else if (f.Matches("CSTM")) return ".bcstm";
             else if (f.Matches("FSTM")) return ".bfstm";
-            else if (f.Matches("STM")) return ".bfsha";
+            else if (f.Matches("STM")) return ".bstm";
             else if (f.Matches("CWAV")) return ".bcwav";
             else if (f.Matches("FWAV")) return ".bfwav";
             else if (f.Matches("CTPK")) return ".ctpk";
@@ -216,6 +216,9 @@ namespace FirstPlugin
                         break;
                     case ".bnsh":
                         fileEntry.FileName = $"Shaders/{fileEntry.FileName}";
+                        break;
+                    case ".ptcl":
+                        fileEntry.FileName = $"Effects/{fileEntry.FileName}";
                         break;
                     default:
                         fileEntry.FileName = $"OtherFiles/{fileEntry.FileName}";

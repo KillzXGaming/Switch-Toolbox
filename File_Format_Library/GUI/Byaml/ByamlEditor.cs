@@ -92,7 +92,7 @@ namespace FirstPlugin
             ParseBymlFirstNode();
 
             xmlEditor = new TextEditor();
-            stPanel2.Controls.Add(xmlEditor);
+            stPanel3.Controls.Add(xmlEditor);
             xmlEditor.Dock = DockStyle.Fill;
             xmlEditor.IsXML = true;
         }

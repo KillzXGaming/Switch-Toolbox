@@ -19,7 +19,7 @@ namespace FirstPlugin
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "*CTR Model Binary" };
-        public string[] Extension { get; set; } = new string[] { ".cmb" };
+        public string[] Extension { get; set; } = new string[] { "*.cmb" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -1661,8 +1661,14 @@ namespace FirstPlugin
             public float BlendColorB { get; set; }
             public float BlendColorA { get; set; }
 
+            private byte[] data;
+
             public void Read(FileReader reader, Header header, MaterialChunk materialChunkParent)
             {
+                int materialSize = 0x15C;
+                if (header.Version >= CMBVersion.MM3DS)
+                    materialSize = 0x16C;
+
                 TextureMaps = new TextureMap[3];
                 TextureMaticies = new TextureMatrix[3];
                 TextureCombiners = new List<TextureCombiner>();
@@ -1701,6 +1707,10 @@ namespace FirstPlugin
                     TextureMaticies[j].Translate = reader.ReadVec2SY();
                     TextureMaticies[j].Rotate = reader.ReadSingle();
                 }
+
+                long dataPos = reader.Position;
+                data = reader.ReadBytes(materialSize - (int)(dataPos - pos));
+                reader.SeekBegin(dataPos);
 
                 uint unkColor0 = reader.ReadUInt32();
 
@@ -1857,6 +1867,8 @@ namespace FirstPlugin
                     writer.Write(TextureMaticies[j].Translate);
                     writer.Write(TextureMaticies[j].Rotate);
                 }
+
+                writer.Write(data);
             }
 
             public override string ToString()
@@ -1948,6 +1960,8 @@ namespace FirstPlugin
 
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
+                writer.Write(Textures.Count);
+
                 for (int i = 0; i < Textures.Count; i++)
                     Textures[i].Write(writer);
 

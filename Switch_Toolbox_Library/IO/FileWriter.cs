@@ -119,7 +119,7 @@ namespace Toolbox.Library.IO
         {
             using (TemporarySeek(position, System.IO.SeekOrigin.Begin))
             {
-                Write((uint)endPosition - startPosition);
+                Write((uint)(endPosition - startPosition));
             }
         }
 

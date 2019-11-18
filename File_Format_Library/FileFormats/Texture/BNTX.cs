@@ -582,7 +582,8 @@ namespace FirstPlugin
             {
                 TextureData texData = new TextureData(tex, BinaryTexFile);
                 Nodes.Add(texData);
-                Textures.Add(tex.Name, texData);
+                if (!Textures.ContainsKey(tex.Name))
+                    Textures.Add(tex.Name, texData);
             }
             BinaryTexFile.Textures.Clear(); //We don't need these in memeory anymore
             BinaryTexFile.TextureDict.Clear();
