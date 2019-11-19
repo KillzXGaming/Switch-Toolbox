@@ -320,6 +320,7 @@ namespace Toolbox.Library.Forms
                 if (e.Node is IContextMenuNode)
                 {
                     bool IsRoot = e.Node.Parent == null;
+                    bool HasChildren = e.Node.Nodes.Count > 0;
 
                     treeNodeContextMenu.Items.Clear();
                     if (e.Node.Tag != null && e.Node.Tag is ArchiveFileInfo)
@@ -354,10 +355,10 @@ namespace Toolbox.Library.Forms
                             HasExpand = true;
                     }
 
-                    if (!HasCollpase)
+                    if (!HasCollpase && HasChildren)
                         treeNodeContextMenu.Items.Add(new ToolStripMenuItem("Collapse All", null, CollapseAllAction, Keys.Control | Keys.Q));
 
-                    if (!HasExpand)
+                    if (!HasExpand && HasChildren)
                         treeNodeContextMenu.Items.Add(new ToolStripMenuItem("Expand All", null, ExpandAllAction, Keys.Control | Keys.P));
 
                     treeNodeContextMenu.Show(Cursor.Position);
@@ -405,7 +406,9 @@ namespace Toolbox.Library.Forms
                     }
 
                     treeViewCustom1.Nodes.Remove(node);
-                    ResetEditor();
+
+                    if (treeViewCustom1.Nodes.Count == 0)
+                        ResetEditor();
 
                     //Force garbage collection.
                     GC.Collect();
@@ -424,8 +427,6 @@ namespace Toolbox.Library.Forms
             {
                 if (control is STUserControl)
                     ((STUserControl)control).OnControlClosing();
-
-                control.Dispose();
             }
 
             stPanel2.Controls.Clear();

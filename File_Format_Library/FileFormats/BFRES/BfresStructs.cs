@@ -2254,15 +2254,15 @@ namespace Bfres.Structs
             BFRESRender.UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
-        public bool HasUV0()
+        public bool HasAttributeUV0()
         {
             return vertexAttributes.Any(x => x.Name == "_u0");
         }
-        public bool HasUV1()
+        public bool HasAttributeUV1()
         {
             return vertexAttributes.Any(x => x.Name == "_u1");
         }
-        public bool HasUV2()
+        public bool HasAttributeUV2()
         {
             return vertexAttributes.Any(x => x.Name == "_u2");
         }

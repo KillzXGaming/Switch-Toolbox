@@ -685,7 +685,7 @@ namespace Bfres.Structs
             bool HasTans = vertexAttributes.Any(x => x.Name == "_t0");
             bool HasBiTans = vertexAttributes.Any(x => x.Name == "_b0");
 
-            if (!HasUV0())
+            if (!HasAttributeUV0())
             {
                 MessageBox.Show($"Error! {Text} does not have UVs!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -738,21 +738,21 @@ namespace Bfres.Structs
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
         }
-        public bool HasUV0()
+        public bool HasAttributeUV0()
         {
             return vertexAttributes.Any(x => x.Name == "_u0");
         }
-        public bool HasUV1()
+        public bool HasAttributeUV1()
         {
             return vertexAttributes.Any(x => x.Name == "_u1");
         }
-        public bool HasUV2()
+        public bool HasAttributeUV2()
         {
             return vertexAttributes.Any(x => x.Name == "_u2");
         }
         public void FlipUvsVertical(object sender, EventArgs args)
         {
-            if (!HasUV0())
+            if (!HasAttributeUV0())
             {
                 MessageBox.Show($"Error! {Text} does not have UVs!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -764,7 +764,7 @@ namespace Bfres.Structs
         }
         public void FlipUvsHorizontal(object sender, EventArgs args)
         {
-            if (!HasUV0())
+            if (!HasAttributeUV0())
             {
                 MessageBox.Show($"Error! {Text} does not have UVs!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -888,7 +888,7 @@ namespace Bfres.Structs
                             var originalAttributes = vertexAttributes;
 
                             BfresModelImportSettings settings = new BfresModelImportSettings();
-                            settings.SetModelAttributes(assimp.objects[0]);
+                            settings.SetModelAttributes(assimp.objects);
                             if (settings.ShowDialog() == DialogResult.OK)
                             {
                                 STGenericObject obj = selector.GetSelectedMesh();

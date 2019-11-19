@@ -6,6 +6,7 @@ using Toolbox.Library;
 using Toolbox.Library.Forms;
 using Toolbox.Library.Rendering;
 using Bfres.Structs;
+using System.Linq;
 
 namespace FirstPlugin
 {
@@ -98,40 +99,40 @@ namespace FirstPlugin
             originalMeshListView.EndUpdate();
         }
 
-        public void SetModelAttributes(STGenericObject obj)
+        public void SetModelAttributes(List<STGenericObject> objects)
         {
             chkBoxEnablePositions.Enabled = true;
-            chkBoxEnablePositions.Checked = obj.HasPos;
-            chkBoxEnableNormals.Checked = obj.HasNrm;
-            chkBoxEnableUVs.Checked = obj.HasUv0;
-            chkBoxEnableTans.Checked = obj.HasUv0;
-            chkBoxEnableBitans.Checked = obj.HasUv0;
-            chkBoxEnableWeightIndices.Checked = obj.HasWeights;
-            chkBoxEnableVertColors.Checked = obj.HasVertColors;
+            chkBoxEnablePositions.Checked = objects.Any(o => o.HasPos);
+            chkBoxEnableNormals.Checked = objects.Any(o => o.HasNrm);
+            chkBoxEnableUVs.Checked = objects.Any(o => o.HasUv0);
+            chkBoxEnableTans.Checked = objects.Any(o => o.HasUv0);
+            chkBoxEnableBitans.Checked = objects.Any(o => o.HasUv0);
+            chkBoxEnableWeightIndices.Checked = objects.Any(o => o.HasWeights);
+            chkBoxEnableVertColors.Checked = objects.Any(o => o.HasVertColors);
             chkResetUVParams.Checked = true;
             chkBoxTransformMatrix.Checked = true;
 
-            if (!obj.HasPos)
+            if (!objects.Any(o => o.HasPos))
                 DisableAttribute(chkBoxEnablePositions, comboBoxFormatPositions);
-            if (!obj.HasNrm)
+            if (!objects.Any(o => o.HasNrm))
                 DisableAttribute(chkBoxEnableNormals, comboBoxFormatPositions);
-            if (!obj.HasUv0)
+            if (!objects.Any(o => o.HasUv0))
                 DisableAttribute(chkBoxEnableUVs, comboBoxFormatUvs);
             //Note. Bitans/tans uses uvs to generate
-            if (!obj.HasUv0)
+            if (!objects.Any(o => o.HasUv0))
                 DisableAttribute(chkBoxEnableTans, comboBoxFormatTangents);
-            if (!obj.HasUv0)
+            if (!objects.Any(o => o.HasUv0))
                 DisableAttribute(chkBoxEnableBitans, comboBoxFormatBitans);
-            if (!obj.HasWeights && !obj.HasIndices)
+            if (!objects.Any(o => o.HasWeights) && !objects.Any(o => o.HasIndices))
             {
                 DisableAttribute(chkBoxEnableWeightIndices, comboBoxFormatWeights);
                 DisableAttribute(chkBoxEnableWeightIndices, comboBoxFormatIndices);
             }
-            if (!obj.HasVertColors)
+            if (!objects.Any(o => o.HasVertColors))
                 DisableAttribute(chkBoxEnableVertColors, comboBoxFormatVertexColors);
 
-            EnableUV1 = obj.HasUv1;
-            EnableUV2 = obj.HasUv2;
+            EnableUV1 = objects.Any(o => o.HasUv1);
+            EnableUV2 = objects.Any(o => o.HasUv2);
         }
 
         public List<FSHP.VertexAttribute> CreateNewAttributes(List<FSHP.VertexAttribute> Attributes)

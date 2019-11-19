@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 using OpenTK;
+using System.Reflection;
 
 namespace FirstPlugin
 {
@@ -16,8 +17,8 @@ namespace FirstPlugin
         public FileType FileType { get; set; } = FileType.Model;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "MDL" };
-        public string[] Extension { get; set; } = new string[] { "*.mdl" };
+        public string[] Description { get; set; } = new string[] { "GFBANM" };
+        public string[] Extension { get; set; } = new string[] { "*.gfbanm" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -36,11 +37,12 @@ namespace FirstPlugin
             }
         }
 
+        Header header;
         public void Load(System.IO.Stream stream)
         {
             using (var reader = new FileReader(stream))
             {
-
+                header = new Header(reader);
             }
         }
 
@@ -56,30 +58,46 @@ namespace FirstPlugin
         public class Header
         {
             public Config config;
+            public BoneList boneList;
 
-            public void Read(FileReader reader)
+            public Header(FileReader reader)
             {
-                reader.ReadUInt32();
                 config = ParseSection<Config>(reader, this);
+                boneList = ParseSection<BoneList>(reader, this);
+
+                Console.WriteLine($"config NumKeyFrames {config.NumKeyFrames}");
+                Console.WriteLine($"config FramesPerSecond {config.FramesPerSecond}");
             }
         }
 
         private static T ParseSection<T>(FileReader reader, Header header)
              where T : GFSection, new()
         {
-            var layoutOffset = reader.ReadOffset(true, typeof(uint));
+            var offset = reader.ReadOffset(true, typeof(uint));
+            reader.SeekBegin(offset);
+
+            long origin = reader.Position;
+
+            int layoutOffset = reader.ReadInt32();
             var dataOffset = reader.ReadOffset(true, typeof(uint));
 
             T section = new T();
-            using (reader.TemporarySeek(layoutOffset, System.IO.SeekOrigin.Begin))
+            using (reader.TemporarySeek(origin - layoutOffset, System.IO.SeekOrigin.Begin))
             {
                 ushort layoutSize = reader.ReadUInt16();
                 ushort layoutStride = reader.ReadUInt16();
-                section.LayoutPointers = reader.ReadUInt16s((int)(layoutSize / 2));
+
+                List<ushort> pointers = new List<ushort>();
+                uint looper = 4;
+                while (looper < layoutSize) {
+                    pointers.Add(reader.ReadUInt16());
+                    looper += 2;
+                }
+
+                section.LayoutPointers = reader.ReadUInt16s((int)(layoutSize / 4));
             }
 
-            using (reader.TemporarySeek(dataOffset, System.IO.SeekOrigin.Begin))
-            {
+            using (reader.TemporarySeek(dataOffset, System.IO.SeekOrigin.Begin)) {
                 section.Read(reader, header);
             }
 
@@ -88,30 +106,117 @@ namespace FirstPlugin
 
         public class GFSection
         {
+            public ushort LayoutSize { get; set; }
+            public ushort LayoutStride { get; set; }
+
             public ushort[] LayoutPointers { get; set; }
 
-            public virtual void Read(FileReader reader, Header header)
+            public void Read(FileReader reader, Header header)
             {
+                long origin = reader.Position;
 
+                PropertyInfo[] types = new PropertyInfo[(int)LayoutPointers?.Length];
+
+                var sectionType = this.GetType();
+
+                int index = 0;
+                foreach (var prop in sectionType.GetProperties()) {
+                    if (!Attribute.IsDefined(prop, typeof(FlatTableParse)))
+                        continue;
+
+                    types[index++] = prop;
+                }
+
+                for (int i = 0; i < LayoutPointers?.Length; i++)
+                {
+                    reader.SeekBegin(origin + LayoutPointers[i]);
+                    if (types[i] != null)
+                    {
+                        var prop = types[i];
+                        var propertyType = prop.PropertyType;
+
+                        if (propertyType == typeof(uint))
+                            prop.SetValue(this, reader.ReadUInt32());
+                        else if (propertyType == typeof(int))
+                            prop.SetValue(this, reader.ReadInt32());
+                        else if(propertyType == typeof(byte))
+                            prop.SetValue(this, reader.ReadByte());
+                        else if(propertyType == typeof(sbyte))
+                            prop.SetValue(this, reader.ReadSByte());
+                        else if (propertyType == typeof(ushort))
+                            prop.SetValue(this, reader.ReadUInt16());
+                        else if (propertyType == typeof(short))
+                            prop.SetValue(this, reader.ReadInt16());
+                        else if (propertyType == typeof(Vector2))
+                            prop.SetValue(this, new Vector2(
+                                reader.ReadSingle(),
+                                reader.ReadSingle())
+                             );
+                        else if (propertyType == typeof(Vector3))
+                            prop.SetValue(this, new Vector3(
+                                reader.ReadSingle(),
+                                reader.ReadSingle(),
+                                reader.ReadSingle())
+                             );
+                        else if (propertyType == typeof(Vector4))
+                            prop.SetValue(this, new Vector4(
+                                reader.ReadSingle(),
+                                reader.ReadSingle(),
+                                reader.ReadSingle(),
+                                reader.ReadSingle())
+                             );
+                        else if (propertyType == typeof(GFSection))
+                        {
+                            var offset = reader.ReadOffset(true, typeof(uint));
+                            reader.SeekBegin(offset);
+                        }
+                        else if (propertyType is IEnumerable<GFSection>) {
+
+                        }
+                    }
+                }
             }
         }
 
+        public class FlatTableParse : Attribute { }
+        public class OffsetProperty : Attribute { }
+
+        [OffsetProperty]
         public class Config : GFSection
         {
+            [FlatTableParse]
             public int Unknown { get; set; }
+            [FlatTableParse]
             public uint NumKeyFrames { get; set; }
+            [FlatTableParse]
             public uint FramesPerSecond { get; set; }
         }
 
+        [OffsetProperty]
         public class BoneList : GFSection
         {
+            [FlatTableParse]
             public List<Bone> Bones = new List<Bone>();
+
+            [FlatTableParse]
             public List<BoneDefaults> BoneDefaults = new List<BoneDefaults>();
         }
 
         public class Bone
         {
+            [FlatTableParse, OffsetProperty]
             public string Name { get; set; }
+
+            [FlatTableParse]
+            public byte ScaleType { get; set; }
+        }
+
+        public class NammeOffset
+        {
+            [FlatTableParse, OffsetProperty]
+            public string Name { get; set; }
+
+            [FlatTableParse]
             public byte ScaleType { get; set; }
         }
 

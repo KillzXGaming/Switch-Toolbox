@@ -211,7 +211,7 @@ namespace Bfres.Structs
         {
             foreach (var shape in shapes)
             {
-                if (!shape.HasUV0())
+                if (!shape.HasAttributeUV0())
                 {
                     MessageBox.Show($"Error! {Text} does not have UVs!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -227,7 +227,7 @@ namespace Bfres.Structs
         {
             foreach (var shape in shapes)
             {
-                if (!shape.HasUV0())
+                if (!shape.HasAttributeUV0())
                 {
                     MessageBox.Show($"Error! {Text} does not have UVs!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -344,7 +344,7 @@ namespace Bfres.Structs
                 bool HasTans = shp.vertexAttributes.Any(x => x.Name == "_t0");
                 bool HasBiTans = shp.vertexAttributes.Any(x => x.Name == "_b0");
 
-                if (!shp.HasUV0())
+                if (!shp.HasAttributeUV0())
                 {
                     MessageBox.Show($"Error! {Text} does not have UVs!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -683,7 +683,7 @@ namespace Bfres.Structs
                     }
                     BfresModelImportSettings csvsettings = new BfresModelImportSettings();
                     csvsettings.DisableMaterialEdits();
-                    csvsettings.SetModelAttributes(csvModel.objects[0]);
+                    csvsettings.SetModelAttributes(csvModel.objects);
                     if (csvsettings.ShowDialog() == DialogResult.OK)
                     {
                         if (csvsettings.LimitSkinCount ||
@@ -861,7 +861,7 @@ namespace Bfres.Structs
                         settings.UpdateTexturePlaceholderSetting(HasTextures);
                     }
 
-                    settings.SetModelAttributes(ImportedObjects[0]);
+                    settings.SetModelAttributes(ImportedObjects);
                     if (settings.ShowDialog() == DialogResult.OK)
                     {
                         STProgressBar progressBar = new STProgressBar();
