@@ -308,6 +308,7 @@ namespace Toolbox.Library
                     new STToolStripSeparator(),
                     new STToolStripItem("Add Folder", AddFolderAction) { Enabled = ArchiveFile.CanAddFiles},
                     new STToolStripItem("Add File", AddFileAction) { Enabled = ArchiveFile.CanAddFiles},
+                    new STToolStripItem("Clear Files", ClearAction) { Enabled = ArchiveFile.CanDeleteFiles},
             };
 
             var toolStripList = ToolStrips.ToList();
@@ -317,6 +318,16 @@ namespace Toolbox.Library
             }
 
             return toolStripList.ToArray();
+        }
+
+        private void ClearAction(object sender, EventArgs args)
+        {
+            //Clear all nodes
+            for (int i = 0; i < FileNodes.Count; i++)
+                ArchiveFile.DeleteFile(FileNodes[i].Item1);
+
+            Nodes.Clear();
+            FileNodes.Clear();
         }
 
         private void AddFolderAction(object sender, EventArgs args)
@@ -669,6 +680,7 @@ namespace Toolbox.Library
                 new STToolStripSeparator(),
                 new STToolStripItem("Add Folder", AddFolderAction) { Enabled = ArchiveFile.CanAddFiles },
                 new STToolStripItem("Add File", AddFileAction) { Enabled = ArchiveFile.CanAddFiles },
+                new STToolStripItem("Clear Files", ClearAction) { Enabled = ArchiveFile.CanDeleteFiles },
             };
         }
 
@@ -686,6 +698,17 @@ namespace Toolbox.Library
             if (ofd.ShowDialog() == DialogResult.OK) {
                 TreeHelper.AddFiles(this, RootNode, ofd.FileNames);
             }
+        }
+
+        private void ClearAction(object sender, EventArgs args)
+        {
+            foreach (var node in TreeViewExtensions.Collect(Nodes))
+            {
+                if (node is ArchiveFileWrapper)
+                    ArchiveFile.DeleteFile(((ArchiveFileWrapper)node).ArchiveFileInfo);
+            }
+
+            Nodes.Clear();
         }
 
         public override void OnClick(TreeView treeView)
@@ -733,8 +756,21 @@ namespace Toolbox.Library
             }
         }
 
-        private void ReplaceAction(object sender, EventArgs args)
-        {
+        private void ReplaceAction(object sender, EventArgs args) {
+            //Add folders and files from selected path
+            FolderSelectDialog ofd = new FolderSelectDialog();
+            if (ofd.ShowDialog() == DialogResult.OK) {
+                //Clear all nodes
+                foreach (var node in TreeViewExtensions.Collect(Nodes))
+                {
+                    if (node is ArchiveFileWrapper)
+                        ArchiveFile.DeleteFile(((ArchiveFileWrapper)node).ArchiveFileInfo);
+                }
+
+                Nodes.Clear();
+
+                TreeHelper.AddFiles(this, RootNode, Directory.GetFiles(ofd.SelectedPath));
+            }
         }
 
         private void DeleteAction(object sender, EventArgs args) {
