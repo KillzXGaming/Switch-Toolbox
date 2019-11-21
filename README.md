@@ -125,6 +125,7 @@ In the event that the tool cannot compile, check references. All the libraries u
 - Ambrosia for BTI and TXE support.
 - Kuriimu for some IO and file parsing help.
 - Skyth and Radfordhound for PAC documentation.
+- Ac_K for ASTC decoder c# port from Ryujinx. 
 
 ##  Resources
 - [TreeView Icons by icons8](https://icons8.com/)
@@ -155,6 +156,7 @@ In the event that the tool cannot compile, check references. All the libraries u
 - [Syroot Maths](https://gitlab.com/Syroot/Maths)
 - [Syroot BFRES Library (Wii U)](https://gitlab.com/Syroot/NintenTools.Bfres)
 - [LibHac](https://github.com/Thealexbarney/LibHac)
+- [ASTC Decoder](https://github.com/Ryujinx/Ryujinx/blob/b2b736abc2569ab5d8199da666aef8d8394844a0/Ryujinx.Graphics/Graphics3d/Texture/AstcDecoder.cs)
 
 ## Helpful Tools
 - [Kuriimu](https://github.com/IcySon55/Kuriimu)
