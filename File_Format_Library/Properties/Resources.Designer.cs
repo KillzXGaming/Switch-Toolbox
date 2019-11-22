@@ -201,31 +201,64 @@ namespace FirstPlugin.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to D:\Project\NeoPlum\Out\Dist\NXROM\NeoPlumNX64_dist.nss
-        ///nnSdk.nss
-        ///c:/NXSDK/V7_3_2/NintendoSDK/Libraries/NX-NXFP2-a64/Release/multimedia.nss
-        ///__nnDetailNintendoSdkRuntimeObjectFile
-        ///__nnDetailNintendoSdkRuntimeObjectFileRefer
-        ///__nnmusl_fini_dso
-        ///__nnmusl_init_dso
-        ///__rel_dyn_end
-        ///__rel_dyn_start
-        ///__rel_plt_end
-        ///__rel_plt_start
-        ///nndetailRoGetRoDataEnd
-        ///nndetailRoGetRoDataStart
-        ///nnMain
-        ///nninitStartup
-        ///_ZdlPv
-        ///_ZNSt3__112__next_primeEm
-        ///strtoul
-        ///strtod
-        ///vsnprintf
-        ///vswprintf
-        ///_ZdaPv
-        ///_Znwm
-        ///_Znam
-        ///__cxa_guard_ac [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 1
+        ///boo
+        ///fan
+        ///ice
+        ///ivy
+        ///lob
+        ///net
+        ///nub
+        ///sky
+        ///_vicenight/riotguard/thigh1
+        ///_vicenight/riotguard/thigh2
+        ///_vicenight/riotguard/thigh3
+        ///GenGlow
+        ///fx_divot_flash
+        ///_craterfield/podsspec
+        ///IDLE
+        ///Idle
+        ///Main
+        ///_tutorialfield/wall_base
+        ///Pass
+        ///_tutorialfield/wall_mask
+        ///_tutorialfield/wall_spec
+        ///arg1
+        ///arm1
+        ///ball
+        ///blue
+        ///boot
+        ///drum
+        ///dump
+        ///fins
+        ///fire
+        ///flag
+        ///glow
+        ///gold
+        ///hull
+        ///land
+        ///leg1
+        ///leg2
+        ///leg3
+        ///lid1
+        ///lid2
+        ///lid3
+        ///mast
+        ///palm
+        ///pole
+        ///pots
+        ///rock
+        ///roof
+        ///rope
+        ///sand
+        ///star
+        ///stop
+        ///toad
+        ///tree
+        ///whip
+        ///wood
+        ///proxy object05/claw1
+        ///proxy  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string LM3_Hashes {
             get {
@@ -270,6 +303,15 @@ namespace FirstPlugin.Properties {
             get {
                 object obj = ResourceManager.GetObject("PicturePane", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Pkmn {
+            get {
+                return ResourceManager.GetString("Pkmn", resourceCulture);
             }
         }
         

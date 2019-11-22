@@ -60,6 +60,9 @@ namespace FirstPlugin.Turbo
             Translate -= new Vector3(X,Z,Y);
         }
 
+        public void PickRotate(float X, float Y, float Z) { }
+        public void PickScale(float X, float Y, float Z) { }
+
         Course_MapCamera_bin.CameraData cameraData;
 
         public CameraPoint(Course_MapCamera_bin.CameraData data, bool isTarget)

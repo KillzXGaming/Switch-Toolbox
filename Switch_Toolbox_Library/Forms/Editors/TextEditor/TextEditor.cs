@@ -140,6 +140,7 @@ namespace Toolbox.Library.Forms
         {
             InitializeComponent();
 
+            Dock = DockStyle.Fill;
 
             findReplaceDialog = new FindReplace();
             findReplaceDialog.Scintilla = scintilla1;

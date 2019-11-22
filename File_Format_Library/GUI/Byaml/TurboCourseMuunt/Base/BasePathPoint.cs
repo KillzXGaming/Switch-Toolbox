@@ -40,7 +40,7 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         public bool IsSelected { get; set; }
         public bool IsHovered { get; set; }
         
-        public bool IsHit(float X, float Y)
+        public virtual bool IsHit(float X, float Y)
         {
             return new STRectangle(Translate.X, Translate.Z, 40, 40).IsHit((int)X, (int)Y);
 
@@ -74,6 +74,16 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
         public void PickTranslate(float X, float Y, float Z)
         {
             Translate = new Vector3(Translate.X - X, Translate.Y - Z, Translate.Z - Y);
+        }
+
+        public void PickRotate(float X, float Y, float Z)
+        {
+            Rotate = new Vector3(Rotate.X - X, Rotate.Y - Z, Rotate.Z - Y);
+        }
+
+        public void PickScale(float X, float Y, float Z)
+        {
+            Scale = new Vector3(Scale.X - X, Scale.Y - Z, Scale.Z - Y);
         }
 
         public const string N_Translate = "Translate";

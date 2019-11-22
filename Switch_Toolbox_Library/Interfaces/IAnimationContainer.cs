@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FirstPlugin.MuuntEditor
+namespace Toolbox.Library.Animations
 {
-    public interface I2DDrawableContainer
+    public interface IAnimationContainer
     {
-        List<IDrawableObject> Drawables { get; }
+        STAnimation AnimationController { get; }
     }
 }

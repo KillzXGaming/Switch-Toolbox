@@ -1,6 +1,7 @@
 .vs/
 bin/
 obj/
+*Google.FlatBuffers
 *NodeEditorWinforms-master
 *GL_EditorFramework-master
 *SuperBMD-master

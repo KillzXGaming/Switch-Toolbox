@@ -55,6 +55,8 @@ namespace Toolbox.Library.Forms
             glControl1.MouseDown += glControl1_MouseDown;
             glControl1.MouseUp += glControl1_MouseUp;
             glControl1.MouseMove += glControl1_MouseMove;
+            glControl1.KeyDown += glControl1_KeyDown;
+
             glControl1.Paint += glControl1_Paint;
             glControl1.Resize += glControl1_Resize;
             Controls.Add(glControl1);
@@ -354,6 +356,30 @@ namespace Toolbox.Library.Forms
                         }
                     }
                 }
+                if (pickAction == PickAction.Rotate)
+                {
+                    foreach (var pickObject in SelectedObjects)
+                    {
+                        if (pickOriginMouse != Point.Empty)
+                        {
+                            float rotX = 0;
+                            float rotY = 0;
+                            float rotZ = 0;
+
+                            if (pickAxis == PickAxis.X)
+                                rotX = pickMouse.X * -0.015625f;
+                            if (pickAxis == PickAxis.Y)
+                                rotY = pickMouse.Y;
+                            if (pickAxis == PickAxis.All)
+                            {
+                                rotX = pickMouse.X * -0.015625f;
+                              //  rotY = pickMouse.Y;
+                            }
+
+                            pickObject.PickRotate(rotX, rotY, rotZ);
+                        }
+                    }
+                }
 
                 pickOriginMouse = temp;
 
@@ -368,6 +394,20 @@ namespace Toolbox.Library.Forms
                 var prevPos = OpenGLHelper.convertScreenToWorldCoords(pickOriginMouse.X, pickOriginMouse.Y);
 
                 DrawSelectionBox(prevPos, curPos);
+            }
+        }
+        
+        private void glControl1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.R)
+            {
+                if (isPicked)
+                    pickAction = PickAction.Rotate;
+            }
+            if (e.KeyCode == Keys.G)
+            {
+                if (isPicked)
+                    pickAction = PickAction.Translate;
             }
         }
 
@@ -395,6 +435,18 @@ namespace Toolbox.Library.Forms
             }
 
             glControl1.Invalidate();
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // Viewport2D
+            // 
+            this.Name = "Viewport2D";
+            this.Size = new System.Drawing.Size(405, 404);
+            this.ResumeLayout(false);
+
         }
     }
 }

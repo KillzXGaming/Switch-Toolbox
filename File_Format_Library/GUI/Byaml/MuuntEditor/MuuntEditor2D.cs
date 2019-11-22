@@ -34,7 +34,10 @@ namespace FirstPlugin.MuuntEditor
         private void RenderGroupChildren(PropertyObject propertyObject)
         {
             if (propertyObject is I2DDrawableContainer)
-                ((I2DDrawableContainer)propertyObject).Drawable?.Draw(Camera.ModelViewMatrix);
+            {
+                foreach (var drawable in ((I2DDrawableContainer)propertyObject).Drawables)
+                    drawable.Draw(Camera.ModelViewMatrix);
+            }
 
             foreach (var subProperty in propertyObject.SubObjects)
                 RenderGroupChildren(subProperty);

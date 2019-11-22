@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GL_EditorFramework.EditorDrawables;
 using OpenTK;
+using Toolbox.Library;
 
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
@@ -73,6 +74,30 @@ namespace FirstPlugin.Turbo.CourseMuuntStructs
     public class LapPathPoint : BasePathPoint
     {
         private RenderablePathPoint renderablePoint;
+
+        public override bool IsHit(float X, float Y)
+        {
+            //Here we need to detect 2 points and see if the space between is selected
+            var point1 = Matrix2DHelper.RotatePoint(Translate, Scale.X / 2, 44, Scale.Y / 2, Rotate);
+            var point2 = Matrix2DHelper.RotatePoint(Translate, -(Scale.X / 2), -44, -(Scale.Y / 2), Rotate);
+
+
+            float LeftPoint = point2.X;
+            float RightPoint = point1.X;
+            float BottomPoint = point2.Y;
+            float TopPoint = point1.Y;
+
+            bool isInBetweenX = (X > LeftPoint) && (X < RightPoint) ||
+                                (X < LeftPoint) && (X > RightPoint);
+
+            bool isInBetweenY = (Y > BottomPoint) && (Y < TopPoint) ||
+                                (Y < BottomPoint) && (Y > TopPoint);
+
+            if (isInBetweenX && isInBetweenY)
+                return true;
+            else
+                return false;
+        }
 
         [Browsable(false)]
         public override RenderablePathPoint RenderablePoint

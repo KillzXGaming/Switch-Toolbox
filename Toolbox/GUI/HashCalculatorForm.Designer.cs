@@ -80,16 +80,16 @@
             this.stringTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.stringTB.Location = new System.Drawing.Point(88, 74);
             this.stringTB.Name = "stringTB";
-            this.stringTB.Size = new System.Drawing.Size(121, 20);
+            this.stringTB.Size = new System.Drawing.Size(282, 20);
             this.stringTB.TabIndex = 11;
             this.stringTB.TextChanged += new System.EventHandler(this.stTextBox1_TextChanged);
             // 
             // resultTB
             // 
             this.resultTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.resultTB.Location = new System.Drawing.Point(299, 74);
+            this.resultTB.Location = new System.Drawing.Point(453, 74);
             this.resultTB.Name = "resultTB";
-            this.resultTB.Size = new System.Drawing.Size(160, 20);
+            this.resultTB.Size = new System.Drawing.Size(199, 20);
             this.resultTB.TabIndex = 12;
             // 
             // hashTypeCB
@@ -103,6 +103,7 @@
             this.hashTypeCB.Name = "hashTypeCB";
             this.hashTypeCB.Size = new System.Drawing.Size(121, 21);
             this.hashTypeCB.TabIndex = 13;
+            this.hashTypeCB.SelectedIndexChanged += new System.EventHandler(this.hashTypeCB_SelectedIndexChanged);
             // 
             // stLabel1
             // 
@@ -125,7 +126,7 @@
             // stLabel3
             // 
             this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(225, 76);
+            this.stLabel3.Location = new System.Drawing.Point(379, 76);
             this.stLabel3.Name = "stLabel3";
             this.stLabel3.Size = new System.Drawing.Size(68, 13);
             this.stLabel3.TabIndex = 16;
@@ -134,7 +135,7 @@
             // chkUseHex
             // 
             this.chkUseHex.AutoSize = true;
-            this.chkUseHex.Location = new System.Drawing.Point(299, 45);
+            this.chkUseHex.Location = new System.Drawing.Point(453, 45);
             this.chkUseHex.Name = "chkUseHex";
             this.chkUseHex.Size = new System.Drawing.Size(86, 17);
             this.chkUseHex.TabIndex = 17;

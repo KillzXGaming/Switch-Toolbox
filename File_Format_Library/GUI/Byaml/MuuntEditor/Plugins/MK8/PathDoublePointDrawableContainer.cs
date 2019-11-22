@@ -28,15 +28,17 @@ namespace FirstPlugin.MuuntEditor
             }
         }
 
-        private IDrawableObject drawable;
-        public IDrawableObject Drawable
+        private List<IDrawableObject> drawables;
+        public List<IDrawableObject> Drawables
         {
             get
             {
-                if (drawable == null)
-                    drawable = new RenderableDoublePointPath(PathGroups, PathColor);
-
-                return drawable;
+                if (drawables == null)
+                {
+                    drawables = new List<IDrawableObject>();
+                    drawables.Add(new RenderableDoublePointPath(PathGroups, PathColor));
+                }
+                return drawables;
             }
         }
     }

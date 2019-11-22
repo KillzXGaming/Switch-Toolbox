@@ -176,11 +176,16 @@ namespace FirstPlugin
             ulong FolderArrayOffset = reader.ReadUInt64();
 
             reader.Seek((long)FolderArrayOffset, SeekOrigin.Begin);
+
+            List<HashIndex> FolderFiles = new List<HashIndex>();
             for (int i = 0; i < FolderCount; i++)
             {
                 Folder folder = new Folder();
                 folder.Read(reader);
                 folders.Add(folder);
+
+                foreach (var hash in folder.hashes)
+                    FolderFiles.Add(hash);
             }
 
             reader.Seek((long)hashArrayPathsOffset, SeekOrigin.Begin);
@@ -195,37 +200,111 @@ namespace FirstPlugin
             {
                 FileEntry fileEntry = new FileEntry(this);
                 fileEntry.Read(reader);
+                fileEntry.FolderHash = FolderFiles[i];
                 fileEntry.FileName = GetString(hashes[i], fileEntry.FileData);
+
+                string suffix = hashes[i].ToString("X").GetLast(6);
+                ulong suffix64 = Convert.ToUInt64(suffix, 16);
+
+                if (HashList.ContainsKey(suffix64))
+                {
+                    fileEntry.FileName = HashList[suffix64];
+                }
+
+                string baseName = Path.GetFileName(fileEntry.FileName.Replace("\r", ""));
 
                 switch (Utils.GetExtension(fileEntry.FileName))
                 {
                     case ".gfbanm":
-                        fileEntry.FileName = $"Animations/{fileEntry.FileName}";
+                        fileEntry.FileName = $"Animations/{baseName}";
                         break;
                     case ".gfbanmcfg":
-                        fileEntry.FileName = $"AnimationConfigs/{fileEntry.FileName}";
+                        fileEntry.FileName = $"AnimationConfigs/{baseName}";
                         break;
                     case ".gfbmdl":
-                        fileEntry.FileName = $"Models/{fileEntry.FileName}";
+                        fileEntry.FileName = $"Models/{baseName}";
                         break;
                     case ".gfbpokecfg":
-                        fileEntry.FileName = $"PokeConfigs/{fileEntry.FileName}";
+                        fileEntry.FileName = $"PokeConfigs/{baseName}";
                         break;
                     case ".bntx":
-                        fileEntry.FileName = $"Textures/{fileEntry.FileName}";
+                        fileEntry.FileName = $"Textures/{baseName}";
                         break;
                     case ".bnsh":
-                        fileEntry.FileName = $"Shaders/{fileEntry.FileName}";
+                        fileEntry.FileName = $"Shaders/{baseName}";
                         break;
                     case ".ptcl":
-                        fileEntry.FileName = $"Effects/{fileEntry.FileName}";
+                        fileEntry.FileName = $"Effects/{baseName}";
                         break;
                     default:
-                        fileEntry.FileName = $"OtherFiles/{fileEntry.FileName}";
+                        fileEntry.FileName = $"OtherFiles/{baseName}";
                         break;
                 }
 
+
+
+           //     Console.WriteLine($"{fileEntry.FileName} {fileEntry.FolderHash.hash.ToString("X")} {suffix64.ToString("X")}");
+
                 files.Add(fileEntry);
+            }
+        }
+
+        private Dictionary<ulong, string> hashList;
+        public Dictionary<ulong, string> HashList
+        {
+            get
+            {
+                if (hashList == null) {
+                    hashList = new Dictionary<ulong, string>();
+                    GenerateHashList();
+                }
+                return hashList;
+            }
+        }
+
+        private void GenerateHashList()
+        {
+            foreach (string hashStr in Properties.Resources.Pkmn.Split('\n'))
+            {
+                string HashString = hashStr.TrimEnd();
+
+                ulong hash = FNV64A1.CalculateSuffix(HashString);
+                if (!hashList.ContainsKey(hash))
+                    hashList.Add(hash, HashString);
+
+                if (HashString.Contains("pm0000"))
+                    GeneratePokeStrings(HashString);
+
+                string[] hashPaths = HashString.Split('/');
+                for (int i = 0; i < hashPaths?.Length; i++)
+                {
+                    hash = FNV64A1.CalculateSuffix(hashPaths[i]);
+                    if (!hashList.ContainsKey(hash))
+                        hashList.Add(hash, HashString);
+                }
+            }
+        }
+
+        private void GeneratePokeStrings(string hashStr)
+        {
+            //Also check file name just in case
+            if (FileName.Contains("pm"))
+            {
+                string baseName = Path.GetFileNameWithoutExtension(FileName);
+                string pokeStrFile = hashStr.Replace("pm0000_00", baseName);
+
+                ulong hash = FNV64A1.CalculateSuffix(pokeStrFile);
+                if (!hashList.ContainsKey(hash))
+                    hashList.Add(hash, pokeStrFile);
+            }
+
+            for (int i = 0; i < 1000; i++)
+            {
+                string pokeStr = hashStr.Replace("pm0000", $"pm{i.ToString("D4")}");
+
+                ulong hash = FNV64A1.CalculateSuffix(pokeStr);
+                if (!hashList.ContainsKey(hash))
+                    hashList.Add(hash, pokeStr);
             }
         }
 
@@ -235,7 +314,7 @@ namespace FirstPlugin
             if (ext == ".bntx" || ext == ".bfres" || ext == ".bnsh" || ext == ".bfsha")
                 return GetBinaryHeaderName(Data) + ext;
             else
-                return $"{Hash}{ext}";
+                return $"{Hash.ToString("X")}{ext}";
         }
 
         public void Write(FileWriter writer)
@@ -304,7 +383,7 @@ namespace FirstPlugin
                 for (int f = 0; f < FileCount; f++)
                 {
                     HashIndex hash = new HashIndex();
-                    hash.Read(reader);
+                    hash.Read(reader, this);
                     hashes.Add(hash);
                 }
             }
@@ -325,8 +404,11 @@ namespace FirstPlugin
             public int Index;
             public uint unknown;
 
-            public void Read(FileReader reader)
+            public Folder Parent { get; set; }
+
+            public void Read(FileReader reader, Folder parent)
             {
+                Parent = parent;
                 hash = reader.ReadUInt64();
                 Index = reader.ReadInt32();
                 unknown = reader.ReadUInt32(); //Always 0xCC?
@@ -340,6 +422,8 @@ namespace FirstPlugin
         }
         public class FileEntry : ArchiveFileInfo
         {
+            public HashIndex FolderHash;
+
             public uint unkown;
             public uint CompressionType;
             private long DataOffset;

@@ -30,14 +30,14 @@ namespace FirstPlugin.MuuntEditor
 
             var pathGroup = new ObjectGroup("Scene Objects");
             Groups.Add(pathGroup);
-            PathDoublePointDrawableContainer lapPaths = new PathDoublePointDrawableContainer("Lap Paths", Color.Blue);
+            PathDoublePointDrawableContainer lapPaths = new PathDoublePointDrawableContainer("Lap Paths", Color.Cyan);
             PathDrawableContainer enemyPaths = new PathDrawableContainer("Enemy Paths", Color.Red);
             PathDrawableContainer glidePaths = new PathDrawableContainer("Glide Paths", Color.Orange);
             PathDrawableContainer itemPaths = new PathDrawableContainer("Item Paths", Color.Green);
-            PathDrawableContainer steerAssitPaths = new PathDrawableContainer("Steer Assist Paths", Color.Cyan);
+            PathDrawableContainer steerAssitPaths = new PathDrawableContainer("Steer Assist Paths", Color.Crimson);
             PathDrawableContainer gravityPaths = new PathDrawableContainer("Gravity Paths", Color.Purple);
             PathDrawableContainer pullPaths = new PathDrawableContainer("Pull Paths", Color.DarkSlateGray);
-            PathDrawableContainer paths = new PathDrawableContainer("Paths", Color.Black);
+            PathDrawableContainer paths = new PathDrawableContainer("Paths", Color.GreenYellow);
             PathDrawableContainer objPaths = new PathDrawableContainer("Object Paths", Color.Brown);
             PathDrawableContainer jugemPaths = new PathDrawableContainer("Latiku Paths", Color.Pink);
             PathDrawableContainer introCameras = new PathDrawableContainer("Intro Camera", Color.Yellow);

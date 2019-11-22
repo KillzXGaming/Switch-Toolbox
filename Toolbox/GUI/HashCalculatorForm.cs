@@ -21,6 +21,9 @@ namespace Toolbox
             InitializeComponent();
 
             hashTypeCB.Items.Add("NLG_Hash");
+            hashTypeCB.Items.Add("FNV64A1");
+            hashTypeCB.Items.Add("CRC32");
+
             hashTypeCB.SelectedIndex = 0;
 
             maxLengthUD.Value = 3;
@@ -32,10 +35,7 @@ namespace Toolbox
 
         private void UpdateHash()
         {
-            uint Hash = 0;
-            if (hashTypeCB.GetSelectedText() == "NLG_Hash") 
-                Hash = StringToHash(stringTB.Text);
-
+            ulong Hash = CalculateHash(hashTypeCB.GetSelectedText(), stringTB.Text);
             if (IsHex)
                 resultTB.Text = Hash.ToString("X");
             else
@@ -44,6 +44,17 @@ namespace Toolbox
 
         private void chkUseHex_CheckedChanged(object sender, EventArgs e) {
             UpdateHash();
+        }
+
+        public static ulong CalculateHash(string type, string text)
+        {
+            if (type == "NLG_Hash")
+                return StringToHash(text);
+            else if (type == "FNV64A1")
+                return FNV64A1.CalculateSuffix(text);
+            else if (type == "CRC32")
+                return Toolbox.Library.Security.Cryptography.Crc32.Compute(text);
+            return 0;
         }
 
         public static uint StringToHash(string name, bool caseSensative = false)
@@ -91,14 +102,16 @@ namespace Toolbox
             progressBar.Show();
             progressBar.Task = $"Searching characters";
 
+            string hashType = hashTypeCB.GetSelectedText();
+
             Thread Thread = new Thread((ThreadStart)(() =>
             {
-                BruteForceHashes(progressBar);
+                BruteForceHashes(progressBar, hashType);
             }));
             Thread.Start();
         }
 
-        private void BruteForceHashes(STProgressBar progressBar)
+        private void BruteForceHashes(STProgressBar progressBar, string hashType)
         {
             if (bruteForceHashTB.Text.Length == 0)
                 return;
@@ -107,11 +120,11 @@ namespace Toolbox
 
             CancelOperation = false;
 
-            List<uint> hashes = new List<uint>();
+            List<ulong> hashes = new List<ulong>();
             foreach (var line in bruteForceHashTB.Lines)
             {
-                uint hash = 0;
-                uint.TryParse(line, out hash);
+                ulong hash = 0;
+                ulong.TryParse(line, out hash);
                 if (hash == 0) continue;
 
                 hashes.Add(hash);
@@ -137,7 +150,7 @@ namespace Toolbox
                 {
                     String value = Sb.ToString();
 
-                    uint calculatedHash = StringToHash($"{characterStartTB.Text}{value}");
+                    ulong calculatedHash = CalculateHash(hashType, $"{characterStartTB.Text}{value}");
                     if (hashes.Contains(calculatedHash))
                     {
                         UpdateTextbox($"{characterStartTB.Text}{value}");
@@ -157,7 +170,7 @@ namespace Toolbox
 
                     foreach (var line in characterStartTB.Lines)
                     {
-                        uint calculatedHash2 = StringToHash($"{line}{value}");
+                        ulong calculatedHash2 = CalculateHash(hashType, $"{line}{value}");
                         if (hashes.Contains(calculatedHash2))
                         {
                             UpdateTextbox($"{line}{value}");
@@ -282,6 +295,10 @@ namespace Toolbox
         private void OnProgressBarExist(object sender, EventArgs e)
         {
             CancelOperation = true;
+        }
+
+        private void hashTypeCB_SelectedIndexChanged(object sender, EventArgs e) {
+            UpdateHash();
         }
     }
 }

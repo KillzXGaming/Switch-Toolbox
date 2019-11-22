@@ -602,7 +602,6 @@ namespace Toolbox.Library.Animations
                         b.rot = EulerToQuat(z, y, x);
                     }
                 }
-
             }
 
             if (AdancedNextFrame)
