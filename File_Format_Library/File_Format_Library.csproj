@@ -380,6 +380,12 @@
     <Compile Include="GL\LM3_Renderer.cs" />
     <Compile Include="GL\PunchOutWii_Renderer.cs" />
     <Compile Include="GL\Strikers_Renderer.cs" />
+    <Compile Include="GUI\ViewportEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\ViewportEditor.Designer.cs">
+      <DependentUpon>ViewportEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\Animations\Basic\AddAnimGroupDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -702,6 +708,7 @@
     </Compile>
     <Compile Include="GUI\Byaml\MuuntEditor\Plugins\MK8\PathDoublePointDrawableContainer.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\Plugins\MK8\PathDrawableContainer.cs" />
+    <Compile Include="GUI\Byaml\MuuntEditor\Plugins\MK8\RenderableSinglePointDrawable.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\PropertyObject.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\MapObject.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\ObjectGroup.cs" />
@@ -731,6 +738,7 @@
     </Compile>
     <Compile Include="GUI\Byaml\MuuntEditor\Plugins\MK8\TrackMuuntLoader.cs" />
     <Compile Include="GUI\Byaml\MuuntEditor\PropertyGridConverters.cs" />
+    <Compile Include="GUI\Byaml\TurboCourseMuunt\Matrix2DHelper.cs" />
     <Compile Include="GUI\Byaml\TurboCourseMuunt\RenderableDoublePointPath.cs" />
     <Compile Include="GUI\Byaml\TurboCourseMuunt\RenderablePath.cs" />
     <Compile Include="GUI\Byaml\TurboCourseMuunt\TransformableObject.cs" />
@@ -1404,6 +1412,9 @@
     <EmbeddedResource Include="GUI\AttributeEditor.resx">
       <DependentUpon>AttributeEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\ViewportEditor.resx">
+      <DependentUpon>ViewportEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\BCRES\BcresEditor.resx">
       <DependentUpon>BcresEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -1891,6 +1902,7 @@
   <ItemGroup>
     <Folder Include="FileFormats\EvemtFlow\" />
     <Folder Include="FileFormats\NLG\Common\" />
+    <Folder Include="FileFormats\Pokemon\GFBANIM\FlatBuffers\" />
     <Folder Include="GUI\Byaml\MuuntEditor\Renderables\" />
   </ItemGroup>
   <ItemGroup>
@@ -1934,6 +1946,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Hashes\LM3_Hashes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Hashes\Pkmn.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
