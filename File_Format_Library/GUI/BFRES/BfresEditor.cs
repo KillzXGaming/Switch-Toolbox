@@ -141,9 +141,9 @@ namespace FirstPlugin.Forms
             if (!Runtime.UseOpenGL || !DisplayViewport)
                 return;
 
-            if (viewport.GL_ControlModern != null)
+            if (viewport.GL_Control != null)
             {
-                Renderer.CenterCamera(viewport.GL_ControlModern);
+                Renderer.CenterCamera(viewport.GL_Control);
                 viewport.UpdateViewport();
             } 
         }

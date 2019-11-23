@@ -87,8 +87,7 @@ namespace LayoutBXLYT
                    };
                 }
 
-                if (!Runtime.DEVELOPER_DEBUG_MODE)
-                    DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
+                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
 
                 ShaderLoader.CafeShader.Disable();
             }

@@ -277,37 +277,19 @@ namespace Toolbox.Library
             if (viewport == null)
                 return;
 
-            if (viewport.GL_ControlLegacy != null &&
-                !viewport.GL_ControlLegacy.IsDisposed)
+            if (viewport.GL_Control == null || viewport.GL_Control.IsDisposed || viewport.GL_Control.Disposing)
+                return;
+
+            if (viewport.GL_Control.InvokeRequired)
             {
-                if (viewport.GL_ControlLegacy.InvokeRequired)
-                {
-                    viewport.GL_ControlLegacy.Invoke((MethodInvoker)delegate {
-                        // Running on the UI thread
-                        viewport.GL_ControlLegacy.Invalidate();
-                    });
-                }
-                else
-                {
-                    viewport.GL_ControlLegacy.Invalidate();
-                }
+                viewport.GL_Control.Invoke((MethodInvoker)delegate {
+                    // Running on the UI thread
+                    viewport.GL_Control.Invalidate();
+                });
             }
             else
             {
-                if (viewport.GL_ControlModern == null || viewport.GL_ControlModern.IsDisposed || viewport.GL_ControlModern.Disposing)
-                    return;
-
-                if (viewport.GL_ControlModern.InvokeRequired)
-                {
-                    viewport.GL_ControlModern.Invoke((MethodInvoker)delegate {
-                        // Running on the UI thread
-                        viewport.GL_ControlModern.Invalidate();
-                    });
-                }
-                else
-                {
-                    viewport.GL_ControlModern.Invalidate();
-                }
+                viewport.GL_Control.Invalidate();
             }
         }
 
@@ -343,7 +325,7 @@ namespace Toolbox.Library
 
         private void SetAnimationsToFrame(float frameNum)
         {
-            if (currentAnimation == null)
+            if (currentAnimation == null && stCurrentAnimation == null)
                 return;
 
             var viewport = LibraryGUI.GetActiveViewport();
@@ -352,6 +334,8 @@ namespace Toolbox.Library
 
             if (stCurrentAnimation != null)
             {
+                Console.WriteLine("SetAnimationsToFrame");
+
                 if (frameNum > stCurrentAnimation.FrameCount)
                     return;
 
@@ -449,10 +433,8 @@ namespace Toolbox.Library
             Viewport viewport = LibraryGUI.GetActiveViewport();
             if (viewport != null)
             {
-                if (viewport.GL_ControlLegacy != null)
-                    viewport.GL_ControlLegacy.VSync = Runtime.enableVSync;
-                else
-                    viewport.GL_ControlModern.VSync = Runtime.enableVSync;
+                if (viewport.GL_Control != null)
+                    viewport.GL_Control.VSync = Runtime.enableVSync;
             }
 
             renderThread = new Thread(new ThreadStart(RenderAndAnimationLoop));
@@ -523,6 +505,8 @@ namespace Toolbox.Library
             currentAnimation = null;
             isOpen = false;
             Dispose();
+
+            Console.WriteLine("Disposeing ANIM PANEL!!");
 
         }
 

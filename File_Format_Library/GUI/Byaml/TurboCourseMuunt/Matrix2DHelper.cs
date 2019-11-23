@@ -8,7 +8,7 @@ using OpenTK;
 namespace FirstPlugin.Turbo.CourseMuuntStructs
 {
     public class Matrix2DHelper
-    {
+    { 
         public static Vector3 RotatePoint(Vector3 translate, float X, float Y, float Z, Vector3 rotate)
         {
             Matrix4 rotationX = Matrix4.CreateRotationX(rotate.X);

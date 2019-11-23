@@ -52,10 +52,7 @@ namespace Toolbox.Library
             if (viewport == null)
                 return null;
 
-            if (viewport.GL_ControlModern != null)
-                return viewport.GL_ControlModern;
-            else
-                return viewport.GL_ControlLegacy;
+            return viewport.GL_Control;
         }
 
         public void SetViewport(OpenTK.GLControl control)

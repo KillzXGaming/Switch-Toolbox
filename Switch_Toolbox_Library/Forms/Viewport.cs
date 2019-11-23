@@ -35,8 +35,7 @@ namespace Toolbox.Library
         public List<DrawableContainer> DrawableContainers;
 
         public EditorScene scene = new EditorScene();
-        public GL_ControlLegacy GL_ControlLegacy;
-        public GL_ControlModern GL_ControlModern;
+        public GL_ControlBase GL_Control;
 
         Runtime.ViewportEditor editor;
 
@@ -173,12 +172,6 @@ namespace Toolbox.Library
 
         public Bitmap CaptureScreenshot(int width, int height, bool enableAlpha)
         {
-            GLControl control = null;
-            if (GL_ControlModern != null)
-                control = GL_ControlModern;
-            else
-                control = GL_ControlLegacy;
-
             Bitmap bitmap = new Bitmap(width, height);
             return bitmap;
         }
@@ -196,20 +189,14 @@ namespace Toolbox.Library
         private void LoadViewport()
         {
             if (Runtime.UseLegacyGL)
-            {
-                GL_ControlLegacy = new GL_ControlLegacy();
-                GL_ControlLegacy.Dock = DockStyle.Fill;
-
-                panelViewport.Controls.Add(GL_ControlLegacy);
-            }
+                GL_Control = new GL_ControlLegacy();
             else
-            {
-                GL_ControlModern = new GL_ControlModern();
-                GL_ControlModern.Dock = DockStyle.Fill;
-                GL_ControlModern.VSync = true;
+                GL_Control = new GL_ControlModern();
 
-                panelViewport.Controls.Add(GL_ControlModern);
-            }
+
+            GL_Control.Dock = DockStyle.Fill;
+            GL_Control.VSync = true;
+            panelViewport.Controls.Add(GL_Control);
         }
 
         public void UpdateGrid()
@@ -277,26 +264,21 @@ namespace Toolbox.Library
             UpdateScene();
         }
 
-        private void UpdateScene()
-        {
-            if (GL_ControlModern != null)
-                GL_ControlModern.MainDrawable = scene;
-            if (GL_ControlLegacy != null)
-                GL_ControlLegacy.MainDrawable = scene;
+        private void UpdateScene() {
+            if (GL_Control != null)
+                GL_Control.MainDrawable = scene;
         }
 
         public void UpdateViewport()
         {
             if (SuppressUpdating) return;
 
-            if (GL_ControlModern != null)
-                GL_ControlModern.Refresh();
-            if (GL_ControlLegacy != null)
-                GL_ControlLegacy.Refresh();
+            if (GL_Control != null)
+                GL_Control.Refresh();
         }
         public void RenderToTexture()
         {
-            if (GL_ControlModern == null)
+            if (GL_Control == null)
                 return;
 
             int Framebuffer = 0;
@@ -325,55 +307,31 @@ namespace Toolbox.Library
         }
         public void LoadViewportRuntimeValues()
         {
-            if (GL_ControlLegacy != null)
+            if (GL_Control != null)
             {
                 switch (Runtime.cameraMovement)
                 {
                     case Runtime.CameraMovement.Inspect:
-                        GL_ControlLegacy.ActiveCamera = new InspectCamera(Runtime.MaxCameraSpeed);
+                        GL_Control.ActiveCamera = new InspectCamera(Runtime.MaxCameraSpeed);
                         break;
                     case Runtime.CameraMovement.Walk:
-                        GL_ControlLegacy.ActiveCamera = new WalkaroundCamera(Runtime.MaxCameraSpeed);
+                        GL_Control.ActiveCamera = new WalkaroundCamera(Runtime.MaxCameraSpeed);
                         break;
                 }
-                GL_ControlLegacy.Stereoscopy = Runtime.stereoscopy;
-                GL_ControlLegacy.ZNear = Runtime.CameraNear;
-                GL_ControlLegacy.ZFar = Runtime.CameraFar;
-            }
-            else
-            {
-                switch (Runtime.cameraMovement)
-                {
-                    case Runtime.CameraMovement.Inspect:
-                        GL_ControlModern.ActiveCamera = new InspectCamera(Runtime.MaxCameraSpeed);
-                        break;
-                    case Runtime.CameraMovement.Walk:
-                        GL_ControlModern.ActiveCamera = new WalkaroundCamera(Runtime.MaxCameraSpeed);
-                        break;
-                }
-                GL_ControlModern.Stereoscopy = Runtime.stereoscopy;
-                GL_ControlModern.ZNear = Runtime.CameraNear;
-                GL_ControlModern.ZFar = Runtime.CameraFar;
-
+                GL_Control.Stereoscopy = Runtime.stereoscopy;
+                GL_Control.ZNear = Runtime.CameraNear;
+                GL_Control.ZFar = Runtime.CameraFar;
             }
         }
         public void SetupViewportRuntimeValues()
         {
-            if (GL_ControlLegacy != null)
+            if (GL_Control != null)
             {
-                if (GL_ControlLegacy.ActiveCamera is InspectCamera)
+                if (GL_Control.ActiveCamera is InspectCamera)
                     Runtime.cameraMovement = Runtime.CameraMovement.Inspect;
-                if (GL_ControlLegacy.ActiveCamera is WalkaroundCamera)
+                if (GL_Control.ActiveCamera is WalkaroundCamera)
                     Runtime.cameraMovement = Runtime.CameraMovement.Walk;
-                Runtime.stereoscopy = GL_ControlLegacy.Stereoscopy;
-            }
-            else
-            {
-                if (GL_ControlModern.ActiveCamera is InspectCamera)
-                    Runtime.cameraMovement = Runtime.CameraMovement.Inspect;
-                if (GL_ControlModern.ActiveCamera is WalkaroundCamera)
-                    Runtime.cameraMovement = Runtime.CameraMovement.Walk;
-                Runtime.stereoscopy = GL_ControlModern.Stereoscopy;
+                Runtime.stereoscopy = GL_Control.Stereoscopy;
             }
         }
 
@@ -397,8 +355,8 @@ namespace Toolbox.Library
 
         private void reloadShadersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GL_ControlModern != null)
-                GL_ControlModern.ReloadShaders();
+            if (GL_Control != null && GL_Control is GL_ControlModern)
+                ((GL_ControlModern)GL_Control).ReloadShaders();
         }
 
         private void resetPoseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -407,7 +365,8 @@ namespace Toolbox.Library
 
             if (animationPanel1 != null)
             {
-                if (animationPanel1.CurrentAnimation != null)
+                if (animationPanel1.CurrentAnimation != null ||
+                  animationPanel1.CurrentSTAnimation != null)
                     animationPanel1.ResetModels();
 
                 UpdateViewport();
@@ -498,39 +457,25 @@ namespace Toolbox.Library
         {
             int pickingBuffer = (int)CameraPick;
 
-            if (GL_ControlModern != null)
-                GL_ControlModern.ApplyCameraOrientation(pickingBuffer);
-            else
-                GL_ControlModern.ApplyCameraOrientation(pickingBuffer);
+            if (GL_Control != null)
+                GL_Control.ApplyCameraOrientation(pickingBuffer);
 
             UpdateViewport();
         }
 
         private void toOriginToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GL_ControlLegacy != null)
-            {
-                GL_ControlLegacy.ResetCamera(false);
-                GL_ControlLegacy.Refresh();
-            }
-            else
-            {
-                GL_ControlModern.ResetCamera(false);
-                GL_ControlModern.Refresh();
+            if (GL_Control != null) {
+                GL_Control.ResetCamera(false);
+                GL_Control.Refresh();
             }
         }
 
         private void toActiveModelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (GL_ControlLegacy != null)
-            {
-                GL_ControlLegacy.ResetCamera(true);
-                GL_ControlLegacy.Refresh();
-            }
-            else
-            {
-                GL_ControlModern.ResetCamera(true);
-                GL_ControlModern.Refresh();
+            if (GL_Control != null) {
+                GL_Control.ResetCamera(true);
+                GL_Control.Refresh();
             }
         }
 
@@ -550,6 +495,9 @@ namespace Toolbox.Library
 
                 for (int i = 0; i < DrawableContainers.Count; i++)
                 {
+                    if (i == index)
+                        CenterCamera(GL_Control, new List<DrawableContainer>() { DrawableContainers[i] });
+
                     for (int a = 0; a < DrawableContainers[i].Drawables.Count; a++)
                     {
                         if (i == index)
@@ -596,6 +544,32 @@ namespace Toolbox.Library
             }
         }
 
+        public void CenterCamera(GL_ControlBase control, List<DrawableContainer> Drawables)
+        {
+            if (!Runtime.FrameCamera)
+                return;
+
+            var spheres = new List<Vector4>();
+            for (int i = 0; i < Drawables.Count; i++)
+            {
+                foreach (var drawable in Drawables[i].Drawables)
+                {
+                    if (drawable is IMeshContainer)
+                    {
+                        for (int m = 0; m < ((IMeshContainer)drawable).Meshes.Count; m++)
+                        {
+                            var mesh = ((IMeshContainer)drawable).Meshes[m];
+                            var vertexPositions = mesh.vertices.Select(x => x.pos).Distinct();
+                            spheres.Add(control.GenerateBoundingSphere(vertexPositions));
+                        }
+                    }
+                }
+            }
+
+            if (spheres.Count > 0)
+                control.FrameSelect(spheres);
+        }
+
         private void uVViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!Runtime.UseOpenGL)
@@ -609,23 +583,15 @@ namespace Toolbox.Library
             uvEditor1.Show(this);
         }
 
-        public GLControl GetActiveControl()
-        {
-            if (GL_ControlModern != null)
-                return GL_ControlModern;
-            else
-                return GL_ControlLegacy;
-        }
-
         public void SaveScreenshot()
         {
-            var control = GetActiveControl();
+            if (GL_Control == null) return;
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = BitmapExtension.FileFilter;
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                CreateScreenshot(control.Width, control.Height, false).Save(sfd.FileName);
+                CreateScreenshot(GL_Control.Width, GL_Control.Height, false).Save(sfd.FileName);
             }
         }
 
@@ -659,10 +625,8 @@ namespace Toolbox.Library
                 Runtime.cameraMovement = Runtime.CameraMovement.Inspect;
             }
 
-            if (GL_ControlModern != null)
-                GL_ControlModern.ResetCamera(Runtime.FrameCamera);
-            else
-                GL_ControlModern.ResetCamera(Runtime.FrameCamera);
+            if (GL_Control != null)
+                GL_Control.ResetCamera(Runtime.FrameCamera);
 
             LoadViewportRuntimeValues();
             UpdateViewport();

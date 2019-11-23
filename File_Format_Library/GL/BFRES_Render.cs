@@ -259,7 +259,7 @@ namespace FirstPlugin
             GL.Enable(EnableCap.Texture2D);
         }
 
-        public void CenterCamera(GL_ControlModern control)
+        public void CenterCamera(GL_ControlBase control)
         {
             if (!Runtime.FrameCamera)
                 return;
