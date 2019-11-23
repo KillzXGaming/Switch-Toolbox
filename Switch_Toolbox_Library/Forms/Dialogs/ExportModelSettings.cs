@@ -33,5 +33,9 @@ namespace Toolbox.Library.Forms
         private void stCheckBox1_CheckedChanged(object sender, EventArgs e) {
             Settings.UseOldExporter = chkOldExporter.Checked;
         }
+
+        private void chkVertexColors_CheckedChanged(object sender, EventArgs e) {
+            Settings.UseVertexColors = chkOldExporter.Checked;
+        }
     }
 }

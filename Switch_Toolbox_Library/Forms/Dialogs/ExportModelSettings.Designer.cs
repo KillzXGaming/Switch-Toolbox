@@ -33,11 +33,13 @@
             this.stButton2 = new Toolbox.Library.Forms.STButton();
             this.chkFlipUvsVertical = new Toolbox.Library.Forms.STCheckBox();
             this.chkOldExporter = new Toolbox.Library.Forms.STCheckBox();
+            this.chkVertexColors = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.chkVertexColors);
             this.contentContainer.Controls.Add(this.chkOldExporter);
             this.contentContainer.Controls.Add(this.chkFlipUvsVertical);
             this.contentContainer.Controls.Add(this.stButton2);
@@ -49,6 +51,7 @@
             this.contentContainer.Controls.SetChildIndex(this.stButton2, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkFlipUvsVertical, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkOldExporter, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkVertexColors, 0);
             // 
             // exportTexturesChkBox
             // 
@@ -107,6 +110,19 @@
             this.chkOldExporter.UseVisualStyleBackColor = true;
             this.chkOldExporter.CheckedChanged += new System.EventHandler(this.stCheckBox1_CheckedChanged);
             // 
+            // chkVertexColors
+            // 
+            this.chkVertexColors.AutoSize = true;
+            this.chkVertexColors.Checked = true;
+            this.chkVertexColors.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkVertexColors.Location = new System.Drawing.Point(132, 47);
+            this.chkVertexColors.Name = "chkVertexColors";
+            this.chkVertexColors.Size = new System.Drawing.Size(121, 17);
+            this.chkVertexColors.TabIndex = 16;
+            this.chkVertexColors.Text = "Export Vertex Colors";
+            this.chkVertexColors.UseVisualStyleBackColor = true;
+            this.chkVertexColors.CheckedChanged += new System.EventHandler(this.chkVertexColors_CheckedChanged);
+            // 
             // ExportModelSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -127,5 +143,6 @@
         private STButton stButton1;
         private STCheckBox chkFlipUvsVertical;
         protected STCheckBox chkOldExporter;
+        private STCheckBox chkVertexColors;
     }
 }

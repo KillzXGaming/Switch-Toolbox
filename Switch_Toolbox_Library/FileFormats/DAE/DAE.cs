@@ -25,6 +25,8 @@ namespace Toolbox.Library
 
             public bool UseOldExporter = false;
 
+            public bool UseVertexColors = true;
+
             public bool FlipTexCoordsVertical = true;
 
             public Version FileVersion = new Version();
@@ -289,7 +291,7 @@ namespace Toolbox.Library
 
 
                         if (vertex.nrm != Vector3.Zero) HasNormals = true;
-                        if (vertex.col != Vector4.One) HasColors = true;
+                        if (vertex.col != Vector4.One && settings.UseVertexColors) HasColors = true;
                         if (vertex.uv0 != Vector2.Zero) HasUV0 = true;
                         if (vertex.uv1 != Vector2.Zero) HasUV1 = true;
                         if (vertex.uv2 != Vector2.Zero) HasUV2 = true;
