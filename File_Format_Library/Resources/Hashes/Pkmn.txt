@@ -1,4 +1,8 @@
-﻿bin/pokemon/pm0000_00/mdl/pm0000_00.gfbmdl
+﻿bin/chara/data/pc/p1/p1_base_app01/anm/pc0002_00_fa0004_eye_close01.gfbanm
+bin/chara/data/pc/p1/p1_base_app01/anm/pc0002_00_fi0001_wait01_loop.gfbanm
+bin/chara/data/pc/p2/p1_base_app01/anm/pc0002_00_fa0004_eye_close01.gfbanm
+bin/chara/data/pc/p2/p1_base_app01/anm/pc0002_00_fi0001_wait01_loop.gfbanm
+bin/pokemon/pm0000_00/mdl/pm0000_00.gfbmdl
 bin/pokemon/pm0000_00/mdl/pm0000_00_rare.gfbmdl
 bin/pokemon/pm0000_00/pm0000_00.gfbpokecfg
 bin/pokemon/pm0000_00/anm/pm0000_00_field01.gfbanmcfg
@@ -66,3 +70,7 @@ bin/pokemon/pm0000_00/anm/pm0000_00_kw50_eatA01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_kw50_eatB01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_kw50_eatC01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_kw60_touch01.gfbanm
+bin/chara/data/pc/p1/anm
+bin/chara/data/pc/p1/mdl
+bin/archive/chara/data/pc/p1/anm
+bin/archive/chara/data/pc/p1/mdl

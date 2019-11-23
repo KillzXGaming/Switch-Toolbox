@@ -81,19 +81,19 @@ namespace Toolbox.Library.Animations
 
 
 
-            if (viewport.GL_ControlModern != null)
+            if (viewport.GL_Control != null)
             {
                 Console.WriteLine($"Camera {Frame} {ClipNear} {ClipFar} {AspectRatio} {FieldOfView} {new Vector3(posX, posY, posZ)} {new Vector3(rotX, rotY, rotZ)}");
 
                 var matrix = CalculateMatrix(new Vector3(posX, posY, posZ), new Vector3(rotX, rotY, rotZ), Twist);
                 var quat = matrix.ExtractRotation();
 
-                viewport.GL_ControlModern.CameraTarget = new Vector3(posX, posY, posZ);
-                viewport.GL_ControlModern.CamRotX = MathHelper.DegreesToRadians(rotX);
-                viewport.GL_ControlModern.CamRotY = MathHelper.DegreesToRadians(rotY);
-                viewport.GL_ControlModern.Fov = FieldOfView;
-                viewport.GL_ControlModern.ZNear = ClipNear;
-                viewport.GL_ControlModern.ZFar = ClipFar;
+                viewport.GL_Control.CameraTarget = new Vector3(posX, posY, posZ);
+                viewport.GL_Control.CamRotX = MathHelper.DegreesToRadians(rotX);
+                viewport.GL_Control.CamRotY = MathHelper.DegreesToRadians(rotY);
+                viewport.GL_Control.Fov = FieldOfView;
+                viewport.GL_Control.ZNear = ClipNear;
+                viewport.GL_Control.ZFar = ClipFar;
 
                 //Add frames to the playing animation
                 Frame += 1f;
