@@ -64,7 +64,13 @@ namespace Toolbox.Library.Forms
                 {
                     if (FileRoot.FileNodes[i].Item2 is ArchiveFileWrapper)
                     {
-                        ((ArchiveFileWrapper)FileRoot.FileNodes[i].Item2).OpenFileFormat(treeViewCustom1);
+                        try {
+                            ((ArchiveFileWrapper)FileRoot.FileNodes[i].Item2).OpenFileFormat(treeViewCustom1);
+                        }
+                        catch
+                        {
+
+                        }
                     }
                 }
             }
@@ -310,26 +316,31 @@ namespace Toolbox.Library.Forms
 
         private void GetArchiveMenus(TreeNode node, ArchiveFileInfo info)
         {
+            STToolStipMenuItem menuItem = new STToolStipMenuItem("Archive");
+            treeNodeContextMenu.Items.Add(menuItem);
 
+            var items = info.FileWrapper.GetContextMenuItems();
+            foreach (var item in items)
+                menuItem.DropDownItems.Add(item);
         }
 
         private void treeViewCustom1_MouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
+                treeNodeContextMenu.Items.Clear();
+                if (e.Node.Tag != null && e.Node.Tag is ArchiveFileInfo)
+                {
+                    //The tag gets set when an archive is replaced by a treenode
+                    //Todo store this in a better place as devs could possiblly replace this
+                    //Create menus when an archive node is replaced
+                    GetArchiveMenus(e.Node, (ArchiveFileInfo)e.Node.Tag);
+                }
+
                 if (e.Node is IContextMenuNode)
                 {
                     bool IsRoot = e.Node.Parent == null;
                     bool HasChildren = e.Node.Nodes.Count > 0;
-
-                    treeNodeContextMenu.Items.Clear();
-                    if (e.Node.Tag != null && e.Node.Tag is ArchiveFileInfo)
-                    {
-                        //The tag gets set when an archive is replaced by a treenode
-                        //Todo store this in a better place as devs could possiblly replace this
-                        //Create menus when an archive node is replaced
-                        GetArchiveMenus(e.Node, (ArchiveFileInfo)e.Node.Tag);
-                    }
 
                     if (IsRoot)
                     {
@@ -361,14 +372,15 @@ namespace Toolbox.Library.Forms
                     if (!HasExpand && HasChildren)
                         treeNodeContextMenu.Items.Add(new ToolStripMenuItem("Expand All", null, ExpandAllAction, Keys.Control | Keys.P));
 
-                    treeNodeContextMenu.Show(Cursor.Position);
-
                     //Select the node without the evemt
                     //We don't want editors displaying on only right clicking
                     SuppressAfterSelectEvent = true;
                     treeViewCustom1.SelectedNode = e.Node;
                     SuppressAfterSelectEvent = false;
                 }
+
+                if (treeNodeContextMenu.Items.Count > 0)
+                    treeNodeContextMenu.Show(Cursor.Position);
             }
             else
             {
@@ -491,6 +503,19 @@ namespace Toolbox.Library.Forms
                 if (LibraryGUI.GetAnimationPanel() != null)
                 {
                     LibraryGUI.GetAnimationPanel().CurrentAnimation = running;
+                }
+            }
+            if (Node is IAnimationContainer)
+            {
+                Viewport viewport = LibraryGUI.GetActiveViewport();
+                if (viewport == null)
+                    return;
+
+                var running = ((IAnimationContainer)Node).AnimationController;
+                if (LibraryGUI.GetAnimationPanel() != null) {
+                    Console.WriteLine($"running {Node.Tag}");
+
+                    LibraryGUI.GetAnimationPanel().CurrentSTAnimation = running;
                 }
             }
         }

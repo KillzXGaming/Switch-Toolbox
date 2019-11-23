@@ -126,7 +126,7 @@ namespace Toolbox.Library
         [Browsable(false)]
         public virtual Dictionary<string, string> ExtensionImageKeyLookup { get; }
 
-        public virtual void Replace()
+        public virtual bool Replace()
         {
             string fileName = Path.GetFileName(FileName.RemoveIllegaleFileNameCharacters());
 
@@ -138,7 +138,9 @@ namespace Toolbox.Library
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 FileData = File.ReadAllBytes(ofd.FileName);
+                return true;
             }
+            return false;
         }
 
         public virtual void Export()
@@ -675,7 +677,7 @@ namespace Toolbox.Library
             {
                 new STToolStripItem("Rename", RenameAction) { Enabled = ArchiveFile.CanRenameFiles },
                 new STToolStripItem("Extract Folder", ExtractAction),
-                new STToolStripItem("Replace Folder", ReplaceAction) { Enabled = ArchiveFile.CanReplaceFiles },
+                new STToolStripItem("Replace Folder", ReplaceAction) { Enabled = ArchiveFile.CanReplaceFiles && ArchiveFile.CanAddFiles },
                 new STToolStripItem("Delete Folder", DeleteAction) { Enabled = ArchiveFile.CanDeleteFiles },
                 new STToolStripSeparator(),
                 new STToolStripItem("Add Folder", AddFolderAction) { Enabled = ArchiveFile.CanAddFiles },
@@ -798,6 +800,7 @@ namespace Toolbox.Library
             {
                 Extension = FindMatch(archiveFileInfo.FileData);
             }
+            
 
             switch (Extension)
             {
@@ -807,6 +810,7 @@ namespace Toolbox.Library
                 case ".aamp": SetImageKey("aamp"); break;
                 case ".bfres": SetImageKey("bfres"); break;
                 case ".sbfres": SetImageKey("sbfres"); break;
+                case ".gfbmdl": SetImageKey("model"); break;
                 case ".dds":
                 case ".tga":
                 case ".jpg":
@@ -932,15 +936,54 @@ namespace Toolbox.Library
             DialogResult result = MessageBox.Show($"Are your sure you want to remove {Text}? This cannot be undone!", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
-                ArchiveFile.DeleteFile(ArchiveFileInfo);
-                Parent.Nodes.Remove(this);
+                bool isRemoved = ArchiveFile.DeleteFile(ArchiveFileInfo);
+                if (!isRemoved) return;
+
+                if (Parent != null)
+                    Parent.Nodes.Remove(this);
+                else if (ArchiveFileInfo.FileFormat != null && 
+                         ArchiveFileInfo.FileFormat is TreeNode)
+                {
+                    var prevNode = (TreeNode)ArchiveFileInfo.FileFormat;
+                    var parent = prevNode.Parent;
+
+                    var index = parent.Nodes.IndexOf(prevNode);
+                    parent.Nodes.RemoveAt(index);
+                }
             }
         }
 
         private void ReplaceAction(object sender, EventArgs args)
         {
-            ArchiveFileInfo.Replace();
-            ArchiveFileInfo.FileFormat = null;
+            if (!ArchiveFile.CanReplaceFiles) return;
+
+            bool IsReplaced = ArchiveFileInfo.Replace();
+            if (!IsReplaced) return;
+
+            if (ArchiveFileInfo.FileFormat != null)
+            {
+                if (ArchiveFileInfo.FileFormat is IArchiveFile)
+                {
+                 
+                }
+                if (ArchiveFileInfo.FileFormat is TreeNode)
+                {
+                    var prevNode = (TreeNode)ArchiveFileInfo.FileFormat;
+                    var parent = prevNode.Parent;
+
+                    var index = parent.Nodes.IndexOf(prevNode);
+                    parent.Nodes.RemoveAt(index);
+                    parent.Nodes.Insert(index, this);
+                }
+
+                ArchiveFileInfo.FileFormat.Unload();
+                ArchiveFileInfo.FileFormat = null;
+                Nodes.Clear();
+
+                ArchiveFileInfo.OpenFile();
+                OpenFileFormat(TreeView);
+            }
+
             UpdateEditor();
         }
 

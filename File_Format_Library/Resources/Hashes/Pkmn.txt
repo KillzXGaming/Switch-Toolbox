@@ -9,6 +9,7 @@ bin/pokemon/pm0000_00/anm/pm0000_00_battle01.gfbanmcfg
 bin/pokemon/pm0000_00/anm/pm0000_00_capture01.gfbanmcfg
 bin/pokemon/pm0000_00/anm/pm0000_00_camp.gfbanmcfg
 bin/pokemon/pm0000_00/anm/pm0000_00_app01.gfbanmcfg
+bin/pokemon/pm0000_00/anm/pm0000_00_ba01_land01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_ba01_landA01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_ba01_landB01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_ba01_landC01.gfbanm
@@ -31,7 +32,12 @@ bin/pokemon/pm0000_00/anm/pm0000_00_fi31_run_wait01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_fi31_wait_run01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_mouth01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_gloop01.gfbanm
+bin/pokemon/pm0000_00/anm/pm0000_00_loop01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_eye01.gfbanm
+bin/pokemon/pm0000_00/anm/pm0000_00_eye01.gfbanm
+bin/pokemon/pm0000_00/anm/pm0000_00_cm10_bawait_kwwait01.gfbanm
+bin/pokemon/pm0000_00/anm/pm0000_00_cm10_kwwait_bawait01.gfbanm
+bin/pokemon/pm0000_00/anm/pm0000_00_kw01_wait01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_kw10_respond01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_kw11_turnA01.gfbanm
 bin/pokemon/pm0000_00/anm/pm0000_00_kw11_turnB01.gfbanm

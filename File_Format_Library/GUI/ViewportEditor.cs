@@ -158,8 +158,8 @@ namespace FirstPlugin.Forms
             OnLoadedTab();
         }
 
-        public override void OnControlClosing()
-        {
+        public override void OnControlClosing() {
+            animationPanel.ClosePanel();
         }
 
         private void OnLoadedTab()
