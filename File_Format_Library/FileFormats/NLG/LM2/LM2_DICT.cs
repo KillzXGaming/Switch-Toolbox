@@ -551,7 +551,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                 string FolderPath = System.IO.Path.GetDirectoryName(ParentDictionary.FilePath);
                 string DataPath = System.IO.Path.Combine(FolderPath, $"{DataFile}");
 
-                if (System.IO.File.Exists(DataFile))
+                if (System.IO.File.Exists(DataPath))
                 {
                     using (var reader = new FileReader(DataPath)) {
                         return ReadDataFile(reader);
