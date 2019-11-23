@@ -87,7 +87,8 @@ namespace LayoutBXLYT
                    };
                 }
 
-                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
+                if (!Runtime.DEVELOPER_DEBUG_MODE)
+                    DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
 
                 ShaderLoader.CafeShader.Disable();
             }
@@ -152,9 +153,8 @@ namespace LayoutBXLYT
                 ShaderLoader.RevShader.Disable();
             }
 
-            GL.Disable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
-            GL.PopAttrib();
+            GL.Disable(EnableCap.Texture2D);
             GL.UseProgram(0);
         }
 
@@ -1302,18 +1302,6 @@ namespace LayoutBXLYT
             {
                 float outAlpha = BasePane.MixColors(colors[i].A, alpha);
                 colors[i] = Color.FromArgb(Utils.FloatToIntClamp(outAlpha), colors[i]);
-            }
-
-            if (Runtime.DEVELOPER_DEBUG_MODE)
-            {
-                GL.Begin(PrimitiveType.LineLoop);
-                GL.Color4(selectionOutline ? Color.Red : colors[0]);
-                GL.Vertex2(rect.BottomLeftPoint);
-                GL.Vertex2(rect.BottomRightPoint);
-                GL.Vertex2(rect.TopRightPoint);
-                GL.Vertex2(rect.TopLeftPoint);
-                GL.End();
-                return;
             }
 
             if (LayoutEditor.UseLegacyGL)
