@@ -10,10 +10,11 @@ using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using Toolbox.Library.Rendering;
 using OpenTK;
+using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
-    public class GFBMDL : TreeNodeFile, IFileFormat
+    public class GFBMDL : TreeNodeFile, IContextMenuNode, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Model;
 
@@ -46,42 +47,27 @@ namespace FirstPlugin
             }
         }
 
-        Viewport viewport
-        {
-            get
-            {
-                var editor = LibraryGUI.GetObjectEditor();
-                return editor.GetViewport();
-            }
-            set
-            {
-                var editor = LibraryGUI.GetObjectEditor();
-                editor.LoadViewport(value);
-            }
-        }
 
         bool DrawablesLoaded = false;
         public override void OnClick(TreeView treeView)
         {
-            if (Runtime.UseOpenGL)
+            ViewportEditor editor = (ViewportEditor)LibraryGUI.GetActiveContent(typeof(ViewportEditor));
+            bool HasModels = DrawableContainer.Drawables.Count > 0;
+            if (editor == null)
             {
-                if (viewport == null)
-                {
-                    viewport = new Viewport(ObjectEditor.GetDrawableContainers());
-                    viewport.Dock = DockStyle.Fill;
-                }
-
-                if (!DrawablesLoaded)
-                {
-                    ObjectEditor.AddContainer(DrawableContainer);
-                    DrawablesLoaded = true;
-                }
-
-                viewport.ReloadDrawables(DrawableContainer);
-                LibraryGUI.LoadEditor(viewport);
-
-                viewport.Text = Text;
+                editor = new ViewportEditor(HasModels);
+                editor.Dock = DockStyle.Fill;
+                LibraryGUI.LoadEditor(editor);
             }
+
+            if (!DrawablesLoaded)
+            {
+                ObjectEditor.AddContainer(DrawableContainer);
+                DrawablesLoaded = true;
+            }
+
+            if (Runtime.UseOpenGL)
+                editor.LoadViewport(DrawableContainer);
         }
 
         public Header header;
@@ -97,9 +83,13 @@ namespace FirstPlugin
 
             header = new Header();
             header.Read(new FileReader(stream), this);
+        }
 
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export Model", null, ExportAction, Keys.Control | Keys.E));
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Export Model", null, ExportAction, Keys.Control | Keys.E));
+            return Items.ToArray();
         }
 
         private void ExportAction(object sender, EventArgs args)
@@ -292,10 +282,32 @@ namespace FirstPlugin
                         matTexture.WrapModeS = STTextureWrapMode.Mirror;
                         matTexture.WrapModeT = STTextureWrapMode.Repeat;
 
-                        if (textureMap.Effect == "Col0Tex")
+                        switch (textureMap.Effect)
                         {
-                            matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
+                            case "Col0Tex":
+                                matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
+                                break;
+                            case "EmissionMaskTex":
+                           //     matTexture.Type = STGenericMatTexture.TextureType.Emission;
+                                break;
+                            case "LyCol0Tex":
+                                break;
+                            case "NormalMapTex":
+                                matTexture.WrapModeT = STTextureWrapMode.Repeat;
+                                matTexture.WrapModeT = STTextureWrapMode.Repeat;
+                                matTexture.Type = STGenericMatTexture.TextureType.Normal;
+                                break;
+                            case "AmbientTex":
+                                break;
+                            case "LightTblTex":
+                                break;
+                            case "SphereMapTex":
+                                break;
+                            case "EffectTex":
+                                break;
                         }
+
+                        Console.WriteLine("texture map " + textureMap.Effect);
 
                         mat.TextureMaps.Add(matTexture);
 
@@ -348,8 +360,8 @@ namespace FirstPlugin
                             for (int j = 0; j < boneIndexList.Length; j++)
                                 vertex.boneIds.Add(SkinningIndices[boneIndexList[j]]);
                         }
-                        //   if (Buffer.Colors1.Count > 0)
-                      //      vertex.col = Buffer.Colors1[v] / 255f;
+                        if (Buffer.Colors1.Count > 0)
+                            vertex.col = Buffer.Colors1[v] / 255f;
                         if (Buffer.Binormals.Count > 0)
                             vertex.bitan = Buffer.Binormals[v];
 
@@ -652,7 +664,7 @@ namespace FirstPlugin
                 else
                     Value = false;
 
-                Console.WriteLine($"Param {Name} {Value}");
+                Console.WriteLine($"SwitchParam {Name} {Value}");
 
                 //Seek back to next in array
                 reader.SeekBegin(DataPosition + sizeof(uint));
@@ -971,11 +983,17 @@ namespace FirstPlugin
                                     BoneIndex.Add(new int[] { (int)boneIndices.X, (int)boneIndices.Y, (int)boneIndices.Z, (int)boneIndices.W });
                                     break;
                                 case VertexAttribute.BufferType.Color1:
-                                    var colors1 = ParseBuffer(reader, Attributes[att].Format, Attributes[att].Type);
+                                    Vector4 colors1 = new Vector4(1, 1, 1, 1);
+                                    if (Attributes[att].Format == VertexAttribute.BufferFormat.Byte)
+                                        colors1 = ParseBuffer(reader, Attributes[att].Format, Attributes[att].Type);
+
                                     Colors1.Add(new Vector4(colors1.X, colors1.Y, colors1.Z, colors1.W));
                                     break;
                                 case VertexAttribute.BufferType.Color2:
-                                    var colors2 = ParseBuffer(reader, Attributes[att].Format, Attributes[att].Type);
+                                    Vector4 colors2 = new Vector4(1,1,1,1);
+                                    if (Attributes[att].Format == VertexAttribute.BufferFormat.Byte)
+                                        colors2 = ParseBuffer(reader, Attributes[att].Format, Attributes[att].Type);
+
                                     Colors2.Add(new Vector4(colors2.X, colors2.Y, colors2.Z, colors2.W));
                                     break;
                                 case VertexAttribute.BufferType.Binormal:
@@ -1283,6 +1301,7 @@ namespace FirstPlugin
                     float RotationX = reader.ReadSingle();
                     float RotationY = reader.ReadSingle();
                     float RotationZ = reader.ReadSingle();
+
                     rotation = new float[] { RotationX,RotationY, RotationZ };
                 }
 
