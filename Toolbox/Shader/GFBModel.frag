@@ -193,7 +193,7 @@ void main()
 
 
     // Global brightness adjustment.
-    fragColor.rgb *= 2.5;
+    fragColor.rgb *= 4.5;
 
     fragColor.rgb *= min(boneWeightsColored, vec3(1));
 
@@ -259,6 +259,8 @@ void main()
 
 	    fragColor = vec4(diffuseMapColor.rgb, 1);
 	}
+	else if (renderType == 4) //Display Normal
+         fragColor.rgb = texture(NormalMap, displayTexCoord).rgb;
     else if (renderType == 5) // vertexColor
         fragColor = vertexColor;
 	else if (renderType == 6) //Display Ambient Occlusion

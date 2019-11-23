@@ -35,7 +35,7 @@ namespace Toolbox.Library.Forms
         }
 
         private void chkVertexColors_CheckedChanged(object sender, EventArgs e) {
-            Settings.UseVertexColors = chkOldExporter.Checked;
+            Settings.UseVertexColors = chkVertexColors.Checked;
         }
     }
 }
