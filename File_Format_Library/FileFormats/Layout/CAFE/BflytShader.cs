@@ -94,9 +94,6 @@ namespace LayoutBXLYT
             shader.SetInt("textures1", 0);
             shader.SetInt("textures2", 0);
 
-            if (Runtime.DEVELOPER_DEBUG_MODE)
-                return;
-
             BindTextureUniforms(shader, material);
 
             if (material.TextureMaps.Length > 0 || Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.UVTestPattern)

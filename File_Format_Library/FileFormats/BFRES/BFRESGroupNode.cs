@@ -230,7 +230,7 @@ namespace Bfres.Structs
                                 {
                                     if (setting.TexName == ftex.Text)
                                     {
-                                        if (setting.GenerateMipmaps)
+                                        if (setting.GenerateMipmaps && !setting.IsFinishedCompressing)
                                         {
                                             setting.DataBlockOutput.Clear();
                                             setting.DataBlockOutput.Add(setting.GenerateMips());
@@ -238,12 +238,11 @@ namespace Bfres.Structs
 
                                         if (setting.DataBlockOutput != null)
                                         {
-                                            ftex.texture = new ResU.Texture();
                                             var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                                             var tex = FTEX.FromGx2Surface(surface, setting.TexName);
                                             ftex.UpdateTex(tex);
+                                            tex.Name = Text;
                                             ftex.IsEdited = true;
-
                                             ftex.Read(ftex.texture);
                                             ftex.LoadOpenGLTexture();
                                         }
