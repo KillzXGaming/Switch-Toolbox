@@ -1304,6 +1304,18 @@ namespace LayoutBXLYT
                 colors[i] = Color.FromArgb(Utils.FloatToIntClamp(outAlpha), colors[i]);
             }
 
+            if (Runtime.DEVELOPER_DEBUG_MODE)
+            {
+                GL.Begin(PrimitiveType.LineLoop);
+                GL.Color4(selectionOutline ? Color.Red : colors[0]);
+                GL.Vertex2(rect.BottomLeftPoint);
+                GL.Vertex2(rect.BottomRightPoint);
+                GL.Vertex2(rect.TopRightPoint);
+                GL.Vertex2(rect.TopLeftPoint);
+                GL.End();
+                return;
+            }
+
             if (LayoutEditor.UseLegacyGL)
             {
                 if (useLines)
