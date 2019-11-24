@@ -639,7 +639,7 @@ namespace Toolbox.Library
             byte[] imageData = new byte[0];
             bool DontSwapRG = false;
 
-            if (Format.ToString().StartsWith("B"))
+            if (Format.ToString().StartsWith("B") && !IsCompressed(Format))
                 DontSwapRG = true;
 
             if (PlatformSwizzle == PlatformSwizzle.Platform_3DS)

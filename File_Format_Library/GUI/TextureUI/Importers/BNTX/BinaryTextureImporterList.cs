@@ -103,7 +103,7 @@ namespace FirstPlugin
             tileModeCB.SelectedIndex = 0;
             formatComboBox.SelectedItem = SurfaceFormat.BC1_SRGB;
 
-                        IsLoaded = true;
+            IsLoaded = true;
 
             button1.Select();
         }
