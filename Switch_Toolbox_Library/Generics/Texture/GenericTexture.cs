@@ -639,6 +639,9 @@ namespace Toolbox.Library
             byte[] imageData = new byte[0];
             bool DontSwapRG = false;
 
+            if (Format.ToString().StartsWith("B"))
+                DontSwapRG = true;
+
             if (PlatformSwizzle == PlatformSwizzle.Platform_3DS)
             {
                 imageData = CTR_3DS.DecodeBlock(data, (int)Width, (int)Height, Format);
