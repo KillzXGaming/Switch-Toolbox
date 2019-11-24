@@ -115,7 +115,7 @@ void main()
     vert.tangent = tangent;
     vert.binormal = binormal;
 
-	float specIntensity = 1;
+	float specIntensity = 0.5f;
 
     // Wireframe color.
     if (colorOverride == 1)
@@ -192,13 +192,10 @@ void main()
     fragColor.rgb += emissionTerm;
 
 
-    // Global brightness adjustment.
-    fragColor.rgb *= 4.5;
-
     fragColor.rgb *= min(boneWeightsColored, vec3(1));
 
     // HDR tonemapping
-    fragColor.rgb = fragColor.rgb / (fragColor.rgb + vec3(1.0));
+//    fragColor.rgb = fragColor.rgb / (fragColor.rgb + vec3(1.0));
 
     // Convert back to sRGB.
     fragColor.rgb = pow(fragColor.rgb, vec3(1 / gamma));
