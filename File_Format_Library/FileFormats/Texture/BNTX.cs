@@ -1086,6 +1086,8 @@ namespace FirstPlugin
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 Text = dialog.textBox1.Text;
+                if (BinaryTexFile != null)
+                    BinaryTexFile.Name = Text;
             }
         }
         private void Save(object sender, EventArgs args)
