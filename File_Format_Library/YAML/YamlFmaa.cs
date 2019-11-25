@@ -154,15 +154,12 @@ namespace FirstPlugin
                 {
                     switch (offset)
                     {
-                        case 0: return "Scale X";
-                        case 4: return "Scale Y";
-                        case 8: return "Scale Z";
-                        case 12: return "Rotate X";
-                        case 16: return "Rotate Y";
-                        case 20: return "Rotate Z";
-                        case 24: return "Translate X";
-                        case 28: return "Translate Y";
-                        case 32: return "Translate Z";
+                        case 0: return "Mode";
+                        case 4: return "Scale X";
+                        case 8: return "Scale Y";
+                        case 12: return "Rotate";
+                        case 16: return "Translate X";
+                        case 20: return "Translate Y";
                         default:
                             return offset.ToString();
                     }

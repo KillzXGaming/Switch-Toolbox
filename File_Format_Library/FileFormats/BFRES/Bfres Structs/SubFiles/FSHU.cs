@@ -134,7 +134,7 @@ namespace Bfres.Structs
             }
             else if (ext == ".yaml")
             {
-                var yaml = YamlFmaa.ToYaml(FileName, BfresPlatformConverter.FSHUConvertWiiUToSwitch(ShaderParamAnim), AnimationType.ShaderParam);
+                var yaml = YamlFmaa.ToYaml(FileName, BfresPlatformConverter.FSHUConvertWiiUToSwitch(ShaderParamAnim), this.AnimType);
                 System.IO.File.WriteAllText(FileName, yaml);
             }
             else if (ext == ".clr0")
