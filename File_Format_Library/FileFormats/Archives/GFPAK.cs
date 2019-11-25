@@ -203,19 +203,12 @@ namespace FirstPlugin
                 fileEntry.FolderHash = FolderFiles[i];
                 fileEntry.FileName = GetString(hashes[i], fileEntry.FileData);
 
-                string suffix = hashes[i].ToString("X").GetLast(6);
-                ulong suffix64 = Convert.ToUInt64(suffix, 16);
-
-                if (HashList.ContainsKey(suffix64))
-                {
-                    fileEntry.FileName = HashList[suffix64];
-                }
-
                 string baseName = Path.GetFileName(fileEntry.FileName.Replace("\r", ""));
 
                 switch (Utils.GetExtension(fileEntry.FileName))
                 {
                     case ".gfbanm":
+                   //     fileEntry.OpenFileFormatOnLoad = true;
                         fileEntry.FileName = $"Animations/{baseName}";
                         break;
                     case ".gfbanmcfg":
@@ -228,6 +221,7 @@ namespace FirstPlugin
                         fileEntry.FileName = $"PokeConfigs/{baseName}";
                         break;
                     case ".bntx":
+                      //  fileEntry.OpenFileFormatOnLoad = true;
                         fileEntry.FileName = $"Textures/{baseName}";
                         break;
                     case ".bnsh":
@@ -268,7 +262,7 @@ namespace FirstPlugin
             {
                 string HashString = hashStr.TrimEnd();
 
-                ulong hash = FNV64A1.CalculateSuffix(HashString);
+                ulong hash = FNV64A1.Calculate(HashString);
                 if (!hashList.ContainsKey(hash))
                     hashList.Add(hash, HashString);
 
@@ -278,7 +272,7 @@ namespace FirstPlugin
                 string[] hashPaths = HashString.Split('/');
                 for (int i = 0; i < hashPaths?.Length; i++)
                 {
-                    hash = FNV64A1.CalculateSuffix(hashPaths[i]);
+                    hash = FNV64A1.Calculate(hashPaths[i]);
                     if (!hashList.ContainsKey(hash))
                         hashList.Add(hash, HashString);
                 }
@@ -293,7 +287,7 @@ namespace FirstPlugin
                 string baseName = Path.GetFileNameWithoutExtension(FileName);
                 string pokeStrFile = hashStr.Replace("pm0000_00", baseName);
 
-                ulong hash = FNV64A1.CalculateSuffix(pokeStrFile);
+                ulong hash = FNV64A1.Calculate(pokeStrFile);
                 if (!hashList.ContainsKey(hash))
                     hashList.Add(hash, pokeStrFile);
             }
@@ -302,7 +296,7 @@ namespace FirstPlugin
             {
                 string pokeStr = hashStr.Replace("pm0000", $"pm{i.ToString("D4")}");
 
-                ulong hash = FNV64A1.CalculateSuffix(pokeStr);
+                ulong hash = FNV64A1.Calculate(pokeStr);
                 if (!hashList.ContainsKey(hash))
                     hashList.Add(hash, pokeStr);
             }
@@ -314,7 +308,12 @@ namespace FirstPlugin
             if (ext == ".bntx" || ext == ".bfres" || ext == ".bnsh" || ext == ".bfsha")
                 return GetBinaryHeaderName(Data) + ext;
             else
-                return $"{Hash.ToString("X")}{ext}";
+            {
+                if (HashList.ContainsKey(Hash))
+                    return HashList[Hash];
+                else
+                    return $"{Hash.ToString("X")}{ext}";
+            }
         }
 
         public void Write(FileWriter writer)
