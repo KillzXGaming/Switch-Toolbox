@@ -1060,7 +1060,7 @@ namespace FirstPlugin
                 animFolder.Nodes.Add(group);
 
                 for (int i = 0; i < resFileU.TexSrtAnims.Count; i++)
-                    group.AddNode(new FSHU(resFileU.TexSrtAnims[i], MaterialAnimation.AnimationType.TexturePattern));
+                    group.AddNode(new FSHU(resFileU.TexSrtAnims[i], MaterialAnimation.AnimationType.TextureSrt));
             }
             if (resFileU.TexPatternAnims.Count > 0)
             {
