@@ -338,6 +338,7 @@ namespace Toolbox.Library
             { TEX_FORMAT.R8G8_B8G8_UNORM,      new FormatInfo(4, 1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.B8G8R8X8_UNORM,       new FormatInfo(4, 1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.B5G5R5A1_UNORM,       new FormatInfo(2, 1,  1, 1,  TargetBuffer.Color) },
+            { TEX_FORMAT.R5G5B5A1_UNORM,       new FormatInfo(2, 1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.B8G8R8A8_UNORM,       new FormatInfo(4, 1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.B8G8R8A8_UNORM_SRGB,  new FormatInfo(4, 1,  1, 1,  TargetBuffer.Color) },
             { TEX_FORMAT.R5G5B5_UNORM,         new FormatInfo(2, 1,  1, 1,  TargetBuffer.Color) },
@@ -510,8 +511,6 @@ namespace Toolbox.Library
                 if (data == null)
                     throw new Exception("Data is null!");
 
-                Console.WriteLine("Decoding " + Format + " " + Runtime.UseDirectXTexDecoder);
-
                 if (PlatformSwizzle == PlatformSwizzle.Platform_3DS)
                 {
                     var Image = BitmapExtension.GetBitmap(ConvertBgraToRgba(CTR_3DS.DecodeBlock(data, (int)width, (int)height, Format)),
@@ -539,10 +538,9 @@ namespace Toolbox.Library
                     case TEX_FORMAT.ETC1_A4:
                         return BitmapExtension.GetBitmap(ETC1.ETC1Decompress(data, (int)width, (int)height, true),
                               (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                    case TEX_FORMAT.L8:
-                        return BitmapExtension.GetBitmap(RGBAPixelDecoder.Decode(data, (int)width, (int)height, Format),
-                              (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    case TEX_FORMAT.R5G5B5A1_UNORM:
                     case TEX_FORMAT.LA8:
+                    case TEX_FORMAT.L8:
                         return BitmapExtension.GetBitmap(RGBAPixelDecoder.Decode(data, (int)width, (int)height, Format),
                               (int)width, (int)height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                 }
@@ -639,9 +637,6 @@ namespace Toolbox.Library
             byte[] imageData = new byte[0];
             bool DontSwapRG = false;
 
-            if (Format.ToString().StartsWith("B") && !IsCompressed(Format))
-                DontSwapRG = true;
-
             if (PlatformSwizzle == PlatformSwizzle.Platform_3DS)
             {
                 imageData = CTR_3DS.DecodeBlock(data, (int)Width, (int)Height, Format);
@@ -660,6 +655,8 @@ namespace Toolbox.Library
                 if (Format == TEX_FORMAT.L8)
                     return RGBAPixelDecoder.Decode(data, (int)Width, (int)Height, Format);
                 if (Format == TEX_FORMAT.LA8)
+                    return RGBAPixelDecoder.Decode(data, (int)Width, (int)Height, Format);
+                if (Format == TEX_FORMAT.R5G5B5A1_UNORM)
                     return RGBAPixelDecoder.Decode(data, (int)Width, (int)Height, Format);
 
                 if (IsCompressed(Format))
@@ -753,6 +750,12 @@ namespace Toolbox.Library
         {
             if (!Runtime.UseDirectXTexDecoder)
                 return data;
+
+            //Channels will be swapped
+            if (format == TEX_FORMAT.R5G5B5A1_UNORM) {
+                format = TEX_FORMAT.B5G5R5A1_UNORM;
+                data = ConvertBgraToRgba(data);
+            }
 
             if (IsCompressed(format))
                 return DDSCompressor.CompressBlock(data, width, height, (DDS.DXGI_FORMAT)format, multiThread, alphaRef, CompressionMode);

@@ -189,6 +189,7 @@ namespace Toolbox.Library
         C14X2 = 248,
         CMPR = 249,
         RGB565 = 250,
-        RGB5A3 = 251
+        RGB5A3 = 251,
+        R5G5B5A1_UNORM = 252,
     }
 }

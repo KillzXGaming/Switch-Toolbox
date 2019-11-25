@@ -23,15 +23,41 @@ namespace Toolbox.Library
                     comp[0] = (byte)((pixel & 0xF) * 17);
                     comp[1] = (byte)(((pixel & 0xF0) >> 4) * 17);
                     break;
-                case TEX_FORMAT.R5G5B5_UNORM:
-                    comp[0] = (byte)((pixel & 0x1F) / 0x1F * 0xFF);
-                    comp[1] = (byte)(((pixel & 0x7E0) >> 5) / 0x3F * 0xFF);
-                    comp[2] = (byte)(((pixel & 0xF800) >> 11) / 0x1F * 0xFF);
-                    break;
                 case TEX_FORMAT.B5G6R5_UNORM:
                     comp[0] = (byte)(((pixel & 0xF800) >> 11) / 0x1F * 0xFF);
                     comp[1] = (byte)(((pixel & 0x7E0) >> 5) / 0x3F * 0xFF);
                     comp[2] = (byte)((pixel & 0x1F) / 0x1F * 0xFF);
+                    break;
+                case TEX_FORMAT.R5G5B5_UNORM:
+                    {
+                        int R = ((pixel >> 0) & 0x1f) << 3;
+                        int G = ((pixel >> 5) & 0x1f) << 3;
+                        int B = ((pixel >> 10) & 0x1f) << 3;
+
+                        comp[0] = (byte)(R | (R >> 5));
+                        comp[1] = (byte)(G | (G >> 5));
+                        comp[2] = (byte)(B | (B >> 5));
+                    }
+                    break;
+                case TEX_FORMAT.R5G5B5A1_UNORM:
+                    {
+                        int R = ((pixel >> 0) & 0x1f) << 3;
+                        int G = ((pixel >> 5) & 0x1f) << 3;
+                        int B = ((pixel >> 10) & 0x1f) << 3;
+                        int A = ((pixel & 0x8000) >> 15) * 0xFF;
+
+                        comp[0] = (byte)(R | (R >> 5));
+                        comp[1] = (byte)(G | (G >> 5));
+                        comp[2] = (byte)(B | (B >> 5));
+                        comp[3] = (byte)A;
+                    }
+                    break;
+                case TEX_FORMAT.R8G8B8A8_UNORM:
+                case TEX_FORMAT.R8G8B8A8_UNORM_SRGB:
+                    comp[0] = (byte)(pixel & 0xFF);
+                    comp[1] = (byte)((pixel & 0xFF00) >> 8);
+                    comp[2] = (byte)((pixel & 0xFF0000) >> 16);
+                    comp[3] = (byte)((pixel & 0xFF000000) >> 24);
                     break;
             }
 
@@ -62,6 +88,11 @@ namespace Toolbox.Library
             }
             else if (format == TEX_FORMAT.L8)
                 compSel = new byte[4] { 0, 0, 0, 5 };
+            else if (format == TEX_FORMAT.R5G5B5A1_UNORM)
+            {
+                bpp = 2;
+                return DDSCompressor.DecodePixelBlock(data, (int)width, (int)height, DDS.DXGI_FORMAT.DXGI_FORMAT_B5G5R5A1_UNORM);
+            }
 
             for (int Y = 0; Y < height; Y++)
             {

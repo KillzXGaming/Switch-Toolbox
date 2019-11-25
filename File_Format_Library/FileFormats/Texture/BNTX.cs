@@ -1236,6 +1236,7 @@ namespace FirstPlugin
                 case TEX_FORMAT.BC6H_SF16: return SurfaceFormat.BC6_UFLOAT;
                 case TEX_FORMAT.BC7_UNORM: return SurfaceFormat.BC7_UNORM;
                 case TEX_FORMAT.BC7_UNORM_SRGB: return SurfaceFormat.BC7_SRGB;
+                case TEX_FORMAT.R5G5B5A1_UNORM: return SurfaceFormat.R5_G5_B5_A1_UNORM;
                 case TEX_FORMAT.B5G5R5A1_UNORM: return SurfaceFormat.B5_G5_R5_A1_UNORM; 
                 case TEX_FORMAT.B5G6R5_UNORM: return SurfaceFormat.B5_G6_R5_UNORM; 
                 case TEX_FORMAT.B8G8R8A8_UNORM_SRGB: return SurfaceFormat.B8_G8_R8_A8_SRGB; 
@@ -1317,7 +1318,7 @@ namespace FirstPlugin
                 case SurfaceFormat.R16_UNORM: return TEX_FORMAT.R16_UNORM;
                 case SurfaceFormat.R4_G4_B4_A4_UNORM: return TEX_FORMAT.B4G4R4A4_UNORM;
                 case SurfaceFormat.R4_G4_UNORM: return TEX_FORMAT.B4G4R4A4_UNORM;
-                case SurfaceFormat.R5_G5_B5_A1_UNORM: return TEX_FORMAT.B5G5R5A1_UNORM;
+                case SurfaceFormat.R5_G5_B5_A1_UNORM: return TEX_FORMAT.R5G5B5A1_UNORM;
                 case SurfaceFormat.R5_G6_B5_UNORM: return TEX_FORMAT.B5G6R5_UNORM;
                 case SurfaceFormat.R8_G8_B8_A8_SRGB: return TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
                 case SurfaceFormat.R8_G8_B8_A8_UNORM: return TEX_FORMAT.R8G8B8A8_UNORM;

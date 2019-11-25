@@ -51,7 +51,7 @@ namespace Toolbox
             if (type == "NLG_Hash")
                 return StringToHash(text);
             else if (type == "FNV64A1")
-                return FNV64A1.CalculateSuffix(text);
+                return FNV64A1.Calculate(text);
             else if (type == "CRC32")
                 return Toolbox.Library.Security.Cryptography.Crc32.Compute(text);
             return 0;
