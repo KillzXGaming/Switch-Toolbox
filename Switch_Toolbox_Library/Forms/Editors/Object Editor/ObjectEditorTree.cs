@@ -539,22 +539,30 @@ namespace Toolbox.Library.Forms
         }
 
         bool UpdateViewport = false;
-        bool IsModelChecked = false;
+        bool SupressUpdateEvent = false;
         private void treeViewCustom1_AfterCheck(object sender, TreeViewEventArgs e)
         {
             UpdateViewport = false;
 
             if (e.Node is STGenericModel)
             {
-                IsModelChecked = true;
+                SupressUpdateEvent = true;
                 CheckChildNodes(e.Node, e.Node.Checked);
-                IsModelChecked = false;
+                SupressUpdateEvent = false;
             }
-            else if (e.Node is STGenericObject && !IsModelChecked)
+
+            if (Control.ModifierKeys == Keys.Shift && !SupressUpdateEvent)
+            {
+                SupressUpdateEvent = true;
+                CheckChildNodes(e.Node, e.Node.Checked);
+                SupressUpdateEvent = false;
+            }
+
+            if (e.Node is STGenericObject && !SupressUpdateEvent)
             {
                 UpdateViewport = true;
             }
-            else if (e.Node is STBone && !IsModelChecked)
+            else if (e.Node is STBone && !SupressUpdateEvent)
             {
                 UpdateViewport = true;
             }

@@ -127,6 +127,12 @@ namespace FirstPlugin
                     case "G": return 4;
                     case "B": return 8;
                     case "A": return 12;
+                    case "Mode": return 0;
+                    case "Scale X": return 4;
+                    case "Scale Y": return 8;
+                    case "Rotate": return 12;
+                    case "Translate X": return 4;
+                    case "Translate Y": return 8;
                     default:
                         uint.TryParse(offset, out val);
                         break;
