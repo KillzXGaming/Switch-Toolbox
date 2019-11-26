@@ -16,10 +16,35 @@ namespace Toolbox.Library.Animations
 
         public bool HasKeys =>  KeyFrames.Count > 0;
 
+        public STAnimationTrack() { }
+        public STAnimationTrack(STInterpoaltionType interpolation) {
+            InterpolationType = interpolation;
+        }
+
         public bool IsKeyed(float frame)
         {
             var matches = KeyFrames.Where(p => p.Frame == frame);
             return matches != null && matches.Count() > 0;
+        }
+
+        public STKeyFrame[] GetFrame(float frame)
+        {
+            if (KeyFrames.Count == 0) return null;
+            STKeyFrame k1 = (STKeyFrame)KeyFrames[0], k2 = (STKeyFrame)KeyFrames[0];
+            foreach (STKeyFrame k in KeyFrames)
+            {
+                if (k.Frame < frame)
+                {
+                    k1 = k;
+                }
+                else
+                {
+                    k2 = k;
+                    break;
+                }
+            }
+
+            return new STKeyFrame[] { k1, k2 };
         }
 
         //Key frame setup based on
