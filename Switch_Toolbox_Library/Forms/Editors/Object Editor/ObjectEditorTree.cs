@@ -337,14 +337,22 @@ namespace Toolbox.Library.Forms
                     GetArchiveMenus(e.Node, (ArchiveFileInfo)e.Node.Tag);
                 }
 
-                if (e.Node is IContextMenuNode)
-                {
-                    bool IsRoot = e.Node.Parent == null;
-                    bool HasChildren = e.Node.Nodes.Count > 0;
+                bool IsRoot = e.Node.Parent == null;
+                bool HasChildren = e.Node.Nodes.Count > 0;
 
+                IContextMenuNode node = null;
+                if (e.Node is IContextMenuNode) {
+                    node = (IContextMenuNode)e.Node;
+                }
+                else if (e.Node.Tag != null && e.Node.Tag is IContextMenuNode) {
+                    node = (IContextMenuNode)e.Node.Tag;
+                }
+
+                if (node != null)
+                {
                     if (IsRoot)
                     {
-                        foreach (var item in ((IContextMenuNode)e.Node).GetContextMenuItems())
+                        foreach (var item in node.GetContextMenuItems())
                         {
                             if (item.Text != "Delete" && item.Text != "Remove")
                                 treeNodeContextMenu.Items.Add(item);
@@ -353,12 +361,12 @@ namespace Toolbox.Library.Forms
                     }
                     else
                     {
-                        treeNodeContextMenu.Items.AddRange(((IContextMenuNode)e.Node).GetContextMenuItems());
+                        treeNodeContextMenu.Items.AddRange(node.GetContextMenuItems());
                     }
 
                     bool HasCollpase = false;
                     bool HasExpand = false;
-                    foreach (var item in ((IContextMenuNode)e.Node).GetContextMenuItems())
+                    foreach (var item in node.GetContextMenuItems())
                     {
                         if (item.Text == "Collapse All")
                             HasCollpase = true;
@@ -378,8 +386,7 @@ namespace Toolbox.Library.Forms
                     treeViewCustom1.SelectedNode = e.Node;
                     SuppressAfterSelectEvent = false;
                 }
-
-                if (treeNodeContextMenu.Items.Count > 0)
+                    if (treeNodeContextMenu.Items.Count > 0)
                     treeNodeContextMenu.Show(Cursor.Position);
             }
             else
@@ -829,10 +836,17 @@ namespace Toolbox.Library.Forms
 
         private void treeViewCustom1_KeyPress(object sender, KeyEventArgs e)
         {
-            if (treeViewCustom1.SelectedNode != null && treeViewCustom1.SelectedNode is IContextMenuNode)
-            {
-                IContextMenuNode node = (IContextMenuNode)treeViewCustom1.SelectedNode;
+            if (treeViewCustom1.SelectedNode == null) return;
 
+            IContextMenuNode node = null;
+            if (treeViewCustom1.SelectedNode is IContextMenuNode) {
+                node = (IContextMenuNode)treeViewCustom1.SelectedNode;
+            }
+            else if (treeViewCustom1.SelectedNode.Tag != null && treeViewCustom1.SelectedNode.Tag is IContextMenuNode) {
+                node = (IContextMenuNode)treeViewCustom1.SelectedNode.Tag;
+            }
+
+            if (node != null) {
                 var Items = node.GetContextMenuItems();
                 foreach (ToolStripItem toolstrip in Items)
                 {

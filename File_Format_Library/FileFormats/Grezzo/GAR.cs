@@ -151,6 +151,7 @@ namespace FirstPlugin
                     var info = (SystemGarFileInfo)GarFileInfos[i];
                     files.Add(new FileEntry()
                     {
+                        OpenFileFormatOnLoad = info.ext == "csab",
                         FileName = $"{info.Name}.{info.ext}",
                         FileData = reader.getSection(info.FileOffset, info.FileSize)
                     });
@@ -187,6 +188,8 @@ namespace FirstPlugin
                     {
                         files.Add(new FileEntry()
                         {
+                            OpenFileFormatOnLoad = ((ZarFileInfo)GarFileInfos[i]).FileName.Contains("csab"),
+
                             FileName = ((ZarFileInfo)GarFileInfos[i]).FileName,
                             FileData = reader.getSection(Offsets[i], ((ZarFileInfo)GarFileInfos[i]).FileSize)
                         });
@@ -195,6 +198,8 @@ namespace FirstPlugin
                     {
                         files.Add(new FileEntry()
                         {
+                            OpenFileFormatOnLoad = ((GarFileInfo)GarFileInfos[i]).FileName.Contains("csab"),
+
                             FileName = ((GarFileInfo)GarFileInfos[i]).FileName,
                             FileData = reader.getSection(Offsets[i], ((GarFileInfo)GarFileInfos[i]).FileSize)
                         });

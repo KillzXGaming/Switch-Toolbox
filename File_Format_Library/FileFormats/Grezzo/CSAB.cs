@@ -8,10 +8,11 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Animations;
+using OpenTK;
 
 namespace FirstPlugin
 {
-    public class CSAB : STSkeletonAnimation, IFileFormat
+    public class CSAB : TreeNodeFile, IFileFormat, IAnimationContainer
     {
         public FileType FileType { get; set; } = FileType.Animation;
 
@@ -39,15 +40,31 @@ namespace FirstPlugin
             }
         }
 
+        public STAnimation AnimationController => header;
+
+        public override void OnClick(TreeView treeview)
+        {
+          
+        }
+
         public Header header;
 
         public void Load(System.IO.Stream stream)
         {
-            header = new Header();
-            header.Read(new FileReader(stream));
+            try
+            {
+                header = new Header();
+                header.Read(new FileReader(stream));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            this.Text = FileName;
 
             foreach (var bone in header.Nodes)
-                AnimGroups.Add(bone);
+                header.AnimGroups.Add(bone);
         }
 
         public void Unload()
@@ -72,11 +89,94 @@ namespace FirstPlugin
             HERMITE = 0x02,
         };
 
-        public class Header
+        public class Header : STSkeletonAnimation
         {
             public GameVersion Version;
 
             public List<AnimationNode> Nodes = new List<AnimationNode>();
+
+            public override STSkeleton GetActiveSkeleton()
+            {
+                var containers = Toolbox.Library.Forms.ObjectEditor.GetDrawableContainers(); 
+                foreach (var container in containers) {
+                    foreach (var draw in container.Drawables)
+                        if (draw is STSkeleton)
+                            return (STSkeleton)draw;
+                }
+
+                return base.GetActiveSkeleton();
+            }
+
+            public override void NextFrame()
+            {
+                if (Frame > FrameCount) return;
+
+                var skeleton = GetActiveSkeleton();
+
+                if (Frame == 0)
+                    skeleton.reset();
+
+                bool Updated = false; // no need to update skeleton of animations that didn't change
+                foreach (var node in Nodes)
+                {
+                    Console.WriteLine($"node.BoneIndex {node.BoneIndex}");
+
+                    if (node.BoneIndex < skeleton.bones.Count) {
+                        var b = skeleton.bones[node.BoneIndex];
+                        if (b == null) continue;
+
+
+                        Updated = true;
+
+                        if (node.TranslateX.HasKeys)
+                            b.pos.X = node.TranslateX.GetFrameValue(Frame);
+                        if (node.TranslateY.HasKeys)
+                            b.pos.Y = node.TranslateY.GetFrameValue(Frame);
+                        if (node.TranslateZ.HasKeys)
+                            b.pos.Z = node.TranslateZ.GetFrameValue(Frame);
+
+                        if (node.ScaleX.HasKeys)
+                            b.sca.X = node.ScaleX.GetFrameValue(Frame);
+                        else b.sca.X = 1;
+                        if (node.ScaleY.HasKeys)
+                            b.sca.Y = node.ScaleY.GetFrameValue(Frame);
+                        else b.sca.Y = 1;
+                        if (node.ScaleZ.HasKeys)
+                            b.sca.Z = node.ScaleZ.GetFrameValue(Frame);
+                        else b.sca.Z = 1;
+
+
+                        if (node.RotationX.HasKeys || node.RotationY.HasKeys || node.RotationZ.HasKeys)
+                        {
+                            float x = node.RotationX.HasKeys ? node.RotationX.GetFrameValue(Frame) : b.rotation[0];
+                            float y = node.RotationY.HasKeys ? node.RotationY.GetFrameValue(Frame) : b.rotation[1];
+                            float z = node.RotationZ.HasKeys ? node.RotationZ.GetFrameValue(Frame) : b.rotation[2];
+                            b.rot = EulerToQuat(z, y, x);
+                        }
+                    }
+                }
+
+                if (Updated) {
+                    skeleton.update();
+                }
+            }
+
+            public static Quaternion EulerToQuat(float z, float y, float x)
+            {
+                {
+                    Quaternion xRotation = Quaternion.FromAxisAngle(Vector3.UnitX, x);
+                    Quaternion yRotation = Quaternion.FromAxisAngle(Vector3.UnitY, y);
+                    Quaternion zRotation = Quaternion.FromAxisAngle(Vector3.UnitZ, z);
+
+                    Quaternion q = (zRotation * yRotation * xRotation);
+
+                    if (q.W < 0)
+                        q *= -1;
+
+                    //return xRotation * yRotation * zRotation;
+                    return q;
+                }
+            }
 
             public void Read(FileReader reader)
             {
@@ -106,17 +206,43 @@ namespace FirstPlugin
                 uint unknown6 = reader.ReadUInt32();//0x00
                 uint unknown7 = reader.ReadUInt32();//0x00
                 uint unknown8 = reader.ReadUInt32();//0x00
+
+                reader.SeekBegin(0x28);
+                if (Version >= GameVersion.MM3D)
+                    reader.SeekBegin(0x34);
+
                 uint duration = reader.ReadUInt32();
+
+                reader.SeekBegin(0x30);
+                if (Version >= GameVersion.MM3D)
+                    reader.SeekBegin(0x3C);
+
                 uint nodeCount = reader.ReadUInt32();
                 uint boneCount = reader.ReadUInt32();
                 if (nodeCount != boneCount) throw new Exception("Unexpected bone and node count!");
 
+                FrameCount = duration;
+
+                Console.WriteLine($"duration {duration}");
+                Console.WriteLine($"boneCount {boneCount}");
+
+                uint nodeSize = 0x18;
+
+                reader.SeekBegin(0x38);
+                if (Version >= GameVersion.MM3D)
+                {
+                    nodeSize = 0x24;
+                    reader.SeekBegin(0x44);
+                }
+
+
                 ushort[] BoneIndexTable = reader.ReadUInt16s((int)boneCount);
                 reader.Align(4);
+
                 uint[] nodeOffsets = reader.ReadUInt32s((int)nodeCount);
                 for (int i = 0; i < nodeCount; i++)
                 {
-                    reader.SeekBegin(nodeOffsets[i] + 0x18);
+                    reader.SeekBegin(nodeOffsets[i] + nodeSize);
                     AnimationNode node = new AnimationNode();
                     node.Read(reader, Version);
                     Nodes.Add(node);
@@ -177,7 +303,7 @@ namespace FirstPlugin
             long pos = reader.Position;
 
             uint Offset = reader.ReadUInt16();
-            if (Offset == 0) return null;
+            if (Offset == 0) return new AnimTrack();
 
             reader.SeekBegin(startPos + Offset);
             var track = new AnimTrack(reader, version);
@@ -191,7 +317,9 @@ namespace FirstPlugin
             public List<LinearKeyFrame> KeyFramesLinear = new List<LinearKeyFrame>();
             public List<HermiteKeyFrame> KeyFramesHermite = new List<HermiteKeyFrame>();
 
-            public uint InterpolationType;
+            public uint TrackInterpolationType;
+
+            public AnimTrack() { }
 
             public AnimTrack(FileReader reader, GameVersion version)
             {
@@ -199,19 +327,22 @@ namespace FirstPlugin
 
                 if (version >= GameVersion.MM3D)
                 {
-                    InterpolationType = reader.ReadByte();
+                    reader.ReadByte(); //unk
+                    TrackInterpolationType = reader.ReadByte();
                     numKeyFrames = reader.ReadUInt16();
                 }
                 else
                 {
-                    InterpolationType = reader.ReadUInt32();
+                    TrackInterpolationType = reader.ReadUInt32();
                     numKeyFrames = reader.ReadUInt32();
                     uint unknown = reader.ReadUInt32();
                     uint endFrame = reader.ReadUInt32();
                 }
 
-                if (InterpolationType == (uint)AnimationTrackType.LINEAR)
+                if (TrackInterpolationType == (uint)AnimationTrackType.LINEAR)
                 {
+                    InterpolationType = STInterpoaltionType.Linear;
+
                     if (version >= GameVersion.MM3D)
                     {
                         float scale = reader.ReadSingle();
@@ -219,33 +350,48 @@ namespace FirstPlugin
 
                         for (uint i = 0; i < numKeyFrames; i++)
                         {
-                            LinearKeyFrame keyFrame = new LinearKeyFrame();
-                            keyFrame.Time = i;
-                            keyFrame.Value = reader.ReadUInt16() * scale - bias;
-                            KeyFramesLinear.Add(keyFrame);
+                            float Value = reader.ReadUInt16() * scale - bias;
+
+                            KeyFrames.Add(new STKeyFrame()
+                            {
+                                Frame = i,
+                                Value = Value
+                            });
                         }
                     }
                     else
                     {
                         for (int i = 0; i < numKeyFrames; i++)
                         {
-                            LinearKeyFrame keyFrame = new LinearKeyFrame();
-                            keyFrame.Time = reader.ReadUInt32();
-                            keyFrame.Value = reader.ReadSingle();
-                            KeyFramesLinear.Add(keyFrame);
+                            uint Time = reader.ReadUInt32();
+                            float Value = reader.ReadSingle();
+
+                            KeyFrames.Add(new STKeyFrame()
+                            {
+                                Frame = Time,
+                                Value = Value
+                            });
                         }
                     }
                 }
-                else if (InterpolationType == (uint)AnimationTrackType.HERMITE)
+                else if (TrackInterpolationType == (uint)AnimationTrackType.HERMITE)
                 {
+                    InterpolationType = STInterpoaltionType.Hermite;
+
                     for (int i = 0; i < numKeyFrames; i++)
                     {
-                        HermiteKeyFrame keyFrame = new HermiteKeyFrame();
-                        keyFrame.Time = reader.ReadUInt32();
-                        keyFrame.Value = reader.ReadSingle();
-                        keyFrame.TangentIn = reader.ReadSingle();
-                        keyFrame.TangentOut = reader.ReadSingle();
-                        KeyFramesHermite.Add(keyFrame);
+                        uint Time = reader.ReadUInt32();
+                        float Value = reader.ReadSingle();
+                        float TangentIn = reader.ReadSingle();
+                        float TangentOut = reader.ReadSingle();
+
+                        KeyFrames.Add(new STHermiteKeyFrame()
+                        {
+                            Frame = Time,
+                            TangentIn = TangentIn,
+                            TangentOut = TangentOut,
+                            Value = Value,
+                        });
                     }
                 }
                 else

@@ -10,6 +10,7 @@ using Toolbox.Library.IO;
 using Toolbox.Library.Rendering;
 using Grezzo.CmbEnums;
 using OpenTK.Graphics.OpenGL;
+using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
@@ -38,20 +39,6 @@ namespace FirstPlugin
             {
                 List<Type> types = new List<Type>();
                 return types.ToArray();
-            }
-        }
-
-        Viewport viewport
-        {
-            get
-            {
-                var editor = LibraryGUI.GetObjectEditor();
-                return editor.GetViewport();
-            }
-            set
-            {
-                var editor = LibraryGUI.GetObjectEditor();
-                editor.LoadViewport(value);
             }
         }
 
@@ -102,25 +89,23 @@ namespace FirstPlugin
         bool DrawablesLoaded = false;
         public override void OnClick(TreeView treeView)
         {
-            if (Runtime.UseOpenGL)
+            ViewportEditor editor = (ViewportEditor)LibraryGUI.GetActiveContent(typeof(ViewportEditor));
+            bool HasModels = DrawableContainer.Drawables.Count > 0;
+            if (editor == null)
             {
-                if (viewport == null)
-                {
-                    viewport = new Viewport(ObjectEditor.GetDrawableContainers());
-                    viewport.Dock = DockStyle.Fill;
-                }
-
-                if (!DrawablesLoaded)
-                {
-                    ObjectEditor.AddContainer(DrawableContainer);
-                    DrawablesLoaded = true;
-                }
-
-                viewport.ReloadDrawables(DrawableContainer);
-                LibraryGUI.LoadEditor(viewport);
-
-                viewport.Text = Text;
+                editor = new ViewportEditor(HasModels);
+                editor.Dock = DockStyle.Fill;
+                LibraryGUI.LoadEditor(editor);
             }
+
+            if (!DrawablesLoaded)
+            {
+                ObjectEditor.AddContainer(DrawableContainer);
+                DrawablesLoaded = true;
+            }
+
+            if (Runtime.UseOpenGL)
+                editor.LoadViewport(DrawableContainer);
         }
 
         public CMB_Renderer Renderer;
@@ -129,7 +114,7 @@ namespace FirstPlugin
 
         public Header header;
         STTextureFolder texFolder;
-        STSkeleton Skeleton;
+        public STSkeleton Skeleton;
 
         public void Load(System.IO.Stream stream)
         {
@@ -137,11 +122,14 @@ namespace FirstPlugin
 
             Renderer = new CMB_Renderer();
             DrawableContainer.Drawables.Add(Renderer);
+        
+
             Skeleton = new STSkeleton();
             //These models/skeletons come out massive so scale them with an overridden scale
             Skeleton.PreviewScale = Renderer.PreviewScale;
             Skeleton.BonePointScale = 40;
-           
+            Renderer.Skeleton = Skeleton;
+
             DrawableContainer.Drawables.Add(Skeleton);
 
             header = new Header();
@@ -285,6 +273,13 @@ namespace FirstPlugin
                         var shape = header.SectionData.SkeletalMeshChunk.ShapeChunk.SeperateShapes[(int)mesh.SepdIndex];
                         genericMesh.Shape = shape;
 
+                        List<ushort> SkinnedBoneTable = new List<ushort>();
+                        foreach (var prim in shape.Primatives)
+                        {
+                            if (prim.BoneIndexTable != null)
+                                SkinnedBoneTable.AddRange(prim.BoneIndexTable);
+                        }
+
                         //Now load the vertex and face data
                         if (shape.Position.VertexData != null)
                         {
@@ -345,8 +340,8 @@ namespace FirstPlugin
                                     }
                                 }
 
-                                    bool HasSkinning = shape.Primatives[0].SkinningMode != SkinningMode.SINGLE_BONE
-                                    && shape.BoneIndices.Type == CmbDataType.UByte; //Noclip checks the type for ubyte so do the same
+                                bool HasSkinning = shape.Primatives[0].SkinningMode != SkinningMode.SINGLE_BONE
+                                && shape.BoneIndices.Type == CmbDataType.UByte; //Noclip checks the type for ubyte so do the same
 
                                 bool HasWeights = shape.Primatives[0].SkinningMode == SkinningMode.SMOOTH_SKINNING;
 
@@ -355,8 +350,12 @@ namespace FirstPlugin
                                     var BoneIndices = shape.BoneIndices.VertexData[v];
                                     for (int j = 0; j < shape.boneDimension; j++)
                                     {
-                                    //    ushort index = shape.Primatives[0].BoneIndexTable[(uint)BoneIndices[j]];
-                                        vert.boneIds.Add((int)BoneIndices[j]);
+                                        if (BoneIndices[j] < SkinnedBoneTable.Count)
+                                            vert.boneIds.Add((int)SkinnedBoneTable[(int)BoneIndices[j]]);
+                                     //   Console.WriteLine("boneIds " + BoneIndices[j]);
+
+                                        //    ushort index = shape.Primatives[0].BoneIndexTable[(uint)BoneIndices[j]];
+                                     //   vert.boneIds.Add((int)BoneIndices[j]);
                                     }
                                 }
                                 if (shape.BoneWeights.VertexData != null && HasWeights && shape.BoneWeights.VertexData.Length > v)
@@ -364,6 +363,7 @@ namespace FirstPlugin
                                     var BoneWeights = shape.BoneWeights.VertexData[v];
                                     for (int j = 0; j < shape.boneDimension; j++)
                                     {
+                                        Console.WriteLine("weight " + BoneWeights[j]);
                                         vert.boneWeights.Add(BoneWeights[j]);
                                     }
                                 }
@@ -693,8 +693,6 @@ namespace FirstPlugin
 
                 int StrideSize = CalculateStrideSize(VertexAttribute.Type, elementCount);
                 int VertexCount = (int)Slice.Size / StrideSize;
-
-                Console.WriteLine($"{VertexAttribute.GetType()} {VertexAttribute.Type} {elementCount} {StrideSize} {VertexCount}");
 
                 VertexAttribute.VertexData = new Syroot.Maths.Vector4F[VertexCount];
                 for (int v = 0; v < VertexCount; v++)
