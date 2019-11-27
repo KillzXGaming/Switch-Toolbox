@@ -60,7 +60,7 @@ namespace FirstPlugin
                 var bone = Model.Bones(b).Value;
                 Skeleton.bones.Add(new GFLXBone(this, bone));
 
-                if (bone.Type == BoneType.HasSkinning && bone.SkinCheck == null)
+                if (bone.SkinCheck == null)
                     SkinningIndices.Add(b);
             }
 
