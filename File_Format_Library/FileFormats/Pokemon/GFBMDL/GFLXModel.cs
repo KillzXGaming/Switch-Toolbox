@@ -83,10 +83,13 @@ namespace FirstPlugin
                 {
                     genericMesh.BoneIndex = boneIndex;
                     transform = Skeleton.bones[boneIndex].Transform;
+
+                    genericMesh.Text = Skeleton.bones[boneIndex].Text;
                 }
 
-                if (group.MeshID < Skeleton.bones.Count && group.MeshID > 0)
-                    genericMesh.Text = Skeleton.bones[(int)group.MeshID].Text;
+             //   if (group.MeshID < Skeleton.bones.Count && group.MeshID > 0)
+             //       genericMesh.Text = Skeleton.bones[(int)group.MeshID].Text;
+
                 Renderer.Meshes.Add(genericMesh);
                 GenericMeshes.Add(genericMesh);
 
