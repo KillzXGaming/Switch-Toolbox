@@ -83,6 +83,9 @@
     <Reference Include="EditorCoreCommon">
       <HintPath>..\Toolbox\Lib\EditorCoreCommon.dll</HintPath>
     </Reference>
+    <Reference Include="FlatBuffers">
+      <HintPath>..\Toolbox\Lib\FlatBuffers.dll</HintPath>
+    </Reference>
     <Reference Include="Gl_EditorFramework">
       <HintPath>..\Toolbox\Gl_EditorFramework.dll</HintPath>
       <Private>False</Private>
@@ -355,7 +358,16 @@
     <Compile Include="FileFormats\NLG\PunchOutWii\PO_VertexAttribute.cs" />
     <Compile Include="FileFormats\Pikmin1\MOD.cs" />
     <Compile Include="FileFormats\Pikmin1\TXE.cs" />
+    <Compile Include="FileFormats\Pokemon\GFBANIM\FlatBuffers\gfbanim.cs" />
     <Compile Include="FileFormats\Pokemon\GFBANIM\GFBANM.cs" />
+    <Compile Include="FileFormats\Pokemon\GFBANMCFG\GFBANMCFG.cs" />
+    <Compile Include="FileFormats\Pokemon\GFBANMCFG\FlatBuffers\gfbanmcfg.cs" />
+    <Compile Include="FileFormats\Pokemon\GFBMDL\FlatBuffers\gfbmdl.cs" />
+    <Compile Include="FileFormats\Pokemon\GFBMDL\GFBMDL.cs" />
+    <Compile Include="FileFormats\Pokemon\GFBMDL\GFLXModel.cs" />
+    <Compile Include="FileFormats\Pokemon\GFBMDL\GFLXMeshBufferHelper.cs" />
+    <Compile Include="FileFormats\Pokemon\GFBPMCATALOG\FlatBuffers\gfbpmcatalog.cs" />
+    <Compile Include="FileFormats\Pokemon\PokemonTable.cs" />
     <Compile Include="FileFormats\Rom\3DS\NCSDStructs.cs" />
     <Compile Include="FileFormats\Rom\3DS\NCSD.cs" />
     <Compile Include="FileFormats\Rom\3DS\RomFS.cs" />
@@ -380,6 +392,24 @@
     <Compile Include="GL\LM3_Renderer.cs" />
     <Compile Include="GL\PunchOutWii_Renderer.cs" />
     <Compile Include="GL\Strikers_Renderer.cs" />
+    <Compile Include="GUI\GFBMDL\GFLXMaterialEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\GFBMDL\GFLXMaterialEditor.Designer.cs">
+      <DependentUpon>GFLXMaterialEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\GFBMDL\GFLXMaterialParamEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\GFBMDL\GFLXMaterialParamEditor.Designer.cs">
+      <DependentUpon>GFLXMaterialParamEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Pokemon\PokemonLoaderSwSh.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Pokemon\PokemonLoaderSwSh.Designer.cs">
+      <DependentUpon>PokemonLoaderSwSh.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\ViewportEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -640,8 +670,7 @@
     <Compile Include="GUI\BMD\BMDModelImportSettings.Designer.cs">
       <DependentUpon>BMDModelImportSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="FileFormats\Pokemon\GFBMDL\GFBMDL.cs" />
-    <Compile Include="FileFormats\Pokemon\GFBMDL\GFBMDL_Wrappers.cs" />
+    <Compile Include="FileFormats\Pokemon\GFBMDL\GFLXMesh.cs" />
     <Compile Include="FileFormats\GMX\GMX.cs" />
     <Compile Include="FileFormats\Hashes\SAHT.cs" />
     <Compile Include="FileFormats\MKAGPDX\MKAGPDX_Model.cs" />
@@ -1412,6 +1441,15 @@
     <EmbeddedResource Include="GUI\AttributeEditor.resx">
       <DependentUpon>AttributeEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\GFBMDL\GFLXMaterialEditor.resx">
+      <DependentUpon>GFLXMaterialEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\GFBMDL\GFLXMaterialParamEditor.resx">
+      <DependentUpon>GFLXMaterialParamEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Pokemon\PokemonLoaderSwSh.resx">
+      <DependentUpon>PokemonLoaderSwSh.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\ViewportEditor.resx">
       <DependentUpon>ViewportEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -1902,7 +1940,6 @@
   <ItemGroup>
     <Folder Include="FileFormats\EvemtFlow\" />
     <Folder Include="FileFormats\NLG\Common\" />
-    <Folder Include="FileFormats\Pokemon\GFBANIM\FlatBuffers\" />
     <Folder Include="GUI\Byaml\MuuntEditor\Renderables\" />
   </ItemGroup>
   <ItemGroup>
