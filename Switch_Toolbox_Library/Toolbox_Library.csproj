@@ -345,11 +345,20 @@
       <DependentUpon>GenericTextureImporterList.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Editors\TextureImport\GenericTextureImporterSettings.cs" />
+    <Compile Include="Forms\Editors\UV\UVEditorAdvanced.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Editors\UV\UVEditorAdvanced.Designer.cs">
+      <DependentUpon>UVEditorAdvanced.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Editors\UV\UVEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Editors\UV\UVEditorForm.Designer.cs">
       <DependentUpon>UVEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Editors\UV\UVViewport.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\SizeTables\FileTableViewTPHD.cs">
       <SubType>UserControl</SubType>
@@ -394,6 +403,7 @@
     <Compile Include="IO\Extensions\StreamExport.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
     <Compile Include="IO\FileStreamStorage.cs" />
+    <Compile Include="IO\FlatBuffer\FlatBufferParse.cs" />
     <Compile Include="IO\HSVPixel.cs" />
     <Compile Include="IO\IOComoon.cs" />
     <Compile Include="IO\Colors\STColor.cs" />
@@ -1129,6 +1139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\UV\UVEditor2.resx">
       <DependentUpon>UVEditor2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\UV\UVEditorAdvanced.resx">
+      <DependentUpon>UVEditorAdvanced.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\UV\UVEditorForm.resx">
       <DependentUpon>UVEditorForm.cs</DependentUpon>

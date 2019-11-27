@@ -13,9 +13,9 @@ using OpenTK.Graphics.OpenGL;
 
 namespace FirstPlugin
 {
-    public class GFBMDL_Render : AbstractGlDrawable
+    public class GFBMDL_Render : AbstractGlDrawable, IMeshContainer
     {
-        public List<GFBMesh> Meshes = new List<GFBMesh>();
+        public List<STGenericObject> Meshes { get; set; } = new List<STGenericObject>();
 
         public Matrix4 ModelTransform = Matrix4.Identity;
 
@@ -43,17 +43,17 @@ namespace FirstPlugin
             if (!Runtime.OpenTKInitialized)
                 return;
 
-            GFBMesh.DisplayVertex[] Vertices;
+            GFLXMesh.DisplayVertex[] Vertices;
             int[] Faces;
 
             int poffset = 0;
             int voffset = 0;
-            List<GFBMesh.DisplayVertex> Vs = new List<GFBMesh.DisplayVertex>();
+            List<GFLXMesh.DisplayVertex> Vs = new List<GFLXMesh.DisplayVertex>();
             List<int> Ds = new List<int>();
 
-            foreach (GFBMesh shape in Meshes)
+            foreach (GFLXMesh shape in Meshes)
             {
-                List<GFBMesh.DisplayVertex> pv = shape.CreateDisplayVertices();
+                List<GFLXMesh.DisplayVertex> pv = shape.CreateDisplayVertices();
                 Vs.AddRange(pv);
 
                 int GroupOffset = 0;
@@ -82,7 +82,7 @@ namespace FirstPlugin
 
             // Bind only once!
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
-            GL.BufferData<GFBMesh.DisplayVertex>(BufferTarget.ArrayBuffer, (IntPtr)(Vertices.Length * GFBMesh.DisplayVertex.Size), Vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData<GFLXMesh.DisplayVertex>(BufferTarget.ArrayBuffer, (IntPtr)(Vertices.Length * GFLXMesh.DisplayVertex.Size), Vertices, BufferUsageHint.StaticDraw);
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
             GL.BufferData<int>(BufferTarget.ElementArrayBuffer, (IntPtr)(Faces.Length * sizeof(int)), Faces, BufferUsageHint.StaticDraw);
@@ -165,10 +165,10 @@ namespace FirstPlugin
             GL.Enable(EnableCap.CullFace);
         }
 
-        private static void SetBoneUniforms(GLControl control, ShaderProgram shader, GFBMesh mesh)
+        private static void SetBoneUniforms(GLControl control, ShaderProgram shader, GFLXMesh mesh)
         {
             int i = 0;
-            foreach (var bone in mesh.ParentModel.header.Skeleton.bones)
+            foreach (var bone in mesh.ParentModel.Skeleton.bones)
             {
                 Matrix4 transform = bone.invert * bone.Transform;
 
@@ -190,7 +190,7 @@ namespace FirstPlugin
               }*/
         }
 
-        private void SetUniformBlocks(GFBMaterial mat, ShaderProgram shader, GFBMesh m, int id)
+        private void SetUniformBlocks(GFLXMaterialData mat, ShaderProgram shader, GFLXMesh m, int id)
         {
             /*     shader.UniformBlockBinding("TexCoord1", 3);
                  GL.GetActiveUniformBlock(shader.program,
@@ -209,7 +209,7 @@ namespace FirstPlugin
                   GL.BINDBUFFER*/
         }
 
-        private static void SetUniforms(GFBMaterial mat, ShaderProgram shader, GFBMesh m, int id)
+        private static void SetUniforms(GFLXMaterialData mat, ShaderProgram shader, GFLXMesh m, int id)
         {
             // Texture Maps
           /*  shader.SetBoolToInt("useColorTex", false);
@@ -242,31 +242,26 @@ namespace FirstPlugin
             SetUniformData(mat, shader, "ColorUVTranslateV");
         }
 
-        private static void SetUniformData(GFBMaterial mat, ShaderProgram shader, string propertyName)
+        private static void SetUniformData(GFLXMaterialData mat, ShaderProgram shader, string propertyName)
         {
-            if (mat.MaterialData.SwitchParams.ContainsKey(propertyName))
+            if (mat.SwitchParams.ContainsKey(propertyName))
             {
-                bool Value = (bool)mat.MaterialData.SwitchParams[propertyName].Value;
+                bool Value = (bool)mat.SwitchParams[propertyName].Value;
                 shader.SetBoolToInt(propertyName, Value);
             }
-            if (mat.MaterialData.ValueParams.ContainsKey(propertyName))
+            if (mat.ValueParams.ContainsKey(propertyName))
             {
-                var Value = mat.MaterialData.ValueParams[propertyName].Value;
-                if (Value is float)
-                    shader.SetFloat(propertyName, (float)Value);
-                if (Value is uint)
-                    shader.SetFloat(propertyName, (uint)Value);
-                if (Value is int)
-                    shader.SetFloat(propertyName, (int)Value);
+                var Value = mat.ValueParams[propertyName].Value;
+                shader.SetFloat(propertyName, (float)Value);
             }
-            if (mat.MaterialData.ColorParams.ContainsKey(propertyName))
+            if (mat.ColorParams.ContainsKey(propertyName))
             {
-                Vector3 Value = (Vector3)mat.MaterialData.ColorParams[propertyName].Value;
+                Vector3 Value = (Vector3)mat.ColorParams[propertyName].Value;
                 shader.SetVector3(propertyName, Value);
             }
         }
 
-        private static void SetTextureUniforms(GFBMaterial mat, GFBMesh m, ShaderProgram shader)
+        private static void SetTextureUniforms(GFLXMaterialData mat, GFLXMesh m, ShaderProgram shader)
         {
             SetDefaultTextureAttributes(mat, shader);
 
@@ -302,6 +297,11 @@ namespace FirstPlugin
                     shader.SetBoolToInt("HasDiffuse", true);
                     TextureUniform(shader, mat, true, "DiffuseMap", matex);
                 }
+                if (matex.Type == STGenericMatTexture.TextureType.Normal)
+                {
+                    shader.SetBoolToInt("HasNormalMap", true);
+                    TextureUniform(shader, mat, true, "NormalMap", matex);
+                }
             }
         }
 
@@ -322,7 +322,7 @@ namespace FirstPlugin
             shader.SetInt("brdfLUT", 27);
         }
 
-        private static void TextureUniform(ShaderProgram shader, GFBMaterial mat, bool hasTex, string name, STGenericMatTexture mattex)
+        private static void TextureUniform(ShaderProgram shader, GFLXMaterialData mat, bool hasTex, string name, STGenericMatTexture mattex)
         {
             if (mattex.textureState == STGenericMatTexture.TextureState.Binded)
                 return;
@@ -383,7 +383,7 @@ namespace FirstPlugin
             GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, 0.0f);
         }
 
-        private static void SetDefaultTextureAttributes(GFBMaterial mat, ShaderProgram shader)
+        private static void SetDefaultTextureAttributes(GFLXMaterialData mat, ShaderProgram shader)
         {
         }
 
@@ -397,7 +397,7 @@ namespace FirstPlugin
         private void DrawModels(ShaderProgram shader, GL_ControlModern control)
         {
             shader.EnableVertexAttributes();
-            foreach (GFBMesh shp in Meshes)
+            foreach (GFLXMesh shp in Meshes)
             {
                 if (shp.Checked)
                     DrawModel(control, shp, shader);
@@ -405,30 +405,30 @@ namespace FirstPlugin
             shader.DisableVertexAttributes();
         }
 
-        private void SetVertexAttributes(GFBMesh m, ShaderProgram shader)
+        private void SetVertexAttributes(GFLXMesh m, ShaderProgram shader)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
-            GL.VertexAttribPointer(shader.GetAttribute("vPosition"), 3, VertexAttribPointerType.Float, false, GFBMesh.DisplayVertex.Size, 0); //+12
-            GL.VertexAttribPointer(shader.GetAttribute("vNormal"), 3, VertexAttribPointerType.Float, false, GFBMesh.DisplayVertex.Size, 12); //+12
-            GL.VertexAttribPointer(shader.GetAttribute("vTangent"), 3, VertexAttribPointerType.Float, false, GFBMesh.DisplayVertex.Size, 24); //+12
-            GL.VertexAttribPointer(shader.GetAttribute("vUV0"), 2, VertexAttribPointerType.Float, false, GFBMesh.DisplayVertex.Size, 36); //+8
-            GL.VertexAttribPointer(shader.GetAttribute("vColor"), 4, VertexAttribPointerType.Float, false, GFBMesh.DisplayVertex.Size, 44); //+16
-            GL.VertexAttribIPointer(shader.GetAttribute("vBone"), 4, VertexAttribIntegerType.Int, GFBMesh.DisplayVertex.Size, new IntPtr(60)); //+16
-            GL.VertexAttribPointer(shader.GetAttribute("vWeight"), 4, VertexAttribPointerType.Float, false, GFBMesh.DisplayVertex.Size, 76);//+16
-            GL.VertexAttribPointer(shader.GetAttribute("vUV1"), 2, VertexAttribPointerType.Float, false, GFBMesh.DisplayVertex.Size, 92);//+8
-            GL.VertexAttribPointer(shader.GetAttribute("vUV2"), 2, VertexAttribPointerType.Float, false, GFBMesh.DisplayVertex.Size, 100);//+8
-            GL.VertexAttribPointer(shader.GetAttribute("vBinormal"), 3, VertexAttribPointerType.Float, false, GFBMesh.DisplayVertex.Size, 108); //+12
+            GL.VertexAttribPointer(shader.GetAttribute("vPosition"), 3, VertexAttribPointerType.Float, false, GFLXMesh.DisplayVertex.Size, 0); //+12
+            GL.VertexAttribPointer(shader.GetAttribute("vNormal"), 3, VertexAttribPointerType.Float, false, GFLXMesh.DisplayVertex.Size, 12); //+12
+            GL.VertexAttribPointer(shader.GetAttribute("vTangent"), 3, VertexAttribPointerType.Float, false, GFLXMesh.DisplayVertex.Size, 24); //+12
+            GL.VertexAttribPointer(shader.GetAttribute("vUV0"), 2, VertexAttribPointerType.Float, false, GFLXMesh.DisplayVertex.Size, 36); //+8
+            GL.VertexAttribPointer(shader.GetAttribute("vColor"), 4, VertexAttribPointerType.Float, false, GFLXMesh.DisplayVertex.Size, 44); //+16
+            GL.VertexAttribIPointer(shader.GetAttribute("vBone"), 4, VertexAttribIntegerType.Int, GFLXMesh.DisplayVertex.Size, new IntPtr(60)); //+16
+            GL.VertexAttribPointer(shader.GetAttribute("vWeight"), 4, VertexAttribPointerType.Float, false, GFLXMesh.DisplayVertex.Size, 76);//+16
+            GL.VertexAttribPointer(shader.GetAttribute("vUV1"), 2, VertexAttribPointerType.Float, false, GFLXMesh.DisplayVertex.Size, 92);//+8
+            GL.VertexAttribPointer(shader.GetAttribute("vUV2"), 2, VertexAttribPointerType.Float, false, GFLXMesh.DisplayVertex.Size, 100);//+8
+            GL.VertexAttribPointer(shader.GetAttribute("vBinormal"), 3, VertexAttribPointerType.Float, false, GFLXMesh.DisplayVertex.Size, 108); //+12
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
         }
 
-        private void DrawModel(GLControl control, GFBMesh m, ShaderProgram shader)
+        private void DrawModel(GLControl control, GFLXMesh m, ShaderProgram shader)
         {
             foreach (var group in m.PolygonGroups)
             {
                 if (group.faces.Count <= 3)
                     return;
 
-                var Material = m.ParentModel.header.Materials[group.MaterialIndex];
+                var Material = m.ParentModel.GenericMaterials[group.MaterialIndex];
 
                 SetUniforms(m.GetMaterial(group), shader, m, m.DisplayId);
                 SetUniformBlocks(m.GetMaterial(group), shader, m, m.DisplayId);

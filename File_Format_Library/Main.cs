@@ -104,6 +104,51 @@ namespace FirstPlugin
 
                 toolsExt[2] = new STToolStripItem("Breath Of The Wild");
                 toolsExt[2].DropDownItems.Add(new STToolStripItem("Actor Editor", ActorEditor));
+
+                toolsExt[1] = new STToolStripItem("Pokemon Sword/Shield");
+                toolsExt[1].DropDownItems.Add(new STToolStripItem("Pokemon Loader", PokemonLoaderSwSh));
+            }
+
+            private void PokemonLoaderSwSh(object sender, EventArgs args)
+            {
+                if (!System.IO.Directory.Exists(Runtime.PkSwShGamePath))
+                {
+                    var result = MessageBox.Show("Please set your Pokemon Sword/Shield game path!");
+                    if (result == DialogResult.OK)
+                    {
+                        FolderSelectDialog ofd = new FolderSelectDialog();
+                        if (ofd.ShowDialog() == DialogResult.OK)
+                        {
+                            Runtime.PkSwShGamePath = ofd.SelectedPath;
+                            Config.Save();
+                        }
+                    }
+                }
+
+                PokemonLoaderSwShForm form = new PokemonLoaderSwShForm();
+                if (form.ShowDialog() == DialogResult.OK) {
+                    if (form.SelectedPokemon != string.Empty)
+                    {
+                        string path = $"{Runtime.PkSwShGamePath}/bin/archive/pokemon/{form.SelectedPokemon}";
+                        if (System.IO.File.Exists(path)) {
+                            var file = STFileLoader.OpenFileFormat(path);
+
+                            var currentForm = Runtime.MainForm.ActiveMdiChild;
+                            if (currentForm != null && currentForm is ObjectEditor &&
+                                Runtime.AddFilesToActiveObjectEditor)
+                            {
+                                ObjectEditor editor = currentForm as ObjectEditor;
+                                editor.AddIArchiveFile(file);
+                            }
+                            else
+                            {
+                                ObjectEditor editor = new ObjectEditor();
+                                editor.AddIArchiveFile(file);
+                                LibraryGUI.CreateMdiWindow(editor);
+                            }
+                        }
+                    }
+                }
             }
 
             private void ActorEditor(object sender, EventArgs args)
@@ -347,7 +392,8 @@ namespace FirstPlugin
             Formats.Add(typeof(IGA_PAK));
             Formats.Add(typeof(MKAGPDX_Model));
             Formats.Add(typeof(GFBMDL));
-        //    Formats.Add(typeof(GFBANM));
+         //   Formats.Add(typeof(GFBANM));
+            Formats.Add(typeof(GFBANMCFG));
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(SDF));
             Formats.Add(typeof(IStorage));

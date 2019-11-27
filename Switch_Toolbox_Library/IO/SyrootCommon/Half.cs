@@ -63,7 +63,7 @@ namespace Syroot.IOExtension
         /// representation.
         /// </summary>
         /// <param name="raw">The raw representation of the internally stored bits.</param>
-        internal Half(ushort raw)
+        public Half(ushort raw)
         {
             Raw = raw;
         }

@@ -6,31 +6,49 @@ using System.Threading.Tasks;
 using Toolbox.Library;
 using Toolbox.Library.Rendering;
 using OpenTK;
+using Toolbox.Library.Forms;
+using System.Windows.Forms;
 
 namespace FirstPlugin
 {
-    public class GFBMaterial : STGenericMaterial
-    {
-        public GFBMDL.MaterialShaderData MaterialData { get; set; }
-
-        public GFBMDL ParentModel { get; set; }
-
-        public GFBMaterial(GFBMDL model, GFBMDL.MaterialShaderData data) {
-            ParentModel = model;
-            MaterialData = data;
-        }
-    }
-
-    public class GFBMesh : STGenericObject
+    public class GFLXMesh : STGenericObject, IContextMenuNode
     {
         public int[] display;
         public int DisplayId;
 
-        public GFBMDL ParentModel { get; set; }
+        public GFLXModel ParentModel { get; set; }
 
-        public GFBMaterial GetMaterial(STGenericPolygonGroup polygroup)
+        public FlatBuffers.Gfbmdl.Mesh MeshData { get; set; }
+        public FlatBuffers.Gfbmdl.Group GroupData { get; set; }
+
+        public GFLXMaterialData GetMaterial(STGenericPolygonGroup polygroup)
         {
-           return ParentModel.header.GenericMaterials[polygroup.MaterialIndex];
+           return ParentModel.GenericMaterials[polygroup.MaterialIndex];
+        }
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            var uvMenu = new ToolStripMenuItem("UVs");
+            Items.Add(uvMenu);
+            uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip Vertical", null, FlipVerticalAction, Keys.Control | Keys.V));
+            uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip Horizontal", null, FlipHorizontalAction, Keys.Control | Keys.H));
+            return Items.ToArray();
+        }
+
+        private void FlipVerticalAction(object sender, EventArgs args) {
+            this.FlipUvsVertical();
+            UpdateMesh();
+        }
+
+        private void FlipHorizontalAction(object sender, EventArgs args) {
+            this.FlipUvsHorizontal();
+            UpdateMesh();
+        }
+
+        private void UpdateMesh() {
+            ParentModel.UpdateVertexData(true);
+            GFLXMeshBufferHelper.ReloadVertexData(this);
         }
 
         public struct DisplayVertex
@@ -50,9 +68,16 @@ namespace FirstPlugin
             public static int Size = 4 * (3 + 3 + 3 + 2 + 4 + 4 + 4 + 2 + 2 + 3);
         }
 
-        public GFBMesh(GFBMDL model) {
+        public GFLXMesh(GFLXModel model, 
+            FlatBuffers.Gfbmdl.Group group, 
+            FlatBuffers.Gfbmdl.Mesh mesh)
+        {
             ParentModel = model;
+            GroupData = group;
+            MeshData = mesh;
         }
+
+        public int MeshIndex { get; set; }
 
         public List<DisplayVertex> CreateDisplayVertices()
         {

@@ -575,6 +575,10 @@ namespace Toolbox
                             botwGamePathTB.Text = "";
                             Runtime.BotwGamePath = "";
                             break;
+                        case "pathPokemonSwShTB":
+                            pathPokemonSwShTB.Text = "";
+                            Runtime.PkSwShGamePath = "";
+                            break;
                     }
                 }
             }
@@ -660,6 +664,32 @@ namespace Toolbox
 
         private void chkAlwaysCompressOnSave_CheckedChanged(object sender, EventArgs e) {
            Runtime.AlwaysCompressOnSave = chkAlwaysCompressOnSave.Checked;
+        }
+
+        private void pathPokemonSwShTB_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pathPokemonSwShTB_Click(object sender, EventArgs e) {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                if (!IsValidPokemonSwShDirectory(sfd.SelectedPath))
+                    throw new Exception("Invalid path choosen. You need Bin/appli/icon_pokemon atleast for pokemon icons");
+
+                pathPokemonSwShTB.Text = sfd.SelectedPath;
+                Runtime.PkSwShGamePath = pathPokemonSwShTB.Text;
+            }
+        }
+
+        private bool IsValidPokemonSwShDirectory(string GamePath)
+        {
+            //Search for pokemon icons
+            string RstbPath = System.IO.Path.Combine($"{GamePath}",
+                 "Bin", "appli", "icon_pokemon", "poke_icon_0000_00s_n.bntx");
+
+            return System.IO.File.Exists(RstbPath);
         }
     }
 }

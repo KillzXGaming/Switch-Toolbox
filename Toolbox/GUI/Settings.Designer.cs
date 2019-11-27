@@ -119,6 +119,8 @@
             this.chkTpFileTable = new Toolbox.Library.Forms.STCheckBox();
             this.stLabel17 = new Toolbox.Library.Forms.STLabel();
             this.chkBotwFileTable = new Toolbox.Library.Forms.STCheckBox();
+            this.stLabel18 = new Toolbox.Library.Forms.STLabel();
+            this.pathPokemonSwShTB = new Toolbox.Library.Forms.STTextBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -1027,6 +1029,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.stLabel18);
+            this.tabPage3.Controls.Add(this.pathPokemonSwShTB);
             this.tabPage3.Controls.Add(this.stLabel13);
             this.tabPage3.Controls.Add(this.botwGamePathTB);
             this.tabPage3.Controls.Add(this.stLabel14);
@@ -1058,7 +1062,7 @@
             // 
             this.botwGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.botwGamePathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.botwGamePathTB.Location = new System.Drawing.Point(112, 120);
+            this.botwGamePathTB.Location = new System.Drawing.Point(128, 120);
             this.botwGamePathTB.Name = "botwGamePathTB";
             this.botwGamePathTB.Size = new System.Drawing.Size(258, 20);
             this.botwGamePathTB.TabIndex = 8;
@@ -1091,7 +1095,7 @@
             // 
             this.tpGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tpGamePathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.tpGamePathTB.Location = new System.Drawing.Point(112, 94);
+            this.tpGamePathTB.Location = new System.Drawing.Point(128, 94);
             this.tpGamePathTB.Name = "tpGamePathTB";
             this.tpGamePathTB.Size = new System.Drawing.Size(258, 20);
             this.tpGamePathTB.TabIndex = 6;
@@ -1110,7 +1114,7 @@
             // 
             this.SMOPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SMOPathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.SMOPathTB.Location = new System.Drawing.Point(112, 68);
+            this.SMOPathTB.Location = new System.Drawing.Point(128, 68);
             this.SMOPathTB.Name = "SMOPathTB";
             this.SMOPathTB.Size = new System.Drawing.Size(258, 20);
             this.SMOPathTB.TabIndex = 4;
@@ -1129,7 +1133,7 @@
             // 
             this.mk8DPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.mk8DPathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.mk8DPathTB.Location = new System.Drawing.Point(112, 42);
+            this.mk8DPathTB.Location = new System.Drawing.Point(128, 42);
             this.mk8DPathTB.Name = "mk8DPathTB";
             this.mk8DPathTB.Size = new System.Drawing.Size(258, 20);
             this.mk8DPathTB.TabIndex = 2;
@@ -1149,7 +1153,7 @@
             this.mk8PathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.mk8PathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.mk8PathTB.Cursor = System.Windows.Forms.Cursors.Default;
-            this.mk8PathTB.Location = new System.Drawing.Point(112, 16);
+            this.mk8PathTB.Location = new System.Drawing.Point(128, 16);
             this.mk8PathTB.Name = "mk8PathTB";
             this.mk8PathTB.Size = new System.Drawing.Size(258, 20);
             this.mk8PathTB.TabIndex = 0;
@@ -1279,6 +1283,26 @@
             this.chkBotwFileTable.Text = "BOTW Resource File Table (RSTB)";
             this.chkBotwFileTable.UseVisualStyleBackColor = true;
             this.chkBotwFileTable.CheckedChanged += new System.EventHandler(this.chkBotwFileTable_CheckedChanged);
+            // 
+            // stLabel18
+            // 
+            this.stLabel18.AutoSize = true;
+            this.stLabel18.Location = new System.Drawing.Point(6, 148);
+            this.stLabel18.Name = "stLabel18";
+            this.stLabel18.Size = new System.Drawing.Size(119, 13);
+            this.stLabel18.TabIndex = 11;
+            this.stLabel18.Text = "Pokemon Sword/Shield";
+            // 
+            // pathPokemonSwShTB
+            // 
+            this.pathPokemonSwShTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pathPokemonSwShTB.ContextMenuStrip = this.stContextMenuStrip1;
+            this.pathPokemonSwShTB.Location = new System.Drawing.Point(128, 146);
+            this.pathPokemonSwShTB.Name = "pathPokemonSwShTB";
+            this.pathPokemonSwShTB.Size = new System.Drawing.Size(258, 20);
+            this.pathPokemonSwShTB.TabIndex = 10;
+            this.pathPokemonSwShTB.Click += new System.EventHandler(this.pathPokemonSwShTB_Click);
+            this.pathPokemonSwShTB.TextChanged += new System.EventHandler(this.pathPokemonSwShTB_TextChanged);
             // 
             // Settings
             // 
@@ -1416,5 +1440,7 @@
         private Toolbox.Library.Forms.STCheckBox chkBotwFileTable;
         private Toolbox.Library.Forms.STCheckBox chkFrameCamera;
         private Toolbox.Library.Forms.STCheckBox chkAlwaysCompressOnSave;
+        private Library.Forms.STLabel stLabel18;
+        private Library.Forms.STTextBox pathPokemonSwShTB;
     }
 }

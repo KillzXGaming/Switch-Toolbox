@@ -63,6 +63,17 @@ uniform int GreenChannel;
 uniform int BlueChannel;
 uniform int AlphaChannel;
 
+//Parameters
+uniform float ColorUVScaleU;
+uniform float ColorUVScaleV;
+uniform float ColorUVTranslateU;
+uniform float ColorUVTranslateV;
+
+uniform float NormalMapUVScaleU;
+uniform float NormalMapUVScaleV;
+uniform float NormalMapUVTranslateU;
+uniform float NormalMapUVTranslateV;
+
 uniform samplerCube irradianceMap;
 uniform samplerCube specularIbl;
 uniform sampler2D brdfLUT;
@@ -127,7 +138,11 @@ void main()
 	vec3 albedo = vec3(1);
     if (HasDiffuse == 1)
 	{
-		vec4 DiffuseTex =  pow(texture(DiffuseMap, f_texcoord0).rgba, vec4(gamma));
+	    vec2 colorUV = f_texcoord0;
+		colorUV.x *= ColorUVScaleU + ColorUVTranslateU;
+	    colorUV.y *= ColorUVScaleV + ColorUVTranslateV;
+
+		vec4 DiffuseTex =  pow(texture(DiffuseMap, colorUV).rgba, vec4(gamma));
 
 		//Comp Selectors
 		albedo.r = GetComponent(RedChannel, DiffuseTex);
@@ -248,8 +263,12 @@ void main()
 	}
 	else if (renderType == 3) //DiffuseColor
 	{
+	    vec2 colorUV = displayTexCoord;
+		colorUV.x *= ColorUVScaleU + ColorUVTranslateU;
+	    colorUV.y *= ColorUVScaleV + ColorUVTranslateV;
+
 		//Comp Selectors
-		vec4 diffuseMapColor = vec4(texture(DiffuseMap, displayTexCoord).rgb, 1);
+		vec4 diffuseMapColor = vec4(texture(DiffuseMap, colorUV).rgb, 1);
 		diffuseMapColor.r = GetComponent(RedChannel, diffuseMapColor);
 		diffuseMapColor.g = GetComponent(GreenChannel, diffuseMapColor);
 		diffuseMapColor.b = GetComponent(BlueChannel, diffuseMapColor);
@@ -257,7 +276,12 @@ void main()
 	    fragColor = vec4(diffuseMapColor.rgb, 1);
 	}
 	else if (renderType == 4) //Display Normal
+	{
+	   if (HasNormalMap == 1)
          fragColor.rgb = texture(NormalMap, displayTexCoord).rgb;
+	   else
+		 fragColor.rgb  = vec3(0);
+    }
     else if (renderType == 5) // vertexColor
         fragColor = vertexColor;
 	else if (renderType == 6) //Display Ambient Occlusion

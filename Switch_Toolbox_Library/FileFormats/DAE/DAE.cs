@@ -20,14 +20,11 @@ namespace Toolbox.Library
         public class ExportSettings
         {
             public bool SuppressConfirmDialog = false;
-
             public bool OptmizeZeroWeights = true;
-
             public bool UseOldExporter = false;
-
             public bool UseVertexColors = true;
-
             public bool FlipTexCoordsVertical = true;
+            public bool OnlyExportRiggedBones = false;
 
             public Version FileVersion = new Version();
 
@@ -191,8 +188,39 @@ namespace Toolbox.Library
                     writer.WriteLibraryImages();
 
                 if (skeleton != null) {
+                    //Search for bones with rigging first
+                    List<string> riggedBones = new List<string>();
+                    if (settings.OnlyExportRiggedBones)
+                    {
+                        for (int i = 0; i < Meshes.Count; i++)
+                        {
+                            for (int v = 0; v < Meshes[i].vertices.Count; v++)
+                            {
+                                var vertex = Meshes[i].vertices[v];
+                                for (int j = 0; j < vertex.boneIds.Count; j++)
+                                {
+                                    int id = -1;
+                                    if (NodeArray != null && NodeArray.Count > vertex.boneIds[j]) {
+                                        id = NodeArray[vertex.boneIds[j]];
+                                    }
+                                    else
+                                        id = vertex.boneIds[j];
+
+                                    if (id < skeleton.bones.Count && id != -1)
+                                        riggedBones.Add(skeleton.bones[id].Text);
+                                }
+                            }
+                        }
+                    }
+
                     foreach (var bone in skeleton.bones)
                     {
+                        if (settings.OnlyExportRiggedBones && !riggedBones.Contains(bone.Text))
+                        {
+                            Console.WriteLine("Skipping " + bone.Text);
+                            continue;
+                        }
+
                         //Set the inverse matrix
                         var inverse = skeleton.GetBoneTransform(bone).Inverted();
                         var transform = bone.GetTransform();
@@ -321,6 +349,8 @@ namespace Toolbox.Library
                         {
                             if (b > mesh.VertexSkinCount - 1)
                                 continue;
+
+
 
                             if (vertex.boneWeights.Count > b)
                             {

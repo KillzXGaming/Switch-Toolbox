@@ -31,6 +31,7 @@ namespace Toolbox.Library
             public static bool BotwTable = false;
         }
 
+        public static string PkSwShGamePath = "";
         public static string Mk8GamePath = "";
         public static string Mk8dGamePath = "";
         public static string SmoGamePath = "";

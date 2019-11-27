@@ -134,7 +134,6 @@ void main()
     ivec4 index = ivec4(vBone);
 
     vec4 objPos = vec4(vPosition.xyz, 1.0);
-
 	if (vBone.x != -1.0)
 		objPos = skin(objPos.xyz, index);
 

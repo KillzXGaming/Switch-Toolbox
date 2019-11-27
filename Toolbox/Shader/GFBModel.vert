@@ -45,11 +45,6 @@ uniform int NoSkinning;
 uniform int RigidSkinning;
 uniform int SingleBoneIndex;
 
-//Parameters
-uniform float ColorUVScaleU;
-uniform float ColorUVScaleV;
-uniform float ColorUVTranslateU;
-uniform float ColorUVTranslateV;
 
 
 vec4 skin(vec3 pos, ivec4 index)
@@ -129,9 +124,6 @@ void main()
 	f_texcoord1 = vUV1;
 	f_texcoord2 = vUV2;
 	tangent = vTangent;
-
-	f_texcoord0.x *= ColorUVScaleU + ColorUVTranslateU;
-	f_texcoord0.y *= ColorUVScaleV + ColorUVTranslateV;
 
     gl_Position = position;
 

@@ -173,6 +173,9 @@ namespace Toolbox.Library
                     case "TpGamePath":
                         Runtime.TpGamePath = node.InnerText;
                         break;
+                    case "PkSwShGamePath":
+                        Runtime.PkSwShGamePath = node.InnerText;
+                        break;
                     case "BotwGamePath":
                         Runtime.BotwGamePath = node.InnerText;
                         break;
@@ -291,6 +294,7 @@ namespace Toolbox.Library
                     case "TransformPaneChidlren":
                         bool.TryParse(node.InnerText, out Runtime.LayoutEditor.TransformChidlren);
                         break;
+                        
                 }
             }
 
@@ -470,6 +474,7 @@ namespace Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "BotwGamePath", Runtime.BotwGamePath.ToString()));
             PathsNode.AppendChild(createNode(doc, "SpecularCubeMapPath", Runtime.PBR.SpecularCubeMapPath.ToString()));
             PathsNode.AppendChild(createNode(doc, "DiffuseCubeMapPath", Runtime.PBR.DiffuseCubeMapPath.ToString()));
+            PathsNode.AppendChild(createNode(doc, "PkSwShGamePath", Runtime.PkSwShGamePath.ToString()));
         }
 
         private static void AppendSwitchKeyPathSettings(XmlDocument doc, XmlNode parentNode)
