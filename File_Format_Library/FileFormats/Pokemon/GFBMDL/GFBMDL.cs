@@ -113,11 +113,14 @@ namespace FirstPlugin
                 }
             }
 
+
+            List<string> loadedTextures = new List<string>();
             for (int i = 0; i < Model.Textures.Count; i++)
             {
                 foreach (var bntx in PluginRuntime.bntxContainers)
                 {
-                    if (bntx.Textures.ContainsKey(Model.Textures[i]))
+                    if (bntx.Textures.ContainsKey(Model.Textures[i]) &&
+                        !loadedTextures.Contains(Model.Textures[i]))
                     {
                         TreeNode tex = new TreeNode(Model.Textures[i]);
                         tex.ImageKey = "texture";
@@ -125,9 +128,12 @@ namespace FirstPlugin
 
                         tex.Tag = bntx.Textures[Model.Textures[i]];
                         Textures.Nodes.Add(tex);
+                        loadedTextures.Add(Model.Textures[i]);
                     }
                 }
             }
+
+            loadedTextures.Clear();
 
             Nodes.Add(MaterialFolderWrapper);
             Nodes.Add(VisualGroupWrapper);
