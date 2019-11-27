@@ -218,7 +218,12 @@ namespace FirstPlugin
         public void Unload()
         {
             foreach (var file in files)
+            {
+                if (file.FileFormat != null)
+                    file.FileFormat.Unload();
+
                 file.FileData = null;
+            }
 
             files.Clear();
 

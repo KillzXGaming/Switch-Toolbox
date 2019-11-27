@@ -179,7 +179,10 @@ namespace FirstPlugin
             var textures = new List<STGenericTexture>();
             foreach (var bntx in PluginRuntime.bntxContainers)
                 foreach (var tex in bntx.Textures.Values)
-                    textures.Add(tex);
+                {
+                    if (Model.Textures.Contains(tex.Text))
+                        textures.Add(tex);
+                }
 
             DAE.Export(fileName, settings, model, textures, Model.Skeleton);
         }
