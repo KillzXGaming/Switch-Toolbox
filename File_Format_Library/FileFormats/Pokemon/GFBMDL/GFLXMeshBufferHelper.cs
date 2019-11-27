@@ -173,7 +173,7 @@ namespace FirstPlugin
                                 if (attribute.FormatID == BufferFormat.Byte)
                                     colors1 = ParseBuffer(reader, attribute.FormatID, attribute.TypeID);
 
-                                vertex.col = new OpenTK.Vector4(colors1.X, colors1.Y, colors1.Z, colors1.W);
+                                vertex.col = colors1 / 255f;
                                 break;
                             case VertexType.Color2:
                                 OpenTK.Vector4 colors2 = new OpenTK.Vector4(1, 1, 1, 1);
