@@ -23,6 +23,9 @@ namespace Toolbox.Library.IO
             var FileCompression = format.IFileInfo.FileCompression;
             if (FileCompression == null) return data;
 
+            if (FileCompression is Yaz0)
+                ((Yaz0)FileCompression).Alignment = Alignment;
+
             return FileCompression.Compress(new MemoryStream(data)).ToArray();
         }
 
