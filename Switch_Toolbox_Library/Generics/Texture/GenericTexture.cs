@@ -976,7 +976,23 @@ namespace Toolbox.Library
             dds.header.mipmapCount = (uint)MipCount;
             dds.header.pitchOrLinearSize = (uint)surfaces[0].mipmaps[0].Length;
 
-            if (surfaces.Count > 0) //Use DX10 format for array surfaces as it can do custom amounts
+            //Check for components to be different. Then set our channel flags
+            if (RedChannel != STChannelType.Red || GreenChannel != STChannelType.Green || 
+               BlueChannel != STChannelType.Blue || AlphaChannel != STChannelType.Alpha)
+            {
+                //R G B A 1 0
+                uint[] components = new uint[6] {
+                    0x000000ff, 0x0000ff00,
+                    0x00ff0000, 0xff000000, 0x00008000, 0};
+
+            /*    dds.header.ddspf.RGBBitCount = 4;
+                dds.header.ddspf.RBitMask = components[(int)RedChannel];
+                dds.header.ddspf.GBitMask = components[(int)GreenChannel];
+                dds.header.ddspf.BBitMask = components[(int)BlueChannel];
+                dds.header.ddspf.ABitMask = components[(int)AlphaChannel];*/
+            }
+
+            if (surfaces.Count > 1) //Use DX10 format for array surfaces as it can do custom amounts
                 dds.SetFlags((DDS.DXGI_FORMAT)Format, true);
             else
                 dds.SetFlags((DDS.DXGI_FORMAT)Format);
