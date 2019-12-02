@@ -96,10 +96,12 @@
             this.stLabel2 = new Toolbox.Library.Forms.STLabel();
             this.preferredTexFormatCB = new System.Windows.Forms.ComboBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.stLabel13 = new Toolbox.Library.Forms.STLabel();
-            this.botwGamePathTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel18 = new Toolbox.Library.Forms.STLabel();
+            this.pathPokemonSwShTB = new Toolbox.Library.Forms.STTextBox();
             this.stContextMenuStrip1 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.clearSettingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stLabel13 = new Toolbox.Library.Forms.STLabel();
+            this.botwGamePathTB = new Toolbox.Library.Forms.STTextBox();
             this.stLabel14 = new Toolbox.Library.Forms.STLabel();
             this.tpGamePathTB = new Toolbox.Library.Forms.STTextBox();
             this.stLabel12 = new Toolbox.Library.Forms.STLabel();
@@ -119,8 +121,7 @@
             this.chkTpFileTable = new Toolbox.Library.Forms.STCheckBox();
             this.stLabel17 = new Toolbox.Library.Forms.STLabel();
             this.chkBotwFileTable = new Toolbox.Library.Forms.STCheckBox();
-            this.stLabel18 = new Toolbox.Library.Forms.STLabel();
-            this.pathPokemonSwShTB = new Toolbox.Library.Forms.STTextBox();
+            this.btnReset = new Toolbox.Library.Forms.STButton();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -148,11 +149,13 @@
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.btnReset);
             this.contentContainer.Controls.Add(this.stTabControl1);
             this.contentContainer.Controls.Add(this.btnSave);
             this.contentContainer.Size = new System.Drawing.Size(549, 490);
             this.contentContainer.Controls.SetChildIndex(this.btnSave, 0);
             this.contentContainer.Controls.SetChildIndex(this.stTabControl1, 0);
+            this.contentContainer.Controls.SetChildIndex(this.btnReset, 0);
             // 
             // label1
             // 
@@ -1049,6 +1052,40 @@
             this.tabPage3.Text = "Paths";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // stLabel18
+            // 
+            this.stLabel18.AutoSize = true;
+            this.stLabel18.Location = new System.Drawing.Point(6, 148);
+            this.stLabel18.Name = "stLabel18";
+            this.stLabel18.Size = new System.Drawing.Size(119, 13);
+            this.stLabel18.TabIndex = 11;
+            this.stLabel18.Text = "Pokemon Sword/Shield";
+            // 
+            // pathPokemonSwShTB
+            // 
+            this.pathPokemonSwShTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pathPokemonSwShTB.ContextMenuStrip = this.stContextMenuStrip1;
+            this.pathPokemonSwShTB.Location = new System.Drawing.Point(128, 146);
+            this.pathPokemonSwShTB.Name = "pathPokemonSwShTB";
+            this.pathPokemonSwShTB.Size = new System.Drawing.Size(258, 20);
+            this.pathPokemonSwShTB.TabIndex = 10;
+            this.pathPokemonSwShTB.Click += new System.EventHandler(this.pathPokemonSwShTB_Click);
+            this.pathPokemonSwShTB.TextChanged += new System.EventHandler(this.pathPokemonSwShTB_TextChanged);
+            // 
+            // stContextMenuStrip1
+            // 
+            this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearSettingToolStripMenuItem});
+            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(142, 26);
+            // 
+            // clearSettingToolStripMenuItem
+            // 
+            this.clearSettingToolStripMenuItem.Name = "clearSettingToolStripMenuItem";
+            this.clearSettingToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.clearSettingToolStripMenuItem.Text = "Clear Setting";
+            this.clearSettingToolStripMenuItem.Click += new System.EventHandler(this.clearSettingToolStripMenuItem_Click);
+            // 
             // stLabel13
             // 
             this.stLabel13.AutoSize = true;
@@ -1067,20 +1104,6 @@
             this.botwGamePathTB.Size = new System.Drawing.Size(258, 20);
             this.botwGamePathTB.TabIndex = 8;
             this.botwGamePathTB.Click += new System.EventHandler(this.botwGamePathTB_Click);
-            // 
-            // stContextMenuStrip1
-            // 
-            this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearSettingToolStripMenuItem});
-            this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(142, 26);
-            // 
-            // clearSettingToolStripMenuItem
-            // 
-            this.clearSettingToolStripMenuItem.Name = "clearSettingToolStripMenuItem";
-            this.clearSettingToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-            this.clearSettingToolStripMenuItem.Text = "Clear Setting";
-            this.clearSettingToolStripMenuItem.Click += new System.EventHandler(this.clearSettingToolStripMenuItem_Click);
             // 
             // stLabel14
             // 
@@ -1284,25 +1307,16 @@
             this.chkBotwFileTable.UseVisualStyleBackColor = true;
             this.chkBotwFileTable.CheckedChanged += new System.EventHandler(this.chkBotwFileTable_CheckedChanged);
             // 
-            // stLabel18
+            // btnReset
             // 
-            this.stLabel18.AutoSize = true;
-            this.stLabel18.Location = new System.Drawing.Point(6, 148);
-            this.stLabel18.Name = "stLabel18";
-            this.stLabel18.Size = new System.Drawing.Size(119, 13);
-            this.stLabel18.TabIndex = 11;
-            this.stLabel18.Text = "Pokemon Sword/Shield";
-            // 
-            // pathPokemonSwShTB
-            // 
-            this.pathPokemonSwShTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pathPokemonSwShTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.pathPokemonSwShTB.Location = new System.Drawing.Point(128, 146);
-            this.pathPokemonSwShTB.Name = "pathPokemonSwShTB";
-            this.pathPokemonSwShTB.Size = new System.Drawing.Size(258, 20);
-            this.pathPokemonSwShTB.TabIndex = 10;
-            this.pathPokemonSwShTB.Click += new System.EventHandler(this.pathPokemonSwShTB_Click);
-            this.pathPokemonSwShTB.TextChanged += new System.EventHandler(this.pathPokemonSwShTB_TextChanged);
+            this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReset.Location = new System.Drawing.Point(3, 449);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(104, 27);
+            this.btnReset.TabIndex = 20;
+            this.btnReset.Text = "Reset Settings";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // Settings
             // 
@@ -1442,5 +1456,6 @@
         private Toolbox.Library.Forms.STCheckBox chkAlwaysCompressOnSave;
         private Library.Forms.STLabel stLabel18;
         private Library.Forms.STTextBox pathPokemonSwShTB;
+        private Library.Forms.STButton btnReset;
     }
 }

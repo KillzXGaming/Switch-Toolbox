@@ -225,7 +225,7 @@ namespace Toolbox
         {
             if (formThemeCB.SelectedIndex >= 0 && !IsStartup)
             {
-               var result = MessageBox.Show("Changing themes will require to restart the program. Do you want to restart now?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+               var result = MessageBox.Show("Changing themes will require to restart the program. Do you want to restart now?", "Toolbox Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                FormThemes.ActivePreset =  (FormThemes.Preset)formThemeCB.SelectedItem;
 
@@ -690,6 +690,20 @@ namespace Toolbox
                  "Bin", "appli", "icon_pokemon", "poke_icon_0000_00s_n.bntx");
 
             return System.IO.File.Exists(RstbPath);
+        }
+
+        private void btnReset_Click(object sender, EventArgs e) {
+            var result = MessageBox.Show("Resetting the settings will require to restart the program. Do you want to restart now?", "Toolbox Settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                if (System.IO.File.Exists($"{Runtime.ExecutableDir}\\config.xml"))
+                    System.IO.File.Delete($"{Runtime.ExecutableDir}\\config.xml");
+
+                this.Close();
+
+                Application.Restart();
+                Environment.Exit(0);
+            }
         }
     }
 }
