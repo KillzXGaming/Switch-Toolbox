@@ -100,7 +100,7 @@ namespace FirstPlugin
         public bool CanAddFiles { get; set; } = false;
         public bool CanRenameFiles { get; set; } = false;
         public bool CanReplaceFiles { get; set; } = true;
-        public bool CanDeleteFiles { get; set; } = false;
+        public bool CanDeleteFiles { get; set; } = true;
 
         public void Load(System.IO.Stream stream)
         {
@@ -165,9 +165,6 @@ namespace FirstPlugin
         public uint Version;
         public List<Folder> folders = new List<Folder>();
 
-        public List<UInt64> hashes = new List<UInt64>();
-        public List<HashIndex> hashIndices = new List<HashIndex>();
-
         public int version;
         public int FolderCount;
 
@@ -186,6 +183,8 @@ namespace FirstPlugin
             ulong FolderArrayOffset = reader.ReadUInt64();
 
             reader.Seek((long)FolderArrayOffset, SeekOrigin.Begin);
+
+            List<UInt64> hashes = new List<UInt64>();
 
             List<HashIndex> FolderFiles = new List<HashIndex>();
             for (int i = 0; i < FolderCount; i++)
@@ -210,15 +209,19 @@ namespace FirstPlugin
             {
                 FileEntry fileEntry = new FileEntry(this);
                 fileEntry.Read(reader);
-                fileEntry.FolderHash = FolderFiles[i];
                 fileEntry.FileName = GetString(hashes[i], fileEntry.FileData);
+                fileEntry.FilePathHash = hashes[i];
+
+                for (int f = 0; f < FolderFiles.Count; f++)
+                    if (FolderFiles[f].Index == f)
+                        fileEntry.FolderHash = FolderFiles[f];
 
                 string baseName = Path.GetFileName(fileEntry.FileName.Replace("\r", ""));
 
                 switch (Utils.GetExtension(fileEntry.FileName))
                 {
                     case ".gfbanm":
-                   //     fileEntry.OpenFileFormatOnLoad = true;
+                     //   fileEntry.OpenFileFormatOnLoad = true;
                         fileEntry.FileName = $"Animations/{baseName}";
                         break;
                     case ".gfbanmcfg":
@@ -345,7 +348,8 @@ namespace FirstPlugin
 
             //Now write all sections
             writer.WriteUint64Offset(HashArrayOffset);
-            writer.Write(hashes);
+            foreach (var fileTbl in files)
+                writer.Write(fileTbl.FilePathHash);
 
             //Save folder sections
             List<long> FolderSectionPositions = new List<long>();
@@ -378,7 +382,7 @@ namespace FirstPlugin
         public class Folder
         {
             public ulong hash;
-            public uint FileCount;
+            public uint FileCount => (uint)hashes.Count;
             public uint unknown;
 
             public List<HashIndex> hashes = new List<HashIndex>();
@@ -386,10 +390,10 @@ namespace FirstPlugin
             public void Read(FileReader reader)
             {
                 hash = reader.ReadUInt64();
-                FileCount = reader.ReadUInt32();
+                uint fileCount = reader.ReadUInt32();
                 unknown = reader.ReadUInt32();
 
-                for (int f = 0; f < FileCount; f++)
+                for (int f = 0; f < fileCount; f++)
                 {
                     HashIndex hash = new HashIndex();
                     hash.Read(reader, this);
@@ -432,6 +436,8 @@ namespace FirstPlugin
         public class FileEntry : ArchiveFileInfo
         {
             public HashIndex FolderHash;
+
+            public UInt64 FilePathHash;
 
             public uint unkown;
             public uint CompressionType;
@@ -533,8 +539,43 @@ namespace FirstPlugin
 
         public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
         {
+            int index = 0;
+            foreach (FileEntry file in files)
+            {
+                //Remove folder references first
+                //Regenerate the indices after
+                foreach (var folder in folders)
+                {
+                    for (int f = 0; f < folder.FileCount; f++)
+                        if (folder.hashes[f].Index == index)
+                            folder.hashes.RemoveAt(f);
+                }
+
+
+                index++;
+            }
+
+            files.Remove((FileEntry)archiveFileInfo);
 
             return true;
+        }
+
+        private void RegenerateFileIndices()
+        {
+            foreach (var folder in folders)
+            {
+                int index = 0;
+                foreach (FileEntry file in files)
+                {
+                    for (int f = 0; f < folder.FileCount; f++)
+                    {
+                        if (file.FolderHash == folder.hashes[f])
+                            folder.hashes[f].Index = index;
+                    }
+
+                    index++;
+                }
+            }
         }
     }
 }
