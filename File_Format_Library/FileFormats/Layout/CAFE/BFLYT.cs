@@ -317,6 +317,8 @@ namespace LayoutBXLYT.Cafe
             [Browsable(false)]
             public CNT1 Container { get; set; }
 
+            public USD1 UserData { get; set; }
+            
             public override short AddMaterial(BxlytMaterial material, ushort index)
             {
                 if (material == null) return -1;
@@ -520,6 +522,7 @@ namespace LayoutBXLYT.Cafe
                 FontList = new FNL1();
                 RootPane = new PAN1();
                 RootGroup = new GRP1();
+                UserData = new USD1();
                 FileInfo = bflyt;
 
                 reader.SetByteOrder(true);
@@ -673,8 +676,19 @@ namespace LayoutBXLYT.Cafe
                             Container = new CNT1(reader, this);
                             break;*/
                         case "usd1":
+                            long dataPos = reader.Position;
+
                             if (currentPane != null)
                                 ((PAN1)currentPane).UserData = new USD1(reader, this);
+                            else
+                            {
+
+                                //User data before panes
+                                UserData = new USD1(reader, this);
+                            }
+                            reader.SeekBegin(dataPos);
+                            UserData.Data = reader.ReadBytes((int)SectionSize - 8);
+
                             break;
                         //If the section is not supported store the raw bytes
                         default:
@@ -717,6 +731,12 @@ namespace LayoutBXLYT.Cafe
                 int sectionCount = 1;
 
                 WriteSection(writer, "lyt1", LayoutInfo,() => LayoutInfo.Write(writer, this));
+
+                if (UserData != null && UserData.Entries?.Count > 0)
+                {
+                    WriteSection(writer, "usd1", UserData, () => UserData.Write(writer, this));
+                    sectionCount++;
+                }
 
                 if (TextureList != null && TextureList.Textures.Count > 0)
                 {
@@ -1028,6 +1048,9 @@ namespace LayoutBXLYT.Cafe
 
             private byte _flags;
 
+            private float Unknown1 { get; set; }
+            private float Unknown2 { get; set; }
+
             private void UpdateTextRender()
             {
                 if (RenderableFont == null) return;
@@ -1070,6 +1093,10 @@ namespace LayoutBXLYT.Cafe
                 ShadowForeColor = STColor8.FromBytes(reader.ReadBytes(4));
                 ShadowBackColor = STColor8.FromBytes(reader.ReadBytes(4));
                 ShadowItalic = reader.ReadSingle();
+                if (header.VersionMajor >= 8) {
+                    Unknown1 = reader.ReadSingle();
+                    Unknown2 = reader.ReadSingle();
+                }
 
                 if (MaterialIndex != ushort.MaxValue && header.MaterialList.Materials.Count > 0)
                     Material = header.MaterialList.Materials[MaterialIndex];
@@ -1129,10 +1156,10 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(ShadowForeColor.ToBytes());
                 writer.Write(ShadowBackColor.ToBytes());
                 writer.Write(ShadowItalic);
-                if (header.VersionMajor == 8)
+                if (header.VersionMajor >= 8)
                 {
-                    writer.Write(0);
-                    writer.Write(0);
+                    writer.Write(Unknown1);
+                    writer.Write(Unknown2);
                 }
 
                 if (Text != null)
