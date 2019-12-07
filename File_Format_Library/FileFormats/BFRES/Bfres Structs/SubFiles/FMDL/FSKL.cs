@@ -699,20 +699,18 @@ namespace Bfres.Structs
             if (dialog.ShowDialog() == DialogResult.OK) { RenameBone(dialog.textBox1.Text); }
         }
 
-        //Method to readjust the dictionaries for the skeleton
+        //Method to re-adjust the dictionaries for the skeleton
         public void RenameBone(string Name)
         {
             if (((FSKL)skeletonParent).node.SkeletonU != null)
             {
                 var Skeleton = ((FSKL)skeletonParent).node.SkeletonU;
-                Skeleton.Bones.Remove(BoneU);
 
                 if (Skeleton.Bones.ContainsKey(Name))
                 {
                     MessageBox.Show("A bone with the same name exits! Make sure to use a unique name!", 
                         "Bone Rename", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    Skeleton.Bones.Add(BoneName, BoneU);
                     return;
                 }
 
@@ -720,9 +718,8 @@ namespace Bfres.Structs
                 Text = Name;
                 BoneName = Name;
 
-                //Adjust dictionaries
-                Skeleton.Bones.Remove(BoneU);
-                Skeleton.Bones.Add(Name, BoneU);
+                //Adjust dictionary
+                UpdateBoneKeys(Skeleton.Bones.Values.ToList());
             }
             else
             {
@@ -730,6 +727,15 @@ namespace Bfres.Structs
                 Text = Name;
                 BoneName = Name;
             }
+        }
+
+        private void UpdateBoneKeys(List<ResU.Bone> bones)
+        {
+            var Skeleton = ((FSKL)skeletonParent).node.SkeletonU;
+
+            Skeleton.Bones.Clear();
+            for (int i = 0; i < bones.Count; i++)
+                Skeleton.Bones.Add(bones[i].Name, bones[i]);
         }
 
         public void CloneBaseInstance(STBone genericBone)
