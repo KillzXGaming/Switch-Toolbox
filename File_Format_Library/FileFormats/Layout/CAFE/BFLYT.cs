@@ -694,6 +694,7 @@ namespace LayoutBXLYT.Cafe
                         default:
                             section.Data = reader.ReadBytes((int)SectionSize - 8);
                             UnknownSections.Add(section);
+                            Console.WriteLine("Unknown section!"  + Signature);
                             break;
                     }
 
@@ -1989,8 +1990,16 @@ namespace LayoutBXLYT.Cafe
                         case UserDataType.Float:
                             writer.Write(Entries[i].GetFloats());
                             break;
+                        case UserDataType.StructData:
+                            foreach (UserDataStruct structure in Entries[i].GetStructs())
+                                structure.Write(writer, header);
+                            break;
                     }
+                }
 
+                //Write strings after
+                for (int i = 0; i < Entries.Count; i++)
+                {
                     writer.WriteUint32Offset(Entries[i]._pos, Entries[i]._pos);
                     writer.WriteString(Entries[i].Name);
                 }
@@ -2034,6 +2043,12 @@ namespace LayoutBXLYT.Cafe
                         case UserDataType.Float:
                             data = reader.ReadSingles((int)dataLength);
                             break;
+                        case UserDataType.StructData:
+                            var structs = new List<UserDataStruct>();
+                            for (int i = 0; i < dataLength; i++)
+                                structs.Add(new UserDataStruct(reader, header));
+                            data = structs;
+                            break;
                     }
                 }
 
@@ -2059,6 +2074,8 @@ namespace LayoutBXLYT.Cafe
                     return ((int[])data).Length;
                 else if (data is float[])
                     return ((float[])data).Length;
+                else if (data is List< UserDataStruct>)
+                    return ((List<UserDataStruct>)data).Count;
                 return 0;
             }
         }
