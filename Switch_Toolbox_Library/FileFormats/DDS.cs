@@ -1084,6 +1084,8 @@ namespace Toolbox.Library
                 case FOURCC_ATI1:
                 case FOURCC_BC4U:
                     return TEX_FORMAT.BC4_UNORM;
+                case FOURCC_BC4S:
+                    return TEX_FORMAT.BC4_SNORM;
                 case FOURCC_ATI2:
                 case FOURCC_BC5U:
                     return TEX_FORMAT.BC5_UNORM;
@@ -1147,17 +1149,25 @@ namespace Toolbox.Library
                     pixelInternalFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                     break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC4_UNORM:
-                case DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
-                    header.ddspf.fourCC = FOURCC_DX10;
+                    header.ddspf.flags = (uint)DDPF.FOURCC;
+                    header.ddspf.fourCC = FOURCC_BC4U;
                     pixelInternalFormat = PixelInternalFormat.CompressedRedRgtc1;
-                    if (DX10header == null)
-                        DX10header = new DX10Header();
-
-                    IsDX10 = true;
-                    DX10header.DXGI_Format = Format;
+                    break;
+                case DXGI_FORMAT.DXGI_FORMAT_BC4_SNORM:
+                    header.ddspf.flags = (uint)DDPF.FOURCC;
+                    header.ddspf.fourCC = FOURCC_BC4S;
+                    pixelInternalFormat = PixelInternalFormat.CompressedSignedRedRgtc1;
                     break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM:
+                    header.ddspf.flags = (uint)DDPF.FOURCC;
+                    header.ddspf.fourCC = FOURCC_BC5U;
+                    pixelInternalFormat = PixelInternalFormat.CompressedRgRgtc2;
+                    break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC5_SNORM:
+                    header.ddspf.flags = (uint)DDPF.FOURCC;
+                    header.ddspf.fourCC = FOURCC_BC5S;
+                    pixelInternalFormat = PixelInternalFormat.CompressedSignedRgRgtc2;
+                    break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16:
                 case DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16:
                 case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM:
