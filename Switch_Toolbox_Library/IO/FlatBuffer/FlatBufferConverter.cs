@@ -200,8 +200,8 @@ namespace Toolbox.Library.IO
         public static byte[] GetSchema(string name)
         {
             var obj = Properties.Resources.ResourceManager.GetObject(name);
-            if (!(obj is byte[] b))
-                throw new FileNotFoundException(nameof(name));
+            if (!(obj is byte[] b)) {
+                throw new FileNotFoundException(nameof(name)); }
             return b;
         }
 
