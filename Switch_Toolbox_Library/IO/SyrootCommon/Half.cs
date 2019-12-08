@@ -191,7 +191,7 @@ namespace Syroot.IOExtension
         /// Gets the internally stored value to represent the instance.
         /// </summary>
         /// <remarks>Signed to get arithmetic rather than logical shifts.</remarks>
-        internal ushort Raw { get; private set; }
+        public ushort Raw { get; private set; }
 
         // ---- OPERATORS ----------------------------------------------------------------------------------------------
 

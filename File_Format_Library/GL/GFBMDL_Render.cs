@@ -15,6 +15,8 @@ namespace FirstPlugin
 {
     public class GFBMDL_Render : AbstractGlDrawable, IMeshContainer
     {
+        public GFBMDL GfbmdlFile;
+
         public List<STGenericObject> Meshes { get; set; } = new List<STGenericObject>();
 
         public Matrix4 ModelTransform = Matrix4.Identity;
@@ -399,7 +401,7 @@ namespace FirstPlugin
             shader.EnableVertexAttributes();
             foreach (GFLXMesh shp in Meshes)
             {
-                if (shp.Checked)
+                if (shp.Checked && shp.AnimationController.IsVisible)
                     DrawModel(control, shp, shader);
             }
             shader.DisableVertexAttributes();

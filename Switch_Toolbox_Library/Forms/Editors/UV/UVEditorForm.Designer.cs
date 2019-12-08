@@ -44,9 +44,9 @@
             // uvEditor1
             // 
             this.uvEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.uvEditor1.Location = new System.Drawing.Point(0, 25);
+            this.uvEditor1.Location = new System.Drawing.Point(0, 0);
             this.uvEditor1.Name = "uvEditor1";
-            this.uvEditor1.Size = new System.Drawing.Size(595, 443);
+            this.uvEditor1.Size = new System.Drawing.Size(595, 468);
             this.uvEditor1.TabIndex = 11;
             // 
             // UVEditorForm

@@ -1,0 +1,196 @@
+namespace Gfbmdl;
+
+enum BoneType : uint {
+   NoSkinning = 0,
+   HasSkinning = 1,
+}
+
+enum VertexType : uint {
+   Position = 0,
+   Normal = 1,
+   Binormal = 2,
+   UV1 = 3,
+   UV2 = 4,
+   UV3 = 5,
+   UV4 = 6,
+   Color1 = 7,
+   Color2 = 8,
+   Color3 = 9,
+   Color4 = 10,
+   BoneID = 11,
+   BoneWeight = 12,
+}
+
+enum BufferFormat : uint {
+	Float = 0,
+	HalfFloat = 1,
+	Byte = 3,
+	Short = 5,
+	BytesAsFloat = 8,
+}
+
+table Model {
+    Version:uint;
+    Bounding:BoundingBox;
+	TextureNames:[string];
+	ShaderNames:[string];
+	Unknown:[UnknownEmpty];
+	MaterialNames:[string];
+	Materials:[Material];
+	Groups:[Group];
+	Meshes:[Mesh];
+	Bones:[Bone];
+	CollisionGroups:[CollisionGroup];
+}
+
+table UnknownEmpty {
+    unk:uint;
+}
+
+table Material {
+    Name:string;
+	ShaderGroup:string;
+	RenderLayer:int;
+	Unknown1:ubyte;
+	Unknown2:ubyte;	
+	Parameter1:int;
+	Parameter2:int;
+	Parameter3:int;
+	Parameter4:int;
+	Parameter5:int;
+	Parameter6:int;
+    TextureMaps:[TextureMap];
+	Switches:[MatSwitch];
+    Values:[MatFloat];
+    Colors:[MatColor];
+	Unknown3:ubyte;
+	Unknown4:ubyte;
+	Unknown5:ubyte;
+	Unknown6:ubyte;
+	Unknown7:ubyte;
+	Common:MaterialCommon;
+}
+
+table MaterialCommon {
+    Switches:[MatSwitch];
+    Values:[MatInt];
+    Colors:[MatColor];
+}
+
+table MatSwitch {
+    Name:string;
+	Value:bool;
+}
+
+table MatColor {
+    Name:string;
+	Color:ColorRGB32;
+}
+
+table MatInt {
+    Name:string;
+	Value:int;
+}
+
+table MatFloat {
+    Name:string;
+	Value:float;
+}
+
+table TextureMap {
+    Sampler:string;
+	Index:int;
+	Params:TextureMapping;
+}
+
+table TextureMapping {
+    Unknown1:uint;
+    Unknown2:uint;
+    Unknown3:uint;
+    Unknown4:uint;
+    Unknown5:uint;
+    Unknown6:uint;
+    Unknown7:uint;
+    Unknown8:uint;
+    lodBias:float;
+}
+
+table Group {
+    BoneIndex:uint;
+    MeshIndex:uint;
+    Bounding:BoundingBox;
+	Layer:uint;
+}
+
+table Mesh {
+    Polygons:[MeshPolygon];
+    Attributes:[MeshAttribute];
+	Data:[ubyte];
+}
+
+table MeshPolygon {
+    MaterialIndex:uint;
+    Faces:[ushort];
+}
+
+table MeshAttribute {
+    VertexType:uint;
+    BufferFormat:uint;
+    ElementCount:uint;
+}
+
+table Bone {
+    Name:string;
+    BoneType:uint;
+    Parent:int;
+    Zero:uint = 0;
+    Visible:bool;
+    Scale:Vector3;
+    Rotation:Vector3;
+    Translation:Vector3;
+    RadiusStart:Vector3;
+    RadiusEnd:Vector3;
+	RigidCheck:BoneRigidData;
+}
+
+struct BoneRigidData {
+   Unknown1:byte;
+}
+
+table CollisionGroup {
+    BoneIndex:uint;
+    Unknown1:uint;
+    BoneChildren:[uint];
+    Bounding:BoundingBox;
+}
+
+
+struct BoundingBox {
+    MinX:float;
+    MinY:float;
+    MinZ:float;
+    MaxX:float;
+    MaxY:float;
+    MaxZ:float;
+}
+
+struct Vector3 {
+    X:float;
+    Y:float;
+    Z:float;
+}
+
+struct ColorRGB32 {
+    R:float;
+    G:float;
+    B:float;
+}
+
+struct Vector4 {
+    X:float;
+    Y:float;
+    Z:float;
+    W:float;
+}
+
+root_type Model;

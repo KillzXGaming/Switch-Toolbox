@@ -1,0 +1,210 @@
+namespace Gfbanim;
+
+union TriggerParams { 
+TriggerParameterInt , TriggerParameterFloat,
+TriggerParameterByte, TriggerParameterString 
+}
+
+union VectorTrack { FixedVectorTrack, DynamicVectorTrack, FramedVectorTrack }
+union RotationTrack { FixedRotationTrack, DynamicRotationTrack, FramedRotationTrack }
+union BooleanTrack { FixedBooleanTrack, DynamicBooleanTrack, FramedBooleanTrack }
+union ValueTrack { FixedValueTrack, DynamicValueTrack, FramedValueTrack }
+
+enum RotationFlags:ushort (bit_flags) { 
+  Orientation = 0,
+  Data1, 
+  Data2 = 3, 
+}
+
+table Animation {
+    AnimConfig:Config;
+	Bones:BoneList;
+	Materials:MaterialList;
+	Groups:GroupList;
+	Triggers:TriggerList;
+}
+
+table TriggerList {
+    Triggers:[Trigger];
+}
+
+table Trigger {
+    Name:string;
+	FrameStart:int;
+	FrameEnd:int;
+	Parameter:TriggerParameter;
+}
+
+
+table TriggerParameter {
+    Name:string;
+    Params:TriggerParams;
+}
+
+
+
+table TriggerParameterInt {
+    Value:int;
+}
+table TriggerParameterFloat {
+    Value:float;
+}
+table TriggerParameterByte {
+    Value:byte;
+}
+table TriggerParameterString {
+    Value:string;
+}
+
+
+table BoneList {
+    Bones:[Bone];
+    Defaults:BoneDefaults;
+}
+
+table MaterialList {
+    Materials:[Material];
+}
+
+table GroupList {
+    Groups:[Group];
+}
+
+
+table Bone {
+    Name:string;
+	Scale:VectorTrack;
+	Rotate:RotationTrack;
+	Translate:VectorTrack;
+	ScaleFrames:FrameRanges;
+	RotationFrames:FrameRanges;
+	TranslationFrames:FrameRanges;
+}
+
+table BoneDefaults {
+    Unknown:uint;
+	Transform:[SRT];
+}
+
+table Material {
+    Name:string;
+	Switches:[MatSwitch];
+	Values:[MatValue];
+	Vectors:[MatVector];
+}
+
+table MatSwitch {
+    Name:string;
+	Value:BooleanTrack;
+	frameRanges:FrameRanges;
+}
+
+table MatValue {
+    Name:string;
+	Value:ValueTrack;
+	frameRanges:FrameRanges;
+}
+
+table MatVector {
+    Name:string;
+	Value:VectorTrack;
+	frameRanges:FrameRanges;
+}
+
+table Group {
+    Name:string;
+	Value:BooleanTrack;
+}
+
+table Config {
+    Unknown:uint;
+    KeyFrames:uint;
+    FramesPerSecond:uint;
+}
+
+table FixedVectorTrack {
+    Value:Vector3;
+}
+table DynamicVectorTrack {
+    Values:[Vector3];
+}
+table FramedVectorTrack {
+    Frames:[ushort];
+    Values:[Vector3];
+}
+
+
+table FixedRotationTrack {
+    Value:Rotation;
+}
+table DynamicRotationTrack {
+    Values:[Rotation];
+}
+table FramedRotationTrack {
+    Frames:[ushort];
+    Values:[Rotation];
+}
+
+table FixedBooleanTrack {
+    Value:byte;
+}
+table DynamicBooleanTrack {
+    Values:[ushort];
+}
+table FramedBooleanTrack {
+    Frames:[ushort];
+    Values:[ushort];
+}
+
+
+table FixedValueTrack {
+    Value:float;
+}
+table DynamicValueTrack {
+    Values:[float];
+}
+table FramedValueTrack {
+    Frames:[ushort];
+    Values:[float];
+}
+
+
+table FrameRanges {
+    StartFrames:[ushort];
+    EndFrames:[ushort];
+}
+
+
+struct Vector3 {
+    X:float;
+    Y:float;
+    Z:float;
+}
+
+struct Vector4 {
+    X:float;
+    Y:float;
+    Z:float;
+    W:float;
+}
+
+struct Rotation {
+    X:ushort;
+    Y:ushort;
+    Z:ushort;
+}
+
+struct SRT {
+    ScaleX:float;
+    ScaleY:float;
+    ScaleZ:float;
+    RotateX:float;
+    RotateY:float;
+    RotateZ:float;
+    RotateW:float;
+    TranslateX:float;
+    TranslateY:float;
+    TranslateZ:float;
+}
+
+root_type Animation;

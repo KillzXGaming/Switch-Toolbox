@@ -27,7 +27,9 @@ namespace Toolbox.Library.IO
             Cursor.Current = Cursors.WaitCursor;
             FileFormat.FilePath = FileName;
 
-            if (FileFormat.IFileInfo.FileIsCompressed || FileFormat.IFileInfo.InArchive || Path.GetExtension(FileName) == ".szs")
+            string compressionLog = "";
+            if (FileFormat.IFileInfo.FileIsCompressed || FileFormat.IFileInfo.InArchive
+                || Path.GetExtension(FileName) == ".szs" || Path.GetExtension(FileName) == ".sbfres")
             {
                 //Todo find more optmial way to handle memory with files in archives
                 //Also make compression require streams
@@ -45,16 +47,19 @@ namespace Toolbox.Library.IO
                     FileName,
                     EnableDialog);
 
-                FileFormat.IFileInfo.CompressedSize = (uint)finalStream.Length;
-                finalStream.ExportToFile(FileName);
+                compressionLog = finalStream.Item2;
+                Stream compressionStream = finalStream.Item1;
 
-                DetailsLog += "\n" + SatisfyFileTables(FileFormat, FileName, finalStream,
+                FileFormat.IFileInfo.CompressedSize = (uint)compressionStream.Length;
+                compressionStream.ExportToFile(FileName);
+
+                DetailsLog += "\n" + SatisfyFileTables(FileFormat, FileName, compressionStream,
                                     FileFormat.IFileInfo.DecompressedSize,
                                     FileFormat.IFileInfo.CompressedSize,
                                     FileFormat.IFileInfo.FileIsCompressed);
 
-                finalStream.Flush();
-                finalStream.Close();
+                compressionStream.Flush();
+                compressionStream.Close();
             }
             else
             {
@@ -85,7 +90,10 @@ namespace Toolbox.Library.IO
                 }
             }
 
-            MessageBox.Show($"File has been saved to {FileName}", "Save Notification");
+            if (compressionLog != string.Empty)
+                MessageBox.Show($"File has been saved to {FileName}. Compressed time: {compressionLog}", "Save Notification");
+            else
+                MessageBox.Show($"File has been saved to {FileName}", "Save Notification");
 
          //   STSaveLogDialog.Show($"File has been saved to {FileName}", "Save Notification", DetailsLog);
             Cursor.Current = Cursors.Default;
@@ -219,7 +227,10 @@ namespace Toolbox.Library.IO
             uint DecompressedSize = (uint)data.Length;
 
             Cursor.Current = Cursors.WaitCursor;
-            Stream FinalData = CompressFileFormat(CompressionFormat, new MemoryStream(data), FileIsCompressed, Alignment, FileName, EnableDialog);
+            var compressedData = CompressFileFormat(CompressionFormat, new MemoryStream(data), FileIsCompressed, Alignment, FileName, EnableDialog);
+            string compressionLog = compressedData.Item2;
+            Stream FinalData = compressedData.Item1;
+
             FinalData.ExportToFile(FileName);
 
             uint CompressedSize = (uint)FinalData.Length;
@@ -268,7 +279,7 @@ namespace Toolbox.Library.IO
             }
         }
 
-        private static Stream CompressFileFormat(ICompressionFormat compressionFormat, Stream data, bool FileIsCompressed, int Alignment,
+        private static Tuple<Stream, string> CompressFileFormat(ICompressionFormat compressionFormat, Stream data, bool FileIsCompressed, int Alignment,
               string FileName, bool EnableDialog = true)
         {
             string extension = Path.GetExtension(FileName);
@@ -280,7 +291,7 @@ namespace Toolbox.Library.IO
             }
 
             if (compressionFormat == null)
-                return data;
+                return Tuple.Create(data, "");
 
             bool CompressFile = false;
             if (EnableDialog && FileIsCompressed)
@@ -303,10 +314,18 @@ namespace Toolbox.Library.IO
                 if (compressionFormat is Yaz0)
                     ((Yaz0)compressionFormat).Alignment = Alignment;
 
-                return compressionFormat.Compress(data);
+                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+
+                var comp = compressionFormat.Compress(data);
+                sw.Stop();
+                TimeSpan ts = sw.Elapsed;
+                string message = string.Format("{0:D2}:{1:D2}:{2:D2}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                Console.WriteLine($"Compression Time : {message}");
+                return Tuple.Create(comp, message);
             }
 
-            return data;
+            return Tuple.Create(data, "");
         }
     }
 

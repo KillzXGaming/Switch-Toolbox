@@ -99,6 +99,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Toolbox\Lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="ObjectListView">
       <HintPath>..\Toolbox\Lib\ObjectListView.dll</HintPath>
       <Private>False</Private>
@@ -345,12 +349,7 @@
       <DependentUpon>GenericTextureImporterList.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Editors\TextureImport\GenericTextureImporterSettings.cs" />
-    <Compile Include="Forms\Editors\UV\UVEditorAdvanced.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Editors\UV\UVEditorAdvanced.Designer.cs">
-      <DependentUpon>UVEditorAdvanced.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Forms\Editors\UV\PickableUVMap.cs" />
     <Compile Include="Forms\Editors\UV\UVEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -403,6 +402,7 @@
     <Compile Include="IO\Extensions\StreamExport.cs" />
     <Compile Include="IO\Extensions\UintExtension.cs" />
     <Compile Include="IO\FileStreamStorage.cs" />
+    <Compile Include="IO\FlatBuffer\FlatBufferConverter.cs" />
     <Compile Include="IO\FlatBuffer\FlatBufferParse.cs" />
     <Compile Include="IO\HSVPixel.cs" />
     <Compile Include="IO\IOComoon.cs" />
@@ -683,12 +683,6 @@
     </Compile>
     <Compile Include="Forms\Animation\TimeLine.Designer.cs">
       <DependentUpon>TimeLine.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Editors\UV\UVEditor2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Editors\UV\UVEditor2.Designer.cs">
-      <DependentUpon>UVEditor2.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Extensions\MDICustom.cs" />
     <Compile Include="Forms\Editors\Object Editor\ObjectEditor.cs">
@@ -1137,14 +1131,11 @@
     <EmbeddedResource Include="Forms\Editors\UV\UVEditor.resx">
       <DependentUpon>UVEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Editors\UV\UVEditor2.resx">
-      <DependentUpon>UVEditor2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Editors\UV\UVEditorAdvanced.resx">
-      <DependentUpon>UVEditorAdvanced.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Editors\UV\UVEditorForm.resx">
       <DependentUpon>UVEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Editors\UV\UVViewport.resx">
+      <DependentUpon>UVViewport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SizeTables\FileTableViewTPHD.resx">
       <DependentUpon>FileTableViewTPHD.cs</DependentUpon>
@@ -1216,6 +1207,8 @@
     <None Include="Resources\FileBank.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\FlatBuffers\gfbanm.fbs" />
+    <None Include="Resources\FlatBuffers\gfbmdl.fbs" />
     <None Include="Resources\Folder.png" />
   </ItemGroup>
   <ItemGroup>
@@ -1518,6 +1511,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\MissingTexture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\flatc.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

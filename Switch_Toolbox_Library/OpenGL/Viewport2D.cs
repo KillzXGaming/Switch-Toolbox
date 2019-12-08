@@ -41,7 +41,7 @@ namespace Toolbox.Library.Forms
         }
 
         private GLControl glControl1;
-        private Color BackgroundColor = Color.FromArgb(40, 40, 40);
+        public Color BackgroundColor = Color.FromArgb(40, 40, 40);
 
         private List<IPickable2DObject> SelectedObjects = new List<IPickable2DObject>();
 
@@ -64,6 +64,9 @@ namespace Toolbox.Library.Forms
 
 
         public void UpdateViewport() {
+            if (!Runtime.OpenTKInitialized)
+                return;
+
             glControl1.Invalidate();
         }
 
@@ -157,6 +160,8 @@ namespace Toolbox.Library.Forms
 
             if (showSelectionBox)
             {
+                GL.PushAttrib(AttribMask.DepthBufferBit);
+
                 GL.Disable(EnableCap.DepthTest);
                 GL.Begin(PrimitiveType.LineLoop);
                 GL.Color4(Color.Red);
@@ -166,6 +171,8 @@ namespace Toolbox.Library.Forms
                 GL.Vertex2(SelectionBox.LeftPoint, SelectionBox.TopPoint);
                 GL.End();
                 GL.Enable(EnableCap.DepthTest);
+
+                GL.PopAttrib();
             }
 
             if (UseOrtho)
@@ -202,7 +209,7 @@ namespace Toolbox.Library.Forms
             showSelectionBox = true;
             SelectionBox = new STRectangle(left, right, top, bottom);
 
-            SetupScene();
+            UpdateViewport();
         }
 
         public virtual void RenderSceme()
@@ -389,9 +396,12 @@ namespace Toolbox.Library.Forms
             if (mouseDown && !isPicked)
             {
                 RenderEditor();
+
                 var temp = e.Location;
                 var curPos = OpenGLHelper.convertScreenToWorldCoords(temp.X, temp.Y);
                 var prevPos = OpenGLHelper.convertScreenToWorldCoords(pickOriginMouse.X, pickOriginMouse.Y);
+
+                GL.PopMatrix();
 
                 DrawSelectionBox(prevPos, curPos);
             }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
+using OpenTK;
 
 namespace Toolbox.Library
 {
@@ -27,6 +28,13 @@ namespace Toolbox.Library
         Linear,
         NearestMipmapLinear,
         NearestMipmapNearest,
+    }
+
+    public class STTextureTransform
+    {
+        public Vector2 Scale { get; set; }
+        public float Rotate { get; set; }
+        public Vector2 Translate { get; set; }
     }
 
     public class STGenericMatTexture
@@ -64,6 +72,8 @@ namespace Toolbox.Library
         {
             return null;
         }
+
+        public virtual STTextureTransform Transform { get; set; }
 
         public TextureType Type;
 

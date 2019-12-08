@@ -85,6 +85,8 @@ namespace FirstPlugin
             tileModeCB.SelectedItem = GX2.GX2TileMode.MODE_DEFAULT;
             formatComboBox.SelectedItem = GX2.GX2SurfaceFormat.T_BC1_SRGB;
 
+            MipmapNum.Maximum = 13;
+
             IsLoaded = true;
         }
 
@@ -280,8 +282,8 @@ namespace FirstPlugin
 
                 SetupSettings(SelectedTexSettings);
 
-                MipmapNum.Maximum = STGenericTexture.GenerateTotalMipCount(
-                    SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight) + 1;
+             //   MipmapNum.Maximum = STGenericTexture.GenerateTotalMipCount(
+              //      SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight) + 1;
 
                 //Force the mip counter to be the selected mip counter
                 //Some textures like bflim (used for UI) only have 1

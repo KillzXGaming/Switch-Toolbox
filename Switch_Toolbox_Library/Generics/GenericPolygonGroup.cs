@@ -18,6 +18,8 @@ namespace Toolbox.Library
 
     public class STGenericPolygonGroup
     {
+        public virtual STGenericMaterial Material { get; set; }
+
         public int Offset { get; set; }
         public int MaterialIndex { get; set; }
         public int Index { get; set; }

@@ -738,6 +738,8 @@ namespace Bfres.Structs
         public float MaxLod;
         public float BiasLod;
 
+
+
         public override STGenericTexture GetTexture()
         {
             foreach (var bntx in PluginRuntime.bntxContainers)

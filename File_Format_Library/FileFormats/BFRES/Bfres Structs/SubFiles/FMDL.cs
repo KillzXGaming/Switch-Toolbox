@@ -816,18 +816,6 @@ namespace Bfres.Structs
                         ImportedMaterials = seModel.materials;
                         ImportedSkeleton = seModel.skeleton;
                     }
-                    else if (Runtime.DEVELOPER_DEBUG_MODE)
-                    {
-                        DAE daeFile = new DAE();
-                        bool IsLoaded = daeFile.LoadFile(FileName);
-
-                        if (!IsLoaded)
-                            return;
-
-                        ImportedObjects = daeFile.objects;
-                        ImportedMaterials = daeFile.materials;
-                        ImportedSkeleton = daeFile.skeleton;
-                    }
                     else
                     {
                         AssimpData assimp = new AssimpData();

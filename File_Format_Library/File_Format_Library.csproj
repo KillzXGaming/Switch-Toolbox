@@ -233,7 +233,7 @@
     <Compile Include="FileFormats\NLG\NLG_Common.cs" />
     <Compile Include="FileFormats\NLG\NLG_NLOC.cs" />
     <Compile Include="FileFormats\NLG\NLOC_Wrapper.cs" />
-    <Compile Include="FileFormats\NLG\NLG_PCK.cs" />
+    <Compile Include="FileFormats\Audio\Archives\PCK.cs" />
     <Compile Include="FileFormats\NLG\PunchOutWii\PO_DICT.cs" />
     <Compile Include="FileFormats\Archives\VIBS.cs" />
     <Compile Include="FileFormats\Audio\Archives\AudioCommon.cs" />
@@ -358,16 +358,21 @@
     <Compile Include="FileFormats\NLG\PunchOutWii\PO_VertexAttribute.cs" />
     <Compile Include="FileFormats\Pikmin1\MOD.cs" />
     <Compile Include="FileFormats\Pikmin1\TXE.cs" />
-    <Compile Include="FileFormats\Pokemon\GFBANIM\FlatBuffers\gfbanim.cs" />
-    <Compile Include="FileFormats\Pokemon\GFBANIM\GFBANM.cs" />
-    <Compile Include="FileFormats\Pokemon\GFBANMCFG\GFBANMCFG.cs" />
-    <Compile Include="FileFormats\Pokemon\GFBANMCFG\FlatBuffers\gfbanmcfg.cs" />
-    <Compile Include="FileFormats\Pokemon\GFBMDL\FlatBuffers\gfbmdl.cs" />
-    <Compile Include="FileFormats\Pokemon\GFBMDL\GFBMDL.cs" />
-    <Compile Include="FileFormats\Pokemon\GFBMDL\GFLXModel.cs" />
-    <Compile Include="FileFormats\Pokemon\GFBMDL\GFLXMeshBufferHelper.cs" />
-    <Compile Include="FileFormats\Pokemon\GFBPMCATALOG\FlatBuffers\gfbpmcatalog.cs" />
-    <Compile Include="FileFormats\Pokemon\PokemonTable.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\FlatBufferHelper.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBANIM\FlatBuffers\gfbanim.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBANIM\GfbanimKeyFrameLoader.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBANIM\GFBANM.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBANMCFG\GFBANMCFG.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBANMCFG\FlatBuffers\gfbanmcfg.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBMDL\FlatBuffers\BufferToStruct.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBMDL\FlatBuffers\gfbmdl.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBMDL\GFBMDL.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBMDL\GFLXModel.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBMDL\GFLXMeshBufferHelper.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBMDL\GfbmdlImportSettings.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBMDL\GFMDLStructs.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBPMCATALOG\FlatBuffers\gfbpmcatalog.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\PokemonTable.cs" />
     <Compile Include="FileFormats\Rom\3DS\NCSDStructs.cs" />
     <Compile Include="FileFormats\Rom\3DS\NCSD.cs" />
     <Compile Include="FileFormats\Rom\3DS\RomFS.cs" />
@@ -392,6 +397,12 @@
     <Compile Include="GL\LM3_Renderer.cs" />
     <Compile Include="GL\PunchOutWii_Renderer.cs" />
     <Compile Include="GL\Strikers_Renderer.cs" />
+    <Compile Include="GUI\BFLYT\Editor\PaneAnimationController.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\PaneAnimationController.Designer.cs">
+      <DependentUpon>PaneAnimationController.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\GFBMDL\GFLXMaterialEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -403,6 +414,18 @@
     </Compile>
     <Compile Include="GUI\GFBMDL\GFLXMaterialParamEditor.Designer.cs">
       <DependentUpon>GFLXMaterialParamEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\GFBMDL\GFLXMeshEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\GFBMDL\GFLXMeshEditor.Designer.cs">
+      <DependentUpon>GFLXMeshEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\GFBMDL\GFLXModelImporter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\GFBMDL\GFLXModelImporter.Designer.cs">
+      <DependentUpon>GFLXModelImporter.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Pokemon\PokemonLoaderSwSh.cs">
       <SubType>Form</SubType>
@@ -441,7 +464,7 @@
       <DependentUpon>LayoutAnimEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\Animations\Basic\LayoutAnimEditorBasic.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\Animations\Basic\LayoutAnimEditorBasic.Designer.cs">
       <DependentUpon>LayoutAnimEditorBasic.cs</DependentUpon>
@@ -670,7 +693,7 @@
     <Compile Include="GUI\BMD\BMDModelImportSettings.Designer.cs">
       <DependentUpon>BMDModelImportSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="FileFormats\Pokemon\GFBMDL\GFLXMesh.cs" />
+    <Compile Include="FileFormats\Pokemon\GFLX\GFBMDL\GFLXMesh.cs" />
     <Compile Include="FileFormats\GMX\GMX.cs" />
     <Compile Include="FileFormats\Hashes\SAHT.cs" />
     <Compile Include="FileFormats\MKAGPDX\MKAGPDX_Model.cs" />
@@ -1441,11 +1464,20 @@
     <EmbeddedResource Include="GUI\AttributeEditor.resx">
       <DependentUpon>AttributeEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\PaneAnimationController.resx">
+      <DependentUpon>PaneAnimationController.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\GFBMDL\GFLXMaterialEditor.resx">
       <DependentUpon>GFLXMaterialEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\GFBMDL\GFLXMaterialParamEditor.resx">
       <DependentUpon>GFLXMaterialParamEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\GFBMDL\GFLXMeshEditor.resx">
+      <DependentUpon>GFLXMeshEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\GFBMDL\GFLXModelImporter.resx">
+      <DependentUpon>GFLXModelImporter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Pokemon\PokemonLoaderSwSh.resx">
       <DependentUpon>PokemonLoaderSwSh.cs</DependentUpon>
@@ -1940,6 +1972,7 @@
   <ItemGroup>
     <Folder Include="FileFormats\EvemtFlow\" />
     <Folder Include="FileFormats\NLG\Common\" />
+    <Folder Include="FileFormats\Pokemon\GFL2\" />
     <Folder Include="GUI\Byaml\MuuntEditor\Renderables\" />
   </ItemGroup>
   <ItemGroup>

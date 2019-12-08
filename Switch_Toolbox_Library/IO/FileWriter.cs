@@ -29,6 +29,14 @@ namespace Toolbox.Library.IO
         {
         }
 
+        public void WriteHalfFloat(float v) {
+            Write((Syroot.IOExtension.Half)v);
+        }
+
+        public void Write(Syroot.IOExtension.Half v) {
+            Write(v.Raw);
+        }
+
         public void Write(Syroot.Maths.Vector2F v)
         {
             Write(v.X);

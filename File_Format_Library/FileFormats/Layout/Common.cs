@@ -821,6 +821,11 @@ namespace LayoutBXLYT
             return (int[])data;
         }
 
+        public byte[] GetBytes()
+        {
+            return (byte[])data;
+        }
+
         public void SetValue(string value)
         {
             data = value;
@@ -839,7 +844,115 @@ namespace LayoutBXLYT
             Type = UserDataType.Int;
         }
 
+        public void SetValue(List<UserDataStruct> value)
+        {
+            data = value;
+            Type = UserDataType.StructData;
+        }
+
+        public List<UserDataStruct> GetStructs()
+        {
+            return (List<UserDataStruct>)data;
+        }
+
         internal long _pos;
+    }
+
+    public class UserDataStruct
+    {
+        public ushort Unknown { get; set; } // 0
+
+        public List<UserDataStructEntry> Entries = new List<UserDataStructEntry>();
+
+        public UserDataStruct(FileReader reader, BxlytHeader header)
+        {
+            long pos = reader.Position;
+
+            ushort unknown = reader.ReadUInt16();
+            ushort numEntries = reader.ReadUInt16();
+            uint[] offsets = reader.ReadUInt32s(numEntries);
+
+
+            for (int i = 0; i < numEntries; i++)
+            {
+                reader.SeekBegin(pos + offsets[i]);
+                Entries.Add(new UserDataStructEntry(reader, header));
+            }
+        }
+
+        public void Write(FileWriter writer, LayoutHeader header)
+        {
+            long pos = writer.Position;
+
+            writer.Write(Unknown);
+            writer.Write((ushort)Entries.Count);
+
+            long _ofsPos = writer.Position;
+            //Fill empty spaces for offsets later
+            writer.Write(new uint[Entries.Count]);
+
+            for (int i = 0; i < Entries.Count; i++)
+            {
+                writer.WriteUint32Offset(_ofsPos + (i * 4), pos);
+                Entries[i].Write(writer, header);
+            }
+        }
+    }
+
+    public class UserDataStructEntry
+    {
+        public uint DataType { get; set; }
+
+        public List<object> Data { get; set; }
+
+        public UserDataStructEntry(FileReader reader, BxlytHeader header)
+        {
+            long pos = reader.Position;
+
+            DataType = reader.ReadUInt32();
+            uint numEntries = reader.ReadUInt32();
+            uint[] offsets = reader.ReadUInt32s((int)numEntries);
+
+            Console.WriteLine($"USD1 Struct DataType " + DataType);
+
+            Data = new List<object>();
+            for (int i = 0; i < numEntries; i++)
+            {
+                reader.SeekBegin(pos + offsets[i]);
+                switch (DataType)
+                {
+                    case 0:
+                        Data.Add(reader.ReadZeroTerminatedString());
+                        break;
+                }
+            }
+        }
+
+        public void Write(FileWriter writer, LayoutHeader header)
+        {
+            long pos = writer.Position;
+
+            writer.Write(DataType);
+            writer.Write(Data.Count);
+
+            long _ofsPos = writer.Position;
+            //Fill empty spaces for offsets later
+            writer.Write(new uint[Data.Count]);
+
+            for (int i = 0; i < Data.Count; i++)
+            {
+                writer.WriteUint32Offset(_ofsPos + (i * 4), pos);
+                switch (DataType)
+                {
+                    case 0:
+                        writer.WriteString((string)Data[i]);
+                        break;
+                }
+
+                if (i == Data.Count - 1)
+                    writer.Align(64);
+            }
+        }
     }
 
     public enum UserDataType : byte
@@ -847,6 +960,7 @@ namespace LayoutBXLYT
         String,
         Int,
         Float,
+        StructData,
     }
 
     public enum AnimationTarget : byte
@@ -1379,6 +1493,53 @@ namespace LayoutBXLYT
         public BxlanPAT1 AnimationTag;
         public BxlanPAI1 AnimationInfo;
 
+        public static bool ContainsEntry(byte[] bxlanFile, string[] EntryNames)
+        {
+            using (var reader = new FileReader(new System.IO.MemoryStream(bxlanFile)))
+            {
+                reader.SetByteOrder(true);
+
+                reader.ReadUInt32(); //magic
+                ushort byteOrderMark = reader.ReadUInt16();
+                reader.CheckByteOrderMark(byteOrderMark);
+                ushort HeaderSize = reader.ReadUInt16();
+                uint Version = reader.ReadUInt32();
+                uint FileSize = reader.ReadUInt32();
+                ushort sectionCount = reader.ReadUInt16();
+                reader.ReadUInt16(); //Padding
+
+                reader.SeekBegin(HeaderSize);
+                for (int i = 0; i < sectionCount; i++)
+                {
+                    long pos = reader.Position;
+                    string Signature = reader.ReadString(4, Encoding.ASCII);
+                    uint SectionSize = reader.ReadUInt32();
+                    if (Signature == "pai1")
+                    {
+                        reader.ReadUInt16(); //FrameSize
+                        reader.ReadBoolean(); //Loop
+                        reader.ReadByte(); //padding
+                        var numTextures = reader.ReadUInt16();
+                        var numEntries = reader.ReadUInt16();
+                        var entryOffsetTbl = reader.ReadUInt32();
+
+                        reader.SeekBegin(pos + entryOffsetTbl);
+                        var entryOffsets = reader.ReadUInt32s(numEntries);
+                        for (int e = 0; e < numEntries; e++)
+                        {
+                            reader.SeekBegin(pos + entryOffsets[e]);
+                            string name = reader.ReadString(28, true);
+                            if (EntryNames.Contains(name))
+                                return true;
+                        }
+                    }
+
+                    reader.SeekBegin(pos + SectionSize);
+                }
+            }
+            return false;
+        }
+
         public BxlanPaiEntry TryGetTag(string name)
         {
             for (int i = 0; i < AnimationInfo.Entries?.Count; i++)
@@ -1387,6 +1548,15 @@ namespace LayoutBXLYT
                     return AnimationInfo.Entries[i];
             }
             return null;
+        }
+
+        public bool ContainsEntry(string name)
+        {
+            for (int i = 0; i < AnimationInfo.Entries?.Count; i++) {
+                if (AnimationInfo.Entries[i].Name == name)
+                    return true;
+            }
+            return false;
         }
 
         public virtual void Read(FileReader reader, BXLAN header)

@@ -26,6 +26,8 @@ namespace Toolbox.Library
             public bool FlipTexCoordsVertical = true;
             public bool OnlyExportRiggedBones = false;
 
+            public bool AddLeafBones = false;
+
             public Version FileVersion = new Version();
 
             public ProgramPreset Preset = ProgramPreset.NONE;

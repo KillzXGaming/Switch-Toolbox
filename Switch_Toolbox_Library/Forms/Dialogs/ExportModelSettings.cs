@@ -37,5 +37,14 @@ namespace Toolbox.Library.Forms
         private void chkVertexColors_CheckedChanged(object sender, EventArgs e) {
             Settings.UseVertexColors = chkVertexColors.Checked;
         }
+
+        private void chkExportRiggedBonesOnly_CheckedChanged(object sender, EventArgs e) {
+            Settings.OnlyExportRiggedBones = chkExportRiggedBonesOnly.Checked;
+        }
+
+        private void contentContainer_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

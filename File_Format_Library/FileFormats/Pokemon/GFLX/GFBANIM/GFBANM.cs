@@ -12,10 +12,11 @@ using System.Reflection;
 using Toolbox.Library.IO.FlatBuffer;
 using Toolbox.Library.Animations;
 using FirstPlugin.Forms;
+using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class GFBANM : TreeNodeFile, IFileFormat, IAnimationContainer
+    public class GFBANM : TreeNodeFile, IFileFormat, IAnimationContainer, IConvertableTextFormat
     {
         public STAnimation AnimationController => AnimationData;
 
@@ -43,6 +44,30 @@ namespace FirstPlugin
                 LibraryGUI.LoadEditor(editor);
             }
         }
+
+        #region Text Converter Interface
+        public TextFileType TextFileType => TextFileType.Json;
+        public bool CanConvertBack => false;
+
+        public string ConvertToString()
+        {
+            if (IFileInfo.ArchiveParent != null)
+            {
+                foreach (var file in IFileInfo.ArchiveParent.Files)
+                    if (file.FileName == FileName)
+                        return FlatBufferConverter.DeserializeToJson(new System.IO.MemoryStream(file.FileData), "gfbanm");
+            }
+            else
+                return FlatBufferConverter.DeserializeToJson(FilePath, "gfbanm");
+
+            return "";
+        }
+
+        public void ConvertFromString(string text)
+        {
+        }
+
+        #endregion
 
         public Type[] Types
         {
@@ -90,8 +115,31 @@ namespace FirstPlugin
         {
         }
 
+        public class MeshAnimationController
+        {
+            public bool IsVisible = true;
+        }
+
         public class Animation : STSkeletonAnimation
         {
+            private GFBMDL ActiveModel
+            {
+                get
+                {
+                    GFBMDL model = null;
+                    foreach (var container in ObjectEditor.GetDrawableContainers()) {
+                        if (container.ContainerState == ContainerState.Active) {
+                            foreach (var drawable in container.Drawables)
+                            {
+                                if (drawable is GFBMDL_Render)
+                                    model = ((GFBMDL_Render)drawable).GfbmdlFile;
+                            }
+                        }
+                    }
+                    return model;
+                }
+            }
+
             public override void NextFrame()
             {
                 if (Frame > FrameCount) return;
@@ -105,6 +153,26 @@ namespace FirstPlugin
                 bool Updated = false; // no need to update skeleton of animations that didn't change
                 foreach (var animGroup in AnimGroups)
                 {
+                    if (animGroup is VisibiltyGroup && ActiveModel != null)
+                    {
+                        var node = animGroup as VisibiltyGroup;
+                        foreach (var mesh in ActiveModel.Model.GenericMeshes) {
+                            if (animGroup.Name == mesh.Text)
+                            {
+                                var value = node.BooleanTrack.GetFrameValue(Frame);
+                                mesh.AnimationController.IsVisible = value == 1; 
+                            }
+                        }
+                    }
+                    if (animGroup is MaterialGroup && ActiveModel != null)
+                    {
+                        foreach (var mat in ActiveModel.Model.GenericMaterials) {
+                            if (animGroup.Name == mat.Text)
+                            {
+
+                            }
+                        }
+                    }
                     if (animGroup is BoneGroup)
                     {
                         var node = animGroup as BoneGroup;
@@ -134,17 +202,22 @@ namespace FirstPlugin
 
                         if (node.RotationX.HasKeys || node.RotationY.HasKeys || node.RotationZ.HasKeys)
                         {
-                            float x = node.RotationX.HasKeys ? node.RotationX.GetFrameValue(Frame) : b.rotation[0];
-                            float y = node.RotationY.HasKeys ? node.RotationY.GetFrameValue(Frame) : b.rotation[1];
-                            float z = node.RotationZ.HasKeys ? node.RotationZ.GetFrameValue(Frame) : b.rotation[2];
+                            ushort value1 = (ushort)node.RotationX.GetFrameValue(Frame);
+                            ushort value2 = (ushort)node.RotationY.GetFrameValue(Frame);
+                            ushort value3 = (ushort)node.RotationZ.GetFrameValue(Frame);
 
-                            var Rotation = new Vector3(x / 0xffff, y/ 0xffff, z / 0xffff).Normalized();
-                            b.rot = EulerToQuat(Rotation.Z, Rotation.Y, Rotation.X);
+                            int x = value1 >> 5;
+                            int y = value2 >> 5;
+                            int z = value3 >> 5;
+
+                            var Rotation = new Vector3(x / (float)0xff, y/ (float)0xff, z / (float)0xff);
+                      //      b.rot = EulerToQuat(Rotation.Z, Rotation.Y, Rotation.X);
+
+                        //    Console.WriteLine($"{animGroup.Name} {Frame} {Rotation}");
 
                             //   b.rot = EulerToQuat(Rotation.Z, Rotation.Y, Rotation.X);
 
                             float Angle = Rotation.Length;
-                            Console.WriteLine($"{node.Name} Angle {Angle}");
 
                         //     b.rot = Angle > 0
                         //        ? Quaternion.FromAxisAngle(Vector3.Normalize(Rotation), Angle)
@@ -168,7 +241,7 @@ namespace FirstPlugin
                 Quaternion xRotation = Quaternion.FromAxisAngle(Vector3.UnitX, x);
                 Quaternion yRotation = Quaternion.FromAxisAngle(Vector3.UnitY, y);
                 Quaternion zRotation = Quaternion.FromAxisAngle(Vector3.UnitZ, z);
-               return (zRotation * yRotation * xRotation);
+                return (zRotation * yRotation * xRotation);
             }
                 
             public void LoadBoneGroup(Gfbanim.Bone boneAnim)
@@ -193,7 +266,7 @@ namespace FirstPlugin
                             var rotate = boneAnim.Rotate<Gfbanim.DynamicQuatTrack>();
                             if (rotate.HasValue)
                             {
-                                var values = LoadRotationTrack(rotate.Value);
+                                var values = GfbanimKeyFrameLoader.LoadRotationTrack(rotate.Value);
                                 groupAnim.RotationX = values[0];
                                 groupAnim.RotationY = values[1];
                                 groupAnim.RotationZ = values[2];
@@ -206,9 +279,9 @@ namespace FirstPlugin
                             if (rotate.HasValue)
                             {
                                 var vec = rotate.Value.Value.Value;
-                                groupAnim.RotationX.KeyFrames.Add(new STKeyFrame(0, ConvertRotation(vec.X)));
-                                groupAnim.RotationY.KeyFrames.Add(new STKeyFrame(0, ConvertRotation(vec.Y)));
-                                groupAnim.RotationZ.KeyFrames.Add(new STKeyFrame(0, ConvertRotation(vec.Z)));
+                                groupAnim.RotationX.KeyFrames.Add(new STKeyFrame(0, GfbanimKeyFrameLoader.ConvertRotation(vec.X)));
+                                groupAnim.RotationY.KeyFrames.Add(new STKeyFrame(0, GfbanimKeyFrameLoader.ConvertRotation(vec.Y)));
+                                groupAnim.RotationZ.KeyFrames.Add(new STKeyFrame(0, GfbanimKeyFrameLoader.ConvertRotation(vec.Z)));
                             }
                         }
                         break;
@@ -217,7 +290,7 @@ namespace FirstPlugin
                             var rotate = boneAnim.Rotate<Gfbanim.FramedQuatTrack>();
                             if (rotate.HasValue)
                             {
-                                var values = LoadRotationTrack(rotate.Value);
+                                var values = GfbanimKeyFrameLoader.LoadRotationTrack(rotate.Value);
                                 groupAnim.RotationX = values[0];
                                 groupAnim.RotationY = values[1];
                                 groupAnim.RotationZ = values[2];
@@ -247,7 +320,7 @@ namespace FirstPlugin
                             var scale = boneAnim.Scale<Gfbanim.DynamicVectorTrack>();
                             if (scale.HasValue)
                             {
-                                var values = LoadVectorTrack(scale.Value);
+                                var values = GfbanimKeyFrameLoader.LoadVectorTrack(scale.Value);
                                 groupAnim.ScaleX = values[0];
                                 groupAnim.ScaleY = values[1];
                                 groupAnim.ScaleZ = values[2];
@@ -259,7 +332,7 @@ namespace FirstPlugin
                             var scale = boneAnim.Scale<Gfbanim.FramedVectorTrack>();
                             if (scale.HasValue)
                             {
-                                var values = LoadVectorTrack(scale.Value);
+                                var values = GfbanimKeyFrameLoader.LoadVectorTrack(scale.Value);
                                 groupAnim.ScaleX = values[0];
                                 groupAnim.ScaleY = values[1];
                                 groupAnim.ScaleZ = values[2];
@@ -286,7 +359,7 @@ namespace FirstPlugin
                             var trans = boneAnim.Translate<Gfbanim.DynamicVectorTrack>();
                             if (trans.HasValue)
                             {
-                                var values = LoadVectorTrack(trans.Value);
+                                var values = GfbanimKeyFrameLoader.LoadVectorTrack(trans.Value);
                                 groupAnim.TranslateX = values[0];
                                 groupAnim.TranslateY = values[1];
                                 groupAnim.TranslateZ = values[2];
@@ -298,7 +371,7 @@ namespace FirstPlugin
                             var trans = boneAnim.Translate<Gfbanim.FramedVectorTrack>();
                             if (trans.HasValue)
                             {
-                                var values = LoadVectorTrack(trans.Value);
+                                var values = GfbanimKeyFrameLoader.LoadVectorTrack(trans.Value);
                                 groupAnim.TranslateX = values[0];
                                 groupAnim.TranslateY = values[1];
                                 groupAnim.TranslateZ = values[2];
@@ -320,101 +393,53 @@ namespace FirstPlugin
                 }
             }
 
-            public float ConvertRotation(ushort val)
-            {
-                return val;
-            }
-
-            public STAnimationTrack[] LoadRotationTrack(Gfbanim.DynamicQuatTrack dynamicTrack)
-            {
-                STAnimationTrack[] tracks = new STAnimationTrack[3];
-                tracks[0] = new STAnimationTrack(STInterpoaltionType.Linear);
-                tracks[1] = new STAnimationTrack(STInterpoaltionType.Linear);
-                tracks[2] = new STAnimationTrack(STInterpoaltionType.Linear);
-
-                for (int i = 0; i < dynamicTrack.ValuesLength; i++)
-                {
-                    var quat = dynamicTrack.Values(i).Value;
-                    tracks[0].KeyFrames.Add(new STKeyFrame(i, ConvertRotation(quat.X)));
-                    tracks[1].KeyFrames.Add(new STKeyFrame(i, ConvertRotation(quat.Y)));
-                    tracks[2].KeyFrames.Add(new STKeyFrame(i, ConvertRotation(quat.Z)));
-
-                    Console.WriteLine($"{i} { ConvertRotation(quat.X)} { ConvertRotation(quat.Y)} {ConvertRotation(quat.Z)}");
-                }
-                return tracks;
-            }
-
-            public STAnimationTrack[] LoadVectorTrack(Gfbanim.DynamicVectorTrack dynamicTrack)
-            {
-                STAnimationTrack[] tracks = new STAnimationTrack[3];
-                tracks[0] = new STAnimationTrack(STInterpoaltionType.Linear);
-                tracks[1] = new STAnimationTrack(STInterpoaltionType.Linear);
-                tracks[2] = new STAnimationTrack(STInterpoaltionType.Linear);
-
-                for (int i = 0; i < dynamicTrack.ValuesLength; i++)
-                {
-                    var vec = dynamicTrack.Values(i).Value;
-                    tracks[0].KeyFrames.Add(new STKeyFrame(i, vec.X));
-                    tracks[1].KeyFrames.Add(new STKeyFrame(i, vec.Y));
-                    tracks[2].KeyFrames.Add(new STKeyFrame(i, vec.Z));
-                }
-                return tracks;
-            }
-
-            public STAnimationTrack[] LoadVectorTrack(Gfbanim.FramedVectorTrack framedTrack)
-            {
-                ushort[] frames = framedTrack.GetFramesArray(); 
-
-                STAnimationTrack[] tracks = new STAnimationTrack[3];
-                tracks[0] = new STAnimationTrack(STInterpoaltionType.Linear);
-                tracks[1] = new STAnimationTrack(STInterpoaltionType.Linear);
-                tracks[2] = new STAnimationTrack(STInterpoaltionType.Linear);
-
-                for (int i = 0; i < framedTrack.ValuesLength; i++)
-                {
-                    var vec = framedTrack.Values(i).Value;
-                    int frame = i;
-
-                    if (i < frames?.Length) frame = frames[i];
-
-                    tracks[0].KeyFrames.Add(new STKeyFrame(frame, vec.X));
-                    tracks[1].KeyFrames.Add(new STKeyFrame(frame, vec.Y));
-                    tracks[2].KeyFrames.Add(new STKeyFrame(frame, vec.Z));
-                }
-                return tracks;
-            }
-
-            public STAnimationTrack[] LoadRotationTrack(Gfbanim.FramedQuatTrack framedTrack)
-            {
-                ushort[] frames = framedTrack.GetFramesArray();
-
-                STAnimationTrack[] tracks = new STAnimationTrack[3];
-                tracks[0] = new STAnimationTrack(STInterpoaltionType.Linear);
-                tracks[1] = new STAnimationTrack(STInterpoaltionType.Linear);
-                tracks[2] = new STAnimationTrack(STInterpoaltionType.Linear);
-
-                for (int i = 0; i < framedTrack.ValuesLength; i++)
-                {
-                    var quat = framedTrack.Values(i).Value;
-                    int frame = i;
-
-                    if (i < frames?.Length) frame = frames[i];
-
-                    tracks[0].KeyFrames.Add(new STKeyFrame(frame, ConvertRotation(quat.X)));
-                    tracks[1].KeyFrames.Add(new STKeyFrame(frame, ConvertRotation(quat.Y)));
-                    tracks[2].KeyFrames.Add(new STKeyFrame(frame, ConvertRotation(quat.Z)));
-                }
-                return tracks;
-            }
-
             public void LoadMaterialGroup(Gfbanim.Material matAnim)
             {
+                for (int i = 0; i < matAnim.SwitchesLength; i++)
+                {
+                    var switchTrack = matAnim.Switches(i).Value;
+                  
+                }
+                for (int i = 0; i < matAnim.ValuesLength; i++)
+                {
+                    var valueTrack = matAnim.Values(i).Value;
 
+                }
+                for (int i = 0; i < matAnim.VectorsLength; i++)
+                {
+                    var vectorTrack = matAnim.Vectors(i).Value;
+
+                }
             }
 
             public void LoadVisibilyGroup(Gfbanim.Group visAnim)
             {
+                VisibiltyGroup groupAnim = new VisibiltyGroup();
+                groupAnim.Name = visAnim.Name;
+                AnimGroups.Add(groupAnim);
 
+                if (visAnim.ValueType == Gfbanim.BooleanTrack.FixedBooleanTrack) {
+                    var track = visAnim.Value<Gfbanim.FixedBooleanTrack>();
+                    if (track.HasValue)
+                    {
+                        var animTrack = new STAnimationTrack();
+                        animTrack.KeyFrames.Add(new STKeyFrame(0, track.Value.Value));
+                        groupAnim.BooleanTrack = animTrack;
+                    }
+                }
+                else if (visAnim.ValueType == Gfbanim.BooleanTrack.DynamicBooleanTrack) {
+                    var track = visAnim.Value<Gfbanim.DynamicBooleanTrack>();
+                    if (track.HasValue) {
+                        groupAnim.BooleanTrack = GfbanimKeyFrameLoader.LoadBooleanTrack(track.Value);
+                    }
+                }
+                else if(visAnim.ValueType == Gfbanim.BooleanTrack.FramedBooleanTrack) {
+                    var track = visAnim.Value<Gfbanim.FramedBooleanTrack>();
+                    if (track.HasValue)
+                    {
+                        groupAnim.BooleanTrack = GfbanimKeyFrameLoader.LoadBooleanTrack(track.Value);
+                    }
+                }
             }
 
             public void LoadTriggerGroup(Gfbanim.Trigger triggerAnim)

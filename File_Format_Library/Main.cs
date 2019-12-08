@@ -392,7 +392,7 @@ namespace FirstPlugin
             Formats.Add(typeof(IGA_PAK));
             Formats.Add(typeof(MKAGPDX_Model));
             Formats.Add(typeof(GFBMDL));
-         //   Formats.Add(typeof(GFBANM));
+          //  Formats.Add(typeof(GFBANM));
             Formats.Add(typeof(GFBANMCFG));
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(SDF));
@@ -443,7 +443,7 @@ namespace FirstPlugin
             Formats.Add(typeof(PunchOutWii.PO_DICT));
             Formats.Add(typeof(LM2_ARCADE_Model));
             Formats.Add(typeof(NLG_NLOC));
-            Formats.Add(typeof(NLG_PCK));
+            Formats.Add(typeof(PCK));
             Formats.Add(typeof(NLG.StrikersSAnim));
 
 

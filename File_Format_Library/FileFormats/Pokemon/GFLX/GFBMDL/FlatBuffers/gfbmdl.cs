@@ -4,6 +4,7 @@
 
 namespace FlatBuffers.Gfbmdl
 {
+
     using global::System;
     using global::FlatBuffers;
 
@@ -66,8 +67,8 @@ namespace FlatBuffers.Gfbmdl
         public int MeshesLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
         public Bone? Bones(int j) { int o = __p.__offset(22); return o != 0 ? (Bone?)(new Bone()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
         public int BonesLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
-        public RenderInfo? RenderData(int j) { int o = __p.__offset(24); return o != 0 ? (RenderInfo?)(new RenderInfo()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-        public int RenderDataLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+        public CollisionGroup? CollisionGroups(int j) { int o = __p.__offset(24); return o != 0 ? (CollisionGroup?)(new CollisionGroup()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+        public int CollisionGroupsLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
 
         public static void StartModel(FlatBufferBuilder builder) { builder.StartObject(11); }
         public static void AddVersion(FlatBufferBuilder builder, uint Version) { builder.AddUint(0, Version, 0); }
@@ -104,10 +105,10 @@ namespace FlatBuffers.Gfbmdl
         public static VectorOffset CreateBonesVector(FlatBufferBuilder builder, Offset<Bone>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
         public static VectorOffset CreateBonesVectorBlock(FlatBufferBuilder builder, Offset<Bone>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
         public static void StartBonesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-        public static void AddRenderData(FlatBufferBuilder builder, VectorOffset RenderDataOffset) { builder.AddOffset(10, RenderDataOffset.Value, 0); }
-        public static VectorOffset CreateRenderDataVector(FlatBufferBuilder builder, Offset<RenderInfo>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-        public static VectorOffset CreateRenderDataVectorBlock(FlatBufferBuilder builder, Offset<RenderInfo>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-        public static void StartRenderDataVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+        public static void AddCollisionGroups(FlatBufferBuilder builder, VectorOffset CollisionGroupsOffset) { builder.AddOffset(10, CollisionGroupsOffset.Value, 0); }
+        public static VectorOffset CreateCollisionGroupsVector(FlatBufferBuilder builder, Offset<CollisionGroup>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+        public static VectorOffset CreateCollisionGroupsVectorBlock(FlatBufferBuilder builder, Offset<CollisionGroup>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+        public static void StartCollisionGroupsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
         public static Offset<Model> EndModel(FlatBufferBuilder builder)
         {
             int o = builder.EndObject();
@@ -169,50 +170,50 @@ namespace FlatBuffers.Gfbmdl
 #endif
         public byte[] GetShaderGroupArray() { return __p.__vector_as_array<byte>(6); }
         public int RenderLayer { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-        public sbyte Unknown1 { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
-        public sbyte Unknown2 { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
+        public byte Unknown1 { get { int o = __p.__offset(10); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+        public byte Unknown2 { get { int o = __p.__offset(12); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
         public int Parameter1 { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
         public int Parameter2 { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
         public int Parameter3 { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
         public int Parameter4 { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
         public int Parameter5 { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
         public int Parameter6 { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-        public TextureMap? Textures(int j) { int o = __p.__offset(26); return o != 0 ? (TextureMap?)(new TextureMap()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-        public int TexturesLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+        public TextureMap? TextureMaps(int j) { int o = __p.__offset(26); return o != 0 ? (TextureMap?)(new TextureMap()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+        public int TextureMapsLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
         public MatSwitch? Switches(int j) { int o = __p.__offset(28); return o != 0 ? (MatSwitch?)(new MatSwitch()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
         public int SwitchesLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
         public MatFloat? Values(int j) { int o = __p.__offset(30); return o != 0 ? (MatFloat?)(new MatFloat()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
         public int ValuesLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
         public MatColor? Colors(int j) { int o = __p.__offset(32); return o != 0 ? (MatColor?)(new MatColor()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
         public int ColorsLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
-        public sbyte Unknown3 { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
-        public sbyte Unknown4 { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
-        public sbyte Unknown5 { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
-        public sbyte Unknown6 { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
-        public sbyte Unknown7 { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
+        public byte Unknown3 { get { int o = __p.__offset(34); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+        public byte Unknown4 { get { int o = __p.__offset(36); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+        public byte Unknown5 { get { int o = __p.__offset(38); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+        public byte Unknown6 { get { int o = __p.__offset(40); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+        public byte Unknown7 { get { int o = __p.__offset(42); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
         public MaterialCommon? Common { get { int o = __p.__offset(44); return o != 0 ? (MaterialCommon?)(new MaterialCommon()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
         public static Offset<Material> CreateMaterial(FlatBufferBuilder builder,
             StringOffset NameOffset = default(StringOffset),
             StringOffset ShaderGroupOffset = default(StringOffset),
             int RenderLayer = 0,
-            sbyte Unknown1 = 0,
-            sbyte Unknown2 = 0,
+            byte Unknown1 = 0,
+            byte Unknown2 = 0,
             int Parameter1 = 0,
             int Parameter2 = 0,
             int Parameter3 = 0,
             int Parameter4 = 0,
             int Parameter5 = 0,
             int Parameter6 = 0,
-            VectorOffset TexturesOffset = default(VectorOffset),
+            VectorOffset TextureMapsOffset = default(VectorOffset),
             VectorOffset SwitchesOffset = default(VectorOffset),
             VectorOffset ValuesOffset = default(VectorOffset),
             VectorOffset ColorsOffset = default(VectorOffset),
-            sbyte Unknown3 = 0,
-            sbyte Unknown4 = 0,
-            sbyte Unknown5 = 0,
-            sbyte Unknown6 = 0,
-            sbyte Unknown7 = 0,
+            byte Unknown3 = 0,
+            byte Unknown4 = 0,
+            byte Unknown5 = 0,
+            byte Unknown6 = 0,
+            byte Unknown7 = 0,
             Offset<MaterialCommon> CommonOffset = default(Offset<MaterialCommon>))
         {
             builder.StartObject(21);
@@ -220,7 +221,7 @@ namespace FlatBuffers.Gfbmdl
             Material.AddColors(builder, ColorsOffset);
             Material.AddValues(builder, ValuesOffset);
             Material.AddSwitches(builder, SwitchesOffset);
-            Material.AddTextures(builder, TexturesOffset);
+            Material.AddTextureMaps(builder, TextureMapsOffset);
             Material.AddParameter6(builder, Parameter6);
             Material.AddParameter5(builder, Parameter5);
             Material.AddParameter4(builder, Parameter4);
@@ -244,18 +245,18 @@ namespace FlatBuffers.Gfbmdl
         public static void AddName(FlatBufferBuilder builder, StringOffset NameOffset) { builder.AddOffset(0, NameOffset.Value, 0); }
         public static void AddShaderGroup(FlatBufferBuilder builder, StringOffset ShaderGroupOffset) { builder.AddOffset(1, ShaderGroupOffset.Value, 0); }
         public static void AddRenderLayer(FlatBufferBuilder builder, int RenderLayer) { builder.AddInt(2, RenderLayer, 0); }
-        public static void AddUnknown1(FlatBufferBuilder builder, sbyte Unknown1) { builder.AddSbyte(3, Unknown1, 0); }
-        public static void AddUnknown2(FlatBufferBuilder builder, sbyte Unknown2) { builder.AddSbyte(4, Unknown2, 0); }
+        public static void AddUnknown1(FlatBufferBuilder builder, byte Unknown1) { builder.AddByte(3, Unknown1, 0); }
+        public static void AddUnknown2(FlatBufferBuilder builder, byte Unknown2) { builder.AddByte(4, Unknown2, 0); }
         public static void AddParameter1(FlatBufferBuilder builder, int Parameter1) { builder.AddInt(5, Parameter1, 0); }
         public static void AddParameter2(FlatBufferBuilder builder, int Parameter2) { builder.AddInt(6, Parameter2, 0); }
         public static void AddParameter3(FlatBufferBuilder builder, int Parameter3) { builder.AddInt(7, Parameter3, 0); }
         public static void AddParameter4(FlatBufferBuilder builder, int Parameter4) { builder.AddInt(8, Parameter4, 0); }
         public static void AddParameter5(FlatBufferBuilder builder, int Parameter5) { builder.AddInt(9, Parameter5, 0); }
         public static void AddParameter6(FlatBufferBuilder builder, int Parameter6) { builder.AddInt(10, Parameter6, 0); }
-        public static void AddTextures(FlatBufferBuilder builder, VectorOffset TexturesOffset) { builder.AddOffset(11, TexturesOffset.Value, 0); }
-        public static VectorOffset CreateTexturesVector(FlatBufferBuilder builder, Offset<TextureMap>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-        public static VectorOffset CreateTexturesVectorBlock(FlatBufferBuilder builder, Offset<TextureMap>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-        public static void StartTexturesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+        public static void AddTextureMaps(FlatBufferBuilder builder, VectorOffset TextureMapsOffset) { builder.AddOffset(11, TextureMapsOffset.Value, 0); }
+        public static VectorOffset CreateTextureMapsVector(FlatBufferBuilder builder, Offset<TextureMap>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+        public static VectorOffset CreateTextureMapsVectorBlock(FlatBufferBuilder builder, Offset<TextureMap>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+        public static void StartTextureMapsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
         public static void AddSwitches(FlatBufferBuilder builder, VectorOffset SwitchesOffset) { builder.AddOffset(12, SwitchesOffset.Value, 0); }
         public static VectorOffset CreateSwitchesVector(FlatBufferBuilder builder, Offset<MatSwitch>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
         public static VectorOffset CreateSwitchesVectorBlock(FlatBufferBuilder builder, Offset<MatSwitch>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -268,11 +269,11 @@ namespace FlatBuffers.Gfbmdl
         public static VectorOffset CreateColorsVector(FlatBufferBuilder builder, Offset<MatColor>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
         public static VectorOffset CreateColorsVectorBlock(FlatBufferBuilder builder, Offset<MatColor>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
         public static void StartColorsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-        public static void AddUnknown3(FlatBufferBuilder builder, sbyte Unknown3) { builder.AddSbyte(15, Unknown3, 0); }
-        public static void AddUnknown4(FlatBufferBuilder builder, sbyte Unknown4) { builder.AddSbyte(16, Unknown4, 0); }
-        public static void AddUnknown5(FlatBufferBuilder builder, sbyte Unknown5) { builder.AddSbyte(17, Unknown5, 0); }
-        public static void AddUnknown6(FlatBufferBuilder builder, sbyte Unknown6) { builder.AddSbyte(18, Unknown6, 0); }
-        public static void AddUnknown7(FlatBufferBuilder builder, sbyte Unknown7) { builder.AddSbyte(19, Unknown7, 0); }
+        public static void AddUnknown3(FlatBufferBuilder builder, byte Unknown3) { builder.AddByte(15, Unknown3, 0); }
+        public static void AddUnknown4(FlatBufferBuilder builder, byte Unknown4) { builder.AddByte(16, Unknown4, 0); }
+        public static void AddUnknown5(FlatBufferBuilder builder, byte Unknown5) { builder.AddByte(17, Unknown5, 0); }
+        public static void AddUnknown6(FlatBufferBuilder builder, byte Unknown6) { builder.AddByte(18, Unknown6, 0); }
+        public static void AddUnknown7(FlatBufferBuilder builder, byte Unknown7) { builder.AddByte(19, Unknown7, 0); }
         public static void AddCommon(FlatBufferBuilder builder, Offset<MaterialCommon> CommonOffset) { builder.AddOffset(20, CommonOffset.Value, 0); }
         public static Offset<Material> EndMaterial(FlatBufferBuilder builder)
         {
@@ -480,32 +481,32 @@ namespace FlatBuffers.Gfbmdl
         public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
         public TextureMap __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-        public string Name { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+        public string Sampler { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetNameBytes() { return __p.__vector_as_span(4); }
+  public Span<byte> GetSamplerBytes() { return __p.__vector_as_span(4); }
 #else
-        public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(4); }
+        public ArraySegment<byte>? GetSamplerBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
-        public byte[] GetNameArray() { return __p.__vector_as_array<byte>(4); }
+        public byte[] GetSamplerArray() { return __p.__vector_as_array<byte>(4); }
         public int Index { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-        public TextureMapping? Mapping { get { int o = __p.__offset(8); return o != 0 ? (TextureMapping?)(new TextureMapping()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+        public TextureMapping? Params { get { int o = __p.__offset(8); return o != 0 ? (TextureMapping?)(new TextureMapping()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
         public static Offset<TextureMap> CreateTextureMap(FlatBufferBuilder builder,
-            StringOffset NameOffset = default(StringOffset),
+            StringOffset SamplerOffset = default(StringOffset),
             int Index = 0,
-            Offset<TextureMapping> MappingOffset = default(Offset<TextureMapping>))
+            Offset<TextureMapping> ParamsOffset = default(Offset<TextureMapping>))
         {
             builder.StartObject(3);
-            TextureMap.AddMapping(builder, MappingOffset);
+            TextureMap.AddParams(builder, ParamsOffset);
             TextureMap.AddIndex(builder, Index);
-            TextureMap.AddName(builder, NameOffset);
+            TextureMap.AddSampler(builder, SamplerOffset);
             return TextureMap.EndTextureMap(builder);
         }
 
         public static void StartTextureMap(FlatBufferBuilder builder) { builder.StartObject(3); }
-        public static void AddName(FlatBufferBuilder builder, StringOffset NameOffset) { builder.AddOffset(0, NameOffset.Value, 0); }
+        public static void AddSampler(FlatBufferBuilder builder, StringOffset SamplerOffset) { builder.AddOffset(0, SamplerOffset.Value, 0); }
         public static void AddIndex(FlatBufferBuilder builder, int Index) { builder.AddInt(1, Index, 0); }
-        public static void AddMapping(FlatBufferBuilder builder, Offset<TextureMapping> MappingOffset) { builder.AddOffset(2, MappingOffset.Value, 0); }
+        public static void AddParams(FlatBufferBuilder builder, Offset<TextureMapping> ParamsOffset) { builder.AddOffset(2, ParamsOffset.Value, 0); }
         public static Offset<TextureMap> EndTextureMap(FlatBufferBuilder builder)
         {
             int o = builder.EndObject();
@@ -522,50 +523,50 @@ namespace FlatBuffers.Gfbmdl
         public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
         public TextureMapping __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-        public uint Type { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Scale { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Translation { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Rotation { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint WrapS { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint WrapT { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint MagFilter { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint MinFilter { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public float MinLOD { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+        public uint Unknown1 { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint Unknown2 { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint Unknown3 { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint Unknown4 { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint Unknown5 { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint Unknown6 { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint Unknown7 { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint Unknown8 { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public float LodBias { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
 
         public static Offset<TextureMapping> CreateTextureMapping(FlatBufferBuilder builder,
-            uint Type = 0,
-            uint Scale = 0,
-            uint Translation = 0,
-            uint Rotation = 0,
-            uint WrapS = 0,
-            uint WrapT = 0,
-            uint magFilter = 0,
-            uint minFilter = 0,
-            float minLOD = 0.0f)
+            uint Unknown1 = 0,
+            uint Unknown2 = 0,
+            uint Unknown3 = 0,
+            uint Unknown4 = 0,
+            uint Unknown5 = 0,
+            uint Unknown6 = 0,
+            uint Unknown7 = 0,
+            uint Unknown8 = 0,
+            float lodBias = 0.0f)
         {
             builder.StartObject(9);
-            TextureMapping.AddMinLOD(builder, minLOD);
-            TextureMapping.AddMinFilter(builder, minFilter);
-            TextureMapping.AddMagFilter(builder, magFilter);
-            TextureMapping.AddWrapT(builder, WrapT);
-            TextureMapping.AddWrapS(builder, WrapS);
-            TextureMapping.AddRotation(builder, Rotation);
-            TextureMapping.AddTranslation(builder, Translation);
-            TextureMapping.AddScale(builder, Scale);
-            TextureMapping.AddType(builder, Type);
+            TextureMapping.AddLodBias(builder, lodBias);
+            TextureMapping.AddUnknown8(builder, Unknown8);
+            TextureMapping.AddUnknown7(builder, Unknown7);
+            TextureMapping.AddUnknown6(builder, Unknown6);
+            TextureMapping.AddUnknown5(builder, Unknown5);
+            TextureMapping.AddUnknown4(builder, Unknown4);
+            TextureMapping.AddUnknown3(builder, Unknown3);
+            TextureMapping.AddUnknown2(builder, Unknown2);
+            TextureMapping.AddUnknown1(builder, Unknown1);
             return TextureMapping.EndTextureMapping(builder);
         }
 
         public static void StartTextureMapping(FlatBufferBuilder builder) { builder.StartObject(9); }
-        public static void AddType(FlatBufferBuilder builder, uint Type) { builder.AddUint(0, Type, 0); }
-        public static void AddScale(FlatBufferBuilder builder, uint Scale) { builder.AddUint(1, Scale, 0); }
-        public static void AddTranslation(FlatBufferBuilder builder, uint Translation) { builder.AddUint(2, Translation, 0); }
-        public static void AddRotation(FlatBufferBuilder builder, uint Rotation) { builder.AddUint(3, Rotation, 0); }
-        public static void AddWrapS(FlatBufferBuilder builder, uint WrapS) { builder.AddUint(4, WrapS, 0); }
-        public static void AddWrapT(FlatBufferBuilder builder, uint WrapT) { builder.AddUint(5, WrapT, 0); }
-        public static void AddMagFilter(FlatBufferBuilder builder, uint magFilter) { builder.AddUint(6, magFilter, 0); }
-        public static void AddMinFilter(FlatBufferBuilder builder, uint minFilter) { builder.AddUint(7, minFilter, 0); }
-        public static void AddMinLOD(FlatBufferBuilder builder, float minLOD) { builder.AddFloat(8, minLOD, 0.0f); }
+        public static void AddUnknown1(FlatBufferBuilder builder, uint Unknown1) { builder.AddUint(0, Unknown1, 0); }
+        public static void AddUnknown2(FlatBufferBuilder builder, uint Unknown2) { builder.AddUint(1, Unknown2, 0); }
+        public static void AddUnknown3(FlatBufferBuilder builder, uint Unknown3) { builder.AddUint(2, Unknown3, 0); }
+        public static void AddUnknown4(FlatBufferBuilder builder, uint Unknown4) { builder.AddUint(3, Unknown4, 0); }
+        public static void AddUnknown5(FlatBufferBuilder builder, uint Unknown5) { builder.AddUint(4, Unknown5, 0); }
+        public static void AddUnknown6(FlatBufferBuilder builder, uint Unknown6) { builder.AddUint(5, Unknown6, 0); }
+        public static void AddUnknown7(FlatBufferBuilder builder, uint Unknown7) { builder.AddUint(6, Unknown7, 0); }
+        public static void AddUnknown8(FlatBufferBuilder builder, uint Unknown8) { builder.AddUint(7, Unknown8, 0); }
+        public static void AddLodBias(FlatBufferBuilder builder, float lodBias) { builder.AddFloat(8, lodBias, 0.0f); }
         public static Offset<TextureMapping> EndTextureMapping(FlatBufferBuilder builder)
         {
             int o = builder.EndObject();
@@ -582,16 +583,16 @@ namespace FlatBuffers.Gfbmdl
         public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
         public Group __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-        public uint BoneID { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint MeshID { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint BoneIndex { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint MeshIndex { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
         public BoundingBox? Bounding { get { int o = __p.__offset(8); return o != 0 ? (BoundingBox?)(new BoundingBox()).__assign(o + __p.bb_pos, __p.bb) : null; } }
         public uint Layer { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
         public static void StartGroup(FlatBufferBuilder builder) { builder.StartObject(4); }
-        public static void AddBoneID(FlatBufferBuilder builder, uint boneID) { builder.AddUint(0, boneID, 0); }
-        public static void AddMeshID(FlatBufferBuilder builder, uint meshID) { builder.AddUint(1, meshID, 0); }
+        public static void AddBoneIndex(FlatBufferBuilder builder, uint BoneIndex) { builder.AddUint(0, BoneIndex, 0); }
+        public static void AddMeshIndex(FlatBufferBuilder builder, uint MeshIndex) { builder.AddUint(1, MeshIndex, 0); }
         public static void AddBounding(FlatBufferBuilder builder, Offset<BoundingBox> BoundingOffset) { builder.AddStruct(2, BoundingOffset.Value, 0); }
-        public static void AddLayer(FlatBufferBuilder builder, uint layer) { builder.AddUint(3, layer, 0); }
+        public static void AddLayer(FlatBufferBuilder builder, uint Layer) { builder.AddUint(3, Layer, 0); }
         public static Offset<Group> EndGroup(FlatBufferBuilder builder)
         {
             int o = builder.EndObject();
@@ -610,8 +611,8 @@ namespace FlatBuffers.Gfbmdl
 
         public MeshPolygon? Polygons(int j) { int o = __p.__offset(4); return o != 0 ? (MeshPolygon?)(new MeshPolygon()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
         public int PolygonsLength { get { int o = __p.__offset(4); return o != 0 ? __p.__vector_len(o) : 0; } }
-        public MeshAlignment? Alignments(int j) { int o = __p.__offset(6); return o != 0 ? (MeshAlignment?)(new MeshAlignment()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-        public int AlignmentsLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
+        public MeshAttribute? Attributes(int j) { int o = __p.__offset(6); return o != 0 ? (MeshAttribute?)(new MeshAttribute()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+        public int AttributesLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
         public byte Data(int j) { int o = __p.__offset(8); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
         public int DataLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -623,12 +624,12 @@ namespace FlatBuffers.Gfbmdl
 
         public static Offset<Mesh> CreateMesh(FlatBufferBuilder builder,
             VectorOffset PolygonsOffset = default(VectorOffset),
-            VectorOffset AlignmentsOffset = default(VectorOffset),
+            VectorOffset AttributesOffset = default(VectorOffset),
             VectorOffset DataOffset = default(VectorOffset))
         {
             builder.StartObject(3);
             Mesh.AddData(builder, DataOffset);
-            Mesh.AddAlignments(builder, AlignmentsOffset);
+            Mesh.AddAttributes(builder, AttributesOffset);
             Mesh.AddPolygons(builder, PolygonsOffset);
             return Mesh.EndMesh(builder);
         }
@@ -638,10 +639,10 @@ namespace FlatBuffers.Gfbmdl
         public static VectorOffset CreatePolygonsVector(FlatBufferBuilder builder, Offset<MeshPolygon>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
         public static VectorOffset CreatePolygonsVectorBlock(FlatBufferBuilder builder, Offset<MeshPolygon>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
         public static void StartPolygonsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-        public static void AddAlignments(FlatBufferBuilder builder, VectorOffset AlignmentsOffset) { builder.AddOffset(1, AlignmentsOffset.Value, 0); }
-        public static VectorOffset CreateAlignmentsVector(FlatBufferBuilder builder, Offset<MeshAlignment>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-        public static VectorOffset CreateAlignmentsVectorBlock(FlatBufferBuilder builder, Offset<MeshAlignment>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-        public static void StartAlignmentsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+        public static void AddAttributes(FlatBufferBuilder builder, VectorOffset AttributesOffset) { builder.AddOffset(1, AttributesOffset.Value, 0); }
+        public static VectorOffset CreateAttributesVector(FlatBufferBuilder builder, Offset<MeshAttribute>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+        public static VectorOffset CreateAttributesVectorBlock(FlatBufferBuilder builder, Offset<MeshAttribute>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+        public static void StartAttributesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
         public static void AddData(FlatBufferBuilder builder, VectorOffset DataOffset) { builder.AddOffset(2, DataOffset.Value, 0); }
         public static VectorOffset CreateDataVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
         public static VectorOffset CreateDataVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
@@ -662,32 +663,32 @@ namespace FlatBuffers.Gfbmdl
         public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
         public MeshPolygon __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-        public uint MaterialID { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public ushort Data(int j) { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUshort(__p.__vector(o) + j * 2) : (ushort)0; }
-        public int DataLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
+        public uint MaterialIndex { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public ushort Faces(int j) { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUshort(__p.__vector(o) + j * 2) : (ushort)0; }
+        public int FacesLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDataBytes() { return __p.__vector_as_span(6); }
+  public Span<byte> GetFacesBytes() { return __p.__vector_as_span(6); }
 #else
-        public ArraySegment<byte>? GetDataBytes() { return __p.__vector_as_arraysegment(6); }
+        public ArraySegment<byte>? GetFacesBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
-        public ushort[] GetDataArray() { return __p.__vector_as_array<ushort>(6); }
+        public ushort[] GetFacesArray() { return __p.__vector_as_array<ushort>(6); }
 
         public static Offset<MeshPolygon> CreateMeshPolygon(FlatBufferBuilder builder,
-            uint materialID = 0,
-            VectorOffset dataOffset = default(VectorOffset))
+            uint MaterialIndex = 0,
+            VectorOffset FacesOffset = default(VectorOffset))
         {
             builder.StartObject(2);
-            MeshPolygon.AddData(builder, dataOffset);
-            MeshPolygon.AddMaterialID(builder, materialID);
+            MeshPolygon.AddFaces(builder, FacesOffset);
+            MeshPolygon.AddMaterialIndex(builder, MaterialIndex);
             return MeshPolygon.EndMeshPolygon(builder);
         }
 
         public static void StartMeshPolygon(FlatBufferBuilder builder) { builder.StartObject(2); }
-        public static void AddMaterialID(FlatBufferBuilder builder, uint materialID) { builder.AddUint(0, materialID, 0); }
-        public static void AddData(FlatBufferBuilder builder, VectorOffset dataOffset) { builder.AddOffset(1, dataOffset.Value, 0); }
-        public static VectorOffset CreateDataVector(FlatBufferBuilder builder, ushort[] data) { builder.StartVector(2, data.Length, 2); for (int i = data.Length - 1; i >= 0; i--) builder.AddUshort(data[i]); return builder.EndVector(); }
-        public static VectorOffset CreateDataVectorBlock(FlatBufferBuilder builder, ushort[] data) { builder.StartVector(2, data.Length, 2); builder.Add(data); return builder.EndVector(); }
-        public static void StartDataVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(2, numElems, 2); }
+        public static void AddMaterialIndex(FlatBufferBuilder builder, uint MaterialIndex) { builder.AddUint(0, MaterialIndex, 0); }
+        public static void AddFaces(FlatBufferBuilder builder, VectorOffset FacesOffset) { builder.AddOffset(1, FacesOffset.Value, 0); }
+        public static VectorOffset CreateFacesVector(FlatBufferBuilder builder, ushort[] data) { builder.StartVector(2, data.Length, 2); for (int i = data.Length - 1; i >= 0; i--) builder.AddUshort(data[i]); return builder.EndVector(); }
+        public static VectorOffset CreateFacesVectorBlock(FlatBufferBuilder builder, ushort[] data) { builder.StartVector(2, data.Length, 2); builder.Add(data); return builder.EndVector(); }
+        public static void StartFacesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(2, numElems, 2); }
         public static Offset<MeshPolygon> EndMeshPolygon(FlatBufferBuilder builder)
         {
             int o = builder.EndObject();
@@ -695,39 +696,39 @@ namespace FlatBuffers.Gfbmdl
         }
     };
 
-    public struct MeshAlignment : IFlatbufferObject
+    public struct MeshAttribute : IFlatbufferObject
     {
         private Table __p;
         public ByteBuffer ByteBuffer { get { return __p.bb; } }
-        public static MeshAlignment GetRootAsMeshAlignment(ByteBuffer _bb) { return GetRootAsMeshAlignment(_bb, new MeshAlignment()); }
-        public static MeshAlignment GetRootAsMeshAlignment(ByteBuffer _bb, MeshAlignment obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+        public static MeshAttribute GetRootAsMeshAttribute(ByteBuffer _bb) { return GetRootAsMeshAttribute(_bb, new MeshAttribute()); }
+        public static MeshAttribute GetRootAsMeshAttribute(ByteBuffer _bb, MeshAttribute obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
         public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-        public MeshAlignment __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+        public MeshAttribute __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-        public VertexType TypeID { get { int o = __p.__offset(4); return o != 0 ? (VertexType)__p.bb.GetUint(o + __p.bb_pos) : VertexType.Position; } }
-        public BufferFormat FormatID { get { int o = __p.__offset(6); return o != 0 ? (BufferFormat)__p.bb.GetUint(o + __p.bb_pos) : BufferFormat.Float; } }
+        public uint VertexType { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint BufferFormat { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
         public uint ElementCount { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
-        public static Offset<MeshAlignment> CreateMeshAlignment(FlatBufferBuilder builder,
-            VertexType TypeID = VertexType.Position,
-            BufferFormat FormatID = BufferFormat.Float,
+        public static Offset<MeshAttribute> CreateMeshAttribute(FlatBufferBuilder builder,
+            uint VertexType = 0,
+            uint BufferFormat = 0,
             uint ElementCount = 0)
         {
             builder.StartObject(3);
-            MeshAlignment.AddElementCount(builder, ElementCount);
-            MeshAlignment.AddFormatID(builder, FormatID);
-            MeshAlignment.AddTypeID(builder, TypeID);
-            return MeshAlignment.EndMeshAlignment(builder);
+            MeshAttribute.AddElementCount(builder, ElementCount);
+            MeshAttribute.AddBufferFormat(builder, BufferFormat);
+            MeshAttribute.AddVertexType(builder, VertexType);
+            return MeshAttribute.EndMeshAttribute(builder);
         }
 
-        public static void StartMeshAlignment(FlatBufferBuilder builder) { builder.StartObject(3); }
-        public static void AddTypeID(FlatBufferBuilder builder, VertexType TypeID) { builder.AddUint(0, (uint)TypeID, 0); }
-        public static void AddFormatID(FlatBufferBuilder builder, BufferFormat FormatID) { builder.AddUint(1, (uint)FormatID, 0); }
+        public static void StartMeshAttribute(FlatBufferBuilder builder) { builder.StartObject(3); }
+        public static void AddVertexType(FlatBufferBuilder builder, uint VertexType) { builder.AddUint(0, VertexType, 0); }
+        public static void AddBufferFormat(FlatBufferBuilder builder, uint BufferFormat) { builder.AddUint(1, BufferFormat, 0); }
         public static void AddElementCount(FlatBufferBuilder builder, uint ElementCount) { builder.AddUint(2, ElementCount, 0); }
-        public static Offset<MeshAlignment> EndMeshAlignment(FlatBufferBuilder builder)
+        public static Offset<MeshAttribute> EndMeshAttribute(FlatBufferBuilder builder)
         {
             int o = builder.EndObject();
-            return new Offset<MeshAlignment>(o);
+            return new Offset<MeshAttribute>(o);
         }
     };
 
@@ -747,7 +748,7 @@ namespace FlatBuffers.Gfbmdl
         public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
         public byte[] GetNameArray() { return __p.__vector_as_array<byte>(4); }
-        public BoneType Type { get { int o = __p.__offset(6); return o != 0 ? (BoneType)__p.bb.GetUint(o + __p.bb_pos) : BoneType.NoSkinning; } }
+        public uint BoneType { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
         public int Parent { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
         public uint Zero { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
         public bool Visible { get { int o = __p.__offset(12); return o != 0 ? 0 != __p.bb.Get(o + __p.bb_pos) : (bool)false; } }
@@ -756,11 +757,11 @@ namespace FlatBuffers.Gfbmdl
         public Vector3? Translation { get { int o = __p.__offset(18); return o != 0 ? (Vector3?)(new Vector3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
         public Vector3? RadiusStart { get { int o = __p.__offset(20); return o != 0 ? (Vector3?)(new Vector3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
         public Vector3? RadiusEnd { get { int o = __p.__offset(22); return o != 0 ? (Vector3?)(new Vector3()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-        public UnknownData? SkinCheck { get { int o = __p.__offset(24); return o != 0 ? (UnknownData?)(new UnknownData()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+        public BoneRigidData? RigidCheck { get { int o = __p.__offset(24); return o != 0 ? (BoneRigidData?)(new BoneRigidData()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
         public static void StartBone(FlatBufferBuilder builder) { builder.StartObject(11); }
         public static void AddName(FlatBufferBuilder builder, StringOffset NameOffset) { builder.AddOffset(0, NameOffset.Value, 0); }
-        public static void AddType(FlatBufferBuilder builder, BoneType Type) { builder.AddUint(1, (uint)Type, 0); }
+        public static void AddBoneType(FlatBufferBuilder builder, uint BoneType) { builder.AddUint(1, BoneType, 0); }
         public static void AddParent(FlatBufferBuilder builder, int Parent) { builder.AddInt(2, Parent, 0); }
         public static void AddZero(FlatBufferBuilder builder, uint Zero) { builder.AddUint(3, Zero, 0); }
         public static void AddVisible(FlatBufferBuilder builder, bool Visible) { builder.AddBool(4, Visible, false); }
@@ -769,7 +770,7 @@ namespace FlatBuffers.Gfbmdl
         public static void AddTranslation(FlatBufferBuilder builder, Offset<Vector3> TranslationOffset) { builder.AddStruct(7, TranslationOffset.Value, 0); }
         public static void AddRadiusStart(FlatBufferBuilder builder, Offset<Vector3> RadiusStartOffset) { builder.AddStruct(8, RadiusStartOffset.Value, 0); }
         public static void AddRadiusEnd(FlatBufferBuilder builder, Offset<Vector3> RadiusEndOffset) { builder.AddStruct(9, RadiusEndOffset.Value, 0); }
-        public static void AddSkinCheck(FlatBufferBuilder builder, Offset<UnknownData> SkinCheckOffset) { builder.AddStruct(10, SkinCheckOffset.Value, 0); }
+        public static void AddRigidCheck(FlatBufferBuilder builder, Offset<BoneRigidData> RigidCheckOffset) { builder.AddStruct(10, RigidCheckOffset.Value, 0); }
         public static Offset<Bone> EndBone(FlatBufferBuilder builder)
         {
             int o = builder.EndObject();
@@ -777,136 +778,56 @@ namespace FlatBuffers.Gfbmdl
         }
     };
 
-    public struct UnknownData : IFlatbufferObject
+    public struct BoneRigidData : IFlatbufferObject
     {
         private Struct __p;
         public ByteBuffer ByteBuffer { get { return __p.bb; } }
         public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-        public UnknownData __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+        public BoneRigidData __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-        public sbyte NoSkin { get { return __p.bb.GetSbyte(__p.bb_pos + 0); } }
+        public sbyte Unknown1 { get { return __p.bb.GetSbyte(__p.bb_pos + 0); } }
 
-        public static Offset<UnknownData> CreateUnknownData(FlatBufferBuilder builder, sbyte NoSkin)
+        public static Offset<BoneRigidData> CreateBoneRigidData(FlatBufferBuilder builder, sbyte Unknown1)
         {
             builder.Prep(1, 1);
-            builder.PutSbyte(NoSkin);
-            return new Offset<UnknownData>(builder.Offset);
+            builder.PutSbyte(Unknown1);
+            return new Offset<BoneRigidData>(builder.Offset);
         }
     };
 
-    public struct RenderInfo : IFlatbufferObject
+    public struct CollisionGroup : IFlatbufferObject
     {
         private Table __p;
         public ByteBuffer ByteBuffer { get { return __p.bb; } }
-        public static RenderInfo GetRootAsRenderInfo(ByteBuffer _bb) { return GetRootAsRenderInfo(_bb, new RenderInfo()); }
-        public static RenderInfo GetRootAsRenderInfo(ByteBuffer _bb, RenderInfo obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+        public static CollisionGroup GetRootAsCollisionGroup(ByteBuffer _bb) { return GetRootAsCollisionGroup(_bb, new CollisionGroup()); }
+        public static CollisionGroup GetRootAsCollisionGroup(ByteBuffer _bb, CollisionGroup obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
         public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-        public RenderInfo __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+        public CollisionGroup __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-        public uint Unknown1 { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Unknown2 { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public RenderUnknown? Unknown3 { get { int o = __p.__offset(8); return o != 0 ? (RenderUnknown?)(new RenderUnknown()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-        public RenderUnknown2? Unknown4 { get { int o = __p.__offset(10); return o != 0 ? (RenderUnknown2?)(new RenderUnknown2()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+        public uint BoneIndex { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint Unknown1 { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public uint BoneChildren(int j) { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+        public int BoneChildrenLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetBoneChildrenBytes() { return __p.__vector_as_span(8); }
+#else
+        public ArraySegment<byte>? GetBoneChildrenBytes() { return __p.__vector_as_arraysegment(8); }
+#endif
+        public uint[] GetBoneChildrenArray() { return __p.__vector_as_array<uint>(8); }
+        public BoundingBox? Bounding { get { int o = __p.__offset(10); return o != 0 ? (BoundingBox?)(new BoundingBox()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
-        public static Offset<RenderInfo> CreateRenderInfo(FlatBufferBuilder builder,
-            uint Unknown1 = 0,
-            uint Unknown2 = 0,
-            Offset<RenderUnknown> Unknown3Offset = default(Offset<RenderUnknown>),
-            Offset<RenderUnknown2> Unknown4Offset = default(Offset<RenderUnknown2>))
-        {
-            builder.StartObject(4);
-            RenderInfo.AddUnknown4(builder, Unknown4Offset);
-            RenderInfo.AddUnknown3(builder, Unknown3Offset);
-            RenderInfo.AddUnknown2(builder, Unknown2);
-            RenderInfo.AddUnknown1(builder, Unknown1);
-            return RenderInfo.EndRenderInfo(builder);
-        }
-
-        public static void StartRenderInfo(FlatBufferBuilder builder) { builder.StartObject(4); }
-        public static void AddUnknown1(FlatBufferBuilder builder, uint Unknown1) { builder.AddUint(0, Unknown1, 0); }
-        public static void AddUnknown2(FlatBufferBuilder builder, uint Unknown2) { builder.AddUint(1, Unknown2, 0); }
-        public static void AddUnknown3(FlatBufferBuilder builder, Offset<RenderUnknown> Unknown3Offset) { builder.AddOffset(2, Unknown3Offset.Value, 0); }
-        public static void AddUnknown4(FlatBufferBuilder builder, Offset<RenderUnknown2> Unknown4Offset) { builder.AddOffset(3, Unknown4Offset.Value, 0); }
-        public static Offset<RenderInfo> EndRenderInfo(FlatBufferBuilder builder)
+        public static void StartCollisionGroup(FlatBufferBuilder builder) { builder.StartObject(4); }
+        public static void AddBoneIndex(FlatBufferBuilder builder, uint BoneIndex) { builder.AddUint(0, BoneIndex, 0); }
+        public static void AddUnknown1(FlatBufferBuilder builder, uint Unknown1) { builder.AddUint(1, Unknown1, 0); }
+        public static void AddBoneChildren(FlatBufferBuilder builder, VectorOffset BoneChildrenOffset) { builder.AddOffset(2, BoneChildrenOffset.Value, 0); }
+        public static VectorOffset CreateBoneChildrenVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+        public static VectorOffset CreateBoneChildrenVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+        public static void StartBoneChildrenVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+        public static void AddBounding(FlatBufferBuilder builder, Offset<BoundingBox> BoundingOffset) { builder.AddStruct(3, BoundingOffset.Value, 0); }
+        public static Offset<CollisionGroup> EndCollisionGroup(FlatBufferBuilder builder)
         {
             int o = builder.EndObject();
-            return new Offset<RenderInfo>(o);
-        }
-    };
-
-    public struct RenderUnknown : IFlatbufferObject
-    {
-        private Table __p;
-        public ByteBuffer ByteBuffer { get { return __p.bb; } }
-        public static RenderUnknown GetRootAsRenderUnknown(ByteBuffer _bb) { return GetRootAsRenderUnknown(_bb, new RenderUnknown()); }
-        public static RenderUnknown GetRootAsRenderUnknown(ByteBuffer _bb, RenderUnknown obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-        public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-        public RenderUnknown __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
-
-        public uint Unknown { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-
-        public static Offset<RenderUnknown> CreateRenderUnknown(FlatBufferBuilder builder,
-            uint Unknown = 0)
-        {
-            builder.StartObject(1);
-            RenderUnknown.AddUnknown(builder, Unknown);
-            return RenderUnknown.EndRenderUnknown(builder);
-        }
-
-        public static void StartRenderUnknown(FlatBufferBuilder builder) { builder.StartObject(1); }
-        public static void AddUnknown(FlatBufferBuilder builder, uint Unknown) { builder.AddUint(0, Unknown, 0); }
-        public static Offset<RenderUnknown> EndRenderUnknown(FlatBufferBuilder builder)
-        {
-            int o = builder.EndObject();
-            return new Offset<RenderUnknown>(o);
-        }
-    };
-
-    public struct RenderUnknown2 : IFlatbufferObject
-    {
-        private Table __p;
-        public ByteBuffer ByteBuffer { get { return __p.bb; } }
-        public static RenderUnknown2 GetRootAsRenderUnknown2(ByteBuffer _bb) { return GetRootAsRenderUnknown2(_bb, new RenderUnknown2()); }
-        public static RenderUnknown2 GetRootAsRenderUnknown2(ByteBuffer _bb, RenderUnknown2 obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-        public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-        public RenderUnknown2 __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
-
-        public float Unknown1 { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-        public float Unknown2 { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-        public float Unknown3 { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-        public float Unknown4 { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-        public float Unknown5 { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-        public float Unknown6 { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-
-        public static Offset<RenderUnknown2> CreateRenderUnknown2(FlatBufferBuilder builder,
-            float Unknown1 = 0.0f,
-            float Unknown2 = 0.0f,
-            float Unknown3 = 0.0f,
-            float Unknown4 = 0.0f,
-            float Unknown5 = 0.0f,
-            float Unknown6 = 0.0f)
-        {
-            builder.StartObject(6);
-            RenderUnknown2.AddUnknown6(builder, Unknown6);
-            RenderUnknown2.AddUnknown5(builder, Unknown5);
-            RenderUnknown2.AddUnknown4(builder, Unknown4);
-            RenderUnknown2.AddUnknown3(builder, Unknown3);
-            RenderUnknown2.AddUnknown2(builder, Unknown2);
-            RenderUnknown2.AddUnknown1(builder, Unknown1);
-            return RenderUnknown2.EndRenderUnknown2(builder);
-        }
-
-        public static void StartRenderUnknown2(FlatBufferBuilder builder) { builder.StartObject(6); }
-        public static void AddUnknown1(FlatBufferBuilder builder, float Unknown1) { builder.AddFloat(0, Unknown1, 0.0f); }
-        public static void AddUnknown2(FlatBufferBuilder builder, float Unknown2) { builder.AddFloat(1, Unknown2, 0.0f); }
-        public static void AddUnknown3(FlatBufferBuilder builder, float Unknown3) { builder.AddFloat(2, Unknown3, 0.0f); }
-        public static void AddUnknown4(FlatBufferBuilder builder, float Unknown4) { builder.AddFloat(3, Unknown4, 0.0f); }
-        public static void AddUnknown5(FlatBufferBuilder builder, float Unknown5) { builder.AddFloat(4, Unknown5, 0.0f); }
-        public static void AddUnknown6(FlatBufferBuilder builder, float Unknown6) { builder.AddFloat(5, Unknown6, 0.0f); }
-        public static Offset<RenderUnknown2> EndRenderUnknown2(FlatBufferBuilder builder)
-        {
-            int o = builder.EndObject();
-            return new Offset<RenderUnknown2>(o);
+            return new Offset<CollisionGroup>(o);
         }
     };
 

@@ -21,6 +21,8 @@ namespace LayoutBXLYT
             InitializeComponent();
             stToolStrip1.HighlightSelectedTab = true;
             stToolStrip1.ItemClicked += tabMenu_SelectedIndexChanged;
+
+            stToolStrip1.CanOverflow = false;
         }
 
         public Dictionary<string, STGenericTexture> GetTextures()
@@ -95,6 +97,11 @@ namespace LayoutBXLYT
                 ((BasePaneEditor)editor).RefreshEditor();
         }
 
+        public List<BxlanHeader> GetAnimations()
+        {
+            return ParentEditor.AnimationFiles;
+        }
+
         public void LoadMaterial(BxlytMaterial material, LayoutEditor parentEditor)
         {
             ActiveMaterial = material;
@@ -159,6 +166,7 @@ namespace LayoutBXLYT
             }
 
             AddTab("User Data", LoadUserData);
+            AddTab("Anims", LoadAnimationData);
 
             int tabIndex;
             if (pane is IPicturePane)
@@ -204,6 +212,13 @@ namespace LayoutBXLYT
                 Runtime.LayoutEditor.TextPaneTabIndex = tabIndex;
             else
                Runtime.LayoutEditor.NullPaneTabIndex = tabIndex;
+        }
+
+        public void LoadAnimationData(object sender, EventArgs e)
+        {
+            UpdateTabIndex();
+            var animEditor = GetActiveEditor<PaneAnimationController>();
+            animEditor.LoadPane(ActivePane, this);
         }
 
         private void LoadUserData(object sender, EventArgs e)
@@ -339,6 +354,11 @@ namespace LayoutBXLYT
         }
 
         private void tabMenu_SelectedIndexChanged(object sender, EventArgs e) {
+        }
+
+        private void stToolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
 }

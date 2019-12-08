@@ -12,7 +12,7 @@ using Toolbox.Library;
 
 namespace LayoutBXLYT
 {
-    public partial class LayoutAnimEditorBasic : LayoutDocked
+    public partial class LayoutAnimEditorBasic : UserControl
     {
         private BxlytHeader ParentLayout;
         private BxlanHeader ActiveAnim;
@@ -54,10 +54,19 @@ namespace LayoutBXLYT
             }
         }
 
+        public void LoadAnimationEntry(BxlanHeader bxlan, BxlanPaiEntry entry)
+        {
+            ActiveAnim = bxlan;
+            LoadAnimationEntry(entry, null);
+        }
+
         private void LoadAnimationEntry(BxlanPaiEntry entry, TreeNode root)
         {
             var nodeEntry = new GroupAnimWrapper(entry.Name) { Tag = entry };
-            root.Nodes.Add(nodeEntry);
+            if (root != null)
+                root.Nodes.Add(nodeEntry);
+            else
+                treeView1.Nodes.Add(nodeEntry);
 
             for (int i = 0; i < entry.Tags.Count; i++)
             {

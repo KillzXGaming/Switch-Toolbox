@@ -71,8 +71,7 @@ namespace Toolbox.Library
                       Flags |= PostProcessSteps.CalculateTangentSpace;
                       Flags |= PostProcessSteps.GenerateNormals;*/
 
-                    
-
+                   
                     scene = Importer.ImportFile(FileName, settings.GetFlags());
 
                     if (Utils.GetExtension(FileName) == ".dae")
@@ -497,6 +496,11 @@ namespace Toolbox.Library
             bool IsBone = boneNames.Contains(Name) && !boneNames.Contains(ParentArmatureName) ||
                           Name.Contains("Skl_Root") || Name.Contains("nw4f_root") ||
                           Name.Contains("skl_root") || Name.Contains("all_root") || Name.Contains("_root") || Name.Contains("Root");
+
+            if (DaeHelper.VisualSceneNodeTypes.ContainsKey(Name)) {
+                if (DaeHelper.VisualSceneNodeTypes[Name] == "JOINT")
+                    IsBone = true;
+            }
 
             //Root set saved by this tool
             //Get our root manually as it's a child to this

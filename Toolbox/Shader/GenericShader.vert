@@ -115,21 +115,20 @@ void main()
 
     vec4 objPos = vec4(vPosition.xyz, 1.0);
 	if (vBone.x != -1.0)
-		objPos = skin(vPosition, index);
+		objPos = skin(objPos.xyz, index);
 	if(vBone.x != -1.0)
 		normal = normalize((skinNRM(vNormal.xyz, index)).xyz);
 
-	vec4 position = mtxCam  * mtxMdl *  vec4(objPos.xyz, 1.0);
+	objPos = mtxMdl * vec4(objPos.xyz, 1.0);
+
+	vec4 position = mtxCam  * objPos;
 
     normal = vNormal;
     vertexColor = vColor;
-	position = objPos;
 	f_texcoord0 = vUV0;
 	f_texcoord1 = vUV1;
 	f_texcoord2 = vUV2;
 	tangent = vTangent;
-
-	position = mtxCam * mtxMdl * vec4(vPosition.xyz, 1.0);
 
 	f_texcoord0.x *= ColorUVScaleU + ColorUVTranslateU;
 	f_texcoord0.y *= ColorUVScaleV + ColorUVTranslateV;

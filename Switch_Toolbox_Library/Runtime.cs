@@ -20,7 +20,7 @@ namespace Toolbox.Library
 
         public static bool EnableDragDrop = true;
 
-        public static bool UseSingleInstance = true;
+        public static bool UseSingleInstance = false;
         public static bool UseDirectXTexDecoder = true;
         public static bool DEVELOPER_DEBUG_MODE = false;
         public static bool AlwaysCompressOnSave = false;
@@ -37,6 +37,11 @@ namespace Toolbox.Library
         public static string SmoGamePath = "";
         public static string TpGamePath = "";
         public static string BotwGamePath = "";
+
+        public class UVEditor
+        {
+            public static Color UVColor = Color.FromArgb(255, 128, 0);
+        }
 
         public class SwitchKeys
         {

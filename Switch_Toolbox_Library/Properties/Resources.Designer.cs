@@ -451,6 +451,16 @@ namespace Toolbox.Library.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] flatc {
+            get {
+                object obj = ResourceManager.GetObject("flatc", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap Folder {
@@ -467,6 +477,26 @@ namespace Toolbox.Library.Properties {
             get {
                 object obj = ResourceManager.GetObject("Font", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] gfbanm {
+            get {
+                object obj = ResourceManager.GetObject("gfbanm", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] gfbmdl {
+            get {
+                object obj = ResourceManager.GetObject("gfbmdl", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         

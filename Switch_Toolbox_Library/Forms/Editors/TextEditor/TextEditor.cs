@@ -94,6 +94,32 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        private bool isJson;
+        public bool IsJson
+        {
+            get
+            {
+                return isJson;
+            }
+            set
+            {
+                isJson = true;
+
+                if (isJson)
+                {
+                    scintilla1.Styles[Style.Json.Default].ForeColor = Color.Silver;
+                    scintilla1.Styles[Style.Json.BlockComment].ForeColor = Color.FromArgb(0, 128, 0); // Green
+                    scintilla1.Styles[Style.Json.LineComment].ForeColor = Color.FromArgb(0, 128, 0); // Green
+                    scintilla1.Styles[Style.Json.Number].ForeColor = Color.Olive;
+                    scintilla1.Styles[Style.Json.PropertyName].ForeColor = Color.Blue;
+                    scintilla1.Styles[Style.Json.String].ForeColor = Color.FromArgb(163, 21, 21); // Red
+                    scintilla1.Styles[Style.Json.StringEol].BackColor = Color.Pink;
+                    scintilla1.Styles[Style.Json.Operator].ForeColor = Color.Purple;
+                    scintilla1.Lexer = Lexer.Json;
+                }
+            }
+        }
+
         private bool isYAML;
         public bool IsYAML
         {

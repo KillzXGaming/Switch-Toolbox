@@ -695,10 +695,21 @@ namespace FirstPlugin
                 int VertexCount = (int)Slice.Size / StrideSize;
 
                 VertexAttribute.VertexData = new Syroot.Maths.Vector4F[VertexCount];
-                for (int v = 0; v < VertexCount; v++)
+                if (VertexAttribute.Mode == SepdVertexAttribMode.ARRAY)
                 {
-                    VertexAttribute.VertexData[v] = ReadVertexBufferData(reader, VertexAttribute, elementCount);
+                    for (int v = 0; v < VertexCount; v++) {
+                        VertexAttribute.VertexData[v] = ReadVertexBufferData(reader, VertexAttribute, elementCount);
+                    }
                 }
+                else
+                {
+                    VertexAttribute.VertexData[0] = new Syroot.Maths.Vector4F(
+                        VertexAttribute.Constants[0],
+                        VertexAttribute.Constants[1],
+                        VertexAttribute.Constants[2],
+                        VertexAttribute.Constants[3]);
+                }
+
             }
 
             private static Syroot.Maths.Vector4F ReadVertexBufferData(FileReader reader, SepdVertexAttribute VertexAttribute, int elementCount)

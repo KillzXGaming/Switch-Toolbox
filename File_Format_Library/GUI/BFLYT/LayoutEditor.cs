@@ -431,10 +431,14 @@ namespace LayoutBXLYT
 
         public void ShowBxlanEditor(BxlanHeader bxlan)
         {
+            LayoutDocked dock = new LayoutDocked();
             LayoutAnimEditorBasic editor = new LayoutAnimEditorBasic();
             editor.LoadAnim(bxlan, ActiveLayout);
             editor.OnPropertyChanged += AnimPropertyChanged;
-            editor.Show(this);
+            editor.Dock = DockStyle.Fill;
+            dock.Controls.Add(editor);
+
+            dock.Show(this);
 
         /*    if (LayoutAnimEditor != null) {
                 LayoutAnimEditor.LoadFile(bxlan.GetGenericAnimation());

@@ -124,6 +124,7 @@ void main()
 	f_texcoord1 = vUV1;
 	f_texcoord2 = vUV2;
 	tangent = vTangent;
+	binormal = vBinormal;
 
     gl_Position = position;
 

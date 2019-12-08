@@ -18,7 +18,6 @@ uniform mat4 mtxCam;
 uniform mat4 mtxMdl;
 
 uniform vec3 specLightDirection;
-uniform vec3 difLightDirection;
 uniform mat4 projMatrix;
 uniform mat4 normalMatrix;
 uniform mat4 modelViewMatrix;

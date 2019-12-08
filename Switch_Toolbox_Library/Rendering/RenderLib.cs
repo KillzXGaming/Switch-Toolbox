@@ -23,14 +23,20 @@ namespace Toolbox.Library.Rendering
         public Vector3 pos = new Vector3(0);
         public Vector3 nrm = new Vector3(0);
         public Vector4 col = new Vector4(1);
+        public Vector4 col2 = new Vector4(1);
+
         public Vector2 uv0 = new Vector2(0);
         public Vector2 uv1 = new Vector2(0);
         public Vector2 uv2 = new Vector2(0);
+        public Vector2 uv3 = new Vector2(0);
+
         public Vector4 tan = new Vector4(0);
         public Vector4 bitan = new Vector4(0);
 
         public List<int> boneIds = new List<int>();
         public List<float> boneWeights = new List<float>();
+
+        public float normalW;
 
         public List<string> boneNames = new List<string>();
 
@@ -49,5 +55,7 @@ namespace Toolbox.Library.Rendering
         //For vertex morphing 
         public Vector3 pos1 = new Vector3();
         public Vector3 pos2 = new Vector3();
+
+        public List<Vector4> Unknowns = new List<Vector4>();
     }
 }

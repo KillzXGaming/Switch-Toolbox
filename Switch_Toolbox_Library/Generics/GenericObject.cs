@@ -278,7 +278,15 @@ namespace Toolbox.Library
             if (vertices.Count < 3)
                 return;
 
-            List<int> f = lodMeshes[DisplayLODIndex].getDisplayFace();
+            List<int> f = new List<int>();
+            if (lodMeshes.Count > 0)
+                f = lodMeshes[DisplayLODIndex].getDisplayFace();
+            if (PolygonGroups.Count > 0)
+            {
+                foreach (var group in PolygonGroups)
+                    f.AddRange(group.GetDisplayFace());
+            }
+
             Vector3[] tanArray = new Vector3[vertices.Count];
             Vector3[] bitanArray = new Vector3[vertices.Count];
 

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.gL_ControlLegacy2D1 = new OpenTK.GLControl();
             this.scaleYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
             this.transYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
             this.transXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
@@ -48,6 +47,7 @@
             this.stButton1 = new Toolbox.Library.Forms.STButton();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.stPanel3 = new Toolbox.Library.Forms.STPanel();
+            this.uvViewport1 = new Toolbox.Library.Forms.UVViewport();
             ((System.ComponentModel.ISupportInitialize)(this.scaleYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transYUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transXUD)).BeginInit();
@@ -56,21 +56,6 @@
             this.stPanel2.SuspendLayout();
             this.stPanel3.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // gL_ControlLegacy2D1
-            // 
-            this.gL_ControlLegacy2D1.BackColor = System.Drawing.Color.Black;
-            this.gL_ControlLegacy2D1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gL_ControlLegacy2D1.Location = new System.Drawing.Point(0, 0);
-            this.gL_ControlLegacy2D1.Name = "gL_ControlLegacy2D1";
-            this.gL_ControlLegacy2D1.Size = new System.Drawing.Size(443, 454);
-            this.gL_ControlLegacy2D1.TabIndex = 2;
-            this.gL_ControlLegacy2D1.VSync = false;
-            this.gL_ControlLegacy2D1.Paint += new System.Windows.Forms.PaintEventHandler(this.gL_ControlLegacy2D1_Paint);
-            this.gL_ControlLegacy2D1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gL_ControlLegacy2D1_MouseDown);
-            this.gL_ControlLegacy2D1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gL_ControlLegacy2D1_MouseMove);
-            this.gL_ControlLegacy2D1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.OnMouseWheel);
-            this.gL_ControlLegacy2D1.Resize += new System.EventHandler(this.gL_ControlLegacy2D1_Resize);
             // 
             // scaleYUD
             // 
@@ -209,6 +194,7 @@
             this.drawableContainerCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.drawableContainerCB.ButtonColor = System.Drawing.Color.Empty;
             this.drawableContainerCB.FormattingEnabled = true;
+            this.drawableContainerCB.IsReadOnly = false;
             this.drawableContainerCB.Location = new System.Drawing.Point(294, 7);
             this.drawableContainerCB.Name = "drawableContainerCB";
             this.drawableContainerCB.Size = new System.Drawing.Size(146, 21);
@@ -223,6 +209,7 @@
             this.meshesCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.meshesCB.ButtonColor = System.Drawing.Color.Empty;
             this.meshesCB.FormattingEnabled = true;
+            this.meshesCB.IsReadOnly = false;
             this.meshesCB.Location = new System.Drawing.Point(294, 34);
             this.meshesCB.Name = "meshesCB";
             this.meshesCB.Size = new System.Drawing.Size(146, 21);
@@ -280,6 +267,7 @@
             this.textureCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.textureCB.ButtonColor = System.Drawing.Color.Empty;
             this.textureCB.FormattingEnabled = true;
+            this.textureCB.IsReadOnly = false;
             this.textureCB.Location = new System.Drawing.Point(446, 34);
             this.textureCB.Name = "textureCB";
             this.textureCB.Size = new System.Drawing.Size(156, 21);
@@ -293,6 +281,7 @@
             this.comboBox1.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBox1.ButtonColor = System.Drawing.Color.Empty;
             this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.IsReadOnly = false;
             this.comboBox1.Location = new System.Drawing.Point(550, 7);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(52, 21);
@@ -312,7 +301,7 @@
             // btnApplyTransform
             // 
             this.btnApplyTransform.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnApplyTransform.Location = new System.Drawing.Point(3, 138);
+            this.btnApplyTransform.Location = new System.Drawing.Point(6, 279);
             this.btnApplyTransform.Name = "btnApplyTransform";
             this.btnApplyTransform.Size = new System.Drawing.Size(119, 23);
             this.btnApplyTransform.TabIndex = 9;
@@ -357,12 +346,23 @@
             // 
             // stPanel3
             // 
-            this.stPanel3.Controls.Add(this.gL_ControlLegacy2D1);
+            this.stPanel3.Controls.Add(this.uvViewport1);
             this.stPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel3.Location = new System.Drawing.Point(162, 70);
             this.stPanel3.Name = "stPanel3";
             this.stPanel3.Size = new System.Drawing.Size(443, 454);
             this.stPanel3.TabIndex = 5;
+            // 
+            // uvViewport1
+            // 
+            this.uvViewport1.ActiveTextureMap = null;
+            this.uvViewport1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uvViewport1.Location = new System.Drawing.Point(0, 0);
+            this.uvViewport1.Name = "uvViewport1";
+            this.uvViewport1.Size = new System.Drawing.Size(443, 454);
+            this.uvViewport1.TabIndex = 0;
+            this.uvViewport1.UseGrid = false;
+            this.uvViewport1.UseOrtho = true;
             // 
             // UVEditor
             // 
@@ -391,7 +391,6 @@
         private STPanel stPanel1;
         private STLabel stLabel1;
         private Toolbox.Library.Forms.STComboBox comboBox1;
-        private OpenTK.GLControl gL_ControlLegacy2D1;
         private Toolbox.Library.Forms.STComboBox textureCB;
         private STLabel stLabel2;
         private NumericUpDownFloat scaleXUD;
@@ -408,5 +407,6 @@
         private STPanel stPanel3;
         private STButton stButton1;
         private STComboBox drawableContainerCB;
+        private UVViewport uvViewport1;
     }
 }

@@ -8,6 +8,7 @@ using Toolbox.Library.Rendering;
 using OpenTK;
 using Toolbox.Library.Forms;
 using System.Windows.Forms;
+using FirstPlugin.Forms;
 
 namespace FirstPlugin
 {
@@ -18,8 +19,17 @@ namespace FirstPlugin
 
         public GFLXModel ParentModel { get; set; }
 
-        public FlatBuffers.Gfbmdl.Mesh MeshData { get; set; }
-        public FlatBuffers.Gfbmdl.Group GroupData { get; set; }
+        public GFBANM.MeshAnimationController AnimationController = new GFBANM.MeshAnimationController();
+
+        public Matrix4 Transform { get; set; }
+
+        public GFMDLStructs.Mesh MeshData { get; set; }
+        public GFMDLStructs.Group GroupData { get; set; }
+
+        public override void OnClick(TreeView treeView) {
+            var editor = ParentModel.LoadEditor<GFLXMeshEditor>();
+            editor.LoadMesh(this);
+        }
 
         public GFLXMaterialData GetMaterial(STGenericPolygonGroup polygroup)
         {
@@ -31,9 +41,33 @@ namespace FirstPlugin
             List<ToolStripItem> Items = new List<ToolStripItem>();
             var uvMenu = new ToolStripMenuItem("UVs");
             Items.Add(uvMenu);
+
+            Items.Add(new ToolStripMenuItem("Recalculate Bitangents", null, CalculateTangentBitangenAction, Keys.Control | Keys.T));
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip Vertical", null, FlipVerticalAction, Keys.Control | Keys.V));
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip Horizontal", null, FlipHorizontalAction, Keys.Control | Keys.H));
+            var colorMenu = new ToolStripMenuItem("Vertex Colors");
+            colorMenu.DropDownItems.Add(new ToolStripMenuItem("Set Color", null, SetVertexColorDialog, Keys.Control | Keys.C));
+            Items.Add(colorMenu);
+
             return Items.ToArray();
+        }
+
+        private void SetVertexColorDialog(object sender, EventArgs args)
+        {
+            if (!MeshData.Attributes.Any(x => x.VertexType == (uint)GFMDLStructs.VertexType.Color1))
+                return;
+
+            ColorDialog dlg = new ColorDialog();
+
+            if (dlg.ShowDialog() == DialogResult.OK) {
+                SetVertexColor(new Vector4(
+                    dlg.Color.R / 255.0f,
+                    dlg.Color.G / 255.0f,
+                    dlg.Color.B / 255.0f,
+                    dlg.Color.A / 255.0f));
+
+                UpdateMesh();
+            }
         }
 
         private void FlipVerticalAction(object sender, EventArgs args) {
@@ -46,9 +80,16 @@ namespace FirstPlugin
             UpdateMesh();
         }
 
+        private void CalculateTangentBitangenAction(object sender, EventArgs args)
+        {
+            this.CalculateTangentBitangent(false);
+            UpdateMesh();
+        }
+
+
         private void UpdateMesh() {
+            MeshData.SetData(GFLXMeshBufferHelper.CreateVertexDataBuffer(this));
             ParentModel.UpdateVertexData(true);
-            GFLXMeshBufferHelper.ReloadVertexData(this);
         }
 
         public struct DisplayVertex
@@ -69,8 +110,8 @@ namespace FirstPlugin
         }
 
         public GFLXMesh(GFLXModel model, 
-            FlatBuffers.Gfbmdl.Group group, 
-            FlatBuffers.Gfbmdl.Mesh mesh)
+            GFMDLStructs.Group group,
+            GFMDLStructs.Mesh mesh)
         {
             ParentModel = model;
             GroupData = group;
