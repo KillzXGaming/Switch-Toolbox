@@ -1849,6 +1849,12 @@ namespace LayoutBXLYT.Cafe
                 writer.Align(4);
 
                 for (int i = 0; i < Properties.Count; i++)
+                    Properties[i].WritePaneInfo(writer, header, startPos);
+
+                for (int i = 0; i < Properties.Count; i++)
+                    Properties[i].WriteUserData(writer, header, startPos);
+
+                for (int i = 0; i < Properties.Count; i++)
                     Properties[i].WriteProperties(writer, header, startPos);
             }
         }
@@ -1862,6 +1868,8 @@ namespace LayoutBXLYT.Cafe
             public byte MaterialUsageFlag { get; set; }
 
             public BasePane Property { get; set; }
+
+            public byte[] PaneInfo { get; set; }
 
             public PartProperty(FileReader reader, Header header, long StartPosition)
             {
@@ -1916,7 +1924,7 @@ namespace LayoutBXLYT.Cafe
                 if (panelInfoOffset != 0)
                 {
                     reader.SeekBegin(StartPosition + panelInfoOffset);
-
+                    PaneInfo = reader.ReadBytes(52);
                 }
 
                 reader.SeekBegin(pos);
@@ -1943,6 +1951,20 @@ namespace LayoutBXLYT.Cafe
                 {
                     writer.WriteUint32Offset(_ofsPos, startPos);
                     Header.WriteSection(writer, Property.Signature, Property, () => Property.Write(writer, header));
+                }
+            }
+
+            public void WriteUserData(FileWriter writer, LayoutHeader header, long startPos)
+            {
+
+            }
+
+            public void WritePaneInfo(FileWriter writer, LayoutHeader header, long startPos)
+            {
+                if (PaneInfo != null)
+                {
+                    writer.WriteUint32Offset(_ofsPos + 8, startPos);
+                    writer.Write(PaneInfo);
                 }
             }
         }
