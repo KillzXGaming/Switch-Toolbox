@@ -200,9 +200,9 @@ namespace Toolbox.Library.IO
         public static byte[] GetSchema(string name)
         {
             var obj = Properties.Resources.ResourceManager.GetObject(name);
-            if (!(obj is byte[] b)) {
+            if (!(obj is byte[])) {
                 throw new FileNotFoundException(nameof(name)); }
-            return b;
+            return (byte[])obj;
         }
 
         public static readonly string WorkingDirectory = Application.StartupPath;
