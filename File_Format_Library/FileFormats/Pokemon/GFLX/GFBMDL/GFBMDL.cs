@@ -88,13 +88,10 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-           // CanSave = true;
+            CanSave = true;
 
             Text = FileName;
             DrawableContainer.Name = FileName;
-            Renderer = new GFBMDL_Render();
-            Renderer.GfbmdlFile = this;
-            DrawableContainer.Drawables.Add(Renderer);
 
             //Here i convert buffer classes generated from flatc to c# classes that are much nicer to alter
             var model = BufferToStruct.LoadFile(stream);
@@ -103,10 +100,16 @@ namespace FirstPlugin
 
         private void ReloadModel(Model model)
         {
+            if (Renderer != null)
+                Renderer.Meshes.Clear();
+
+            DrawableContainer.Drawables.Clear();
+
+            Renderer = new GFBMDL_Render();
+            Renderer.GfbmdlFile = this;
+            DrawableContainer.Drawables.Add(Renderer);
+
             Nodes.Clear();
-            if (Renderer.Meshes == null)
-                Renderer.Meshes = new List<STGenericObject>();
-            Renderer.Meshes.Clear();
 
             Model = new GFLXModel();
             Model.LoadFile(model, this, Renderer);
@@ -210,7 +213,8 @@ namespace FirstPlugin
                     var model = JsonConvert.DeserializeObject<Model>(
                              System.IO.File.ReadAllText(ofd.FileName));
 
-                    Model.LoadFile(model, this, Renderer);
+                    ReloadModel(model);
+                    Model.UpdateVertexData(true);
                 }
                 else
                 {

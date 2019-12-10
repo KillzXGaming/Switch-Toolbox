@@ -31,7 +31,7 @@ uniform int uvChannel;
 
 // Texture Samplers
 uniform sampler2D DiffuseMap;
-uniform sampler2D BakeShadowMap;
+uniform sampler2D AmbientMap;
 uniform sampler2D NormalMap;
 uniform sampler2D BakeLightMap;
 uniform sampler2D UVTestPattern;
@@ -48,7 +48,7 @@ uniform int HasDiffuse;
 uniform int HasNormalMap;
 uniform int HasSpecularMap;
 uniform int HasShadowMap;
-uniform int HasAmbientOcclusionMap;
+uniform int HasAmbientMap;
 uniform int HasLightMap;
 uniform int HasEmissionMap;
 uniform int HasDiffuseLayer;
@@ -158,8 +158,17 @@ void main()
         roughness = texture(RoughnessMap, f_texcoord0).r;
 
 	float ao = 1;
-    if (HasShadowMap == 1)
-        ao = texture(BakeShadowMap, f_texcoord1).r;
+    if (HasAmbientMap == 1)
+	{
+	    vec2 ambientUV = f_texcoord0;
+		ambientUV.x *= ColorUVScaleU + ColorUVTranslateU;
+	    ambientUV.y *= ColorUVScaleV + ColorUVTranslateV;
+        float intensity = texture(AmbientMap, ambientUV).r;
+        float unknown = texture(AmbientMap, ambientUV).g; //Unsually black
+        float ambient = texture(AmbientMap, ambientUV).b;
+
+		ao = ambient + 0.5;
+	}
 
 	vec3 emissionTerm = vec3(0);
 

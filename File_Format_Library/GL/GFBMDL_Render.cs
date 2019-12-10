@@ -304,6 +304,11 @@ namespace FirstPlugin
                     shader.SetBoolToInt("HasNormalMap", true);
                     TextureUniform(shader, mat, true, "NormalMap", matex);
                 }
+                if (matex.Type == STGenericMatTexture.TextureType.AO)
+                {
+                    shader.SetBoolToInt("HasAmbientMap", true);
+                    TextureUniform(shader, mat, true, "AmbientMap", matex);
+                }
             }
         }
 

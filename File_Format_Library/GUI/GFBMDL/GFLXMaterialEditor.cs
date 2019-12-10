@@ -138,11 +138,11 @@ namespace FirstPlugin.Forms
                 if (gflxTex.Params != null)
                 {
                     param1CB.Value = gflxTex.Params.Unknown1;
-                    param2CB.Value = gflxTex.Params.Unknown2;
-                    param3CB.Value = gflxTex.Params.Unknown3;
-                    param4CB.Value = gflxTex.Params.Unknown4;
-                    param5CB.Value = gflxTex.Params.Unknown5;
-                    param6CB.Value = gflxTex.Params.Unknown6;
+                    param2CB.Value = gflxTex.Params.WrapModeX;
+                    param3CB.Value = gflxTex.Params.WrapModeY;
+                    param4CB.Value = gflxTex.Params.WrapModeZ;
+                  //  param5CB.Value = gflxTex.Params.Unknown5;
+                  //  param6CB.Value = gflxTex.Params.Unknown6;
                     param7CB.Value = gflxTex.Params.Unknown7;
                     param8CB.Value = gflxTex.Params.Unknown8;
                     param9CB.Value = gflxTex.Params.lodBias;

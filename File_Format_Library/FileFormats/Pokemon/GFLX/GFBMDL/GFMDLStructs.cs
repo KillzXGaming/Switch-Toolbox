@@ -65,9 +65,9 @@ namespace FirstPlugin.GFMDLStructs
         public int Parameter1 { get; set; }
         public int Parameter2 { get; set; }
         public int Parameter3 { get; set; }
+        public int ShaderIndex { get; set; }
         public int Parameter4 { get; set; }
         public int Parameter5 { get; set; }
-        public int Parameter6 { get; set; }
 
         public IList<TextureMap> TextureMaps { get; set; }
 
@@ -106,9 +106,9 @@ namespace FirstPlugin.GFMDLStructs
     public class TextureParams
     {
         public uint Unknown1 { get; set; }
-        public uint Unknown2 { get; set; }
-        public uint Unknown3 { get; set; }
-        public uint Unknown4 { get; set; }
+        public uint WrapModeX { get; set; }
+        public uint WrapModeY { get; set; }
+        public uint WrapModeZ { get; set; }
         public uint Unknown5 { get; set; }
         public uint Unknown6 { get; set; }
         public uint Unknown7 { get; set; }

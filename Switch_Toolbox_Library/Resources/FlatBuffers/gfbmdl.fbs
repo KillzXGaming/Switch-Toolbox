@@ -5,6 +5,12 @@ enum BoneType : uint {
    HasSkinning = 1,
 }
 
+enum WrapMode : uint {
+   Repeat = 0,
+   Clamp = 1,
+   Mirror = 2,
+}
+
 enum VertexType : uint {
    Position = 0,
    Normal = 1,
@@ -56,9 +62,9 @@ table Material {
 	Parameter1:int;
 	Parameter2:int;
 	Parameter3:int;
+	ShaderIndex:int;
 	Parameter4:int;
 	Parameter5:int;
-	Parameter6:int;
     TextureMaps:[TextureMap];
 	Switches:[MatSwitch];
     Values:[MatFloat];
@@ -105,9 +111,9 @@ table TextureMap {
 
 table TextureMapping {
     Unknown1:uint;
-    Unknown2:uint;
-    Unknown3:uint;
-    Unknown4:uint;
+    WrapModeX:WrapMode;
+    WrapModeY:WrapMode;
+    WrapModeZ:WrapMode;
     Unknown5:uint;
     Unknown6:uint;
     Unknown7:uint;

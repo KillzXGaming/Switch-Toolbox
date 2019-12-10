@@ -132,6 +132,10 @@ namespace Toolbox.Library.IO
             var jsonName = fbs + ".json";
             var text = WriteJson(obj);
 
+            var fbsPath = Path.Combine(FlatPath, fbsName);
+            if (!File.Exists(fbsPath))
+                File.WriteAllBytes(fbsPath, GetSchema(fbs));
+
             var jsonPath = Path.Combine(FlatPath, jsonName);
             File.WriteAllText(jsonPath, text);
             var args = GetArgumentsSerialize(jsonName, fbsName);

@@ -53,6 +53,8 @@ namespace FirstPlugin
             Model = model;
             ParentFile = file;
 
+            Renderer.Meshes.Clear();
+
             for (int m = 0; m < Model.Materials?.Count; m++) {
                 GenericMaterials.Add(new GFLXMaterialData(this, Model.Materials[m]));
             }
@@ -122,7 +124,9 @@ namespace FirstPlugin
 
         public void SaveFile(System.IO.Stream stream)
         {
-           
+            using (var writer = new FileWriter(stream)) {
+                writer.Write(FlatBufferConverter.SerializeFrom<Model>(Model, "gfbmdl"));
+            }
         }
 
         public List<int> GenerateSkinningIndices()
@@ -310,6 +314,12 @@ namespace FirstPlugin
                 matTexture.WrapModeT = STTextureWrapMode.Repeat;
                 TextureMaps.Add(matTexture);
 
+                if (tex.Params != null)
+                {
+                    matTexture.WrapModeS = GFLXTextureMap.ConvertWrap(tex.Params.WrapModeX);
+                    matTexture.WrapModeT = GFLXTextureMap.ConvertWrap(tex.Params.WrapModeY);
+                }
+
                 switch (tex.Sampler)
                 {
                     case "BaseColor0":
@@ -318,17 +328,19 @@ namespace FirstPlugin
                     case "Col0Tex":
                         matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
                         break;
+                    case "L0ColTex":
+                        matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
+                        break;
                     case "EmissionMaskTex":
                         //     matTexture.Type = STGenericMatTexture.TextureType.Emission;
                         break;
                     case "LyCol0Tex":
                         break;
                     case "NormalMapTex":
-                        matTexture.WrapModeT = STTextureWrapMode.Repeat;
-                        matTexture.WrapModeT = STTextureWrapMode.Repeat;
                         matTexture.Type = STGenericMatTexture.TextureType.Normal;
                         break;
                     case "AmbientTex":
+                        matTexture.Type = STGenericMatTexture.TextureType.AO;
                         break;
                     case "LightTblTex":
                         break;
@@ -382,6 +394,17 @@ namespace FirstPlugin
             }
 
             return base.GetTexture();
+        }
+
+        public static STTextureWrapMode ConvertWrap(uint value)
+        {
+            switch (value)
+            {
+                case 0: return STTextureWrapMode.Repeat;
+                case 1: return STTextureWrapMode.Clamp;
+                case 2: return STTextureWrapMode.Mirror;
+                default: return STTextureWrapMode.Repeat;
+            }
         }
     }
 
