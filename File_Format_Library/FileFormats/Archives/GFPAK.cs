@@ -95,9 +95,9 @@ namespace FirstPlugin
         public List<FileEntry> files = new List<FileEntry>();
         public IEnumerable<ArchiveFileInfo> Files => files;
 
-        public void ClearFiles() { files.Clear(); }
+        public void ClearFiles() { files.Clear(); folders.Clear(); }
 
-        public bool CanAddFiles { get; set; } = false;
+        public bool CanAddFiles { get; set; } = true;
         public bool CanRenameFiles { get; set; } = false;
         public bool CanReplaceFiles { get; set; } = true;
         public bool CanDeleteFiles { get; set; } = true;
@@ -208,49 +208,16 @@ namespace FirstPlugin
             for (int i = 0; i < FileCount; i++)
             {
                 FileEntry fileEntry = new FileEntry(this);
-                fileEntry.Read(reader);
-                fileEntry.FileName = GetString(hashes[i], fileEntry.FileData);
-                fileEntry.FilePathHash = hashes[i];
 
                 for (int f = 0; f < FolderFiles.Count; f++)
-                    if (FolderFiles[f].Index == f)
+                    if (FolderFiles[f].Index == i)
                         fileEntry.FolderHash = FolderFiles[f];
 
-                string baseName = Path.GetFileName(fileEntry.FileName.Replace("\r", ""));
+                var dir = fileEntry.FolderHash.Parent;
 
-                switch (Utils.GetExtension(fileEntry.FileName))
-                {
-                    case ".gfbanm":
-                     //   fileEntry.OpenFileFormatOnLoad = true;
-                        fileEntry.FileName = $"Animations/{baseName}";
-                        break;
-                    case ".gfbanmcfg":
-                        fileEntry.FileName = $"AnimationConfigs/{baseName}";
-                        break;
-                    case ".gfbmdl":
-                        fileEntry.FileName = $"Models/{baseName}";
-                        break;
-                    case ".gfbpokecfg":
-                        fileEntry.FileName = $"PokeConfigs/{baseName}";
-                        break;
-                    case ".bntx":
-                      //  fileEntry.OpenFileFormatOnLoad = true;
-                        fileEntry.FileName = $"Textures/{baseName}";
-                        break;
-                    case ".bnsh":
-                        fileEntry.FileName = $"Shaders/{baseName}";
-                        break;
-                    case ".ptcl":
-                        fileEntry.FileName = $"Effects/{baseName}";
-                        break;
-                    default:
-                        fileEntry.FileName = $"OtherFiles/{baseName}";
-                        break;
-                }
-
-
-
-           //     Console.WriteLine($"{fileEntry.FileName} {fileEntry.FolderHash.hash.ToString("X")} {suffix64.ToString("X")}");
+                fileEntry.Read(reader);
+                fileEntry.FileName = GetString(hashes[i], fileEntry.FolderHash, fileEntry.FileData);
+                fileEntry.FilePathHash = hashes[i];
 
                 files.Add(fileEntry);
             }
@@ -297,7 +264,7 @@ namespace FirstPlugin
             //Also check file name just in case
             if (FileName.Contains("pm"))
             {
-                string baseName = Path.GetFileNameWithoutExtension(FileName);
+                string baseName = FileName.Substring(0, 12);
                 string pokeStrFile = hashStr.Replace("pm0000_00", baseName);
 
                 ulong hash = FNV64A1.Calculate(pokeStrFile);
@@ -315,19 +282,59 @@ namespace FirstPlugin
             }
         }
 
-        private string GetString(ulong Hash, byte[] Data)
+        private string GetString(ulong fullHash, HashIndex fileHashIndex, byte[] Data)
         {
+            var folderHash = fileHashIndex.Parent.hash;
+            var fileHash = fileHashIndex.hash;
+
+            bool hasFolderHash = false;
+
+            string folder = "";
+            if (HashList.ContainsKey(folderHash)) {
+                hasFolderHash = true;
+                folder = $"{HashList[folderHash]}/";
+            }
+
+            if (!hasFolderHash)
+                folder = $"{folderHash.ToString("X")}/";
+
+
+
             string ext = FindMatch(Data);
             if (ext == ".bntx" || ext == ".bfres" || ext == ".bnsh" || ext == ".bfsha")
-                return GetBinaryHeaderName(Data) + ext;
+            {
+                string fileName = GetBinaryHeaderName(Data);
+                //Check for matches for shaders
+                if (ext == ".bnsh")
+                {
+                    if (FNV64A1.Calculate($"{fileName}.bnsh_fsh") == fileHash)
+                        fileName = $"{fileName}.bnsh_fsh";
+                    else if (FNV64A1.Calculate($"{fileName}.bnsh_vsh") == fileHash)
+                        fileName = $"{fileName}.bnsh_vsh";
+                }
+                else
+                    fileName = $"{fileName}{ext}";
+
+                if (hasFolderHash)
+                    return $"{folder}{fileName}";
+                else
+                    return $"{folder}{fileName}[FullHash={fullHash.ToString("X")}]{ext}";
+            }
             else
             {
-                if (HashList.ContainsKey(Hash))
-                    return HashList[Hash];
+                if (HashList.ContainsKey(fileHash))
+                {
+                    if (hasFolderHash)
+                        return $"{folder}{HashList[fileHash]}";
+                    else
+                        return $"{folder}{HashList[fileHash]}[FullHash={fullHash.ToString("X")}]{ext}";
+                }
                 else
-                    return $"{Hash.ToString("X")}{ext}";
+                    return $"{folder}{fileHash.ToString("X")}[FullHash={fullHash.ToString("X")}]{ext}";
             }
         }
+
+
 
         public void Write(FileWriter writer)
         {
@@ -383,7 +390,7 @@ namespace FirstPlugin
         {
             public ulong hash;
             public uint FileCount => (uint)hashes.Count;
-            public uint unknown;
+            public uint Padding = 0xCC;
 
             public List<HashIndex> hashes = new List<HashIndex>();
 
@@ -391,7 +398,7 @@ namespace FirstPlugin
             {
                 hash = reader.ReadUInt64();
                 uint fileCount = reader.ReadUInt32();
-                unknown = reader.ReadUInt32();
+                Padding = reader.ReadUInt32();
 
                 for (int f = 0; f < fileCount; f++)
                 {
@@ -404,7 +411,7 @@ namespace FirstPlugin
             {
                 writer.Write(hash);
                 writer.Write(FileCount);
-                writer.Write(unknown);
+                writer.Write(Padding);
 
                 foreach (var hash in hashes)
                     hash.Write(writer);
@@ -415,7 +422,7 @@ namespace FirstPlugin
         {
             public ulong hash;
             public int Index;
-            public uint unknown;
+            public uint Padding = 0xCC;
 
             public Folder Parent { get; set; }
 
@@ -424,13 +431,13 @@ namespace FirstPlugin
                 Parent = parent;
                 hash = reader.ReadUInt64();
                 Index = reader.ReadInt32();
-                unknown = reader.ReadUInt32(); //Always 0xCC?
+                Padding = reader.ReadUInt32(); //Always 0xCC?
             }
             public void Write(FileWriter writer)
             {
                 writer.Write(hash);
                 writer.Write(Index);
-                writer.Write(unknown);
+                writer.Write(Padding);
             }
         }
         public class FileEntry : ArchiveFileInfo
@@ -439,12 +446,12 @@ namespace FirstPlugin
 
             public UInt64 FilePathHash;
 
-            public uint unkown;
-            public uint CompressionType;
+            public ushort Level = 9;
+            public CompressionType Type = CompressionType.Lz4;
             private long DataOffset;
 
             public uint CompressedFileSize;
-            public uint padding;
+            public uint Padding = 0xCC;
 
             private IArchiveFile ArchiveFile;
 
@@ -476,11 +483,11 @@ namespace FirstPlugin
 
             public void Read(FileReader reader)
             {
-                unkown = reader.ReadUInt16(); //Usually 9?
-                CompressionType = reader.ReadUInt16();
+                Level = reader.ReadUInt16(); //Usually 9?
+                Type = reader.ReadEnum<CompressionType>(true);
                 uint DecompressedFileSize = reader.ReadUInt32();
                 CompressedFileSize = reader.ReadUInt32();
-                padding = reader.ReadUInt32();
+                Padding = reader.ReadUInt32();
                 ulong FileOffset = reader.ReadUInt64();
 
                 using (reader.TemporarySeek((long)FileOffset, SeekOrigin.Begin))
@@ -495,13 +502,13 @@ namespace FirstPlugin
             {
                 this.SaveFileFormat();
 
-                CompressedData = Compress(FileData, CompressionType);
+                CompressedData = Compress(FileData, Type);
 
-                writer.Write((ushort)unkown);
-                writer.Write((ushort)CompressionType);
+                writer.Write(Level);
+                writer.Write(Type, true);
                 writer.Write(FileData.Length);
                 writer.Write(CompressedData.Length);
-                writer.Write(padding);
+                writer.Write(Padding);
                 DataOffset = writer.Position;
                 writer.Write(0L);
             }
@@ -511,14 +518,23 @@ namespace FirstPlugin
                 writer.WriteUint64Offset(DataOffset);
                 writer.Write(CompressedData);
             }
-            public static byte[] Compress(byte[] data, uint Type)
+            public static byte[] Compress(byte[] data, CompressionType Type)
             {
-                if (Type == 2)
-                {
+                if (Type == CompressionType.Lz4)
                     return STLibraryCompression.Type_LZ4.Compress(data);
-                }
+                else if (Type == CompressionType.None)
+                    return data;
+                else if (Type == CompressionType.Zlib)
+                    return STLibraryCompression.ZLIB.Compress(data);
                 else
                     throw new Exception("Unkown compression type?");
+            }
+
+            public enum CompressionType : ushort
+            {
+                None = 0,
+                Zlib = 1,
+                Lz4 = 2,
             }
         }
 
@@ -534,7 +550,89 @@ namespace FirstPlugin
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
         {
-            return false;
+            //First we need to determine the paths
+            string fullPath = archiveFileInfo.FileName.Replace("\\", "/");
+            string filePath = Path.GetFileName(fullPath);
+            string filePathNoExt = Path.GetFileNameWithoutExtension(fullPath);
+            string directoryPath = Path.GetDirectoryName(fullPath).Replace("\\", "/");
+
+            ulong fullPathHash = 0;
+            ulong directoryHash = 0;
+            ulong fileHash = 0;
+
+            //Calculate hashes for each one
+
+            //Check for full path hashes
+            if (fullPath.Contains("[FullHash="))
+            {
+                string HashString = fullPath.Split('=').LastOrDefault().Replace("]", string.Empty);
+                HashString = Path.GetFileNameWithoutExtension(HashString);
+
+                filePath = filePath.Split('[').FirstOrDefault();
+
+                TryParseHex(HashString, out fullPathHash);
+            }
+
+            ulong hash = 0;
+            bool isDirectoryHash = TryParseHex(directoryPath, out hash);
+            bool isFileHash = TryParseHex(filePath, out hash);
+
+            if (isFileHash)
+                TryParseHex(filePath, out fileHash);
+            else
+                fileHash = FNV64A1.Calculate(filePath);
+
+            if (isDirectoryHash)
+                TryParseHex(directoryPath, out directoryHash);
+            else
+                directoryHash = FNV64A1.Calculate($"{directoryPath}/");
+
+            if (!isFileHash && !isDirectoryHash)
+                fullPathHash = FNV64A1.Calculate(fullPath);
+
+            var folder = folders.FirstOrDefault(x => x.hash == directoryHash);
+
+            Console.WriteLine($"{fullPath} FilePathHash {fullPathHash}");
+            Console.WriteLine($"{directoryPath} FolderHash {directoryHash} directoryHash {directoryHash}");
+            Console.WriteLine($"{filePath} fileHash {fileHash} isFileHash {isFileHash}");
+
+            if (folder != null)
+            {
+                folder.hashes.Add(new HashIndex()
+                {
+                    hash = fileHash,
+                    Parent = folder,
+                    Index = files.Count,
+                });
+            }
+            else
+            {
+                folder = new Folder();
+                folder.hash = directoryHash;
+                folder.hashes.Add(new HashIndex()
+                {
+                    hash = fileHash,
+                    Parent = folder,
+                    Index = files.Count,
+                });
+                folders.Add(folder);
+            }
+
+            files.Add(new FileEntry(this)
+            {
+                FilePathHash = fullPathHash,
+                FolderHash = folder.hashes.LastOrDefault(),
+                FileData = archiveFileInfo.FileData,
+                FileDataStream = archiveFileInfo.FileDataStream,
+                FileName = archiveFileInfo.FileName,
+            });
+
+            return true;
+        }
+
+        private static bool TryParseHex(string str, out ulong value)
+        {
+            return ulong.TryParse(str, System.Globalization.NumberStyles.HexNumber, null, out value);
         }
 
         public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
