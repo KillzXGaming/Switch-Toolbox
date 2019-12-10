@@ -65,22 +65,17 @@ namespace LayoutBXLYT
         }
 
         private STPropertyGrid propertyGrid;
+        private object activeProperty;
         public void LoadProperties(object properties)
         {
             Reset();
 
             MaterialMode = false;
 
-            AddTab("Properties");
+            activeProperty = properties;
 
-            if (propertyGrid == null || propertyGrid.Disposing || propertyGrid.IsDisposed)
-            {
-                propertyGrid = new STPropertyGrid();
-                propertyGrid.Dock = DockStyle.Fill;
-                stPanel1.Controls.Add(propertyGrid);
-            }
-
-            propertyGrid.LoadProperty(properties, ProperyChanged);
+            AddTab("Properties", LoadPropertyData);
+            stToolStrip1.Items[0].PerformClick();
         }
 
         private void ProperyChanged()
@@ -178,7 +173,8 @@ namespace LayoutBXLYT
             else
                 tabIndex = Runtime.LayoutEditor.NullPaneTabIndex;
 
-            stToolStrip1.Items[tabIndex].PerformClick();
+            if (tabIndex < stToolStrip1.Items.Count)
+                stToolStrip1.Items[tabIndex].PerformClick();
 
             Loaded = true;
         }
@@ -212,6 +208,13 @@ namespace LayoutBXLYT
                 Runtime.LayoutEditor.TextPaneTabIndex = tabIndex;
             else
                Runtime.LayoutEditor.NullPaneTabIndex = tabIndex;
+        }
+
+        public void LoadPropertyData(object sender, EventArgs e)
+        {
+            UpdateTabIndex();
+            propertyGrid = GetActiveEditor<STPropertyGrid>();
+            propertyGrid.LoadProperty(activeProperty, ProperyChanged);
         }
 
         public void LoadAnimationData(object sender, EventArgs e)
