@@ -16,7 +16,19 @@ namespace FirstPlugin
         public string TexName;
         public uint TexWidth;
         public uint TexHeight;
-        public uint MipCount;
+
+        private uint mipCount;
+        public uint MipCount
+        {
+            get
+            {
+                if (UseOriginalMips && MipCountOriginal >= 0) return (uint)MipCountOriginal;
+                else return mipCount;
+            }
+            set { mipCount = value; }
+        }
+
+        public int MipCountOriginal = -1;
         public uint Depth = 1;
         public uint arrayLength = 1;
         public List<byte[]> DataBlockOutput = new List<byte[]>();
@@ -24,6 +36,7 @@ namespace FirstPlugin
         public GX2.GX2SurfaceFormat Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(Runtime.PreferredTexFormat);
         public bool GenerateMipmaps;
         public bool IsSRGB;
+        public bool UseOriginalMips = false;
         public uint tileMode = 4;
 
         public bool UseBc4Alpha;

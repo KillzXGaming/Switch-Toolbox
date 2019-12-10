@@ -19,6 +19,7 @@ namespace FirstPlugin
         public bool OverrideMipCounter = false;
         private STLabel dataSizeLbl;
         private STCheckBox chkBc4Alpha;
+        private STCheckBox chkOriginalMipCount;
         bool IsLoaded = false;
 
         public GTXTextureImporter()
@@ -30,6 +31,7 @@ namespace FirstPlugin
             listViewCustom1.FullRowSelect = true;
             listViewCustom1.CanResizeList = true;
             chkBc4Alpha.Visible = false;
+            chkOriginalMipCount.Enabled = false;
 
             formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM);
             formatComboBox.Items.Add(GX2.GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB);
@@ -154,7 +156,7 @@ namespace FirstPlugin
 
         private Thread Thread;
 
-        public void SetupSettings(GTXImporterSettings setting)
+        public void SetupSettings(GTXImporterSettings setting, bool setFormat = true)
         {
             if (setting.Format == GX2.GX2SurfaceFormat.INVALID || SelectedIndex == -1)
                 return;
@@ -162,7 +164,7 @@ namespace FirstPlugin
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
-            if (formatComboBox.SelectedItem is GX2.GX2SurfaceFormat)
+            if (formatComboBox.SelectedItem is GX2.GX2SurfaceFormat && setFormat)
             {
                 setting.Format = (GX2.GX2SurfaceFormat)formatComboBox.SelectedItem;
 
@@ -176,6 +178,12 @@ namespace FirstPlugin
 
                 listViewCustom1.Items[SelectedIndex].SubItems[1].Text = setting.Format.ToString();
             }
+
+            if (setting.MipCountOriginal >= 0)
+                chkOriginalMipCount.Enabled = true;
+            else
+                chkOriginalMipCount.Enabled = false;
+
             HeightLabel.Text = $"Height: {setting.TexHeight}";
             WidthLabel.Text = $"Width: {setting.TexWidth}";
 
@@ -282,18 +290,22 @@ namespace FirstPlugin
 
                 SetupSettings(SelectedTexSettings);
 
-             //   MipmapNum.Maximum = STGenericTexture.GenerateTotalMipCount(
-              //      SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight) + 1;
-
                 //Force the mip counter to be the selected mip counter
                 //Some textures like bflim (used for UI) only have 1
-                if (OverrideMipCounter)
+                if (OverrideMipCounter || SelectedTexSettings.UseOriginalMips)
                 {
-                    MipmapNum.Maximum = SelectedTexSettings.MipCount;
-                    MipmapNum.Minimum = SelectedTexSettings.MipCount;
+                    MipmapNum.Maximum = SelectedTexSettings.MipCountOriginal;
+                    MipmapNum.Minimum = SelectedTexSettings.MipCountOriginal;
+                    MipmapNum.Value = SelectedTexSettings.MipCountOriginal;
+                }
+                else
+                {
+                    MipmapNum.Maximum = STGenericTexture.GenerateTotalMipCount(
+                       SelectedTexSettings.TexWidth, SelectedTexSettings.TexHeight) + 1;
+
+                    MipmapNum.Value = SelectedTexSettings.MipCount;
                 }
 
-                MipmapNum.Value = SelectedTexSettings.MipCount;
                 SwizzleNum.Value = SelectedTexSettings.SwizzlePattern;
             }
         }
@@ -349,6 +361,7 @@ namespace FirstPlugin
             this.pictureBox1 = new Toolbox.Library.Forms.PictureBoxCustom();
             this.dataSizeLbl = new Toolbox.Library.Forms.STLabel();
             this.chkBc4Alpha = new Toolbox.Library.Forms.STCheckBox();
+            this.chkOriginalMipCount = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SwizzleNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).BeginInit();
@@ -357,6 +370,7 @@ namespace FirstPlugin
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.chkOriginalMipCount);
             this.contentContainer.Controls.Add(this.chkBc4Alpha);
             this.contentContainer.Controls.Add(this.dataSizeLbl);
             this.contentContainer.Controls.Add(this.SwizzleNum);
@@ -394,10 +408,11 @@ namespace FirstPlugin
             this.contentContainer.Controls.SetChildIndex(this.SwizzleNum, 0);
             this.contentContainer.Controls.SetChildIndex(this.dataSizeLbl, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkBc4Alpha, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkOriginalMipCount, 0);
             // 
             // SwizzleNum
             // 
-            this.SwizzleNum.Location = new System.Drawing.Point(772, 177);
+            this.SwizzleNum.Location = new System.Drawing.Point(772, 204);
             this.SwizzleNum.Maximum = new decimal(new int[] {
             7,
             0,
@@ -411,7 +426,7 @@ namespace FirstPlugin
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(664, 177);
+            this.label5.Location = new System.Drawing.Point(664, 204);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(82, 13);
             this.label5.TabIndex = 43;
@@ -472,7 +487,7 @@ namespace FirstPlugin
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(664, 153);
+            this.label1.Location = new System.Drawing.Point(664, 180);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 37;
@@ -480,7 +495,7 @@ namespace FirstPlugin
             // 
             // MipmapNum
             // 
-            this.MipmapNum.Location = new System.Drawing.Point(772, 151);
+            this.MipmapNum.Location = new System.Drawing.Point(772, 178);
             this.MipmapNum.Maximum = new decimal(new int[] {
             13,
             0,
@@ -494,7 +509,7 @@ namespace FirstPlugin
             // WidthLabel
             // 
             this.WidthLabel.AutoSize = true;
-            this.WidthLabel.Location = new System.Drawing.Point(664, 254);
+            this.WidthLabel.Location = new System.Drawing.Point(664, 281);
             this.WidthLabel.Name = "WidthLabel";
             this.WidthLabel.Size = new System.Drawing.Size(35, 13);
             this.WidthLabel.TabIndex = 35;
@@ -503,7 +518,7 @@ namespace FirstPlugin
             // HeightLabel
             // 
             this.HeightLabel.AutoSize = true;
-            this.HeightLabel.Location = new System.Drawing.Point(664, 217);
+            this.HeightLabel.Location = new System.Drawing.Point(664, 244);
             this.HeightLabel.Name = "HeightLabel";
             this.HeightLabel.Size = new System.Drawing.Size(38, 13);
             this.HeightLabel.TabIndex = 34;
@@ -586,7 +601,7 @@ namespace FirstPlugin
             // dataSizeLbl
             // 
             this.dataSizeLbl.AutoSize = true;
-            this.dataSizeLbl.Location = new System.Drawing.Point(664, 291);
+            this.dataSizeLbl.Location = new System.Drawing.Point(664, 318);
             this.dataSizeLbl.Name = "dataSizeLbl";
             this.dataSizeLbl.Size = new System.Drawing.Size(56, 13);
             this.dataSizeLbl.TabIndex = 45;
@@ -604,12 +619,23 @@ namespace FirstPlugin
             this.chkBc4Alpha.Visible = false;
             this.chkBc4Alpha.CheckedChanged += new System.EventHandler(this.chkBc4Alpha_CheckedChanged);
             // 
+            // chkOriginalMipCount
+            // 
+            this.chkOriginalMipCount.AutoSize = true;
+            this.chkOriginalMipCount.Location = new System.Drawing.Point(667, 154);
+            this.chkOriginalMipCount.Name = "chkOriginalMipCount";
+            this.chkOriginalMipCount.Size = new System.Drawing.Size(134, 17);
+            this.chkOriginalMipCount.TabIndex = 47;
+            this.chkOriginalMipCount.Text = "Use Original Mip Count";
+            this.chkOriginalMipCount.UseVisualStyleBackColor = true;
+            this.chkOriginalMipCount.CheckedChanged += new System.EventHandler(this.chkOriginalMipCount_CheckedChanged);
+            // 
             // GTXTextureImporter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(986, 516);
-            this.Text = "GTXTextureImporter";
+            this.Text = "GX2 Texture Importer";
             this.contentContainer.ResumeLayout(false);
             this.contentContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SwizzleNum)).EndInit();
@@ -651,7 +677,7 @@ namespace FirstPlugin
                 else
                     settings[index].MipCount = 1;
 
-                SetupSettings(settings[index]);
+                SetupSettings(settings[index], false);
             }
         }
 
@@ -662,9 +688,18 @@ namespace FirstPlugin
             foreach (int index in listViewCustom1.SelectedIndices)
             {
                 settings[index].UseBc4Alpha = chkBc4Alpha.Checked;
-                SetupSettings(settings[index]);
+                SetupSettings(settings[index], false);
             }
-            
+        }
+
+        private void chkOriginalMipCount_CheckedChanged(object sender, EventArgs e) {
+            if (!IsLoaded)
+                return;
+
+            foreach (int index in listViewCustom1.SelectedIndices) {
+                settings[index].UseOriginalMips = chkOriginalMipCount.Checked;
+                SetupSettings(settings[index], false);
+            }
         }
     }
 }
