@@ -207,7 +207,7 @@ namespace Bfres.Structs
                                 else
                                 {
                                     var setting = FTEX.SetImporterSettings(file);
-                                    setting.MipCount = ftex.MipCount;
+                                    setting.MipCountOriginal = (int)ftex.MipCount;
                                     setting.Format = (GX2.GX2SurfaceFormat)FTEX.ConvertToGx2Format(ftex.Format);
                                     settings.Add(setting);
                                 }

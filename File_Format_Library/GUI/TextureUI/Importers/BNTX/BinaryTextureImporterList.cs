@@ -131,7 +131,7 @@ namespace FirstPlugin
         }
 
         private Thread Thread;
-        public void SetupSettings(TextureImporterSettings setting)
+        public void SetupSettings(TextureImporterSettings setting, bool setFormat = true)
         {
             if (setting.Format == SurfaceFormat.Invalid || SelectedIndex == -1)
                 return;
@@ -143,11 +143,11 @@ namespace FirstPlugin
             if (Thread != null && Thread.IsAlive)
                 Thread.Abort();
 
-            if (formatComboBox.SelectedItem is SurfaceDim)
+            if (formatComboBox.SelectedItem is SurfaceDim && setFormat)
                 setting.SurfaceDim = (SurfaceDim)formatComboBox.SelectedItem;
 
 
-           if (formatComboBox.SelectedItem is SurfaceFormat)
+           if (formatComboBox.SelectedItem is SurfaceFormat && setFormat)
             {
                 setting.Format = (SurfaceFormat)formatComboBox.SelectedItem;
 
@@ -297,7 +297,7 @@ namespace FirstPlugin
                 else
                     settings[index].MipCount = 1;
 
-                SetupSettings(settings[index]);
+                SetupSettings(settings[index], false);
             }
         }
 
@@ -316,7 +316,7 @@ namespace FirstPlugin
         {
             if (formatComboBox.SelectedIndex > -1 && SelectedTexSettings != null)
             {
-                SetupSettings(SelectedTexSettings);
+                SetupSettings(SelectedTexSettings, false);
             }
         }
 
@@ -332,13 +332,13 @@ namespace FirstPlugin
             if (SelectedTexSettings != null)
             {
                 SelectedTexSettings.GammaFix = cnkGammaFix.Checked;
-                SetupSettings(SelectedTexSettings);
+                SetupSettings(SelectedTexSettings, false);
             }
         }
 
         private void chkMultiThreading_CheckedChanged(object sender, EventArgs e) {
             if (SelectedTexSettings != null) {
-                SetupSettings(SelectedTexSettings);
+                SetupSettings(SelectedTexSettings, false);
             }
         }
     }

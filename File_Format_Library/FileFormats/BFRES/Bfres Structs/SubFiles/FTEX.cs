@@ -146,6 +146,7 @@ namespace Bfres.Structs
         {
             GTXImporterSettings setting = SetImporterSettings(image, FileName);
             setting.MipSwizzle = Tex2Swizzle;
+            setting.MipCountOriginal = (int)MipCount;
 
             GTXTextureImporter importer = new GTXTextureImporter();
             importer.LoadSetting(setting);

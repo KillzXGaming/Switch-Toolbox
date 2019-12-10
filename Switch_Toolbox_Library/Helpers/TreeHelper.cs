@@ -142,49 +142,31 @@ namespace Toolbox.Library
             return filesExtracted.ToArray();
         }
 
+        /// <summary>
+        /// S
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <returns></returns>
         public static List<Tuple<string, string>> ReadFiles(string directory)
         {
             var Files = new List<Tuple<string, string>>();
-            ProcessDirectory(directory, Files);
+            ProcessDirectory(directory, "", Files);
             return Files;
         }
 
-        private static void ProcessDirectory(string targetDirectory, List<Tuple<string, string>> FileList)
+        private static void ProcessDirectory(string targetDirectory, string directory,
+            List<Tuple<string, string>> FileList, string seperator = "/")
         {
-            var fileEntries = GetRelativePaths(targetDirectory);
+            //Combine the target and current directory to get the full path for searching
+            string folder = Path.Combine(targetDirectory, directory);
 
-            foreach (string fileName in fileEntries)
-            {
-                char[] sep = { '\\' };
-                string[] fn = fileName.Split(sep);
-                string tempf = "";
-                for (int i = 0; i < fn.Length; i++)
-                {
-                    tempf += fn[i];
-                    if (fn.Length > 2 && (i != fn.Length - 1))
-                    {
-                        tempf += "/";
-                    }
-                }
+            //Search sub directories. Remove target directory from path
+            foreach (string dir in Directory.GetDirectories(folder))
+                ProcessDirectory(targetDirectory, dir.Replace($"{targetDirectory}\\", string.Empty), FileList);
 
-                Console.WriteLine($"{tempf} {targetDirectory} {fileName}");
-
-                FileList.Add(Tuple.Create(fileName, $"{targetDirectory}/{fileName}"));
-            }
-
-            string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
-            foreach (string subdirectory in subdirectoryEntries)
-                ProcessDirectory(subdirectory, FileList);
-        }
-
-        private static IEnumerable<string> GetRelativePaths(string root)
-        {
-            int rootLength = root.Length + (root[root.Length - 1] == '\\' ? 0 : 1);
-
-            foreach (string path in Directory.GetFiles(root, "*", SearchOption.AllDirectories))
-            {
-                yield return path.Remove(0, rootLength);
-            }
+            //Search files. Remove target directory from path
+            foreach (string file in Directory.GetFiles(folder))
+                FileList.Add(Tuple.Create($"{file.Replace($"{targetDirectory}\\", string.Empty)}".Replace("\\", seperator), file));
         }
 
         private static void CreateDirectoryIfExists(string Dir)
