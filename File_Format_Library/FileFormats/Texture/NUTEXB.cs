@@ -337,7 +337,13 @@ namespace FirstPlugin
                 if (Width != tex.Texture.Width || Height != tex.Texture.Height)
                     throw new Exception("Image size must be the same!");
 
-                ImageData = tex.Texture.TextureData[0][0];
+                List<byte[]> data = new List<byte[]>();
+                foreach (var array in tex.Texture.TextureData)
+                    data.Add(array[0]);
+
+                ImageData = Utils.CombineByteArray(data.ToArray());
+
+                data.Clear();
 
                 Width = tex.Texture.Width;
                 Height = tex.Texture.Height;
