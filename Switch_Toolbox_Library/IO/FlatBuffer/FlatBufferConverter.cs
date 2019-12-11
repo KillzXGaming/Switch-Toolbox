@@ -128,6 +128,9 @@ namespace Toolbox.Library.IO
 
         private static string GenerateBinFrom<T>(T obj, string fbs)
         {
+            if (!Directory.Exists(FlatPath))
+                Directory.CreateDirectory(FlatPath);
+
             var fbsName = fbs + ".fbs";
             var jsonName = fbs + ".json";
             var text = WriteJson(obj);
