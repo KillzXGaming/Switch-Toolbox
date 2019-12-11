@@ -337,25 +337,17 @@ namespace FirstPlugin
                 if (Width != tex.Texture.Width || Height != tex.Texture.Height)
                     throw new Exception("Image size must be the same!");
 
-                List<byte[]> data = new List<byte[]>();
-                foreach (var array in tex.Texture.TextureData)
-                    data.Add(array[0]);
-
-                ImageData = Utils.CombineByteArray(data.ToArray());
-
-                data.Clear();
-
                 Width = tex.Texture.Width;
                 Height = tex.Texture.Height;
                 MipCount = tex.Texture.MipCount;
             }
             else
             {
-                ImageData = tex.Texture.TextureData[0][0];
-
                 Width = tex.Texture.Width;
                 Height = tex.Texture.Height;
                 MipCount = tex.Texture.MipCount;
+                ArrayCount = tex.Texture.ArrayLength;
+                Depth = tex.Texture.Depth;
 
                 Format = tex.Format;
                 NutFormat = ConvertGenericToNutFormat(tex.Format);
@@ -363,6 +355,13 @@ namespace FirstPlugin
                 mipSizes = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length);
             }
 
+            List<byte[]> data = new List<byte[]>();
+            foreach (var array in tex.Texture.TextureData)
+                data.Add(array[0]);
+
+            ImageData = Utils.CombineByteArray(data.ToArray());
+
+            data.Clear();
             surfacesNew.Clear();
             surfaces.Clear();
 
