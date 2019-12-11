@@ -1098,12 +1098,19 @@ namespace Toolbox.Library
                     return TEX_FORMAT.R8G8B8A8_UNORM;
             }
         }
-        public void SetFlags(DXGI_FORMAT Format, bool UseDX10 = false)
+        public void SetFlags(DXGI_FORMAT Format, bool UseDX10 = false, bool isCubeMap = false)
         {
             header.flags = (uint)(DDSD.CAPS | DDSD.HEIGHT | DDSD.WIDTH | DDSD.PIXELFORMAT | DDSD.MIPMAPCOUNT | DDSD.LINEARSIZE);
             header.caps = (uint)DDSCAPS.TEXTURE;
             if (header.mipmapCount > 1)
                 header.caps |= (uint)(DDSCAPS.COMPLEX | DDSCAPS.MIPMAP);
+
+            if (isCubeMap)
+            {
+                header.caps2 |= (uint)(DDSCAPS2.CUBEMAP | DDSCAPS2.CUBEMAP_POSITIVEX | DDSCAPS2.CUBEMAP_NEGATIVEX |
+                                      DDSCAPS2.CUBEMAP_POSITIVEY | DDSCAPS2.CUBEMAP_NEGATIVEY |
+                                      DDSCAPS2.CUBEMAP_POSITIVEZ | DDSCAPS2.CUBEMAP_NEGATIVEZ);
+            }
 
             if (UseDX10)
             {
@@ -1114,6 +1121,11 @@ namespace Toolbox.Library
 
                 IsDX10 = true;
                 DX10header.DXGI_Format = Format;
+                if (isCubeMap)
+                {
+                    DX10header.arrayFlag = (ArrayCount / 6);
+                    DX10header.miscFlag = 0x4;
+                }
                 return;
             }
 

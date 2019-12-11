@@ -992,10 +992,12 @@ namespace Toolbox.Library
                 dds.header.ddspf.ABitMask = components[(int)AlphaChannel];*/
             }
 
+            bool isCubeMap = ArrayCount == 6;
+
             if (surfaces.Count > 1) //Use DX10 format for array surfaces as it can do custom amounts
-                dds.SetFlags((DDS.DXGI_FORMAT)Format, true);
+                dds.SetFlags((DDS.DXGI_FORMAT)Format, true, isCubeMap);
             else
-                dds.SetFlags((DDS.DXGI_FORMAT)Format);
+                dds.SetFlags((DDS.DXGI_FORMAT)Format, false, isCubeMap);
 
             if (dds.IsDX10)
             {
@@ -1003,7 +1005,11 @@ namespace Toolbox.Library
                     dds.DX10header = new DDS.DX10Header();
 
                 dds.DX10header.ResourceDim = 3;
-                dds.DX10header.arrayFlag = (uint)surfaces.Count;
+
+                if (isCubeMap)
+                    dds.DX10header.arrayFlag = (uint)(surfaces.Count / 6);
+                else
+                    dds.DX10header.arrayFlag = (uint)surfaces.Count;
             }
 
 
