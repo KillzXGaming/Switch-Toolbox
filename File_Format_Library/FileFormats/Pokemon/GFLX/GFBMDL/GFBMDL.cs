@@ -231,6 +231,8 @@ namespace FirstPlugin
                     }
                 }
             }
+
+            LoadEditor<STPropertyGrid>();
         }
 
         private List<STGenericObject> GeneratePolygonGroups(List<STGenericObject> importedMeshes,
