@@ -28,6 +28,7 @@ namespace FirstPlugin
 
         public static byte[] CreateVertexDataBuffer(STGenericObject mesh, List<int> SkinningIndices, IList<MeshAttribute> attributes)
         {
+            var stride = GetTotalBufferStride(attributes);
 
             var mem = new System.IO.MemoryStream();
             using (var writer = new FileWriter(mem))
@@ -35,6 +36,8 @@ namespace FirstPlugin
                 //Generate a buffer based on the attributes used
                 for (int v = 0; v < mesh.vertices.Count; v++)
                 {
+                    writer.SeekBegin(v * stride);
+
                     for (int a = 0; a < attributes.Count; a++)
                     {
                         uint numAttributes = attributes[a].ElementCount;
@@ -51,7 +54,7 @@ namespace FirstPlugin
                                 values.Add(mesh.vertices[v].nrm.X);
                                 values.Add(mesh.vertices[v].nrm.Y);
                                 values.Add(mesh.vertices[v].nrm.Z);
-                                values.Add(0);
+                                values.Add(mesh.vertices[v].normalW);
                                 //  values.Add(((GFLXMesh.GFLXVertex)mesh.vertices[v]).NormalW);
                                 break;
                             case VertexType.Color1:
@@ -128,12 +131,12 @@ namespace FirstPlugin
             return mem.ToArray();
         }
 
-        public static uint GetTotalBufferStride(Mesh mesh)
+        public static uint GetTotalBufferStride(IList<MeshAttribute> attributes)
         {
             uint VertBufferStride = 0;
-            for (int i = 0; i < mesh.Attributes?.Count; i++)
+            for (int i = 0; i < attributes?.Count; i++)
             {
-                var attribute = mesh.Attributes[i];
+                var attribute = attributes[i];
                 switch ((VertexType)attribute.VertexType)
                 {
                     case VertexType.Position:
@@ -210,7 +213,7 @@ namespace FirstPlugin
         {
             List<Vertex> Vertices = new List<Vertex>();
 
-            uint VertBufferStride = GetTotalBufferStride(mesh);
+            uint VertBufferStride = GetTotalBufferStride(mesh.Attributes);
 
             using (var reader = new FileReader(mesh.Data.ToArray()))
             {
@@ -417,9 +420,9 @@ namespace FirstPlugin
         }
 
 
-        private static void WriteBuffer(FileWriter writer, uint ElementCount,  float[] value, BufferFormat Format, VertexType AttributeType)
+        private static void WriteBuffer(FileWriter writer, uint elementCount,  float[] value, BufferFormat Format, VertexType AttributeType)
         {
-            for (int i = 0; i < ElementCount; i++)
+            for (int i = 0; i < elementCount; i++)
             {
                 switch (Format)
                 {

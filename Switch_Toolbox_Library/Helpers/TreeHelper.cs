@@ -93,18 +93,25 @@ namespace Toolbox.Library
             var Collection = TreeViewExtensions.Collect(Nodes);
 
             int Curfile = 0;
-            foreach (TreeNode file in Collection)
+            foreach (TreeNode node in Collection)
             {
-                if (file is ArchiveFileWrapper)
+                ArchiveFileInfo file = null;
+
+                if (node.Tag != null && node.Tag is ArchiveFileInfo)
+                    file = (ArchiveFileInfo)node.Tag;
+                else if (node is ArchiveFileWrapper)
+                    file = ((ArchiveFileWrapper)node).ArchiveFileInfo;
+
+                if (file != null)
                 {
-                    string FilePath = ((ArchiveFileWrapper)file).ArchiveFileInfo.FileName;
+                    string FilePath = file.FileName;
                     string FolderPath = Path.GetDirectoryName(FilePath.RemoveIllegaleFolderNameCharacters());
                     string FolderPathDir = Path.Combine(overridePath, FolderPath);
 
                     if (!Directory.Exists(FolderPathDir))
                         Directory.CreateDirectory(FolderPathDir);
 
-                    string FileName = file.Text.RemoveIllegaleFileNameCharacters();
+                    string FileName = Path.GetFileName(file.FileName).RemoveIllegaleFileNameCharacters();
 
                     FilePath = Path.Combine(FolderPath, FileName);
 
@@ -118,19 +125,18 @@ namespace Toolbox.Library
                     progressBar.Refresh();
                     CreateDirectoryIfExists($"{path}");
 
-                    if (file is ArchiveFileWrapper)
-                    {
-                        filesExtracted.Add($"{path}");
+                    filesExtracted.Add($"{path}");
 
-                        if (((ArchiveFileWrapper)file).ArchiveFileInfo.FileDataStream != null)
-                        {
-                            ((ArchiveFileWrapper)file).ArchiveFileInfo.FileDataStream.ExportToFile(path);
-                        }
-                        else
-                        {
-                            File.WriteAllBytes($"{path}",
-                            ((ArchiveFileWrapper)file).ArchiveFileInfo.FileData);
-                        }
+                    if (file.FileFormat != null && file.FileFormat.CanSave)
+                        file.SaveFileFormat();
+
+                    if (file.FileDataStream != null)
+                    {
+                        file.FileDataStream.ExportToFile(path);
+                    }
+                    else
+                    {
+                        File.WriteAllBytes($"{path}", file.FileData);
                     }
                 }
             }

@@ -182,7 +182,7 @@ namespace FirstPlugin
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Supported Formats|*.dae;*.json;";
-            sfd.FileName = Text;
+            sfd.FileName = Path.GetFileNameWithoutExtension(Text);
             sfd.DefaultExt = "dae";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
