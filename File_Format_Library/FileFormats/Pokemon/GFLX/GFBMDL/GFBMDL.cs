@@ -648,9 +648,13 @@ namespace FirstPlugin
                         if (diffuse != null)
                             transform = diffuse.Transform;
 
-                        mesh.vertices[faces[v]].uv0 += transform.Translate * transform.Scale;
-                        mesh.vertices[faces[v + 1]].uv0 += transform.Translate * transform.Scale;
-                        mesh.vertices[faces[v + 2]].uv0 += transform.Translate * transform.Scale;
+                        /*   mesh.vertices[faces[v]].uv0 *= transform.Scale;
+                           mesh.vertices[faces[v + 1]].uv0 *= transform.Scale;
+                           mesh.vertices[faces[v + 2]].uv0 *= transform.Scale;
+
+                           mesh.vertices[faces[v]].uv0 += transform.Translate;
+                           mesh.vertices[faces[v + 1]].uv0 += transform.Translate;
+                           mesh.vertices[faces[v + 2]].uv0 += transform.Translate;*/
                     }
                 }
             }
