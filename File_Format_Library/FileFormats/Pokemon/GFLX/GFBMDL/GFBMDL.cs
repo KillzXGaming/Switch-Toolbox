@@ -463,8 +463,8 @@ namespace FirstPlugin
                 bone.RadiusEnd = new GFMDLStructs.Vector3(0, 0, 0);
                 bone.RigidCheck = new BoneRigidData();
 
-                int NodeIndex = Model.Model.Bones.IndexOf(bone);
                 Model.Model.Bones.Add(bone);
+                int NodeIndex = Model.Model.Bones.IndexOf(bone);
 
                 //Now create the associated group
                 var group = new Group();
