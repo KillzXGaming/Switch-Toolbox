@@ -391,8 +391,9 @@ namespace FirstPlugin
 
                 if (Model.GenericMeshes.Any(x => x.Text == node.Text))
                 {
-                    NodeIndices.Add(node.Text, i);
-                    Console.WriteLine($"match  {node.Text}");
+                    if (!NodeIndices.ContainsKey(node.Text))
+                        NodeIndices.Add(node.Text, i);
+
                     Model.Model.Bones.Remove(node.Bone);
                     Model.Skeleton.bones.Remove(node);
                 }
@@ -631,33 +632,6 @@ namespace FirstPlugin
                     if (Model.Textures.Contains(tex.Text))
                         textures.Add(tex);
                 }
-
-            foreach (var mesh in model.Objects)
-            {
-                foreach (var poly in mesh.PolygonGroups)
-                {
-                    GFLXMaterialData mat = (GFLXMaterialData)poly.Material;
-                    var faces = poly.GetDisplayFace();
-                    for (int v = 0; v < poly.displayFaceSize; v += 3)
-                    {
-                        if (faces.Count < v + 2)
-                            break;
-
-                        var diffuse = mat.TextureMaps.FirstOrDefault(x => x.Type == STGenericMatTexture.TextureType.Diffuse);
-                        STTextureTransform transform = new STTextureTransform();
-                        if (diffuse != null)
-                            transform = diffuse.Transform;
-
-                        /*   mesh.vertices[faces[v]].uv0 *= transform.Scale;
-                           mesh.vertices[faces[v + 1]].uv0 *= transform.Scale;
-                           mesh.vertices[faces[v + 2]].uv0 *= transform.Scale;
-
-                           mesh.vertices[faces[v]].uv0 += transform.Translate;
-                           mesh.vertices[faces[v + 1]].uv0 += transform.Translate;
-                           mesh.vertices[faces[v + 2]].uv0 += transform.Translate;*/
-                    }
-                }
-            }
 
             DAE.Export(fileName, settings, model, textures, Model.Skeleton);
         }
