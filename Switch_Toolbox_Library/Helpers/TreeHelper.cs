@@ -131,13 +131,9 @@ namespace Toolbox.Library
                         file.SaveFileFormat();
 
                     if (file.FileDataStream != null)
-                    {
                         file.FileDataStream.ExportToFile(path);
-                    }
                     else
-                    {
                         File.WriteAllBytes($"{path}", file.FileData);
-                    }
                 }
             }
 

@@ -32,6 +32,9 @@ namespace Toolbox
 
                 foreach (Release latest in Releases)
                 {
+                    if (latest.Assets?.Count == 0)
+                        continue;
+
                     Console.WriteLine(
                         "The latest release is tagged at {0} and is named {1} commit {2} date {3}",
                         latest.TagName,
