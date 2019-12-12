@@ -363,16 +363,6 @@ namespace FirstPlugin
                     bone.Translation = new GFMDLStructs.Vector3(trans[0], trans[1], trans[2]);
                     bone.RadiusStart = new GFMDLStructs.Vector3(0, 0, 0);
                     bone.RadiusEnd = new GFMDLStructs.Vector3(0, 0, 0);
-                    bone.RigidCheck = new BoneRigidData() { Unknown1 = 0 };
-
-                    //Check if the bone is rigged
-                    for (int i = 0; i < meshes.Count; i++)
-                    {
-                        if (meshes[i].vertices.Any(x => x.boneNames.Contains(bone.Name))) {
-                            bone.BoneType = 1;
-                            bone.RigidCheck = null;
-                        }
-                    }
 
                     Model.Model.Bones.Add(bone);
                 }
@@ -383,7 +373,22 @@ namespace FirstPlugin
             //Go through each bone and remove the original mesh node
             for (int i = 0; i < Model.Skeleton.bones.Count; i++)
             {
+                //Reset bone as rigid
                 var node = (GFLXBone)Model.Skeleton.bones[i];
+                node.Bone.RigidCheck = new BoneRigidData() { Unknown1 = 0 };
+                if (node.Bone.BoneType == 1)
+                    node.Bone.BoneType = 0;
+
+                //Check if the bone is rigged to any meshes and use skinning
+                for (int m = 0; m < meshes.Count; m++)
+                {
+                    if (meshes[m].vertices.Any(x => x.boneNames.Contains(node.Text)))
+                    {
+                        node.Bone.BoneType = 1;
+                        node.Bone.RigidCheck = null;
+                    }
+                }
+
                 if (Model.GenericMeshes.Any(x => x.Text == node.Text))
                 {
                     NodeIndices.Add(node.Text, i);
