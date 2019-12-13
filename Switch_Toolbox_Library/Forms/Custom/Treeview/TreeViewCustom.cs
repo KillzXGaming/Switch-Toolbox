@@ -17,7 +17,8 @@ namespace Toolbox.Library
         public virtual void OnMouseRightClick(TreeView treeview) { }
         public virtual void OnDoubleMouseClick(TreeView treeview) { }
 
-
+        public virtual void OnExpand() { }
+        
         public TreeNodeCustom()
         {
         }

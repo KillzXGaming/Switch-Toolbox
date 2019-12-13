@@ -12,7 +12,7 @@ using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class GFPAK : IArchiveFile, IFileFormat
+    public class GFPAK : TreeNodeFile, IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -22,6 +22,22 @@ namespace FirstPlugin
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
+
+        public Dictionary<string, string> CategoryLookup
+        {
+            get {
+                return new Dictionary<string, string>()
+                {
+                    { ".bnsh_vsh", "VertexShader" },
+                    { ".bnsh_fsh", "FragmentShader" },
+                    { ".bntx", "Textures" },
+                    { ".gfbmdl", "Models" },
+                    { ".gfbanm", "Animations" },
+                    { ".gfbanmcfg", "AnimationConfigs" },
+                    { ".gfbpokecfg", "PokemonConfigs" },
+                };
+            }
+        }
 
         private string FindMatch(byte[] f)
         {
@@ -107,6 +123,237 @@ namespace FirstPlugin
             CanSave = true;
 
             Read(new FileReader(stream));
+
+            TreeNode node = new TreeNode("Quick access");
+            Nodes.Add(node);
+            Dictionary<string, TreeNode> folders = new Dictionary<string, TreeNode>();
+            foreach (var file in files)
+            {
+                string ext = Utils.GetExtension(file.FileName);
+                string folderName = "Other";
+                if (CategoryLookup.ContainsKey(ext))
+                    folderName = CategoryLookup[ext];
+
+                if (!folders.ContainsKey(folderName))
+                {
+                    TreeNode folder = new TreeNode(folderName);
+                    if (folderName == "Textures")
+                        folder = new TextureFolder(this, "Textures");
+                    if (folderName == "Models")
+                        folder = new ModelFolder("Models");
+
+                    node.Nodes.Add(folder);
+                    folders.Add(folderName, folder);
+                }
+
+                string name = Path.GetFileName(file.FileName).Split('[').FirstOrDefault();
+
+                string imageKey = "fileBlank";
+                switch (ext)
+                {
+                    case ".bntx": imageKey = "bntx"; break;
+                    case ".gfbmdl": imageKey = "model"; break;
+                }
+
+                TreeNode fodlerNode = folders[folderName];
+                fodlerNode.Nodes.Add(new QuickAccessFile(name)
+                {
+                    Tag = file,
+                    ImageKey = imageKey,
+                    SelectedImageKey = imageKey,
+                });
+            }
+        }
+
+        public class QuickAccessFile : TreeNodeCustom
+        {
+            public QuickAccessFile(string text) {
+                Text = text;
+            }
+
+            public override void OnClick(TreeView treeview)
+            {
+                ArchiveFilePanel editor = (ArchiveFilePanel)LibraryGUI.GetActiveContent(typeof(ArchiveFilePanel));
+                if (editor == null)
+                {
+                    editor = new ArchiveFilePanel();
+                    editor.Dock = DockStyle.Fill;
+                    LibraryGUI.LoadEditor(editor);
+                }
+
+                editor.LoadFile((ArchiveFileInfo)Tag);
+                editor.UpdateEditor();
+            }
+        }
+
+        public class ModelFolder : TreeNodeCustom
+        {
+            private bool HasExpanded = false;
+
+            public ModelFolder(string text) {
+                Text = text;
+            }
+
+            public override void OnExpand()
+            {
+                if (HasExpanded) return;
+
+                List<GFBMDL> models = new List<GFBMDL>();
+                foreach (TreeNode node in Nodes)
+                {
+                    var file = (ArchiveFileInfo)node.Tag;
+                    if (file.FileFormat == null)
+                        file.FileFormat = file.OpenFile();
+
+                    var model = file.FileFormat as GFBMDL;
+                    if (model != null) {
+                        model.Tag = file;
+                        model.ImageKey = "model";
+                        model.SelectedImageKey = "model";
+                        models.Add(model);
+                    }
+                }
+
+                Nodes.Clear();
+                Nodes.AddRange(models.ToArray());
+
+                HasExpanded = true;
+            }
+        }
+
+        public class TextureFolder : TreeNodeCustom, IContextMenuNode
+        {
+            private bool HasExpanded = false;
+
+            private IArchiveFile ArchiveFile;
+
+            public TextureFolder(IArchiveFile archive, string text) {
+                ArchiveFile = archive;
+                Text = text;
+            }
+
+            public void AddTexture(string fileName)
+            {
+                BNTX bntx = BNTX.CreateBNTXFromTexture(fileName);
+                var mem = new MemoryStream();
+                bntx.Save(mem);
+
+                string filePath = fileName;
+
+                ArchiveFile.AddFile(new ArchiveFileInfo()
+                {
+                    FileData = mem.ToArray(),
+                    FileFormat = bntx,
+                    FileName = filePath,
+                });
+            }
+
+            private void OnTextureDeleted(object sender, EventArgs e)
+            {
+                var tex = (TextureData)sender;
+                foreach (var file in ArchiveFile.Files)
+                {
+                    if (file.FileFormat != null && file.FileFormat is BNTX) {
+                        var bntx = (BNTX)file.FileFormat;
+                        if (bntx.Textures.ContainsKey(tex.Text))
+                        {
+                            bntx.RemoveTexture(tex);
+                            bntx.Unload();
+                            ArchiveFile.DeleteFile(file);
+                            Nodes.RemoveByKey(tex.Text);
+                        }
+                    }
+                }
+            }
+
+            public virtual ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
+                Items.Add(new ToolStripMenuItem("Replace Textures (From Folder)", null, ReplaceAllAction, Keys.Control | Keys.R));
+
+                return Items.ToArray();
+            }
+
+            private void ReplaceAllAction(object sender, EventArgs args) {
+                LoadTextures();
+
+                List<BNTX> bntxFiles = new List<BNTX>();
+                foreach (TextureData node in Nodes)
+                    bntxFiles.Add(node.ParentBNTX);
+
+                if (bntxFiles.Count > 0)
+                    BNTX.ReplaceAll(bntxFiles.ToArray());
+            }
+
+            private void ExportAllAction(object sender, EventArgs args)
+            {
+                LoadTextures();
+
+                List<string> Formats = new List<string>();
+                Formats.Add("Microsoft DDS (.dds)");
+                Formats.Add("Portable Graphics Network (.png)");
+                Formats.Add("Joint Photographic Experts Group (.jpg)");
+                Formats.Add("Bitmap Image (.bmp)");
+                Formats.Add("Tagged Image File Format (.tiff)");
+
+                FolderSelectDialog sfd = new FolderSelectDialog();
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    string folderPath = sfd.SelectedPath;
+
+                    BatchFormatExport form = new BatchFormatExport(Formats);
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (STGenericTexture tex in Nodes)
+                        {
+                            if (form.Index == 0)
+                                tex.SaveDDS(folderPath + '\\' + tex.Text + ".dds");
+                            else if (form.Index == 1)
+                                tex.SaveBitMap(folderPath + '\\' + tex.Text + ".png");
+                            else if (form.Index == 2)
+                                tex.SaveBitMap(folderPath + '\\' + tex.Text + ".jpg");
+                            else if (form.Index == 3)
+                                tex.SaveBitMap(folderPath + '\\' + tex.Text + ".bmp");
+                            else if (form.Index == 4)
+                                tex.SaveBitMap(folderPath + '\\' + tex.Text + ".tiff");
+                        }
+                    }
+                }
+            }
+
+            public override void OnExpand() {
+                LoadTextures();
+            }
+
+            public void LoadTextures()
+            {
+                if (HasExpanded) return;
+
+                List<TreeNode> textures = new List<TreeNode>();
+                foreach (TreeNode node in Nodes)
+                {
+                    var file = (ArchiveFileInfo)node.Tag;
+                    if (file.FileFormat == null)
+                        file.FileFormat = file.OpenFile();
+
+                    BNTX bntx = file.FileFormat as BNTX;
+                    foreach (var tex in bntx.Textures)
+                    {
+                        tex.Value.OnTextureDeleted += OnTextureDeleted;
+                        //Set tree key for deletion
+                        tex.Value.Name = tex.Key;
+                        tex.Value.Tag = file;
+                        textures.Add(tex.Value);
+                    }
+                }
+
+                Nodes.Clear();
+                Nodes.AddRange(textures.ToArray());
+
+                HasExpanded = true;
+            }
         }
 
         public void Unload()

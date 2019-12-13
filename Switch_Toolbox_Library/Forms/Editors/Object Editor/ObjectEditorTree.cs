@@ -56,6 +56,43 @@ namespace Toolbox.Library.Forms
                     FileRoot.Nodes.Add(n);
             }
 
+            if (FileFormat is IArchiveQuickAccess)
+            {
+                var lookup = ((IArchiveQuickAccess)FileFormat).CategoryLookup;
+
+                TreeNode quickAcessNode = new TreeNode("Quick access");
+                AddNode(quickAcessNode);
+
+                Dictionary<string, TreeNode> folders = new Dictionary<string, TreeNode>();
+                for (int i = 0; i < FileRoot.FileNodes.Count; i++)
+                {
+                    string fileName = FileRoot.FileNodes[i].Item1.FileName;
+                    string name = System.IO.Path.GetFileName(fileName);
+                    string ext = Utils.GetExtension(fileName);
+
+                    var fileNode = FileRoot.FileNodes[i].Item2;
+
+                    string folder = "Other";
+                    if (lookup.ContainsKey(ext))
+                        folder = lookup[ext];
+
+                    if (!folders.ContainsKey(folder)) {
+                        var dirNode = new TreeNode(folder);
+                        folders.Add(folder, dirNode);
+                        quickAcessNode.Nodes.Add(dirNode);
+                    }
+
+                    folders[folder].Nodes.Add(new TreeNode()
+                    {
+                        Tag = fileNode,
+                        Text = name,
+                        ImageKey = fileNode.ImageKey,
+                        SelectedImageKey = fileNode.SelectedImageKey,
+                    });
+                    // dirNode.Nodes.Add(FileRoot.FileNodes[i].Item2);
+                }
+            }
+
             SelectNode(FileRoot);
 
             for (int i = 0; i < FileRoot.FileNodes.Count; i++)
@@ -271,6 +308,10 @@ namespace Toolbox.Library.Forms
             {
                 ((TreeNodeCustom)treeViewCustom1.SelectedNode).OnDoubleMouseClick(treeViewCustom1);
             }
+            if (treeViewCustom1.SelectedNode.Tag != null && treeViewCustom1.SelectedNode.Tag is TreeNodeCustom)
+            {
+                ((TreeNodeCustom)treeViewCustom1.SelectedNode.Tag).OnDoubleMouseClick(treeViewCustom1);
+            }
         }
 
         public void UpdateTextureIcon(ISingleTextureIconLoader texturIcon, Image image) {
@@ -314,14 +355,9 @@ namespace Toolbox.Library.Forms
             ClearNodes();
         }
 
-        private void GetArchiveMenus(TreeNode node, ArchiveFileInfo info)
+        private ToolStripItem[] GetArchiveMenus(TreeNode node, ArchiveFileInfo info)
         {
-            STToolStipMenuItem menuItem = new STToolStipMenuItem("Archive");
-            treeNodeContextMenu.Items.Add(menuItem);
-
-            var items = info.FileWrapper.GetContextMenuItems();
-            foreach (var item in items)
-                menuItem.DropDownItems.Add(item);
+            return info.FileWrapper.GetContextMenuItems();
         }
 
         private void treeViewCustom1_MouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -329,12 +365,17 @@ namespace Toolbox.Library.Forms
             if (e.Button == MouseButtons.Right)
             {
                 treeNodeContextMenu.Items.Clear();
+
+                List<ToolStripItem> archiveMenus = new List<ToolStripItem>();
+                List<ToolStripItem> menuItems = new List<ToolStripItem>();
+
                 if (e.Node.Tag != null && e.Node.Tag is ArchiveFileInfo)
                 {
                     //The tag gets set when an archive is replaced by a treenode
                     //Todo store this in a better place as devs could possiblly replace this
                     //Create menus when an archive node is replaced
-                    GetArchiveMenus(e.Node, (ArchiveFileInfo)e.Node.Tag);
+                    archiveMenus.AddRange(GetArchiveMenus(e.Node, (ArchiveFileInfo)e.Node.Tag));
+                    Console.WriteLine($"archiveMenus {archiveMenus.Count}");
                 }
 
                 bool IsRoot = e.Node.Parent == null;
@@ -348,6 +389,7 @@ namespace Toolbox.Library.Forms
                     node = (IContextMenuNode)e.Node.Tag;
                 }
 
+
                 if (node != null)
                 {
                     if (IsRoot)
@@ -355,13 +397,13 @@ namespace Toolbox.Library.Forms
                         foreach (var item in node.GetContextMenuItems())
                         {
                             if (item.Text != "Delete" && item.Text != "Remove")
-                                treeNodeContextMenu.Items.Add(item);
+                                menuItems.Add(item);
                         }
-                        treeNodeContextMenu.Items.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.Delete));
+                        menuItems.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.Delete));
                     }
                     else
                     {
-                        treeNodeContextMenu.Items.AddRange(node.GetContextMenuItems());
+                        menuItems.AddRange(node.GetContextMenuItems());
                     }
 
                     bool HasCollpase = false;
@@ -375,10 +417,21 @@ namespace Toolbox.Library.Forms
                     }
 
                     if (!HasCollpase && HasChildren)
-                        treeNodeContextMenu.Items.Add(new ToolStripMenuItem("Collapse All", null, CollapseAllAction, Keys.Control | Keys.Q));
+                        menuItems.Add(new ToolStripMenuItem("Collapse All", null, CollapseAllAction, Keys.Control | Keys.Q));
 
                     if (!HasExpand && HasChildren)
-                        treeNodeContextMenu.Items.Add(new ToolStripMenuItem("Expand All", null, ExpandAllAction, Keys.Control | Keys.P));
+                        menuItems.Add(new ToolStripMenuItem("Expand All", null, ExpandAllAction, Keys.Control | Keys.P));
+
+                    if (archiveMenus.Count > 0)
+                    {
+                        STToolStipMenuItem archiveItem = new STToolStipMenuItem("Archive");
+                        treeNodeContextMenu.Items.Add(archiveItem);
+
+                        foreach (var item in archiveMenus)
+                            archiveItem.DropDownItems.Add(item);
+                    }
+
+                    treeNodeContextMenu.Items.AddRange(menuItems.ToArray());
 
                     //Select the node without the evemt
                     //We don't want editors displaying on only right clicking
@@ -386,7 +439,13 @@ namespace Toolbox.Library.Forms
                     treeViewCustom1.SelectedNode = e.Node;
                     SuppressAfterSelectEvent = false;
                 }
-                    if (treeNodeContextMenu.Items.Count > 0)
+                else
+                {
+                    if (archiveMenus.Count > 0)
+                        treeNodeContextMenu.Items.AddRange(archiveMenus.ToArray());
+                }
+
+                if (treeNodeContextMenu.Items.Count > 0)
                     treeNodeContextMenu.Show(Cursor.Position);
             }
             else
@@ -964,6 +1023,12 @@ namespace Toolbox.Library.Forms
             {
                 treeViewCustom1.BeginUpdate();
                 ((ExplorerFolder)e.Node).OnBeforeExpand();
+                treeViewCustom1.EndUpdate();
+            }
+            else if (e.Node is TreeNodeCustom)
+            {
+                treeViewCustom1.BeginUpdate();
+                ((TreeNodeCustom)e.Node).OnExpand();
                 treeViewCustom1.EndUpdate();
             }
         }
