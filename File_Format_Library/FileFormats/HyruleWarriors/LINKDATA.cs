@@ -11,7 +11,7 @@ using System.IO;
 
 namespace FirstPlugin
 {
-    public class LINKDATA : IArchiveFile, IFileFormat, ILeaveOpenOnLoad
+    public class LINKDATA : IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -51,7 +51,7 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            using (var reader = new FileReader(stream, true))
+            using (var reader = new FileReader(stream))
             {
                 const uint SizeOfEntry = 32;
                 uint FileCount = (uint)reader.BaseStream.Length / SizeOfEntry;
@@ -128,11 +128,12 @@ namespace FirstPlugin
                 string path = "";
                 if (FilePath.Contains("LINKDATA.IDX"))
                     path = FilePath.Replace("IDX", "BIN");
-                if (FilePath.Contains("DATA1.bin"))
+
+                if (FilePath.Contains("DATA0.bin"))
                     path = FilePath.Replace("DATA0", "DATA1");
 
                 if (!System.IO.File.Exists(path))
-                    return null;
+                    throw new Exception("Failed to find data path! " + path);
 
                 return new FileReader(path, true);
             }
