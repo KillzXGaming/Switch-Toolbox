@@ -35,7 +35,9 @@ namespace Bfres.Structs
                 List<ushort> RigidIndices = new List<ushort>();
 
                 foreach (var Bone in Skeleton.Bones.Values)
-                    Bone.InverseMatrix = new Syroot.Maths.Matrix3x4();
+                    Bone.InverseMatrix = new Syroot.Maths.Matrix3x4(1,0,0,0,
+                                                                    0,1,0,0,
+                                                                    0,0,1,0);
 
                 ushort SmoothIndex = 0;
                 foreach (BfresBone bn in bones)
