@@ -206,10 +206,8 @@ namespace Toolbox.Library
             return b;
         }
 
-        public static Bitmap SwapBlueRedChannels(Image image)
+        public static Bitmap SwapBlueRedChannels(Bitmap b)
         {
-            Bitmap b = new Bitmap(image);
-
             BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height),
     ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
             int stride = bmData.Stride;
@@ -289,7 +287,7 @@ namespace Toolbox.Library
             if (Buffer.Length > ImgData.Stride * Img.Height)
                 throw new Exception($"Invalid Buffer Length ({Buffer.Length})!!!");
 
-                Marshal.Copy(Buffer, 0, ImgData.Scan0, Buffer.Length);
+            Marshal.Copy(Buffer, 0, ImgData.Scan0, Buffer.Length);
 
             Img.UnlockBits(ImgData);
 
@@ -742,6 +740,7 @@ namespace Toolbox.Library
             }
             return bm;
         }
+
         public static byte[] ImageToByte(Bitmap bitmap)
         {
             BitmapData bmpdata = null;

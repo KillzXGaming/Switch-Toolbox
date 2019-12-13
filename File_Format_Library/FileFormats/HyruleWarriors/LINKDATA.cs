@@ -11,7 +11,7 @@ using System.IO;
 
 namespace FirstPlugin
 {
-    public class LINKDATA : IArchiveFile, IFileFormat
+    public class LINKDATA : IArchiveFile, IFileFormat, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -51,7 +51,7 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            using (var reader = new FileReader(stream))
+            using (var reader = new FileReader(stream, true))
             {
                 const uint SizeOfEntry = 32;
                 uint FileCount = (uint)reader.BaseStream.Length / SizeOfEntry;
