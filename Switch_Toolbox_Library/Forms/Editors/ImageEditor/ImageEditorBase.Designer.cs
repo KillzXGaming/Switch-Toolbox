@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Toolbox.Library.Forms.STPanel();
@@ -41,7 +40,7 @@
             this.stContextMenuStrip2 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel3 = new Toolbox.Library.Forms.STPanel();
-            this.gammaLbl = new Toolbox.Library.Forms.STLabel();
+            this.noteifcationLbl = new Toolbox.Library.Forms.STLabel();
             this.alphaBtn = new Toolbox.Library.Forms.STButton();
             this.editBtn = new Toolbox.Library.Forms.STButton();
             this.saveBtn = new Toolbox.Library.Forms.STButton();
@@ -88,6 +87,7 @@
             this.hueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.brightnessContrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gammaFixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stContextMenuStrip3 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -147,6 +147,7 @@
             this.stPanel4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.stPanel4.Controls.Add(this.noteifcationLbl);
             this.stPanel4.Controls.Add(this.stPanel5);
             this.stPanel4.Controls.Add(this.pictureBoxCustom1);
             this.stPanel4.Location = new System.Drawing.Point(3, 74);
@@ -199,7 +200,6 @@
             // 
             // stPanel3
             // 
-            this.stPanel3.Controls.Add(this.gammaLbl);
             this.stPanel3.Controls.Add(this.alphaBtn);
             this.stPanel3.Controls.Add(this.editBtn);
             this.stPanel3.Controls.Add(this.saveBtn);
@@ -215,13 +215,14 @@
             this.stPanel3.TabIndex = 3;
             this.stPanel3.Paint += new System.Windows.Forms.PaintEventHandler(this.stPanel3_Paint);
             // 
-            // gammaLbl
+            // noteifcationLbl
             // 
-            this.gammaLbl.AutoSize = true;
-            this.gammaLbl.Location = new System.Drawing.Point(111, 8);
-            this.gammaLbl.Name = "gammaLbl";
-            this.gammaLbl.Size = new System.Drawing.Size(0, 13);
-            this.gammaLbl.TabIndex = 18;
+            this.noteifcationLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.noteifcationLbl.AutoSize = true;
+            this.noteifcationLbl.Location = new System.Drawing.Point(4, 385);
+            this.noteifcationLbl.Name = "noteifcationLbl";
+            this.noteifcationLbl.Size = new System.Drawing.Size(0, 13);
+            this.noteifcationLbl.TabIndex = 18;
             // 
             // alphaBtn
             // 
@@ -661,6 +662,7 @@
             this.stPanel1.ResumeLayout(false);
             this.stPanel1.PerformLayout();
             this.stPanel4.ResumeLayout(false);
+            this.stPanel4.PerformLayout();
             this.stPanel5.ResumeLayout(false);
             this.stPanel5.PerformLayout();
             this.stContextMenuStrip2.ResumeLayout(false);
@@ -730,7 +732,7 @@
         private System.Windows.Forms.ToolStripMenuItem previewCubemap3DToolStripMenuItem;
         private STContextMenuStrip stContextMenuStrip3;
         private System.Windows.Forms.ToolStripMenuItem previewGammaFixSmashUltimateToolStripMenuItem;
-        private STLabel gammaLbl;
+        private STLabel noteifcationLbl;
         private System.Windows.Forms.ToolStripMenuItem gammaFixToolStripMenuItem;
     }
 }

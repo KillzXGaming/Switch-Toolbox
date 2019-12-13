@@ -61,10 +61,12 @@ namespace Toolbox.Library.Forms
 
         private void UpdateLabel()
         {
+            noteifcationLbl.Text = "";
+
             if (Runtime.ImageEditor.PreviewGammaFix)
-                gammaLbl.Text = "Note: Gamma Correction Enabled!";
-            else
-                gammaLbl.Text = "";
+                noteifcationLbl.Text = "Note: gamma correction enabled! ";
+            if (!Runtime.ImageEditor.DisplayAlpha)
+                noteifcationLbl.Text += "Note: alpha channel hidden in editor!";
         }
 
         private int _currentCacheIndex = -1;
@@ -1226,6 +1228,7 @@ namespace Toolbox.Library.Forms
 
             Runtime.ImageEditor.DisplayAlpha = displayAlphaToolStripMenuItem.Checked;
             UpdateMipDisplay();
+            UpdateLabel();
 
             SaveSettings();
         }
