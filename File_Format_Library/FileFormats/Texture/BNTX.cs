@@ -486,6 +486,17 @@ namespace FirstPlugin
             }
         }
 
+        public static BNTX CreateBNTXFromTexture(string filePath)
+        {
+            string name = Path.GetFileNameWithoutExtension(filePath);
+
+            BNTX bntx = new BNTX();
+            bntx.IFileInfo = new IFileInfo();
+            bntx.Load(new MemoryStream(CreateNewBNTX(name)));
+            bntx.ImportTexture(new string[] { filePath });
+            return bntx;
+        }
+
         public static byte[] CreateNewBNTX(string Name)
         {
             MemoryStream mem = new MemoryStream();
@@ -581,6 +592,8 @@ namespace FirstPlugin
             foreach (Texture tex in BinaryTexFile.Textures)
             {
                 TextureData texData = new TextureData(tex, BinaryTexFile);
+                texData.ParentBNTX = this;
+
                 Nodes.Add(texData);
                 if (!Textures.ContainsKey(tex.Name))
                     Textures.Add(tex.Name, texData);
@@ -690,6 +703,8 @@ namespace FirstPlugin
                         setting.textureData.Text = setting.textureData.Text + i++;
                     }
 
+                    setting.textureData.ParentBNTX = this;
+
                     Nodes.Add(setting.textureData);
                     Textures.Add(setting.textureData.Text, setting.textureData);
                     setting.textureData.LoadOpenGLTexture();
@@ -744,6 +759,7 @@ namespace FirstPlugin
             texData.Text = TextureName;
 
 
+            texData.ParentBNTX = this;
 
             Nodes.Add(texData);
             Textures.Add(TextureName, texData);
@@ -842,6 +858,7 @@ namespace FirstPlugin
                 texData.Text = Utils.RenameDuplicateString(keyList, texData.Text);
                 texData.Load(texData.Texture);
                 Nodes.Add(texData);
+                texData.ParentBNTX = this;
                 Textures.Add(texData.Text, texData);
             }
             return texData;
@@ -869,7 +886,12 @@ namespace FirstPlugin
             }
         }
 
-        private void ReplaceAll(object sender, EventArgs args)
+
+        private void ReplaceAll(object sender, EventArgs args) {
+            ReplaceAll(new BNTX[] { this });
+        }
+
+        public static void ReplaceAll(BNTX[] bntxFiles)
         {
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
@@ -886,44 +908,46 @@ namespace FirstPlugin
 
                     string ext = Utils.GetExtension(file);
 
-                    foreach (TextureData node in Textures.Values)
+                    foreach (var bntx in bntxFiles)
                     {
-                        var DefaultFormat = node.Format;
-
-                        if (FileName == node.Text)
+                        foreach (TextureData node in bntx.Textures.Values)
                         {
-                            switch (ext)
-                            {
-                                case ".bftex":
-                                    node.Texture.Import(file);
-                                    node.Texture.Name = Text;
-                                    node.LoadOpenGLTexture();
-                                    break;
-                                case ".dds":
-                                case ".dds2":
-                                    setting.LoadDDS(file, null, node);
-                                    node.ApplyImportSettings(setting, STCompressionMode.Normal, false);
-                                    break;
-                                case ".astc":
-                                    setting.LoadASTC(file);
-                                    node.ApplyImportSettings(setting, STCompressionMode.Normal, false);
-                                    break;
-                                case ".png":
-                                case ".tga":
-                                case ".tiff":
-                                case ".gif":
-                                case ".jpg":
-                                case ".jpeg":
-                                    TexturesForImportSettings.Add(node);
-                                    setting.LoadBitMap(file);
-                                    importer.LoadSetting(setting);
-                                    if (!STGenericTexture.IsAtscFormat(DefaultFormat))
-                                        setting.Format = TextureData.GenericToBntxSurfaceFormat(DefaultFormat);
+                            var DefaultFormat = node.Format;
 
-                                    settings.Add(setting);
-                                    break;
-                                default:
-                                    return;
+                            if (FileName == node.Text)
+                            {
+                                switch (ext)
+                                {
+                                    case ".bftex":
+                                        node.Texture.Import(file);
+                                        node.LoadOpenGLTexture();
+                                        break;
+                                    case ".dds":
+                                    case ".dds2":
+                                        setting.LoadDDS(file, null, node);
+                                        node.ApplyImportSettings(setting, STCompressionMode.Normal, false);
+                                        break;
+                                    case ".astc":
+                                        setting.LoadASTC(file);
+                                        node.ApplyImportSettings(setting, STCompressionMode.Normal, false);
+                                        break;
+                                    case ".png":
+                                    case ".tga":
+                                    case ".tiff":
+                                    case ".gif":
+                                    case ".jpg":
+                                    case ".jpeg":
+                                        TexturesForImportSettings.Add(node);
+                                        setting.LoadBitMap(file);
+                                        importer.LoadSetting(setting);
+                                        if (!STGenericTexture.IsAtscFormat(DefaultFormat))
+                                            setting.Format = TextureData.GenericToBntxSurfaceFormat(DefaultFormat);
+
+                                        settings.Add(setting);
+                                        break;
+                                    default:
+                                        return;
+                                }
                             }
                         }
                     }
@@ -1014,6 +1038,7 @@ namespace FirstPlugin
                     }
 
                     tex.Texture.Name = tex.Text;
+
 
                     BinaryTexFile.Textures.Add(tex.Texture);
                     BinaryTexFile.TextureDict.Add(tex.Text);
@@ -1106,6 +1131,10 @@ namespace FirstPlugin
 
     public class TextureData : STGenericTexture
     {
+        public BNTX ParentBNTX { get; set; }
+
+        public EventHandler OnTextureDeleted;
+
         public override TEX_FORMAT[] SupportedFormats
         {
             get
@@ -1428,7 +1457,8 @@ namespace FirstPlugin
 
         public override void Delete()
         {
-            ((BNTX)Parent).RemoveTexture(this);
+            ParentBNTX.RemoveTexture(this);
+            OnTextureDeleted?.Invoke(this, EventArgs.Empty);
         }
 
         public override void Rename()
@@ -1438,10 +1468,10 @@ namespace FirstPlugin
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                ((BNTX)Parent).Textures.Remove(Text);
+                ParentBNTX.Textures.Remove(Text);
                 Text = dialog.textBox1.Text;
 
-                ((BNTX)Parent).Textures.Add(Text, this);
+                ParentBNTX.Textures.Add(Text, this);
             }
         }
 
@@ -1629,9 +1659,9 @@ namespace FirstPlugin
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
         {
             int target = 1;
-            if (Parent != null && Parent is BNTX && ((BNTX)Parent).BinaryTexFile != null)
+            if (ParentBNTX != null && ParentBNTX is BNTX && ParentBNTX.BinaryTexFile != null)
             {
-                bool IsNX = ((BNTX)Parent).BinaryTexFile.PlatformTarget == "NX  ";
+                bool IsNX = ParentBNTX.BinaryTexFile.PlatformTarget == "NX  ";
                 if (!IsNX)
                     target = 0;
             }
@@ -1688,7 +1718,7 @@ namespace FirstPlugin
         }
         internal void SaveBinaryTexture(string FileName)
         {
-            Texture.Export(FileName, ((BNTX)Parent).BinaryTexFile);
+            Texture.Export(FileName, ParentBNTX.BinaryTexFile);
         }
     }
 }
