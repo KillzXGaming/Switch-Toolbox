@@ -206,8 +206,21 @@ namespace Toolbox.Library
             return b;
         }
 
-        public static Bitmap SwapBlueRedChannels(Bitmap b)
+        public static Bitmap SwapBlueRedChannels(Bitmap orig)
         {
+            Bitmap b = orig;
+            if (orig.PixelFormat != PixelFormat.Format32bppArgb)
+            {
+                Console.WriteLine($"orig.PixelFormat {orig.PixelFormat}");
+                b = new Bitmap(orig.Width, orig.Height,
+                      System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+                using (Graphics gr = Graphics.FromImage(b))
+                {
+                    gr.DrawImage(orig, new Rectangle(0, 0, b.Width, b.Height));
+                }
+            }
+
             BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height),
     ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
             int stride = bmData.Stride;
