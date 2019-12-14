@@ -211,9 +211,7 @@ namespace Toolbox.Library
             Bitmap b = orig;
             if (orig.PixelFormat != PixelFormat.Format32bppArgb)
             {
-                Console.WriteLine($"orig.PixelFormat {orig.PixelFormat}");
-                b = new Bitmap(orig.Width, orig.Height,
-                      System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                b = new Bitmap(orig.Width, orig.Height, PixelFormat.Format32bppArgb);
 
                 using (Graphics gr = Graphics.FromImage(b))
                 {
@@ -222,7 +220,7 @@ namespace Toolbox.Library
             }
 
             BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height),
-    ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+                     ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
             int stride = bmData.Stride;
             System.IntPtr Scan0 = bmData.Scan0;
 
