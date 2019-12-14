@@ -9,6 +9,8 @@ namespace FirstPlugin
 {
     public class GfbmdlImportSettings
     {
+        public bool OptmizeZeroWeights { get; set; } = false;
+
         public List<MeshSetting> MeshSettings = new List<MeshSetting>();
 
         public class MeshSetting
@@ -16,8 +18,8 @@ namespace FirstPlugin
             public bool FlipUVsVertical { get; set; }
 
             public bool HasNormals { get; set; }
-            public bool HasBitangents { get; set; }
             public bool HasTangents { get; set; }
+            public bool HasBitangents { get; set; }
             public bool HasTexCoord1 { get; set; }
             public bool HasTexCoord2 { get; set; }
             public bool HasTexCoord3 { get; set; }
@@ -33,7 +35,7 @@ namespace FirstPlugin
 
             public BufferFormat PositionFormat { get; set; } = BufferFormat.Float;
             public BufferFormat NormalFormat { get; set; } = BufferFormat.HalfFloat;
-            public BufferFormat BitangentnFormat { get; set; } = BufferFormat.HalfFloat;
+            public BufferFormat TangentsFormat { get; set; } = BufferFormat.HalfFloat;
             public BufferFormat TexCoord1Format { get; set; } = BufferFormat.Float;
             public BufferFormat TexCoord2Format { get; set; } = BufferFormat.Float;
             public BufferFormat TexCoord3Format { get; set; } = BufferFormat.Float;
@@ -44,8 +46,8 @@ namespace FirstPlugin
             public BufferFormat Color4Format { get; set; } = BufferFormat.Byte;
             public BufferFormat BoneIndexFormat { get; set; } = BufferFormat.Byte;
             public BufferFormat BoneWeightFormat { get; set; } = BufferFormat.BytesAsFloat;
-            public BufferFormat TangentsFormat { get; set; } = BufferFormat.HalfFloat;
-            
+            public BufferFormat BitangentnFormat { get; set; } = BufferFormat.HalfFloat;
+
             public string Material { get; set; }
 
             public string MaterialFile { get; set; }

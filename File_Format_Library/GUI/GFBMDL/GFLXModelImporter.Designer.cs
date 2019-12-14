@@ -42,8 +42,6 @@
             this.chkHasUv2 = new Toolbox.Library.Forms.STCheckBox();
             this.color1FormatCB = new Toolbox.Library.Forms.STComboBox();
             this.chkUseColor2 = new Toolbox.Library.Forms.STCheckBox();
-            this.bitangentFormatCB = new Toolbox.Library.Forms.STComboBox();
-            this.chkBitangents = new Toolbox.Library.Forms.STCheckBox();
             this.positionFormatCB = new Toolbox.Library.Forms.STComboBox();
             this.stCheckBox8 = new Toolbox.Library.Forms.STCheckBox();
             this.stLabel2 = new Toolbox.Library.Forms.STLabel();
@@ -53,6 +51,7 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.weightFormatCB = new Toolbox.Library.Forms.STComboBox();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.chkSetNormalsToColorChannel = new Toolbox.Library.Forms.STCheckBox();
             this.tangentFormatCB = new Toolbox.Library.Forms.STComboBox();
             this.chkTangents = new Toolbox.Library.Forms.STCheckBox();
             this.chkUseBoneWeights = new Toolbox.Library.Forms.STCheckBox();
@@ -65,7 +64,8 @@
             this.chkUseOriginalBones = new Toolbox.Library.Forms.STCheckBox();
             this.stCheckBox7 = new Toolbox.Library.Forms.STCheckBox();
             this.stButton2 = new Toolbox.Library.Forms.STButton();
-            this.chkSetNormalsToColorChannel = new Toolbox.Library.Forms.STCheckBox();
+            this.chkBitangents = new Toolbox.Library.Forms.STCheckBox();
+            this.bitangentFormatCB = new Toolbox.Library.Forms.STComboBox();
             this.contentContainer.SuspendLayout();
             this.stPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rotateModel90YUD)).BeginInit();
@@ -119,7 +119,7 @@
             // chkHasUv1
             // 
             this.chkHasUv1.AutoSize = true;
-            this.chkHasUv1.Location = new System.Drawing.Point(12, 187);
+            this.chkHasUv1.Location = new System.Drawing.Point(11, 197);
             this.chkHasUv1.Name = "chkHasUv1";
             this.chkHasUv1.Size = new System.Drawing.Size(114, 17);
             this.chkHasUv1.TabIndex = 15;
@@ -130,7 +130,7 @@
             // chkUseBoneIndex
             // 
             this.chkUseBoneIndex.AutoSize = true;
-            this.chkUseBoneIndex.Location = new System.Drawing.Point(12, 327);
+            this.chkUseBoneIndex.Location = new System.Drawing.Point(11, 337);
             this.chkUseBoneIndex.Name = "chkUseBoneIndex";
             this.chkUseBoneIndex.Size = new System.Drawing.Size(110, 17);
             this.chkUseBoneIndex.TabIndex = 16;
@@ -141,7 +141,7 @@
             // chkUseColor1
             // 
             this.chkUseColor1.AutoSize = true;
-            this.chkUseColor1.Location = new System.Drawing.Point(12, 243);
+            this.chkUseColor1.Location = new System.Drawing.Point(11, 253);
             this.chkUseColor1.Name = "chkUseColor1";
             this.chkUseColor1.Size = new System.Drawing.Size(123, 17);
             this.chkUseColor1.TabIndex = 17;
@@ -169,7 +169,7 @@
             this.uv0FormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.uv0FormatCB.FormattingEnabled = true;
             this.uv0FormatCB.IsReadOnly = false;
-            this.uv0FormatCB.Location = new System.Drawing.Point(147, 183);
+            this.uv0FormatCB.Location = new System.Drawing.Point(146, 193);
             this.uv0FormatCB.Name = "uv0FormatCB";
             this.uv0FormatCB.Size = new System.Drawing.Size(131, 21);
             this.uv0FormatCB.TabIndex = 19;
@@ -182,7 +182,7 @@
             this.boneFormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.boneFormatCB.FormattingEnabled = true;
             this.boneFormatCB.IsReadOnly = false;
-            this.boneFormatCB.Location = new System.Drawing.Point(143, 323);
+            this.boneFormatCB.Location = new System.Drawing.Point(142, 333);
             this.boneFormatCB.Name = "boneFormatCB";
             this.boneFormatCB.Size = new System.Drawing.Size(133, 21);
             this.boneFormatCB.TabIndex = 21;
@@ -195,7 +195,7 @@
             this.color0FormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.color0FormatCB.FormattingEnabled = true;
             this.color0FormatCB.IsReadOnly = false;
-            this.color0FormatCB.Location = new System.Drawing.Point(145, 241);
+            this.color0FormatCB.Location = new System.Drawing.Point(144, 251);
             this.color0FormatCB.Name = "color0FormatCB";
             this.color0FormatCB.Size = new System.Drawing.Size(131, 21);
             this.color0FormatCB.TabIndex = 20;
@@ -208,7 +208,7 @@
             this.uv1FormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.uv1FormatCB.FormattingEnabled = true;
             this.uv1FormatCB.IsReadOnly = false;
-            this.uv1FormatCB.Location = new System.Drawing.Point(147, 210);
+            this.uv1FormatCB.Location = new System.Drawing.Point(146, 220);
             this.uv1FormatCB.Name = "uv1FormatCB";
             this.uv1FormatCB.Size = new System.Drawing.Size(131, 21);
             this.uv1FormatCB.TabIndex = 23;
@@ -217,7 +217,7 @@
             // chkHasUv2
             // 
             this.chkHasUv2.AutoSize = true;
-            this.chkHasUv2.Location = new System.Drawing.Point(12, 214);
+            this.chkHasUv2.Location = new System.Drawing.Point(11, 224);
             this.chkHasUv2.Name = "chkHasUv2";
             this.chkHasUv2.Size = new System.Drawing.Size(114, 17);
             this.chkHasUv2.TabIndex = 22;
@@ -232,7 +232,7 @@
             this.color1FormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.color1FormatCB.FormattingEnabled = true;
             this.color1FormatCB.IsReadOnly = false;
-            this.color1FormatCB.Location = new System.Drawing.Point(145, 268);
+            this.color1FormatCB.Location = new System.Drawing.Point(144, 278);
             this.color1FormatCB.Name = "color1FormatCB";
             this.color1FormatCB.Size = new System.Drawing.Size(131, 21);
             this.color1FormatCB.TabIndex = 25;
@@ -241,37 +241,13 @@
             // chkUseColor2
             // 
             this.chkUseColor2.AutoSize = true;
-            this.chkUseColor2.Location = new System.Drawing.Point(12, 270);
+            this.chkUseColor2.Location = new System.Drawing.Point(11, 280);
             this.chkUseColor2.Name = "chkUseColor2";
             this.chkUseColor2.Size = new System.Drawing.Size(123, 17);
             this.chkUseColor2.TabIndex = 24;
             this.chkUseColor2.Text = "Use Color Channel 2";
             this.chkUseColor2.UseVisualStyleBackColor = true;
             this.chkUseColor2.CheckedChanged += new System.EventHandler(this.ApplySettings);
-            // 
-            // bitangentFormatCB
-            // 
-            this.bitangentFormatCB.BorderColor = System.Drawing.Color.Empty;
-            this.bitangentFormatCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.bitangentFormatCB.ButtonColor = System.Drawing.Color.Empty;
-            this.bitangentFormatCB.FormattingEnabled = true;
-            this.bitangentFormatCB.IsReadOnly = false;
-            this.bitangentFormatCB.Location = new System.Drawing.Point(147, 129);
-            this.bitangentFormatCB.Name = "bitangentFormatCB";
-            this.bitangentFormatCB.Size = new System.Drawing.Size(131, 21);
-            this.bitangentFormatCB.TabIndex = 27;
-            this.bitangentFormatCB.SelectedIndexChanged += new System.EventHandler(this.ApplySettings);
-            // 
-            // chkBitangents
-            // 
-            this.chkBitangents.AutoSize = true;
-            this.chkBitangents.Location = new System.Drawing.Point(12, 131);
-            this.chkBitangents.Name = "chkBitangents";
-            this.chkBitangents.Size = new System.Drawing.Size(98, 17);
-            this.chkBitangents.TabIndex = 26;
-            this.chkBitangents.Text = "Use Bitangents";
-            this.chkBitangents.UseVisualStyleBackColor = true;
-            this.chkBitangents.CheckedChanged += new System.EventHandler(this.ApplySettings);
             // 
             // positionFormatCB
             // 
@@ -359,7 +335,7 @@
             this.weightFormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.weightFormatCB.FormattingEnabled = true;
             this.weightFormatCB.IsReadOnly = false;
-            this.weightFormatCB.Location = new System.Drawing.Point(143, 350);
+            this.weightFormatCB.Location = new System.Drawing.Point(142, 360);
             this.weightFormatCB.Name = "weightFormatCB";
             this.weightFormatCB.Size = new System.Drawing.Size(135, 21);
             this.weightFormatCB.TabIndex = 35;
@@ -397,6 +373,17 @@
             this.stPanel1.Size = new System.Drawing.Size(378, 382);
             this.stPanel1.TabIndex = 36;
             // 
+            // chkSetNormalsToColorChannel
+            // 
+            this.chkSetNormalsToColorChannel.AutoSize = true;
+            this.chkSetNormalsToColorChannel.Location = new System.Drawing.Point(11, 305);
+            this.chkSetNormalsToColorChannel.Name = "chkSetNormalsToColorChannel";
+            this.chkSetNormalsToColorChannel.Size = new System.Drawing.Size(176, 17);
+            this.chkSetNormalsToColorChannel.TabIndex = 41;
+            this.chkSetNormalsToColorChannel.Text = "Set Normals to Color Channel  2";
+            this.chkSetNormalsToColorChannel.UseVisualStyleBackColor = true;
+            this.chkSetNormalsToColorChannel.CheckedChanged += new System.EventHandler(this.ApplySettings);
+            // 
             // tangentFormatCB
             // 
             this.tangentFormatCB.BorderColor = System.Drawing.Color.Empty;
@@ -404,7 +391,7 @@
             this.tangentFormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.tangentFormatCB.FormattingEnabled = true;
             this.tangentFormatCB.IsReadOnly = false;
-            this.tangentFormatCB.Location = new System.Drawing.Point(147, 156);
+            this.tangentFormatCB.Location = new System.Drawing.Point(147, 131);
             this.tangentFormatCB.Name = "tangentFormatCB";
             this.tangentFormatCB.Size = new System.Drawing.Size(131, 21);
             this.tangentFormatCB.TabIndex = 40;
@@ -413,7 +400,7 @@
             // chkTangents
             // 
             this.chkTangents.AutoSize = true;
-            this.chkTangents.Location = new System.Drawing.Point(12, 158);
+            this.chkTangents.Location = new System.Drawing.Point(12, 133);
             this.chkTangents.Name = "chkTangents";
             this.chkTangents.Size = new System.Drawing.Size(93, 17);
             this.chkTangents.TabIndex = 39;
@@ -424,7 +411,7 @@
             // chkUseBoneWeights
             // 
             this.chkUseBoneWeights.AutoSize = true;
-            this.chkUseBoneWeights.Location = new System.Drawing.Point(12, 354);
+            this.chkUseBoneWeights.Location = new System.Drawing.Point(11, 364);
             this.chkUseBoneWeights.Name = "chkUseBoneWeights";
             this.chkUseBoneWeights.Size = new System.Drawing.Size(115, 17);
             this.chkUseBoneWeights.TabIndex = 38;
@@ -542,16 +529,29 @@
             this.stButton2.Text = "Ok";
             this.stButton2.UseVisualStyleBackColor = false;
             // 
-            // chkSetNormalsToColorChannel
+            // chkBitangents
             // 
-            this.chkSetNormalsToColorChannel.AutoSize = true;
-            this.chkSetNormalsToColorChannel.Location = new System.Drawing.Point(12, 295);
-            this.chkSetNormalsToColorChannel.Name = "chkSetNormalsToColorChannel";
-            this.chkSetNormalsToColorChannel.Size = new System.Drawing.Size(176, 17);
-            this.chkSetNormalsToColorChannel.TabIndex = 41;
-            this.chkSetNormalsToColorChannel.Text = "Set Normals to Color Channel  2";
-            this.chkSetNormalsToColorChannel.UseVisualStyleBackColor = true;
-            this.chkSetNormalsToColorChannel.CheckedChanged += new System.EventHandler(this.ApplySettings);
+            this.chkBitangents.AutoSize = true;
+            this.chkBitangents.Location = new System.Drawing.Point(12, 164);
+            this.chkBitangents.Name = "chkBitangents";
+            this.chkBitangents.Size = new System.Drawing.Size(98, 17);
+            this.chkBitangents.TabIndex = 26;
+            this.chkBitangents.Text = "Use Bitangents";
+            this.chkBitangents.UseVisualStyleBackColor = true;
+            this.chkBitangents.CheckedChanged += new System.EventHandler(this.ApplySettings);
+            // 
+            // bitangentFormatCB
+            // 
+            this.bitangentFormatCB.BorderColor = System.Drawing.Color.Empty;
+            this.bitangentFormatCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.bitangentFormatCB.ButtonColor = System.Drawing.Color.Empty;
+            this.bitangentFormatCB.FormattingEnabled = true;
+            this.bitangentFormatCB.IsReadOnly = false;
+            this.bitangentFormatCB.Location = new System.Drawing.Point(147, 162);
+            this.bitangentFormatCB.Name = "bitangentFormatCB";
+            this.bitangentFormatCB.Size = new System.Drawing.Size(131, 21);
+            this.bitangentFormatCB.TabIndex = 27;
+            this.bitangentFormatCB.SelectedIndexChanged += new System.EventHandler(this.ApplySettings);
             // 
             // GFLXModelImporter
             // 
@@ -582,8 +582,6 @@
         private Toolbox.Library.Forms.STCheckBox chkUseBoneIndex;
         private Toolbox.Library.Forms.STCheckBox chkHasUv1;
         private Toolbox.Library.Forms.STCheckBox chkUseNormals;
-        private Toolbox.Library.Forms.STComboBox bitangentFormatCB;
-        private Toolbox.Library.Forms.STCheckBox chkBitangents;
         private Toolbox.Library.Forms.STComboBox color1FormatCB;
         private Toolbox.Library.Forms.STCheckBox chkUseColor2;
         private Toolbox.Library.Forms.STComboBox uv1FormatCB;
@@ -610,5 +608,7 @@
         private Toolbox.Library.Forms.STCheckBox chkTangents;
         private Toolbox.Library.Forms.STCheckBox chkMatchAttributes;
         private Toolbox.Library.Forms.STCheckBox chkSetNormalsToColorChannel;
+        private Toolbox.Library.Forms.STComboBox bitangentFormatCB;
+        private Toolbox.Library.Forms.STCheckBox chkBitangents;
     }
 }

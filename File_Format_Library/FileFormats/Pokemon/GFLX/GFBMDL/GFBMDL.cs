@@ -462,6 +462,38 @@ namespace FirstPlugin
                         mesh.vertices[i].nrm = OpenTK.Vector3.TransformPosition(mesh.vertices[i].nrm, transform);
                     }
 
+                    if (importer.Settings.OptmizeZeroWeights)
+                    {
+                        float MaxWeight = 1;
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (mesh.vertices[i].boneWeights.Count <= j)
+                                continue;
+
+                            if (mesh.vertices[i].boneIds.Count < j + 1)
+                            {
+                                mesh.vertices[i].boneWeights[j] = 0;
+                                MaxWeight = 0;
+                            }
+                            else
+                            {
+                                float weight = mesh.vertices[i].boneWeights[j];
+                                if (mesh.vertices[i].boneWeights.Count == j + 1)
+                                    weight = MaxWeight;
+
+                                if (weight >= MaxWeight)
+                                {
+                                    weight = MaxWeight;
+                                    MaxWeight = 0;
+                                }
+                                else
+                                    MaxWeight -= weight;
+
+                                mesh.vertices[i].boneWeights[j] = weight;
+                            }
+                        }
+                    }
+
                     for (int j = 0; j < mesh.vertices[i].boneNames?.Count; j++)
                     {
                         string boneName = mesh.vertices[i].boneNames[j];
@@ -513,16 +545,13 @@ namespace FirstPlugin
                 var meshData = new Mesh();
                 Model.Model.Meshes.Add(meshData);
 
-                if (setting.HasBitangents)
+                if (setting.HasTangents || setting.HasBitangents)
                 {
                     try {
                         mesh.CalculateTangentBitangent(false);
                     }
                     catch { }
                 }
-
-                for (int i = 0; i < mesh.vertices.Count; i++)
-                    mesh.vertices[i].bitan = mesh.vertices[i].tan;
 
                 //Add attributes based on settings
                 IList<MeshAttribute> attributes = new List<MeshAttribute>();
@@ -593,7 +622,7 @@ namespace FirstPlugin
                 if (setting.HasBitangents) {
                     attributes.Add(new MeshAttribute()
                     {
-                        VertexType = (uint)VertexType.Binormal,
+                        VertexType = (uint)VertexType.Bitangent,
                         BufferFormat = (uint)setting.BitangentnFormat,
                         ElementCount = 4,
                     });
