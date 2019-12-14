@@ -316,10 +316,10 @@ namespace Toolbox.Library
 
         private void CalculateTanBitanArrays(List<int> faces, Vector3[] tanArray, Vector3[] bitanArray, bool UseUVLayer2)
         {
-            if (vertices.Count < 3 || lodMeshes.Count <= 0)
+            if (vertices.Count < 3 || faces.Count <= 0)
                 return;
 
-            for (int i = 0; i < lodMeshes[DisplayLODIndex].displayFaceSize; i += 3)
+            for (int i = 0; i < faces.Count; i += 3)
             {
                 Vertex v1 = vertices[faces[i]];
                 Vertex v2 = vertices[faces[i + 1]];
