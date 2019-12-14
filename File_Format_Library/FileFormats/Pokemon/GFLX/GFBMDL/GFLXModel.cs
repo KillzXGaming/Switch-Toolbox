@@ -142,12 +142,12 @@ namespace FirstPlugin
 
         public GFMDLStructs.BoundingBox GenerateBoundingBox(STGenericObject mesh)
         {
-            float minX = 0;
-            float minY = 0;
-            float minZ = 0;
-            float maxX = 0;
-            float maxY = 0;
-            float maxZ = 0;
+            float minX = float.MaxValue;
+            float minY = float.MaxValue;
+            float minZ = float.MaxValue;
+            float maxX = float.MinValue;
+            float maxY = float.MinValue;
+            float maxZ = float.MinValue;
 
             for (int v = 0; v < mesh.vertices.Count; v++)
             {
@@ -171,12 +171,12 @@ namespace FirstPlugin
 
         public void GenerateBoundingBox()
         {
-            float minX = 0;
-            float minY = 0;
-            float minZ = 0;
-            float maxX = 0;
-            float maxY = 0;
-            float maxZ = 0;
+            float minX = float.MaxValue;
+            float minY = float.MaxValue;
+            float minZ = float.MaxValue;
+            float maxX = float.MinValue;
+            float maxY = float.MinValue;
+            float maxZ = float.MinValue;
 
             foreach (var mesh in GenericMeshes)
             {
@@ -322,12 +322,9 @@ namespace FirstPlugin
 
                 switch (tex.Sampler)
                 {
+                    case "Texture0112`":
                     case "BaseColor0":
-                        matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
-                        break;
                     case "Col0Tex":
-                        matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
-                        break;
                     case "L0ColTex":
                         matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
                         break;

@@ -137,15 +137,21 @@ namespace FirstPlugin.Forms
 
                 if (gflxTex.Params != null)
                 {
+                    wrapModeUCB.LoadEnum(typeof(FlatBuffers.Gfbmdl.WrapMode));
+                    wrapModeUCB.SelectedItem = (FlatBuffers.Gfbmdl.WrapMode)gflxTex.Params.WrapModeX;
+
+                    wrapModeVCB.LoadEnum(typeof(FlatBuffers.Gfbmdl.WrapMode));
+                    wrapModeVCB.SelectedItem = (FlatBuffers.Gfbmdl.WrapMode)gflxTex.Params.WrapModeY;
+
+                    wrapModeWCB.LoadEnum(typeof(FlatBuffers.Gfbmdl.WrapMode));
+                    wrapModeWCB.SelectedItem = (FlatBuffers.Gfbmdl.WrapMode)gflxTex.Params.WrapModeZ;
+
                     param1CB.Value = gflxTex.Params.Unknown1;
-                    param2CB.Value = gflxTex.Params.WrapModeX;
-                    param3CB.Value = gflxTex.Params.WrapModeY;
-                    param4CB.Value = gflxTex.Params.WrapModeZ;
-                  //  param5CB.Value = gflxTex.Params.Unknown5;
-                  //  param6CB.Value = gflxTex.Params.Unknown6;
-                    param7CB.Value = gflxTex.Params.Unknown7;
-                    param8CB.Value = gflxTex.Params.Unknown8;
-                    param9CB.Value = gflxTex.Params.lodBias;
+                    param2CB.Value = gflxTex.Params.Unknown5;
+                    param3CB.Value = gflxTex.Params.Unknown6;
+                    param4CB.Value = gflxTex.Params.Unknown7;
+                    param5CB.Value = gflxTex.Params.Unknown8;
+                    param6CB.Value = gflxTex.Params.lodBias;
                 }
 
                 if (tex.Type == STGenericMatTexture.TextureType.Diffuse) {

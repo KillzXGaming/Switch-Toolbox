@@ -11,7 +11,7 @@ namespace FirstPlugin.GFMDLStructs
     {
         Position = 0,
         Normal = 1,
-        Binormal = 2,
+        Tangents = 2,
         UV1 = 3,
         UV2 = 4,
         UV3 = 5,
@@ -22,7 +22,7 @@ namespace FirstPlugin.GFMDLStructs
         Color4 = 10,
         BoneID = 11,
         BoneWeight = 12,
-        Tangents = 13,
+        Bitangent = 13,
         Unknown2 = 14,
     }
 
@@ -109,10 +109,10 @@ namespace FirstPlugin.GFMDLStructs
         public uint WrapModeX { get; set; }
         public uint WrapModeY { get; set; }
         public uint WrapModeZ { get; set; }
-        public uint Unknown5 { get; set; }
-        public uint Unknown6 { get; set; }
-        public uint Unknown7 { get; set; }
-        public uint Unknown8 { get; set; }
+        public float Unknown5 { get; set; }
+        public float Unknown6 { get; set; }
+        public float Unknown7 { get; set; }
+        public float Unknown8 { get; set; }
 
         public float lodBias { get; set; }
     }

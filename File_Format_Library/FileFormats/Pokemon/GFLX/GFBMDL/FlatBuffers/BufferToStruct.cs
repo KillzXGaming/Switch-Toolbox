@@ -98,9 +98,9 @@ namespace FirstPlugin
                         parameters = new TextureParams()
                         {
                             Unknown1 = param.Unknown1,
-                            WrapModeX = param.Unknown2,
-                            WrapModeY = param.Unknown3,
-                            WrapModeZ = param.Unknown4,
+                            WrapModeX = (uint)param.WrapModeX,
+                            WrapModeY = (uint)param.WrapModeY,
+                            WrapModeZ = (uint)param.WrapModeZ,
                             Unknown5 = param.Unknown5,
                             Unknown6 = param.Unknown6,
                             Unknown7 = param.Unknown7,
@@ -146,12 +146,12 @@ namespace FirstPlugin
                     });
                 }
 
-                if (mat.Parameter4 != i)
-                    Console.WriteLine($"Expected {i} for shader index, got " + mat.Parameter4);
-                if (mat.Parameter5 != -1)
-                    Console.WriteLine("Expected -1 for param 4, got " + mat.Parameter5);
-                if (mat.Parameter6 != i)
-                    Console.WriteLine($"Expected {i} for param 5, got " + mat.Parameter6);
+                if (mat.Parameter3 != i)
+                    Console.WriteLine($"Expected {i} for shader index, got " + mat.Parameter3);
+                if (mat.Parameter4 != -1)
+                    Console.WriteLine("Expected -1 for param 4, got " + mat.Parameter4);
+                if (mat.Parameter5 != i)
+                    Console.WriteLine($"Expected {i} for param 5, got " + mat.Parameter5);
 
                 model.Materials.Add(new Material()
                 {
@@ -162,9 +162,9 @@ namespace FirstPlugin
                     Parameter1 = mat.Parameter1,
                     Parameter2 = mat.Parameter2,
                     Parameter3 = mat.Parameter3,
-                    ShaderIndex = mat.Parameter4,
-                    Parameter4 = mat.Parameter5,
-                    Parameter5 = mat.Parameter6,
+                    ShaderIndex = mat.ShaderIndex,
+                    Parameter4 = mat.Parameter4,
+                    Parameter5 = mat.Parameter5,
                     RenderLayer = mat.RenderLayer,
                     ShaderGroup = mat.ShaderGroup,
                     Unknown1 = mat.Unknown1,

@@ -14,6 +14,13 @@ namespace FlatBuffers.Gfbmdl
         HasSkinning = 1,
     };
 
+    public enum WrapMode : uint
+    {
+        Repeat = 0,
+        Clamp = 1,
+        Mirror = 2,
+    };
+
     public enum VertexType : uint
     {
         Position = 0,
@@ -175,9 +182,9 @@ namespace FlatBuffers.Gfbmdl
         public int Parameter1 { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
         public int Parameter2 { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
         public int Parameter3 { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-        public int Parameter4 { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-        public int Parameter5 { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-        public int Parameter6 { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+        public int ShaderIndex { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+        public int Parameter4 { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+        public int Parameter5 { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
         public TextureMap? TextureMaps(int j) { int o = __p.__offset(26); return o != 0 ? (TextureMap?)(new TextureMap()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
         public int TextureMapsLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
         public MatSwitch? Switches(int j) { int o = __p.__offset(28); return o != 0 ? (MatSwitch?)(new MatSwitch()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
@@ -202,9 +209,9 @@ namespace FlatBuffers.Gfbmdl
             int Parameter1 = 0,
             int Parameter2 = 0,
             int Parameter3 = 0,
+            int ShaderIndex = 0,
             int Parameter4 = 0,
             int Parameter5 = 0,
-            int Parameter6 = 0,
             VectorOffset TextureMapsOffset = default(VectorOffset),
             VectorOffset SwitchesOffset = default(VectorOffset),
             VectorOffset ValuesOffset = default(VectorOffset),
@@ -222,9 +229,9 @@ namespace FlatBuffers.Gfbmdl
             Material.AddValues(builder, ValuesOffset);
             Material.AddSwitches(builder, SwitchesOffset);
             Material.AddTextureMaps(builder, TextureMapsOffset);
-            Material.AddParameter6(builder, Parameter6);
             Material.AddParameter5(builder, Parameter5);
             Material.AddParameter4(builder, Parameter4);
+            Material.AddShaderIndex(builder, ShaderIndex);
             Material.AddParameter3(builder, Parameter3);
             Material.AddParameter2(builder, Parameter2);
             Material.AddParameter1(builder, Parameter1);
@@ -250,9 +257,9 @@ namespace FlatBuffers.Gfbmdl
         public static void AddParameter1(FlatBufferBuilder builder, int Parameter1) { builder.AddInt(5, Parameter1, 0); }
         public static void AddParameter2(FlatBufferBuilder builder, int Parameter2) { builder.AddInt(6, Parameter2, 0); }
         public static void AddParameter3(FlatBufferBuilder builder, int Parameter3) { builder.AddInt(7, Parameter3, 0); }
-        public static void AddParameter4(FlatBufferBuilder builder, int Parameter4) { builder.AddInt(8, Parameter4, 0); }
-        public static void AddParameter5(FlatBufferBuilder builder, int Parameter5) { builder.AddInt(9, Parameter5, 0); }
-        public static void AddParameter6(FlatBufferBuilder builder, int Parameter6) { builder.AddInt(10, Parameter6, 0); }
+        public static void AddShaderIndex(FlatBufferBuilder builder, int ShaderIndex) { builder.AddInt(8, ShaderIndex, 0); }
+        public static void AddParameter4(FlatBufferBuilder builder, int Parameter4) { builder.AddInt(9, Parameter4, 0); }
+        public static void AddParameter5(FlatBufferBuilder builder, int Parameter5) { builder.AddInt(10, Parameter5, 0); }
         public static void AddTextureMaps(FlatBufferBuilder builder, VectorOffset TextureMapsOffset) { builder.AddOffset(11, TextureMapsOffset.Value, 0); }
         public static VectorOffset CreateTextureMapsVector(FlatBufferBuilder builder, Offset<TextureMap>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
         public static VectorOffset CreateTextureMapsVectorBlock(FlatBufferBuilder builder, Offset<TextureMap>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -524,24 +531,24 @@ namespace FlatBuffers.Gfbmdl
         public TextureMapping __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
         public uint Unknown1 { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Unknown2 { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Unknown3 { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Unknown4 { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Unknown5 { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Unknown6 { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Unknown7 { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-        public uint Unknown8 { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+        public WrapMode WrapModeX { get { int o = __p.__offset(6); return o != 0 ? (WrapMode)__p.bb.GetUint(o + __p.bb_pos) : WrapMode.Repeat; } }
+        public WrapMode WrapModeY { get { int o = __p.__offset(8); return o != 0 ? (WrapMode)__p.bb.GetUint(o + __p.bb_pos) : WrapMode.Repeat; } }
+        public WrapMode WrapModeZ { get { int o = __p.__offset(10); return o != 0 ? (WrapMode)__p.bb.GetUint(o + __p.bb_pos) : WrapMode.Repeat; } }
+        public float Unknown5 { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+        public float Unknown6 { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+        public float Unknown7 { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+        public float Unknown8 { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
         public float LodBias { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
 
         public static Offset<TextureMapping> CreateTextureMapping(FlatBufferBuilder builder,
             uint Unknown1 = 0,
-            uint Unknown2 = 0,
-            uint Unknown3 = 0,
-            uint Unknown4 = 0,
-            uint Unknown5 = 0,
-            uint Unknown6 = 0,
-            uint Unknown7 = 0,
-            uint Unknown8 = 0,
+            WrapMode WrapModeX = WrapMode.Repeat,
+            WrapMode WrapModeY = WrapMode.Repeat,
+            WrapMode WrapModeZ = WrapMode.Repeat,
+            float Unknown5 = 0.0f,
+            float Unknown6 = 0.0f,
+            float Unknown7 = 0.0f,
+            float Unknown8 = 0.0f,
             float lodBias = 0.0f)
         {
             builder.StartObject(9);
@@ -550,22 +557,22 @@ namespace FlatBuffers.Gfbmdl
             TextureMapping.AddUnknown7(builder, Unknown7);
             TextureMapping.AddUnknown6(builder, Unknown6);
             TextureMapping.AddUnknown5(builder, Unknown5);
-            TextureMapping.AddUnknown4(builder, Unknown4);
-            TextureMapping.AddUnknown3(builder, Unknown3);
-            TextureMapping.AddUnknown2(builder, Unknown2);
+            TextureMapping.AddWrapModeZ(builder, WrapModeZ);
+            TextureMapping.AddWrapModeY(builder, WrapModeY);
+            TextureMapping.AddWrapModeX(builder, WrapModeX);
             TextureMapping.AddUnknown1(builder, Unknown1);
             return TextureMapping.EndTextureMapping(builder);
         }
 
         public static void StartTextureMapping(FlatBufferBuilder builder) { builder.StartObject(9); }
         public static void AddUnknown1(FlatBufferBuilder builder, uint Unknown1) { builder.AddUint(0, Unknown1, 0); }
-        public static void AddUnknown2(FlatBufferBuilder builder, uint Unknown2) { builder.AddUint(1, Unknown2, 0); }
-        public static void AddUnknown3(FlatBufferBuilder builder, uint Unknown3) { builder.AddUint(2, Unknown3, 0); }
-        public static void AddUnknown4(FlatBufferBuilder builder, uint Unknown4) { builder.AddUint(3, Unknown4, 0); }
-        public static void AddUnknown5(FlatBufferBuilder builder, uint Unknown5) { builder.AddUint(4, Unknown5, 0); }
-        public static void AddUnknown6(FlatBufferBuilder builder, uint Unknown6) { builder.AddUint(5, Unknown6, 0); }
-        public static void AddUnknown7(FlatBufferBuilder builder, uint Unknown7) { builder.AddUint(6, Unknown7, 0); }
-        public static void AddUnknown8(FlatBufferBuilder builder, uint Unknown8) { builder.AddUint(7, Unknown8, 0); }
+        public static void AddWrapModeX(FlatBufferBuilder builder, WrapMode WrapModeX) { builder.AddUint(1, (uint)WrapModeX, 0); }
+        public static void AddWrapModeY(FlatBufferBuilder builder, WrapMode WrapModeY) { builder.AddUint(2, (uint)WrapModeY, 0); }
+        public static void AddWrapModeZ(FlatBufferBuilder builder, WrapMode WrapModeZ) { builder.AddUint(3, (uint)WrapModeZ, 0); }
+        public static void AddUnknown5(FlatBufferBuilder builder, float Unknown5) { builder.AddFloat(4, Unknown5, 0.0f); }
+        public static void AddUnknown6(FlatBufferBuilder builder, float Unknown6) { builder.AddFloat(5, Unknown6, 0.0f); }
+        public static void AddUnknown7(FlatBufferBuilder builder, float Unknown7) { builder.AddFloat(6, Unknown7, 0.0f); }
+        public static void AddUnknown8(FlatBufferBuilder builder, float Unknown8) { builder.AddFloat(7, Unknown8, 0.0f); }
         public static void AddLodBias(FlatBufferBuilder builder, float lodBias) { builder.AddFloat(8, lodBias, 0.0f); }
         public static Offset<TextureMapping> EndTextureMapping(FlatBufferBuilder builder)
         {
@@ -922,6 +929,4 @@ namespace FlatBuffers.Gfbmdl
             return new Offset<Vector4>(builder.Offset);
         }
     };
-
-
 }

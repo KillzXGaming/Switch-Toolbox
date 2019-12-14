@@ -69,6 +69,8 @@ namespace FirstPlugin.Forms
                         material = importedMat;
                 }
 
+                //Check if color 2 is used (if any vertex colors are enabled)
+                bool color2Unused = meshes[i].HasVertColors && !meshes[i].HasVertColors2;
                 Settings.MeshSettings.Add(new GfbmdlImportSettings.MeshSetting()
                 {
                     HasColor1 = meshes[i].HasVertColors,
@@ -79,8 +81,9 @@ namespace FirstPlugin.Forms
                     HasNormals = meshes[i].HasNrm,
                     HasBoneIndices = meshes[i].HasIndices,
                     HasWeights = meshes[i].HasWeights,
-                    HasBitangents = meshes[i].HasUv0,
+                    HasTangents = meshes[i].HasUv0,
                     Material = material,
+                    SetNormalsToColorChannel2 = color2Unused,
                 });
                 listViewCustom1.Items.Add($"{meshes[i].ObjectName}");
             }
@@ -155,6 +158,10 @@ namespace FirstPlugin.Forms
                             case VertexType.Color2:
                                 setting.Color2Format = (BufferFormat)attribute.BufferFormat;
                                 setting.HasColor2 = true;
+
+                                bool hasColors = mesh.vertices.Any(x => x.col2 != OpenTK.Vector4.Zero);
+                                if (!hasColors)
+                                    setting.SetNormalsToColorChannel2 = true;
                                 break;
                             case VertexType.UV1:
                                 setting.TexCoord1Format = (BufferFormat)attribute.BufferFormat;
@@ -202,7 +209,7 @@ namespace FirstPlugin.Forms
                                 setting.TangentsFormat = (BufferFormat)attribute.BufferFormat;
                                 setting.HasTangents = true;
                                 break;
-                            case VertexType.Binormal:
+                            case VertexType.Bitangent:
                                 setting.BitangentnFormat = (BufferFormat)attribute.BufferFormat;
                                 setting.HasBitangents = true;
                                 break;
@@ -210,6 +217,7 @@ namespace FirstPlugin.Forms
                     }
                 }
             }
+
             Loaded = true;
         }
 
@@ -248,6 +256,9 @@ namespace FirstPlugin.Forms
                 settings.HasBitangents = chkBitangents.Checked;
                 settings.HasTexCoord1 = chkHasUv1.Checked;
                 settings.HasTexCoord2 = chkHasUv2.Checked;
+                settings.SetNormalsToColorChannel2 = chkSetNormalsToColorChannel.Checked;
+                if (settings.SetNormalsToColorChannel2)
+                    chkUseColor2.Checked = true;
                 settings.HasColor1 = chkUseColor1.Checked;
                 settings.HasColor2 = chkUseColor2.Checked;
                 settings.HasBoneIndices = chkUseBoneIndex.Checked;
@@ -273,10 +284,11 @@ namespace FirstPlugin.Forms
             chkHasUv1.Checked = settings.HasTexCoord1;
             chkHasUv2.Checked = settings.HasTexCoord2;
             chkUseColor1.Checked = settings.HasColor1;
-            chkUseColor2.Checked = settings.HasColor2;
+            chkUseColor2.Checked = settings.HasColor2 || settings.SetNormalsToColorChannel2;
             chkUseBoneIndex.Checked = settings.HasBoneIndices;
             chkUseBoneWeights.Checked = settings.HasWeights;
             chkTangents.Checked = settings.HasTangents;
+            chkSetNormalsToColorChannel.Checked = settings.SetNormalsToColorChannel2;
 
             positionFormatCB.SelectedItem = settings.PositionFormat;
             normalFormatCB.SelectedItem = settings.NormalFormat;
@@ -300,13 +312,11 @@ namespace FirstPlugin.Forms
             ofd.DefaultExt = "json";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                try {
-                     Newtonsoft.Json.JsonConvert.DeserializeObject<Material>(
-                       System.IO.File.ReadAllText(ofd.FileName));
-                }
-                catch (Exception ex)
-                {
-                    STErrorDialog.Show("Failed to load material!", "GFBMDL Importer", ex.ToString());
+                var mat = Newtonsoft.Json.JsonConvert.DeserializeObject<Material>(
+                                    System.IO.File.ReadAllText(ofd.FileName));
+
+                if (mat == null) {
+                    MessageBox.Show("Invalid material file!", "GFBMDL Importer");
                     return;
                 }
 

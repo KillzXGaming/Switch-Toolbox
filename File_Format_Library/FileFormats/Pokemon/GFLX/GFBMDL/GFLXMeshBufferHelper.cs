@@ -105,7 +105,7 @@ namespace FirstPlugin
                                         values.Add(0);
                                 }
                                 break;
-                            case VertexType.Binormal:
+                            case VertexType.Bitangent:
                                 values.Add(mesh.vertices[v].bitan.X);
                                 values.Add(mesh.vertices[v].bitan.Y);
                                 values.Add(mesh.vertices[v].bitan.Z);
@@ -155,7 +155,7 @@ namespace FirstPlugin
                         else
                             throw new Exception($"Unknown Combination! {attribute.VertexType} {attribute.BufferFormat}");
                         break;
-                    case VertexType.Binormal:
+                    case VertexType.Bitangent:
                         if (attribute.BufferFormat == (uint)BufferFormat.HalfFloat)
                             VertBufferStride += 0x08;
                         else if (attribute.BufferFormat == (uint)BufferFormat.Float)
@@ -290,9 +290,9 @@ namespace FirstPlugin
 
                                 vertex.col2 = colors2 / 255f;
                                 break;
-                            case VertexType.Binormal:
-                                var binormals = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
-                                vertex.bitan = new OpenTK.Vector4(binormals.X, binormals.Y, binormals.Z, binormals.W);
+                            case VertexType.Bitangent:
+                                var bitans = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
+                                vertex.bitan = new OpenTK.Vector4(bitans.X, bitans.Y, bitans.Z, bitans.W);
                                 break;
                             case VertexType.Tangents:
                                 var tans = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
@@ -341,7 +341,7 @@ namespace FirstPlugin
                         throw new Exception($"Unknown Combination! {AttributeType} {Format}");
                 }
             }
-            else if (AttributeType == VertexType.Binormal)
+            else if (AttributeType == VertexType.Bitangent)
             {
                 switch (Format)
                 {
