@@ -281,14 +281,14 @@ namespace FirstPlugin
                                 if (attribute.BufferFormat == (uint)BufferFormat.Byte)
                                     colors1 = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
 
-                            //    vertex.col = colors1 / 255f;
+                                vertex.col = colors1 / 255f;
                                 break;
                             case VertexType.Color2:
                                 OpenTK.Vector4 colors2 = new OpenTK.Vector4(1, 1, 1, 1);
                                 if (attribute.BufferFormat == (uint)BufferFormat.Byte)
                                     colors2 = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
 
-                                vertex.col = colors2 / 255f;
+                                vertex.col2 = colors2 / 255f;
                                 break;
                             case VertexType.Binormal:
                                 var binormals = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
