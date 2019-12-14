@@ -47,9 +47,30 @@ namespace FirstPlugin
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip Horizontal", null, FlipHorizontalAction, Keys.Control | Keys.H));
             var colorMenu = new ToolStripMenuItem("Vertex Colors");
             colorMenu.DropDownItems.Add(new ToolStripMenuItem("Set Color", null, SetVertexColorDialog, Keys.Control | Keys.C));
+            colorMenu.DropDownItems.Add(new ToolStripMenuItem("Convert Normals", null, SetVertexColorNormals, Keys.Control | Keys.N));
+
             Items.Add(colorMenu);
 
             return Items.ToArray();
+        }
+
+        private void SetVertexColorNormals(object sender, EventArgs args)
+        {
+            if (!MeshData.Attributes.Any(x => x.VertexType == (uint)GFMDLStructs.VertexType.Color2))
+                return;
+
+            SetVertexColorNormals();
+            UpdateMesh();
+        }
+
+        public void SetVertexColorNormals()
+        {
+            for (int v = 0; v < vertices.Count; v++)
+                vertices[v].col = new Vector4(
+                    vertices[v].nrm.X * 0.5f + 0.5f,
+                    vertices[v].nrm.Y * 0.5f + 0.5f,
+                    vertices[v].nrm.Z * 0.5f + 0.5f,
+                    1);
         }
 
         private void SetVertexColorDialog(object sender, EventArgs args)

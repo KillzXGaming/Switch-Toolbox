@@ -29,6 +29,8 @@ namespace FirstPlugin
             public bool HasBoneIndices { get; set; }
             public bool HasWeights { get; set; }
 
+            public bool SetNormalsToColorChannel2 { get; set; }
+
             public BufferFormat PositionFormat { get; set; } = BufferFormat.Float;
             public BufferFormat NormalFormat { get; set; } = BufferFormat.HalfFloat;
             public BufferFormat BitangentnFormat { get; set; } = BufferFormat.HalfFloat;

@@ -46,6 +46,7 @@ namespace Toolbox.Library
         public bool HasBitans;
         public bool HasTans;
         public bool HasVertColors;
+        public bool HasVertColors2;
         public string ObjectName;
         public int BoneIndex = -1;
         public int MaterialIndex;

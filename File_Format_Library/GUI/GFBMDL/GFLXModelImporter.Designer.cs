@@ -65,6 +65,7 @@
             this.chkUseOriginalBones = new Toolbox.Library.Forms.STCheckBox();
             this.stCheckBox7 = new Toolbox.Library.Forms.STCheckBox();
             this.stButton2 = new Toolbox.Library.Forms.STButton();
+            this.chkSetNormalsToColorChannel = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.stPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rotateModel90YUD)).BeginInit();
@@ -77,7 +78,7 @@
             this.contentContainer.Controls.Add(this.stPanel2);
             this.contentContainer.Controls.Add(this.stPanel1);
             this.contentContainer.Controls.Add(this.listViewCustom1);
-            this.contentContainer.Size = new System.Drawing.Size(605, 601);
+            this.contentContainer.Size = new System.Drawing.Size(605, 620);
             this.contentContainer.Controls.SetChildIndex(this.listViewCustom1, 0);
             this.contentContainer.Controls.SetChildIndex(this.stPanel1, 0);
             this.contentContainer.Controls.SetChildIndex(this.stPanel2, 0);
@@ -129,7 +130,7 @@
             // chkUseBoneIndex
             // 
             this.chkUseBoneIndex.AutoSize = true;
-            this.chkUseBoneIndex.Location = new System.Drawing.Point(12, 301);
+            this.chkUseBoneIndex.Location = new System.Drawing.Point(12, 327);
             this.chkUseBoneIndex.Name = "chkUseBoneIndex";
             this.chkUseBoneIndex.Size = new System.Drawing.Size(110, 17);
             this.chkUseBoneIndex.TabIndex = 16;
@@ -140,7 +141,7 @@
             // chkUseColor1
             // 
             this.chkUseColor1.AutoSize = true;
-            this.chkUseColor1.Location = new System.Drawing.Point(12, 247);
+            this.chkUseColor1.Location = new System.Drawing.Point(12, 243);
             this.chkUseColor1.Name = "chkUseColor1";
             this.chkUseColor1.Size = new System.Drawing.Size(123, 17);
             this.chkUseColor1.TabIndex = 17;
@@ -181,7 +182,7 @@
             this.boneFormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.boneFormatCB.FormattingEnabled = true;
             this.boneFormatCB.IsReadOnly = false;
-            this.boneFormatCB.Location = new System.Drawing.Point(143, 297);
+            this.boneFormatCB.Location = new System.Drawing.Point(143, 323);
             this.boneFormatCB.Name = "boneFormatCB";
             this.boneFormatCB.Size = new System.Drawing.Size(133, 21);
             this.boneFormatCB.TabIndex = 21;
@@ -194,7 +195,7 @@
             this.color0FormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.color0FormatCB.FormattingEnabled = true;
             this.color0FormatCB.IsReadOnly = false;
-            this.color0FormatCB.Location = new System.Drawing.Point(145, 245);
+            this.color0FormatCB.Location = new System.Drawing.Point(145, 241);
             this.color0FormatCB.Name = "color0FormatCB";
             this.color0FormatCB.Size = new System.Drawing.Size(131, 21);
             this.color0FormatCB.TabIndex = 20;
@@ -231,7 +232,7 @@
             this.color1FormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.color1FormatCB.FormattingEnabled = true;
             this.color1FormatCB.IsReadOnly = false;
-            this.color1FormatCB.Location = new System.Drawing.Point(145, 272);
+            this.color1FormatCB.Location = new System.Drawing.Point(145, 268);
             this.color1FormatCB.Name = "color1FormatCB";
             this.color1FormatCB.Size = new System.Drawing.Size(131, 21);
             this.color1FormatCB.TabIndex = 25;
@@ -240,7 +241,7 @@
             // chkUseColor2
             // 
             this.chkUseColor2.AutoSize = true;
-            this.chkUseColor2.Location = new System.Drawing.Point(12, 274);
+            this.chkUseColor2.Location = new System.Drawing.Point(12, 270);
             this.chkUseColor2.Name = "chkUseColor2";
             this.chkUseColor2.Size = new System.Drawing.Size(123, 17);
             this.chkUseColor2.TabIndex = 24;
@@ -358,7 +359,7 @@
             this.weightFormatCB.ButtonColor = System.Drawing.Color.Empty;
             this.weightFormatCB.FormattingEnabled = true;
             this.weightFormatCB.IsReadOnly = false;
-            this.weightFormatCB.Location = new System.Drawing.Point(143, 324);
+            this.weightFormatCB.Location = new System.Drawing.Point(143, 350);
             this.weightFormatCB.Name = "weightFormatCB";
             this.weightFormatCB.Size = new System.Drawing.Size(135, 21);
             this.weightFormatCB.TabIndex = 35;
@@ -366,6 +367,7 @@
             // 
             // stPanel1
             // 
+            this.stPanel1.Controls.Add(this.chkSetNormalsToColorChannel);
             this.stPanel1.Controls.Add(this.tangentFormatCB);
             this.stPanel1.Controls.Add(this.chkTangents);
             this.stPanel1.Controls.Add(this.chkUseBoneWeights);
@@ -392,7 +394,7 @@
             this.stPanel1.Controls.Add(this.chkUseColor2);
             this.stPanel1.Location = new System.Drawing.Point(219, 206);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(378, 356);
+            this.stPanel1.Size = new System.Drawing.Size(378, 382);
             this.stPanel1.TabIndex = 36;
             // 
             // tangentFormatCB
@@ -422,7 +424,7 @@
             // chkUseBoneWeights
             // 
             this.chkUseBoneWeights.AutoSize = true;
-            this.chkUseBoneWeights.Location = new System.Drawing.Point(12, 328);
+            this.chkUseBoneWeights.Location = new System.Drawing.Point(12, 354);
             this.chkUseBoneWeights.Name = "chkUseBoneWeights";
             this.chkUseBoneWeights.Size = new System.Drawing.Size(115, 17);
             this.chkUseBoneWeights.TabIndex = 38;
@@ -533,18 +535,29 @@
             // 
             this.stButton2.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton2.Location = new System.Drawing.Point(522, 568);
+            this.stButton2.Location = new System.Drawing.Point(522, 594);
             this.stButton2.Name = "stButton2";
             this.stButton2.Size = new System.Drawing.Size(75, 23);
             this.stButton2.TabIndex = 42;
             this.stButton2.Text = "Ok";
             this.stButton2.UseVisualStyleBackColor = false;
             // 
+            // chkSetNormalsToColorChannel
+            // 
+            this.chkSetNormalsToColorChannel.AutoSize = true;
+            this.chkSetNormalsToColorChannel.Location = new System.Drawing.Point(12, 295);
+            this.chkSetNormalsToColorChannel.Name = "chkSetNormalsToColorChannel";
+            this.chkSetNormalsToColorChannel.Size = new System.Drawing.Size(176, 17);
+            this.chkSetNormalsToColorChannel.TabIndex = 41;
+            this.chkSetNormalsToColorChannel.Text = "Set Normals to Color Channel  2";
+            this.chkSetNormalsToColorChannel.UseVisualStyleBackColor = true;
+            this.chkSetNormalsToColorChannel.CheckedChanged += new System.EventHandler(this.ApplySettings);
+            // 
             // GFLXModelImporter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(611, 605);
+            this.ClientSize = new System.Drawing.Size(611, 624);
             this.Name = "GFLXModelImporter";
             this.Text = "GFBMDL Importer";
             this.contentContainer.ResumeLayout(false);
@@ -596,5 +609,6 @@
         private Toolbox.Library.Forms.STComboBox tangentFormatCB;
         private Toolbox.Library.Forms.STCheckBox chkTangents;
         private Toolbox.Library.Forms.STCheckBox chkMatchAttributes;
+        private Toolbox.Library.Forms.STCheckBox chkSetNormalsToColorChannel;
     }
 }
