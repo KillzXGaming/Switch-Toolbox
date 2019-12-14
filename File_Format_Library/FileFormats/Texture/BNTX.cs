@@ -475,7 +475,8 @@ namespace FirstPlugin
                 }
 
                 Textures.Clear();
-                Nodes.Clear();
+                if (this.IsVisible)
+                    Nodes.Clear();
 
                 this.BinaryTexFile = null;
 
