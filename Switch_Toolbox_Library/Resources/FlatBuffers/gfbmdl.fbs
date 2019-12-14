@@ -114,10 +114,10 @@ table TextureMapping {
     WrapModeX:WrapMode;
     WrapModeY:WrapMode;
     WrapModeZ:WrapMode;
-    Unknown5:uint;
-    Unknown6:uint;
-    Unknown7:uint;
-    Unknown8:uint;
+    Unknown5:float;
+    Unknown6:float;
+    Unknown7:float;
+    Unknown8:float;
     lodBias:float;
 }
 
