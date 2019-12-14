@@ -66,7 +66,7 @@ namespace FirstPlugin
         public void SetVertexColorNormals()
         {
             for (int v = 0; v < vertices.Count; v++)
-                vertices[v].col = new Vector4(
+                vertices[v].col2 = new Vector4(
                     vertices[v].nrm.X * 0.5f + 0.5f,
                     vertices[v].nrm.Y * 0.5f + 0.5f,
                     vertices[v].nrm.Z * 0.5f + 0.5f,
