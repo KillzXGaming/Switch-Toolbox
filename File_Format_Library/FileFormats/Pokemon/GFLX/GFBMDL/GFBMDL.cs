@@ -571,6 +571,16 @@ namespace FirstPlugin
                     });
                 }
 
+                if (setting.HasTangents)
+                {
+                    attributes.Add(new MeshAttribute()
+                    {
+                        VertexType = (uint)VertexType.Tangents,
+                        BufferFormat = (uint)setting.TangentsFormat,
+                        ElementCount = 4,
+                    });
+                }
+
                 if (setting.HasTexCoord1) {
                     attributes.Add(new MeshAttribute()
                     {
@@ -619,22 +629,7 @@ namespace FirstPlugin
                         ElementCount = 4,
                     });
                 }
-                if (setting.HasBitangents) {
-                    attributes.Add(new MeshAttribute()
-                    {
-                        VertexType = (uint)VertexType.Bitangent,
-                        BufferFormat = (uint)setting.BitangentnFormat,
-                        ElementCount = 4,
-                    });
-                }
-                if (setting.HasWeights) {
-                    attributes.Add(new MeshAttribute()
-                    {
-                        VertexType = (uint)VertexType.BoneWeight,
-                        BufferFormat = (uint)setting.BoneWeightFormat,
-                        ElementCount = 4,
-                    });
-                }
+
                 if (setting.HasBoneIndices) {
                     attributes.Add(new MeshAttribute()
                     {
@@ -643,11 +638,23 @@ namespace FirstPlugin
                         ElementCount = 4,
                     });
                 }
-                if (setting.HasTangents) {
+
+                if (setting.HasWeights)
+                {
                     attributes.Add(new MeshAttribute()
                     {
-                        VertexType = (uint)VertexType.Tangents,
-                        BufferFormat = (uint)setting.TangentsFormat,
+                        VertexType = (uint)VertexType.BoneWeight,
+                        BufferFormat = (uint)setting.BoneWeightFormat,
+                        ElementCount = 4,
+                    });
+                }
+
+                if (setting.HasBitangents)
+                {
+                    attributes.Add(new MeshAttribute()
+                    {
+                        VertexType = (uint)VertexType.Bitangent,
+                        BufferFormat = (uint)setting.BitangentnFormat,
                         ElementCount = 4,
                     });
                 }
