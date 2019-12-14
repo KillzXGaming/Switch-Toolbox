@@ -28,8 +28,9 @@ namespace FirstPlugin
             get {
                 return new Dictionary<string, string>()
                 {
-                    { ".bnsh_vsh", "VertexShader" },
-                    { ".bnsh_fsh", "FragmentShader" },
+                    { ".bnsh_vsh", "VertexShaders" },
+                    { ".bnsh_fsh", "FragmentShaders" },
+                    { ".bnsh", "Shaders" },
                     { ".bntx", "Textures" },
                     { ".gfbmdl", "Models" },
                     { ".gfbanm", "Animations" },
@@ -124,7 +125,7 @@ namespace FirstPlugin
 
             Read(new FileReader(stream));
 
-            TreeNode node = new TreeNode("Quick access");
+            TreeNode node = new QuickAccessFolder(this, "Quick access");
             Nodes.Add(node);
             Dictionary<string, TreeNode> folders = new Dictionary<string, TreeNode>();
             foreach (var file in files)
@@ -136,7 +137,7 @@ namespace FirstPlugin
 
                 if (!folders.ContainsKey(folderName))
                 {
-                    TreeNode folder = new TreeNode(folderName);
+                    TreeNode folder = new QuickAccessFileFolder(folderName);
                     if (folderName == "Textures")
                         folder = new TextureFolder(this, "Textures");
                     if (folderName == "Models")
@@ -186,6 +187,116 @@ namespace FirstPlugin
             }
         }
 
+        public class QuickAccessFolder : TreeNodeCustom, IContextMenuNode
+        {
+            private IArchiveFile ArchiveFile;
+            public QuickAccessFolder(IArchiveFile archiveFile, string text) {
+                Text = text;
+                ArchiveFile = archiveFile;
+            }
+
+            public virtual ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
+                Items.Add(new ToolStripMenuItem("Replace (From Folder)", null, ReplaceAllAction, Keys.Control | Keys.R));
+                return Items.ToArray();
+            }
+
+            private void ExportAllAction(object sender, EventArgs args)
+            {
+                FolderSelectDialog folderDialog = new FolderSelectDialog();
+                if (folderDialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                foreach (TreeNode folder in Nodes)
+                {
+                    string path = Path.Combine(folderDialog.SelectedPath, Text, folder.Text);
+
+                    foreach (TreeNode file in folder.Nodes) {
+                        if (file.Tag is ArchiveFileInfo)
+                        {
+                            var fileInfo = (ArchiveFileInfo)file.Tag;
+                            var filePath = Path.Combine(path, file.Text);
+
+                            if (!Directory.Exists(path))
+                                Directory.CreateDirectory(path);
+
+                            File.WriteAllBytes(filePath, fileInfo.FileData);
+                        }
+                    }
+                }
+            }
+
+            private void ReplaceAllAction(object sender, EventArgs args)
+            {
+                FolderSelectDialog folderDialog = new FolderSelectDialog();
+                if (folderDialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                foreach (var folder in Directory.GetDirectories(folderDialog.SelectedPath))
+                {
+                    foreach (var file in Directory.GetFiles(folder))
+                    {
+                        var fileInfo = ArchiveFile.Files.FirstOrDefault(x => 
+                             Path.GetFileName(x.FileName).Contains(Path.GetFileName(file)));
+
+                        if (fileInfo != null)
+                            fileInfo.FileData = File.ReadAllBytes(file);
+                    }
+                }
+            }
+        }
+
+        public class QuickAccessFileFolder : TreeNodeCustom
+        {
+            private bool HasExpanded = false;
+
+            public QuickAccessFileFolder(string text) {
+                Text = text;
+            }
+
+            public override void OnExpand()
+            {
+                if (HasExpanded) return;
+
+                List<TreeNode> files = new List<TreeNode>();
+                foreach (TreeNode node in Nodes)
+                {
+                    var file = (ArchiveFileInfo)node.Tag;
+
+                    try
+                    {
+                        if (file.FileFormat == null)
+                            file.FileFormat = file.OpenFile();
+                    }
+                    catch
+                    {
+                        files.Add(node);
+                        continue;
+                    }
+
+                    var fileNode = file.FileFormat as TreeNode;
+                    if (fileNode != null)
+                    {
+                        fileNode.Tag = file;
+                        fileNode.ImageKey = "fileBlank";
+                        fileNode.SelectedImageKey = "fileBlank";
+                        fileNode.Tag = file;
+
+                        files.Add(fileNode);
+                    }
+                    else
+                        files.Add(node);
+                }
+
+                Nodes.Clear();
+                Nodes.AddRange(files.ToArray());
+
+                HasExpanded = true;
+            }
+        }
+
         public class ModelFolder : TreeNodeCustom
         {
             private bool HasExpanded = false;
@@ -208,6 +319,7 @@ namespace FirstPlugin
                     var model = file.FileFormat as GFBMDL;
                     if (model != null) {
                         model.Tag = file;
+                        model.Text = node.Text;
                         model.ImageKey = "model";
                         model.SelectedImageKey = "model";
                         models.Add(model);
@@ -271,7 +383,6 @@ namespace FirstPlugin
                 List<ToolStripItem> Items = new List<ToolStripItem>();
                 Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
                 Items.Add(new ToolStripMenuItem("Replace Textures (From Folder)", null, ReplaceAllAction, Keys.Control | Keys.R));
-
                 return Items.ToArray();
             }
 
