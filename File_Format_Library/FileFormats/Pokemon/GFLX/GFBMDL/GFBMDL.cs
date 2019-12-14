@@ -181,7 +181,11 @@ namespace FirstPlugin
         private void ExportAction(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Supported Formats|*.dae;*.json;";
+            sfd.Filter = "Supported Formats|*.dae;*.json;|" +
+             "DAE |*.dae|" +
+             "JSON |*.json|" +
+             "All files(*.*)|*.*";
+
             sfd.FileName = Path.GetFileNameWithoutExtension(Text);
             sfd.DefaultExt = "dae";
             if (sfd.ShowDialog() == DialogResult.OK)
@@ -204,7 +208,12 @@ namespace FirstPlugin
         private void ReplaceAction(object sender, EventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Supported Formats|*.dae;*.json;";
+            ofd.Filter = "Supported Formats|*.dae;*.fbx;*.json;|" +
+                         "FBX |*.fbx|" +
+                         "DAE |*.dae|" +
+                         "JSON |*.json|" +
+                         "All files(*.*)|*.*";
+
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 string ext = Utils.GetExtension(ofd.FileName);
@@ -411,16 +420,41 @@ namespace FirstPlugin
                 }*/
             }
 
-        //    Model.Model.CollisionGroups = new List<CollisionGroup>();
+            Model.Model.CollisionGroups = new List<CollisionGroup>();
 
             List<int> skinningIndices = Model.GenerateSkinningIndices();
+
+            //Set an empty bone with rigging if there is no rigging
+            if (importer.Settings.MeshSettings.Any(x => x.HasBoneIndices) && skinningIndices.Count == 0)
+            {
+                var node = (GFLXBone)Model.Skeleton.bones[0];
+                node.Bone.RigidCheck = null;
+                node.Bone.BoneType = 1;
+                skinningIndices.Add(0);
+            }
 
             List<string> unmappedBones = new List<string>();
 
             foreach (var mesh in meshes)
             {
+                var setting = importer.Settings.MeshSettings[meshes.IndexOf(mesh)];
+
                 for (int i = 0; i < mesh.vertices.Count; i++)
                 {
+                    if (setting.SetNormalsToColorChannel2)
+                    {
+                           mesh.vertices[i].col2 = new OpenTK.Vector4(
+                           mesh.vertices[i].nrm.X * 0.5f + 0.5f,
+                           mesh.vertices[i].nrm.Y * 0.5f + 0.5f,
+                           mesh.vertices[i].nrm.Z * 0.5f + 0.5f,
+                           1);
+                    }
+
+                    //Single bind if no bones are mapped but setting is enabled
+                    if (setting.HasBoneIndices && mesh.vertices[i].boneNames.Count == 0) {
+                        mesh.vertices[i].boneIds.Add(0);
+                        mesh.vertices[i].boneWeights.Add(1);
+                    }
                     if (importer.RotationY != 0)
                     {
                         var transform = OpenTK.Matrix4.CreateRotationX(OpenTK.MathHelper.DegreesToRadians(importer.RotationY));
@@ -486,6 +520,9 @@ namespace FirstPlugin
                     }
                     catch { }
                 }
+
+                for (int i = 0; i < mesh.vertices.Count; i++)
+                    mesh.vertices[i].bitan = mesh.vertices[i].tan;
 
                 //Add attributes based on settings
                 IList<MeshAttribute> attributes = new List<MeshAttribute>();
