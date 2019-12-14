@@ -276,11 +276,13 @@ namespace Toolbox.Library
                     List<float> UV2 = new List<float>();
                     List<float> UV3 = new List<float>();
                     List<float> Color = new List<float>();
+                    List<float> Color2 = new List<float>();
                     List<int[]> BoneIndices = new List<int[]>();
                     List<float[]> BoneWeights = new List<float[]>();
 
                     bool HasNormals = false;
                     bool HasColors = false;
+                    bool HasColors2 = false;
                     bool HasUV0 = false;
                     bool HasUV1 = false;
                     bool HasUV2 = false;
@@ -324,6 +326,7 @@ namespace Toolbox.Library
 
                         if (vertex.nrm != Vector3.Zero) HasNormals = true;
                         if (vertex.col != Vector4.One && settings.UseVertexColors) HasColors = true;
+                        if (vertex.col2 != Vector4.One && settings.UseVertexColors) HasColors2 = true;
                         if (vertex.uv0 != Vector2.Zero) HasUV0 = true;
                         if (vertex.uv1 != Vector2.Zero) HasUV1 = true;
                         if (vertex.uv2 != Vector2.Zero) HasUV2 = true;
@@ -346,6 +349,7 @@ namespace Toolbox.Library
                         }
 
                         Color.AddRange(new float[] { vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W });
+                        Color2.AddRange(new float[] { vertex.col2.X, vertex.col2.Y, vertex.col2.Z, vertex.col2.W });
 
                         List<int> bIndices = new List<int>();
                         List<float> bWeights = new List<float>();
@@ -463,7 +467,10 @@ namespace Toolbox.Library
                         writer.WriteGeometrySource(mesh.Text, SemanticType.NORMAL, Normal.ToArray(), triangleLists.ToArray());
 
                     if (HasColors)
-                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color.ToArray(), triangleLists.ToArray());
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color.ToArray(), triangleLists.ToArray(), 0);
+
+                    if (HasColors2)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color2.ToArray(), triangleLists.ToArray(), 1);
 
                     if (HasUV0)
                         writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV0.ToArray(), triangleLists.ToArray(), 0);
@@ -541,6 +548,8 @@ namespace Toolbox.Library
 
             foreach (var item in collada.Items)
             {
+                if (item is library_controllers)
+                    LoadControllers((library_controllers)item);
                 if (item is library_geometries)
                     LoadGeometry((library_geometries)item);
                 if (item is library_images)
@@ -556,6 +565,11 @@ namespace Toolbox.Library
             return true;
         }
 
+        private void LoadControllers(library_controllers controllers)
+        {
+
+        }
+
         private void LoadVisualScenes(library_visual_scenes nodes)
         {
 
@@ -564,11 +578,6 @@ namespace Toolbox.Library
         private void LoadNodes(library_nodes nodes)
         {
             
-        }
-
-        private void LoadControllers(library_controllers controllers)
-        {
-           
         }
 
         private void LoadMaterials(library_materials materials)

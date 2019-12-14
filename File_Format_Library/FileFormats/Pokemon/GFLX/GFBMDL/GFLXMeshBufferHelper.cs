@@ -63,6 +63,12 @@ namespace FirstPlugin
                                 values.Add(mesh.vertices[v].col.Z * 255);
                                 values.Add(mesh.vertices[v].col.W * 255);
                                 break;
+                            case VertexType.Color2:
+                                values.Add(mesh.vertices[v].col2.X * 255);
+                                values.Add(mesh.vertices[v].col2.Y * 255);
+                                values.Add(mesh.vertices[v].col2.Z * 255);
+                                values.Add(mesh.vertices[v].col2.W * 255);
+                                break;
                             case VertexType.UV1:
                                 values.Add(mesh.vertices[v].uv0.X);
                                 values.Add(1 - mesh.vertices[v].uv0.Y);
@@ -104,12 +110,6 @@ namespace FirstPlugin
                                 values.Add(mesh.vertices[v].bitan.Y);
                                 values.Add(mesh.vertices[v].bitan.Z);
                                 values.Add(mesh.vertices[v].bitan.W);
-                                break;
-                            case VertexType.Color2:
-                                values.Add(mesh.vertices[v].col2.X * 255);
-                                values.Add(mesh.vertices[v].col2.Y * 255);
-                                values.Add(mesh.vertices[v].col2.Z * 255);
-                                values.Add(mesh.vertices[v].col2.W * 255);
                                 break;
                             case VertexType.Tangents:
                                 values.Add(mesh.vertices[v].tan.X);
