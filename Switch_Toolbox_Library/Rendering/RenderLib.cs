@@ -36,7 +36,7 @@ namespace Toolbox.Library.Rendering
         public List<int> boneIds = new List<int>();
         public List<float> boneWeights = new List<float>();
 
-        public float normalW;
+        public float normalW = 1;
 
         public List<string> boneNames = new List<string>();
 

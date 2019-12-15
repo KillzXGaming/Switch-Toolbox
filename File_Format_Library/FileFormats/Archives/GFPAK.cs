@@ -333,11 +333,18 @@ namespace FirstPlugin
             }
         }
 
+        public class TextureSubFolder : TreeNodeCustom
+        {
+
+        }
+
         public class TextureFolder : TreeNodeCustom, IContextMenuNode
         {
             private bool HasExpanded = false;
 
             private IArchiveFile ArchiveFile;
+
+            private List<STGenericTexture> Textures = new List<STGenericTexture>();
 
             public TextureFolder(IArchiveFile archive, string text) {
                 ArchiveFile = archive;
@@ -390,7 +397,7 @@ namespace FirstPlugin
                 LoadTextures();
 
                 List<BNTX> bntxFiles = new List<BNTX>();
-                foreach (TextureData node in Nodes)
+                foreach (TextureData node in Textures)
                     bntxFiles.Add(node.ParentBNTX);
 
                 if (bntxFiles.Count > 0)
@@ -417,7 +424,7 @@ namespace FirstPlugin
                     BatchFormatExport form = new BatchFormatExport(Formats);
                     if (form.ShowDialog() == DialogResult.OK)
                     {
-                        foreach (STGenericTexture tex in Nodes)
+                        foreach (STGenericTexture tex in Textures)
                         {
                             if (form.Index == 0)
                                 tex.SaveDDS(folderPath + '\\' + tex.Text + ".dds");
@@ -442,12 +449,32 @@ namespace FirstPlugin
             {
                 if (HasExpanded) return;
 
-                List<TreeNode> textures = new List<TreeNode>();
+                Dictionary<string, TreeNode> folders = new Dictionary<string, TreeNode>();
+
+                //Create a folder lookup
+                foreach (TreeNode node in Nodes) {
+                    var file = (FileEntry)node.Tag;
+
+                    string folder = file.FolderHash.Parent.hash.ToString();
+                    if (!folders.ContainsKey(folder)) {
+                        folders.Add(folder, new TreeNode($"{folders.Count}"));
+                    }
+                }
+
+                List<TreeNode> subNodes = new List<TreeNode>();
+
+                if (folders.Count > 1) {
+                    foreach (var node in folders.Values)
+                        subNodes.Add(node);
+                }
+
                 foreach (TreeNode node in Nodes)
                 {
-                    var file = (ArchiveFileInfo)node.Tag;
+                    var file = (FileEntry)node.Tag;
                     if (file.FileFormat == null)
                         file.FileFormat = file.OpenFile();
+
+                    string folder = file.FolderHash.Parent.hash.ToString();
 
                     BNTX bntx = file.FileFormat as BNTX;
                     foreach (var tex in bntx.Textures)
@@ -456,12 +483,17 @@ namespace FirstPlugin
                         //Set tree key for deletion
                         tex.Value.Name = tex.Key;
                         tex.Value.Tag = file;
-                        textures.Add(tex.Value);
+
+                        if (folders.Count > 1)
+                            folders[folder].Nodes.Add(tex.Value);
+                        else
+                            subNodes.Add(tex.Value);
+                        Textures.Add(tex.Value);
                     }
                 }
 
                 Nodes.Clear();
-                Nodes.AddRange(textures.ToArray());
+                Nodes.AddRange(subNodes.ToArray());
 
                 HasExpanded = true;
             }

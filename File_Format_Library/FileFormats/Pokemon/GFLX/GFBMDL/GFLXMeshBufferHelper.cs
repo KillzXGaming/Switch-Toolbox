@@ -55,7 +55,6 @@ namespace FirstPlugin
                                 values.Add(mesh.vertices[v].nrm.Y);
                                 values.Add(mesh.vertices[v].nrm.Z);
                                 values.Add(mesh.vertices[v].normalW);
-                                //  values.Add(((GFLXMesh.GFLXVertex)mesh.vertices[v]).NormalW);
                                 break;
                             case VertexType.Color1:
                                 values.Add(mesh.vertices[v].col.X * 255);
@@ -233,20 +232,24 @@ namespace FirstPlugin
                                 var pos = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
                                 vertex.pos = new OpenTK.Vector3(pos.X, pos.Y, pos.Z);
                                 vertex.pos = OpenTK.Vector3.TransformPosition(vertex.pos, transform);
+                                Console.WriteLine($"pos {pos}");
                                 break;
                             case VertexType.Normal:
                                 var normal = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
                                 vertex.nrm = new OpenTK.Vector3(normal.X, normal.Y, normal.Z);
                                 vertex.normalW = normal.W;
                                 vertex.nrm = OpenTK.Vector3.TransformNormal(vertex.nrm, transform);
+                                Console.WriteLine($"nrm {normal}");
                                 break;
                             case VertexType.UV1:
                                 var texcoord1 = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
                                 vertex.uv0 = new OpenTK.Vector2(texcoord1.X, texcoord1.Y);
+                                Console.WriteLine($"uv0 {texcoord1}");
                                 break;
                             case VertexType.UV2:
                                 var texcoord2 = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
                                 vertex.uv1 = new OpenTK.Vector2(texcoord2.X, texcoord2.Y);
+                                Console.WriteLine($"uv1 {texcoord2}");
                                 break;
                             case VertexType.UV3:
                                 var texcoord3 = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
@@ -282,6 +285,8 @@ namespace FirstPlugin
                                     colors1 = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
 
                                 vertex.col = colors1 / 255f;
+
+                                Console.WriteLine($"colors1 {colors1}");
                                 break;
                             case VertexType.Color2:
                                 OpenTK.Vector4 colors2 = new OpenTK.Vector4(1, 1, 1, 1);
@@ -289,14 +294,20 @@ namespace FirstPlugin
                                     colors2 = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
 
                                 vertex.col2 = colors2 / 255f;
+
+                                Console.WriteLine($"colors2 {colors2}");
                                 break;
                             case VertexType.Bitangent:
                                 var bitans = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
                                 vertex.bitan = new OpenTK.Vector4(bitans.X, bitans.Y, bitans.Z, bitans.W);
+
+                                Console.WriteLine($"bitans {bitans}");
                                 break;
                             case VertexType.Tangents:
                                 var tans = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
                                 vertex.tan = new OpenTK.Vector4(tans.X, tans.Y, tans.Z, tans.W);
+
+                                Console.WriteLine($"tans {tans}");
                                 break;
                             default:
                                 var values = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
