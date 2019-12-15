@@ -9,7 +9,7 @@ namespace FirstPlugin
 {
     public class GfbmdlImportSettings
     {
-        public bool OptmizeZeroWeights { get; set; } = false;
+        public bool OptmizeZeroWeights { get; set; } = true;
 
         public List<MeshSetting> MeshSettings = new List<MeshSetting>();
 

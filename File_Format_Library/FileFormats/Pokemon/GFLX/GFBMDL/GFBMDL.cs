@@ -384,7 +384,7 @@ namespace FirstPlugin
             {
                 //Reset bone as rigid
                 var node = (GFLXBone)Model.Skeleton.bones[i];
-                node.Bone.RigidCheck = new BoneRigidData() { Unknown1 = 0 };
+             /*   node.Bone.RigidCheck = new BoneRigidData() { Unknown1 = 0 };
                 if (node.Bone.BoneType == 1)
                     node.Bone.BoneType = 0;
 
@@ -396,7 +396,7 @@ namespace FirstPlugin
                         node.Bone.BoneType = 1;
                         node.Bone.RigidCheck = null;
                     }
-                }
+                }*/
 
                 if (Model.GenericMeshes.Any(x => x.Text == node.Text))
                 {
@@ -464,20 +464,19 @@ namespace FirstPlugin
 
                     if (importer.Settings.OptmizeZeroWeights)
                     {
-                        float MaxWeight = 1;
+                        float[] weightsA = new float[4];
+
+                        int MaxWeight = 255;
                         for (int j = 0; j < 4; j++)
                         {
-                            if (mesh.vertices[i].boneWeights.Count <= j)
-                                continue;
-
-                            if (mesh.vertices[i].boneIds.Count < j + 1)
+                            if (mesh.vertices[i].boneWeights.Count < j + 1)
                             {
-                                mesh.vertices[i].boneWeights[j] = 0;
+                                weightsA[j] = 0;
                                 MaxWeight = 0;
                             }
                             else
                             {
-                                float weight = mesh.vertices[i].boneWeights[j];
+                                int weight = (int)(mesh.vertices[i].boneWeights[j] * 255);
                                 if (mesh.vertices[i].boneWeights.Count == j + 1)
                                     weight = MaxWeight;
 
@@ -489,9 +488,11 @@ namespace FirstPlugin
                                 else
                                     MaxWeight -= weight;
 
-                                mesh.vertices[i].boneWeights[j] = weight;
+                                weightsA[j] = weight / 255f;
                             }
                         }
+
+                        mesh.vertices[i].boneWeights = weightsA.ToList();
                     }
 
                     for (int j = 0; j < mesh.vertices[i].boneNames?.Count; j++)
@@ -528,7 +529,7 @@ namespace FirstPlugin
                 bone.Translation = new GFMDLStructs.Vector3(0,0,0);
                 bone.RadiusStart = new GFMDLStructs.Vector3(0, 0, 0);
                 bone.RadiusEnd = new GFMDLStructs.Vector3(0, 0, 0);
-                bone.RigidCheck = new BoneRigidData();
+           //     bone.RigidCheck = new BoneRigidData();
 
                 Model.Model.Bones.Add(bone);
                 int NodeIndex = Model.Model.Bones.IndexOf(bone);
