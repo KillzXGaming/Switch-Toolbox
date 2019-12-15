@@ -40,7 +40,9 @@ namespace FirstPlugin
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
             var uvMenu = new ToolStripMenuItem("UVs");
+            var normalsMenu = new ToolStripMenuItem("Normals");
             Items.Add(uvMenu);
+            Items.Add(normalsMenu);
 
             Items.Add(new ToolStripMenuItem("Recalculate Bitangents", null, CalculateTangentBitangenAction, Keys.Control | Keys.T));
             uvMenu.DropDownItems.Add(new ToolStripMenuItem("Flip Vertical", null, FlipVerticalAction, Keys.Control | Keys.V));
@@ -48,7 +50,10 @@ namespace FirstPlugin
             var colorMenu = new ToolStripMenuItem("Vertex Colors");
             colorMenu.DropDownItems.Add(new ToolStripMenuItem("Set Color", null, SetVertexColorDialog, Keys.Control | Keys.C));
             colorMenu.DropDownItems.Add(new ToolStripMenuItem("Convert Normals", null, SetVertexColorNormals, Keys.Control | Keys.N));
+            normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Recalculate", null, RecalculateNormals, Keys.Control | Keys.R));
+            normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Smooth", null, SmoothNormals, Keys.Control | Keys.S));
 
+            
             Items.Add(colorMenu);
 
             return Items.ToArray();
@@ -99,6 +104,22 @@ namespace FirstPlugin
         private void FlipHorizontalAction(object sender, EventArgs args) {
             this.FlipUvsHorizontal();
             UpdateMesh();
+        }
+
+        private void RecalculateNormals(object sender, EventArgs args)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            CalculateNormals();
+            UpdateMesh();
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void SmoothNormals(object sender, EventArgs args)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            SmoothNormals();
+            UpdateMesh();
+            Cursor.Current = Cursors.Default;
         }
 
         private void CalculateTangentBitangenAction(object sender, EventArgs args)

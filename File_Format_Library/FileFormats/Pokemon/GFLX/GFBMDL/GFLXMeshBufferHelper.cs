@@ -51,10 +51,14 @@ namespace FirstPlugin
                                 values.Add(mesh.vertices[v].pos.Z);
                                 break;
                             case VertexType.Normal:
-                                values.Add(mesh.vertices[v].nrm.X);
-                                values.Add(mesh.vertices[v].nrm.Y);
-                                values.Add(mesh.vertices[v].nrm.Z);
-                                values.Add(mesh.vertices[v].normalW);
+                                OpenTK.Vector4 normal = new OpenTK.Vector4(mesh.vertices[v].nrm.X,
+                                    mesh.vertices[v].nrm.Y, mesh.vertices[v].nrm.Z,
+                                    mesh.vertices[v].normalW);
+
+                                values.Add(normal.X);
+                                values.Add(normal.Y);
+                                values.Add(normal.Z);
+                                values.Add(normal.W);
                                 break;
                             case VertexType.Color1:
                                 values.Add(mesh.vertices[v].col.X * 255);

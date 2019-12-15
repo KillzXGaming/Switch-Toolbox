@@ -279,14 +279,7 @@ namespace Toolbox.Library
             if (vertices.Count < 3)
                 return;
 
-            List<int> f = new List<int>();
-            if (lodMeshes.Count > 0)
-                f = lodMeshes[DisplayLODIndex].getDisplayFace();
-            if (PolygonGroups.Count > 0)
-            {
-                foreach (var group in PolygonGroups)
-                    f.AddRange(group.GetDisplayFace());
-            }
+            List<int> f = GetFaces();
 
             Vector3[] tanArray = new Vector3[vertices.Count];
             Vector3[] bitanArray = new Vector3[vertices.Count];
@@ -416,9 +409,9 @@ namespace Toolbox.Library
 
                 Vector3[] normals = new Vector3[Shapes[s].vertices.Count];
 
-                List<int> f = Shapes[s].lodMeshes[DisplayLODIndex].getDisplayFace();
+                List<int> f = Shapes[s].GetFaces();
 
-                for (int v = 0; v < Shapes[s].lodMeshes[DisplayLODIndex].displayFaceSize; v += 3)
+                for (int v = 0; v < f.Count; v += 3)
                 {
                     Vertex v1 = Shapes[s].vertices[f[v]];
                     Vertex v2 = Shapes[s].vertices[f[v + 1]];
@@ -498,9 +491,9 @@ namespace Toolbox.Library
 
             Vector3[] normals = new Vector3[vertices.Count];
 
-            List<int> f = lodMeshes[DisplayLODIndex].getDisplayFace();
+            List<int> f = GetFaces();
 
-            for (int i = 0; i < lodMeshes[DisplayLODIndex].displayFaceSize; i += 3)
+            for (int i = 0; i < f.Count; i += 3)
             {
                 Vertex v1 = vertices[f[i]];
                 Vertex v2 = vertices[f[i + 1]];
@@ -562,9 +555,9 @@ namespace Toolbox.Library
             for (int i = 0; i < normals.Length; i++)
                 normals[i] = new Vector3(0, 0, 0);
 
-            List<int> f = lodMeshes[DisplayLODIndex].getDisplayFace();
+            List<int> f = GetFaces();
 
-            for (int i = 0; i < lodMeshes[DisplayLODIndex].displayFaceSize; i += 3)
+            for (int i = 0; i < f.Count; i += 3)
             {
                 Vertex v1 = vertices[f[i]];
                 Vertex v2 = vertices[f[i + 1]];
@@ -578,6 +571,19 @@ namespace Toolbox.Library
 
             for (int i = 0; i < normals.Length; i++)
                 vertices[i].nrm = normals[i].Normalized();
+        }
+
+        private List<int> GetFaces()
+        {
+            List<int> f = new List<int>();
+            if (PolygonGroups.Count > 0)
+            {
+                foreach (var group in PolygonGroups)
+                    f.AddRange(group.GetDisplayFace());
+            }
+            else if (lodMeshes.Count > 0)
+                f = lodMeshes[DisplayLODIndex].getDisplayFace();
+            return f;
         }
 
         private Vector3 CalculateNormal(Vertex v1, Vertex v2, Vertex v3)
