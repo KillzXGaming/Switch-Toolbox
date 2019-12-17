@@ -1564,9 +1564,13 @@ namespace FirstPlugin
                 setting.DataBlockOutput.Add(setting.GenerateMips(CompressionMode, multiThread));
             }
 
-            Texture = setting.FromBitMap(setting.DataBlockOutput, setting);
-            Texture.Name = Text;
-            Load(Texture);
+            Texture tex = setting.FromBitMap(setting.DataBlockOutput, setting);
+            tex.UserData = Texture.UserData;
+            tex.UserDataDict = Texture.UserDataDict;
+            tex.Name = Text;
+
+            Texture = tex;
+            Load(tex);
 
             LoadOpenGLTexture();
 
