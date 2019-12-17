@@ -7,6 +7,7 @@ using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using System.Windows.Forms;
+using Syroot.NintenTools.NSW.Bntx.GFX;
 
 namespace FirstPlugin.LuigisMansion3
 {
@@ -206,7 +207,7 @@ namespace FirstPlugin.LuigisMansion3
             tex.Swizzle = 0;
             tex.textureLayout = 0;
             tex.Regs = new uint[0];
-            tex.AccessFlags = 0x20;
+            tex.AccessFlags = AccessFlags.Texture;
             tex.ArrayLength = (uint)ArrayLevel;
             tex.MipCount = MipCount;
             tex.Depth = Depth;

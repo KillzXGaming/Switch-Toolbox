@@ -24,7 +24,7 @@ namespace FirstPlugin
 
         public bool GammaFix = false;
         public string TexName;
-        public uint AccessFlags = 0x20;
+        public AccessFlags AccessFlags = AccessFlags.Texture;
         public uint MipCount;
         public uint Depth = 1;
         public uint TexWidth;
@@ -172,7 +172,7 @@ namespace FirstPlugin
                 int MipHeight = Math.Max(1, (int)TexHeight >> mipLevel);
 
                 if (mipLevel != 0)
-                    Image = BitmapExtension.Resize(Image, MipWidth, MipHeight);
+                    Image = BitmapExtension.ResizeImage(Image, MipWidth, MipHeight);
 
                 mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
                     Image.Width, Image.Height, TextureData.ConvertFormat(Format), alphaRef, multiThread, CompressionMode));
