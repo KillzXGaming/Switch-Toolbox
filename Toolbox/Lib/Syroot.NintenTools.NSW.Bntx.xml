@@ -1807,7 +1807,7 @@
         </member>
         <member name="M:Syroot.NintenTools.NSW.Bntx.Core.BntxFileLoader.CheckSignature(System.String)">
             <summary>
-            Reads a Bntx signature consisting of 4 ASCII characters encoded as an <see cref="T:System.UInt32"/> and checks for
+            Reads a B ntx signature consisting of 4 ASCII characters encoded as an <see cref="T:System.UInt32"/> and checks for
             validity.
             </summary>
             <param name="validSignature">A valid signature.</param>
