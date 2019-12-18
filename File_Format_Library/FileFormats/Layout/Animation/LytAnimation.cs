@@ -26,7 +26,7 @@ namespace LayoutBXLYT
 
         private void ReloadAnimation()
         {
-            FrameCount = (uint)BxlanAnimation.AnimationTag.EndFrame;
+            FrameCount = (uint)BxlanAnimation.AnimationInfo.FrameSize;
             StartFrame = (uint)BxlanAnimation.AnimationTag.StartFrame;
 
             Textures.Clear();
