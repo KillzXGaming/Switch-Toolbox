@@ -1565,8 +1565,11 @@ namespace FirstPlugin
             }
 
             Texture tex = setting.FromBitMap(setting.DataBlockOutput, setting);
-            tex.UserData = Texture.UserData;
-            tex.UserDataDict = Texture.UserDataDict;
+            if (Texture != null && Texture.UserData != null) {
+                tex.UserData = Texture.UserData;
+                tex.UserDataDict = Texture.UserDataDict;
+            }
+
             tex.Name = Text;
 
             Texture = tex;
