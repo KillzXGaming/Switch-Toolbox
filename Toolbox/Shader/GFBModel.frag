@@ -163,11 +163,11 @@ void main()
 	    vec2 ambientUV = f_texcoord0;
 		ambientUV.x *= ColorUVScaleU + ColorUVTranslateU;
 	    ambientUV.y *= ColorUVScaleV + ColorUVTranslateV;
-        float intensity = texture(AmbientMap, ambientUV).r;
-        float unknown = texture(AmbientMap, ambientUV).g; //Unsually black
-        float ambient = texture(AmbientMap, ambientUV).b;
+        float ambient = 1 - texture(AmbientMap, ambientUV).r;
+        float shadows = 1 - texture(AmbientMap, ambientUV).g; //Unsually black
+        float cavity =  texture(AmbientMap, ambientUV).b;
 
-		ao = 1 - intensity;
+		ao = (ambient * shadows);
 	}
 
 	vec3 emissionTerm = vec3(0);
