@@ -167,7 +167,7 @@ void main()
         float unknown = texture(AmbientMap, ambientUV).g; //Unsually black
         float ambient = texture(AmbientMap, ambientUV).b;
 
-		ao = ambient + 0.5;
+		ao = 1 - intensity;
 	}
 
 	vec3 emissionTerm = vec3(0);
