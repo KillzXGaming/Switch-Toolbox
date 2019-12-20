@@ -384,7 +384,7 @@ namespace FirstPlugin
             {
                 //Reset bone as rigid
                 var node = (GFLXBone)Model.Skeleton.bones[i];
-             /*   node.Bone.RigidCheck = new BoneRigidData() { Unknown1 = 0 };
+                node.Bone.RigidCheck = new BoneRigidData() { Unknown1 = 0 };
                 if (node.Bone.BoneType == 1)
                     node.Bone.BoneType = 0;
 
@@ -396,7 +396,7 @@ namespace FirstPlugin
                         node.Bone.BoneType = 1;
                         node.Bone.RigidCheck = null;
                     }
-                }*/
+                }
 
                 if (Model.GenericMeshes.Any(x => x.Text == node.Text))
                 {

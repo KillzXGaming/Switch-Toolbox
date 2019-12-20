@@ -203,7 +203,9 @@ namespace Toolbox.Library.Forms
             if (meshesCB.SelectedIndex >= 0)
             {
                 uvViewport1.ActiveObjects.Clear();
-                uvViewport1.ActiveObjects.Add(Objects[meshesCB.SelectedIndex]);
+
+                if (Objects.Count > meshesCB.SelectedIndex)
+                    uvViewport1.ActiveObjects.Add(Objects[meshesCB.SelectedIndex]);
 
                 ActiveMaterial = Materials[meshesCB.SelectedIndex];
 

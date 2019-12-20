@@ -6,6 +6,11 @@ bin/pokemon/pm0000_00/
 bin/pokemon/pm0000_00/tex/
 bin/pokemon/pm0000_00/anm/
 bin/pokemon/pm0000_00/mdl/
+bin/pokemon_data/
+bin/graphics/mask_texture/pattern_01/
+bin/app/pokecamp/cooking/common_model/anm/
+bin/app/pokecamp/cooking/common_model/mdl/
+bin/app/pokecamp/cooking/common_model/
 bin/chara/data/pc/p2/p1_base_app01/anm/
 pm0000_00.gfbpokecfg
 pm0000_00.gfbmdl

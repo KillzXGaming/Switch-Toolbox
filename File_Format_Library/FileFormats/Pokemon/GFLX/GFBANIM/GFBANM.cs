@@ -70,7 +70,7 @@ namespace FirstPlugin
         #endregion
 
         public Type[] Types
-        {
+        {   
             get
             {
                 List<Type> types = new List<Type>();
@@ -104,7 +104,7 @@ namespace FirstPlugin
                 for (int i = 0; i < anim.Triggers.Value.TriggersLength; i++)
                     AnimationData.LoadTriggerGroup(anim.Triggers.Value.Triggers(i).Value);
             }
-        }
+        }   
 
         public void Unload()
         {

@@ -201,10 +201,29 @@ namespace FirstPlugin
         }
     }
 
+    public class GFLXMaterialAnimController
+    {
+        public Dictionary<string, bool> SwitchParams = new Dictionary<string, bool>();
+        public Dictionary<string, float> ValueParams = new Dictionary<string, float>();
+        public Dictionary<string, OpenTK.Vector3> ColorParams = new Dictionary<string, OpenTK.Vector3>();
+
+        public bool IsVisible { get; set; } = true;
+
+        public void ResetAnims()
+        {
+            ColorParams.Clear();
+            SwitchParams.Clear();
+            ValueParams.Clear();
+            IsVisible = true;
+        }
+    }
+
     public class GFLXMaterialData : STGenericMaterial, IContextMenuNode
     {
         private Material Material;
         public GFLXModel ParentModel;
+
+        public GFLXMaterialAnimController AnimController = new GFLXMaterialAnimController();
 
         public Dictionary<string, GFLXSwitchParam> SwitchParams = new Dictionary<string, GFLXSwitchParam>();
         public Dictionary<string, GFLXValueParam> ValueParams = new Dictionary<string, GFLXValueParam>();
