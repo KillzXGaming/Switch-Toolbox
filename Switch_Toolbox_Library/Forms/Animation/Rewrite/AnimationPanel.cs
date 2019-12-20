@@ -100,6 +100,21 @@ namespace Toolbox.Library
             }
         }
 
+        public float StartFrame
+        {
+            get
+            {
+                float startFrame = float.MaxValue;
+                for (int i = 0; i < currentAnimations.Count; i++)
+                    startFrame = Math.Min(startFrame, currentAnimations[i].StartFrame);
+
+                if (startFrame == float.MaxValue)
+                    startFrame = 0;
+
+                return startFrame;
+            }
+        }
+
         private List<STAnimation> currentAnimations = new List<STAnimation>();
 
         public void AddAnimation(STAnimation animation, bool reset = true)
@@ -110,8 +125,6 @@ namespace Toolbox.Library
             if (reset)
                 Reset();
 
-            Console.WriteLine($"Add anim " + animation.Name);
-
             currentAnimations.Add(animation);
 
             ResetModels();
@@ -119,9 +132,11 @@ namespace Toolbox.Library
             totalFrame.Maximum = (decimal)FrameCount;
             totalFrame.Value = (decimal)FrameCount;
             currentFrameUpDown.Maximum = (decimal)FrameCount;
-            animationTrackBar.ActiveAnimation = animation;
+            currentFrameUpDown.Minimum = (decimal)StartFrame;
             animationTrackBar.FrameCount = (float)FrameCount;
-            currentFrameUpDown.Value = 0;
+            animationTrackBar.StartTime = (int)StartFrame;
+            animationTrackBar.ActiveAnimation = animation;
+            currentFrameUpDown.Value = (decimal)StartFrame;
 
             SetAnimationsToFrame(0);
             UpdateViewport();
@@ -209,7 +224,7 @@ namespace Toolbox.Library
 
         private void Stop()
         {
-            currentFrameUpDown.Value = 0;
+            currentFrameUpDown.Value = (decimal)StartFrame;
             AnimationPlayerState = AnimPlayerState.Stop;
             UpdateAnimationUI();
             animationTimer.Stop();
@@ -254,7 +269,7 @@ namespace Toolbox.Library
             if (animationTrackBar.CurrentFrame == animationTrackBar.FrameCount - 1)
             {
                 if (IsLooping)
-                    currentFrameUpDown.Value = 0;
+                    currentFrameUpDown.Value = (decimal)StartFrame;
                 else
                     Stop();
             }
@@ -270,7 +285,7 @@ namespace Toolbox.Library
 
         private void animationPlayBtn_Click(object sender, EventArgs e)
         {
-            if (currentAnimations.Count == 0 || FrameCount <= 0)
+            if (currentAnimations.Count == 0 || FrameCount <= StartFrame)
                 return;
 
             if (AnimationPlayerState == AnimPlayerState.Playing)
@@ -283,13 +298,13 @@ namespace Toolbox.Library
         {
             if (currentAnimations.Count == 0) return;
 
-            if (totalFrame.Value < 1)
+            if (totalFrame.Value < (decimal)StartFrame + 1)
             {
-                totalFrame.Value = 1;
+                totalFrame.Value = (decimal)StartFrame + 1;
             }
             else
             {
-                animationTrackBar.CurrentFrame = 0;
+                animationTrackBar.CurrentFrame = StartFrame;
                 animationTrackBar.FrameCount = FrameCount;
             }
         }
@@ -323,7 +338,7 @@ namespace Toolbox.Library
         }
 
         private void animationTrackBar_ValueChanged(object sender, EventArgs e) {
-            if (currentAnimations.Count == 0 || totalFrame.Value <= 0)
+            if (currentAnimations.Count == 0 || totalFrame.Value <= (decimal)StartFrame)
                 return;
 
             currentFrameUpDown.Value = (decimal)animationTrackBar.CurrentFrame;
@@ -365,7 +380,7 @@ namespace Toolbox.Library
                 //Reset it when it reaches the total frame count
                 if (anim.Frame >= anim.FrameCount && anim.Loop)
                 {
-                    anim.Frame = 0;
+                    anim.Frame = anim.StartFrame;
                 }
             }
         }

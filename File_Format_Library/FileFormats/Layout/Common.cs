@@ -1579,8 +1579,8 @@ namespace LayoutBXLYT
         {
             if (animation == null)
                 animation = new LytAnimation(this, parentLayout);
-            else
-                animation.UpdateLayout(parentLayout);
+
+            animation.UpdateLayout(parentLayout);
             return animation;
         }
     }

@@ -1869,6 +1869,8 @@ namespace LayoutBXLYT.Cafe
 
             public BasePane Property { get; set; }
 
+            public USD1 UserData { get; set; }
+
             public byte[] PaneInfo { get; set; }
 
             public PartProperty(FileReader reader, Header header, long StartPosition)
@@ -1919,7 +1921,7 @@ namespace LayoutBXLYT.Cafe
                 if (userDataOffset != 0)
                 {
                     reader.SeekBegin(StartPosition + userDataOffset);
-
+                    UserData = new USD1(reader, header);
                 }
                 if (panelInfoOffset != 0)
                 {
@@ -1956,7 +1958,11 @@ namespace LayoutBXLYT.Cafe
 
             public void WriteUserData(FileWriter writer, LayoutHeader header, long startPos)
             {
-
+                if (UserData != null)
+                {
+                    writer.WriteUint32Offset(_ofsPos + 4, startPos);
+                    UserData.Write(writer, header);
+                }
             }
 
             public void WritePaneInfo(FileWriter writer, LayoutHeader header, long startPos)

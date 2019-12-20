@@ -24,6 +24,12 @@ namespace Toolbox.Library.Forms
 
         protected int margin = 0;
 
+        private int startTime = 0;
+        public int StartTime
+        {
+            set { startTime = value; }
+        }
+
         public event EventHandler FrameChanged;
 
         private Timer timer = new Timer();
@@ -32,10 +38,10 @@ namespace Toolbox.Library.Forms
 
         private void ResolveCollision()
         {
-            if (frameLeft < 0)
+            if (frameLeft < startTime)
             {
-                frameRight -= frameLeft;
-                frameLeft = 0;
+                frameRight += startTime - frameLeft;
+                frameLeft = startTime;
             }
             else if (frameRight > lastFrame)
             {
@@ -46,18 +52,18 @@ namespace Toolbox.Library.Forms
 
         private void ResolveFitting()
         {
-            if (frameLeft < 0)
+            if (frameLeft < startTime)
             {
-                frameRight -= frameLeft;
+                frameRight += startTime - frameLeft;
                 if (frameRight > lastFrame)
                     frameRight = lastFrame;
-                frameLeft = 0;
+                frameLeft = startTime;
             }
             else if (frameRight > lastFrame)
             {
                 frameLeft += lastFrame - frameRight;
-                if (frameLeft < 0)
-                    frameLeft = 0;
+                if (frameLeft < startTime)
+                    frameLeft = startTime;
                 frameRight = lastFrame;
             }
         }
@@ -90,7 +96,7 @@ namespace Toolbox.Library.Forms
 
                 if (value == 1)
                 {
-                    frameLeft = 0;
+                    frameLeft = startTime;
                     frameRight = 1;
                 }
                 else
@@ -150,7 +156,7 @@ namespace Toolbox.Library.Forms
                 step = Math.Round(Math.Max(1, step));
             }
 
-            if (lastFrame != 0)
+            if (lastFrame != startTime)
             {
                 double max;
                 if (frameRight < lastFrame)
@@ -215,10 +221,10 @@ namespace Toolbox.Library.Forms
                 frameRight -= step;
 
                 #region resolve collsions
-                if (frameLeft < 0)
+                if (frameLeft < startTime)
                 {
                     frameRight -= frameLeft;
-                    frameLeft = 0;
+                    frameLeft = startTime;
                 }
                 #endregion
             }
@@ -237,7 +243,7 @@ namespace Toolbox.Library.Forms
                 #endregion
             }
 
-            currentFrame = Math.Min(Math.Max(0, (int)Math.Round(((lastMousePos.X - 20 - margin) * (frameRight - frameLeft) / (Width - 40 - margin) + frameLeft))), lastFrame);
+            currentFrame = Math.Min(Math.Max(startTime, (int)Math.Round(((lastMousePos.X - 20 - margin) * (frameRight - frameLeft) / (Width - 40 - margin) + frameLeft))), lastFrame);
             FrameChanged?.Invoke(this, new EventArgs());
             Refresh();
         }
@@ -245,7 +251,7 @@ namespace Toolbox.Library.Forms
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if (lastFrame == 0)
+            if (lastFrame == startTime)
                 return;
 
             if (e.Button == MouseButtons.Left)
@@ -253,7 +259,7 @@ namespace Toolbox.Library.Forms
 
                 timer.Enabled = (e.X < 20 + margin || e.X > Width - 20);
                 Locked = true;
-                currentFrame = Math.Min(Math.Max(0, (int)Math.Round(((e.X - 20 - margin) * (frameRight - frameLeft) / (Width - 40 - margin) + frameLeft))), lastFrame);
+                currentFrame = Math.Min(Math.Max(startTime, (int)Math.Round(((e.X - 20 - margin) * (frameRight - frameLeft) / (Width - 40 - margin) + frameLeft))), lastFrame);
                 FrameChanged?.Invoke(this, new EventArgs());
                 Refresh();
             }
@@ -281,7 +287,7 @@ namespace Toolbox.Library.Forms
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
-            if (lastFrame == 0)
+            if (lastFrame == startTime)
                 return;
 
             if (frameRight - frameLeft <= 2 && e.Delta > 0)
@@ -289,7 +295,7 @@ namespace Toolbox.Library.Forms
 
             double delta = 1 + Math.Min(Math.Max(-0.5, -e.Delta * 0.00390625), 0.5);
 
-            double frameOrigin = Math.Min(Math.Max(0, ((e.X - 20 - margin) * (frameRight - frameLeft) / (Width - 40 - margin) + frameLeft)), lastFrame);
+            double frameOrigin = Math.Min(Math.Max(startTime, ((e.X - 20 - margin) * (frameRight - frameLeft) / (Width - 40 - margin) + frameLeft)), lastFrame);
 
             frameLeft = Math.Min(-1, (frameLeft - frameOrigin)) * delta + frameOrigin;
             frameRight = Math.Max(1, (frameRight - frameOrigin)) * delta + frameOrigin;
