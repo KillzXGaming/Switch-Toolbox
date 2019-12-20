@@ -19,7 +19,8 @@ namespace FirstPlugin
                 return;
             }
 
-            ReadConfigFromFile(fileName);
+            if (File.Exists(fileName))
+                ReadConfigFromFile(fileName);
         }
 
         private static void ReadConfigFromFile(string fileName)

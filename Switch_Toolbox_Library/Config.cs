@@ -18,7 +18,8 @@ namespace Toolbox.Library
                 return;
             }
 
-            ReadConfigFromFile(fileName);
+            if (File.Exists(fileName))
+                ReadConfigFromFile(fileName);
         }
 
         public static void GamePathsFromFile(string fileName)
