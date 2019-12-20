@@ -163,9 +163,9 @@ void main()
 	    vec2 ambientUV = f_texcoord0;
 		ambientUV.x *= ColorUVScaleU + ColorUVTranslateU;
 	    ambientUV.y *= ColorUVScaleV + ColorUVTranslateV;
-        float ambient = 1 - texture(AmbientMap, ambientUV).r;
-        float shadows = 1 - texture(AmbientMap, ambientUV).g; //Unsually black
-        float cavity =  texture(AmbientMap, ambientUV).b;
+	    float factor =  texture(AmbientMap, ambientUV).b; //Usually 128,128,128. Intensity??
+        float ambient = 1 - (texture(AmbientMap, ambientUV).r * factor); //Inverted ao
+        float shadows = 1 - (texture(AmbientMap, ambientUV).g * factor); //Inverted shadows
 
 		ao = (ambient * shadows);
 	}
