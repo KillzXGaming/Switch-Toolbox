@@ -283,6 +283,7 @@ namespace FirstPlugin
                         fileNode.ImageKey = "fileBlank";
                         fileNode.SelectedImageKey = "fileBlank";
                         fileNode.Tag = file;
+                        fileNode.Text = node.Text;
 
                         files.Add(fileNode);
                     }
@@ -320,6 +321,9 @@ namespace FirstPlugin
                     if (model != null) {
                         model.Tag = file;
                         model.Text = node.Text;
+                        if (Utils.GetExtension(model.Text) != ".gfbmdl")
+                            model.Text += ".gfbmdl";
+
                         model.ImageKey = "model";
                         model.SelectedImageKey = "model";
                         models.Add(model);
