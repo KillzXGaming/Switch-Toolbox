@@ -173,9 +173,22 @@ namespace FirstPlugin
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
             Items.Add(new ToolStripMenuItem("Export Model", null, ExportAction, Keys.Control | Keys.E));
             Items.Add(new ToolStripMenuItem("Replace Model", null, ReplaceAction, Keys.Control | Keys.R));
             return Items.ToArray();
+        }
+
+        private void SaveAction(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = Utils.GetAllFilters(this);
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
+            }
         }
 
         private void ExportAction(object sender, EventArgs args)
@@ -377,9 +390,8 @@ namespace FirstPlugin
                 }
             }
 
-            Dictionary<string, int> NodeIndices = new Dictionary<string, int>();
-
             //Go through each bone and remove the original mesh node
+            List<STBone> bonesToRemove = new List<STBone>();
             for (int i = 0; i < Model.Skeleton.bones.Count; i++)
             {
                 //Reset bone as rigid
@@ -398,13 +410,9 @@ namespace FirstPlugin
                     }
                 }
 
-                if (Model.GenericMeshes.Any(x => x.Text == node.Text))
-                {
-                    if (!NodeIndices.ContainsKey(node.Text))
-                        NodeIndices.Add(node.Text, i);
-
+                if (Model.GenericMeshes.Any(x => x.Text == node.Text)) {
+                    bonesToRemove.Add(node);
                     Model.Model.Bones.Remove(node.Bone);
-                    Model.Skeleton.bones.Remove(node);
                 }
 
               /*  if (Model.Model.CollisionGroups?.Count != 0)
@@ -419,6 +427,11 @@ namespace FirstPlugin
                     }
                 }*/
             }
+
+            foreach (var bone in bonesToRemove)
+                Model.Skeleton.bones.Remove(bone);
+
+            bonesToRemove.Clear();
 
             Model.Model.CollisionGroups = new List<CollisionGroup>();
 
