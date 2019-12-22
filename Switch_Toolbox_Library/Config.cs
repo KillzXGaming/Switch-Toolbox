@@ -295,7 +295,10 @@ namespace Toolbox.Library
                     case "TransformPaneChidlren":
                         bool.TryParse(node.InnerText, out Runtime.LayoutEditor.TransformChidlren);
                         break;
-                        
+                    case "DumpShadersDEBUG":
+                        bool.TryParse(node.InnerText, out Runtime.DumpShadersDEBUG);
+                        break;
+
                 }
             }
 
@@ -438,12 +441,12 @@ namespace Toolbox.Library
             XmlNode mainSettingsNode = doc.CreateElement("MAINFORM");
             parentNode.AppendChild(mainSettingsNode);
 
-            
             mainSettingsNode.AppendChild(createNode(doc, "UseSingleInstance", Runtime.UseSingleInstance.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseDirectXTexDecoder", Runtime.UseDirectXTexDecoder.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "AlwaysCompressOnSave", Runtime.AlwaysCompressOnSave.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "DisplayViewport", Runtime.DisplayViewport.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseOpenGL", Runtime.UseOpenGL.ToString()));
+            mainSettingsNode.AppendChild(createNode(doc, "DumpShadersDEBUG", Runtime.DumpShadersDEBUG.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "UseDebugDomainExceptionHandler", Runtime.UseDebugDomainExceptionHandler.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "OpenStartupWindow", Runtime.OpenStartupWindow.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "EnableVersionCheck", Runtime.EnableVersionCheck.ToString()));

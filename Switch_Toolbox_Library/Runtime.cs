@@ -20,6 +20,8 @@ namespace Toolbox.Library
 
         public static bool EnableDragDrop = true;
 
+        public static bool DumpShadersDEBUG = false;
+
         public static bool UseSingleInstance = false;
         public static bool UseDirectXTexDecoder = true;
         public static bool DEVELOPER_DEBUG_MODE = false;
