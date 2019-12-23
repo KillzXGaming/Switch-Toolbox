@@ -61,7 +61,7 @@ namespace LayoutBXLYT
             get
             {
                 StringBuilder vert = new StringBuilder();
-                vert.AppendLine("uniform vec4 color");
+                vert.AppendLine("uniform vec4 color;");
                 vert.AppendLine("void main()");
                 vert.AppendLine("{");
                 {
@@ -216,11 +216,14 @@ namespace LayoutBXLYT
             if (!string.IsNullOrWhiteSpace(info))
             {
                 if (Toolbox.Library.Runtime.DumpShadersDEBUG)
+                {
                     if (!System.IO.Directory.Exists("ShaderDump"))
                         System.IO.Directory.CreateDirectory("ShaderDump");
 
-                    System.IO.File.WriteAllText($"ShaderDump/ShaderError_VS[{vertexShader}]_FS[{fragmentShader}].txt", 
+                    System.IO.File.WriteAllText($"ShaderDump/ShaderError_VS[{vertexShader}]_FS[{fragmentShader}].txt",
                         info + VertexShader + FragmentShader);
+                }
+
 
                 Console.WriteLine($"GL.LinkProgram had info log: {info}");
             }
