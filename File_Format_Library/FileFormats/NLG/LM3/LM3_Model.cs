@@ -175,6 +175,8 @@ namespace FirstPlugin.LuigisMansion3
         public void ExportModel(string fileName, DAE.ExportSettings settings)
         {
             List<STGenericMaterial> Materials = new List<STGenericMaterial>();
+            List<STGenericTexture> textures = GetTextureList();
+
             foreach (STGenericObject mesh in RenderedMeshes)
                 if (mesh.GetMaterial() != null)
                     Materials.Add(mesh.GetMaterial());
@@ -183,7 +185,7 @@ namespace FirstPlugin.LuigisMansion3
             model.Materials = Materials;
             model.Objects = RenderedMeshes;
 
-            DAE.Export(fileName, settings, model, new List<STGenericTexture>());
+            DAE.Export(fileName, settings, model, textures);
         }
 
         public LM3_Model(LM3_DICT dict)
@@ -214,6 +216,17 @@ namespace FirstPlugin.LuigisMansion3
         }
 
         public void OnPropertyChanged() { }
+
+        public List<STGenericTexture> GetTextureList()
+        {
+            List<STGenericTexture> texturesList = new List<STGenericTexture>();
+            for (int t = 0; t < TextureHashes.Count; t++)
+            {
+                if (DataDictionary.Renderer.TextureList.ContainsKey(TextureHashes[t].ToString("x")))
+                    texturesList.Add(DataDictionary.Renderer.TextureList[TextureHashes[t].ToString("x")]);
+            }
+            return texturesList;
+        }
 
         public void ReadVertexBuffers()
         {
@@ -416,8 +429,8 @@ namespace FirstPlugin.LuigisMansion3
 
                                 for (int j = 0; j < 4; j++) {
                                     maxIndex = Math.Max(maxIndex, boneIndices[j]);
-                                    genericObj.vertices[v].boneIds.Add(boneIndices[j]);
-                                    genericObj.vertices[v].boneWeights.Add(boneWeights[j]);
+                                //    genericObj.vertices[v].boneIds.Add(boneIndices[j]);
+                               //     genericObj.vertices[v].boneWeights.Add(boneWeights[j]);
                                 }
                             }
 
