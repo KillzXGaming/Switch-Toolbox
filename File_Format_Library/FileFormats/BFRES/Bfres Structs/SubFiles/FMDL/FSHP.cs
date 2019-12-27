@@ -594,6 +594,8 @@ namespace Bfres.Structs
                 foreach (Vertex v in vertices)
                 {
                     v.uv0 = new Vector2(v.uv0.X, 1 - v.uv0.Y);
+                    v.uv1 = new Vector2(v.uv1.X, 1 - v.uv1.Y);
+                    v.uv2 = new Vector2(v.uv2.X, 1 - v.uv2.Y);
                 }
             }
             if (settings.RecalculateNormals)
@@ -1127,18 +1129,27 @@ namespace Bfres.Structs
             Vector3 Max = new Vector3();
             Vector3 Min = new Vector3();
 
-            Min = Max = vertices[0].pos;
-
             Min = CalculateBBMin(vertices);
             Max = CalculateBBMax(vertices);
-            Vector3 center = (Max + Min);
-            Vector3 extend = Max - Min;
+            Vector3 center = Max + Min;
+
+            float xxMax = GetExtent(Max.X, Min.X);
+            float yyMax = GetExtent(Max.Y, Min.Y);
+            float zzMax = GetExtent(Max.Z, Min.Z);
+
+            Vector3 extend = new Vector3(xxMax, yyMax, zzMax);
 
             return new BoundingBox() { Center = center, Extend = extend };
         }
+
+        private float GetExtent(float max, float min)
+        {
+            return (float)Math.Max(Math.Sqrt(max * max), Math.Sqrt(min * min));
+        }
+
         private Vector3 CalculateBBMin(List<Vertex> positionVectors)
         {
-            Vector3 minimum = new Vector3();
+            Vector3 minimum = new Vector3(float.MaxValue);
             foreach (Vertex vtx in positionVectors)
             {
                 if (vtx.pos.X < minimum.X) minimum.X = vtx.pos.X;
@@ -1151,7 +1162,7 @@ namespace Bfres.Structs
 
         private Vector3 CalculateBBMax(List<Vertex> positionVectors)
         {
-            Vector3 maximum = new Vector3();
+            Vector3 maximum = new Vector3(float.MinValue);
             foreach (Vertex vtx in positionVectors)
             {
                 if (vtx.pos.X > maximum.X) maximum.X = vtx.pos.X;
