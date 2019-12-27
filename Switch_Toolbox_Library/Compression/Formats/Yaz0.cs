@@ -66,8 +66,8 @@ namespace Toolbox.Library
 
         public Stream Compress(Stream stream)
         {
-          //  return new MemoryStream(EveryFileExplorer.YAZ0.Compress(
-          //      stream.ToArray(), Runtime.Yaz0CompressionLevel, (uint)Alignment));
+            return new MemoryStream(EveryFileExplorer.YAZ0.Compress(
+             stream.ToArray(), Runtime.Yaz0CompressionLevel, (uint)Alignment));
 
             var mem = new MemoryStream();
             using (var writer = new FileWriter(mem, true))
