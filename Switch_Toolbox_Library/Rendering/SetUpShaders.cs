@@ -24,6 +24,9 @@ namespace Toolbox.Library.Rendering
             SetUpAllShaders();
 
             System.Diagnostics.Debug.WriteLine("Shader Setup: {0} ms", stopwatch.ElapsedMilliseconds);
+
+            if (Runtime.DumpShadersDEBUG)
+                SaveErrorLogs();
         }
 
         private static void SetUpAllShaders()
