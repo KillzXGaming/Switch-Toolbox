@@ -29,7 +29,7 @@ float GetComponent(int Type, vec4 Texture)
 	     case 2: return Texture.b; 
 	     case 3: return Texture.a; 
 	     case 4: return 1.0; 
-	     case 5: return 1.0; 
+	     case 5: return 0.0; 
 		 default: return 1.0;
 	 }
 }

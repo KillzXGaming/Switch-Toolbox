@@ -244,6 +244,9 @@ namespace FirstPlugin.Forms
         {
             if (!Loaded) return;
 
+            Settings.ResetUVTransform = chkResetTexTransforms.Checked;
+            Settings.FlipUVsVertical = chkFlipUVsVertical.Checked;
+
             var indices = listViewCustom1.SelectedIndices;
             for (int i = 0; i < indices?.Count; i++)
             {

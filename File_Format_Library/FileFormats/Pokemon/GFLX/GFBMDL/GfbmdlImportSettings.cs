@@ -11,6 +11,10 @@ namespace FirstPlugin
     {
         public bool OptmizeZeroWeights { get; set; } = true;
 
+        public bool FlipUVsVertical { get; set; }
+
+        public bool ResetUVTransform { get; set; }
+
         public List<MeshSetting> MeshSettings = new List<MeshSetting>();
 
         public class MeshSetting

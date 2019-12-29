@@ -56,16 +56,17 @@
             this.chkTangents = new Toolbox.Library.Forms.STCheckBox();
             this.chkUseBoneWeights = new Toolbox.Library.Forms.STCheckBox();
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.bitangentFormatCB = new Toolbox.Library.Forms.STComboBox();
+            this.chkBitangents = new Toolbox.Library.Forms.STCheckBox();
             this.stLabel4 = new Toolbox.Library.Forms.STLabel();
             this.rotateModel90YUD = new Toolbox.Library.Forms.NumericUpDownFloat();
             this.stLabel5 = new Toolbox.Library.Forms.STLabel();
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.chkMatchAttributes = new Toolbox.Library.Forms.STCheckBox();
             this.chkUseOriginalBones = new Toolbox.Library.Forms.STCheckBox();
-            this.stCheckBox7 = new Toolbox.Library.Forms.STCheckBox();
+            this.chkFlipUVsVertical = new Toolbox.Library.Forms.STCheckBox();
             this.stButton2 = new Toolbox.Library.Forms.STButton();
-            this.chkBitangents = new Toolbox.Library.Forms.STCheckBox();
-            this.bitangentFormatCB = new Toolbox.Library.Forms.STComboBox();
+            this.chkResetTexTransforms = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.stPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rotateModel90YUD)).BeginInit();
@@ -428,6 +429,30 @@
             this.stLabel3.TabIndex = 37;
             this.stLabel3.Text = "Mesh Settings:";
             // 
+            // bitangentFormatCB
+            // 
+            this.bitangentFormatCB.BorderColor = System.Drawing.Color.Empty;
+            this.bitangentFormatCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.bitangentFormatCB.ButtonColor = System.Drawing.Color.Empty;
+            this.bitangentFormatCB.FormattingEnabled = true;
+            this.bitangentFormatCB.IsReadOnly = false;
+            this.bitangentFormatCB.Location = new System.Drawing.Point(147, 162);
+            this.bitangentFormatCB.Name = "bitangentFormatCB";
+            this.bitangentFormatCB.Size = new System.Drawing.Size(131, 21);
+            this.bitangentFormatCB.TabIndex = 27;
+            this.bitangentFormatCB.SelectedIndexChanged += new System.EventHandler(this.ApplySettings);
+            // 
+            // chkBitangents
+            // 
+            this.chkBitangents.AutoSize = true;
+            this.chkBitangents.Location = new System.Drawing.Point(12, 164);
+            this.chkBitangents.Name = "chkBitangents";
+            this.chkBitangents.Size = new System.Drawing.Size(98, 17);
+            this.chkBitangents.TabIndex = 26;
+            this.chkBitangents.Text = "Use Bitangents";
+            this.chkBitangents.UseVisualStyleBackColor = true;
+            this.chkBitangents.CheckedChanged += new System.EventHandler(this.ApplySettings);
+            // 
             // stLabel4
             // 
             this.stLabel4.AutoSize = true;
@@ -472,9 +497,10 @@
             // 
             // stPanel2
             // 
+            this.stPanel2.Controls.Add(this.chkResetTexTransforms);
             this.stPanel2.Controls.Add(this.chkMatchAttributes);
             this.stPanel2.Controls.Add(this.chkUseOriginalBones);
-            this.stPanel2.Controls.Add(this.stCheckBox7);
+            this.stPanel2.Controls.Add(this.chkFlipUVsVertical);
             this.stPanel2.Controls.Add(this.stLabel1);
             this.stPanel2.Controls.Add(this.presetCB);
             this.stPanel2.Controls.Add(this.stLabel5);
@@ -501,22 +527,23 @@
             this.chkUseOriginalBones.AutoSize = true;
             this.chkUseOriginalBones.Checked = true;
             this.chkUseOriginalBones.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkUseOriginalBones.Location = new System.Drawing.Point(157, 134);
+            this.chkUseOriginalBones.Location = new System.Drawing.Point(9, 134);
             this.chkUseOriginalBones.Name = "chkUseOriginalBones";
             this.chkUseOriginalBones.Size = new System.Drawing.Size(116, 17);
             this.chkUseOriginalBones.TabIndex = 43;
             this.chkUseOriginalBones.Text = "Use Original Bones";
             this.chkUseOriginalBones.UseVisualStyleBackColor = true;
             // 
-            // stCheckBox7
+            // chkFlipUVsVertical
             // 
-            this.stCheckBox7.AutoSize = true;
-            this.stCheckBox7.Location = new System.Drawing.Point(157, 111);
-            this.stCheckBox7.Name = "stCheckBox7";
-            this.stCheckBox7.Size = new System.Drawing.Size(103, 17);
-            this.stCheckBox7.TabIndex = 41;
-            this.stCheckBox7.Text = "Flip UVs Vertical";
-            this.stCheckBox7.UseVisualStyleBackColor = true;
+            this.chkFlipUVsVertical.AutoSize = true;
+            this.chkFlipUVsVertical.Location = new System.Drawing.Point(157, 111);
+            this.chkFlipUVsVertical.Name = "chkFlipUVsVertical";
+            this.chkFlipUVsVertical.Size = new System.Drawing.Size(103, 17);
+            this.chkFlipUVsVertical.TabIndex = 41;
+            this.chkFlipUVsVertical.Text = "Flip UVs Vertical";
+            this.chkFlipUVsVertical.UseVisualStyleBackColor = true;
+            this.chkFlipUVsVertical.CheckedChanged += new System.EventHandler(this.ApplySettings);
             // 
             // stButton2
             // 
@@ -529,29 +556,16 @@
             this.stButton2.Text = "Ok";
             this.stButton2.UseVisualStyleBackColor = false;
             // 
-            // chkBitangents
+            // chkResetTexTransforms
             // 
-            this.chkBitangents.AutoSize = true;
-            this.chkBitangents.Location = new System.Drawing.Point(12, 164);
-            this.chkBitangents.Name = "chkBitangents";
-            this.chkBitangents.Size = new System.Drawing.Size(98, 17);
-            this.chkBitangents.TabIndex = 26;
-            this.chkBitangents.Text = "Use Bitangents";
-            this.chkBitangents.UseVisualStyleBackColor = true;
-            this.chkBitangents.CheckedChanged += new System.EventHandler(this.ApplySettings);
-            // 
-            // bitangentFormatCB
-            // 
-            this.bitangentFormatCB.BorderColor = System.Drawing.Color.Empty;
-            this.bitangentFormatCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.bitangentFormatCB.ButtonColor = System.Drawing.Color.Empty;
-            this.bitangentFormatCB.FormattingEnabled = true;
-            this.bitangentFormatCB.IsReadOnly = false;
-            this.bitangentFormatCB.Location = new System.Drawing.Point(147, 162);
-            this.bitangentFormatCB.Name = "bitangentFormatCB";
-            this.bitangentFormatCB.Size = new System.Drawing.Size(131, 21);
-            this.bitangentFormatCB.TabIndex = 27;
-            this.bitangentFormatCB.SelectedIndexChanged += new System.EventHandler(this.ApplySettings);
+            this.chkResetTexTransforms.AutoSize = true;
+            this.chkResetTexTransforms.Location = new System.Drawing.Point(153, 134);
+            this.chkResetTexTransforms.Name = "chkResetTexTransforms";
+            this.chkResetTexTransforms.Size = new System.Drawing.Size(167, 17);
+            this.chkResetTexTransforms.TabIndex = 45;
+            this.chkResetTexTransforms.Text = "Reset Material UV Transforms";
+            this.chkResetTexTransforms.UseVisualStyleBackColor = true;
+            this.chkResetTexTransforms.CheckedChanged += new System.EventHandler(this.ApplySettings);
             // 
             // GFLXModelImporter
             // 
@@ -601,7 +615,7 @@
         private Toolbox.Library.Forms.NumericUpDownFloat rotateModel90YUD;
         private Toolbox.Library.Forms.STCheckBox chkUseBoneWeights;
         private Toolbox.Library.Forms.STPanel stPanel2;
-        private Toolbox.Library.Forms.STCheckBox stCheckBox7;
+        private Toolbox.Library.Forms.STCheckBox chkFlipUVsVertical;
         private Toolbox.Library.Forms.STCheckBox chkUseOriginalBones;
         private Toolbox.Library.Forms.STButton stButton2;
         private Toolbox.Library.Forms.STComboBox tangentFormatCB;
@@ -610,5 +624,6 @@
         private Toolbox.Library.Forms.STCheckBox chkSetNormalsToColorChannel;
         private Toolbox.Library.Forms.STComboBox bitangentFormatCB;
         private Toolbox.Library.Forms.STCheckBox chkBitangents;
+        private Toolbox.Library.Forms.STCheckBox chkResetTexTransforms;
     }
 }
