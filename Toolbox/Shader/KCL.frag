@@ -28,13 +28,13 @@ float checker(vec3 p)
 
 	if (mod(yi,2)==0) {
 		if(mod(xi,2) != mod(zi,2))
-			return 1;
+			return 1.0;
 		else
 			return 0.5;
 	}
 	else {
 		if (mod(xi,2) == mod(zi,2))
-			return 1;
+			return 1.0;
 		else
 			return 0.5;
 	}
