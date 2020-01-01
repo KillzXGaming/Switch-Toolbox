@@ -392,7 +392,7 @@ namespace Toolbox.Library.Forms
                 }
 
                 IFileFormat fileFormat = null;
-                if (e.Node.Tag != null && e.Node is IFileFormat)
+                if (e.Node.Tag != null && e.Node.Tag is IFileFormat)
                     fileFormat = (IFileFormat)e.Node.Tag;
                 else if (e.Node is IFileFormat)
                     fileFormat = (IFileFormat)e.Node;
