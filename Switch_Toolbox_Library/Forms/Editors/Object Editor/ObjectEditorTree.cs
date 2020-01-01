@@ -304,6 +304,8 @@ namespace Toolbox.Library.Forms
 
         private void treeViewCustom1_DoubleClick(object sender, EventArgs e)
         {
+            if (treeViewCustom1.SelectedNode == null) return;
+
             if (treeViewCustom1.SelectedNode is TreeNodeCustom)
             {
                 ((TreeNodeCustom)treeViewCustom1.SelectedNode).OnDoubleMouseClick(treeViewCustom1);
@@ -389,6 +391,11 @@ namespace Toolbox.Library.Forms
                     node = (IContextMenuNode)e.Node.Tag;
                 }
 
+                IFileFormat fileFormat = null;
+                if (e.Node.Tag != null && e.Node is IFileFormat)
+                    fileFormat = (IFileFormat)e.Node.Tag;
+                else if (e.Node is IFileFormat)
+                    fileFormat = (IFileFormat)e.Node;
 
                 if (node != null)
                 {
@@ -430,14 +437,6 @@ namespace Toolbox.Library.Forms
                         foreach (var item in archiveMenus)
                             archiveItem.DropDownItems.Add(item);
                     }
-
-                    treeNodeContextMenu.Items.AddRange(menuItems.ToArray());
-
-                    //Select the node without the evemt
-                    //We don't want editors displaying on only right clicking
-                    SuppressAfterSelectEvent = true;
-                    treeViewCustom1.SelectedNode = e.Node;
-                    SuppressAfterSelectEvent = false;
                 }
                 else
                 {
@@ -445,12 +444,45 @@ namespace Toolbox.Library.Forms
                         treeNodeContextMenu.Items.AddRange(archiveMenus.ToArray());
                 }
 
+                if (fileFormat != null)
+                {
+                    string path = fileFormat.FilePath;
+                    if (File.Exists(path))
+                        menuItems.Add(new ToolStripMenuItem("Open In Explorer", null, SelectFileInExplorer, Keys.Control | Keys.Q));
+                }
+
+                treeNodeContextMenu.Items.AddRange(menuItems.ToArray());
+
+                //Select the node without the evemt
+                //We don't want editors displaying on only right clicking
+                SuppressAfterSelectEvent = true;
+                treeViewCustom1.SelectedNode = e.Node;
+                SuppressAfterSelectEvent = false;
+
                 if (treeNodeContextMenu.Items.Count > 0)
                     treeNodeContextMenu.Show(Cursor.Position);
             }
             else
             {
                 OnAnimationSelected(e.Node);
+            }
+        }
+
+        private void SelectFileInExplorer(object sender, EventArgs args)
+        {
+            var node = treeViewCustom1.SelectedNode;
+            if (node != null)
+            {
+                IFileFormat fileFormat;
+                if (node.Tag is IFileFormat)
+                    fileFormat = (IFileFormat)node.Tag;
+                else
+                    fileFormat = (IFileFormat)node;
+
+                string path = fileFormat.FilePath;
+
+                string argument = "/select, \"" + path + "\"";
+                System.Diagnostics.Process.Start("explorer.exe", argument);
             }
         }
 
