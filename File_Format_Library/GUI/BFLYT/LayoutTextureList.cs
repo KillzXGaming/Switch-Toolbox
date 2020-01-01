@@ -216,6 +216,13 @@ namespace LayoutBXLYT
                     if (TextureList.ContainsKey(texture))
                     {
                         ActiveLayout.TextureManager.RemoveTexture(TextureList[texture]);
+                        foreach (var bntx in PluginRuntime.bntxContainers) {
+                            if (bntx.Textures.ContainsKey(texture))
+                                bntx.Textures.Remove(texture);
+                        }
+                        if (PluginRuntime.bflimTextures.ContainsKey(texture))
+                            PluginRuntime.bflimTextures.Remove(texture);
+
                         TextureList.Remove(texture);
                     }
 
@@ -247,6 +254,9 @@ namespace LayoutBXLYT
                 item.ImageIndex = 0;
 
                 listViewCustom1.BeginUpdate();
+                if (listViewCustom1.Items.ContainsKey(tex.Text))
+                    listViewCustom1.Items.RemoveByKey(tex.Text);
+
                 listViewCustom1.Items.Add(item);
 
                 //Add icon

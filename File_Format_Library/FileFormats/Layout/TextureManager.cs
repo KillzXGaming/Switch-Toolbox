@@ -128,7 +128,7 @@ namespace LayoutBXLYT
             }
         }
 
-            public List<STGenericTexture> AddTextures()
+        public List<STGenericTexture> AddTextures()
         {
             List<STGenericTexture> textures = new List<STGenericTexture>();
 
@@ -179,16 +179,14 @@ namespace LayoutBXLYT
                             bntx = BinaryContainers.Values.FirstOrDefault();
                         }
 
-                        int startIndex = bntx.Textures.Count;
-                        bntx.ImportTexture();
+                        int startIndex = bntx.Textures.Count - 1;
+                        var importedTextures = bntx.ImportTexture();
+
+                        Console.WriteLine("startIndex " + startIndex);
 
                         //Load all the additional textues
-
-                        for (int i = 0; i < bntx.Textures.Count; i++)
-                        {
-                            if (i > startIndex - 1)
-                                textures.Add(bntx.Textures.Values.ElementAt(i));
-                        }
+                        for (int i = 0; i < importedTextures.Count; i++)
+                            textures.Add(importedTextures[i]);
                     }
                     break;
             }

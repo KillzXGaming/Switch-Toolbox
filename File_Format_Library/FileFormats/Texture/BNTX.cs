@@ -606,7 +606,7 @@ namespace FirstPlugin
         private void ImportTextureAction(object sender, EventArgs args) {
             ImportTexture();
         }
-        public void ImportTexture()
+        public List<TextureData> ImportTexture()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = FileFilters.GetFilter(typeof(TextureData));
@@ -614,14 +614,16 @@ namespace FirstPlugin
             ofd.DefaultExt = "png";
             ofd.Multiselect = true;
 
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                ImportTexture(ofd.FileNames);
+            if (ofd.ShowDialog() == DialogResult.OK) {
+               return ImportTexture(ofd.FileNames);
             }
+            return new List<TextureData>();
         }
 
-        public void ImportTexture(string[] FileNames)
+        public List<TextureData> ImportTexture(string[] FileNames)
         {
+            List<TextureData> textures = new List<TextureData>();
+
             BinaryTextureImporterList importer = new BinaryTextureImporterList();
             List<TextureImporterSettings> settings = new List<TextureImporterSettings>();
 
@@ -632,7 +634,7 @@ namespace FirstPlugin
 
                 if (ext == ".dds" || ext == ".bftex" || ext == ".astc")
                 {
-                    AddTexture(name);
+                    textures.Add(AddTexture(name));
                 }
                 else
                 {
@@ -642,17 +644,18 @@ namespace FirstPlugin
             if (settings.Count == 0)
             {
                 importer.Dispose();
-                return;
+                return textures;
             }
 
             importer.LoadSettings(settings);
-            if (importer.ShowDialog() == DialogResult.OK)
-            {
-                ImportTexture(settings, importer.CompressionMode);
+            if (importer.ShowDialog() == DialogResult.OK) {
+                textures.AddRange(ImportTexture(settings, importer.CompressionMode));
             }
             settings.Clear();
             GC.Collect();
             Cursor.Current = Cursors.Default;
+
+            return textures;
         }
 
         public void ImportTexture(ImageKeyFrame[] Keys, string TextureName)
@@ -679,8 +682,10 @@ namespace FirstPlugin
             Cursor.Current = Cursors.Default;
         }
 
-        private void ImportTexture(List<TextureImporterSettings> settings, STCompressionMode CompressionMode)
+        private List<TextureData> ImportTexture(List<TextureImporterSettings> settings, STCompressionMode CompressionMode)
         {
+            List<TextureData> textures = new List<TextureData>();
+
             Cursor.Current = Cursors.WaitCursor;
             foreach (var setting in settings)
             {
@@ -708,6 +713,8 @@ namespace FirstPlugin
 
                     Nodes.Add(setting.textureData);
                     Textures.Add(setting.textureData.Text, setting.textureData);
+                    textures.Add(setting.textureData);
+
                     setting.textureData.LoadOpenGLTexture();
                     LibraryGUI.UpdateViewport();
                 }
@@ -716,6 +723,7 @@ namespace FirstPlugin
                     MessageBox.Show("Something went wrong???");
                 }
             }
+            return textures;
         }
 
         //This function is an optional feature that will import a dummy texture if one is missing in the materials
