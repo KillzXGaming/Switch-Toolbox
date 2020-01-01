@@ -191,8 +191,67 @@ namespace LayoutBXLYT
             var item = listViewCustom1.SelectedItems[0];
             if (e.Button == MouseButtons.Right)
             {
-                
+                STContextMenuStrip menu = new STContextMenuStrip();
+                menu.Items.Add(new STToolStipMenuItem("Export", null, ActionExportTexture));
+                menu.Items.Add(new STToolStipMenuItem("Replace", null, ActionReplaceTexture));
+
+                menu.Show(Cursor.Position);
             }
+        }
+
+        private void ActionExportTexture(object sender, EventArgs e)
+        {
+            List<STGenericTexture> textures = new List<STGenericTexture>();
+            foreach (ListViewItem item in listViewCustom1.SelectedItems)
+            {
+                if (TextureList.ContainsKey(item.Text)) {
+                    textures.Add(TextureList[item.Text]);
+                }
+            }
+
+            if (textures.Count == 1) {
+                textures[0].ExportImage();
+            }
+            else if (textures.Count > 1)
+            {
+                List<string> Formats = new List<string>();
+                Formats.Add("Microsoft DDS (.dds)");
+                Formats.Add("Portable Graphics Network (.png)");
+                Formats.Add("Joint Photographic Experts Group (.jpg)");
+                Formats.Add("Bitmap Image (.bmp)");
+                Formats.Add("Tagged Image File Format (.tiff)");
+
+                FolderSelectDialog sfd = new FolderSelectDialog();
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    string folderPath = sfd.SelectedPath;
+
+                    BatchFormatExport form = new BatchFormatExport(Formats);
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (STGenericTexture tex in textures)
+                        {
+                            if (form.Index == 0)
+                                tex.SaveDDS(folderPath + '\\' + tex.Text + ".dds");
+                            else if (form.Index == 1)
+                                tex.SaveBitMap(folderPath + '\\' + tex.Text + ".png");
+                            else if (form.Index == 2)
+                                tex.SaveBitMap(folderPath + '\\' + tex.Text + ".jpg");
+                            else if (form.Index == 3)
+                                tex.SaveBitMap(folderPath + '\\' + tex.Text + ".bmp");
+                            else if (form.Index == 4)
+                                tex.SaveBitMap(folderPath + '\\' + tex.Text + ".tiff");
+                        }
+                    }
+                }
+            }
+
+            textures.Clear();
+        }
+
+        private void ActionReplaceTexture(object sender, EventArgs e) {
+            EditTexture();
         }
 
         private void listViewCustom1_ItemDrag(object sender, ItemDragEventArgs e)  {
@@ -291,7 +350,11 @@ namespace LayoutBXLYT
             }
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
+        private void btnEdit_Click(object sender, EventArgs e) {
+            EditTexture();
+        }
+
+        private void EditTexture()
         {
             if (listViewCustom1.SelectedItems.Count == 0)
                 return;
