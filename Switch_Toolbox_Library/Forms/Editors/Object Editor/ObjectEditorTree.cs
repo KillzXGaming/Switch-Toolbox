@@ -466,9 +466,16 @@ namespace Toolbox.Library.Forms
         private IFileFormat TryGetActiveFile(TreeNode node)
         {
             if (node.Tag != null && node.Tag is IFileFormat)
-               return (IFileFormat)node.Tag;
+                return (IFileFormat)node.Tag;
             else if (node is IFileFormat)
                 return (IFileFormat)node;
+            else if (node is ArchiveRootNodeWrapper)
+            {
+                if (((ArchiveRootNodeWrapper)node).ArchiveFile is IFileFormat)
+                    return ((ArchiveRootNodeWrapper)node).ArchiveFile as IFileFormat;
+                else
+                    return null;
+            }
             else
                 return null;
         }
