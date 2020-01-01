@@ -92,9 +92,12 @@ namespace Toolbox.Library
         {
             get
             {
-                float frameCount = 1;
+                float frameCount = uint.MinValue;
                 for (int i = 0; i < currentAnimations.Count; i++)
                     frameCount = Math.Max(frameCount, currentAnimations[i].FrameCount);
+
+                if (frameCount == uint.MinValue)
+                    frameCount = 1;
 
                 return frameCount;
             }
@@ -269,7 +272,11 @@ namespace Toolbox.Library
             if (animationTrackBar.CurrentFrame == animationTrackBar.FrameCount - 1)
             {
                 if (IsLooping)
+                {
+                    //Reset the min setting as animations can potentically be switched
+                    currentFrameUpDown.Minimum = (decimal)StartFrame;
                     currentFrameUpDown.Value = (decimal)StartFrame;
+                }
                 else
                     Stop();
             }
