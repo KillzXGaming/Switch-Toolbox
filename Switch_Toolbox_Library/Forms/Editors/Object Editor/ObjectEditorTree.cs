@@ -391,12 +391,6 @@ namespace Toolbox.Library.Forms
                     node = (IContextMenuNode)e.Node.Tag;
                 }
 
-                IFileFormat fileFormat = null;
-                if (e.Node.Tag != null && e.Node.Tag is IFileFormat)
-                    fileFormat = (IFileFormat)e.Node.Tag;
-                else if (e.Node is IFileFormat)
-                    fileFormat = (IFileFormat)e.Node;
-
                 if (node != null)
                 {
                     if (IsRoot)
@@ -444,6 +438,7 @@ namespace Toolbox.Library.Forms
                         treeNodeContextMenu.Items.AddRange(archiveMenus.ToArray());
                 }
 
+                var fileFormat = TryGetActiveFile(e.Node);
                 if (fileFormat != null)
                 {
                     string path = fileFormat.FilePath;
@@ -468,20 +463,22 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        private IFileFormat TryGetActiveFile(TreeNode node)
+        {
+            if (node.Tag != null && node.Tag is IFileFormat)
+               return (IFileFormat)node.Tag;
+            else if (node is IFileFormat)
+                return (IFileFormat)node;
+            else
+                return null;
+        }
+
         private void SelectFileInExplorer(object sender, EventArgs args)
         {
             var node = treeViewCustom1.SelectedNode;
-            if (node != null)
-            {
-                IFileFormat fileFormat;
-                if (node.Tag is IFileFormat)
-                    fileFormat = (IFileFormat)node.Tag;
-                else
-                    fileFormat = (IFileFormat)node;
-
-                string path = fileFormat.FilePath;
-
-                string argument = "/select, \"" + path + "\"";
+            if (node != null) {
+                var fileFormat = TryGetActiveFile(node);
+                string argument = "/select, \"" + fileFormat.FilePath + "\"";
                 System.Diagnostics.Process.Start("explorer.exe", argument);
             }
         }
