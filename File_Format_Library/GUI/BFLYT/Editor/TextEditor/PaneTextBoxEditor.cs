@@ -44,7 +44,7 @@ namespace LayoutBXLYT
             if (fonts != null)
             {
                 foreach (var font in fonts)
-                    fontFileCB.Items.Add(pane.FontName);
+                    fontFileCB.Items.Add(font);
             }
 
             if (fontFileCB.Items.Contains(pane.FontName))
@@ -176,6 +176,8 @@ namespace LayoutBXLYT
 
             activePane.ShadowXYSize = new Syroot.Maths.Vector2F(
               shadowScaleXUD.Value, shadowScaleYUD.Value);
+
+            parentEditor.PropertyChanged?.Invoke(sender, e);
         }
 
         private void chkSizeRestrict_CheckedChanged(object sender, EventArgs e) {
@@ -197,6 +199,8 @@ namespace LayoutBXLYT
             activePane.HorizontalAlignment = (OriginX)alighmentHCB.SelectedItem;
             activePane.VerticalAlignment = (OriginY)alighmentVCB.SelectedItem;
             activePane.LineAlignment = (LineAlign)alighmentLineCB.SelectedItem;
+
+            parentEditor.PropertyChanged?.Invoke(sender, e);
         }
 
         private void fontFileCB_SelectedIndexChanged(object sender, EventArgs e)
@@ -205,6 +209,7 @@ namespace LayoutBXLYT
 
             activePane.FontName = (string)fontFileCB.SelectedItem;
             activePane.FontIndex = (ushort)fontFileCB.SelectedIndex;
+            parentEditor.PropertyChanged?.Invoke(sender, e);
         }
     }
 }

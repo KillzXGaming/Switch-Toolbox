@@ -62,7 +62,7 @@
             this.stComboBox1.IsReadOnly = false;
             this.stComboBox1.Location = new System.Drawing.Point(9, 55);
             this.stComboBox1.Name = "stComboBox1";
-            this.stComboBox1.Size = new System.Drawing.Size(158, 21);
+            this.stComboBox1.Size = new System.Drawing.Size(342, 21);
             this.stComboBox1.TabIndex = 0;
             // 
             // stTextBox1
@@ -86,7 +86,7 @@
             // btnAdd
             // 
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdd.Location = new System.Drawing.Point(173, 53);
+            this.btnAdd.Location = new System.Drawing.Point(357, 55);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 3;
