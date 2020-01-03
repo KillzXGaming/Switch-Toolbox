@@ -131,8 +131,8 @@ namespace FirstPlugin
                     case "Scale X": return 4;
                     case "Scale Y": return 8;
                     case "Rotate": return 12;
-                    case "Translate X": return 4;
-                    case "Translate Y": return 8;
+                    case "Translate X": return 16;
+                    case "Translate Y": return 20;
                     default:
                         uint.TryParse(offset, out val);
                         break;
