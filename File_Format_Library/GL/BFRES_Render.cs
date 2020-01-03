@@ -1069,6 +1069,7 @@ namespace FirstPlugin
 
             SetUniformData(mat, shader, "cIsEnableNormalMap");
 
+            SetUniformData(mat, shader, "texsrt0");
             SetUniformData(mat, shader, "tex_mtx0");
 
             //Sets shadow type
@@ -1145,6 +1146,16 @@ namespace FirstPlugin
                     shader.SetFloat("SRT_Rotate", texSRT.Rotation);
                     shader.SetVector2("SRT_Translate", Utils.ToVec2(texSRT.Translation));
                 }
+
+                //MTA SRT
+                if (propertyName == "texsrt0" && mat.shaderassign.ShaderArchive == "ssg")
+                {
+                    TexSrt texSRT = mat.matparam[propertyName].ValueTexSrt;
+
+                    shader.SetVector2("SRT_Scale", Utils.ToVec2(texSRT.Scaling));
+                    shader.SetFloat("SRT_Rotate", texSRT.Rotation);
+                    shader.SetVector2("SRT_Translate", Utils.ToVec2(texSRT.Translation));
+                }
             }
 
             if (mat.animatedMatParams.ContainsKey(propertyName))
@@ -1192,6 +1203,7 @@ namespace FirstPlugin
 
                     shader.SetVector4(propertyName, Utils.ToVec4(mat.animatedMatParams[propertyName].ValueFloat));
                 }
+
                 if (mat.animatedMatParams[propertyName].Type == ShaderParamType.TexSrt)
                 {
                     // Vector 2 Scale
