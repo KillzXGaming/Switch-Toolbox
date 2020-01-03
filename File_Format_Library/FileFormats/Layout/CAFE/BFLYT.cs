@@ -894,6 +894,8 @@ namespace LayoutBXLYT.Cafe
                 MaterialIndex = (ushort)header.MaterialList.Materials.IndexOf(mat);
                 Material = mat;
 
+                Text = Encoding.Unicode.GetString(new byte[0]);
+
                 FontIndex = 0;
                 FontName = "";
                 TextLength = 4;
@@ -1052,7 +1054,7 @@ namespace LayoutBXLYT.Cafe
             private float Unknown1 { get; set; }
             private float Unknown2 { get; set; }
 
-            private void UpdateTextRender()
+            public void UpdateTextRender()
             {
                 if (RenderableFont == null) return;
 
