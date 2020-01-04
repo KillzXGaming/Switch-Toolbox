@@ -16,7 +16,7 @@ using NAudio.Wave;
 
 namespace FirstPlugin
 {
-    public class BARS : TreeNodeFile, IFileFormat
+    public class BARS : TreeNodeFile, IFileFormat, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Audio;
 
@@ -70,7 +70,7 @@ namespace FirstPlugin
             }
         }
 
-        public class AudioEntry : TreeNodeCustom
+        public class AudioEntry : TreeNodeCustom, IContextMenuNode
         {
             public BARSAudioFile audioFile;
 
@@ -89,15 +89,16 @@ namespace FirstPlugin
 
             public AudioEntry()
             {
-                ContextMenu = new ContextMenu();
-                MenuItem export = new MenuItem("Export");
-                ContextMenu.MenuItems.Add(export);
-                export.Click += Export;
-
-                MenuItem replace = new MenuItem("Replace");
-                ContextMenu.MenuItems.Add(replace);
-                replace.Click += Replace;
             }
+
+            public ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
+                Items.Add(new ToolStripMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R));
+                return Items.ToArray();
+            }
+
             public void SetupMusic()
             {
                 if (Magic == "FWAV" || Magic == "BWAV")
@@ -132,7 +133,7 @@ namespace FirstPlugin
                 return mem.ToArray();
             }
 
-            private void Export(object sender, EventArgs args)
+            private void ExportAction(object sender, EventArgs args)
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.FileName = Text;
@@ -145,7 +146,7 @@ namespace FirstPlugin
                 }
             }
 
-            private void Replace(object sender, EventArgs args)
+            private void ReplaceAction(object sender, EventArgs args)
             {
                 OpenFileDialog ofd = new OpenFileDialog();
                 ofd.FileName = Text;
@@ -276,17 +277,21 @@ namespace FirstPlugin
                     Nodes[1].Nodes.Add(node);
                 }
             }
-
-            ContextMenu = new ContextMenu();
-            MenuItem save = new MenuItem("Save");
-            ContextMenu.MenuItems.Add(save);
-            save.Click += Save;
         }
+
         public void Unload()
         {
 
         }
-        private void Save(object sender, EventArgs args)
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            return Items.ToArray();
+        }
+
+        private void SaveAction(object sender, EventArgs args)
         {
             List<IFileFormat> formats = new List<IFileFormat>();
 
