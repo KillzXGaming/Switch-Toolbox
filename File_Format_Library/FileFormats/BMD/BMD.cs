@@ -214,8 +214,8 @@ namespace FirstPlugin
 
                                 for (int j = 0; j < vert.VertexWeight.WeightCount; j++)
                                 {
-                                    vertex.boneWeights.Add(vert.VertexWeight.Weights[j]);
-                                    vertex.boneIds.Add(vert.VertexWeight.BoneIndices[j]);
+                               //     vertex.boneWeights.Add(vert.VertexWeight.Weights[j]);
+                                  //  vertex.boneIds.Add(vert.VertexWeight.BoneIndices[j]);
                                 }
 
                                 if (vert.VertexWeight.WeightCount == 1)
@@ -318,7 +318,7 @@ namespace FirstPlugin
             List<ToolStripItem> Items = new List<ToolStripItem>();
             Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
             Items.Add(new STToolStripSeparator());
-            Items.Add(new STToolStipMenuItem("Export", null, ExportAction, Keys.Control | Keys.E) { Enabled = false});
+            Items.Add(new STToolStipMenuItem("Export", null, ExportAction, Keys.Control | Keys.E) );
             Items.Add(new STToolStipMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R) { Enabled = false});
             return Items.ToArray();
         }
@@ -327,9 +327,23 @@ namespace FirstPlugin
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Collada DAE |*.dae;";
+            sfd.FileName = System.IO.Path.GetFileNameWithoutExtension(FileName);
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                BMDFile.ExportAssImp(sfd.FileName, "dae", new ExportSettings());
+                var model = new STGenericModel();
+                var materials = new List<STGenericMaterial>();
+                var textures = new List<STGenericTexture>();
+                foreach (var mesh in Renderer.Meshes)
+                    materials.Add(mesh.GetMaterial());
+                foreach (var tex in Renderer.TextureList)
+                    textures.Add(tex);
+
+                model.Materials = materials;
+                model.Objects = Renderer.Meshes;
+
+                ExportModelSettings exportDlg = new ExportModelSettings();
+                if (exportDlg.ShowDialog() == DialogResult.OK)
+                    DAE.Export(sfd.FileName, exportDlg.Settings, model, textures, Skeleton);
             }
         }
 
