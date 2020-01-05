@@ -80,6 +80,9 @@ namespace Bfres.Structs
             ((BFRES)Parent?.Parent?.Parent)?.LoadEditors(this);
         }
 
+        public override string ExportFilter => FileFilters.GetFilter(typeof(FSCN));
+        public override string ReplaceFilter => FileFilters.GetFilter(typeof(FSCN));
+
         public override void Export(string FileName)
         {
             SceneAnim.Export(FileName, ((BFRESGroupNode)Parent).GetResFile());

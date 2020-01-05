@@ -84,6 +84,9 @@ namespace Bfres.Structs
             return ((BFRESGroupNode)Parent).GetResFileU();
         }
 
+        public override string ExportFilter => FileFilters.GetFilter(typeof(FSHA));
+        public override string ReplaceFilter => FileFilters.GetFilter(typeof(FSHA));
+
         public override void OnClick(TreeView treeView) => UpdateEditor();
 
         public ToolStripItem[] GetContextMenuItems()
@@ -114,8 +117,6 @@ namespace Bfres.Structs
 
             ShapeAnimU = shapeAnim;
         }
-
-        public override string ExportFilter => FileFilters.GetFilter(typeof(FSHA));
 
         public override void Export(string FileName)
         {
