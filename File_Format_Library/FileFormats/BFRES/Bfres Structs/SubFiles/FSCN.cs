@@ -36,6 +36,7 @@ namespace Bfres.Structs
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.AddRange(base.GetContextMenuItems());
             Items.Add(new ToolStripMenuItem("New Camera Animation", null, NewCameraAction, Keys.Control | Keys.C));
             Items.Add(new ToolStripMenuItem("New Light Animation", null, NewLightAction, Keys.Control | Keys.L));
             Items.Add(new ToolStripMenuItem("New Fog Animation", null, NewFogAction, Keys.Control | Keys.F));

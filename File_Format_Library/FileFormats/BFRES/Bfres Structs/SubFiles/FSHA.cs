@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.Animations;
@@ -84,6 +85,13 @@ namespace Bfres.Structs
         }
 
         public override void OnClick(TreeView treeView) => UpdateEditor();
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.AddRange(base.GetContextMenuItems());
+            return Items.ToArray();
+        }
 
         public void UpdateEditor(){
             ((BFRES)Parent?.Parent?.Parent)?.LoadEditors(this);
