@@ -1271,7 +1271,7 @@ namespace FirstPlugin
                 case TEX_FORMAT.BC5_UNORM: return SurfaceFormat.BC5_UNORM;
                 case TEX_FORMAT.BC5_SNORM: return SurfaceFormat.BC5_SNORM;
                 case TEX_FORMAT.BC6H_UF16: return SurfaceFormat.BC6_UFLOAT;
-                case TEX_FORMAT.BC6H_SF16: return SurfaceFormat.BC6_UFLOAT;
+                case TEX_FORMAT.BC6H_SF16: return SurfaceFormat.BC6_FLOAT;
                 case TEX_FORMAT.BC7_UNORM: return SurfaceFormat.BC7_UNORM;
                 case TEX_FORMAT.BC7_UNORM_SRGB: return SurfaceFormat.BC7_SRGB;
                 case TEX_FORMAT.R5G5B5A1_UNORM: return SurfaceFormat.R5_G5_B5_A1_UNORM;
@@ -1335,9 +1335,9 @@ namespace FirstPlugin
                 case SurfaceFormat.BC1_UNORM: return TEX_FORMAT.BC1_UNORM;
                 case SurfaceFormat.BC1_SRGB: return TEX_FORMAT.BC1_UNORM_SRGB;
                 case SurfaceFormat.BC2_UNORM: return TEX_FORMAT.BC2_UNORM;
-                case SurfaceFormat.BC2_SRGB: return TEX_FORMAT.BC2_UNORM;
+                case SurfaceFormat.BC2_SRGB: return TEX_FORMAT.BC2_UNORM_SRGB;
                 case SurfaceFormat.BC3_UNORM: return TEX_FORMAT.BC3_UNORM;
-                case SurfaceFormat.BC3_SRGB: return TEX_FORMAT.BC3_UNORM;
+                case SurfaceFormat.BC3_SRGB: return TEX_FORMAT.BC3_UNORM_SRGB;
                 case SurfaceFormat.BC4_UNORM: return TEX_FORMAT.BC4_UNORM;
                 case SurfaceFormat.BC4_SNORM: return TEX_FORMAT.BC4_SNORM;
                 case SurfaceFormat.BC5_UNORM: return TEX_FORMAT.BC5_UNORM;
@@ -1345,7 +1345,7 @@ namespace FirstPlugin
                 case SurfaceFormat.BC6_UFLOAT: return TEX_FORMAT.BC6H_UF16;
                 case SurfaceFormat.BC6_FLOAT: return TEX_FORMAT.BC6H_SF16;
                 case SurfaceFormat.BC7_UNORM: return TEX_FORMAT.BC7_UNORM;
-                case SurfaceFormat.BC7_SRGB: return TEX_FORMAT.BC7_UNORM;
+                case SurfaceFormat.BC7_SRGB: return TEX_FORMAT.BC7_UNORM_SRGB;
                 case SurfaceFormat.A1_B5_G5_R5_UNORM: return TEX_FORMAT.B5G5R5A1_UNORM;
                 case SurfaceFormat.A4_B4_G4_R4_UNORM: return TEX_FORMAT.B4G4R4A4_UNORM;
                 case SurfaceFormat.B5_G5_R5_A1_UNORM: return TEX_FORMAT.B5G5R5A1_UNORM;
