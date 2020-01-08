@@ -208,6 +208,9 @@ namespace Toolbox.Library.Animations
 
         public static void CreateANIM(string fname, Animation a, STSkeleton vbn)
         {
+            System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@fname))
             {
                 AnimHeader header = new AnimHeader();
