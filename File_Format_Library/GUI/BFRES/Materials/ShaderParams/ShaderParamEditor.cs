@@ -93,6 +93,9 @@ namespace FirstPlugin.Forms
                 case ShaderParamType.TexSrtEx:
                     DisplayValue = SetValueToString(prm.ValueTexSrtEx);
                     break;
+                case ShaderParamType.Srt2D:
+                    DisplayValue = SetValueToString(prm.ValueSrt2D);
+                    break;
             }
 
             item.UseItemStyleForSubItems = false;
@@ -145,6 +148,8 @@ namespace FirstPlugin.Forms
                 return TexSrtToString((TexSrt)values);
             else if (values is TexSrtEx)
                 return TexSrtToString((TexSrtEx)values);
+            else if (values is Srt2D)
+                return TexSrtToString((Srt2D)values);
             else if (values is bool[])
                 return string.Join(" , ", values as bool[]);
             else if (values is int[])
@@ -163,6 +168,11 @@ namespace FirstPlugin.Forms
         private string TexSrtToString(TexSrt val)
         {
             return $"{val.Mode} {val.Scaling.X} {val.Scaling.Y} {val.Rotation} {val.Translation.X} {val.Translation.Y}  ";
+        }
+
+        private string TexSrtToString(Srt2D val)
+        {
+            return $"{val.Scaling.X} {val.Scaling.Y} {val.Rotation} {val.Translation.X} {val.Translation.Y}  ";
         }
 
         STFlowLayoutPanel stFlowLayoutPanel1;
@@ -188,6 +198,11 @@ namespace FirstPlugin.Forms
             else if (param.Type == ShaderParamType.TexSrt)
             {
                 TexSrtPanel panel = new TexSrtPanel(param.ValueTexSrt, param);
+                LoadDropPanel(panel, param);
+            }
+            else if (param.Type == ShaderParamType.Srt2D)
+            {
+                TexSrtPanel2D panel = new TexSrtPanel2D(param.ValueSrt2D, param);
                 LoadDropPanel(panel, param);
             }
             else if (param.Type == ShaderParamType.Float)
@@ -288,6 +303,7 @@ namespace FirstPlugin.Forms
                 case ShaderParamType.UInt4: panel = new vector4SliderPanel(param.Name, param.ValueUint, param); break;
                 case ShaderParamType.TexSrt: panel = new TexSrtPanel(param.ValueTexSrt,param); break;
                 case ShaderParamType.TexSrtEx: panel = new TexSrtPanel(param.ValueTexSrtEx, param); break;
+                case ShaderParamType.Srt2D: panel = new TexSrtPanel2D(param.ValueSrt2D, param); break;
                 case ShaderParamType.Bool: panel = new booleanPanel(param.ValueBool, param); break;
                 case ShaderParamType.Bool2: panel = new booleanPanel(param.ValueBool, param); break;
                 case ShaderParamType.Bool3: panel = new booleanPanel(param.ValueBool, param); break;
