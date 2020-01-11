@@ -159,11 +159,13 @@ namespace FirstPlugin
         }
 
 
-        public List<byte[]> GenerateMipList(STCompressionMode CompressionMode, bool multiThread, int SurfaceLevel = 0)
+        public List<byte[]> GenerateMipList(STCompressionMode CompressionMode, bool multiThread, bool bc4Alpha, int SurfaceLevel = 0)
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
             if (GammaFix)
                 Image = BitmapExtension.AdjustGamma(Image, 2.2f);
+            if (bc4Alpha)
+                Image = BitmapExtension.SetChannel(Image, STChannelType.Alpha, STChannelType.Alpha, STChannelType.Alpha, STChannelType.Alpha);
 
             List<byte[]> mipmaps = new List<byte[]>();
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
@@ -172,7 +174,7 @@ namespace FirstPlugin
                 int MipHeight = Math.Max(1, (int)TexHeight >> mipLevel);
 
                 if (mipLevel != 0)
-                    Image = BitmapExtension.ResizeImage(Image, MipWidth, MipHeight);
+                    Image = BitmapExtension.Resize(Image, MipWidth, MipHeight);
 
                 mipmaps.Add(STGenericTexture.CompressBlock(BitmapExtension.ImageToByte(Image),
                     Image.Width, Image.Height, TextureData.ConvertFormat(Format), alphaRef, multiThread, CompressionMode));

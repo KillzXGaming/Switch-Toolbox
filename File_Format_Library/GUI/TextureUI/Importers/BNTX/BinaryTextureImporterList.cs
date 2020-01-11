@@ -53,7 +53,6 @@ namespace FirstPlugin
                 //  if (format != SurfaceFormat.Invalid)
             }
 
-            
             formatComboBox.Items.Add(SurfaceFormat.D32_FLOAT_S8X24_UINT);
             formatComboBox.Items.Add(SurfaceFormat.A1_B5_G5_R5_UNORM);
             formatComboBox.Items.Add(SurfaceFormat.A4_B4_G4_R4_UNORM);
@@ -93,6 +92,7 @@ namespace FirstPlugin
             compressionModeCB.SelectedIndex = 0;
             compressionModeCB.Visible = false;
             compModeLbl.Visible = false;
+            chkBC4Alpha.Enabled = false;
 
             foreach (SurfaceDim dim in (SurfaceDim[])Enum.GetValues(typeof(SurfaceDim)))
             {
@@ -166,6 +166,11 @@ namespace FirstPlugin
                 compModeLbl.Visible = false;
             }
 
+            if (setting.Format == SurfaceFormat.BC4_UNORM || setting.Format == SurfaceFormat.BC4_SNORM)
+                chkBC4Alpha.Enabled = true;
+            else
+                chkBC4Alpha.Enabled = false;
+
             Bitmap bitmap = Toolbox.Library.Imaging.GetLoadingImage();
 
             if (compressionModeCB.SelectedIndex == 0)
@@ -180,7 +185,8 @@ namespace FirstPlugin
 
                 pictureBox1.Image = bitmap;
 
-                var mips = setting.GenerateMipList(CompressionMode, MultiThreading);
+                var mips = setting.GenerateMipList(CompressionMode, MultiThreading, chkBC4Alpha.Checked);
+
                 setting.DataBlockOutput.Clear();
                 setting.DataBlockOutput.Add(Utils.CombineByteArray(mips.ToArray()));
 
@@ -198,6 +204,10 @@ namespace FirstPlugin
                         bitmap = STGenericTexture.DecodeBlockGetBitmap(mips[0],
                         setting.TexWidth, setting.TexHeight, TextureData.ConvertFormat(setting.Format), new byte[0]);
                     }
+
+                    if (chkBC4Alpha.Checked)
+                        bitmap = BitmapExtension.SetChannel(bitmap, STChannelType.Red,
+                            STChannelType.Red, STChannelType.Red, STChannelType.Red);
                 }
 
                 if (pictureBox1.InvokeRequired)
@@ -253,7 +263,6 @@ namespace FirstPlugin
             {
                 SetupSettings(SelectedTexSettings);
             }
-
         }
 
         private void listViewCustom1_SelectedIndexChanged(object sender, EventArgs e)
@@ -337,6 +346,12 @@ namespace FirstPlugin
         }
 
         private void chkMultiThreading_CheckedChanged(object sender, EventArgs e) {
+            if (SelectedTexSettings != null) {
+                SetupSettings(SelectedTexSettings, false);
+            }
+        }
+
+        private void chkBC4Alpha_CheckedChanged(object sender, EventArgs e) {
             if (SelectedTexSettings != null) {
                 SetupSettings(SelectedTexSettings, false);
             }

@@ -52,6 +52,7 @@
             this.dataSizeLbl = new Toolbox.Library.Forms.STLabel();
             this.cnkGammaFix = new Toolbox.Library.Forms.STCheckBox();
             this.chkMultiThreading = new Toolbox.Library.Forms.STCheckBox();
+            this.chkBC4Alpha = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SwizzleNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MipmapNum)).BeginInit();
@@ -60,6 +61,7 @@
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.chkBC4Alpha);
             this.contentContainer.Controls.Add(this.chkMultiThreading);
             this.contentContainer.Controls.Add(this.cnkGammaFix);
             this.contentContainer.Controls.Add(this.dataSizeLbl);
@@ -103,6 +105,7 @@
             this.contentContainer.Controls.SetChildIndex(this.dataSizeLbl, 0);
             this.contentContainer.Controls.SetChildIndex(this.cnkGammaFix, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkMultiThreading, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkBC4Alpha, 0);
             // 
             // button2
             // 
@@ -316,7 +319,7 @@
             // cnkGammaFix
             // 
             this.cnkGammaFix.AutoSize = true;
-            this.cnkGammaFix.Location = new System.Drawing.Point(757, 345);
+            this.cnkGammaFix.Location = new System.Drawing.Point(754, 345);
             this.cnkGammaFix.Name = "cnkGammaFix";
             this.cnkGammaFix.Size = new System.Drawing.Size(160, 17);
             this.cnkGammaFix.TabIndex = 32;
@@ -334,6 +337,17 @@
             this.chkMultiThreading.Text = "Use Multi Threading ";
             this.chkMultiThreading.UseVisualStyleBackColor = true;
             this.chkMultiThreading.CheckedChanged += new System.EventHandler(this.chkMultiThreading_CheckedChanged);
+            // 
+            // chkBC4Alpha
+            // 
+            this.chkBC4Alpha.AutoSize = true;
+            this.chkBC4Alpha.Location = new System.Drawing.Point(754, 368);
+            this.chkBC4Alpha.Name = "chkBC4Alpha";
+            this.chkBC4Alpha.Size = new System.Drawing.Size(76, 17);
+            this.chkBC4Alpha.TabIndex = 34;
+            this.chkBC4Alpha.Text = "BC4 Alpha";
+            this.chkBC4Alpha.UseVisualStyleBackColor = true;
+            this.chkBC4Alpha.CheckedChanged += new System.EventHandler(this.chkBC4Alpha_CheckedChanged);
             // 
             // BinaryTextureImporterList
             // 
@@ -377,5 +391,6 @@
         private Toolbox.Library.Forms.STLabel compModeLbl;
         private Toolbox.Library.Forms.STCheckBox cnkGammaFix;
         private Toolbox.Library.Forms.STCheckBox chkMultiThreading;
+        private Toolbox.Library.Forms.STCheckBox chkBC4Alpha;
     }
 }
