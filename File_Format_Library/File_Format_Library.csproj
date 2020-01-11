@@ -403,6 +403,12 @@
     <Compile Include="GUI\BFLYT\Editor\PaneAnimationController.Designer.cs">
       <DependentUpon>PaneAnimationController.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\TexSrtPanel2D.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\ShaderParams\TexSrtPanel2D.Designer.cs">
+      <DependentUpon>TexSrtPanel2D.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\GFBMDL\GFLXMaterialEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
