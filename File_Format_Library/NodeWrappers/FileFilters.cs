@@ -38,10 +38,10 @@ namespace FirstPlugin
         public static string FTXP = GetFilter(".bftxp", ".yaml", ".gif");
         public static string FMTV = GetFilter(".bfmvi");
         public static string FBNV = GetFilter(".bfbvi");
-        public static string FSCN = GetFilter(".bfscn");
+        public static string FSCN = GetFilter(".bfscn", ".yaml", ".json");
         public static string FSHA = GetFilter(".bfspa");
 
-        public static string CMDL = GetFilter(".dae");
+        public static string CMDL = GetFilter(".dae", ".cmdl");
 
         public static string NUTEXB = GetFilter(".dds",".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
         public static string XTX = GetFilter(".dds", ".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
@@ -61,6 +61,7 @@ namespace FirstPlugin
             else if (type == typeof(FTXP)) return FTXP;
             else if (type == typeof(FSHA)) return FSHA;
             else if (type == typeof(FTEX)) return FTEX;
+            else if (type == typeof(FSCN)) return FSCN;
             else if (type == typeof(FSHU))
             {
                 if (IsExporting)
@@ -137,6 +138,7 @@ namespace FirstPlugin
                     case ".anim": filters.Add(ext, "Maya Animation"); break;
                     case ".yaml": filters.Add(ext, "Yet Another Markup Language"); break;
                     case ".gif": filters.Add(ext, "Graphics Interchange Format"); break;
+                    case ".cmdl": filters.Add(ext, "CTR Model"); break;
                     default:
                         filters.Add(ext, ""); break;
                 }

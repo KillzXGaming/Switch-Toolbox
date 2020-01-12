@@ -141,6 +141,8 @@ namespace FirstPlugin
 
         private void GetShapeTransform()
         {
+            if (activeShape.boundingBoxes.Count == 0) return;
+
             Vector3 translate = new Vector3(0);
             Vector3 scale = new Vector3(1);
             Vector4 rotate = new Vector4(0);

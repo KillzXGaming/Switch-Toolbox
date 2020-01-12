@@ -85,12 +85,38 @@ namespace Bfres.Structs
 
         public override void Export(string FileName)
         {
-            SceneAnim.Export(FileName, ((BFRESGroupNode)Parent).GetResFile());
+            string ext = Utils.GetExtension(FileName);
+
+            if (ext == ".bfscn")
+            {
+                SceneAnim.Export(FileName, ((BFRESGroupNode)Parent).GetResFile());
+            }
+            else if (ext == ".yaml")
+            {
+                System.IO.File.WriteAllText(FileName, YamlFscn.ToYaml(FileName, SceneAnim));
+            }
+            else if (ext == ".json")
+            {
+                System.IO.File.WriteAllText(FileName, YamlFscn.ToJson(FileName, SceneAnim));
+            }
         }
 
 
         public override void Replace(string FileName) {
-            Replace(FileName, GetResFile(), GetResFileU());
+            string ext = Utils.GetExtension(FileName);
+
+            if (ext == ".bfscn")
+            {
+                Replace(FileName, GetResFile(), GetResFileU());
+            }
+            else if (ext == ".yaml")
+            {
+                SceneAnim = YamlFscn.FromYaml(FileName);
+            }
+            else if (ext == ".json")
+            {
+                SceneAnim = YamlFscn.FromJson(FileName);
+            }
         }
 
         public void Replace(string FileName, ResFile resFileNX, ResU.ResFile resFileU)

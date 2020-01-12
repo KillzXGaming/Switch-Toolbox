@@ -1454,6 +1454,7 @@
     <Compile Include="YAML\YamlFmaa.cs" />
     <Compile Include="YAML\YamlFmat.cs" />
     <Compile Include="YAML\YamlFska.cs" />
+    <Compile Include="YAML\YamlFscn.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
