@@ -95,6 +95,7 @@ namespace FirstPlugin
                     CameraAnim camAnim = new CameraAnim();
                     camAnim.Name = camera.Name;
                     camAnim.FrameCount = camera.FrameCount;
+                    camAnim.BakedSize = camera.BakedSize;
                     camAnim.BaseData = camera.BaseData;
                     if (camera.EulerZXY)
                         camAnim.Flags |= CameraAnimFlags.EulerZXY;
@@ -175,15 +176,20 @@ namespace FirstPlugin
             public bool Perspective { get; set; }
 
             [JsonProperty(Order = 5)]
-            public CameraAnimData BaseData { get; set; }
+            public uint BakedSize { get; set; }
 
             [JsonProperty(Order = 6)]
+            public CameraAnimData BaseData { get; set; }
+
+            [JsonProperty(Order = 7)]
             public List<CameraAnimCurve> Curves = new List<CameraAnimCurve>();
 
             public CameraAnimConfig() { }
 
             public CameraAnimConfig(CameraAnim camAnim)
             {
+                FrameCount = camAnim.FrameCount;
+                BakedSize = camAnim.BakedSize;
                 Name = camAnim.Name;
                 Loop = camAnim.Flags.HasFlag(CameraAnimFlags.Looping);
                 EulerZXY = camAnim.Flags.HasFlag(CameraAnimFlags.EulerZXY);
