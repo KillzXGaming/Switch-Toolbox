@@ -236,13 +236,12 @@ namespace FirstPlugin
                 }
             }
 
-            private static ushort _flagsMask = 0b11000011_11111111;
+           // private static readonly ushort _flagsMask = 0b11000011_11111111;
 
             private static float PackedToQuat(short val)
             {
-                Console.WriteLine("bin1 " + Convert.ToString(val, 2));
-                val &= unchecked((short)(~_flagsMask));
-                Console.WriteLine("bin2 " + Convert.ToString(val, 2));
+             //   Console.WriteLine("bin1 " + Convert.ToString(val, 2));
+              //  Console.WriteLine("bin2 " + Convert.ToString(val, 2));
 
                 return val / 0x8000f;
             }
