@@ -129,6 +129,7 @@ namespace FirstPlugin
                             animCurve.Keys[i, 1] = Delta;
                         }
 
+                        animCurve.StartFrame = animCurve.Frames.Max();
                         animCurve.EndFrame = animCurve.Frames.Max();
                         if (animCurve.Keys.Length > 1)
                             animCurve.Delta = values[values.Count - 1] - values[0];

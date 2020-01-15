@@ -414,6 +414,8 @@ namespace Toolbox.Library.Rendering
 
         public void DrawModel(GLControl control, STSkeleton Skeleton, STGenericMaterial Material, STGenericObject m, ShaderProgram shader)
         {
+            GL.PushAttrib(AttribMask.ColorBufferBit);
+
             if (m.PolygonGroups.Count > 0)
             {
                 foreach (var group in m.PolygonGroups)
@@ -473,6 +475,7 @@ namespace Toolbox.Library.Rendering
                 }
             }
 
+            GL.PopAttrib();
         }
 
         private static void DrawModelWireframe(STGenericObject p, ShaderProgram shader)
