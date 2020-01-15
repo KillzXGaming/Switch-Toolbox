@@ -44,6 +44,8 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
+            CanSave = true;
+
             header = new Header();
             header.Read(new FileReader(stream));
 
@@ -67,8 +69,8 @@ namespace FirstPlugin
 
         }
 
-        public void Save(System.IO.Stream stream)
-        {
+        public void Save(System.IO.Stream stream) {
+            header.Write(new FileWriter(stream));
         }
 
         //Docs https://github.com/Kinnay/Wii-U-File-Formats/wiki/SHARCFB-File-Format
@@ -87,7 +89,7 @@ namespace FirstPlugin
                 uint FileSize = reader.ReadUInt32();
                 uint bom = reader.ReadUInt32();
                 uint FileLength = reader.ReadUInt32();
-                Name = reader.ReadString((int)FileLength);
+                Name = reader.ReadString((int)FileLength, true);
 
 
                 var pos = reader.Position;
@@ -113,9 +115,37 @@ namespace FirstPlugin
                     SourceDatas.Add(source);
                 }
             }
-            public void Write(FileWriter reader)
-            {
 
+            public void Write(FileWriter writer)
+            {
+                writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+                writer.WriteSignature("AAHS");
+                writer.Write(Version);
+                writer.Write(uint.MaxValue); //fileSize
+                writer.Write(1);
+                writer.Write(Name.Length);
+                writer.WriteString(Name);
+                Console.WriteLine("pos " + writer.Position);
+                long sourceArrayPos = writer.Position;
+                writer.Write(uint.MaxValue);
+                writer.Write(ShaderPrograms.Count);
+
+                for (int i = 0; i < ShaderPrograms.Count; i++) {
+                    long pos = writer.Position;
+                    ShaderPrograms[i].Write(writer, this);
+                    SharcCommon.WriteSectionSize(writer, pos);
+                }
+
+                writer.WriteUint32Offset(sourceArrayPos);
+                for (int i = 0; i < SourceDatas.Count; i++) {
+                    long pos = writer.Position;
+                    SourceDatas[i].Write(writer, this);
+                    SharcCommon.WriteSectionSize(writer, pos);
+                }
+
+                using (writer.TemporarySeek(8, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)writer.BaseStream.Length);
+                };
             }
         }
 
@@ -143,6 +173,10 @@ namespace FirstPlugin
             public ShaderSymbolData SamplerVariables;
             public ShaderSymbolData AttributeVariables;
 
+            public int VertexShaderIndex;
+            public int FragmentShaderIndex;
+            public int GeoemetryShaderIndex;
+
             public override void OnClick(TreeView treeview)
             {
                 ShaderEditor editor = (ShaderEditor)LibraryGUI.GetActiveContent(typeof(ShaderEditor));
@@ -166,9 +200,9 @@ namespace FirstPlugin
 
                 if (header.Version >= 13)
                 {
-                    ushort vertexUnk1 = reader.ReadUInt16();
-                    ushort fragmentUnk1 = reader.ReadUInt16();
-                    ushort geometryUnk1 = reader.ReadUInt16();
+                    VertexShaderIndex = reader.ReadInt32();
+                    FragmentShaderIndex = reader.ReadInt32();
+                    GeoemetryShaderIndex = reader.ReadInt32();
                     ushort computeUnk1 = reader.ReadUInt16();
                     ushort vertexUnk2 = reader.ReadUInt16();
                     ushort fragmentUnk2 = reader.ReadUInt16();
@@ -177,12 +211,11 @@ namespace FirstPlugin
                 }
                 else
                 {
-                    uint vertexUnk1 = reader.ReadUInt32();
-                    uint fragmentUnk1 = reader.ReadUInt32();
-                    uint geometryUnk1 = reader.ReadUInt32();
+                    VertexShaderIndex = reader.ReadInt32();
+                    FragmentShaderIndex = reader.ReadInt32();
+                    GeoemetryShaderIndex = reader.ReadInt32();
                 }
-
-                Text = reader.ReadString((int)NameLength);
+                Text = reader.ReadString((int)NameLength, true);
 
                 variationVertexMacroData = new VariationMacroData();
                 variationFragmenMacroData = new VariationMacroData();
@@ -224,6 +257,39 @@ namespace FirstPlugin
 
                 reader.Seek(SectionSize + pos, System.IO.SeekOrigin.Begin);
             }
+
+            public void Write(FileWriter writer, SHARC.Header header)
+            {
+                writer.Write(uint.MaxValue);
+                writer.Write(Text.Length);
+                writer.Write(VertexShaderIndex);
+                writer.Write(FragmentShaderIndex);
+                writer.Write(GeoemetryShaderIndex);
+
+                variationVertexMacroData.Write(writer, header.Version);
+                variationFragmenMacroData.Write(writer, header.Version);
+                variationGeometryMacroData.Write(writer, header.Version);
+
+                if (header.Version >= 13)
+                {
+                    variationComputeMacroData.Write(writer, header.Version);
+                }
+
+                variationSymbolData.Write(writer);
+                variationSymbolDataFull.Write(writer);
+
+                if (header.Version <= 12)
+                {
+                    UniformVariables.Write(writer);
+
+                    if (header.Version >= 11) {
+                        UniformBlocks.Write(writer, header.Version);
+                    }
+
+                    SamplerVariables.Write(writer);
+                    AttributeVariables.Write(writer);
+                }
+            }
         }
 
         public class SourceData : TreeNodeCustom
@@ -253,15 +319,21 @@ namespace FirstPlugin
                 uint CodeLength = reader.ReadUInt32();
                 uint CodeLength2 = reader.ReadUInt32(); //?????
                 Text = reader.ReadString((int)FileNameLength);
-             //   Code = reader.ReadString((int)CodeLength, Encoding.UTF32);
-                byte[] CodeData = reader.ReadBytes((int)CodeLength);
-                Code = Encoding.GetEncoding(932).GetString(CodeData);
+                byte[] data = reader.ReadBytes((int)CodeLength);
+                Code = Encoding.GetEncoding("shift_jis").GetString(data);
 
                 reader.Seek(SectioSize + pos, System.IO.SeekOrigin.Begin);
             }
-            public void Write(FileWriter reader)
-            {
 
+            public void Write(FileWriter writer, SHARC.Header header)
+            {
+                var data = Encoding.GetEncoding("shift_jis").GetBytes(Code);
+                writer.Write(uint.MaxValue);
+                writer.Write(Name.Length);
+                writer.Write(data.Length);
+                writer.Write(data.Length);
+                writer.WriteString(Name);
+                writer.Write(data);
             }
         }
     }

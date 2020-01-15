@@ -143,6 +143,12 @@
     <Reference Include="SharpYaml">
       <HintPath>..\Toolbox\Lib\SharpYaml.dll</HintPath>
     </Reference>
+    <Reference Include="SPICA">
+      <HintPath>..\Toolbox\Lib\SPICA.dll</HintPath>
+    </Reference>
+    <Reference Include="SPICA.Rendering">
+      <HintPath>..\Toolbox\Lib\SPICA.Rendering.dll</HintPath>
+    </Reference>
     <Reference Include="SuperBMDLib">
       <HintPath>..\Toolbox\Lib\SuperBMDLib.dll</HintPath>
       <Private>False</Private>
@@ -216,6 +222,16 @@
     <Compile Include="FileFormats\Archives\DARC.cs" />
     <Compile Include="FileFormats\Archives\DAT_Bayonetta.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
+    <Compile Include="FileFormats\BCH\BCH.cs" />
+    <Compile Include="FileFormats\BCH\MBN.cs" />
+    <Compile Include="FileFormats\BCH\Wrappers\BCHGroupNode.cs" />
+    <Compile Include="FileFormats\BCH\Wrappers\H3DTextureWrapper.cs" />
+    <Compile Include="FileFormats\BCH\Wrappers\Model\H3DBoneWrapper.cs" />
+    <Compile Include="FileFormats\BCH\Wrappers\Model\H3DMaterialWrapper.cs" />
+    <Compile Include="FileFormats\BCH\Wrappers\Model\H3DMeshWrapper.cs" />
+    <Compile Include="FileFormats\BCH\Wrappers\Model\H3DModelWrapper.cs" />
+    <Compile Include="FileFormats\BCH\Wrappers\Model\H3DSkeletonWrapper.cs" />
+    <Compile Include="FileFormats\BCH\Wrappers\SkeletalAnimation\H3DSkeletalAnimWrapper.cs" />
     <Compile Include="FileFormats\LM1\LM1_MDL.cs" />
     <Compile Include="FileFormats\MarioParty\HSF.cs" />
     <Compile Include="FileFormats\MKAGPDX\LM2_ARCADE_Model.cs" />
@@ -288,15 +304,6 @@
     <Compile Include="FileFormats\Audio\MP3.cs" />
     <Compile Include="FileFormats\Audio\Ogg.cs" />
     <Compile Include="FileFormats\Audio\WAV.cs" />
-    <Compile Include="FileFormats\BCRES\BCRES.cs" />
-    <Compile Include="FileFormats\BCRES\Wrappers\BCRESGroupNode.cs" />
-    <Compile Include="FileFormats\BCRES\Wrappers\CMDL\BcresMatTexture.cs" />
-    <Compile Include="FileFormats\BCRES\Wrappers\CMDL\CMDLWrapper.cs" />
-    <Compile Include="FileFormats\BCRES\Wrappers\CMDL\CRESBoneWrapper.cs" />
-    <Compile Include="FileFormats\BCRES\Wrappers\CMDL\CRESSkeletonWrapper.cs" />
-    <Compile Include="FileFormats\BCRES\Wrappers\CMDL\MTOBWrapper.cs" />
-    <Compile Include="FileFormats\BCRES\Wrappers\CMDL\SOBJWrapper.cs" />
-    <Compile Include="FileFormats\BCRES\Wrappers\TXOBWrapper.cs" />
     <Compile Include="FileFormats\BFRES\PlatformConverter\BfresPlatformConverter.cs" />
     <Compile Include="FileFormats\BFRES\BFRESGroupNode.cs" />
     <Compile Include="FileFormats\BFRES\BFRESAnimFolder.cs" />
@@ -379,6 +386,7 @@
     <Compile Include="FileFormats\Rom\3DS\NCCH.cs" />
     <Compile Include="FileFormats\Rom\3DS\NCCHStructs.cs" />
     <Compile Include="FileFormats\Rom\3DS\RomFSStructure.cs" />
+    <Compile Include="FileFormats\Shader\SHARC\SharcCommon.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Grezzo\CTXB.cs" />
     <Compile Include="FileFormats\Texture\SIR0.cs" />
@@ -387,6 +395,8 @@
     <Compile Include="FileFormats\Rom\GCDisk.cs" />
     <Compile Include="FileFormats\Texture\BTI.cs" />
     <Compile Include="FileFormats\Texture\WTB.cs" />
+    <Compile Include="GL\BCH_Render.cs" />
+    <Compile Include="GL\BFRESRender.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\CMB_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
@@ -397,11 +407,90 @@
     <Compile Include="GL\LM3_Renderer.cs" />
     <Compile Include="GL\PunchOutWii_Renderer.cs" />
     <Compile Include="GL\Strikers_Renderer.cs" />
+    <Compile Include="GUI\BCH\BCHMeshEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\BCHMeshEditor.Designer.cs">
+      <DependentUpon>BCHMeshEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\BCHModelEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\BCHModelEditor.Designer.cs">
+      <DependentUpon>BCHModelEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\BCHBoneEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\BCHBoneEditor.Designer.cs">
+      <DependentUpon>BCHBoneEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialGeneralEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialGeneralEditor.Designer.cs">
+      <DependentUpon>BCHMaterialGeneralEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialShaderParamEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialShaderParamEditor.Designer.cs">
+      <DependentUpon>BCHMaterialShaderParamEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialEditor.Designer.cs">
+      <DependentUpon>BCHMaterialEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialColorEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialColorEditor.Designer.cs">
+      <DependentUpon>BCHMaterialColorEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialBlendingEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialBlendingEditor.Designer.cs">
+      <DependentUpon>BCHMaterialBlendingEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialFragmentEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHMaterialFragmentEditor.Designer.cs">
+      <DependentUpon>BCHMaterialFragmentEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHTextureMapEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\BCHTextureMapEditor.Designer.cs">
+      <DependentUpon>BCHTextureMapEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\Material\IMaterialLoader.cs" />
+    <Compile Include="GUI\BCH\MetaData\UserDataEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\MetaData\UserDataEditor.Designer.cs">
+      <DependentUpon>UserDataEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BCH\MetaData\UserDataParser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BCH\MetaData\UserDataParser.Designer.cs">
+      <DependentUpon>UserDataParser.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFLYT\Editor\PaneAnimationController.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\BFLYT\Editor\PaneAnimationController.Designer.cs">
       <DependentUpon>PaneAnimationController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\RenderState\RenderStateEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\Materials\RenderState\RenderStateEditor.Designer.cs">
+      <DependentUpon>RenderStateEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFRES\Materials\ShaderParams\TexSrtPanel2D.cs">
       <SubType>UserControl</SubType>
@@ -708,7 +797,7 @@
     <Compile Include="FileFormats\Shader\NSWShaderDecompile.cs" />
     <Compile Include="FileFormats\Shader\NUSHDB.cs" />
     <Compile Include="FileFormats\Shader\NVNSH.cs" />
-    <Compile Include="FileFormats\Shader\SHARCFBNX.cs" />
+    <Compile Include="FileFormats\Shader\SHARC\SHARCFBNX.cs" />
     <Compile Include="FileFormats\Texture\BCLIM.cs" />
     <Compile Include="FileFormats\Texture\BFLIM.cs" />
     <Compile Include="FileFormats\Layout\CAFE\BFLAN.cs" />
@@ -718,7 +807,6 @@
     <Compile Include="FileFormats\Texture\NUT.cs" />
     <Compile Include="FileFormats\Texture\TEX3DS.cs" />
     <Compile Include="FileFormats\XLINK\XLINK.cs" />
-    <Compile Include="GL\BCRES_Render.cs" />
     <Compile Include="GL\GFBMDL_Render.cs" />
     <Compile Include="GL\GMX_Renderer.cs" />
     <Compile Include="GL\Helpers\DepthGLControl.cs" />
@@ -734,7 +822,7 @@
     <Compile Include="FileFormats\Audio\BFSTM.cs" />
     <Compile Include="FileFormats\Archives\NARC.cs" />
     <Compile Include="FileFormats\Archives\SDF.cs" />
-    <Compile Include="FileFormats\Shader\SHARCFB.cs" />
+    <Compile Include="FileFormats\Shader\SHARC\SHARCFB.cs" />
     <Compile Include="FileFormats\Audio\BRSTM.cs" />
     <Compile Include="GL\Helpers\AlphaGLControl.cs" />
     <Compile Include="GL\Helpers\ColorGLControl.cs" />
@@ -856,18 +944,6 @@
     <Compile Include="Scenes\SMO_Scene.cs" />
     <Compile Include="Scenes\ZTP_Scene.cs" />
     <Compile Include="YAML\YamlAamp.cs" />
-    <Compile Include="GUI\BCRES\BcresEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\BCRES\BcresEditor.Designer.cs">
-      <DependentUpon>BcresEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\BCRES\Material\SamplerEditorSimple.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\BCRES\Material\SamplerEditorSimple.Designer.cs">
-      <DependentUpon>SamplerEditorSimple.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\BFRES\BoneVisualAnims\BoneVisualAnimEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1306,7 +1382,7 @@
     <Compile Include="FileFormats\Rom\NSP.cs" />
     <Compile Include="FileFormats\Effects\PCTL.cs" />
     <Compile Include="FileFormats\Archives\SARC.cs" />
-    <Compile Include="FileFormats\Shader\SHARC.cs" />
+    <Compile Include="FileFormats\Shader\SHARC\SHARC.cs" />
     <Compile Include="FileFormats\Texture\BNTX.cs" />
     <Compile Include="FileFormats\Effects\EFF.cs" />
     <Compile Include="FileFormats\BFRES\Bfres Structs\SubFiles\FTEX.cs" />
@@ -1316,7 +1392,7 @@
     <Compile Include="FileFormats\Texture\XTX.cs" />
     <Compile Include="FileFormats\Rom\XCI.cs" />
     <Compile Include="GetSwitchKeys.cs" />
-    <Compile Include="GL\BFRES_Render.cs" />
+    <Compile Include="GL\BFRES\BFRES_Render.cs" />
     <Compile Include="GUI\Advanced Editor\TextureViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1453,8 +1529,8 @@
     <Compile Include="XML\Sharc2XML.cs" />
     <Compile Include="YAML\YamlFmaa.cs" />
     <Compile Include="YAML\YamlFmat.cs" />
-    <Compile Include="YAML\YamlFska.cs" />
     <Compile Include="YAML\YamlFscn.cs" />
+    <Compile Include="YAML\YamlFska.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -1471,8 +1547,50 @@
     <EmbeddedResource Include="GUI\AttributeEditor.resx">
       <DependentUpon>AttributeEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\BCHMeshEditor.resx">
+      <DependentUpon>BCHMeshEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\BCHModelEditor.resx">
+      <DependentUpon>BCHModelEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\BCHBoneEditor.resx">
+      <DependentUpon>BCHBoneEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\Material\BCHMaterialGeneralEditor.resx">
+      <DependentUpon>BCHMaterialGeneralEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\Material\BCHMaterialBlendingEditor.resx">
+      <DependentUpon>BCHMaterialBlendingEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\Material\BCHMaterialColorEditor.resx">
+      <DependentUpon>BCHMaterialColorEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\Material\BCHMaterialEditor.resx">
+      <DependentUpon>BCHMaterialEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\Material\BCHMaterialFragmentEditor.resx">
+      <DependentUpon>BCHMaterialFragmentEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\Material\BCHMaterialShaderParamEditor.resx">
+      <DependentUpon>BCHMaterialShaderParamEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\Material\BCHTextureMapEditor.resx">
+      <DependentUpon>BCHTextureMapEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\MetaData\UserDataEditor.resx">
+      <DependentUpon>UserDataEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BCH\MetaData\UserDataParser.resx">
+      <DependentUpon>UserDataParser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\Editor\PaneAnimationController.resx">
       <DependentUpon>PaneAnimationController.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\RenderState\RenderStateEditor.resx">
+      <DependentUpon>RenderStateEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\Materials\ShaderParams\TexSrtPanel2D.resx">
+      <DependentUpon>TexSrtPanel2D.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\GFBMDL\GFLXMaterialEditor.resx">
       <DependentUpon>GFLXMaterialEditor.cs</DependentUpon>
@@ -1491,12 +1609,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\ViewportEditor.resx">
       <DependentUpon>ViewportEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\BCRES\BcresEditor.resx">
-      <DependentUpon>BcresEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\BCRES\Material\SamplerEditorSimple.resx">
-      <DependentUpon>SamplerEditorSimple.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFFNT\BffntEditor.resx">
       <DependentUpon>BffntEditor.cs</DependentUpon>

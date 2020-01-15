@@ -368,7 +368,7 @@ namespace FirstPlugin.CtrLibrary.Forms
             if (index == -1 || !(comboBox.SelectedItem is PICATextureCombinerSource))
                 return;
 
-            switch ((PICATextureCombinerSource)comboBox.SelectedItem)
+     /*       switch ((PICATextureCombinerSource)comboBox.SelectedItem)
             {
                 case PICATextureCombinerSource.Texture0:
                     if (CombinerImages.ContainsKey("Texture0"))
@@ -382,7 +382,7 @@ namespace FirstPlugin.CtrLibrary.Forms
                     if (CombinerImages.ContainsKey("Texture2"))
                         comboBox.Items[index].Image = CombinerImages["Texture2"];
                     break;
-            }
+            }*/
         }
 
         private void layerCB_SelectedIndexChanged(object sender, EventArgs e) {

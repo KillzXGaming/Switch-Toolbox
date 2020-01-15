@@ -793,11 +793,10 @@ namespace Toolbox.Library.Collada
                             Writer.WriteStartElement("instance_material");
                             Writer.WriteAttributeString("symbol", mat);
                             Writer.WriteAttributeString("target", "#" + mat);
-                            Writer.WriteEndElement();
-
                             WriteChannel(0);
                             WriteChannel(1);
                             WriteChannel(2);
+                            Writer.WriteEndElement();
                         }
                         Writer.WriteEndElement();
                         Writer.WriteEndElement();

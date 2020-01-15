@@ -227,6 +227,7 @@
     <Compile Include="Compression\7ZIP\LZ\LzBinTree.cs" />
     <Compile Include="Compression\7ZIP\LZ\LzInWindow.cs" />
     <Compile Include="Compression\7ZIP\LZ\LzOutWindow.cs" />
+    <Compile Include="Compression\Formats\BPE.cs" />
     <Compile Include="Compression\Formats\Gzip.cs" />
     <Compile Include="Compression\Formats\lz4.cs" />
     <Compile Include="Compression\Formats\LZ4F.cs" />
@@ -283,10 +284,19 @@
     <Compile Include="Forms\Color\AlphaSelectorHorizontalPanel.Designer.cs">
       <DependentUpon>AlphaSelectorHorizontalPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Color\STColorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Color\STColorControl.Designer.cs">
+      <DependentUpon>STColorControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Color\VertexColorBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Forms\Color\VertexColorTopBottomBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\Custom\ComboBox\ImagedComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Forms\Custom\SideMenu\STVerticalNavigationMenu.cs">
@@ -958,6 +968,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Color\ColorSelector.resx">
       <DependentUpon>ColorSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Color\STColorControl.resx">
+      <DependentUpon>STColorControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Custom\ColorSlider.resx" />
     <EmbeddedResource Include="Forms\Custom\DropdownPanel\STCollapsePanelButton.resx">

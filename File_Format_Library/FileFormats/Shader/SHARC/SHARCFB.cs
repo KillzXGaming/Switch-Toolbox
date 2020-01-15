@@ -139,7 +139,6 @@ namespace FirstPlugin
 
                 Name = reader.ReadString((int)NameLength);
 
-
                 var pos = reader.Position;
                 uint BinarySectionSize = reader.ReadUInt32();
                 uint BinaryFileCount = reader.ReadUInt32();
@@ -167,6 +166,7 @@ namespace FirstPlugin
 
             }
         }
+
         public class ShaderProgram : TreeNodeCustom
         {
             public enum ShaderType
@@ -309,7 +309,20 @@ namespace FirstPlugin
             }
             reader.Seek(SectionPos + SectionSize, System.IO.SeekOrigin.Begin);
         }
+
+        public void Write(FileWriter writer, uint Version = 12)
+        {
+            long pos = writer.Position;
+            writer.Write(uint.MaxValue);
+            writer.Write(macros.Count);
+
+            for (int i = 0; i < macros.Count; i++)
+                macros[i].Write(writer, Version);
+
+            SharcCommon.WriteSectionSize(writer, pos);
+        }
     }
+
     public class VariationMacro
     {
         public string Name { get; set; }
@@ -334,6 +347,17 @@ namespace FirstPlugin
 
             reader.Seek(pos + SectionSize, System.IO.SeekOrigin.Begin);
         }
+
+        public void Write(FileWriter writer, uint Version)
+        {
+            var pos = writer.Position;
+            writer.Write(uint.MaxValue);
+            writer.Write(Name.Length);
+            writer.Write(Value.Length);
+            writer.WriteString(Name);
+            writer.WriteString(Value);
+            SharcCommon.WriteSectionSize(writer, pos);
+        }
     }
 
     public class VariationSymbolData
@@ -352,6 +376,17 @@ namespace FirstPlugin
                 symbols.Add(symbol);
             }
             reader.Seek(SectionPos + SectionSize, System.IO.SeekOrigin.Begin);
+        }
+
+        public void Write(FileWriter writer)
+        {
+            var pos = writer.Position;
+            writer.Write(uint.MaxValue);
+            writer.Write(symbols.Count);
+            for (int i = 0; i < symbols.Count; i++)
+                symbols[i].Write(writer);
+
+            SharcCommon.WriteSectionSize(writer, pos);
         }
     }
     public class VariationSymbol
@@ -379,6 +414,18 @@ namespace FirstPlugin
 
             reader.Seek(pos + SectionSize, System.IO.SeekOrigin.Begin);
         }
+
+        public void Write(FileWriter writer)
+        {
+            var pos = writer.Position;
+            writer.Write(Name.Length);
+            writer.Write(DefaultValue.Length);
+            writer.Write(SymbolName.Length);
+            writer.WriteString(Name);
+            writer.WriteString(DefaultValue);
+            writer.WriteString(SymbolName);
+            SharcCommon.WriteSectionSize(writer, pos);
+        }
     }
 
     public class ShaderSymbolData
@@ -401,6 +448,17 @@ namespace FirstPlugin
             }
 
             reader.Seek(SectionPos + SectionSize, System.IO.SeekOrigin.Begin);
+        }
+
+        public void Write(FileWriter writer, uint Version = 12)
+        {
+            var pos = writer.Position;
+            writer.Write(uint.MaxValue);
+            writer.Write(symbols.Count);
+            for (int i = 0; i < symbols.Count; i++)
+                symbols[i].Write(writer);
+
+            SharcCommon.WriteSectionSize(writer, pos);
         }
     }
 
@@ -514,6 +572,20 @@ namespace FirstPlugin
 
         
             reader.Seek(pos + SectionSize, System.IO.SeekOrigin.Begin);
+        }
+
+        public void Write(FileWriter writer)
+        {
+            var pos = writer.Position;
+            writer.Write(0);
+            writer.Write(Name.Length);
+            writer.Write(SymbolName.Length);
+            writer.Write(DefaultValue.Length);
+            writer.Write(0);
+            writer.WriteString(Name);
+            writer.Write(DefaultValue);
+            writer.WriteString(SymbolName);
+            SharcCommon.WriteSectionSize(writer, pos);
         }
 
         public class SharcNXValue

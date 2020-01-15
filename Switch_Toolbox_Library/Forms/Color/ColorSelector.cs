@@ -310,12 +310,12 @@ namespace Toolbox.Library.Forms
 
             if (!huePanel.Enabled)
             {
-                for (int i = 0; i < _mainBrush.SurroundColors.Length; i++)
-                    _mainBrush.SurroundColors[i] = _mainBrush.SurroundColors[i].Darken(190);
+                _boxColors[0] = _boxColors[4] = new HSVPixel(_hsv.H, 0, 50).ToRGBA();
+                _mainBrush.SurroundColors = _boxColors;
+                _mainBrush.CenterColor = new HSVPixel(_hsv.H, 0, 50).ToRGBA();
             }
 
             g.FillRectangle(_mainBrush, r);
-
 
             //Draw indicator
             int x = (int)(_hsv.V / 100.0f * colorSquare.Width);

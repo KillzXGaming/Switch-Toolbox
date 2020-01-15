@@ -970,6 +970,7 @@ namespace Toolbox.Library
                 {
                     var prevNode = (TreeNode)ArchiveFileInfo.FileFormat;
                     var parent = prevNode.Parent;
+                    if (parent == null) return;
 
                     var index = parent.Nodes.IndexOf(prevNode);
                     parent.Nodes.RemoveAt(index);

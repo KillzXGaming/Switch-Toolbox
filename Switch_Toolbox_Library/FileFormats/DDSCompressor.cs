@@ -554,6 +554,7 @@ namespace Toolbox.Library
 
             return Convert(data, width, height, DXGI_FORMAT.R8G8B8A8_UNORM, (DXGI_FORMAT)format);
         }
+
         public static unsafe byte[] Convert(Byte[] data, int width, int height, DXGI_FORMAT inputFormat, DXGI_FORMAT outputFormat)
         {
             long inputRowPitch;

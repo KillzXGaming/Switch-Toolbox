@@ -102,8 +102,7 @@ namespace Toolbox.Library
             if (GenericPluginLoader._Plugins == null)
                 GenericPluginLoader.LoadPlugin();
 
-            foreach (var plugin in GenericPluginLoader._Plugins)
-            {
+            foreach (var plugin in GenericPluginLoader._Plugins) {
                 LoadCompressionFormats(plugin.Value.Types, types);
             }
 

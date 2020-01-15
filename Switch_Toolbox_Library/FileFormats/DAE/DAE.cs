@@ -95,7 +95,8 @@ namespace Toolbox.Library
                     List<string> textureNames = new List<string>();
                     for (int i = 0; i < Textures?.Count; i++)
                     {
-                        textureNames.Add(Textures[i].Text);
+                        if (!textureNames.Contains(Textures[i].Text))
+                            textureNames.Add(Textures[i].Text);
 
                         if (settings.ExportTextures) {
 
@@ -176,7 +177,7 @@ namespace Toolbox.Library
 
                             //If no textures are saved, still keep images references
                             //So the user can still dump textures after
-                            if (Textures?.Count == 0)
+                            if (Textures?.Count == 0 && !textureNames.Contains(texMap.Name))
                                 textureNames.Add($"{texMap.Name}");
 
                             material.Textures.Add(texMap);
