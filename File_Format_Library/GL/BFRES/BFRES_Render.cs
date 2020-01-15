@@ -19,11 +19,8 @@ using SF = SFGraphics.GLObjects.Shaders;
 
 namespace FirstPlugin
 {
-    public class BFRESRender : AbstractGlDrawable, IMeshContainer
+    public class BFRESRender : BFRESRenderBase
     {
-        private bool Disposing = false;
-
-        public Matrix4 ModelTransform = Matrix4.Identity;
         Vector3 position = new Vector3(0);
 
         public static Vector4 hoverColor = new Vector4(1);
@@ -34,179 +31,19 @@ namespace FirstPlugin
 
         public bool IsSelected() => Selected;
 
-        // gl buffer objects
-        int vbo_position;
-        int ibo_elements;
-
-        public List<STGenericObject> Meshes
-        {
-            get
-            {
-                List<STGenericObject> meshes = new List<STGenericObject>();
-                for (int m =0; m < models.Count; m++)
-                {
-                    for (int s = 0; s < models[m].shapes.Count; s++)
-                        meshes.Add(models[m].shapes[s]);
-                }
-                return meshes;
-            }
-        }
-
-        private List<FMDL> _models = new List<FMDL>();
-        public List<FMDL> models
-        {
-            get
-            {
-                return _models;
-            }
-        }
-
-        public void UpdateModelList()
-        {
-            _models.Clear();
-            foreach (var node in ResFileNode.Nodes)
-            {
-                if (node is BFRESGroupNode &&
-                    ((BFRESGroupNode)node).Type == BRESGroupType.Models)
-                {
-                    foreach (FMDL mdl in ((BFRESGroupNode)node).Nodes)
-                        _models.Add(mdl);
-                }
-            }
-        }
-
-        public BFRES ResFileNode;
-
         public BFRESRender()
         {
 
         }
-        private void GenerateBuffers()
-        {
-            GL.GenBuffers(1, out vbo_position);
-            GL.GenBuffers(1, out ibo_elements);
-
-            TransformBones();
-
-            UpdateVertexData();
-            UpdateTextureMaps();
-        }
-
-        public void Destroy()
-        {
-            bool buffersWereInitialized = ibo_elements != 0 && vbo_position != 0;
-
-            if (!buffersWereInitialized)
-                return;
-
-            GL.DeleteBuffer(vbo_position);
-            GL.DeleteBuffer(ibo_elements);
-
-            Disposing = true;
-        }
-
-        private void TransformBones()
-        {
-            for (int mdl = 0; mdl < models.Count; mdl++)
-            {
-                for (int b = 0; b < models[mdl].Skeleton.bones.Count; b++)
-                {
-                    models[mdl].Skeleton.bones[b].ModelMatrix = ModelTransform;
-                }
-            }
-        }
 
         #region Rendering
 
-
-    //    public ShaderProgram BotwShaderProgram;
-    //    public ShaderProgram normalsShaderProgram;
-    //    public ShaderProgram debugShaderProgram;
-     //   public ShaderProgram pbrShaderProgram;
-      //  public ShaderProgram defaultShaderProgram;
-     //   public ShaderProgram solidColorShaderProgram;
-
         public override void Prepare(GL_ControlModern control)
         {
-    /*        string pathFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES.frag";
-            string pathVert = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES.vert";
-
-
-            string pathBotwFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES_Botw.frag";
-
-            string pathPbrFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES_PBR.frag";
-
-            string pathBfresUtiltyFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES_utility.frag";
-            string pathBfresTurboShadow = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRESTurboShadow.frag";
-
-            string pathUtiltyFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Utility") + "\\Utility.frag";
-
-
-
-            string pathDebugFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\BFRES_Debug.frag";
-            string pathNormalsFrag = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\Normals.frag";
-            string pathNormalsVert = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\Normals.vert";
-            string pathNormalGeom = System.IO.Path.Combine(Runtime.ExecutableDir, "Shader", "Bfres") + "\\Normals.geom";
-
-            var defaultFrag = new FragmentShader(System.IO.File.ReadAllText(pathFrag));
-            var defaultVert = new VertexShader(System.IO.File.ReadAllText(pathVert));
-
-            var BotwtFrag = new FragmentShader(System.IO.File.ReadAllText(pathBotwFrag));
-
-            var shadowMapAGL = new FragmentShader(System.IO.File.ReadAllText(pathBfresTurboShadow));
-
-            var PbrFrag = new FragmentShader(System.IO.File.ReadAllText(pathPbrFrag));
-
-            var debugFrag = new FragmentShader(System.IO.File.ReadAllText(pathDebugFrag));
-            var normalsVert = new VertexShader(System.IO.File.ReadAllText(pathNormalsVert));
-            var normalsFrag = new FragmentShader(System.IO.File.ReadAllText(pathNormalsFrag));
-            var normalsGeom = new GeomertyShader(System.IO.File.ReadAllText(pathNormalGeom));
-
-            var bfresUtiltyFrag = new FragmentShader(System.IO.File.ReadAllText(pathBfresUtiltyFrag));
-            var utiltyFrag = new FragmentShader(System.IO.File.ReadAllText(pathUtiltyFrag));
-
-            var solidColorFrag = new FragmentShader(
-      @"#version 330
-				uniform vec4 color;
-				out vec4 fragColor;
-
-				void main(){
-					fragColor = color;
-				}");
-
-            var solidColorVert = new VertexShader(
-          @"#version 330
-                in vec3 vPosition;
-                in vec3 vNormal;
-                in vec3 vColor;
-
-				uniform mat4 mtxMdl;
-				uniform mat4 mtxCam;
-
-                out vec3 normal;
-                out vec3 color;
-                out vec3 position;
-
-				void main(){
-                    normal = vNormal;
-                    color = vColor;
-	                position = vPosition;
-
-                    gl_Position = mtxMdl * mtxCam * vec4(vPosition.xyz, 1.0);
-				}");
-
-            defaultShaderProgram = new ShaderProgram(new Shader[] { bfresUtiltyFrag, utiltyFrag, defaultFrag, defaultVert, utiltyFrag, shadowMapAGL });
-            BotwShaderProgram = new ShaderProgram(new Shader[] { bfresUtiltyFrag, utiltyFrag, BotwtFrag, defaultVert, utiltyFrag, shadowMapAGL });
-
-            normalsShaderProgram = new ShaderProgram(new Shader[] { normalsFrag, normalsVert, normalsGeom });
-            debugShaderProgram = new ShaderProgram(new Shader[] { bfresUtiltyFrag, utiltyFrag, debugFrag, defaultVert, utiltyFrag, shadowMapAGL });
-            pbrShaderProgram = new ShaderProgram(new Shader[] { bfresUtiltyFrag, utiltyFrag, PbrFrag, defaultVert, shadowMapAGL });
-            solidColorShaderProgram = new ShaderProgram(solidColorFrag, solidColorVert);*/
         }
 
         public override void Prepare(GL_ControlLegacy control)
         {
-
         }
 
         public override void Draw(GL_ControlLegacy control, Pass pass)
@@ -259,55 +96,9 @@ namespace FirstPlugin
             GL.Enable(EnableCap.Texture2D);
         }
 
-        public void CenterCamera(GL_ControlBase control)
-        {
-            if (!Runtime.FrameCamera)
-                return;
-
-            var spheres = new List<Vector4>();
-            for (int mdl = 0; mdl < models.Count; mdl++)
-            {
-                for (int shp = 0; shp < models[mdl].shapes.Count; shp++)
-                {
-                    var vertexPositions = models[mdl].shapes[shp].vertices.Select(x => x.pos).Distinct();
-                    spheres.Add(control.GenerateBoundingSphere(vertexPositions));
-                }
-            }
-
-            control.FrameSelect(spheres);
-        }
-
-        public static Vector4 GenerateBoundingSphere(IEnumerable<Vector4> boundingSpheres)
-        {
-            // The initial max/min should be the first point.
-            Vector3 min = boundingSpheres.FirstOrDefault().Xyz - new Vector3(boundingSpheres.FirstOrDefault().W);
-            Vector3 max = boundingSpheres.FirstOrDefault().Xyz + new Vector3(boundingSpheres.FirstOrDefault().W);
-
-            // Calculate the end points using the center and radius
-            foreach (var sphere in boundingSpheres)
-            {
-                min = Vector3.ComponentMin(min, sphere.Xyz - new Vector3(sphere.W));
-                max = Vector3.ComponentMax(max, sphere.Xyz + new Vector3(sphere.W));
-            }
-
-            return GetBoundingSphereFromSpheres(min, max);
-        }
-        private static Vector4 GetBoundingSphereFromSpheres(Vector3 min, Vector3 max)
-        {
-            Vector3 lengths = max - min;
-            float maxLength = Math.Max(lengths.X, Math.Max(lengths.Y, lengths.Z));
-            Vector3 center = (max + min) / 2.0f;
-            float radius = maxLength / 2.0f;
-            return new Vector4(center, radius);
-        }
-
         public override void Draw(GL_ControlModern control, Pass pass) {
             DrawBfres(control, pass);
         }
-
- /*       public override void Draw(GL_ControlModern control, Pass pass, EditorSceneBase editorScene) {
-            DrawBfres(control, pass);
-        }*/
 
         private void DrawBfres(GL_ControlModern control, Pass pass)
         {
@@ -443,26 +234,6 @@ namespace FirstPlugin
             }
 
             shader.DisableVertexAttributes();
-        }
-
-        public void DepthSortMeshes(Vector3 cameraPosition)
-        {
-            foreach (FMDL fmdl in models)
-            {
-                List<FSHP> unsortedMeshes = new List<FSHP>();
-
-                foreach (FSHP m in fmdl.shapes)
-                {
-                    m.sortingDistance = m.CalculateSortingDistance(cameraPosition);
-                    unsortedMeshes.Add(m);
-                }
-
-                fmdl.depthSortedMeshes = unsortedMeshes.OrderBy(o => (o.sortingDistance)).ToList();
-            }
-
-
-            // Order by the distance from the camera to the closest point on the bounding sphere. 
-            // Positive values are usually closer to camera. Negative values are usually farther away. 
         }
 
         private void SetRenderSettings(SF.Shader shader)
@@ -813,7 +584,7 @@ namespace FirstPlugin
         }
 
         static bool Loaded = false;
-        public void UpdateVertexData()
+        public override void UpdateVertexData()
         {
             if (!Runtime.OpenTKInitialized)
                 return;
@@ -871,50 +642,6 @@ namespace FirstPlugin
             LibraryGUI.UpdateViewport();
 
             Loaded = true;
-        }
-        public void UpdateSingleMaterialTextureMaps(FMAT mat)
-        {
-            if (!Runtime.OpenTKInitialized)
-                return;
-
-            foreach (BNTX bntx in PluginRuntime.bntxContainers)
-            {
-                foreach (var t in mat.TextureMaps)
-                {
-                    if (bntx.Textures.ContainsKey(t.Name))
-                    {
-                        if (!bntx.Textures[t.Name].RenderableTex.GLInitialized)
-                            bntx.Textures[t.Name].LoadOpenGLTexture();
-                    }
-                }
-            }
-
-            LibraryGUI.UpdateViewport();
-        }
-        public void UpdateTextureMaps()
-        {
-            if (!Runtime.OpenTKInitialized)
-                return;
-
-            foreach (BNTX bntx in PluginRuntime.bntxContainers)
-            {
-                if (!bntx.AllGLInitialized)
-                {
-                    foreach (var tex in bntx.Textures)
-                    {
-                        if (tex.Value.RenderableTex != null && !tex.Value.RenderableTex.GLInitialized)
-                            tex.Value.LoadOpenGLTexture();
-                    }
-                }
-            }
-            foreach (BFRESGroupNode ftexCont in PluginRuntime.ftexContainers)
-            {
-                foreach (var tex in ftexCont.ResourceNodes)
-                {
-                    if (!((FTEX)tex.Value).RenderableTex.GLInitialized)
-                        ((FTEX)tex.Value).LoadOpenGLTexture();
-                }
-            }
         }
 
         private static void SetRenderPass(FMAT mat)
@@ -1299,107 +1026,6 @@ namespace FirstPlugin
 
             GL.DrawElements(PrimitiveType.Triangles, p.lodMeshes[p.DisplayLODIndex].displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
         }
-
-  /*      public override BoundingBox GetSelectionBox()
-        {
-            Vector3 Min = new Vector3(0);
-            Vector3 Max = new Vector3(0);
-
-            foreach (var model in models)
-            {
-                foreach (var shape in model.shapes)
-                {
-                    foreach (var vertex in shape.vertices)
-                    {
-                        Min.X = Math.Min(Min.X, vertex.pos.X);
-                        Min.Y = Math.Min(Min.Y, vertex.pos.Y);
-                        Min.Z = Math.Min(Min.Z, vertex.pos.Z);
-                        Max.X = Math.Max(Max.X, vertex.pos.X);
-                        Max.Y = Math.Max(Max.Y, vertex.pos.Y);
-                        Max.Z = Math.Max(Max.Z, vertex.pos.Z);
-                    }
-                }
-            }
-
-            return new BoundingBox()
-            {
-                minX = Min.X,
-                minY = Min.Y,
-                minZ = Min.Z,
-                maxX = Max.X,
-                maxY = Max.Y,
-                maxZ = Max.Z,
-            };
-        }
-
-
-        public override uint SelectAll(GL_ControlBase control)
-        {
-            Selected = true;
-            return REDRAW;
-        }
-
-        public override uint SelectDefault(GL_ControlBase control)
-        {
-            Selected = true;
-            return REDRAW;
-        }
-
-        public override uint Select(int partIndex, GL_ControlBase control)
-        {
-            Selected = true;
-            return REDRAW;
-        }
-
-        public override uint Deselect(int partIndex, GL_ControlBase control)
-        {
-            Selected = false;
-            return REDRAW;
-        }
-
-        public override LocalOrientation GetLocalOrientation(int partIndex)
-        {
-            return new LocalOrientation(position);
-        }
-
-        public override bool TryStartDragging(DragActionType actionType, int hoveredPart, out LocalOrientation localOrientation, out bool dragExclusively)
-        {
-            localOrientation = new LocalOrientation(position);
-            dragExclusively = false;
-            return Selected;
-        }
-
-        public override bool IsInRange(float range, float rangeSquared, Vector3 pos)
-        {
-            range = 20000; //Make the range large for now. Todo go back to this
-
-            BoundingBox box = GetSelectionBox();
-
-            if (pos.X < box.maxX + range && pos.X > box.minX - range &&
-              pos.Y < box.maxY + range && pos.Y > box.minY - range &&
-              pos.Z < box.maxZ + range && pos.Z > box.minZ - range)
-                return true;
-
-            return false;
-        }
-
-        public override uint DeselectAll(GL_ControlBase control)
-        {
-            Selected = false;
-            return REDRAW;
-        }
-
-        public override Vector3 Position
-        {
-            get
-            {
-                return position;
-            }
-            set
-            {
-                position = value;
-            }
-        }*/
 
         #endregion
     }

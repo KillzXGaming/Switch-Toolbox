@@ -16,6 +16,7 @@ namespace Toolbox.Library
         private int vertexShaderID;
         private int fragmentShaderID;
 
+        private Dictionary<string, int> uniformBlocks = new Dictionary<string, int>();
         private Dictionary<string, int> attributes = new Dictionary<string, int>();
         private Dictionary<string, int> uniforms = new Dictionary<string, int>();
         private int activeAttributeCount;
@@ -66,18 +67,32 @@ namespace Toolbox.Library
         {
             if (uniforms.ContainsKey(name))
                 GL.Uniform4(uniforms[name], value);
+            else
+                Console.WriteLine("Could not find vec4 " + name);
+        }
+
+        public void SetVec3(string name, Vector3 value)
+        {
+            if (uniforms.ContainsKey(name))
+                GL.Uniform3(uniforms[name], value);
+            else
+                Console.WriteLine("Could not find vec3 " + name);
         }
 
         public void SetVec2(string name, Vector2 value)
         {
             if (uniforms.ContainsKey(name))
                 GL.Uniform2(uniforms[name], value);
+            else
+                Console.WriteLine("Could not find vec2 " + name);
         }
 
         public void SetFloat(string name, float value)
         {
             if (uniforms.ContainsKey(name))
                 GL.Uniform1(uniforms[name], value);
+            else
+                Console.WriteLine("Could not find float " + name);
         }
 
         public void SetInt(string name, int value)
@@ -104,6 +119,50 @@ namespace Toolbox.Library
         {
             if (uniforms.ContainsKey(name))
                 GL.UniformMatrix4(uniforms[name], false, ref value);
+        }
+
+        public void LoadLayout(string name)
+        {
+            if (!uniformBlocks.ContainsKey(name)) {
+                //Get block indices
+                var uniformID = GL.GetUniformBlockIndex(program, name);
+
+                //Link them
+                GL.UniformBlockBinding(program, uniformID, 0);
+
+                int buffer;
+                GL.GenBuffers(1, out buffer);
+                uniformBlocks.Add(name, buffer);
+
+                var dataValues = new Vector4[3]
+                {
+                new Vector4(1, 0, 0, 0),
+                new Vector4(0, 1, 0, 0),
+                new Vector4(0, 0, 1, 0)
+                };
+
+                var totalSize = (Vector3.SizeInBytes + 4) * dataValues.Length; //Add 4 for alignment
+
+                GL.BindBuffer(BufferTarget.UniformBuffer, buffer);
+                GL.BufferData(BufferTarget.UniformBuffer,
+                    totalSize,
+                    IntPtr.Zero,
+                    BufferUsageHint.StaticDraw);
+                GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+
+                // define the range of the buffer that links to a uniform binding point
+                GL.BindBufferRange(BufferRangeTarget.UniformBuffer, 0, buffer,
+                    IntPtr.Zero, totalSize);
+
+                GL.BindBuffer(BufferTarget.UniformBuffer, buffer);
+                GL.BufferSubData<Vector4>(BufferTarget.UniformBuffer, IntPtr.Zero, (Vector3.SizeInBytes + 4) * dataValues.Length, dataValues); //Add 4 for alignment
+                GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+            }
+        }
+
+        public void GetAttribLocation()
+        {
+
         }
 
         public int this[string name]

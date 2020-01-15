@@ -345,7 +345,6 @@ namespace FirstPlugin
             Formats.Add(typeof(BTI));
             Formats.Add(typeof(TXE));
             Formats.Add(typeof(SARC));
-            Formats.Add(typeof(BCRES));
             Formats.Add(typeof(BNTX));
             Formats.Add(typeof(BEA));
             Formats.Add(typeof(BYAML));
@@ -392,7 +391,7 @@ namespace FirstPlugin
             Formats.Add(typeof(IGA_PAK));
             Formats.Add(typeof(MKAGPDX_Model));
             Formats.Add(typeof(GFBMDL));
-          //  Formats.Add(typeof(GFBANM));
+         //  Formats.Add(typeof(GFBANM));
             Formats.Add(typeof(GFBANMCFG));
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(SDF));
@@ -445,6 +444,7 @@ namespace FirstPlugin
             Formats.Add(typeof(NLG_NLOC));
             Formats.Add(typeof(PCK));
             Formats.Add(typeof(NLG.StrikersSAnim));
+            Formats.Add(typeof(CtrLibrary.BCH));
 
 
 

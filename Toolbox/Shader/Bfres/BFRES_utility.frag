@@ -28,8 +28,9 @@ vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap
     float specBrdf = max(dot(I, normal), 0);
     float exponent = 8;
 
-	if (SpecColor == vec3(0)) //Color shouldn't be black unless it's not set
-	    SpecColor = vec3(1);
+	vec3 specularColor = SpecColor;
+	if (specularColor == vec3(0)) //Color shouldn't be black unless it's not set
+	    specularColor = vec3(1);
 
     if (HasSpecularMap == 0)
 	{
@@ -51,7 +52,7 @@ vec3 SpecularPass(vec3 I, vec3 normal, int HasSpecularMap, sampler2D SpecularMap
 	result *= SpecColor.rgb;
 
     float intensity = 0.3;
-    return result * intensity;
+    return result * vec3(intensity);
 }
 
 vec3 EmissionPass(sampler2D EmissionMap, float emission_intensity, VertexAttributes vert, float texCoordIndex, vec3 emission_color)

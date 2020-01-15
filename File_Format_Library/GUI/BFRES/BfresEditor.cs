@@ -136,7 +136,7 @@ namespace FirstPlugin.Forms
             return null;
         }
 
-        public void FrameCamera(BFRESRender Renderer)
+        public void FrameCamera(BFRESRenderBase Renderer)
         {
             if (!Runtime.UseOpenGL || !DisplayViewport)
                 return;

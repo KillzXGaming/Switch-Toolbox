@@ -396,7 +396,7 @@
     <Compile Include="FileFormats\Texture\BTI.cs" />
     <Compile Include="FileFormats\Texture\WTB.cs" />
     <Compile Include="GL\BCH_Render.cs" />
-    <Compile Include="GL\BFRES_Render.cs" />
+    <Compile Include="GL\BFRES\BFRESRenderBase.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\CMB_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
@@ -406,6 +406,8 @@
     <Compile Include="GL\Custom2D\KCLRendering2D.cs" />
     <Compile Include="GL\LM3_Renderer.cs" />
     <Compile Include="GL\PunchOutWii_Renderer.cs" />
+    <Compile Include="GL\BFRES\RedPro\RedPro_Renderer.cs" />
+    <Compile Include="GL\BFRES\RedPro\ShaderProgram.cs" />
     <Compile Include="GL\Strikers_Renderer.cs" />
     <Compile Include="GUI\BCH\BCHMeshEditor.cs">
       <SubType>UserControl</SubType>
@@ -1392,6 +1394,7 @@
     <Compile Include="FileFormats\Texture\XTX.cs" />
     <Compile Include="FileFormats\Rom\XCI.cs" />
     <Compile Include="GetSwitchKeys.cs" />
+    <Compile Include="GL\BFRES\BFRES_Render.cs" />
     <Compile Include="GUI\Advanced Editor\TextureViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>

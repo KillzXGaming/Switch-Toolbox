@@ -758,7 +758,8 @@ namespace FirstPlugin
             return editor;
         }
 
-        public BFRESRender BFRESRender;
+
+        public BFRESRenderBase BFRESRender;
         public void Load(System.IO.Stream stream)
         {
             CanSave = true;
@@ -781,7 +782,6 @@ namespace FirstPlugin
 
        
             BFRESRender = new BFRESRender();
-            DrawableContainer.Drawables.Add(BFRESRender);
             DrawableContainer.Name = FileName;
 
             BFRESRender.ModelTransform = MarioCostumeEditor.SetTransform(FileName);
@@ -795,6 +795,20 @@ namespace FirstPlugin
             {
                 LoadFile(new Syroot.NintenTools.NSW.Bfres.ResFile(stream));
             }
+
+            if (resFileU != null) {
+                if (resFileU.VersioFull == "3,0,0,1")
+                {
+                    //Todo check for valid sharc files to parse as programs via materials to map
+
+                 //   Console.WriteLine("RedPro_Renderer!");
+                  /*  BFRESRender = new RedPro_Renderer();
+                    BFRESRender.ModelTransform = Matrix4.Identity;
+                    BFRESRender.ResFileNode = this;*/
+                }
+            }
+
+            DrawableContainer.Drawables.Add(BFRESRender);
 
             var Models = GetModels();
             if (Models != null)

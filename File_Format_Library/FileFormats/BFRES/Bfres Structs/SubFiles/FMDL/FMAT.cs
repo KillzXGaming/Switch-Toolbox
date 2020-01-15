@@ -203,7 +203,7 @@ namespace Bfres.Structs
            ((BFRES)Parent.Parent.Parent.Parent).BFRESRender.UpdateSingleMaterialTextureMaps(this);
         }
 
-        public BFRESRender GetRenderer()
+        public BFRESRenderBase GetRenderer()
         {
            return ((BFRES)Parent.Parent.Parent.Parent).BFRESRender;
         }

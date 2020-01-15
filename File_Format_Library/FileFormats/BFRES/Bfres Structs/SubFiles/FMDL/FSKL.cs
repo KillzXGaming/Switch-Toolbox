@@ -186,10 +186,11 @@ namespace Bfres.Structs
             public override string ImportFilter => FileFilters.GetFilter(typeof(BfresBone));
             public override string ReplaceFilter => FileFilters.GetFilter(typeof(FSKL));
 
-            public BFRESRender GetRenderer()
+            public BFRESRenderBase GetRenderer()
             {
                return ((FMDL)Parent.Parent).GetRenderer();
             }
+
             public fsklNode()
             {
                 Text = "Skeleton";
