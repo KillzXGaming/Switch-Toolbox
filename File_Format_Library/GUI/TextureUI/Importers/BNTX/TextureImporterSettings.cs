@@ -155,9 +155,7 @@ namespace FirstPlugin
             {
                 throw new Exception("Failed to load " + Format);
             }
-
         }
-
 
         public List<byte[]> GenerateMipList(STCompressionMode CompressionMode, bool multiThread, bool bc4Alpha, int SurfaceLevel = 0)
         {

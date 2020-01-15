@@ -70,6 +70,7 @@
             this.whiteColorPB.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("whiteColorPB.BackgroundImage")));
             this.whiteColorPB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.whiteColorPB.Color = System.Drawing.Color.Empty;
+            this.whiteColorPB.DisplayAlphaSolid = false;
             this.whiteColorPB.Location = new System.Drawing.Point(16, 36);
             this.whiteColorPB.Name = "whiteColorPB";
             this.whiteColorPB.Size = new System.Drawing.Size(90, 45);
@@ -82,6 +83,7 @@
             this.blackColorBP.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("blackColorBP.BackgroundImage")));
             this.blackColorBP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.blackColorBP.Color = System.Drawing.Color.Empty;
+            this.blackColorBP.DisplayAlphaSolid = false;
             this.blackColorBP.Location = new System.Drawing.Point(16, 87);
             this.blackColorBP.Name = "blackColorBP";
             this.blackColorBP.Size = new System.Drawing.Size(90, 45);

@@ -836,6 +836,7 @@ namespace Bfres.Structs
 
         public static int Size = 4 * (3 + 3 + 3 + 3 + 2 + 4 + 4 + 4 + 2 + 2 + 3 + 3);
     }
+
     public class FSHPFolder : TreeNodeCustom
     {
         public FSHPFolder()

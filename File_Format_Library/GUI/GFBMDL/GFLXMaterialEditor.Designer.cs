@@ -43,10 +43,19 @@
             this.stPanel4 = new Toolbox.Library.Forms.STPanel();
             this.stTabControl2 = new Toolbox.Library.Forms.STTabControl();
             this.ParamsTabPage = new System.Windows.Forms.TabPage();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.wrapModeWCB = new Toolbox.Library.Forms.STComboBox();
+            this.wrapModeVCB = new Toolbox.Library.Forms.STComboBox();
+            this.wrapModeUCB = new Toolbox.Library.Forms.STComboBox();
             this.param6CB = new BarSlider.BarSlider();
             this.param5CB = new BarSlider.BarSlider();
             this.stTextBox2 = new Toolbox.Library.Forms.STTextBox();
             this.stTextBox1 = new Toolbox.Library.Forms.STTextBox();
+            this.param4CB = new BarSlider.BarSlider();
+            this.param2CB = new BarSlider.BarSlider();
+            this.param3CB = new BarSlider.BarSlider();
             this.param1CB = new BarSlider.BarSlider();
             this.TransformTabPage = new System.Windows.Forms.TabPage();
             this.stPanel6 = new Toolbox.Library.Forms.STPanel();
@@ -59,15 +68,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.stPanel7 = new Toolbox.Library.Forms.STPanel();
-            this.param4CB = new BarSlider.BarSlider();
-            this.param3CB = new BarSlider.BarSlider();
-            this.param2CB = new BarSlider.BarSlider();
-            this.wrapModeUCB = new Toolbox.Library.Forms.STComboBox();
-            this.wrapModeVCB = new Toolbox.Library.Forms.STComboBox();
-            this.wrapModeWCB = new Toolbox.Library.Forms.STComboBox();
-            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
-            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
-            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.stTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.stPanel1.SuspendLayout();
@@ -277,6 +277,69 @@
             this.ParamsTabPage.Text = "Params";
             this.ParamsTabPage.UseVisualStyleBackColor = true;
             // 
+            // stLabel3
+            // 
+            this.stLabel3.AutoSize = true;
+            this.stLabel3.Location = new System.Drawing.Point(6, 115);
+            this.stLabel3.Name = "stLabel3";
+            this.stLabel3.Size = new System.Drawing.Size(47, 13);
+            this.stLabel3.TabIndex = 22;
+            this.stLabel3.Text = "Wrap W";
+            // 
+            // stLabel2
+            // 
+            this.stLabel2.AutoSize = true;
+            this.stLabel2.Location = new System.Drawing.Point(6, 88);
+            this.stLabel2.Name = "stLabel2";
+            this.stLabel2.Size = new System.Drawing.Size(43, 13);
+            this.stLabel2.TabIndex = 21;
+            this.stLabel2.Text = "Wrap V";
+            // 
+            // stLabel1
+            // 
+            this.stLabel1.AutoSize = true;
+            this.stLabel1.Location = new System.Drawing.Point(6, 61);
+            this.stLabel1.Name = "stLabel1";
+            this.stLabel1.Size = new System.Drawing.Size(44, 13);
+            this.stLabel1.TabIndex = 20;
+            this.stLabel1.Text = "Wrap U";
+            // 
+            // wrapModeWCB
+            // 
+            this.wrapModeWCB.BorderColor = System.Drawing.Color.Empty;
+            this.wrapModeWCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.wrapModeWCB.ButtonColor = System.Drawing.Color.Empty;
+            this.wrapModeWCB.FormattingEnabled = true;
+            this.wrapModeWCB.IsReadOnly = false;
+            this.wrapModeWCB.Location = new System.Drawing.Point(61, 112);
+            this.wrapModeWCB.Name = "wrapModeWCB";
+            this.wrapModeWCB.Size = new System.Drawing.Size(94, 21);
+            this.wrapModeWCB.TabIndex = 19;
+            // 
+            // wrapModeVCB
+            // 
+            this.wrapModeVCB.BorderColor = System.Drawing.Color.Empty;
+            this.wrapModeVCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.wrapModeVCB.ButtonColor = System.Drawing.Color.Empty;
+            this.wrapModeVCB.FormattingEnabled = true;
+            this.wrapModeVCB.IsReadOnly = false;
+            this.wrapModeVCB.Location = new System.Drawing.Point(61, 85);
+            this.wrapModeVCB.Name = "wrapModeVCB";
+            this.wrapModeVCB.Size = new System.Drawing.Size(94, 21);
+            this.wrapModeVCB.TabIndex = 18;
+            // 
+            // wrapModeUCB
+            // 
+            this.wrapModeUCB.BorderColor = System.Drawing.Color.Empty;
+            this.wrapModeUCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.wrapModeUCB.ButtonColor = System.Drawing.Color.Empty;
+            this.wrapModeUCB.FormattingEnabled = true;
+            this.wrapModeUCB.IsReadOnly = false;
+            this.wrapModeUCB.Location = new System.Drawing.Point(61, 58);
+            this.wrapModeUCB.Name = "wrapModeUCB";
+            this.wrapModeUCB.Size = new System.Drawing.Size(94, 21);
+            this.wrapModeUCB.TabIndex = 17;
+            // 
             // param6CB
             // 
             this.param6CB.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
@@ -378,6 +441,135 @@
             this.stTextBox1.Name = "stTextBox1";
             this.stTextBox1.Size = new System.Drawing.Size(149, 20);
             this.stTextBox1.TabIndex = 13;
+            // 
+            // param4CB
+            // 
+            this.param4CB.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.param4CB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.param4CB.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.param4CB.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.param4CB.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.param4CB.BarPenColorTop = System.Drawing.Color.Empty;
+            this.param4CB.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.param4CB.DataType = null;
+            this.param4CB.DrawSemitransparentThumb = false;
+            this.param4CB.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(121)))), ((int)(((byte)(180)))));
+            this.param4CB.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.param4CB.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.param4CB.ElapsedPenColorTop = System.Drawing.Color.Empty;
+            this.param4CB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.param4CB.IncrementAmount = 0.01F;
+            this.param4CB.InputName = "Param4";
+            this.param4CB.LargeChange = 5F;
+            this.param4CB.Location = new System.Drawing.Point(6, 256);
+            this.param4CB.Maximum = 9999999F;
+            this.param4CB.Minimum = -9999999F;
+            this.param4CB.Name = "param4CB";
+            this.param4CB.Precision = 0.01F;
+            this.param4CB.ScaleDivisions = 1;
+            this.param4CB.ScaleSubDivisions = 2;
+            this.param4CB.ShowDivisionsText = false;
+            this.param4CB.ShowSmallScale = false;
+            this.param4CB.Size = new System.Drawing.Size(149, 25);
+            this.param4CB.SmallChange = 1F;
+            this.param4CB.TabIndex = 12;
+            this.param4CB.Text = "barSlider3";
+            this.param4CB.ThumbInnerColor = System.Drawing.Color.Empty;
+            this.param4CB.ThumbPenColor = System.Drawing.Color.Empty;
+            this.param4CB.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
+            this.param4CB.ThumbSize = new System.Drawing.Size(1, 1);
+            this.param4CB.TickAdd = 0F;
+            this.param4CB.TickColor = System.Drawing.Color.White;
+            this.param4CB.TickDivide = 0F;
+            this.param4CB.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.param4CB.UseInterlapsedBar = true;
+            this.param4CB.Value = -9999999F;
+            // 
+            // param2CB
+            // 
+            this.param2CB.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.param2CB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.param2CB.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.param2CB.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.param2CB.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.param2CB.BarPenColorTop = System.Drawing.Color.Empty;
+            this.param2CB.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.param2CB.DataType = null;
+            this.param2CB.DrawSemitransparentThumb = false;
+            this.param2CB.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(121)))), ((int)(((byte)(180)))));
+            this.param2CB.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.param2CB.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.param2CB.ElapsedPenColorTop = System.Drawing.Color.Empty;
+            this.param2CB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.param2CB.IncrementAmount = 0.01F;
+            this.param2CB.InputName = "Param2";
+            this.param2CB.LargeChange = 5F;
+            this.param2CB.Location = new System.Drawing.Point(6, 194);
+            this.param2CB.Maximum = 9999999F;
+            this.param2CB.Minimum = -9999999F;
+            this.param2CB.Name = "param2CB";
+            this.param2CB.Precision = 0.01F;
+            this.param2CB.ScaleDivisions = 1;
+            this.param2CB.ScaleSubDivisions = 2;
+            this.param2CB.ShowDivisionsText = false;
+            this.param2CB.ShowSmallScale = false;
+            this.param2CB.Size = new System.Drawing.Size(149, 25);
+            this.param2CB.SmallChange = 1F;
+            this.param2CB.TabIndex = 10;
+            this.param2CB.Text = "barSlider2";
+            this.param2CB.ThumbInnerColor = System.Drawing.Color.Empty;
+            this.param2CB.ThumbPenColor = System.Drawing.Color.Empty;
+            this.param2CB.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
+            this.param2CB.ThumbSize = new System.Drawing.Size(1, 1);
+            this.param2CB.TickAdd = 0F;
+            this.param2CB.TickColor = System.Drawing.Color.White;
+            this.param2CB.TickDivide = 0F;
+            this.param2CB.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.param2CB.UseInterlapsedBar = true;
+            this.param2CB.Value = -9999999F;
+            // 
+            // param3CB
+            // 
+            this.param3CB.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.param3CB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.param3CB.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.param3CB.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.param3CB.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.param3CB.BarPenColorTop = System.Drawing.Color.Empty;
+            this.param3CB.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.param3CB.DataType = null;
+            this.param3CB.DrawSemitransparentThumb = false;
+            this.param3CB.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(121)))), ((int)(((byte)(180)))));
+            this.param3CB.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.param3CB.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.param3CB.ElapsedPenColorTop = System.Drawing.Color.Empty;
+            this.param3CB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.param3CB.IncrementAmount = 0.01F;
+            this.param3CB.InputName = "Param3";
+            this.param3CB.LargeChange = 5F;
+            this.param3CB.Location = new System.Drawing.Point(6, 225);
+            this.param3CB.Maximum = 9999999F;
+            this.param3CB.Minimum = -9999999F;
+            this.param3CB.Name = "param3CB";
+            this.param3CB.Precision = 0.01F;
+            this.param3CB.ScaleDivisions = 1;
+            this.param3CB.ScaleSubDivisions = 2;
+            this.param3CB.ShowDivisionsText = false;
+            this.param3CB.ShowSmallScale = false;
+            this.param3CB.Size = new System.Drawing.Size(149, 25);
+            this.param3CB.SmallChange = 1F;
+            this.param3CB.TabIndex = 11;
+            this.param3CB.Text = "barSlider4";
+            this.param3CB.ThumbInnerColor = System.Drawing.Color.Empty;
+            this.param3CB.ThumbPenColor = System.Drawing.Color.Empty;
+            this.param3CB.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
+            this.param3CB.ThumbSize = new System.Drawing.Size(1, 1);
+            this.param3CB.TickAdd = 0F;
+            this.param3CB.TickColor = System.Drawing.Color.White;
+            this.param3CB.TickDivide = 0F;
+            this.param3CB.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.param3CB.UseInterlapsedBar = true;
+            this.param3CB.Value = -9999999F;
             // 
             // param1CB
             // 
@@ -663,198 +855,6 @@
             this.stPanel7.Name = "stPanel7";
             this.stPanel7.Size = new System.Drawing.Size(561, 734);
             this.stPanel7.TabIndex = 0;
-            // 
-            // param4CB
-            // 
-            this.param4CB.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.param4CB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.param4CB.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.param4CB.BarPenColorBottom = System.Drawing.Color.Empty;
-            this.param4CB.BarPenColorMiddle = System.Drawing.Color.Empty;
-            this.param4CB.BarPenColorTop = System.Drawing.Color.Empty;
-            this.param4CB.BorderRoundRectSize = new System.Drawing.Size(32, 32);
-            this.param4CB.DataType = null;
-            this.param4CB.DrawSemitransparentThumb = false;
-            this.param4CB.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(121)))), ((int)(((byte)(180)))));
-            this.param4CB.ElapsedPenColorBottom = System.Drawing.Color.Empty;
-            this.param4CB.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
-            this.param4CB.ElapsedPenColorTop = System.Drawing.Color.Empty;
-            this.param4CB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.param4CB.IncrementAmount = 0.01F;
-            this.param4CB.InputName = "Param4";
-            this.param4CB.LargeChange = 5F;
-            this.param4CB.Location = new System.Drawing.Point(6, 256);
-            this.param4CB.Maximum = 9999999F;
-            this.param4CB.Minimum = -9999999F;
-            this.param4CB.Name = "param4CB";
-            this.param4CB.Precision = 0.01F;
-            this.param4CB.ScaleDivisions = 1;
-            this.param4CB.ScaleSubDivisions = 2;
-            this.param4CB.ShowDivisionsText = false;
-            this.param4CB.ShowSmallScale = false;
-            this.param4CB.Size = new System.Drawing.Size(149, 25);
-            this.param4CB.SmallChange = 1F;
-            this.param4CB.TabIndex = 12;
-            this.param4CB.Text = "barSlider3";
-            this.param4CB.ThumbInnerColor = System.Drawing.Color.Empty;
-            this.param4CB.ThumbPenColor = System.Drawing.Color.Empty;
-            this.param4CB.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
-            this.param4CB.ThumbSize = new System.Drawing.Size(1, 1);
-            this.param4CB.TickAdd = 0F;
-            this.param4CB.TickColor = System.Drawing.Color.White;
-            this.param4CB.TickDivide = 0F;
-            this.param4CB.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.param4CB.UseInterlapsedBar = true;
-            this.param4CB.Value = -9999999F;
-            // 
-            // param3CB
-            // 
-            this.param3CB.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.param3CB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.param3CB.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.param3CB.BarPenColorBottom = System.Drawing.Color.Empty;
-            this.param3CB.BarPenColorMiddle = System.Drawing.Color.Empty;
-            this.param3CB.BarPenColorTop = System.Drawing.Color.Empty;
-            this.param3CB.BorderRoundRectSize = new System.Drawing.Size(32, 32);
-            this.param3CB.DataType = null;
-            this.param3CB.DrawSemitransparentThumb = false;
-            this.param3CB.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(121)))), ((int)(((byte)(180)))));
-            this.param3CB.ElapsedPenColorBottom = System.Drawing.Color.Empty;
-            this.param3CB.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
-            this.param3CB.ElapsedPenColorTop = System.Drawing.Color.Empty;
-            this.param3CB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.param3CB.IncrementAmount = 0.01F;
-            this.param3CB.InputName = "Param3";
-            this.param3CB.LargeChange = 5F;
-            this.param3CB.Location = new System.Drawing.Point(6, 225);
-            this.param3CB.Maximum = 9999999F;
-            this.param3CB.Minimum = -9999999F;
-            this.param3CB.Name = "param3CB";
-            this.param3CB.Precision = 0.01F;
-            this.param3CB.ScaleDivisions = 1;
-            this.param3CB.ScaleSubDivisions = 2;
-            this.param3CB.ShowDivisionsText = false;
-            this.param3CB.ShowSmallScale = false;
-            this.param3CB.Size = new System.Drawing.Size(149, 25);
-            this.param3CB.SmallChange = 1F;
-            this.param3CB.TabIndex = 11;
-            this.param3CB.Text = "barSlider4";
-            this.param3CB.ThumbInnerColor = System.Drawing.Color.Empty;
-            this.param3CB.ThumbPenColor = System.Drawing.Color.Empty;
-            this.param3CB.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
-            this.param3CB.ThumbSize = new System.Drawing.Size(1, 1);
-            this.param3CB.TickAdd = 0F;
-            this.param3CB.TickColor = System.Drawing.Color.White;
-            this.param3CB.TickDivide = 0F;
-            this.param3CB.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.param3CB.UseInterlapsedBar = true;
-            this.param3CB.Value = -9999999F;
-            // 
-            // param2CB
-            // 
-            this.param2CB.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.param2CB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.param2CB.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.param2CB.BarPenColorBottom = System.Drawing.Color.Empty;
-            this.param2CB.BarPenColorMiddle = System.Drawing.Color.Empty;
-            this.param2CB.BarPenColorTop = System.Drawing.Color.Empty;
-            this.param2CB.BorderRoundRectSize = new System.Drawing.Size(32, 32);
-            this.param2CB.DataType = null;
-            this.param2CB.DrawSemitransparentThumb = false;
-            this.param2CB.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(121)))), ((int)(((byte)(180)))));
-            this.param2CB.ElapsedPenColorBottom = System.Drawing.Color.Empty;
-            this.param2CB.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
-            this.param2CB.ElapsedPenColorTop = System.Drawing.Color.Empty;
-            this.param2CB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.param2CB.IncrementAmount = 0.01F;
-            this.param2CB.InputName = "Param2";
-            this.param2CB.LargeChange = 5F;
-            this.param2CB.Location = new System.Drawing.Point(6, 194);
-            this.param2CB.Maximum = 9999999F;
-            this.param2CB.Minimum = -9999999F;
-            this.param2CB.Name = "param2CB";
-            this.param2CB.Precision = 0.01F;
-            this.param2CB.ScaleDivisions = 1;
-            this.param2CB.ScaleSubDivisions = 2;
-            this.param2CB.ShowDivisionsText = false;
-            this.param2CB.ShowSmallScale = false;
-            this.param2CB.Size = new System.Drawing.Size(149, 25);
-            this.param2CB.SmallChange = 1F;
-            this.param2CB.TabIndex = 10;
-            this.param2CB.Text = "barSlider2";
-            this.param2CB.ThumbInnerColor = System.Drawing.Color.Empty;
-            this.param2CB.ThumbPenColor = System.Drawing.Color.Empty;
-            this.param2CB.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
-            this.param2CB.ThumbSize = new System.Drawing.Size(1, 1);
-            this.param2CB.TickAdd = 0F;
-            this.param2CB.TickColor = System.Drawing.Color.White;
-            this.param2CB.TickDivide = 0F;
-            this.param2CB.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.param2CB.UseInterlapsedBar = true;
-            this.param2CB.Value = -9999999F;
-            // 
-            // wrapModeUCB
-            // 
-            this.wrapModeUCB.BorderColor = System.Drawing.Color.Empty;
-            this.wrapModeUCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.wrapModeUCB.ButtonColor = System.Drawing.Color.Empty;
-            this.wrapModeUCB.FormattingEnabled = true;
-            this.wrapModeUCB.IsReadOnly = false;
-            this.wrapModeUCB.Location = new System.Drawing.Point(61, 58);
-            this.wrapModeUCB.Name = "wrapModeUCB";
-            this.wrapModeUCB.Size = new System.Drawing.Size(94, 21);
-            this.wrapModeUCB.TabIndex = 17;
-            // 
-            // wrapModeVCB
-            // 
-            this.wrapModeVCB.BorderColor = System.Drawing.Color.Empty;
-            this.wrapModeVCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.wrapModeVCB.ButtonColor = System.Drawing.Color.Empty;
-            this.wrapModeVCB.FormattingEnabled = true;
-            this.wrapModeVCB.IsReadOnly = false;
-            this.wrapModeVCB.Location = new System.Drawing.Point(61, 85);
-            this.wrapModeVCB.Name = "wrapModeVCB";
-            this.wrapModeVCB.Size = new System.Drawing.Size(94, 21);
-            this.wrapModeVCB.TabIndex = 18;
-            // 
-            // wrapModeWCB
-            // 
-            this.wrapModeWCB.BorderColor = System.Drawing.Color.Empty;
-            this.wrapModeWCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.wrapModeWCB.ButtonColor = System.Drawing.Color.Empty;
-            this.wrapModeWCB.FormattingEnabled = true;
-            this.wrapModeWCB.IsReadOnly = false;
-            this.wrapModeWCB.Location = new System.Drawing.Point(61, 112);
-            this.wrapModeWCB.Name = "wrapModeWCB";
-            this.wrapModeWCB.Size = new System.Drawing.Size(94, 21);
-            this.wrapModeWCB.TabIndex = 19;
-            // 
-            // stLabel1
-            // 
-            this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(6, 61);
-            this.stLabel1.Name = "stLabel1";
-            this.stLabel1.Size = new System.Drawing.Size(44, 13);
-            this.stLabel1.TabIndex = 20;
-            this.stLabel1.Text = "Wrap U";
-            // 
-            // stLabel2
-            // 
-            this.stLabel2.AutoSize = true;
-            this.stLabel2.Location = new System.Drawing.Point(6, 88);
-            this.stLabel2.Name = "stLabel2";
-            this.stLabel2.Size = new System.Drawing.Size(43, 13);
-            this.stLabel2.TabIndex = 21;
-            this.stLabel2.Text = "Wrap V";
-            // 
-            // stLabel3
-            // 
-            this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(6, 115);
-            this.stLabel3.Name = "stLabel3";
-            this.stLabel3.Size = new System.Drawing.Size(47, 13);
-            this.stLabel3.TabIndex = 22;
-            this.stLabel3.Text = "Wrap W";
             // 
             // GFLXMaterialEditor
             // 

@@ -32,16 +32,23 @@
             this.stToolStrip1 = new Toolbox.Library.Forms.STToolStrip();
             this.toggleViewportToolStripBtn = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitter2 = new System.Windows.Forms.Splitter();
+            this.timelineTabPage = new Toolbox.Library.Forms.STPanel();
             this.stPanel3 = new Toolbox.Library.Forms.STPanel();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.timelineTabPage = new Toolbox.Library.Forms.STPanel();
-            this.splitter2 = new System.Windows.Forms.Splitter();
+            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stMenuStrip1 = new Toolbox.Library.Forms.STMenuStrip();
+            this.dockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stPanel4 = new Toolbox.Library.Forms.STPanel();
             this.stPanel2.SuspendLayout();
             this.stToolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.stPanel3.SuspendLayout();
+            this.stPanel1.SuspendLayout();
+            this.stMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // stPanel2
@@ -88,9 +95,30 @@
             this.splitContainer1.Panel1.Controls.Add(this.splitter2);
             this.splitContainer1.Panel1.Controls.Add(this.timelineTabPage);
             this.splitContainer1.Panel1.Controls.Add(this.stPanel3);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.stPanel1);
             this.splitContainer1.Size = new System.Drawing.Size(712, 515);
             this.splitContainer1.SplitterDistance = 440;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // splitter2
+            // 
+            this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.splitter2.Location = new System.Drawing.Point(0, 377);
+            this.splitter2.Name = "splitter2";
+            this.splitter2.Size = new System.Drawing.Size(440, 3);
+            this.splitter2.TabIndex = 6;
+            this.splitter2.TabStop = false;
+            // 
+            // timelineTabPage
+            // 
+            this.timelineTabPage.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.timelineTabPage.Location = new System.Drawing.Point(0, 380);
+            this.timelineTabPage.Name = "timelineTabPage";
+            this.timelineTabPage.Size = new System.Drawing.Size(440, 135);
+            this.timelineTabPage.TabIndex = 5;
             // 
             // stPanel3
             // 
@@ -110,22 +138,42 @@
             this.splitter1.TabIndex = 4;
             this.splitter1.TabStop = false;
             // 
-            // timelineTabPage
+            // stPanel1
             // 
-            this.timelineTabPage.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.timelineTabPage.Location = new System.Drawing.Point(0, 380);
-            this.timelineTabPage.Name = "timelineTabPage";
-            this.timelineTabPage.Size = new System.Drawing.Size(440, 135);
-            this.timelineTabPage.TabIndex = 5;
+            this.stPanel1.Controls.Add(this.stPanel4);
+            this.stPanel1.Controls.Add(this.stMenuStrip1);
+            this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel1.Location = new System.Drawing.Point(0, 0);
+            this.stPanel1.Name = "stPanel1";
+            this.stPanel1.Size = new System.Drawing.Size(268, 515);
+            this.stPanel1.TabIndex = 0;
             // 
-            // splitter2
+            // stMenuStrip1
             // 
-            this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter2.Location = new System.Drawing.Point(0, 377);
-            this.splitter2.Name = "splitter2";
-            this.splitter2.Size = new System.Drawing.Size(440, 3);
-            this.splitter2.TabIndex = 6;
-            this.splitter2.TabStop = false;
+            this.stMenuStrip1.HighlightSelectedTab = false;
+            this.stMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.dockToolStripMenuItem});
+            this.stMenuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.stMenuStrip1.Name = "stMenuStrip1";
+            this.stMenuStrip1.Size = new System.Drawing.Size(268, 24);
+            this.stMenuStrip1.TabIndex = 0;
+            this.stMenuStrip1.Text = "stMenuStrip1";
+            // 
+            // dockToolStripMenuItem
+            // 
+            this.dockToolStripMenuItem.Name = "dockToolStripMenuItem";
+            this.dockToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.dockToolStripMenuItem.Text = "Dock";
+            this.dockToolStripMenuItem.Click += new System.EventHandler(this.dockToolStripMenuItem_Click);
+            // 
+            // stPanel4
+            // 
+            this.stPanel4.AutoScroll = true;
+            this.stPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel4.Location = new System.Drawing.Point(0, 24);
+            this.stPanel4.Name = "stPanel4";
+            this.stPanel4.Size = new System.Drawing.Size(268, 491);
+            this.stPanel4.TabIndex = 1;
             // 
             // ViewportEditor
             // 
@@ -139,9 +187,14 @@
             this.stToolStrip1.ResumeLayout(false);
             this.stToolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.stPanel3.ResumeLayout(false);
+            this.stPanel1.ResumeLayout(false);
+            this.stPanel1.PerformLayout();
+            this.stMenuStrip1.ResumeLayout(false);
+            this.stMenuStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -155,5 +208,9 @@
         private System.Windows.Forms.ToolStripButton toggleViewportToolStripBtn;
         private System.Windows.Forms.Splitter splitter2;
         private Toolbox.Library.Forms.STPanel timelineTabPage;
+        private Toolbox.Library.Forms.STPanel stPanel1;
+        private Toolbox.Library.Forms.STPanel stPanel4;
+        private Toolbox.Library.Forms.STMenuStrip stMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem dockToolStripMenuItem;
     }
 }

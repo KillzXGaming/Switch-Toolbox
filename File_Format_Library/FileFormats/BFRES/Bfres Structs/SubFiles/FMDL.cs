@@ -54,10 +54,12 @@ namespace Bfres.Structs
             if (Parent != null)
                 GetRenderer().UpdateVertexData();
         }
-        public BFRESRender GetRenderer()
+
+        public BFRESRenderBase GetRenderer()
         {
             return ((BFRES)Parent.Parent).BFRESRender;
         }
+
         public List<FMDL> GetModelList()
         {
             return GetRenderer().models;
@@ -660,12 +662,6 @@ namespace Bfres.Structs
                         Model mdl = new Model();
                         mdl.Import(FileName, resFileNX);
                         mdl.Name = Text;
-
-                        Console.WriteLine(mdl.ShapeCount);
-                        Console.WriteLine(mdl.MaterialCount);
-                        Console.WriteLine(mdl.VertexBufferCount);
-                        Console.WriteLine(mdl.Skeleton.Bones.Count);
-
                         BfresSwitch.ReadModel(this, mdl);
                     }
                     IsEdited = true;

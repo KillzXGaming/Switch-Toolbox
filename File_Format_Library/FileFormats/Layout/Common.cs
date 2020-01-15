@@ -910,20 +910,24 @@ namespace LayoutBXLYT
             long pos = reader.Position;
 
             DataType = reader.ReadUInt32();
-            uint numEntries = reader.ReadUInt32();
-            uint[] offsets = reader.ReadUInt32s((int)numEntries);
-
             Console.WriteLine($"USD1 Struct DataType " + DataType);
-
-            Data = new List<object>();
-            for (int i = 0; i < numEntries; i++)
+            if (DataType == 0)
             {
-                reader.SeekBegin(pos + offsets[i]);
-                switch (DataType)
+                uint numEntries = reader.ReadUInt32();
+                uint[] offsets = reader.ReadUInt32s((int)numEntries);
+
+                Data = new List<object>();
+                for (int i = 0; i < numEntries; i++)
                 {
-                    case 0:
-                        Data.Add(reader.ReadZeroTerminatedString());
-                        break;
+                    reader.SeekBegin(pos + offsets[i]);
+                    switch (DataType)
+                    {
+                        case 0:
+                            string str = reader.ReadZeroTerminatedString();
+                            Console.WriteLine($"USD1 str " + str);
+                            Data.Add(str);
+                            break;
+                    }
                 }
             }
         }
@@ -933,24 +937,23 @@ namespace LayoutBXLYT
             long pos = writer.Position;
 
             writer.Write(DataType);
-            writer.Write(Data.Count);
-
-            long _ofsPos = writer.Position;
-            //Fill empty spaces for offsets later
-            writer.Write(new uint[Data.Count]);
-
-            for (int i = 0; i < Data.Count; i++)
+            switch (DataType)
             {
-                writer.WriteUint32Offset(_ofsPos + (i * 4), pos);
-                switch (DataType)
-                {
-                    case 0:
-                        writer.WriteString((string)Data[i]);
-                        break;
-                }
+                case 0:
+                    writer.Write(Data.Count);
+                    long _ofsPos = writer.Position;
+                    //Fill empty spaces for offsets later
+                    writer.Write(new uint[Data.Count]);
 
-                if (i == Data.Count - 1)
-                    writer.Align(64);
+                    for (int i = 0; i < Data.Count; i++)
+                    {
+                        writer.WriteUint32Offset(_ofsPos + (i * 4), pos);
+                        writer.WriteString((string)Data[i]);
+
+                        if (i == Data.Count - 1)
+                            writer.Align(64);
+                    }
+                    break;
             }
         }
     }

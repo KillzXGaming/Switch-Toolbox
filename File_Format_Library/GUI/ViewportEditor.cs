@@ -121,12 +121,14 @@ namespace FirstPlugin.Forms
             return null;
         }
 
+        public Panel GetEditorPanel() { return stPanel4; }
+
         public void LoadEditor(UserControl Control)
         {
             Control.Dock = DockStyle.Fill;
 
-            splitContainer1.Panel2.Controls.Clear();
-            splitContainer1.Panel2.Controls.Add(Control);
+            stPanel4.Controls.Clear();
+            stPanel4.Controls.Add(Control);
         }
 
         public AnimationPanel GetAnimationPanel() => animationPanel;
@@ -203,6 +205,13 @@ namespace FirstPlugin.Forms
 
             DisplayViewport = Runtime.DisplayViewport;
             Config.Save();
+        }
+
+        private void dockToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            STForm floatingForm = new STForm();
+            floatingForm.AddControl(stPanel4);
+            floatingForm.Show(this);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace FirstPlugin
         public static Dictionary<string, BFLIM> bflimTextures = new Dictionary<string, BFLIM>();
         public static List<BNTX> bntxContainers = new List<BNTX>();
         public static List<BFRESGroupNode> ftexContainers = new List<BFRESGroupNode>();
-        public static List<BCRESGroupNode> bcresTexContainers = new List<BCRESGroupNode>();
+        public static List<CtrLibrary.BCHGroupNode> bchTexContainers = new List<CtrLibrary.BCHGroupNode>();
         public static List<NLG.StrikersRLT.TextureEntry> stikersTextures = new List<NLG.StrikersRLT.TextureEntry>();
 
         public static string ExternalFMATPath = "";

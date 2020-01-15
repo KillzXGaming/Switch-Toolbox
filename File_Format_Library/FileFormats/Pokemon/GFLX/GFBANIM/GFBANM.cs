@@ -202,26 +202,26 @@ namespace FirstPlugin
 
                         if (node.RotationX.HasKeys || node.RotationY.HasKeys || node.RotationZ.HasKeys)
                         {
-                            ushort value1 = (ushort)node.RotationX.GetFrameValue(Frame);
-                            ushort value2 = (ushort)node.RotationY.GetFrameValue(Frame);
-                            ushort value3 = (ushort)node.RotationZ.GetFrameValue(Frame);
+                            short value1 = (short)node.RotationX.GetFrameValue(Frame);
+                            short value2 = (short)node.RotationY.GetFrameValue(Frame);
+                            short value3 = (short)node.RotationZ.GetFrameValue(Frame);
 
-                            int x = value1 >> 5;
-                            int y = value2 >> 5;
-                            int z = value3 >> 5;
+                            Console.WriteLine("3ds X bits " + Convert.ToString(14, 2));
 
-                            var Rotation = new Vector3(x / (float)0xff, y/ (float)0xff, z / (float)0xff);
-                      //      b.rot = EulerToQuat(Rotation.Z, Rotation.Y, Rotation.X);
+                            float x = PackedToQuat(value1);
+                            float y = PackedToQuat(value2);
+                            float z = PackedToQuat(value3);
+                            float w = (float)Math.Sqrt(1 - x - y - z);
 
-                        //    Console.WriteLine($"{animGroup.Name} {Frame} {Rotation}");
+                            if (b.Text == "Waist") {
+                                var quat = EulerToQuat(1.570796f, -1.313579f, 0.03490628f);
+                                Console.WriteLine($"quat og {quat.X} {quat.Y} {quat.Z} {quat.W}");
+                                Console.WriteLine("group " + b.Text);
+                                Console.WriteLine($"packed rot {value1} {value2} {value3}");
+                                Console.WriteLine($"quat rot X {x} Y {y} Z {z} W {w}");
+                            }
 
-                            //   b.rot = EulerToQuat(Rotation.Z, Rotation.Y, Rotation.X);
-
-                            float Angle = Rotation.Length;
-
-                        //     b.rot = Angle > 0
-                        //        ? Quaternion.FromAxisAngle(Vector3.Normalize(Rotation), Angle)
-                        //        : Quaternion.Identity;
+                            b.rot = new Quaternion(x, y, z, w);
                         }
                         else
                         {
@@ -234,6 +234,22 @@ namespace FirstPlugin
                 {
                     skeleton.update();
                 }
+            }
+
+            private static ushort _flagsMask = 0b11000011_11111111;
+
+            private static float PackedToQuat(short val)
+            {
+                Console.WriteLine("bin1 " + Convert.ToString(val, 2));
+                val &= unchecked((short)(~_flagsMask));
+                Console.WriteLine("bin2 " + Convert.ToString(val, 2));
+
+                return val / 0x8000f;
+            }
+
+            public enum RotationFlags : ushort
+            {
+
             }
 
             public static Quaternion EulerToQuat(float z, float y, float x)
@@ -256,8 +272,6 @@ namespace FirstPlugin
                 // Framed (multiple keys and frames)
 
                 List<float> Frames = new List<float>();
-
-                Console.WriteLine($"BoneGroup {groupAnim.Name }");
 
                 switch (boneAnim.RotateType)
                 {

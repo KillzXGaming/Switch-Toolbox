@@ -395,6 +395,7 @@ namespace FirstPlugin
             bone.position[1] = bn.Position.Y;
             bone.position[2] = bn.Position.Z;
         }
+
         public static void SetShape(this FSHP s, Shape shp)
         {
             shp.Name = s.Text;
@@ -429,6 +430,7 @@ namespace FirstPlugin
                 indx++;
             }
         }
+
         public static void SetMaterial(this FMAT m, Material mat, ResFile ResFile)
         {
             mat.Name = m.Text;
