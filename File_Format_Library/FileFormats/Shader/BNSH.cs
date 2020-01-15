@@ -385,7 +385,7 @@ namespace FirstPlugin
             {
                 //Shader A and B usually need to be combined but atm it has some issues
                 return NSWShaderDecompile.DecompileShader(shaderType,
-                    Utils.SubArray(data[1], 48, (uint)data[1].Length - 48), 0x30);
+                    Utils.SubArray(data[1], 48, (uint)data[1].Length - 48), 0);
             }
         }
     }
