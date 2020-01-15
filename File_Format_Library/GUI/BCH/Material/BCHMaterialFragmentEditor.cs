@@ -386,6 +386,8 @@ namespace FirstPlugin.CtrLibrary.Forms
         }
 
         private void layerCB_SelectedIndexChanged(object sender, EventArgs e) {
+            if (ActiveMaterial == null) return;
+
             ActiveMaterial.MaterialParams.TranslucencyKind = (H3DTranslucencyKind)layerCB.SelectedItem;
             UpdateTerms();
         }
