@@ -228,7 +228,7 @@ namespace FirstPlugin
                     {
                         reader.Seek(GeometryShaderOffset, SeekOrigin.Begin);
                         GeometryShader = new ShaderData();
-                        GeometryShader.shaderType =  NSWShaderDecompile.NswShaderType.Geometry;
+                        GeometryShader.shaderType = NSWShaderDecompile.NswShaderType.Geometry;
                         GeometryShader.Format = Format;
                         GeometryShader.Read(reader);
                     }
@@ -250,7 +250,7 @@ namespace FirstPlugin
                     }
                 }
 
-            
+
                 reader.Seek(pos, SeekOrigin.Begin);
             }
         }
@@ -362,7 +362,7 @@ namespace FirstPlugin
                 sfd.FileName = "shader1";
 
                 sfd.Filter = "Supported Formats|*.bin;";
-                    
+
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     File.WriteAllBytes(sfd.FileName, data[1]);
@@ -384,7 +384,8 @@ namespace FirstPlugin
             private string DecompileShader()
             {
                 //Shader A and B usually need to be combined but atm it has some issues
-               return NSWShaderDecompile.DecompileShader(shaderType, data[1], 0x30);
+                return NSWShaderDecompile.DecompileShader(shaderType,
+                    Utils.SubArray(data[1], 48, (uint)data[1].Length - 48), 0x30);
             }
         }
     }
