@@ -396,7 +396,7 @@
     <Compile Include="FileFormats\Texture\BTI.cs" />
     <Compile Include="FileFormats\Texture\WTB.cs" />
     <Compile Include="GL\BCH_Render.cs" />
-    <Compile Include="GL\BFRESRender.cs" />
+    <Compile Include="GL\BFRES_Render.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\CMB_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
@@ -1392,7 +1392,6 @@
     <Compile Include="FileFormats\Texture\XTX.cs" />
     <Compile Include="FileFormats\Rom\XCI.cs" />
     <Compile Include="GetSwitchKeys.cs" />
-    <Compile Include="GL\BFRES\BFRES_Render.cs" />
     <Compile Include="GUI\Advanced Editor\TextureViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
