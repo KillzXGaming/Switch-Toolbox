@@ -117,7 +117,7 @@ In the event that the tool cannot compile, check references. All the libraries u
 - Every File Explorer devs (Gericom) for Yaz0 and bitmap font stuff.
 - exelix for BYAML, SARC and KCL library.
 - Syroot for helpful IO extensions and libraries.
-- GDKChan for PICA shaders stuff used with BCRES, structs for BCRES, and some DDS decode methods.
+- GDKChan for SPICA library (used for BCH), PICA shaders stuff used with BCRES, structs for BCRES, and some DDS decode methods.
 - AboodXD for some foundation stuff with exelix's SARC library, Wii U (GPU7) and Switch (Tegra X1) textures swizzling, reading/converting uncompressed types for DDS, and documentation for GTX, XTX, and BNTX. Library for Yaz0 made by AboodXD and helped port it to the tool.
 - MelonSpeedruns for Switch Toolbox logo.
 - BrawlBox team for brawl libraries used for BRRES parsing.
