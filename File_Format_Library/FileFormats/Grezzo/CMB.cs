@@ -11,6 +11,8 @@ using Toolbox.Library.Rendering;
 using Grezzo.CmbEnums;
 using OpenTK.Graphics.OpenGL;
 using FirstPlugin.Forms;
+using SPICA.Formats.CtrH3D.Model.Material;
+using SPICA.PICA.Commands;
 
 namespace FirstPlugin
 {
@@ -89,23 +91,34 @@ namespace FirstPlugin
         bool DrawablesLoaded = false;
         public override void OnClick(TreeView treeView)
         {
+            LoadEditor<STPropertyGrid>();
+        }
+
+        public T LoadEditor<T>() where T : UserControl, new()
+        {
             ViewportEditor editor = (ViewportEditor)LibraryGUI.GetActiveContent(typeof(ViewportEditor));
-            bool HasModels = DrawableContainer.Drawables.Count > 0;
             if (editor == null)
             {
-                editor = new ViewportEditor(HasModels);
+                editor = new ViewportEditor(true);
                 editor.Dock = DockStyle.Fill;
                 LibraryGUI.LoadEditor(editor);
             }
-
             if (!DrawablesLoaded)
             {
                 ObjectEditor.AddContainer(DrawableContainer);
                 DrawablesLoaded = true;
             }
-
             if (Runtime.UseOpenGL)
                 editor.LoadViewport(DrawableContainer);
+
+            foreach (var subControl in editor.GetEditorPanel().Controls)
+                if (subControl.GetType() == typeof(T))
+                    return subControl as T;
+
+            T control = new T();
+            control.Dock = DockStyle.Fill;
+            editor.LoadEditor(control);
+            return control;
         }
 
         public CMB_Renderer Renderer;
@@ -226,7 +239,7 @@ namespace FirstPlugin
                     int materialIndex = 0;
                     foreach (var mat in header.SectionData.MaterialChunk.Materials)
                     {
-                        CMBMaterialWrapper material = new CMBMaterialWrapper(mat);
+                        CMBMaterialWrapper material = new CMBMaterialWrapper(mat, this);
                         material.Text = $"Material {materialIndex++}";
                         materialFolder.Nodes.Add(material);
                         Materials.Add(material);
@@ -236,7 +249,7 @@ namespace FirstPlugin
                         {
                             if (tex.TextureIndex != -1)
                             {
-                                CMBTextureMapWrapper matTexture = new CMBTextureMapWrapper(tex);
+                                CMBTextureMapWrapper matTexture = new CMBTextureMapWrapper(tex, this);
                                 matTexture.TextureIndex = tex.TextureIndex;
                                 material.TextureMaps.Add(matTexture);
 
@@ -421,18 +434,33 @@ namespace FirstPlugin
             LM3DS,
         }
 
-        public class CMBMaterialWrapper : STGenericMaterial
+        public class CMBMaterialWrapper : CtrLibrary.H3DMaterialWrapper
         {
-            public Material Material { get; set; }
+            private CMB ParentCMB;
 
-            public CMBMaterialWrapper(Material material)
+            public Material CMBMaterial { get; set; }
+
+            public override List<STGenericObject> FindMappedMeshes()
             {
-                Material = material;
+                List<STGenericObject> meshes = new List<STGenericObject>();
+                foreach (var mesh in ParentCMB.Renderer.Meshes)
+                    if (mesh.GetMaterial() == this)
+                        meshes.Add(mesh);
+                return meshes;
+            }
+
+            public CMBMaterialWrapper(Material material, CMB cmb) : base(material.CTRMaterial)
+            {
+                ParentCMB = cmb;
+                CMBMaterial = material;
             }
 
             public override void OnClick(TreeView treeView)
             {
-                STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
+                var editor = ParentCMB.LoadEditor<CtrLibrary.Forms.BCHMaterialEditor>();
+                editor.LoadMaterial(this);
+
+             /*   STPropertyGrid editor = (STPropertyGrid)LibraryGUI.GetActiveContent(typeof(STPropertyGrid));
                 if (editor == null)
                 {
                     editor = new STPropertyGrid();
@@ -440,18 +468,30 @@ namespace FirstPlugin
                 }
                 editor.Text = Text;
                 editor.Dock = DockStyle.Fill;
-                editor.LoadProperty(Material, null);
+                editor.LoadProperty(Material, null);*/
             }
         }
 
         public class CMBTextureMapWrapper : STGenericMatTexture
         {
+            public CMB CMBParent;
+
             public int TextureIndex { get; set; }
 
             public TextureMap TextureMapData;
 
-            public CMBTextureMapWrapper(TextureMap texMap)
+            public override STGenericTexture GetTexture()
             {
+                foreach (var tex in CMBParent.Renderer.TextureList)
+                    if (tex.Text == this.Name)
+                        return tex;
+
+                return null;
+            }
+
+            public CMBTextureMapWrapper(TextureMap texMap, CMB cmb)
+            {
+                CMBParent = cmb;
                 TextureMapData = texMap;
 
                 //Linear filtering looks better according to noclip
@@ -1632,7 +1672,25 @@ namespace FirstPlugin
         //https://github.com/magcius/noclip.website/blob/9270b9e5022c691703689990f9c536cd9058e5cd/src/oot3d/cmb.ts#L232
         public class Material
         {
+            private Header CMBHeader;
+
+            private H3DMaterial ctrMaterial;
+            public H3DMaterial CTRMaterial
+            {
+                get
+                {
+                    if (ctrMaterial == null)
+                        ctrMaterial = ToH3DMaterial();
+                    return ctrMaterial;
+                }
+            }
+
             public bool IsTransparent = false;
+
+            public bool IsFragmentLightingEnabled;
+            public bool IsVertexLightingEnabled;
+            public bool IsHemiSphereLightingEnabled;
+            public bool IsHemiSphereOcclusionEnabled;
 
             public CullMode CullMode { get; set; }
 
@@ -1644,7 +1702,7 @@ namespace FirstPlugin
 
             public List<TextureCombiner> TextureCombiners { get; set; }
 
-            public STColor[] ConstantColors { get; set; }
+            public STColor8[] ConstantColors { get; set; }
 
             public bool AlphaTestEnable { get; set; }
             public float AlphaTestReference { get; set; }
@@ -1661,16 +1719,366 @@ namespace FirstPlugin
 
             public BlendingFactor BlendingFactorSrcRGB { get; set; }
             public BlendingFactor BlendingFactorDestRGB { get; set; }
+            public BlendEquationMode BlendingEquationRGB { get; set; }
 
             public BlendingFactor BlendingFactorSrcAlpha { get; set; }
             public BlendingFactor BlendingFactorDestAlpha { get; set; }
+            public BlendEquationMode BlendingEquationAlpha { get; set; }
+
 
             public float BlendColorR { get; set; }
             public float BlendColorG { get; set; }
             public float BlendColorB { get; set; }
             public float BlendColorA { get; set; }
 
+            public float BufferColorR { get; set; }
+            public float BufferColorG { get; set; }
+            public float BufferColorB { get; set; }
+            public float BufferColorA { get; set; }
+
+            public short BumpMapIndex { get; set; }
+            public ushort BumpMapMode { get; set; }
+            public short IsBumpRenormalize { get; set; }
+
+            public LayerConfig LayerConfig { get; set; }
+
+            public FresnelSelector FresnelSelector { get; set; }
+
+            public bool IsClampHighLight { get; set; }
+            public bool IsDistribution0Enabled { get; set; }
+            public bool IsDistribution1Enabled { get; set; }
+            public bool IsGeometricFactor0Enabled { get; set; }
+            public bool IsGeometricFactor1Enabled { get; set; }
+            public bool IsReflectionEnabled { get; set; }
+
             private byte[] data;
+
+            public H3DMaterial ToH3DMaterial()
+            {
+                H3DMaterial h3dMaterial = new H3DMaterial();
+                var matParams = h3dMaterial.MaterialParams;
+
+                if (IsVertexLightingEnabled)
+                    matParams.Flags |= H3DMaterialFlags.IsVertexLightingEnabled;
+                if (IsFragmentLightingEnabled)
+                    matParams.Flags |= H3DMaterialFlags.IsFragmentLightingEnabled;
+                if (IsHemiSphereLightingEnabled)
+                    matParams.Flags |= H3DMaterialFlags.IsHemiSphereLightingEnabled;
+                if (IsHemiSphereOcclusionEnabled)
+                    matParams.Flags |= H3DMaterialFlags.IsHemiSphereOcclusionEnabled;
+
+                switch (LayerConfig)
+                {
+                    case LayerConfig.LayerConfig0: matParams.TranslucencyKind = H3DTranslucencyKind.LayerConfig0; break;
+                    case LayerConfig.LayerConfig1: matParams.TranslucencyKind = H3DTranslucencyKind.LayerConfig1; break;
+                    case LayerConfig.LayerConfig2: matParams.TranslucencyKind = H3DTranslucencyKind.LayerConfig2; break;
+                    case LayerConfig.LayerConfig3: matParams.TranslucencyKind = H3DTranslucencyKind.LayerConfig3; break;
+                    case LayerConfig.LayerConfig4: matParams.TranslucencyKind = H3DTranslucencyKind.LayerConfig4; break;
+                    case LayerConfig.LayerConfig5: matParams.TranslucencyKind = H3DTranslucencyKind.LayerConfig5; break;
+                    case LayerConfig.LayerConfig6: matParams.TranslucencyKind = H3DTranslucencyKind.LayerConfig6; break;
+                    case LayerConfig.LayerConfig7: matParams.TranslucencyKind = H3DTranslucencyKind.LayerConfig7; break;
+                }
+
+                for (int i = 0; i < TextureMaps?.Length; i++)
+                {
+                    string texture = GetTextureName(TextureMaps[i].TextureIndex);
+                    if (texture == string.Empty)
+                        continue;
+
+                    if (i == 0) h3dMaterial.Texture0Name = texture;
+                    if (i == 0) h3dMaterial.Texture1Name = texture;
+                    if (i == 0) h3dMaterial.Texture2Name = texture;
+
+                    h3dMaterial.TextureMappers[i].WrapU = ConvertWrapMode(TextureMaps[i].WrapS);
+                    h3dMaterial.TextureMappers[i].WrapV = ConvertWrapMode(TextureMaps[i].WrapT);
+                    h3dMaterial.TextureMappers[i].MagFilter = ConvertTexMagFilter(TextureMaps[i].MagFiler);
+                    h3dMaterial.TextureMappers[i].MinFilter = ConvertTexMinFilter(TextureMaps[i].MinFiler);
+                    h3dMaterial.TextureMappers[i].LODBias = TextureMaps[i].LodBias;
+                    h3dMaterial.TextureMappers[i].MinLOD = (byte)(TextureMaps[i].MinLOD / 255);
+                    h3dMaterial.TextureMappers[i].BorderColor = new SPICA.Math3D.RGBA(
+                        TextureMaps[i].borderColorR,
+                        TextureMaps[i].borderColorG,
+                        TextureMaps[i].borderColorB,
+                        TextureMaps[i].borderColorA);
+
+                    matParams.TextureCoords[i].TransformType = H3DTextureTransformType.DccMaya;
+                    matParams.TextureCoords[i].MappingType = H3DTextureMappingType.UvCoordinateMap;
+
+                    matParams.TextureCoords[i].Scale = new System.Numerics.Vector2(
+                        TextureMaticies[i].Scale.X, TextureMaticies[i].Scale.Y);
+                    matParams.TextureCoords[i].Translation = new System.Numerics.Vector2(
+                        TextureMaticies[i].Translate.X, TextureMaticies[i].Translate.Y);
+
+                    matParams.TextureCoords[i].Rotation = TextureMaticies[i].Rotate;
+                }
+
+                matParams.DiffuseColor = new SPICA.Math3D.RGBA(255,255,255,255);
+                matParams.Specular0Color = new SPICA.Math3D.RGBA(0, 0, 0, 255);
+                matParams.Specular1Color = new SPICA.Math3D.RGBA(0, 0, 0, 255);
+                matParams.EmissionColor = new SPICA.Math3D.RGBA(0, 0, 0, 255);
+                matParams.Constant0Color = ConvertRGBA(ConstantColors[0]);
+                matParams.Constant1Color = ConvertRGBA(ConstantColors[1]);
+                matParams.Constant2Color = ConvertRGBA(ConstantColors[2]);
+                matParams.Constant3Color = ConvertRGBA(ConstantColors[3]);
+                matParams.Constant4Color = ConvertRGBA(ConstantColors[4]);
+                matParams.Constant5Color = ConvertRGBA(ConstantColors[5]);
+                matParams.BlendColor = ConvertRGBA(BlendColorR, BlendColorG, BlendColorB, BlendColorA);
+                matParams.TexEnvBufferColor = ConvertRGBA(BufferColorR, BufferColorG, BufferColorB, BufferColorA);
+
+                if (CullMode == CullMode.BACK)
+                    matParams.FaceCulling = PICAFaceCulling.BackFace;
+                else if (CullMode == CullMode.FRONT)
+                    matParams.FaceCulling = PICAFaceCulling.FrontFace;
+                else
+                    matParams.FaceCulling = PICAFaceCulling.Never;
+
+                matParams.AlphaTest.Enabled = AlphaTestEnable;
+                matParams.AlphaTest.Function = ConvertAlphaFunction(AlphaTestFunction);
+                matParams.AlphaTest.Reference = (byte)(AlphaTestReference / 0xff);
+                matParams.BlendFunction.ColorSrcFunc = ConvertBlendFunc(BlendingFactorSrcRGB);
+                matParams.BlendFunction.ColorDstFunc = ConvertBlendFunc(BlendingFactorDestRGB);
+                matParams.BlendFunction.AlphaSrcFunc = ConvertBlendFunc(BlendingFactorSrcAlpha);
+                matParams.BlendFunction.AlphaDstFunc = ConvertBlendFunc(BlendingFactorDestAlpha);
+
+                for (int i = 0; i < TextureCombiners.Count; i++)
+                {
+                    var combiner = TextureCombiners[i];
+                    var h3dStage = new PICATexEnvStage();
+                /*    h3dStage.Source.Color[0] = ConvertCombinerSrc[combiner.source0RGB];
+                    h3dStage.Source.Color[1] = ConvertCombinerSrc[combiner.source1RGB];
+                    h3dStage.Source.Color[2] = ConvertCombinerSrc[combiner.source2RGB];
+                    h3dStage.Source.Alpha[0] = ConvertCombinerSrc[combiner.source0Alpha];
+                    h3dStage.Source.Alpha[1] = ConvertCombinerSrc[combiner.source1Alpha];
+                    h3dStage.Source.Alpha[2] = ConvertCombinerSrc[combiner.source2Alpha];
+                    h3dStage.Operand.Alpha[0] = ConvertConvertCombinerAlphaOp[combiner.op0Alpha];
+                    h3dStage.Operand.Alpha[1] = ConvertConvertCombinerAlphaOp[combiner.op1Alpha];
+                    h3dStage.Operand.Alpha[2] = ConvertConvertCombinerAlphaOp[combiner.op2Alpha];
+                    h3dStage.Operand.Color[0] = ConvertConvertCombinerColorOp[combiner.op0RGB];
+                    h3dStage.Operand.Color[1] = ConvertConvertCombinerColorOp[combiner.op1RGB];
+                    h3dStage.Scale.Color = ConvertScale[combiner.scaleRGB];
+                    h3dStage.Scale.Alpha = ConvertScale[combiner.scaleAlpha];
+                    h3dStage.Combiner.Alpha = ConvertConvertCombiner[combiner.combineAlpha];
+                    h3dStage.Combiner.Color = ConvertConvertCombiner[combiner.combineRGB];*/
+
+                    matParams.TexEnvStages[i] = h3dStage;
+                }
+
+                matParams.LUTInputAbsolute.Dist0 = LUTTable.reflectance0SamplerIsAbs;
+                matParams.LUTInputAbsolute.Dist1 = LUTTable.reflectance1SamplerIsAbs;
+                matParams.LUTInputAbsolute.ReflecR = LUTTable.reflectanceRSamplerIsAbs;
+                matParams.LUTInputAbsolute.ReflecG = LUTTable.reflectanceGSamplerIsAbs;
+                matParams.LUTInputAbsolute.ReflecB = LUTTable.reflectanceBSamplerIsAbs;
+                matParams.LUTInputAbsolute.Fresnel = LUTTable.fresnelSamplerIsAbs;
+
+                return h3dMaterial;
+            }
+
+            private Dictionary<CombineResultOpDMP, PICATextureCombinerMode> ConvertConvertCombiner =
+             new Dictionary<CombineResultOpDMP, PICATextureCombinerMode>()
+             {
+                    { CombineResultOpDMP.ADD, PICATextureCombinerMode.Add },
+                    { CombineResultOpDMP.ADD_MULT, PICATextureCombinerMode.AddMult },
+                    { CombineResultOpDMP.ADD_SIGNED, PICATextureCombinerMode.AddSigned },
+                    { CombineResultOpDMP.DOT3_RGB, PICATextureCombinerMode.DotProduct3Rgb },
+                    { CombineResultOpDMP.DOT3_RGBA, PICATextureCombinerMode.DotProduct3Rgba },
+                    { CombineResultOpDMP.INTERPOLATE, PICATextureCombinerMode.Interpolate },
+                    { CombineResultOpDMP.MODULATE, PICATextureCombinerMode.Modulate },
+                    { CombineResultOpDMP.MULT_ADD, PICATextureCombinerMode.MultAdd },
+                    { CombineResultOpDMP.REPLACE, PICATextureCombinerMode.Replace },
+                    { CombineResultOpDMP.SUBTRACT, PICATextureCombinerMode.Subtract },
+             };
+
+            private Dictionary<CombineSourceDMP, PICATextureCombinerSource> ConvertCombinerSrc =
+                new Dictionary<CombineSourceDMP, PICATextureCombinerSource>()
+                {
+                    { CombineSourceDMP.CONSTANT, PICATextureCombinerSource.Constant },
+                    { CombineSourceDMP.FRAGMENT_PRIMARY_COLOR, PICATextureCombinerSource.FragmentPrimaryColor },
+                    { CombineSourceDMP.FRAGMENT_SECONDARY_COLOR, PICATextureCombinerSource.FragmentSecondaryColor },
+                    { CombineSourceDMP.PREVIOUS, PICATextureCombinerSource.Previous },
+                    { CombineSourceDMP.PREVIOUS_BUFFER, PICATextureCombinerSource.PreviousBuffer },
+                    { CombineSourceDMP.PRIMARY_COLOR, PICATextureCombinerSource.PrimaryColor },
+                    { CombineSourceDMP.TEXTURE0, PICATextureCombinerSource.Texture0 },
+                    { CombineSourceDMP.TEXTURE1, PICATextureCombinerSource.Texture1 },
+                    { CombineSourceDMP.TEXTURE2, PICATextureCombinerSource.Texture2 },
+                    { CombineSourceDMP.TEXTURE3, PICATextureCombinerSource.Texture3 },
+                };
+
+            private Dictionary<CombineOpDMP, PICATextureCombinerAlphaOp> ConvertConvertCombinerAlphaOp =
+                new Dictionary<CombineOpDMP, PICATextureCombinerAlphaOp>()
+                {
+                    { CombineOpDMP.ONE_MINUS_SRC_COLOR, PICATextureCombinerAlphaOp.OneMinusAlpha },
+                    { CombineOpDMP.ONE_MINUS_SRC_ALPHA, PICATextureCombinerAlphaOp.OneMinusAlpha },
+                    { CombineOpDMP.ONE_MINUS_SRC_R, PICATextureCombinerAlphaOp.OneMinusRed },
+                    { CombineOpDMP.ONE_MINUS_SRC_G, PICATextureCombinerAlphaOp.OneMinusGreen },
+                    { CombineOpDMP.ONE_MINUS_SRC_B, PICATextureCombinerAlphaOp.OneMinusBlue },
+                    { CombineOpDMP.SRC_ALPHA, PICATextureCombinerAlphaOp.Alpha },
+                    { CombineOpDMP.SRC_COLOR, PICATextureCombinerAlphaOp.Alpha },
+                    { CombineOpDMP.SRC_R, PICATextureCombinerAlphaOp.Red },
+                    { CombineOpDMP.SRC_B, PICATextureCombinerAlphaOp.Blue },
+                    { CombineOpDMP.SRC_G, PICATextureCombinerAlphaOp.Green },
+                };
+
+            private Dictionary<CombineOpDMP, PICATextureCombinerColorOp> ConvertConvertCombinerColorOp =
+                new Dictionary<CombineOpDMP, PICATextureCombinerColorOp>()
+                {
+                    { CombineOpDMP.ONE_MINUS_SRC_COLOR, PICATextureCombinerColorOp.OneMinusColor },
+                    { CombineOpDMP.ONE_MINUS_SRC_ALPHA, PICATextureCombinerColorOp.OneMinusAlpha },
+                    { CombineOpDMP.ONE_MINUS_SRC_R, PICATextureCombinerColorOp.OneMinusRed },
+                    { CombineOpDMP.ONE_MINUS_SRC_G, PICATextureCombinerColorOp.OneMinusGreen },
+                    { CombineOpDMP.ONE_MINUS_SRC_B, PICATextureCombinerColorOp.OneMinusBlue },
+                    { CombineOpDMP.SRC_ALPHA, PICATextureCombinerColorOp.Alpha },
+                    { CombineOpDMP.SRC_COLOR, PICATextureCombinerColorOp.Color },
+                    { CombineOpDMP.SRC_R, PICATextureCombinerColorOp.Red },
+                    { CombineOpDMP.SRC_B, PICATextureCombinerColorOp.Blue },
+                    { CombineOpDMP.SRC_G, PICATextureCombinerColorOp.Green },
+                };
+
+            private Dictionary<CombineScaleDMP, PICATextureCombinerScale> ConvertScale =
+                new Dictionary<CombineScaleDMP, PICATextureCombinerScale>()
+                {
+                    { CombineScaleDMP._1, PICATextureCombinerScale.One },
+                    { CombineScaleDMP._2, PICATextureCombinerScale.Two },
+                    { CombineScaleDMP._4, PICATextureCombinerScale.Four },
+                };
+
+
+            private PICABlendEquation ConvertEquation()
+            {
+                return PICABlendEquation.FuncAdd;
+            }
+
+            private PICABlendFunc ConvertBlendFunc(BlendingFactor factor)
+            {
+                switch (factor)
+                {
+                    case BlendingFactor.ConstantAlpha: return PICABlendFunc.ConstantAlpha;
+                    case BlendingFactor.ConstantColor: return PICABlendFunc.ConstantColor;
+                    case BlendingFactor.DstAlpha: return PICABlendFunc.DestinationAlpha;
+                    case BlendingFactor.DstColor: return PICABlendFunc.DestinationColor;
+                    case BlendingFactor.One: return PICABlendFunc.One;
+                    case BlendingFactor.OneMinusConstantAlpha: return PICABlendFunc.OneMinusConstantAlpha;
+                    case BlendingFactor.OneMinusConstantColor: return PICABlendFunc.OneMinusConstantColor;
+                    case BlendingFactor.OneMinusDstAlpha: return PICABlendFunc.OneMinusDestinationAlpha;
+                    case BlendingFactor.OneMinusDstColor: return PICABlendFunc.OneMinusDestinationColor;
+                    case BlendingFactor.OneMinusSrcAlpha: return PICABlendFunc.OneMinusSourceAlpha;
+                    case BlendingFactor.OneMinusSrcColor: return PICABlendFunc.OneMinusSourceColor;
+                    case BlendingFactor.Src1Alpha: return PICABlendFunc.SourceAlpha;
+                    case BlendingFactor.Src1Color: return PICABlendFunc.SourceColor;
+                    case BlendingFactor.SrcAlpha: return PICABlendFunc.SourceColor;
+                    case BlendingFactor.SrcColor: return PICABlendFunc.SourceColor;
+                    case BlendingFactor.SrcAlphaSaturate: return PICABlendFunc.SourceAlphaSaturate;
+                    case BlendingFactor.Zero: return PICABlendFunc.Zero;
+                    default: return PICABlendFunc.Zero;
+                }
+            }
+
+            private PICATestFunc ConvertAlphaFunction(AlphaFunction func)
+            {
+                switch (func)
+                {
+                    case AlphaFunction.Always: return PICATestFunc.Always;
+                    case AlphaFunction.Equal: return PICATestFunc.Equal;
+                    case AlphaFunction.Gequal: return PICATestFunc.Gequal;
+                    case AlphaFunction.Greater: return PICATestFunc.Greater;
+                    case AlphaFunction.Lequal: return PICATestFunc.Lequal ;
+                    case AlphaFunction.Less: return PICATestFunc.Less;
+                    case AlphaFunction.Never: return PICATestFunc.Never;
+                    case AlphaFunction.Notequal: return PICATestFunc.Notequal;
+                    default: return PICATestFunc.Always;
+                }
+            }
+
+            private SPICA.Math3D.RGBA ConvertRGBA(STColor8 color)
+            {
+                return new SPICA.Math3D.RGBA(color.R, color.G, color.B, color.A);
+            }
+
+            private SPICA.Math3D.RGBA ConvertRGBA(float R, float G, float B, float A = 255)
+            {
+                return new SPICA.Math3D.RGBA((byte)Utils.FloatToIntClamp(R),
+                                             (byte)Utils.FloatToIntClamp(G),
+                                             (byte)Utils.FloatToIntClamp(B),
+                                             (byte)Utils.FloatToIntClamp(A));
+            }
+
+            private H3DTextureMagFilter ConvertTexMagFilter(TextureFilter filterMode)
+            {
+                switch (filterMode)
+                {
+                    case TextureFilter.LINEAR: return H3DTextureMagFilter.Linear;
+                    case TextureFilter.NEAREST: return H3DTextureMagFilter.Nearest;
+                    default: return H3DTextureMagFilter.Linear;
+
+                }
+            }
+
+            private H3DTextureMinFilter ConvertTexMinFilter(TextureFilter filterMode)
+            {
+                switch (filterMode)
+                {
+                    case TextureFilter.LINEAR: return H3DTextureMinFilter.Linear;
+                    case TextureFilter.LINEAR_MIPMAP_LINEAR: return H3DTextureMinFilter.LinearMipmapLinear;
+                    case TextureFilter.LINEAR_MIPMAP_NEAREST: return H3DTextureMinFilter.LinearMipmapNearest;
+                    case TextureFilter.NEAREST: return H3DTextureMinFilter.Nearest;
+                    case TextureFilter.NEAREST_MIPMAP_LINEAR: return H3DTextureMinFilter.NearestMipmapLinear;
+                    case TextureFilter.NEAREST_MIPMAP_NEAREST: return H3DTextureMinFilter.NearestMipmapNearest;
+                    default: return H3DTextureMinFilter.Linear;
+
+                }
+            }
+
+            private PICATextureWrap ConvertWrapMode(CMBTextureWrapMode wrapMode)
+            {
+                switch (wrapMode)
+                {
+                    case CMBTextureWrapMode.CLAMP: return PICATextureWrap.ClampToBorder;
+                    case CMBTextureWrapMode.CLAMP_TO_EDGE: return PICATextureWrap.ClampToEdge;
+                    case CMBTextureWrapMode.MIRRORED_REPEAT: return PICATextureWrap.Mirror;
+                    case CMBTextureWrapMode.REPEAT: return PICATextureWrap.Repeat;
+                    default: return PICATextureWrap.Repeat;
+                }
+            }
+
+            private string GetTextureName(int index)
+            {
+                if (index != -1 && index < CMBHeader.SectionData.TextureChunk?.Textures?.Count)
+                    return CMBHeader.SectionData.TextureChunk.Textures[index].Name;
+                else
+                    return "";
+            }
+
+            public LightTable LUTTable;
+
+            public struct LightTable
+            {
+                public bool reflectanceRSamplerIsAbs;
+                public LUTInput reflectanceRSamplerInput;
+                public uint reflectanceRSamplerScale;
+
+                public bool reflectanceGSamplerIsAbs;
+                public LUTInput reflectanceGSamplerInput;
+                public uint reflectanceGSamplerScale;
+
+                public bool reflectanceBSamplerIsAbs;
+                public LUTInput reflectanceBSamplerInput;
+                public uint reflectanceBSamplerScale;
+
+                public bool reflectance0SamplerIsAbs;
+                public LUTInput reflectance0SamplerInput;
+                public uint reflectance0SamplerScale;
+
+                public bool reflectance1SamplerIsAbs;
+                public LUTInput reflectance1SamplerInput;
+                public uint reflectance1SamplerScale;
+
+                public bool fresnelSamplerIsAbs;
+                public LUTInput fresnelSamplerInput;
+                public uint fresnelSamplerScale;
+            }
+
+            public uint Unknown1 { get; set; }
+            public ushort Unknown2 { get; set; }
+            public ushort Unknown3 { get; set; }
 
             public void Read(FileReader reader, Header header, MaterialChunk materialChunkParent)
             {
@@ -1678,19 +2086,29 @@ namespace FirstPlugin
                 if (header.Version >= CMBVersion.MM3DS)
                     materialSize = 0x16C;
 
-                TextureMaps = new TextureMap[3];
+                CMBHeader = header;
+
+                 TextureMaps = new TextureMap[3];
                 TextureMaticies = new TextureMatrix[3];
                 TextureCombiners = new List<TextureCombiner>();
 
                 long pos = reader.Position;
 
+                IsFragmentLightingEnabled = reader.ReadBoolean();
+                IsVertexLightingEnabled = reader.ReadBoolean();
+                IsHemiSphereLightingEnabled = reader.ReadBoolean();
+                IsHemiSphereOcclusionEnabled = reader.ReadBoolean();
+
                 CullMode = reader.ReadEnum<CullMode>(true); //byte
                 IsPolygonOffsetEnabled = reader.ReadBoolean(); //byte
-                PolygonOffset = reader.ReadUInt32();
+                PolygonOffset = reader.ReadUInt16();
                 PolygonOffset = IsPolygonOffsetEnabled ? PolygonOffset / 0x10000 : 0;
+                Unknown1 = reader.ReadUInt32();
+                Unknown2 = reader.ReadUInt16();
+                Unknown3 = reader.ReadUInt16();
 
                 //Texture bind data
-                reader.SeekBegin(pos + 0x10);
+             //   reader.SeekBegin(pos + 0x10);
                 for (int j = 0; j < 3; j++)
                 {
                     TextureMaps[j] = new TextureMap();
@@ -1723,46 +2141,57 @@ namespace FirstPlugin
 
                 uint unkColor0 = reader.ReadUInt32();
 
-                ConstantColors = new STColor[6];
-                ConstantColors[0] = STColor.FromBytes(reader.ReadBytes(4));
-                ConstantColors[1] = STColor.FromBytes(reader.ReadBytes(4));
-                ConstantColors[2] = STColor.FromBytes(reader.ReadBytes(4));
-                ConstantColors[3] = STColor.FromBytes(reader.ReadBytes(4));
-                ConstantColors[4] = STColor.FromBytes(reader.ReadBytes(4));
-                ConstantColors[5] = STColor.FromBytes(reader.ReadBytes(4));
+                ConstantColors = new STColor8[6];
+                ConstantColors[0] = STColor8.FromBytes(reader.ReadBytes(4));
+                ConstantColors[1] = STColor8.FromBytes(reader.ReadBytes(4));
+                ConstantColors[2] = STColor8.FromBytes(reader.ReadBytes(4));
+                ConstantColors[3] = STColor8.FromBytes(reader.ReadBytes(4));
+                ConstantColors[4] = STColor8.FromBytes(reader.ReadBytes(4));
+                ConstantColors[5] = STColor8.FromBytes(reader.ReadBytes(4));
 
-                float bufferColorR = reader.ReadSingle();
-                float bufferColorG = reader.ReadSingle();
-                float bufferColorB = reader.ReadSingle();
-                float bufferColorA = reader.ReadSingle();
+                BufferColorR = reader.ReadSingle();
+                BufferColorG = reader.ReadSingle();
+                BufferColorB = reader.ReadSingle();
+                BufferColorA = reader.ReadSingle();
 
-                int bumpTextureIndex = reader.ReadInt16();
-                int lightEnvBumpUsage = reader.ReadInt16();
+                BumpMapIndex = reader.ReadInt16();
+                BumpMapMode = reader.ReadUInt16();
+                IsBumpRenormalize = reader.ReadInt16();
+                reader.ReadInt16(); //padding
+                LayerConfig = (LayerConfig)reader.ReadUInt16();
+                reader.ReadInt16(); //padding
+                FresnelSelector = (FresnelSelector)reader.ReadUInt16();
+                IsClampHighLight = reader.ReadBoolean();
+                IsDistribution0Enabled = reader.ReadBoolean();
+                IsDistribution1Enabled = reader.ReadBoolean();
+                IsGeometricFactor0Enabled = reader.ReadBoolean();
+                IsGeometricFactor1Enabled = reader.ReadBoolean();
+                IsReflectionEnabled = reader.ReadBoolean();
 
                 // Fragment lighting table.
-                byte reflectanceRSamplerIsAbs = reader.ReadByte();
-                ushort reflectanceRSamplerInput = reader.ReadUInt16();
-                uint reflectanceRSamplerScale = reader.ReadUInt32();
+                LUTTable.reflectanceRSamplerIsAbs = reader.ReadBoolean();
+                LUTTable.reflectanceRSamplerInput = (LUTInput)reader.ReadUInt16();
+                LUTTable.reflectanceRSamplerScale = reader.ReadUInt32();
 
-                byte reflectanceGSamplerIsAbs = reader.ReadByte();
-                ushort reflectanceGSamplerInput = reader.ReadUInt16();
-                uint reflectanceGSamplerScale = reader.ReadUInt32();
+                LUTTable.reflectanceGSamplerIsAbs = reader.ReadBoolean();
+                LUTTable.reflectanceGSamplerInput = (LUTInput)reader.ReadUInt16();
+                LUTTable.reflectanceGSamplerScale = reader.ReadUInt32();
 
-                byte reflectanceBSamplerIsAbs = reader.ReadByte();
-                ushort reflectanceBSamplerInput = reader.ReadUInt16();
-                uint reflectanceBSamplerScale = reader.ReadUInt32();
+                LUTTable.reflectanceBSamplerIsAbs = reader.ReadBoolean();
+                LUTTable.reflectanceBSamplerInput = (LUTInput)reader.ReadUInt16();
+                LUTTable.reflectanceBSamplerScale = reader.ReadUInt32();
 
-                byte reflectance0SamplerIsAbs = reader.ReadByte();
-                ushort reflectance0SamplerInput = reader.ReadUInt16();
-                uint reflectance0SamplerScale = reader.ReadUInt32();
+                LUTTable.reflectance0SamplerIsAbs = reader.ReadBoolean();
+                LUTTable.reflectance0SamplerInput = (LUTInput)reader.ReadUInt16();
+                LUTTable.reflectance0SamplerScale = reader.ReadUInt32();
 
-                byte reflectance1SamplerIsAbs = reader.ReadByte();
-                ushort reflectance1SamplerInput = reader.ReadUInt16();
-                uint reflectance1SamplerScale = reader.ReadUInt32();
+                LUTTable.reflectance1SamplerIsAbs = reader.ReadBoolean();
+                LUTTable.reflectance1SamplerInput = (LUTInput)reader.ReadUInt16();
+                LUTTable.reflectance1SamplerScale = reader.ReadUInt32();
 
-                byte fresnelSamplerIsAbs = reader.ReadByte();
-                ushort fresnelSamplerInput = reader.ReadUInt16();
-                uint fresnelSamplerScale = reader.ReadUInt32();
+                LUTTable.fresnelSamplerIsAbs = reader.ReadBoolean();
+                LUTTable.fresnelSamplerInput = (LUTInput)reader.ReadUInt16();
+                LUTTable.fresnelSamplerScale = reader.ReadUInt32();
 
                 reader.SeekBegin(pos + 0x120);
                 uint textureCombinerTableCount = reader.ReadUInt32();
@@ -1798,7 +2227,7 @@ namespace FirstPlugin
                     textureCombinerTableIdx += 0x2;
                 }
 
-                reader.SeekBegin(pos + 0x130);
+                reader.ReadUInt16(); //padding
                 AlphaTestEnable = reader.ReadBoolean();
                 AlphaTestReference = reader.ReadByte() / 0xFF;
                 AlphaTestFunction = (AlphaFunction)reader.ReadUInt16();
@@ -1813,27 +2242,20 @@ namespace FirstPlugin
                 if (!DepthTestEnable)
                     DepthTestFunction = DepthFunction.Always;
 
-                reader.SeekBegin(pos + 0x138);
                 BlendEnaled = reader.ReadBoolean();
-                Console.WriteLine("BlendEnaled " + BlendEnaled);
 
                 //Unknown. 
                 reader.ReadByte();
-                reader.ReadUInt16();
-
-                reader.SeekBegin(pos + 0x13C);
+                reader.ReadByte();
+                reader.ReadByte();
 
                 BlendingFactorSrcAlpha = (BlendingFactor)reader.ReadUInt16();
                 BlendingFactorDestAlpha = (BlendingFactor)reader.ReadUInt16();
-
-                reader.SeekBegin(pos + 0x144);
+                BlendingEquationAlpha = (BlendEquationMode)reader.ReadUInt16();
 
                 BlendingFactorSrcRGB = (BlendingFactor)reader.ReadUInt16();
                 BlendingFactorDestRGB = (BlendingFactor)reader.ReadUInt16();
-
-                //  BlendingFunctionAlpha = (AlphaFunction)reader.ReadUInt16();
-
-                reader.SeekBegin(pos + 0x14C);
+                BlendingEquationRGB = (BlendEquationMode)reader.ReadUInt16();
 
                 BlendColorR = reader.ReadSingle();
                 BlendColorG = reader.ReadSingle();
@@ -1842,16 +2264,34 @@ namespace FirstPlugin
 
                 IsTransparent = BlendEnaled;
 
-                Console.WriteLine(ToString());
+                if (header.Version > CMBVersion.OOT3DS)
+                {
+                    byte StencilEnabled = reader.ReadByte();
+                    byte StencilReferenceValue = reader.ReadByte();
+                    byte BufferMask = reader.ReadByte();
+                    byte Buffer = reader.ReadByte();
+                    ushort StencilFunc = reader.ReadUInt16();
+                    ushort FailOP = reader.ReadUInt16();
+                    ushort ZFailOP = reader.ReadUInt16();
+                    ushort ZPassOP = reader.ReadUInt16();
+                    float unk6 = reader.ReadSingle();
+                }
             }
 
             public void Write(FileWriter writer, Header header)
             {
                 long pos = writer.Position;
 
+                writer.Write(IsFragmentLightingEnabled);
+                writer.Write(IsVertexLightingEnabled);
+                writer.Write(IsHemiSphereLightingEnabled);
+                writer.Write(IsHemiSphereOcclusionEnabled);
                 writer.Write(CullMode, true);
                 writer.Write(IsPolygonOffsetEnabled);
                 writer.Write(PolygonOffset);
+                writer.Write(Unknown1);
+                writer.Write(Unknown2);
+                writer.Write(Unknown3);
 
                 writer.SeekBegin(pos + 0x10);
                 for (int j = 0; j < 3; j++)
