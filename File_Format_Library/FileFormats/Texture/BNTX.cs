@@ -1701,8 +1701,6 @@ namespace FirstPlugin
                 if (Depth > 1)
                     numDepth = Depth;
 
-                return TegraX1Swizzle.GetImageData(this, Texture.TextureData[0][0], ArrayLevel, MipLevel, DepthLevel, target, Texture.TileMode == TileMode.LinearAligned);
-
                 for (int depthLevel = 0; depthLevel < numDepth; depthLevel++)
                 {
                     for (int arrayLevel = 0; arrayLevel < Texture.TextureData.Count; arrayLevel++)
