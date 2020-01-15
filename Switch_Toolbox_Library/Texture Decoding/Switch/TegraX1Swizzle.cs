@@ -68,16 +68,16 @@ namespace Toolbox.Library
             return MipMapSizes;
         }
 
-        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, int target = 1, bool LinearTileMode = false)
+        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, int DepthLevel, int target = 1, bool LinearTileMode = false)
         {
             uint blkHeight = STGenericTexture.GetBlockHeight(texture.Format);
             uint blkDepth = STGenericTexture.GetBlockDepth(texture.Format);
             uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(texture.Height, blkHeight));
             uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
-            return GetImageData(texture, ImageData, ArrayLevel, MipLevel, BlockHeightLog2, target, LinearTileMode);
+            return GetImageData(texture, ImageData, ArrayLevel, MipLevel, DepthLevel, BlockHeightLog2, target, LinearTileMode);
         }
 
-        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, uint BlockHeightLog2, int target = 1, bool LinearTileMode = false)
+        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, int DepthLevel, uint BlockHeightLog2, int target = 1, bool LinearTileMode = false)
         {
             uint bpp = STGenericTexture.GetBytesPerPixel(texture.Format);
             uint blkWidth = STGenericTexture.GetBlockWidth(texture.Format);
@@ -90,68 +90,73 @@ namespace Toolbox.Library
             uint TileMode = 0;
             if (LinearTileMode)
                 TileMode = 1;
+            uint numDepth = 1;
+            if (texture.Depth > 1)
+                numDepth = texture.Depth;
 
             int linesPerBlockHeight = (1 << (int)BlockHeightLog2) * 8;
 
             uint ArrayOffset = 0;
-            for (int arrayLevel = 0; arrayLevel < texture.ArrayCount; arrayLevel++)
+            for (int depthLevel = 0; depthLevel < numDepth; depthLevel++)
             {
-                uint SurfaceSize = 0;
-                int blockHeightShift = 0;
-
-                List<uint> MipOffsets = new List<uint>();
-
-                for (int mipLevel = 0; mipLevel < texture.MipCount; mipLevel++)
+                for (int arrayLevel = 0; arrayLevel < texture.ArrayCount; arrayLevel++)
                 {
-                    uint width = (uint)Math.Max(1, texture.Width >> mipLevel);
-                    uint height = (uint)Math.Max(1, texture.Height >> mipLevel);
-                    uint depth = (uint)Math.Max(1, texture.Depth >> mipLevel);
+                    uint SurfaceSize = 0;
+                    int blockHeightShift = 0;
 
-                    uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
+                    List<uint> MipOffsets = new List<uint>();
 
-                    Console.WriteLine($"size " + size);
-
-                    if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
-                        blockHeightShift += 1;
-
-
-                    uint width__ = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth);
-                    uint height__ = TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight);
-
-                    //Calculate the mip size instead
-                    byte[] AlignedData = new byte[(TegraX1Swizzle.round_up(SurfaceSize, DataAlignment) - SurfaceSize)];
-                    SurfaceSize += (uint)AlignedData.Length;
-                    MipOffsets.Add(SurfaceSize);
-
-                    //Get the first mip offset and current one and the total image size
-                    int msize = (int)((MipOffsets[0] + ImageData.Length - MipOffsets[mipLevel]) / texture.ArrayCount);
-
-                    byte[] data_ = Utils.SubArray(ImageData, ArrayOffset + MipOffsets[mipLevel], (uint)msize);
-
-                    try
+                    for (int mipLevel = 0; mipLevel < texture.MipCount; mipLevel++)
                     {
-                        Pitch = TegraX1Swizzle.round_up(width__ * bpp, 64);
-                        SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
+                        uint width = (uint)Math.Max(1, texture.Width >> mipLevel);
+                        uint height = (uint)Math.Max(1, texture.Height >> mipLevel);
+                        uint depth = (uint)Math.Max(1, texture.Depth >> mipLevel);
 
-                        byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
-                        //Create a copy and use that to remove uneeded data
-                        byte[] result_ = new byte[size];
-                        Array.Copy(result, 0, result_, 0, size);
-                        result = null;
+                        uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
 
-                        if (ArrayLevel == arrayLevel && MipLevel == mipLevel)
-                            return result_;
+                        Console.WriteLine($"size " + size);
+
+                        if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
+                            blockHeightShift += 1;
+
+
+                        uint width__ = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth);
+                        uint height__ = TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight);
+
+                        //Calculate the mip size instead
+                        byte[] AlignedData = new byte[(TegraX1Swizzle.round_up(SurfaceSize, DataAlignment) - SurfaceSize)];
+                        SurfaceSize += (uint)AlignedData.Length;
+                        MipOffsets.Add(SurfaceSize);
+
+                        //Get the first mip offset and current one and the total image size
+                        int msize = (int)((MipOffsets[0] + ImageData.Length - MipOffsets[mipLevel]) / texture.ArrayCount);
+
+                        byte[] data_ = Utils.SubArray(ImageData, ArrayOffset + MipOffsets[mipLevel], (uint)msize);
+
+                        try
+                        {
+                            Pitch = TegraX1Swizzle.round_up(width__ * bpp, 64);
+                            SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
+
+                            byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
+                            //Create a copy and use that to remove uneeded data
+                            byte[] result_ = new byte[size];
+                            Array.Copy(result, 0, result_, 0, size);
+                            result = null;
+
+                            if (ArrayLevel == arrayLevel && MipLevel == mipLevel && DepthLevel == depthLevel)
+                                return result_;
+                        }
+                        catch (Exception e)
+                        {
+                            System.Windows.Forms.MessageBox.Show($"Failed to swizzle texture {texture.Text}!");
+                            Console.WriteLine(e);
+
+                            return new byte[0];
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        System.Windows.Forms.MessageBox.Show($"Failed to swizzle texture {texture.Text}!");
-                        Console.WriteLine(e);
-
-                        return new byte[0];
-                    }
+                    ArrayOffset += (uint)(ImageData.Length / texture.ArrayCount);
                 }
-
-                ArrayOffset += (uint)(ImageData.Length / texture.ArrayCount);
             }
             return new byte[0];
         }
@@ -222,7 +227,7 @@ namespace Toolbox.Library
 
             for (uint y = 0; y < height; y++)
             {
-                for (uint x = 0; x < width;     x++)
+                for (uint x = 0; x < width; x++)
                 {
                     uint pos;
                     uint pos_;

@@ -179,10 +179,7 @@ namespace LayoutBXLYT
                             bntx = BinaryContainers.Values.FirstOrDefault();
                         }
 
-                        int startIndex = bntx.Textures.Count - 1;
                         var importedTextures = bntx.ImportTexture();
-
-                        Console.WriteLine("startIndex " + startIndex);
 
                         //Load all the additional textues
                         for (int i = 0; i < importedTextures.Count; i++)

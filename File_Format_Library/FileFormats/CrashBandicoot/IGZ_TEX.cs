@@ -174,7 +174,7 @@ namespace FirstPlugin
             IGZStructure.TextureInfo.ImageData = GenerateMipsAndCompress(bitmap, MipCount, Format);
         }
 
-        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             if (PlatformSwizzle == PlatformSwizzle.Platform_Switch)
                 return TegraX1Swizzle.GetImageData(this, IGZStructure.TextureInfo.ImageData, ArrayLevel, MipLevel, 1);

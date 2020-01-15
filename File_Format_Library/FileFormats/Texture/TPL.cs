@@ -147,6 +147,8 @@ namespace FirstPlugin
                         texWrapper.ImageData = reader.getSection(image.ImageOffset, 
                             (uint)Decode_Gamecube.GetDataSize(GXFormat, (int)image.Width, (int)image.Height));
 
+                        Console.WriteLine($"PaletteHeaderOffset {PaletteHeaderOffset}");
+
                         //Palette is sometimes unused to check
                         if (PaletteHeaderOffset != 0)
                         {
@@ -200,7 +202,7 @@ namespace FirstPlugin
 
             }
 
-            public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+            public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
             {
                 return Decode_Gamecube.GetMipLevel(ImageData, Width, Height, MipCount, (uint)MipLevel, Format);
             }

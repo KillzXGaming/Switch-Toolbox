@@ -191,7 +191,7 @@ namespace Toolbox.Library
 
         public string DataSize { get { return STMath.GetFileSize(DataSizeInBytes, 5); } }
 
-        public abstract byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0);
+        public abstract byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0);
 
         private byte[] paletteData = new byte[0];
 
@@ -493,18 +493,40 @@ namespace Toolbox.Library
             }
         }
 
+        public Bitmap GetBitmap3D(int ArrayLevel = 0, int MipLevel = 0)
+        {
+            List<Bitmap> images = new List<Bitmap>();
+            for (int i = 0; i < Depth; i++)
+                images.Add(GetBitmap(ArrayLevel, MipLevel, i));
+
+            //Combine images in a horizontal pattern
+            uint width = Width * Depth;
+            var newBitmap = new Bitmap((int)width, (int)Height);
+            using (Graphics grfx = Graphics.FromImage(newBitmap))
+            {
+                int x = 0;
+                foreach (var image in images) {
+                    grfx.DrawImage(image, x, 0);
+                    x += image.Width;
+                }
+
+                return newBitmap;
+            }
+        }
+
         /// <summary>
         /// Gets a <see cref="Bitmap"/> given an array and mip index.
         /// </summary>
         /// <param name="ArrayIndex">The index of the surface/array. Cubemaps will have 6</param>
         /// <param name="MipLevel">The index of the mip level.</param>
         /// <returns></returns>
-        public Bitmap GetBitmap(int ArrayLevel = 0, int MipLevel = 0)
+        public Bitmap GetBitmap(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             uint width = Math.Max(1, Width >> MipLevel);
             uint height = Math.Max(1, Height >> MipLevel);
-            byte[] data = GetImageData(ArrayLevel, MipLevel);
+            byte[] data = GetImageData(ArrayLevel, MipLevel, DepthLevel);
             byte[] paletteData = GetPaletteData();
+            if (Format == TEX_FORMAT.R8G8B8A8_UNORM) return BitmapExtension.GetBitmap(ConvertBgraToRgba(data), (int)width, (int)height);
 
             try
             {

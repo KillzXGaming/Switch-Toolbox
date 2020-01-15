@@ -66,7 +66,7 @@ namespace FirstPlugin
             return TextureImage.PaletteData;
         }
 
-        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             return TextureImage.ImageData;
         }

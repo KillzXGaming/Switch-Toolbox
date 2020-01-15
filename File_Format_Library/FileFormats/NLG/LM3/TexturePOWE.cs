@@ -229,7 +229,7 @@ namespace FirstPlugin.LuigisMansion3
             UpdateProperties();
         }
 
-        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             uint blkHeight = STGenericTexture.GetBlockHeight(Format);
             uint blkDepth = STGenericTexture.GetBlockDepth(Format);
@@ -245,7 +245,7 @@ namespace FirstPlugin.LuigisMansion3
             Console.WriteLine("blockHeight " + blockHeight);
             Console.WriteLine("BlockHeightLog2 " + BlockHeightLog2);
 
-            return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, BlockHeightLog2, 1);
+            return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, BlockHeightLog2, 1);
         }
 
         public override TEX_FORMAT[] SupportedFormats

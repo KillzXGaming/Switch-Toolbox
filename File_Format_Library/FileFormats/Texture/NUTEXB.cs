@@ -427,6 +427,7 @@ namespace FirstPlugin
                 //Seek to next one
                 reader.Seek(mipPos + 0x40, System.IO.SeekOrigin.Begin);
             }
+
             reader.Seek(0, System.IO.SeekOrigin.Begin);
             ImageData = reader.ReadBytes(imagesize);
         }
@@ -572,12 +573,12 @@ namespace FirstPlugin
             ImageData = Utils.CombineByteArray(mipmaps.ToArray());
         }
 
-        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             if (!IsSwizzled)
                 return DDS.GetArrayFaces(this, ImageData,1)[ArrayLevel].mipmaps[0];
 
-            return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, 1);
+            return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, 1);
         }
 
         STToolStripItem useSizeRestrictions = new STToolStripItem("UseSizeRestrictions");

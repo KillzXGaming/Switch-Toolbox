@@ -113,4 +113,45 @@ namespace Grezzo.CmbEnums
         ONE_MINUS_SRC_B = 0x8585,
     };
 
+    public enum FresnelSelector
+    {
+        No = 25280,
+        Pri = 25281,
+        Sec = 25282,
+        PriSec = 25283
+    };
+
+    public enum LayerConfig
+    {
+        LayerConfig0 = 25264,
+        LayerConfig1 = 25265,
+        LayerConfig2 = 25266,
+        LayerConfig3 = 25267,
+        LayerConfig4 = 25268,
+        LayerConfig5 = 25269,
+        LayerConfig6 = 25270,
+        LayerConfig7 = 25271,
+    };
+
+    public enum LUTInput : ushort
+    {
+        CosNormalHalf = 25248,
+        CosViewHalf = 25249,
+        CosNormalView = 25250,
+        CosLightNormal = 25251,
+        CosLightSpot = 25252,
+        CosPhi = 25253
+    }
+
+    public enum StencilOp
+    {
+        Keep = 7680,
+        Zero = 0,
+        Replace = 7681,
+        Increment = 7682,
+        Decrement = 7683,
+        Invert = 5386,
+        IncrementWrap = 34055,
+        DecrementWrap = 34055
+    }
 }

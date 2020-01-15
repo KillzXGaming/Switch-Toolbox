@@ -66,7 +66,7 @@ namespace Toolbox.Library
             ImageData = DDSCompressor.EncodePixelBlock(Data, bitmap.Width, bitmap.Width, DDS.DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
         }
 
-        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             return ImageData;
         }

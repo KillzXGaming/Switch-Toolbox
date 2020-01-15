@@ -67,7 +67,7 @@ namespace FirstPlugin
 
             for (int m = 0; m < Meshes.Count; m++)
             {
-                if (((CMB.CMBMaterialWrapper)Meshes[m].GetMaterial()).Material.IsTransparent)
+                if (((CMB.CMBMaterialWrapper)Meshes[m].GetMaterial()).CMBMaterial.IsTransparent)
                     transparent.Add(Meshes[m]);
                 else
                     opaque.Add(Meshes[m]);
@@ -88,7 +88,7 @@ namespace FirstPlugin
 
         public override void SetRenderData(STGenericMaterial mat, ShaderProgram shader, STGenericObject m)
         {
-            var cmbMaterial = ((CMB.CMBMaterialWrapper)mat).Material;
+            var cmbMaterial = ((CMB.CMBMaterialWrapper)mat).CMBMaterial;
             var cmbMesh = ((CMB.CmbMeshWrapper)m);
 
             bool HasNoNormals = cmbMesh.Shape.Normal.VertexData == null || cmbMesh.Shape.Normal.VertexData.Length == 0;

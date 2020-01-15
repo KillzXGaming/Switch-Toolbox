@@ -816,15 +816,15 @@ namespace Toolbox.Library
         }
 
         public bool SwitchSwizzle = false;
-        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             if (IsAtscFormat(Format))
                 SwitchSwizzle = true;
 
             if (SwitchSwizzle)
-                return TegraX1Swizzle.GetImageData(this, bdata, ArrayLevel, MipLevel);
+                return TegraX1Swizzle.GetImageData(this, bdata, ArrayLevel, MipLevel, DepthLevel);
 
-            return GetArrayFaces(this, ArrayCount)[ArrayLevel].mipmaps[MipLevel];
+            return GetArrayFaces(this, ArrayCount, DepthLevel)[ArrayLevel].mipmaps[MipLevel];
         }
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
@@ -985,8 +985,12 @@ namespace Toolbox.Library
 
                 uint formatSize = GetBytesPerPixel(tex.Format);
 
+                uint numDepth = 1;
+                if (tex.Depth > 1)
+                    numDepth = tex.Depth;
+
                 uint Offset = 0;
-                for (byte d = 0; d < tex.Depth; ++d)
+                for (byte d = 0; d < numDepth; ++d)
                 {
                     for (byte i = 0; i < Length; ++i)
                     {
@@ -1021,7 +1025,7 @@ namespace Toolbox.Library
             }
         }
 
-        public static List<Surface> GetArrayFaces(DDS dds, uint Length)
+        public static List<Surface> GetArrayFaces(DDS dds, uint Length, int DepthLevel = 0)
         {
             using (FileReader reader = new FileReader(dds.bdata))
             {
@@ -1034,32 +1038,37 @@ namespace Toolbox.Library
                     dds.header.mipmapCount = 1;
 
                 uint Offset = 0;
-                for (byte i = 0; i < Length; ++i)
+                for (byte d = 0; d < dds.Depth; ++d)
                 {
-                    var Surface = new STGenericTexture.Surface();
-
-                    uint MipWidth = dds.header.width, MipHeight = dds.header.height;
-                    for (int j = 0; j < dds.header.mipmapCount; ++j)
+                    for (byte i = 0; i < Length; ++i)
                     {
-                        MipWidth = (uint)Math.Max(1, dds.header.width >> j);
-                        MipHeight = (uint)Math.Max(1, dds.header.height >> j);
+                        var Surface = new STGenericTexture.Surface();
 
-                        uint size = (MipWidth * MipHeight); //Total pixels
-                        if (isBlock)
+                        uint MipWidth = dds.header.width, MipHeight = dds.header.height;
+                        for (int j = 0; j < dds.header.mipmapCount; ++j)
                         {
-                            size = ((MipWidth + 3) >> 2) * ((MipHeight + 3) >> 2) * formatSize;
-                            if (size < formatSize)
-                                size = formatSize;
-                        }
-                        else
-                        {
-                            size = (uint)(size * (GetBytesPerPixel(dds.Format))); //Bytes per pixel
+                            MipWidth = (uint)Math.Max(1, dds.header.width >> j);
+                            MipHeight = (uint)Math.Max(1, dds.header.height >> j);
+
+                            uint size = (MipWidth * MipHeight); //Total pixels
+                            if (isBlock)
+                            {
+                                size = ((MipWidth + 3) >> 2) * ((MipHeight + 3) >> 2) * formatSize;
+                                if (size < formatSize)
+                                    size = formatSize;
+                            }
+                            else
+                            {
+                                size = (uint)(size * (GetBytesPerPixel(dds.Format))); //Bytes per pixel
+                            }
+
+                            Surface.mipmaps.Add(reader.getSection((int)Offset, (int)size));
+                            Offset += size;
                         }
 
-                        Surface.mipmaps.Add(reader.getSection((int)Offset, (int)size));
-                        Offset += size;
+                        if (d == DepthLevel)
+                            Surfaces.Add(Surface);
                     }
-                    Surfaces.Add(Surface);
                 }
 
                 return Surfaces;

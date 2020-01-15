@@ -1236,7 +1236,8 @@ namespace FirstPlugin
             Text = tex.Name;
             Width = tex.Width;
             Height = tex.Height;
-            ArrayCount = (uint)tex.TextureData.Count;
+            ArrayCount = tex.Depth;
+        //    ArrayCount = (uint)tex.TextureData.Count;
             MipCount = (uint)tex.TextureData[0].Count;
             Format = ConvertFormat(tex.Format);
 
@@ -1672,7 +1673,7 @@ namespace FirstPlugin
             }
         }
 
-        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+        public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             int target = 1;
             if (ParentBNTX != null && ParentBNTX is BNTX && ParentBNTX.BinaryTexFile != null)
@@ -1696,34 +1697,43 @@ namespace FirstPlugin
                 int linesPerBlockHeight = (1 << (int)Texture.BlockHeightLog2) * 8;
                 uint bpp = GetBytesPerPixel(Format);
 
+                uint numDepth = 1;
+                if (Depth > 1)
+                    numDepth = Depth;
 
-                for (int arrayLevel = 0; arrayLevel < Texture.TextureData.Count; arrayLevel++)
+                return TegraX1Swizzle.GetImageData(this, Texture.TextureData[0][0], ArrayLevel, MipLevel, DepthLevel, target, Texture.TileMode == TileMode.LinearAligned);
+
+                for (int depthLevel = 0; depthLevel < numDepth; depthLevel++)
                 {
-                    int blockHeightShift = 0;
-
-                    for (int mipLevel = 0; mipLevel < Texture.TextureData[arrayLevel].Count; mipLevel++)
+                    for (int arrayLevel = 0; arrayLevel < Texture.TextureData.Count; arrayLevel++)
                     {
-                        uint width = (uint)Math.Max(1, Texture.Width >> mipLevel);
-                        uint height = (uint)Math.Max(1, Texture.Height >> mipLevel);
-                        uint depth = (uint)Math.Max(1, Texture.Depth >> mipLevel);
+                        int blockHeightShift = 0;
 
-                        uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
+                        for (int mipLevel = 0; mipLevel < Texture.TextureData[arrayLevel].Count; mipLevel++)
+                        {
+                            uint width = (uint)Math.Max(1, Texture.Width >> mipLevel);
+                            uint height = (uint)Math.Max(1, Texture.Height >> mipLevel);
+                            uint depth = (uint)Math.Max(1, Texture.Depth >> mipLevel);
 
-                        if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
-                            blockHeightShift += 1;
+                            uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
 
-                        Console.WriteLine($"{width} {height} {depth} {blkWidth} {blkHeight} {blkDepth} {target} {bpp} {Texture.TileMode} {(int)Math.Max(0, Texture.BlockHeightLog2 - blockHeightShift)} {Texture.TextureData[arrayLevel][mipLevel].Length}");
-                        byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, (uint)Texture.TileMode, (int)Math.Max(0, Texture.BlockHeightLog2 - blockHeightShift), Texture.TextureData[arrayLevel][mipLevel]);
-                        //Create a copy and use that to remove uneeded data
-                        byte[] result_ = new byte[size];
-                        Array.Copy(result, 0, result_, 0, size);
+                            if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
+                                blockHeightShift += 1;
 
-                        result = null;
+                            Console.WriteLine($"{width} {height} {depth} {blkWidth} {blkHeight} {blkDepth} {target} {bpp} {Texture.TileMode} {(int)Math.Max(0, Texture.BlockHeightLog2 - blockHeightShift)} {Texture.TextureData[arrayLevel][mipLevel].Length}");
+                            byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, (uint)Texture.TileMode, (int)Math.Max(0, Texture.BlockHeightLog2 - blockHeightShift), Texture.TextureData[arrayLevel][mipLevel]);
+                            //Create a copy and use that to remove uneeded data
+                            byte[] result_ = new byte[size];
+                            Array.Copy(result, 0, result_, 0, size);
 
-                        if (ArrayLevel == arrayLevel && MipLevel == mipLevel)
-                            return result_;
+                            result = null;
+
+                            if (ArrayLevel == arrayLevel && MipLevel == mipLevel && DepthLevel == depthLevel)
+                                return result_;
+                        }
                     }
                 }
+              
                 return new byte[0];
             }
             catch (Exception e)

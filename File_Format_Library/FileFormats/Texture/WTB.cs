@@ -308,7 +308,7 @@ namespace FirstPlugin
             }
 
             private bool hasShownDialog = false;
-            public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0)
+            public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
             {
                 if (Texture.ImageData == null)
                 {
@@ -324,7 +324,7 @@ namespace FirstPlugin
 
                 var BlockHeightLog2 = Texture.Info.textureLayout & 7;
 
-                 return TegraX1Swizzle.GetImageData(this, Texture.ImageData, ArrayLevel, MipLevel, BlockHeightLog2, 1);
+                 return TegraX1Swizzle.GetImageData(this, Texture.ImageData, ArrayLevel, MipLevel, DepthLevel, BlockHeightLog2, 1);
             }
 
 
