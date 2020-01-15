@@ -444,6 +444,7 @@ namespace FirstPlugin
             Formats.Add(typeof(NLG_NLOC));
             Formats.Add(typeof(PCK));
             Formats.Add(typeof(NLG.StrikersSAnim));
+            Formats.Add(typeof(APAK));
             Formats.Add(typeof(CtrLibrary.BCH));
 
 

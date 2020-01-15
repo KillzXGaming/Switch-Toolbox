@@ -11,13 +11,10 @@ using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class APAKFileInfo : ArchiveFileInfo
+    public class APAK : IFileFormat, IArchiveFile
     {
+        public FileType FileType { get; set; } = FileType.Archive;
 
-    }
-
-    public class APAK : TreeNodeFile
-    {
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "APAK" };
         public string[] Extension { get; set; } = new string[] { "*.apak" };
@@ -42,7 +39,11 @@ namespace FirstPlugin
             }
         }
 
-        public IEnumerable<ArchiveFileInfo> Files { get; }
+        public List<APAKFileInfo> files = new List<APAKFileInfo>();
+
+        public IEnumerable<ArchiveFileInfo> Files => files;
+
+        public void ClearFiles() { files.Clear(); }
 
         public bool CanAddFiles { get; set; } = true;
         public bool CanRenameFiles { get; set; } = true;
@@ -51,16 +52,16 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            Text = FileName;
-
-            CanDelete = true;
-
             using (var reader = new FileReader(stream))
             {
-                reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                reader.SetByteOrder(true);
 
                 reader.ReadSignature(4, "APAK");
-                uint Version = reader.ReadUInt32();
+                reader.ReadUInt16();
+                uint Version = reader.ReadUInt16();
+                if (Version != 5)
+                    reader.SetByteOrder(false);
+
                 uint FileCount = reader.ReadUInt32();
                 uint unk = reader.ReadUInt32();
                 uint unk2 = reader.ReadUInt32();
@@ -68,57 +69,18 @@ namespace FirstPlugin
                 uint unk3 = reader.ReadUInt32();
 
                 for (int i = 0; i < FileCount; i++)
-                {
-                    var info = new FileInfo(reader);
-
-                    APAKFileInfo archive = new APAKFileInfo();
-                    archive.FileData = info.Data;
-                    archive.Name = info.Text;
-
-                    Nodes.Add(info);
-                }
+                    files.Add(new APAKFileInfo(reader));
             }
         }
 
-        public class FileInfo : TreeNodeCustom
+        public void Save(System.IO.Stream stream)
         {
-            public byte[] Data;
 
-            public FileInfo()
-            {
-                ContextMenu = new ContextMenu();
-                MenuItem export = new MenuItem("Export Raw Data");
-                ContextMenu.MenuItems.Add(export);
-                export.Click += Export;
-            }
+        }
 
-            private void Export(object sender, EventArgs args)
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.FileName = Text;
-                sfd.DefaultExt = Path.GetExtension(Text);
-                sfd.Filter = "Raw Data (*.*)|*.*";
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    File.WriteAllBytes(sfd.FileName, Data);
-                }
-            }
-
-            public override void OnClick(TreeView treeview)
-            {
-                HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
-                if (editor == null)
-                {
-                    editor = new HexEditor();
-                    LibraryGUI.LoadEditor(editor);
-                }
-                editor.Text = Text;
-                editor.Dock = DockStyle.Fill;
-                editor.LoadData(Data);
-            }
-
-            public FileInfo(FileReader reader)
+        public class APAKFileInfo : ArchiveFileInfo
+        {
+            public APAKFileInfo(FileReader reader)
             {
                 long pos = reader.Position;
 
@@ -130,22 +92,15 @@ namespace FirstPlugin
                 uint unk3 = reader.ReadUInt32();
                 uint unk4 = reader.ReadUInt32();
 
-                uint FileOffset = reader.ReadUInt32();
-                uint FileSize = reader.ReadUInt32();
-                uint padding = reader.ReadUInt32();
+                FileName = reader.ReadString(0x20, true);
+                reader.ReadUInt32();
 
-            //    reader.Seek(NameOffset, System.IO.SeekOrigin.Begin);
-                Text = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+                long endpos = reader.Position;
 
                 reader.Seek(dataOffset, System.IO.SeekOrigin.Begin);
-                Data = reader.ReadBytes((int)compressedSize);
+                FileData = reader.ReadBytes((int)compressedSize);
 
-                reader.Seek(pos + 16, System.IO.SeekOrigin.Begin);
-
-                ContextMenu = new ContextMenu();
-                MenuItem export = new MenuItem("Export Raw Data");
-                ContextMenu.MenuItems.Add(export);
-                export.Click += Export;
+                reader.Seek(endpos, System.IO.SeekOrigin.Begin);
             }
         }
 

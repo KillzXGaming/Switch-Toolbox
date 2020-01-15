@@ -36,8 +36,8 @@ namespace FirstPlugin.CtrLibrary
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true)) {
                 return (reader.CheckSignature(3, "BCH") ||
-                      reader.CheckSignature(4, "CGFX")) ||
-                      (GFPackage.IsValidPackage(stream));
+                      reader.CheckSignature(4, "CGFX"));
+                     // (GFPackage.IsValidPackage(stream));
             }
         }
 

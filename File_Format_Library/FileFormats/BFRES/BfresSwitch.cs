@@ -925,7 +925,16 @@ namespace FirstPlugin
                             texture.Type = MatTexture.TextureType.Diffuse;
                         }
                     }
-
+                    else if (useSampler.Contains("diffuse"))
+                    {
+                        m.HasDiffuseMap = true;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    else if (useSampler.Contains("normal"))
+                    {
+                        m.HasNormalMap = true;
+                        texture.Type = MatTexture.TextureType.Normal;
+                    }
                     else if (TextureName.Contains("Nrm") || TextureName.Contains("Norm") || TextureName.Contains("norm") || TextureName.Contains("nrm"))
                     {
                         m.HasNormalMap = true;
