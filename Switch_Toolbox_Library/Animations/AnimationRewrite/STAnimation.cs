@@ -27,7 +27,7 @@ namespace Toolbox.Library.Animations
     }
 
     /// <summary>
-    /// Represents a class for animating a skeleton
+    /// Represents a class for animating
     /// </summary>
     public class STAnimation
     {

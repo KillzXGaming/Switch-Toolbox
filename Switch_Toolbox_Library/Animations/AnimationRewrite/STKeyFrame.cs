@@ -26,12 +26,12 @@ namespace Toolbox.Library.Animations
         }
     }
 
-    public class STCubicKeyFrame : STKeyFrame
+    public class STHermiteCubicKeyFrame : STHermiteKeyFrame
     {
-        public virtual float Coef0 { get; set; }
-        public virtual float Coef1 { get; set; }
-        public virtual float Coef2 { get; set; }
-        public virtual float Coef3 { get; set; }
+        public float Coef0 { get; set; }
+        public float Coef1 { get; set; }
+        public float Coef2 { get; set; }
+        public float Coef3 { get; set; }
     }
 
     public class STHermiteKeyFrame : STKeyFrame

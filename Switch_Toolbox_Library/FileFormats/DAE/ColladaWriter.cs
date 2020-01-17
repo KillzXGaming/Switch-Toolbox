@@ -989,7 +989,10 @@ namespace Toolbox.Library.Collada
         JOINT,
         INV_BIND_MATRIX,
         TEXTANGENT,
-        TEXBINORMAL
+        TEXBINORMAL,
+        INPUT,
+        OUTPUT,
+        INTERPOLATION,
     }
 
     public enum ProgramPreset
@@ -1038,5 +1041,27 @@ namespace Toolbox.Library.Collada
         public int ParentIndex = -1;
         public float[] Transform;
         public float[] BindPose;
+    }
+
+    public class Animation
+    {
+        public string ID;
+        public string Name;
+
+        public Sampler Sampler = new Sampler();
+        public Channel Channel = new Channel();
+    }
+
+    public class Sampler
+    {
+        public string ID;
+
+        public Dictionary<string, SemanticType> Inputs = new Dictionary<string, SemanticType>();
+    }
+
+    public class Channel
+    {
+        public string Source;
+        public string Target;
     }
 }
