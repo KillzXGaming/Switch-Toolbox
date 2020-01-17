@@ -41,7 +41,7 @@ namespace FirstPlugin
         public static string FSCN = GetFilter(".bfscn", ".yaml", ".json");
         public static string FSHA = GetFilter(".bfspa");
 
-        public static string CMDL = GetFilter(".dae", ".cmdl");
+        public static string CMDL = GetFilter(".dae");
 
         public static string NUTEXB = GetFilter(".dds",".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
         public static string XTX = GetFilter(".dds", ".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");

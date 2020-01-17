@@ -30,19 +30,6 @@ namespace FirstPlugin.CtrLibrary
             string ext = Utils.GetExtension(FileName);
             switch (ext)
             {
-                case ".cmdl":
-                    string ctexPath = FileName.Replace("cmdl", "ctex");
-                    string cltsPath = FileName.Replace("cmdl", "clts");
-
-                    var settings = new SPICA.Formats.Generic.CTR.CMDL.CMDLSettings();
-                    settings.TextureFilePath = System.IO.Path.GetFileName(ctexPath);
-                    settings.LookupFilePath = System.IO.Path.GetFileName(cltsPath);
-
-                    Model.Export(FileName, settings);
-                    List<H3DTexture> textures = new List<H3DTexture>();
-                    if (BchParent.H3DFile.Textures?.Count > 0)
-                        SPICA.Formats.Generic.CTR.CTEX.Export(BchParent.H3DFile.Textures, ctexPath);
-                    break;
                 case ".dae":
                     ExportModelSettings exportDlg = new ExportModelSettings();
                     if (exportDlg.ShowDialog() == DialogResult.OK)

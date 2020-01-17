@@ -59,7 +59,7 @@ namespace FirstPlugin.CtrLibrary
         private void ExportAction(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Supported Formats|*.json;*.cmat;";
+            sfd.Filter = "Supported Formats|*.json;";
             sfd.FileName = Text;
             sfd.DefaultExt = "json";
             if (sfd.ShowDialog() == DialogResult.OK) {
@@ -67,11 +67,6 @@ namespace FirstPlugin.CtrLibrary
                 if (ext == ".json") {
                     string json = JsonConvert.SerializeObject(Material, Formatting.Indented);
                     System.IO.File.WriteAllText(sfd.FileName, json);
-                }
-                if (ext == ".cmat") {
-                    var settings =  new SPICA.Formats.Generic.CTR.CMDL.CMDLSettings();
-                    settings.TextureFilePath = sfd.FileName.Replace("cmat", "ctex");
-                    SPICA.Formats.Generic.CTR.CMDL.ExportCMAT(Material, settings, sfd.FileName);
                 }
             }
         }
