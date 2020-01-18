@@ -390,6 +390,8 @@ namespace FirstPlugin
                 }
             }
 
+            int originIndex = int.MaxValue;
+
             //Go through each bone and remove the original mesh node
             List<STBone> bonesToRemove = new List<STBone>();
             for (int i = 0; i < Model.Skeleton.bones.Count; i++)
@@ -399,6 +401,11 @@ namespace FirstPlugin
                 node.Bone.RigidCheck = new BoneRigidData() { Unknown1 = 0 };
                 if (node.Bone.BoneType == 1)
                     node.Bone.BoneType = 0;
+
+                int index = Model.Skeleton.bones.IndexOf(node);
+
+                if (node.Text == "Origin")
+                    originIndex = index;
 
                 //Check if the bone is rigged to any meshes and use skinning
                 for (int m = 0; m < meshes.Count; m++)
@@ -465,14 +472,21 @@ namespace FirstPlugin
 
                     //Single bind if no bones are mapped but setting is enabled
                     if (setting.HasBoneIndices && mesh.vertices[i].boneNames.Count == 0) {
-                        mesh.vertices[i].boneIds.Add(0);
+                        mesh.vertices[i].boneIds.Add(skinningIndices.FirstOrDefault());
                         mesh.vertices[i].boneWeights.Add(1);
                     }
+
                     if (importer.RotationY != 0)
                     {
                         var transform = OpenTK.Matrix4.CreateRotationX(OpenTK.MathHelper.DegreesToRadians(importer.RotationY));
                         mesh.vertices[i].pos = OpenTK.Vector3.TransformPosition(mesh.vertices[i].pos, transform);
                         mesh.vertices[i].nrm = OpenTK.Vector3.TransformPosition(mesh.vertices[i].nrm, transform);
+                    }
+
+                    if (importer.Settings.FlipUVsVertical) {
+                        mesh.vertices[i].uv0 = new Vector2(0, 1) - mesh.vertices[i].uv0;
+                        mesh.vertices[i].uv1 = new Vector2(0, 1) - mesh.vertices[i].uv1;
+                        mesh.vertices[i].uv2 = new Vector2(0, 1) - mesh.vertices[i].uv2;
                     }
 
                     if (importer.Settings.OptmizeZeroWeights)
@@ -513,13 +527,28 @@ namespace FirstPlugin
                         string boneName = mesh.vertices[i].boneNames[j];
                         int boneIndex = Model.Model.Bones.IndexOf(Model.Model.Bones.Where(p => p.Name == boneName).FirstOrDefault());
 
-                        if (boneIndex != -1)
+                        if (boneIndex != -1 && skinningIndices.IndexOf(boneIndex) != -1)
                             mesh.vertices[i].boneIds.Add(boneIndex);
                         else
                         {
                             if (!unmappedBones.Contains(boneName))
                                 unmappedBones.Add(boneName);
                         }
+                    }
+                }
+            }
+
+            //Adjust materials if necessary
+            if (importer.Settings.ResetUVTransform)
+            {
+                foreach (var mat in Model.GenericMaterials)
+                {
+                    foreach (var param in mat.ValueParams)
+                    {
+                        if (param.Key.Contains("UVScale"))
+                            param.Value.Value = 1;
+                        if (param.Key.Contains("UVTranslate"))
+                            param.Value.Value = 0;
                     }
                 }
             }
@@ -695,8 +724,9 @@ namespace FirstPlugin
                 }
             }
 
-            foreach (var bone in unmappedBones)
-                Console.WriteLine($"unmapped bone! {bone}");
+            if (unmappedBones.Count > 0)
+                STErrorDialog.Show($"{unmappedBones.Count} bone(s) are not present in the boneset and are unmapped!", 
+                    "GFBMDL Importer", string.Join("\n", unmappedBones.ToArray()));
 
             Console.WriteLine($"");
 
