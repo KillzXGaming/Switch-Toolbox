@@ -35,11 +35,13 @@
             this.chkOldExporter = new Toolbox.Library.Forms.STCheckBox();
             this.chkVertexColors = new Toolbox.Library.Forms.STCheckBox();
             this.chkExportRiggedBonesOnly = new Toolbox.Library.Forms.STCheckBox();
+            this.chkApplyUVTransforms = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.chkApplyUVTransforms);
             this.contentContainer.Controls.Add(this.chkExportRiggedBonesOnly);
             this.contentContainer.Controls.Add(this.chkVertexColors);
             this.contentContainer.Controls.Add(this.chkOldExporter);
@@ -56,6 +58,7 @@
             this.contentContainer.Controls.SetChildIndex(this.chkOldExporter, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkVertexColors, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkExportRiggedBonesOnly, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkApplyUVTransforms, 0);
             // 
             // exportTexturesChkBox
             // 
@@ -95,7 +98,7 @@
             // chkFlipUvsVertical
             // 
             this.chkFlipUvsVertical.AutoSize = true;
-            this.chkFlipUvsVertical.Location = new System.Drawing.Point(22, 126);
+            this.chkFlipUvsVertical.Location = new System.Drawing.Point(20, 147);
             this.chkFlipUvsVertical.Name = "chkFlipUvsVertical";
             this.chkFlipUvsVertical.Size = new System.Drawing.Size(101, 17);
             this.chkFlipUvsVertical.TabIndex = 14;
@@ -106,7 +109,7 @@
             // chkOldExporter
             // 
             this.chkOldExporter.AutoSize = true;
-            this.chkOldExporter.Location = new System.Drawing.Point(22, 149);
+            this.chkOldExporter.Location = new System.Drawing.Point(20, 170);
             this.chkOldExporter.Name = "chkOldExporter";
             this.chkOldExporter.Size = new System.Drawing.Size(200, 17);
             this.chkOldExporter.TabIndex = 15;
@@ -139,6 +142,18 @@
             this.chkExportRiggedBonesOnly.UseVisualStyleBackColor = true;
             this.chkExportRiggedBonesOnly.CheckedChanged += new System.EventHandler(this.chkExportRiggedBonesOnly_CheckedChanged);
             // 
+            // chkApplyUVTransforms
+            // 
+            this.chkApplyUVTransforms.AutoSize = true;
+            this.chkApplyUVTransforms.Enabled = false;
+            this.chkApplyUVTransforms.Location = new System.Drawing.Point(23, 116);
+            this.chkApplyUVTransforms.Name = "chkApplyUVTransforms";
+            this.chkApplyUVTransforms.Size = new System.Drawing.Size(187, 17);
+            this.chkApplyUVTransforms.TabIndex = 18;
+            this.chkApplyUVTransforms.Text = "Apply UV Transforms (diffuse only)";
+            this.chkApplyUVTransforms.UseVisualStyleBackColor = true;
+            this.chkApplyUVTransforms.CheckedChanged += new System.EventHandler(this.chkApplyUVTransforms_CheckedChanged);
+            // 
             // ExportModelSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -161,5 +176,6 @@
         protected STCheckBox chkOldExporter;
         private STCheckBox chkVertexColors;
         private STCheckBox chkExportRiggedBonesOnly;
+        private STCheckBox chkApplyUVTransforms;
     }
 }

@@ -46,5 +46,9 @@ namespace Toolbox.Library.Forms
         {
 
         }
+
+        private void chkApplyUVTransforms_CheckedChanged(object sender, EventArgs e) {
+            Settings.TransformColorUVs = chkApplyUVTransforms.Checked;
+        }
     }
 }
