@@ -272,6 +272,7 @@ namespace Toolbox.Library
 
                     if (settings.TransformColorUVs)
                     {
+                        List<Vertex> transformedVertices = new List<Vertex>();
                         foreach (var poly in mesh.PolygonGroups)
                         {
                             var mat = poly.Material;
@@ -288,16 +289,22 @@ namespace Toolbox.Library
                                 if (diffuse != null)
                                     transform = diffuse.Transform;
 
-                                Console.WriteLine("transform scale " + transform.Scale);
-                                Console.WriteLine("transform translate " + transform.Translate);
+                                var vertexA = mesh.vertices[faces[v]];
+                                var vertexB = mesh.vertices[faces[v+1]];
+                                var vertexC = mesh.vertices[faces[v+2]];
 
-                                mesh.vertices[faces[v]].uv0 *= transform.Scale;
-                                mesh.vertices[faces[v + 1]].uv0 *= transform.Scale;
-                                mesh.vertices[faces[v + 2]].uv0 *= transform.Scale;
-
-                                mesh.vertices[faces[v]].uv0 += transform.Translate;
-                                mesh.vertices[faces[v + 1]].uv0 += transform.Translate;
-                                mesh.vertices[faces[v + 2]].uv0 += transform.Translate;
+                                if (!transformedVertices.Contains(vertexA)) {
+                                    vertexA.uv0 = (vertexA.uv0 * transform.Scale) + transform.Translate;
+                                    transformedVertices.Add(vertexA);
+                                }
+                                if (!transformedVertices.Contains(vertexB)) {
+                                    vertexB.uv0 = (vertexB.uv0 * transform.Scale) + transform.Translate;
+                                    transformedVertices.Add(vertexB);
+                                }
+                                if (!transformedVertices.Contains(vertexC)) {
+                                    vertexC.uv0 = (vertexC.uv0 * transform.Scale) + transform.Translate;
+                                    transformedVertices.Add(vertexC);
+                                }
                             }
                         }
                     }
