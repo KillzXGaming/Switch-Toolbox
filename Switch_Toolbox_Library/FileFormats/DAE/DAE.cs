@@ -269,6 +269,39 @@ namespace Toolbox.Library
                         writer.CurrentMaterial = Materials[mesh.MaterialIndex].Text;
                     }
 
+
+                    if (settings.TransformColorUVs)
+                    {
+                        foreach (var poly in mesh.PolygonGroups)
+                        {
+                            var mat = poly.Material;
+                            if (mat == null) continue;
+
+                            var faces = poly.GetDisplayFace();
+                            for (int v = 0; v < poly.displayFaceSize; v += 3)
+                            {
+                                if (faces.Count < v + 2)
+                                    break;
+
+                                var diffuse = mat.TextureMaps.FirstOrDefault(x => x.Type == STGenericMatTexture.TextureType.Diffuse);
+                                STTextureTransform transform = new STTextureTransform();
+                                if (diffuse != null)
+                                    transform = diffuse.Transform;
+
+                                Console.WriteLine("transform scale " + transform.Scale);
+                                Console.WriteLine("transform translate " + transform.Translate);
+
+                                mesh.vertices[faces[v]].uv0 *= transform.Scale;
+                                mesh.vertices[faces[v + 1]].uv0 *= transform.Scale;
+                                mesh.vertices[faces[v + 2]].uv0 *= transform.Scale;
+
+                                mesh.vertices[faces[v]].uv0 += transform.Translate;
+                                mesh.vertices[faces[v + 1]].uv0 += transform.Translate;
+                                mesh.vertices[faces[v + 2]].uv0 += transform.Translate;
+                            }
+                        }
+                    }
+
                     // collect sources
                     List<float> Position = new List<float>();
                     List<float> Normal = new List<float>();
@@ -391,35 +424,6 @@ namespace Toolbox.Library
 
                         BoneIndices.Add(bIndices.ToArray());
                         BoneWeights.Add(bWeights.ToArray());
-                    }
-
-                    if (settings.TransformColorUVs)
-                    {
-                        foreach (var poly in mesh.PolygonGroups)
-                        {
-                            var mat = poly.Material;
-                            if (mat == null) continue;
-
-                            var faces = poly.GetDisplayFace();
-                            for (int v = 0; v < poly.displayFaceSize; v += 3)
-                            {
-                                if (faces.Count < v + 2)
-                                    break;
-
-                                var diffuse = mat.TextureMaps.FirstOrDefault(x => x.Type == STGenericMatTexture.TextureType.Diffuse);
-                                STTextureTransform transform = new STTextureTransform();
-                                if (diffuse != null)
-                                    transform = diffuse.Transform;
-
-                                mesh.vertices[faces[v]].uv0 *= transform.Scale;
-                                mesh.vertices[faces[v + 1]].uv0 *= transform.Scale;
-                                mesh.vertices[faces[v + 2]].uv0 *= transform.Scale;
-
-                                mesh.vertices[faces[v]].uv0 += transform.Translate;
-                                mesh.vertices[faces[v + 1]].uv0 += transform.Translate;
-                                mesh.vertices[faces[v + 2]].uv0 += transform.Translate;
-                            }
-                        }
                     }
 
                     List<TriangleList> triangleLists = new List<TriangleList>();

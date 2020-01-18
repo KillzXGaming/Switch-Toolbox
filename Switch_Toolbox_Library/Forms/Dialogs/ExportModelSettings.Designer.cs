@@ -145,7 +145,6 @@
             // chkApplyUVTransforms
             // 
             this.chkApplyUVTransforms.AutoSize = true;
-            this.chkApplyUVTransforms.Enabled = false;
             this.chkApplyUVTransforms.Location = new System.Drawing.Point(23, 116);
             this.chkApplyUVTransforms.Name = "chkApplyUVTransforms";
             this.chkApplyUVTransforms.Size = new System.Drawing.Size(187, 17);
