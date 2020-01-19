@@ -143,7 +143,7 @@ namespace FirstPlugin.Turbo
             return (float)(Math.Atan2(yDiff, xDiff) * 180.0 / Math.PI);
         }
 
-        public override void RenderSceme()
+        public override void RenderScene()
         {
             if (MapCamera == null) return;
 

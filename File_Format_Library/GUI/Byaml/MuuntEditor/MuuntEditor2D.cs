@@ -19,7 +19,7 @@ namespace FirstPlugin.MuuntEditor
             ParentEditor = editor;
         }
 
-        public override void RenderSceme()
+        public override void RenderScene()
         {
             foreach (var col in ParentEditor.CollisionObjects)
                 col.Renderer.Draw(Camera.ModelViewMatrix);

@@ -38,7 +38,7 @@ namespace Toolbox.Library.Forms
             return new List<IPickable2DObject>() { PickableUVMap };
         }
 
-        public override void RenderSceme()
+        public override void RenderScene()
         {
             GL.PushMatrix();
             Vector3 Scale = new Vector3(30, 30, 30);

@@ -156,7 +156,7 @@ namespace Toolbox.Library.Forms
             if (UseGrid)
                 Render2D.DrawGrid(BackgroundColor);
 
-            RenderSceme();
+            RenderScene();
 
             if (showSelectionBox)
             {
@@ -212,7 +212,7 @@ namespace Toolbox.Library.Forms
             UpdateViewport();
         }
 
-        public virtual void RenderSceme()
+        public virtual void RenderScene()
         {
 
         }
