@@ -879,6 +879,32 @@ namespace LayoutBXLYT.Cafe
                 }
             }
 
+            public override BasePane Copy()
+            {   
+                TXT1 pane = new TXT1();
+                pane.Material = Material;
+                pane.MaterialIndex = MaterialIndex;
+                pane.FontIndex = FontIndex;
+                pane.FontName = FontName;
+                pane.FontTopColor = FontTopColor;
+                pane.FontBottomColor = FontBottomColor;
+                pane.FontSize = FontSize;
+                pane.LineSpace = LineSpace;
+                pane.CharacterSpace = CharacterSpace;
+                pane.ShadowXY = ShadowXY;
+                pane.ShadowXYSize = ShadowXYSize;
+                pane.ShadowForeColor = ShadowForeColor;
+                pane.ShadowBackColor = ShadowBackColor;
+                pane.ShadowItalic = ShadowItalic;
+                pane.LineAlignment = LineAlignment;
+                pane.TextAlignment = TextAlignment;
+                pane.MaxTextLength = MaxTextLength;
+                pane.ItalicTilt = ItalicTilt;
+                pane._flags = _flags;
+
+                return pane;
+            }
+
             public TXT1() : base()
             {
          
@@ -1023,6 +1049,7 @@ namespace LayoutBXLYT.Cafe
                 set
                 {
                     text = value;
+                    TextLength = (ushort)((text.Length * 2) + 2);
                     UpdateTextRender();
                 }
             }

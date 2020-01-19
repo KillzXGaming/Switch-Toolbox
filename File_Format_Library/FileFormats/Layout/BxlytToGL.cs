@@ -45,7 +45,7 @@ namespace LayoutBXLYT
             }
         }
 
-        public static void DrawPictureBox(BasePane pane, bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures, bool isSelected)
+        public static void DrawPictureBox(BasePane pane, LayoutViewer.Camera2D camera, bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures, bool isSelected)
         {
             if (!Runtime.LayoutEditor.DisplayPicturePane)
                 return;
@@ -74,7 +74,10 @@ namespace LayoutBXLYT
 
                 var mat = pic1Pane.Material as BFLYT.Material;
 
+                var mvp = camera.ModelViewMatrix;
+
                 ShaderLoader.CafeShader.Enable();
+                ShaderLoader.CafeShader.SetMatrix("modelViewMatrix", ref mvp);
                 BflytShader.SetMaterials(ShaderLoader.CafeShader, mat, pane, Textures);
 
                 if (pic1Pane.TexCoords.Length > 0)
@@ -152,9 +155,9 @@ namespace LayoutBXLYT
                 ShaderLoader.RevShader.Disable();
             }
 
-            GL.BindTexture(TextureTarget.Texture2D, 0);
-            GL.Disable(EnableCap.Texture2D);
-            GL.UseProgram(0);
+        //    GL.BindTexture(TextureTarget.Texture2D, 0);
+         //   GL.Disable(EnableCap.Texture2D);
+          //  GL.UseProgram(0);
         }
 
         public static void DrawBoundryPane(BasePane pane, bool gameWindow, byte effectiveAlpha, bool isSelected)
@@ -243,7 +246,7 @@ namespace LayoutBXLYT
             BxlytToGL.DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha);
         }
 
-        public static void DrawTextbox(BasePane pane, bool gameWindow, Bitmap fontBitmap, byte effectiveAlpha,
+        public static void DrawTextbox(BasePane pane, LayoutViewer.Camera2D camera, bool gameWindow, Bitmap fontBitmap, byte effectiveAlpha,
             Dictionary<string, STGenericTexture> Textures, List<BasePane> SelectedPanes, bool updateBitmap, bool isSelected)
         {
             GL.Enable(EnableCap.Texture2D);
@@ -398,7 +401,7 @@ namespace LayoutBXLYT
         //Huge thanks to layout studio for the window pane rendering code
         //https://github.com/Treeki/LayoutStudio/blob/master/layoutgl/widget.cpp
         //Note i still need to fix UV coordinates being flips and transformed!
-        public static void DrawWindowPane(BasePane pane,bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures, bool isSelected)
+        public static void DrawWindowPane(BasePane pane, LayoutViewer.Camera2D camera, bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures, bool isSelected)
         {
             if (!Runtime.LayoutEditor.DisplayWindowPane)
                 return;
