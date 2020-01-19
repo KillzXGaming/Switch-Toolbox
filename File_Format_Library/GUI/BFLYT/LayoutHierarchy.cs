@@ -69,12 +69,75 @@ namespace LayoutBXLYT
             LoadTextures(bxlyt.Textures);
             LoadFonts(bxlyt.Fonts);
             LoadMaterials(bxlyt.GetMaterials());
+            treeView1.Nodes.Add(new AnimatedPaneFolder(ParentEditor, "Animated Pane List") { Tag = bxlyt });
+
             LoadPane(bxlyt.RootGroup);
             LoadPane(bxlyt.RootPane);
 
             treeView1.EndUpdate();
 
             isLoaded = true;
+        }
+
+        public class AnimatedPaneFolder : TreeNodeCustom
+        {
+            private LayoutEditor ParentEditor;
+            private bool Expanded = false;
+
+            public AnimatedPaneFolder(LayoutEditor editor, string text) {
+                ParentEditor = editor;
+                Text = text;
+
+                Nodes.Add("Empty");
+            }
+
+            public override void OnExpand()
+            {
+                if (Expanded) return;
+
+                var layoutFile = (BxlytHeader)Tag;
+
+                Nodes.Clear();
+
+                Expanded = true;
+
+                var animations = ParentEditor.AnimationFiles;
+
+                foreach (var pane in layoutFile.PaneLookup.Values) {
+                    string matName = "";
+
+                    //Find materials
+                    var mat = pane.TryGetActiveMaterial();
+                    if (mat != null) matName = mat.Name;
+
+                    //search archive
+                    var archive = layoutFile.FileInfo.IFileInfo.ArchiveParent;
+                    if (archive != null)
+                    {
+                        foreach (var file in archive.Files)
+                        {
+                            if (Utils.GetExtension(file.FileName) == ".bflan" &&
+                                !animations.Any(x => x.FileName == file.FileName))
+                            {
+                                if (BxlanHeader.ContainsEntry(file.FileData, new string[2] { pane.Name, matName }))
+                                {
+                                    var paneNode = CreatePaneWrapper(pane);
+                                    Nodes.Add(paneNode);
+                                }
+                            }
+                        }
+                    }
+
+                    //Search opened animations
+                    for (int i = 0; i < animations?.Count; i++) {
+                        if (animations[i].ContainsEntry(pane.Name) || animations[i].ContainsEntry(matName))
+                        {
+                            var paneNode = CreatePaneWrapper(pane);
+                            Nodes.Add(paneNode);
+                        }
+                    }
+                }
+            }
         }
 
         public void SelectNode(TreeNode node)
@@ -352,6 +415,9 @@ namespace LayoutBXLYT
             {
 
             }
+
+            if (e.Node is TreeNodeCustom)
+                ((TreeNodeCustom)e.Node).OnExpand();
         }
 
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)

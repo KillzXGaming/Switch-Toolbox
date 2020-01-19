@@ -27,7 +27,12 @@ namespace LayoutBXLYT
 
         public class Camera2D
         {
-            public Matrix4 ModelViewMatrix = Matrix4.Identity;
+            public Matrix4 ModelViewMatrix => ModelMatrix * ViewMatrix * ProjectionMatrix;
+
+            public Matrix4 ProjectionMatrix = Matrix4.Identity;
+            public Matrix4 ViewMatrix = Matrix4.Identity;
+            public Matrix4 ModelMatrix = Matrix4.Identity;
+
             public float Zoom = 1;
             public Vector2 Position;
         }
@@ -56,7 +61,8 @@ namespace LayoutBXLYT
             UpdateViewport();
         }
 
-        public Dictionary<string, STGenericTexture> GetTextures() {
+        public Dictionary<string, STGenericTexture> GetTextures()
+        {
             return Textures;
         }
 
@@ -156,7 +162,7 @@ namespace LayoutBXLYT
                 var orthoMatrix = Matrix4.CreateOrthographic(halfW, halfH, -10000, 10000);
                 GL.LoadMatrix(ref orthoMatrix);
                 GL.MatrixMode(MatrixMode.Modelview);
-                Camera.ModelViewMatrix = orthoMatrix;
+                Camera.ProjectionMatrix = orthoMatrix;
             }
             else
             {
@@ -164,7 +170,7 @@ namespace LayoutBXLYT
                 var perspectiveMatrix = Matrix4.CreateTranslation(cameraPosition) * Matrix4.CreatePerspectiveFieldOfView(0.785398f, WindowWidth / WindowHeight, 0.01f, 100000);
                 GL.LoadMatrix(ref perspectiveMatrix);
                 GL.MatrixMode(MatrixMode.Modelview);
-                Camera.ModelViewMatrix = perspectiveMatrix;
+                Camera.ProjectionMatrix = perspectiveMatrix;
             }
 
             GL.ClearColor(BackgroundColor);
@@ -184,7 +190,7 @@ namespace LayoutBXLYT
                 var orthoMatrix = Matrix4.CreateOrthographic(halfW, halfH, -10000, 10000);
                 GL.LoadMatrix(ref orthoMatrix);
                 GL.MatrixMode(MatrixMode.Modelview);
-                Camera.ModelViewMatrix = orthoMatrix;
+                Camera.ProjectionMatrix = orthoMatrix;
             }
             else
             {
@@ -192,7 +198,7 @@ namespace LayoutBXLYT
                 var perspectiveMatrix = Matrix4.CreateTranslation(cameraPosition) * Matrix4.CreatePerspectiveFieldOfView(1.3f, glControl1.Width / glControl1.Height, 0.01f, 100000);
                 GL.LoadMatrix(ref perspectiveMatrix);
                 GL.MatrixMode(MatrixMode.Modelview);
-                Camera.ModelViewMatrix = perspectiveMatrix;
+                Camera.ProjectionMatrix = perspectiveMatrix;
             }
 
             GL.ClearColor(BackgroundColor);
@@ -203,6 +209,9 @@ namespace LayoutBXLYT
                 GL.PushMatrix();
                 GL.Scale(Camera.Zoom, Camera.Zoom, 1);
                 GL.Translate(Camera.Position.X, Camera.Position.Y, 0);
+
+                Camera.ViewMatrix *= Matrix4.CreateScale(Camera.Zoom, Camera.Zoom, 1) *
+                                   Matrix4.CreateTranslation(Camera.Position.X, Camera.Position.Y, 0);
             }
         }
 
@@ -329,7 +338,7 @@ namespace LayoutBXLYT
             {
                 var paneRect = pane.CreateRectangle();
 
-                rect = paneRect.GetTransformedRectangle(pane.Parent, 
+                rect = paneRect.GetTransformedRectangle(pane.Parent,
                     pane.GetTranslation(), pane.GetRotation(), pane.GetScale());
                 points.AddRange(new Vector2[4]
                 {
@@ -465,9 +474,9 @@ namespace LayoutBXLYT
                 if (!pane.Visible && !pane.animController.Visibile)
                     DrawDefaultPane(shader, pane, isSelected);
                 else if (pane is IPicturePane)
-                    BxlytToGL.DrawPictureBox(pane, GameWindow, effectiveAlpha, Textures, isSelected);
+                    BxlytToGL.DrawPictureBox(pane, Camera, GameWindow, effectiveAlpha, Textures, isSelected);
                 else if (pane is IWindowPane)
-                    BxlytToGL.DrawWindowPane(pane, GameWindow, effectiveAlpha, Textures, isSelected);
+                    BxlytToGL.DrawWindowPane(pane, Camera, GameWindow, effectiveAlpha, Textures, isSelected);
                 else if (pane is IBoundryPane)
                 {
                     shader.Enable();
@@ -490,7 +499,7 @@ namespace LayoutBXLYT
                     }
 
                     if (bitmap != null)
-                        BxlytToGL.DrawTextbox(pane, GameWindow, bitmap, effectiveAlpha,
+                        BxlytToGL.DrawTextbox(pane, Camera, GameWindow, bitmap, effectiveAlpha,
                             Textures, SelectedPanes, textPane.RenderableFont == null, isSelected);
                     else
                         DrawDefaultPane(shader, pane, isSelected);
@@ -574,7 +583,7 @@ namespace LayoutBXLYT
             shader.Disable();
         }
 
-        private void DrawPartsPane(BxlytShader shader, BFLYT.PRT1 pane, byte effectiveAlpha,bool isSelected, bool parentInfluenceAlpha)
+        private void DrawPartsPane(BxlytShader shader, BFLYT.PRT1 pane, byte effectiveAlpha, bool isSelected, bool parentInfluenceAlpha)
         {
             if (Runtime.LayoutEditor.PartsAsNullPanes)
             {
@@ -585,7 +594,7 @@ namespace LayoutBXLYT
             pane.UpdateTextureData(this.Textures);
             var partPane = pane.GetExternalPane();
             if (partPane != null)
-                RenderPanes(shader,partPane, true, effectiveAlpha, parentInfluenceAlpha);
+                RenderPanes(shader, partPane, true, effectiveAlpha, parentInfluenceAlpha);
             else
                 DrawDefaultPane(shader, pane, isSelected);
 
@@ -595,7 +604,7 @@ namespace LayoutBXLYT
                 {
                     if (prop.Property != null)
                     {
-                        RenderPanes(shader,prop.Property, false, effectiveAlpha, parentInfluenceAlpha || pane.InfluenceAlpha);
+                        RenderPanes(shader, prop.Property, false, effectiveAlpha, parentInfluenceAlpha || pane.InfluenceAlpha);
                     }
                 }
             }
@@ -840,15 +849,15 @@ namespace LayoutBXLYT
                 stContextMenuStrip1.Items.Clear();
                 stContextMenuStrip1.Items.Add(createPanes);
                 stContextMenuStrip1.Items.Add(selectOverlapping);
-                    stContextMenuStrip1.Items.Add(new STToolStripItem("Show All Hidden Panes", ShowAllPaneAction));
+                stContextMenuStrip1.Items.Add(new STToolStripItem("Show All Hidden Panes", ShowAllPaneAction));
+                stContextMenuStrip1.Items.Add(new STToolStripItem("Paste (Experimental)", PastePaneAction) { Enabled = CopiedPanes.Count > 0 });
 
                 if (SelectedPanes.Count > 0)
                 {
                     stContextMenuStrip1.Items.Add(new STToolStripSeparator());
-                    stContextMenuStrip1.Items.Add(new STToolStripItem("Copy", CopyPaneAction));
-                    stContextMenuStrip1.Items.Add(new STToolStripItem("Paste", PastePaneAction));
+                    stContextMenuStrip1.Items.Add(new STToolStripItem("Copy (Experimental)", CopyPaneAction));
                     stContextMenuStrip1.Items.Add(new STToolStripItem("Edit Group"));
-                    stContextMenuStrip1.Items.Add(new STToolStripItem("Delete Selected Panes",DeletePaneAction ));
+                    stContextMenuStrip1.Items.Add(new STToolStripItem("Delete Selected Panes", DeletePaneAction));
                     stContextMenuStrip1.Items.Add(new STToolStripItem("Hide Selected Panes", HidePaneAction));
                 }
 
@@ -858,63 +867,71 @@ namespace LayoutBXLYT
             Console.WriteLine("SelectedPanes " + SelectedPanes.Count);
         }
 
-        private void CreatePartPaneAction(object sender, EventArgs e) {
+        private void CreatePartPaneAction(object sender, EventArgs e)
+        {
             var pane = ParentEditor.AddNewPartPane();
             SetupNewPane(pane, pickOriginMouse);
         }
 
-        private void CreateNullPaneAction(object sender, EventArgs e) {
+        private void CreateNullPaneAction(object sender, EventArgs e)
+        {
             var pane = ParentEditor.AddNewNullPane();
             SetupNewPane(pane, pickOriginMouse);
         }
 
-        private void CreatePicturePaneAction(object sender, EventArgs e) {
+        private void CreatePicturePaneAction(object sender, EventArgs e)
+        {
             var pane = ParentEditor.AddNewPicturePane();
             SetupNewPane(pane, pickOriginMouse);
         }
 
-        private void CreateWindowPaneAction(object sender, EventArgs e) {
+        private void CreateWindowPaneAction(object sender, EventArgs e)
+        {
             var pane = ParentEditor.AddNewWindowPane();
             SetupNewPane(pane, pickOriginMouse);
         }
 
-        private void CreateTextPaneAction(object sender, EventArgs e) {
+        private void CreateTextPaneAction(object sender, EventArgs e)
+        {
             var pane = ParentEditor.AddNewTextPane();
             SetupNewPane(pane, pickOriginMouse);
+            if (pane is Cafe.BFLYT.TXT1)
+                ((Cafe.BFLYT.TXT1)pane).UpdateTextRender();
         }
 
-        private void CreateBoundryPaneAction(object sender, EventArgs e) {
+        private void CreateBoundryPaneAction(object sender, EventArgs e)
+        {
             var pane = ParentEditor.AddNewBoundryPane();
             SetupNewPane(pane, pickOriginMouse);
         }
 
-        private void CopyPaneAction(object sender, EventArgs e) {
+        private void CopyPaneAction(object sender, EventArgs e)
+        {
             CopyPanes();
         }
 
-        private void PastePaneAction(object sender, EventArgs e) {
+        private void PastePaneAction(object sender, EventArgs e)
+        {
             PastePanes();
         }
 
         private void CopyPanes()
         {
-            return;
-
             CopiedPanes.Clear();
-            foreach (var pane in SelectedPanes)
-            {
-                var copiedPane = pane.Copy();
+            foreach (var pane in SelectedPanes) {
+                BasePane copiedPane = (BasePane)pane.Clone();
                 CopiedPanes.Add(copiedPane);
             }
         }
 
         private void PastePanes()
         {
-            return;
-
             SelectedPanes.Clear();
-            foreach (var pane in CopiedPanes)
+            foreach (var copiedPane in CopiedPanes)
             {
+                //Copy again as the user may paste the same one multiple times
+                //This will make sure it's a completely new instance
+                BasePane pane = (BasePane)copiedPane.Clone();
                 ParentEditor.AddNewPastedPane(pane);
                 SelectedPanes.Add(pane);
             }
@@ -933,15 +950,18 @@ namespace LayoutBXLYT
             glControl1.Invalidate();
         }
 
-        private void DeletePaneAction(object sender, EventArgs e) {
+        private void DeletePaneAction(object sender, EventArgs e)
+        {
             DeleteSelectedPanes();
         }
 
-        private void HidePaneAction(object sender, EventArgs e) {
+        private void HidePaneAction(object sender, EventArgs e)
+        {
             HideSelectedPanes();
         }
 
-        private void ShowAllPaneAction(object sender, EventArgs e) {
+        private void ShowAllPaneAction(object sender, EventArgs e)
+        {
             ShowHiddenPanes();
         }
 
@@ -1071,7 +1091,7 @@ namespace LayoutBXLYT
                     SelectedPanes.Add(pane);
 
             foreach (var childPane in pane.Childern)
-                 GetHitPanes(childPane, X, Y, SelectedPanes);
+                GetHitPanes(childPane, X, Y, SelectedPanes);
 
             return SelectedPanes;
         }
@@ -1087,7 +1107,7 @@ namespace LayoutBXLYT
             var top = new Point((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.TopPoint);
             var bottom = new Point((transformed.RightPoint + transformed.LeftPoint) / 2, transformed.BottomPoint);
 
-            if ( IsEdgeHit(leftTop, X, Y)) return PickAction.DragTopLeft;
+            if (IsEdgeHit(leftTop, X, Y)) return PickAction.DragTopLeft;
             else if (IsEdgeHit(left, X, Y)) return PickAction.DragLeft;
             else if (IsEdgeHit(leftBottom, X, Y)) return PickAction.DragBottomLeft;
             else if (IsEdgeHit(rightTop, X, Y)) return PickAction.DragTopRight;
@@ -1126,6 +1146,9 @@ namespace LayoutBXLYT
                 SelectionBoxPanes.Clear();
 
                 ParentEditor.RefreshEditors();
+
+                if (SelectedPanes.Count > 0)
+                    ParentEditor.UpdateHiearchyNodeSelection(SelectedPanes.FirstOrDefault());
             }
 
             glControl1.Invalidate();
@@ -1176,7 +1199,7 @@ namespace LayoutBXLYT
                 var paneRect = GetSelectedPanesBounding(SelectedPanes);
                 var pickState = SearchEdgePicking(paneRect, posWorld.X, posWorld.Y);
 
-                  if (pickState != PickAction.None)
+                if (pickState != PickAction.None)
                 {
                     if (pickState == PickAction.DragTop)
                         Cursor.Current = Cursors.SizeNS;
@@ -1450,14 +1473,16 @@ namespace LayoutBXLYT
             }
         }
 
-        private void glControl1_DragEnter(object sender, DragEventArgs e) {
+        private void glControl1_DragEnter(object sender, DragEventArgs e)
+        {
             if (e.Data.GetDataPresent(typeof(ListViewItem)))
             {
                 e.Effect = DragDropEffects.Move;
             }
         }
 
-        private void glControl1_DragDrop(object sender, DragEventArgs e) {
+        private void glControl1_DragDrop(object sender, DragEventArgs e)
+        {
             if (e.Data.GetDataPresent(typeof(ListViewItem)))
             {
                 var item = e.Data.GetData(typeof(ListViewItem)) as ListViewItem;

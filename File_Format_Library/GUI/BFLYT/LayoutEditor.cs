@@ -40,7 +40,7 @@ namespace LayoutBXLYT
             get { return ActiveViewport?.SelectedPanes; }
         }
 
-        private BxlytHeader ActiveLayout;
+        public BxlytHeader ActiveLayout;
         private BxlanHeader ActiveAnimation;
 
         public enum DockLayout
@@ -116,6 +116,7 @@ namespace LayoutBXLYT
         private LayoutPartsEditor LayoutPartsEditor;
         private STAnimationPanel AnimationPanel;
         private PaneEditor LayoutPaneEditor;
+        private LytAnimationWindow AnimationWindow;
 
         private bool isLoaded = false;
         public void LoadBxlyt(BxlytHeader header)
@@ -356,6 +357,9 @@ namespace LayoutBXLYT
 
             if (!ActiveViewport.SelectedPanes.Contains(pane))
                 ActiveViewport.SelectedPanes.Add(pane);
+
+            if (AnimationWindow != null && !AnimationWindow.Disposing && !AnimationWindow.IsDisposed)
+                AnimationWindow.LoadPane(pane, this);
         }
 
         public void RefreshEditors()
@@ -1104,8 +1108,12 @@ namespace LayoutBXLYT
         {
             string name = pane.Name;
             string numberedEnd  = pane.Name.Split('_').LastOrDefault().Replace("_", string.Empty);
-            if (numberedEnd.All(char.IsDigit))
-                name = name.Replace(numberedEnd, string.Empty);
+            if (numberedEnd.All(char.IsDigit)) {
+                if (name.Contains($"_{numberedEnd}"))
+                    name = name.Replace($"_{numberedEnd}", string.Empty);
+                else
+                    name = name.Replace(numberedEnd, string.Empty);
+            }
 
             pane.Name = RenamePane(name);
             pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
@@ -1166,6 +1174,20 @@ namespace LayoutBXLYT
 
             if (LayoutPaneEditor != null)
                 LayoutPaneEditor.ReloadEditor();
+        }
+
+        private void showAnimationWindowToolStripMenuItem_Click(object sender, EventArgs e) {
+            OpenAnimationEditor();
+        }
+
+        private void OpenAnimationEditor() {
+            if (AnimationWindow == null || AnimationWindow.Disposing || AnimationWindow.IsDisposed) {
+                AnimationWindow = new LytAnimationWindow();
+                AnimationWindow.OnPropertyChanged += AnimPropertyChanged;
+                if (SelectedPanes.Count > 0)
+                    AnimationWindow.LoadPane(SelectedPanes[0], this);
+                AnimationWindow.Show(this);
+            }
         }
     }
 }

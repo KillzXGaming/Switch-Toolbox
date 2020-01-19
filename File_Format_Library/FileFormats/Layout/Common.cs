@@ -9,10 +9,13 @@ using Toolbox.Library.Animations;
 using Toolbox.Library;
 using WeifenLuo.WinFormsUI.Docking;
 using System.ComponentModel;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace LayoutBXLYT
 {
-    public class BasePane : SectionCommon
+    public class BasePane : SectionCommon,  ICloneable
     {
         [Browsable(false)]
         public BxlytHeader LayoutFile;
@@ -213,6 +216,11 @@ namespace LayoutBXLYT
         public virtual BasePane Copy()
         {
             return new BasePane();
+        }
+
+        public object Clone()
+        { 
+            return this.MemberwiseClone();
         }
 
         public virtual UserData CreateUserData()
@@ -2078,8 +2086,6 @@ namespace LayoutBXLYT
             pane.Parent = parent;
             parent.Childern.Add(pane);
             parent.NodeWrapper.Nodes.Add(pane.NodeWrapper);
-
-            Console.WriteLine("newpane " + pane.Name + " " + pane.Parent.Name);
         }
 
         public void RemovePanes(List<BasePane> panes, BasePane rootPane)
