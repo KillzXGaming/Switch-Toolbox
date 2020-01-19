@@ -375,7 +375,7 @@ namespace Toolbox.Library.Animations
                         break;
                 }
 
-                file.WriteLine(" " + (key.Frame + 1) + " {0:N6} fixed fixed 1 1 0 0 1 0 1;", v);
+                file.WriteLine(" " + (key.Frame + 1) + " {0:N6} fixed fixed 1 1 0 0 1 0 1;".Replace(",","."), v);
             }
 
             file.WriteLine(" }");
