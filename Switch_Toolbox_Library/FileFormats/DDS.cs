@@ -1038,18 +1038,18 @@ namespace Toolbox.Library
                     dds.header.mipmapCount = 1;
 
                 uint Offset = 0;
-                for (byte d = 0; d < dds.Depth; ++d)
+
+                if (dds.Depth > 1 && dds.header.mipmapCount > 1)
                 {
-                    for (byte i = 0; i < Length; ++i)
+                    var Surface = new Surface();
+
+                    uint MipWidth = dds.header.width, MipHeight = dds.header.height;
+                    for (int j = 0; j < dds.header.mipmapCount; ++j)
                     {
-                        var Surface = new STGenericTexture.Surface();
-
-                        uint MipWidth = dds.header.width, MipHeight = dds.header.height;
-                        for (int j = 0; j < dds.header.mipmapCount; ++j)
+                        MipWidth = (uint)Math.Max(1, dds.header.width >> j);
+                        MipHeight = (uint)Math.Max(1, dds.header.height >> j);
+                        for (byte d = 0; d < dds.Depth; ++d)
                         {
-                            MipWidth = (uint)Math.Max(1, dds.header.width >> j);
-                            MipHeight = (uint)Math.Max(1, dds.header.height >> j);
-
                             uint size = (MipWidth * MipHeight); //Total pixels
                             if (isBlock)
                             {
@@ -1062,12 +1062,52 @@ namespace Toolbox.Library
                                 size = (uint)(size * (GetBytesPerPixel(dds.Format))); //Bytes per pixel
                             }
 
-                            Surface.mipmaps.Add(reader.getSection((int)Offset, (int)size));
-                            Offset += size;
-                        }
 
-                        if (d == DepthLevel)
-                            Surfaces.Add(Surface);
+                            //Only add mips to the depth level needed
+                            if (d == DepthLevel)
+                                Surface.mipmaps.Add(reader.getSection((int)Offset, (int)size));
+
+                            Offset += size;
+
+                            //Add the current depth level and only once
+                            if (d == DepthLevel && j == 0)
+                                Surfaces.Add(Surface);
+                        }
+                    }
+                }
+                else
+                {
+                    for (byte d = 0; d < dds.Depth; ++d)
+                    {
+                        for (byte i = 0; i < Length; ++i)
+                        {
+                            var Surface = new STGenericTexture.Surface();
+
+                            uint MipWidth = dds.header.width, MipHeight = dds.header.height;
+                            for (int j = 0; j < dds.header.mipmapCount; ++j)
+                            {
+                                MipWidth = (uint)Math.Max(1, dds.header.width >> j);
+                                MipHeight = (uint)Math.Max(1, dds.header.height >> j);
+
+                                uint size = (MipWidth * MipHeight); //Total pixels
+                                if (isBlock)
+                                {
+                                    size = ((MipWidth + 3) >> 2) * ((MipHeight + 3) >> 2) * formatSize;
+                                    if (size < formatSize)
+                                        size = formatSize;
+                                }
+                                else
+                                {
+                                    size = (uint)(size * (GetBytesPerPixel(dds.Format))); //Bytes per pixel
+                                }
+
+                                Surface.mipmaps.Add(reader.getSection((int)Offset, (int)size));
+                                Offset += size;
+                            }
+
+                            if (d == DepthLevel)
+                                Surfaces.Add(Surface);
+                        }
                     }
                 }
 

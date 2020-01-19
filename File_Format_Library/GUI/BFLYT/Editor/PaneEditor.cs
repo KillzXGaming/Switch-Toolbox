@@ -161,7 +161,6 @@ namespace LayoutBXLYT
             }
 
             AddTab("User Data", LoadUserData);
-            AddTab("Anims", LoadAnimationData);
 
             int tabIndex;
             if (pane is IPicturePane)
@@ -215,13 +214,6 @@ namespace LayoutBXLYT
             UpdateTabIndex();
             propertyGrid = GetActiveEditor<STPropertyGrid>();
             propertyGrid.LoadProperty(activeProperty, ProperyChanged);
-        }
-
-        public void LoadAnimationData(object sender, EventArgs e)
-        {
-            UpdateTabIndex();
-            var animEditor = GetActiveEditor<PaneAnimationController>();
-            animEditor.LoadPane(ActivePane, this);
         }
 
         private void LoadUserData(object sender, EventArgs e)

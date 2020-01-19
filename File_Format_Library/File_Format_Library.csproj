@@ -482,11 +482,12 @@
     <Compile Include="GUI\BCH\MetaData\UserDataParser.Designer.cs">
       <DependentUpon>UserDataParser.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\BFLYT\Editor\PaneAnimationController.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="GUI\BFLYT\Animations\Basic\LayoutAnimTreeLoader.cs" />
+    <Compile Include="GUI\BFLYT\Animations\LytAnimationWindow.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\BFLYT\Editor\PaneAnimationController.Designer.cs">
-      <DependentUpon>PaneAnimationController.cs</DependentUpon>
+    <Compile Include="GUI\BFLYT\Animations\LytAnimationWindow.Designer.cs">
+      <DependentUpon>LytAnimationWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFRES\Materials\RenderState\RenderStateEditor.cs">
       <SubType>UserControl</SubType>
@@ -1585,8 +1586,8 @@
     <EmbeddedResource Include="GUI\BCH\MetaData\UserDataParser.resx">
       <DependentUpon>UserDataParser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\BFLYT\Editor\PaneAnimationController.resx">
-      <DependentUpon>PaneAnimationController.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\BFLYT\Animations\LytAnimationWindow.resx">
+      <DependentUpon>LytAnimationWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Materials\RenderState\RenderStateEditor.resx">
       <DependentUpon>RenderStateEditor.cs</DependentUpon>

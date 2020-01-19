@@ -142,31 +142,40 @@ namespace LayoutBXLYT
         }
     }
 
-    public class LytAlphaTestGroup : STAnimGroup
+    public class SubAnimGroup : STAnimGroup
     {
-        public LytAlphaTestGroup(BxlanPaiTag entry)
+        public BxlanPaiTag PaiTag;
+
+        public SubAnimGroup(BxlanPaiTag entry) {
+            PaiTag = entry;
+        }
+    }
+
+    public class LytAlphaTestGroup : SubAnimGroup
+    {
+        public LytAlphaTestGroup(BxlanPaiTag entry) : base(entry)
         {
 
         }
     }
 
-    public class LytFontShadowGroup : STAnimGroup
+    public class LytFontShadowGroup : SubAnimGroup
     {
-        public LytFontShadowGroup(BxlanPaiTag entry)
+        public LytFontShadowGroup(BxlanPaiTag entry) : base(entry)
         {
 
         }
     }
 
-    public class LytPerCharacterTransformCurveGroup : STAnimGroup
+    public class LytPerCharacterTransformCurveGroup : SubAnimGroup
     {
-        public LytPerCharacterTransformCurveGroup(BxlanPaiTag entry)
+        public LytPerCharacterTransformCurveGroup(BxlanPaiTag entry) : base(entry)
         {
 
         }
     }
 
-    public class LytPaneSRTGroup : STAnimGroup, IAnimationTarget
+    public class LytPaneSRTGroup : SubAnimGroup, IAnimationTarget
     {
         public BxlanPaiTag Tag;
 
@@ -210,13 +219,13 @@ namespace LayoutBXLYT
             }
         }
 
-        public LytPaneSRTGroup(BxlanPaiTag entry)
+        public LytPaneSRTGroup(BxlanPaiTag entry) : base(entry)
         {
             Tag = entry;
         }
     }
 
-    public class LytTexturePatternGroup : STAnimGroup, IAnimationTarget
+    public class LytTexturePatternGroup : SubAnimGroup, IAnimationTarget
     {
         public LytAnimTrack Tex0AnimTrack = new LytAnimTrack();
         public LytAnimTrack Tex1AnimTrack = new LytAnimTrack();
@@ -241,13 +250,13 @@ namespace LayoutBXLYT
                 return Tex0AnimTrack;
         }
 
-        public LytTexturePatternGroup(BxlanPaiTag entry)
+        public LytTexturePatternGroup(BxlanPaiTag entry) : base(entry)
         {
 
         }
     }
 
-    public class LytVisibiltyGroup : STAnimGroup, IAnimationTarget
+    public class LytVisibiltyGroup : SubAnimGroup, IAnimationTarget
     {
         public LytAnimTrack AnimTrack = new LytAnimTrack();
 
@@ -263,13 +272,13 @@ namespace LayoutBXLYT
             return AnimTrack;
         }
 
-        public LytVisibiltyGroup(BxlanPaiTag entry)
+        public LytVisibiltyGroup(BxlanPaiTag entry) : base(entry)
         {
 
         }
     }
 
-    public class LytVertexColorGroup : STAnimGroup, IAnimationTarget
+    public class LytVertexColorGroup : SubAnimGroup, IAnimationTarget
     {
         public LytAnimTrack TopLeftR = new LytAnimTrack();
         public LytAnimTrack TopLeftG = new LytAnimTrack();
@@ -325,13 +334,13 @@ namespace LayoutBXLYT
             }
         }
 
-        public LytVertexColorGroup(BxlanPaiTag entry)
+        public LytVertexColorGroup(BxlanPaiTag entry) : base(entry)
         {
 
         }
     }
 
-    public class LytMaterialColorGroup : STAnimGroup, IAnimationTarget
+    public class LytMaterialColorGroup : SubAnimGroup, IAnimationTarget
     {
         public LytAnimTrack BlackColorR = new LytAnimTrack();
         public LytAnimTrack BlackColorG = new LytAnimTrack();
@@ -367,13 +376,13 @@ namespace LayoutBXLYT
             }
         }
 
-        public LytMaterialColorGroup(BxlanPaiTag entry)
+        public LytMaterialColorGroup(BxlanPaiTag entry) : base(entry)
         {
 
         }
     }
 
-    public class LytTextureSRTGroup : STAnimGroup, IAnimationTarget
+    public class LytTextureSRTGroup : SubAnimGroup, IAnimationTarget
     {
         public LytAnimTrack TranslateU = new LytAnimTrack();
         public LytAnimTrack TranslateV = new LytAnimTrack();
@@ -402,13 +411,13 @@ namespace LayoutBXLYT
             }
         }
 
-        public LytTextureSRTGroup(BxlanPaiTag entry)
+        public LytTextureSRTGroup(BxlanPaiTag entry) : base(entry)
         {
 
         }
     }
 
-    public class LytIndirectSRTGroup : STAnimGroup, IAnimationTarget
+    public class LytIndirectSRTGroup : SubAnimGroup, IAnimationTarget
     {
         public LytAnimTrack Rotate = new LytAnimTrack();
         public LytAnimTrack ScaleU = new LytAnimTrack();
@@ -433,7 +442,7 @@ namespace LayoutBXLYT
             }
         }
 
-        public LytIndirectSRTGroup(BxlanPaiTag entry)
+        public LytIndirectSRTGroup(BxlanPaiTag entry) : base(entry)
         {
 
         }

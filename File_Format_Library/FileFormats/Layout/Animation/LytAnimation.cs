@@ -67,6 +67,31 @@ namespace LayoutBXLYT
                 AnimGroups.Add(new LytAnimGroup(tag));
         }
 
+        public STAnimationTrack FindTarget(BxlanPaiTag group, int index)
+        {
+            var tracks = FindTargets(group);
+
+            Console.WriteLine($"tracks {tracks.Count}");
+
+            if (index < tracks.Count)
+                return tracks[index];
+            else
+                return null;
+        }
+
+        public List<STAnimationTrack> FindTargets(BxlanPaiTag group)
+        {
+            foreach (LytAnimGroup grp in AnimGroups) {
+                foreach (SubAnimGroup sub in grp.SubAnimGroups)
+                {
+                    if (sub.PaiTag == group)
+                        return sub.GetTracks();
+                }
+            }
+
+            return new List<STAnimationTrack>();
+        }
+
         public override void NextFrame()
         {
             if (Frame == 0)

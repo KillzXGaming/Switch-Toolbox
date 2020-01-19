@@ -335,6 +335,9 @@
     <Compile Include="Forms\Dialogs\STColorDialog.Designer.cs">
       <DependentUpon>STColorDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Editors\CurveEditor\CurveEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Editors\Object Editor\SearchNodeForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
