@@ -312,8 +312,7 @@ namespace Toolbox.Library.Animations
         {
             bool isAngular = type == "rotateX" || type == "rotateY" || type == "rotateZ";
 
-            //    string interp = isAngular ? "angular" : "linear";
-            string interp = "linear";
+            string interp = isAngular ? "angular" : "linear";
 
             file.WriteLine("animData {");
             file.WriteLine("  input time;");
