@@ -11,6 +11,7 @@ using System.Drawing;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using FirstPlugin.Forms;
+using ByamlExt.Byaml;
 
 namespace FirstPlugin
 {
@@ -72,6 +73,8 @@ namespace FirstPlugin
         }
 
         public DrawableContainer DrawableContainer = new DrawableContainer();
+
+        public BymlFileData AttributeByml = null;
 
         public void Load(System.IO.Stream stream)
         {
@@ -222,6 +225,55 @@ namespace FirstPlugin
             {
                 writer.Write(data);
             }
+
+            if (AttributeByml != null)
+                SaveAttributeByml();
+        }
+
+        private void SaveAttributeByml(bool UpdateArchive = false)
+        {
+            string byml = $"{Path.GetFileNameWithoutExtension(Text)}Attribute.byml";
+            if (IFileInfo.ArchiveParent != null)
+            {
+                foreach (var file in IFileInfo.ArchiveParent.Files) {
+                    if (file.FileName == byml) {
+                        var mem = new MemoryStream();
+                        ByamlFile.SaveN(mem, new BymlFileData
+                        {
+                            Version = AttributeByml.Version,
+                            byteOrder = AttributeByml.byteOrder,
+                            SupportPaths = AttributeByml.SupportPaths,
+                            RootNode = AttributeByml.RootNode
+                        });
+
+                        file.FileData = mem.ToArray();
+                        //Reload the file format
+                        if (file.FileFormat != null) {
+                            file.FileFormat = null;
+                            file.FileFormat = file.OpenFile();
+                        }
+                    }
+                }
+            }
+            else if (!UpdateArchive)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Supported Formats|*.byml";
+                sfd.FileName = byml;
+                sfd.DefaultExt = ".byml";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    using (var fileStream = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write)) {
+                        ByamlFile.SaveN(fileStream, new BymlFileData
+                        {
+                            Version = AttributeByml.Version,
+                            byteOrder = AttributeByml.byteOrder,
+                            SupportPaths = AttributeByml.SupportPaths,
+                            RootNode = AttributeByml.RootNode
+                        });
+                    }
+                }
+            }
         }
 
         public enum GameSet : ushort
@@ -344,9 +396,11 @@ namespace FirstPlugin
                     return;
                 }
                 kcl = MarioKart.MK7.KCL.FromOBJ(mod);
+                AttributeByml = kcl.AttributeByml;
                 data = kcl.Write(Endianness);
                 Read(data);
                 Renderer.UpdateVertexData();
+                SaveAttributeByml(true);
             }
         }
 
