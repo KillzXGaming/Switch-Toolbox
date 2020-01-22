@@ -23,7 +23,7 @@ namespace Toolbox.Library
             using (var reader = new FileReader(stream, true))
             {
                 hasMagic = reader.CheckSignature(4, "LzS\x01");
-                return hasMagic;
+                return hasMagic || Utils.GetExtension(fileName) == ".lzs";
             }
         }
 
@@ -42,14 +42,14 @@ namespace Toolbox.Library
                 uint unknown = BitConverter.ToUInt32(arcdata, 4);
                 decompressedSize = BitConverter.ToUInt32(arcdata, 8);
                 compressedSize = BitConverter.ToUInt32(arcdata, 12);
+
+                if (arcdata.Length != compressedSize + 0x10) throw new Exception("compressed size mismatch");
             }
             else
             {
                 decompressedSize = BitConverter.ToUInt32(arcdata, 0);
-                compressedSize = BitConverter.ToUInt32(arcdata, 4);
             }
 
-            if (arcdata.Length != compressedSize + 0x10) throw new Exception("compressed size mismatch");
 
             List<byte> outdata = new List<byte>();
             byte[] BUFFER = new byte[4096];
@@ -58,6 +58,8 @@ namespace Toolbox.Library
             ushort writeidx = 0xFEE;
             ushort readidx = 0;
             uint fidx = 0x10;
+            if (!hasMagic)
+                fidx = 4;
 
             while (fidx < arcdata.Length)
             {
