@@ -17,9 +17,9 @@ namespace FirstPlugin
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
-        public bool CanAddFiles { get; set; } = false;
-        public bool CanRenameFiles { get; set; } = false;
-        public bool CanDeleteFiles { get; set; } = false;
+        public bool CanAddFiles { get; set; } = true;
+        public bool CanRenameFiles { get; set; } = true;
+        public bool CanDeleteFiles { get; set; } = true;
         public bool CanReplaceFiles { get; set; } = true;
 
         public List<FileEntry> files = new List<FileEntry>();
@@ -138,12 +138,17 @@ namespace FirstPlugin
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
         {
-            return false;
+            FileEntry file = new FileEntry();
+            file.FileName = archiveFileInfo.FileName;
+            file.CreateEntry(archiveFileInfo.FileData, true);
+            files.Add(file);
+            return true;
         }
 
         public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
         {
-            return false;
+            files.Remove((FileEntry)archiveFileInfo);
+            return true;
         }
 
         private void Save(object sender, EventArgs args)
@@ -218,6 +223,14 @@ namespace FirstPlugin
 
             public byte[] CompressedData;
 
+            public void CreateEntry(byte[] data, bool compress)
+            {
+                IsCompressed = compress;
+                unk1 = 2;
+                unk2 = 12;
+                FileData = data;
+            }
+
             public override Dictionary<string, string> ExtensionImageKeyLookup
             {
                 get
@@ -251,8 +264,6 @@ namespace FirstPlugin
             node.Nodes.RemoveAt(index);
             node.Nodes.Insert(index, NewNode);
         }
-
-
 
         public static byte[] GetASSTData(FileEntry entry)
         {
