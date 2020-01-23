@@ -61,6 +61,10 @@ namespace FirstPlugin
             CanSave = true;
             Text = FileName;
             LoadFile(stream);
+            for (int i = 0; i < TextureInfos.Count; i++) {
+                string name = Path.GetFileNameWithoutExtension(FileName);
+                TextureInfos[0].Text = TextureInfos.Count == 1 ? name : $"{name}_image{i}";
+            }
 
             ContextMenuStrip = new STContextMenuStrip();
             ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
