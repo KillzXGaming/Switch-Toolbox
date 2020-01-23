@@ -8,7 +8,7 @@ using Toolbox.Library;
 using System.Windows.Forms;
 using System.IO;
 
-namespace FirstPlugin.FileFormats.Archives.QuickAccess
+namespace FirstPlugin
 {
     public class QuickAccessFolder : TreeNodeCustom, IContextMenuNode
     {

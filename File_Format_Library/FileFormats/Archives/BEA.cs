@@ -13,7 +13,7 @@ using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class BEA : IArchiveFile, IFileFormat
+    public class BEA : TreeNodeFile, IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 

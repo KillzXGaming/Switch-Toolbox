@@ -195,6 +195,7 @@ namespace Toolbox.Library
 
             return oldString;
         }
+
         public static T DeepCopy<T>(T other)
         {
             using (MemoryStream ms = new MemoryStream())

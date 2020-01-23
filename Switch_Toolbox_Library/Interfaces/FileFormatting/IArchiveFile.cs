@@ -161,7 +161,8 @@ namespace Toolbox.Library
             }
         }
 
-        public virtual string FileSize { get {return STMath.GetFileSize(FileData.Length, 4); } }
+        public virtual string FileSize { get {return STMath.GetFileSize(
+            FileDataStream != null ? FileDataStream.Length : FileData.Length, 4); } }
 
         [Browsable(false)]
         public IFileFormat FileFormat = null; //Format attached for saving
