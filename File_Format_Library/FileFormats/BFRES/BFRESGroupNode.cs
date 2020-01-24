@@ -190,16 +190,13 @@ namespace Bfres.Structs
                                 }
                                 else if (ext == ".dds" || ext == ".dds2")
                                 {
-                                    ftex.texture = new ResU.Texture();
-
                                     GTXImporterSettings setting = FTEX.SetImporterSettings(file);
                                     if (setting.DataBlockOutput != null)
                                     {
                                         var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                                         var tex = FTEX.FromGx2Surface(surface, setting.TexName);
                                         ftex.UpdateTex(tex);
-
-                                        ftex.IsEdited = true;
+                                        ftex.IsReplaced = true;
                                         ftex.Read(ftex.texture);
                                         ftex.LoadOpenGLTexture();
                                     }
@@ -241,7 +238,7 @@ namespace Bfres.Structs
                                             var surface = GTXSwizzle.CreateGx2Texture(setting.DataBlockOutput[0], setting);
                                             var tex = FTEX.FromGx2Surface(surface, setting.TexName);
                                             ftex.UpdateTex(tex);
-                                            tex.Name = Text;
+                                            tex.Name = ftex.Text;
                                             ftex.IsEdited = true;
                                             ftex.Read(ftex.texture);
                                             ftex.LoadOpenGLTexture();
