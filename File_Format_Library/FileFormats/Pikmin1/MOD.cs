@@ -88,6 +88,42 @@ namespace FirstPlugin
         private Vertex[] Vertices;
         private Vertex[] VertexNormals;
         private Vertex[] Colors;
+        private enum ChunkNames
+        {
+            Header,
+
+            VertexPosition = 0x0010,
+            VertexNormal = 0x0011,
+            VertexNBT = 0x0012,
+            VertexColor = 0x0013,
+
+            VertexUV0 = 0x0018,
+            VertexUV1 = 0x0019,
+            VertexUV2 = 0x001A,
+            VertexUV3 = 0x001B,
+            VertexUV4 = 0x001C,
+            VertexUV5 = 0x001D,
+            VertexUV6 = 0x001E,
+            VertexUV7 = 0x001F,
+
+            Texture = 0x0020,
+            TextureAttribute = 0x0022,
+            Material = 0x0030,
+
+            VertexMatrix = 0x0040,
+
+            Envelope = 0x0041,
+
+            Mesh = 0x0050,
+
+            Joint = 0x0060,
+            JointName = 0x0061,
+
+            CollisionPrism = 0x0100,
+            CollisionGrid = 0x0110,
+
+            EoF = 0xFFFF
+        }
 
         private void SkipPadding(FileReader stream, int offset)
         {
@@ -121,69 +157,56 @@ namespace FirstPlugin
                     if ((chunkStart & 0x1F) != 0)
                         throw new Exception($"Chunk start ({chunkStart}) not on boundary!");
 
-                    switch (opcode)
+                    Vector3Holder holder = new Vector3Holder();
+
+                    switch ((ChunkNames)opcode)
                     {
-                        case 0x10: // VERTICES
+                        case ChunkNames.VertexPosition:
                             int vertexCount = reader.ReadInt32();
                             Vertices = new Vertex[vertexCount];
 
                             SkipPadding(reader, 0x20);
-
                             for (int i = 0; i < vertexCount; i++)
                             {
-                                float x = reader.ReadSingle();
-                                float y = reader.ReadSingle();
-                                float z = reader.ReadSingle();
-                                Vertices[i] = new Vertex
-                                {
-                                    pos = new Vector3(x, y, z)
-                                };
+                                holder.Read(reader);
+                                Vertices[i] = new Vertex { pos = holder.value };
                             }
-
                             SkipPadding(reader, 0x20);
+
                             break;
-                        case 0x11:
-                            int vertexNormalCount = reader.ReadInt32();
-                            VertexNormals = new Vertex[vertexNormalCount];
-                            SkipPadding(reader, 0x20);
+                        case ChunkNames.VertexNormal:
+                            int normalCount = reader.ReadInt32();
+                            VertexNormals = new Vertex[normalCount];
 
-                            for (int i = 0; i < vertexNormalCount; i++)
+                            SkipPadding(reader, 0x20);
+                            for (int i = 0; i < normalCount; i++)
                             {
-                                float x = reader.ReadSingle();
-                                float y = reader.ReadSingle();
-                                float z = reader.ReadSingle();
-                                VertexNormals[i] = new Vertex
-                                {
-                                    nrm = new Vector3(x, y, z)
-                                };
+                                holder.Read(reader);
+                                VertexNormals[i] = new Vertex { nrm = holder.value };
                             }
-
                             SkipPadding(reader, 0x20);
+
                             break;
-                        case 0x13: // COLOURS
+                        case ChunkNames.VertexColor:
                             int colorCount = reader.ReadInt32();
                             Colors = new Vertex[colorCount];
-                            SkipPadding(reader, 0x20);
 
+                            SkipPadding(reader, 0x20);
                             for (int i = 0; i < colorCount; i++)
                             {
-                                byte x = reader.ReadByte();
-                                byte y = reader.ReadByte();
-                                byte z = reader.ReadByte();
-                                byte w = reader.ReadByte();
                                 Colors[i] = new Vertex
                                 {
-                                    col = new Vector4(x, y, z, w)
+                                    col = new Vector4(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte())
                                 };
                             }
-
                             SkipPadding(reader, 0x20);
+
                             break;
-                        case 0x50:
+                        case ChunkNames.Mesh:
                             int meshCount = reader.ReadInt32();
                             SkipPadding(reader, 0x20);
 
-                            for (int i = 0; i < meshCount; i++)
+                            for (int mIdx = 0; mIdx < meshCount; mIdx++)
                             {
                                 //Create a renderable object for our mesh
                                 var renderedMesh = new GenericRenderedObject
@@ -191,7 +214,7 @@ namespace FirstPlugin
                                     Checked = true,
                                     ImageKey = "mesh",
                                     SelectedImageKey = "mesh",
-                                    Text = $"Mesh {i}"
+                                    Text = $"Mesh {mIdx}"
                                 };
                                 Nodes.Add(renderedMesh);
                                 Renderer.Meshes.Add(renderedMesh);
@@ -199,104 +222,90 @@ namespace FirstPlugin
                                 STGenericPolygonGroup polyGroup = new STGenericPolygonGroup();
                                 renderedMesh.PolygonGroups.Add(polyGroup);
 
-                                reader.ReadInt32();
+                                renderedMesh.BoneIndex = reader.ReadInt32();
 
                                 int vtxDescriptor = reader.ReadInt32();
                                 int mtxGroupCount = reader.ReadInt32();
-
-                                Console.WriteLine("mtxGroupCount " + mtxGroupCount);
-
-                                for (int a = 0; a < mtxGroupCount; a++)
+                                for (int mgIdx = 0; mgIdx < mtxGroupCount; mgIdx++)
                                 {
-                                    int unkCount = reader.ReadInt32();
-                                    for (int unkIter = 0; unkIter < unkCount; unkIter++)
+                                    int dependencyCount = reader.ReadInt32();
+                                    for (int ll = 0; ll < dependencyCount; ll++)
                                         reader.ReadInt16();
 
-                                    int dispListCount = reader.ReadInt32();
-
-                                    Console.WriteLine("dispListCount " + dispListCount);
-
-                                    for (int b = 0; b < dispListCount; b++)
+                                    int dListCount = reader.ReadInt32();
+                                    for (int dlIdx = 0; dlIdx < dListCount; dlIdx++)
                                     {
-                                        reader.ReadInt32();
-                                        reader.ReadInt32();
-
-                                        int displacementSize = reader.ReadInt32();
+                                        int flags = reader.ReadInt32();
+                                        int unk1 = reader.ReadInt32();
+                                        int dataSize = reader.ReadInt32();
                                         SkipPadding(reader, 0x20);
-
-                                        long end_displist = reader.Position + displacementSize;
-
-                                        Console.WriteLine("end_displist " + end_displist);
-                                        Console.WriteLine("displacementSize " + displacementSize);
-                                        Console.WriteLine("reader.Position " + reader.Position);
-
-                                        while (reader.Position < end_displist)
+                                        long endPosition = reader.Position + dataSize;
+                                        while (reader.Position < endPosition)
                                         {
-                                            byte faceOpCode = reader.ReadByte();
-
-                                            if (faceOpCode == 0x98 || faceOpCode == 0xA0)
+                                            byte faceType = reader.ReadByte();
+                                            if (faceType == 0x98 || faceType == 0xA0)
                                             {
-                                                short vCount = reader.ReadInt16();
 
-                                                int[] polys = new int[vCount];
-                                                for (int vc = 0; vc < vCount; vc++)
+                                                short faceCount = reader.ReadInt16();
+                                                int[] polygons = new int[faceCount];
+
+                                                for (int fIdx = 0; fIdx < faceCount; fIdx++)
                                                 {
-                                                    if ((vtxDescriptor & 0x1) == 0x1)
-                                                        reader.ReadByte(); // Position Matrix
+                                                    if ((vtxDescriptor & 1) == 1)
+                                                        reader.ReadByte(); // posmat index
+                                                    if ((vtxDescriptor & 2) == 2)
+                                                        reader.ReadByte(); // tex1 index
 
-                                                    if ((vtxDescriptor & 0x2) == 0x2)
-                                                        reader.ReadByte(); // tex1 matrix
+                                                    ushort vtxIdx = reader.ReadUInt16();
 
-                                                    ushort vtxPosIndex = reader.ReadUInt16();
-
-                                                    uint normalID = 0;
+                                                    ushort nrmIdx = 0;
                                                     if (VertexNormals.Length > 0)
-                                                        normalID = reader.ReadUInt16();
+                                                        nrmIdx = reader.ReadUInt16();
 
-                                                    uint colorID = 0;
-                                                    if ((vtxDescriptor & 0x4) == 0x4)
-                                                        colorID = reader.ReadUInt16();
+                                                    ushort colIdx = 0;
+                                                    if ((vtxDescriptor & 4) == 4)
+                                                        colIdx = reader.ReadUInt16();
 
-                                                    int tmpVar = vtxDescriptor >> 3;
-
-                                                    uint texCoordID = 0;
-                                                    for (int c = 0; c < 8; c++)
+                                                    int txCoordIdx = 0;
+                                                    int txCoordDescriptor = vtxDescriptor >> 3;
+                                                    for (int tcoordIdx = 0; tcoordIdx < 8; tcoordIdx++)
                                                     {
-                                                        if ((tmpVar & 0x1) == 0x1)
-                                                            if (c == 0) texCoordID = reader.ReadUInt16();
-                                                        tmpVar >>= 1;
+                                                        if ((txCoordDescriptor & 1) == 0x1)
+                                                        {
+                                                            // Only read for the first texcoord
+                                                            txCoordIdx = reader.ReadInt16();
+                                                            txCoordDescriptor >>= 1;
+                                                        }
                                                     }
 
-                                                    Vertex vert = new Vertex
+                                                    Vertex newVertex = new Vertex
                                                     {
-                                                        pos = Vertices[vtxPosIndex].pos,
-                                                        nrm = VertexNormals[normalID].nrm,
-                                                        //col = Colors[colorID].col
+                                                        pos = Vertices[vtxIdx].pos
                                                     };
 
-                                                    polys[vc] = renderedMesh.vertices.Count;
-                                                    renderedMesh.vertices.Add(vert);
+                                                    if (VertexNormals != null)
+                                                        newVertex.nrm = VertexNormals[nrmIdx].nrm;
+                                                    if (Colors != null)
+                                                        newVertex.col = Colors[colIdx].col;
+
+                                                    polygons[fIdx] = renderedMesh.vertices.Count;
+                                                    renderedMesh.vertices.Add(newVertex);
                                                 }
 
-                                                List<Triangle> curPolys = ToTris(polys, faceOpCode);
+                                                List<Triangle> currentPolygons = ToTris(polygons, faceType);
 
-                                                foreach (Triangle poly in curPolys)
+                                                foreach (Triangle triangle in currentPolygons)
                                                 {
-                                                    Console.WriteLine($"{poly.A} {poly.B} {poly.C}");
-
-                                                    polyGroup.faces.Add(poly.A);
-                                                    polyGroup.faces.Add(poly.B);
-                                                    polyGroup.faces.Add(poly.C);
+                                                    polyGroup.faces.Add(triangle.C);
+                                                    polyGroup.faces.Add(triangle.B);
+                                                    polyGroup.faces.Add(triangle.A);
                                                 }
                                             }
                                         }
                                     }
                                 }
-
-                                Console.WriteLine("vertices " + renderedMesh.vertices.Count);
-                                Console.WriteLine("faces " + renderedMesh.PolygonGroups[0].faces.Count);
-                                Console.WriteLine("Vertices " + Vertices.Length);
                             }
+
                             break;
                         default:
                             reader.Seek(lengthOfStruct, System.IO.SeekOrigin.Current);
@@ -364,6 +373,18 @@ namespace FirstPlugin
             public int A;
             public int B;
             public int C;
+        }
+
+        public class Vector3Holder
+        {
+            public Vector3 value;
+
+            public void Read(FileReader reader)
+            {
+                value.X = reader.ReadSingle();
+                value.Y = reader.ReadSingle();
+                value.Z = reader.ReadSingle();
+            }
         }
 
         public void Unload()
