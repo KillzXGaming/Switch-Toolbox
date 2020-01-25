@@ -54,7 +54,7 @@ namespace Bfres.Structs
             }
         }
 
-        bool IsReplaced = false;
+        public bool IsReplaced = false;
 
         public override bool CanEdit { get; set; } = true;
 
@@ -323,7 +323,6 @@ namespace Bfres.Structs
             texture.ViewSliceFirst = tex.ViewSliceFirst;
             texture.Regs = tex.Regs;
             texture.MipCount = tex.MipCount;
-
         }
 
         //We reuse GX2 data as it's the same thing
