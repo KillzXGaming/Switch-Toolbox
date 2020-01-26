@@ -40,7 +40,6 @@ namespace Toolbox.Library.Forms
 
         public override void RenderScene()
         {
-            GL.PushMatrix();
             Vector3 Scale = new Vector3(30, 30, 30);
 
             //Scale the plane by aspect ratio
