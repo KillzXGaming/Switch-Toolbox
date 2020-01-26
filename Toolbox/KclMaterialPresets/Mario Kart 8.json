@@ -1,0 +1,31 @@
+{
+  "GameTitle": "Mario Kart 8 Wii U / Deluxe",
+  "PrismThickness": 30.0,
+  "SphereRadius": 25.0,
+  "MaterialPresets": {
+    "0": "Road",
+    "2": "Road (Bumpy)",
+    "4": "Road (Slippery)",
+    "6": "Road (Offroad Sand)",
+    "9": "Road (Slippery Effect Only)",
+    "10": "Road (Booster)",
+    "16": "Latiku",
+    "31": "Glider",
+    "32": "Road (Foamy Sound)",
+    "40": "Road (Offroad, clicking Sound)",
+    "56": "Unsolid",
+    "60": "Water (Drown reset)",
+    "64": "Road (Rocky Sound)",
+    "81": "Wall"
+    "129": "Road (3DS MP Piano)"
+    "134": "Road (RoyalR Offroad Grass)"
+    "161": "Road (3DS MP Xylophone)"
+    "193": "Road (3DS MP Vibraphone)"
+    "227": "Road (SNES RR road)"
+    "297": "Road (MKS Offroad Grass)"
+    "500": "Road (Water Wall)"
+    "4096": "Road (Stunt)"
+    "4106": "Road (Booster + Stunt)"
+    "4108": "Road (Stunt + Glider)"
+  }
+}

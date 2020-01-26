@@ -1,0 +1,8 @@
+{
+  "GameTitle": "Splatoon 2",
+  "PrismThickness": 30.0,
+  "SphereRadius": 25.0,
+  "MaterialPresets": {
+      "0": "Unknown",
+  }
+}

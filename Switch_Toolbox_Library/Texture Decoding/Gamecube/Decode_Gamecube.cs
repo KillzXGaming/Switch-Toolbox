@@ -884,26 +884,17 @@ namespace Toolbox.Library
             if ((sourcePixel & 0x8000) == 0x8000)
             {
                 a = 0xFF;
-                r = (byte)((sourcePixel & 0x7C00) >> 10);
-                g = (byte)((sourcePixel & 0x3E0) >> 5);
-                b = (byte)(sourcePixel & 0x1F);
-
-                r = (byte)((r << (8 - 5)) | (r >> (10 - 8)));
-                g = (byte)((g << (8 - 5)) | (g >> (10 - 8)));
-                b = (byte)((b << (8 - 5)) | (b >> (10 - 8)));
+                r = Expand5to8((sourcePixel >> 10) & 0x1F);
+                g = Expand5to8((sourcePixel >> 5) & 0x1F);
+                b = Expand5to8(sourcePixel & 0x1F);
             }
             //Alpha bits
             else
             {
-                a = (byte)((sourcePixel & 0x7000) >> 12);
-                r = (byte)((sourcePixel & 0xF00) >> 8);
-                g = (byte)((sourcePixel & 0xF0) >> 4);
-                b = (byte)(sourcePixel & 0xF);
-
-                a = (byte)((a << (8 - 3)) | (a << (8 - 6)) | (a >> (9 - 8)));
-                r = (byte)((r << (8 - 4)) | r);
-                g = (byte)((g << (8 - 4)) | g);
-                b = (byte)((b << (8 - 4)) | b);
+                a = Expand3to8(sourcePixel >> 12);
+                r = Expand4to8((sourcePixel >> 8) & 0x0F);
+                g = Expand4to8((sourcePixel >> 4) & 0x0F);
+                b = Expand4to8(sourcePixel & 0x0F);
             }
 
             dest[destOffset + 0] = b;
@@ -911,6 +902,23 @@ namespace Toolbox.Library
             dest[destOffset + 2] = r;
             dest[destOffset + 3] = a;
         }
+
+        //From noclip https://github.com/magcius/noclip.website/blob/e5c302ff52ad72429e5d0dc64062420546010831/src/gx/gx_texture.ts
+        private static byte Expand5to8(int n)
+        {
+            return (byte)((n << (8 - 5)) | (n >> (10 - 8)));
+        }
+
+        private static byte Expand4to8(int n)
+        {
+            return (byte)((n << 4) | n);
+        }
+
+        private static byte Expand3to8(int n)
+        {
+            return (byte)((n << (8 - 3)) | (n << (8 - 6)) | (n >> (9 - 8)));
+        }
+
         #endregion
 
         public static Tuple<byte[], ushort[]> EncodeFromBitmap(System.Drawing.Bitmap bitmap, TextureFormats Format, PaletteFormats PaletteFormat = PaletteFormats.RGB565)
