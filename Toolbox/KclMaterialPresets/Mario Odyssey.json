@@ -2,6 +2,7 @@
   "GameTitle": "Mario Odyssey",
   "PrismThickness": 40.0,
   "SphereRadius": 0.0,
+  "Comments": "This game uses byml to customize presets.",
   "MaterialPresets": {
   }
 }
