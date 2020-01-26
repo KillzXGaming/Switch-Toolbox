@@ -59,6 +59,14 @@ namespace FirstPlugin
             ContextMenuStrip.Items.Add(EndiannessToolstrip);
             CanSave = true;
             IFileInfo = new IFileInfo();
+
+            string path = Path.Combine(Runtime.ExecutableDir, "KclMaterialPresets");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            MarioKart.MK7.KCL.CollisionPresets.Clear();
+            MarioKart.MK7.KCL.LoadPresets(Directory.GetFiles(path));
+            MarioKart.MK7.KCL.LoadDefaultPresets();
         }
 
         private void OpenMaterialEditor(object sender, EventArgs args)
