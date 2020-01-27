@@ -85,6 +85,8 @@ namespace FirstPlugin
 
         public DrawableContainer DrawableContainer = new DrawableContainer();
 
+        private STSkeleton Skeleton;
+
         private Vertex[] Vertices;
         private Vertex[] VertexNormals;
         private Vertex[] Colors;
@@ -139,8 +141,10 @@ namespace FirstPlugin
             //Set renderer
             //Load it to a drawables list
             Renderer = new MDL_Renderer();
+            Skeleton = new STSkeleton();
             DrawableContainer.Name = FileName;
             DrawableContainer.Drawables.Add(Renderer);
+            DrawableContainer.Drawables.Add(Skeleton);
 
             using (var reader = new FileReader(stream))
             {
@@ -294,11 +298,21 @@ namespace FirstPlugin
 
                                                 List<Triangle> currentPolygons = ToTris(polygons, faceType);
 
+                                                Console.WriteLine($"faceType {faceType} polygons {polygons.Length} ");
                                                 foreach (Triangle triangle in currentPolygons)
                                                 {
-                                                    polyGroup.faces.Add(triangle.C);
-                                                    polyGroup.faces.Add(triangle.B);
-                                                    polyGroup.faces.Add(triangle.A);
+                                                    if (faceType == 0x98)
+                                                    {
+                                                        polyGroup.faces.Add(triangle.B);
+                                                        polyGroup.faces.Add(triangle.C);
+                                                        polyGroup.faces.Add(triangle.A);
+                                                    }
+                                                    else
+                                                    {
+                                                        polyGroup.faces.Add(triangle.C);
+                                                        polyGroup.faces.Add(triangle.B);
+                                                        polyGroup.faces.Add(triangle.A);
+                                                    }
                                                 }
                                             }
                                         }

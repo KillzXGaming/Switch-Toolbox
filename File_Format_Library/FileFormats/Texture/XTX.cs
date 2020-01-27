@@ -63,7 +63,7 @@ namespace FirstPlugin
             LoadFile(stream);
             for (int i = 0; i < TextureInfos.Count; i++) {
                 string name = Path.GetFileNameWithoutExtension(FileName);
-                TextureInfos[0].Text = TextureInfos.Count == 1 ? name : $"{name}_image{i}";
+                TextureInfos[i].Text = TextureInfos.Count == 1 ? name : $"{name}_image{i}";
             }
 
             ContextMenuStrip = new STContextMenuStrip();
@@ -241,7 +241,6 @@ namespace FirstPlugin
 
             while (reader.Position < reader.BaseStream.Length)
             {
-                Console.WriteLine("BLOCK POS " + reader.Position);
                 BlockHeader blockHeader = new BlockHeader();
                 blockHeader.Read(reader);
                 Blocks.Add(blockHeader);
