@@ -92,7 +92,7 @@ namespace FirstPlugin
             ParseBymlFirstNode();
 
             xmlEditor = new TextEditor();
-            stPanel3.Controls.Add(xmlEditor);
+            stPanel4.Controls.Add(xmlEditor);
             xmlEditor.Dock = DockStyle.Fill;
             xmlEditor.IsXML = true;
         }
@@ -192,6 +192,9 @@ namespace FirstPlugin
                 item.SubItems.Add(TypeString);
                 item.SubItems.Add(ValueText);
                 if (node[k] != null) item.Tag = new EditableNode(node, k);
+
+                if (NameText == "name_en")
+                    Console.WriteLine("{ " + '"' + $"{ValueText}" + '"' + "," + '"' + $"{ValueText}" + '"' + " },");
 
                 listViewCustom1.Items.Add(item);
             }
