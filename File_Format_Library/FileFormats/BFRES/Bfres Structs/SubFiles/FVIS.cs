@@ -49,7 +49,10 @@ namespace Bfres.Structs
 
         public override void Export(string FileName)
         {
-            VisibilityAnim.Export(FileName, GetResFile());
+            if (VisibilityAnim != null)
+                VisibilityAnim.Export(FileName, GetResFile());
+            else
+                VisibilityAnimU.Export(FileName, GetResFileU());
         }
 
         public override void Replace(string FileName)
