@@ -215,11 +215,17 @@ namespace FirstPlugin
             Syroot.Maths.Vector4F[] vec4Positions1 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4Positions2 = new Syroot.Maths.Vector4F[0];
 
+            List<VertexAttrib> SortedList = vtx.Attributes.Values.OrderBy(o => o.BufferIndex).ToList();
+
+            foreach (VertexAttrib att in SortedList)
+                Console.WriteLine($"{att.Name} {att.BufferIndex} {att.Offset} {att.Format} ");
+
             foreach (VertexAttrib att in vtx.Attributes.Values)
             {
                 FSHP.VertexAttribute attr = new FSHP.VertexAttribute();
                 attr.Name = att.Name;
                 attr.Format = attr.GetTypeWiiU(att.Format);
+                attr.BufferIndex = att.BufferIndex;
 
                 if (att.Name == "_p0")
                     vec4Positions = AttributeData(att, helper, "_p0");
@@ -1019,6 +1025,7 @@ namespace FirstPlugin
                     vert.Name = att.Name;
                     vert.Data = fshp.verts.ToArray();
                     vert.Format = att.SetTypeWiiU(att.Format);
+                    vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
                 if (att.Name == "_n0")
@@ -1027,6 +1034,7 @@ namespace FirstPlugin
                     vert.Name = att.Name;
                     vert.Data = fshp.norms.ToArray();
                     vert.Format = att.SetTypeWiiU(att.Format);
+                    vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
                 if (att.Name == "_u0")
@@ -1035,6 +1043,7 @@ namespace FirstPlugin
                     vert.Name = att.Name;
                     vert.Data = fshp.uv0.ToArray();
                     vert.Format = att.SetTypeWiiU(att.Format);
+                    vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
                 if (att.Name == "_u1")
@@ -1043,6 +1052,7 @@ namespace FirstPlugin
                     vert.Name = att.Name;
                     vert.Data = fshp.uv1.ToArray();
                     vert.Format = att.SetTypeWiiU(att.Format);
+                    vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
                 if (att.Name == "_u2")
@@ -1051,6 +1061,7 @@ namespace FirstPlugin
                     vert.Name = att.Name;
                     vert.Data = fshp.uv2.ToArray();
                     vert.Format = att.SetTypeWiiU(att.Format);
+                    vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
                 if (att.Name == "_w0")
@@ -1059,6 +1070,7 @@ namespace FirstPlugin
                     vert.Name = att.Name;
                     vert.Data = fshp.weights.ToArray();
                     vert.Format = att.SetTypeWiiU(att.Format);
+                    vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
                 if (att.Name == "_i0")
@@ -1067,6 +1079,7 @@ namespace FirstPlugin
                     vert.Name = att.Name;
                     vert.Data = fshp.boneInd.ToArray();
                     vert.Format = att.SetTypeWiiU(att.Format);
+                    vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
                 if (att.Name == "_b0")
@@ -1075,6 +1088,7 @@ namespace FirstPlugin
                     vert.Name = att.Name;
                     vert.Data = fshp.bitans.ToArray();
                     vert.Format = att.SetTypeWiiU(att.Format);
+                    vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
                 if (att.Name == "_t0")
@@ -1083,6 +1097,7 @@ namespace FirstPlugin
                     vert.Name = att.Name;
                     vert.Data = fshp.tans.ToArray();
                     vert.Format = att.SetTypeWiiU(att.Format);
+                    vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
                 if (att.Name == "_c0")
@@ -1091,6 +1106,7 @@ namespace FirstPlugin
                     vert.Name = att.Name;
                     vert.Data = fshp.colors.ToArray();
                     vert.Format = att.SetTypeWiiU(att.Format);
+                    vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
             }

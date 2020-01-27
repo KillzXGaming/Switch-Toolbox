@@ -100,6 +100,8 @@
             this.stCheckBox1 = new Toolbox.Library.Forms.STCheckBox();
             this.chkMapOriginalMaterials = new Toolbox.Library.Forms.STCheckBox();
             this.ogSkinCountChkBox = new Toolbox.Library.Forms.STCheckBox();
+            this.gamePresetCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -149,6 +151,7 @@
             this.comboBoxFormatPositions.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBoxFormatPositions.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatPositions.FormattingEnabled = true;
+            this.comboBoxFormatPositions.IsReadOnly = false;
             this.comboBoxFormatPositions.Location = new System.Drawing.Point(50, 37);
             this.comboBoxFormatPositions.Name = "comboBoxFormatPositions";
             this.comboBoxFormatPositions.Size = new System.Drawing.Size(157, 21);
@@ -188,6 +191,7 @@
             this.comboBoxFormatNormals.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBoxFormatNormals.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatNormals.FormattingEnabled = true;
+            this.comboBoxFormatNormals.IsReadOnly = false;
             this.comboBoxFormatNormals.Location = new System.Drawing.Point(53, 34);
             this.comboBoxFormatNormals.Name = "comboBoxFormatNormals";
             this.comboBoxFormatNormals.Size = new System.Drawing.Size(157, 21);
@@ -227,6 +231,7 @@
             this.comboBoxFormatUvs.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBoxFormatUvs.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatUvs.FormattingEnabled = true;
+            this.comboBoxFormatUvs.IsReadOnly = false;
             this.comboBoxFormatUvs.Location = new System.Drawing.Point(53, 26);
             this.comboBoxFormatUvs.Name = "comboBoxFormatUvs";
             this.comboBoxFormatUvs.Size = new System.Drawing.Size(157, 21);
@@ -256,7 +261,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(3, 7);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(64, 13);
+            this.label7.Size = new System.Drawing.Size(69, 13);
             this.label7.TabIndex = 2;
             this.label7.Text = "Vertex Colors";
             // 
@@ -267,6 +272,7 @@
             this.comboBoxFormatVertexColors.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatVertexColors.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.comboBoxFormatVertexColors.FormattingEnabled = true;
+            this.comboBoxFormatVertexColors.IsReadOnly = false;
             this.comboBoxFormatVertexColors.Location = new System.Drawing.Point(53, 33);
             this.comboBoxFormatVertexColors.Name = "comboBoxFormatVertexColors";
             this.comboBoxFormatVertexColors.Size = new System.Drawing.Size(157, 21);
@@ -306,6 +312,7 @@
             this.comboBoxFormatTangents.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBoxFormatTangents.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatTangents.FormattingEnabled = true;
+            this.comboBoxFormatTangents.IsReadOnly = false;
             this.comboBoxFormatTangents.Location = new System.Drawing.Point(60, 37);
             this.comboBoxFormatTangents.Name = "comboBoxFormatTangents";
             this.comboBoxFormatTangents.Size = new System.Drawing.Size(157, 21);
@@ -345,6 +352,7 @@
             this.comboBoxFormatBitans.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBoxFormatBitans.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatBitans.FormattingEnabled = true;
+            this.comboBoxFormatBitans.IsReadOnly = false;
             this.comboBoxFormatBitans.Location = new System.Drawing.Point(51, 34);
             this.comboBoxFormatBitans.Name = "comboBoxFormatBitans";
             this.comboBoxFormatBitans.Size = new System.Drawing.Size(157, 21);
@@ -377,6 +385,7 @@
             this.comboBoxFormatIndices.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBoxFormatIndices.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatIndices.FormattingEnabled = true;
+            this.comboBoxFormatIndices.IsReadOnly = false;
             this.comboBoxFormatIndices.Location = new System.Drawing.Point(92, 60);
             this.comboBoxFormatIndices.Name = "comboBoxFormatIndices";
             this.comboBoxFormatIndices.Size = new System.Drawing.Size(157, 21);
@@ -407,6 +416,7 @@
             this.comboBoxFormatWeights.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBoxFormatWeights.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatWeights.FormattingEnabled = true;
+            this.comboBoxFormatWeights.IsReadOnly = false;
             this.comboBoxFormatWeights.Location = new System.Drawing.Point(92, 30);
             this.comboBoxFormatWeights.Name = "comboBoxFormatWeights";
             this.comboBoxFormatWeights.Size = new System.Drawing.Size(157, 21);
@@ -424,7 +434,7 @@
             // chkBoxFlipUvsY
             // 
             this.chkBoxFlipUvsY.AutoSize = true;
-            this.chkBoxFlipUvsY.Location = new System.Drawing.Point(3, 16);
+            this.chkBoxFlipUvsY.Location = new System.Drawing.Point(3, 42);
             this.chkBoxFlipUvsY.Name = "chkBoxFlipUvsY";
             this.chkBoxFlipUvsY.Size = new System.Drawing.Size(65, 17);
             this.chkBoxFlipUvsY.TabIndex = 4;
@@ -435,7 +445,7 @@
             // chkBoxImportBones
             // 
             this.chkBoxImportBones.AutoSize = true;
-            this.chkBoxImportBones.Location = new System.Drawing.Point(3, 39);
+            this.chkBoxImportBones.Location = new System.Drawing.Point(3, 65);
             this.chkBoxImportBones.Name = "chkBoxImportBones";
             this.chkBoxImportBones.Size = new System.Drawing.Size(88, 17);
             this.chkBoxImportBones.TabIndex = 10;
@@ -446,6 +456,8 @@
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.stLabel3);
+            this.panel8.Controls.Add(this.gamePresetCB);
             this.panel8.Controls.Add(this.chkResetColorParams);
             this.panel8.Controls.Add(this.chkPlaceHolderTextures);
             this.panel8.Controls.Add(this.chkBoxImportMat);
@@ -476,7 +488,7 @@
             // chkResetColorParams
             // 
             this.chkResetColorParams.AutoSize = true;
-            this.chkResetColorParams.Location = new System.Drawing.Point(240, 204);
+            this.chkResetColorParams.Location = new System.Drawing.Point(240, 230);
             this.chkResetColorParams.Name = "chkResetColorParams";
             this.chkResetColorParams.Size = new System.Drawing.Size(119, 17);
             this.chkResetColorParams.TabIndex = 34;
@@ -487,7 +499,7 @@
             // chkPlaceHolderTextures
             // 
             this.chkPlaceHolderTextures.AutoSize = true;
-            this.chkPlaceHolderTextures.Location = new System.Drawing.Point(5, 204);
+            this.chkPlaceHolderTextures.Location = new System.Drawing.Point(5, 230);
             this.chkPlaceHolderTextures.Name = "chkPlaceHolderTextures";
             this.chkPlaceHolderTextures.Size = new System.Drawing.Size(160, 17);
             this.chkPlaceHolderTextures.TabIndex = 32;
@@ -513,7 +525,7 @@
             // chkResetUVParams
             // 
             this.chkResetUVParams.AutoSize = true;
-            this.chkResetUVParams.Location = new System.Drawing.Point(240, 181);
+            this.chkResetUVParams.Location = new System.Drawing.Point(240, 207);
             this.chkResetUVParams.Name = "chkResetUVParams";
             this.chkResetUVParams.Size = new System.Drawing.Size(110, 17);
             this.chkResetUVParams.TabIndex = 30;
@@ -524,7 +536,7 @@
             // chkBoxRotNegative90Y
             // 
             this.chkBoxRotNegative90Y.AutoSize = true;
-            this.chkBoxRotNegative90Y.Location = new System.Drawing.Point(3, 85);
+            this.chkBoxRotNegative90Y.Location = new System.Drawing.Point(3, 111);
             this.chkBoxRotNegative90Y.Name = "chkBoxRotNegative90Y";
             this.chkBoxRotNegative90Y.Size = new System.Drawing.Size(117, 17);
             this.chkBoxRotNegative90Y.TabIndex = 29;
@@ -546,7 +558,7 @@
             // chkBoxEnableWeightIndices
             // 
             this.chkBoxEnableWeightIndices.AutoSize = true;
-            this.chkBoxEnableWeightIndices.Location = new System.Drawing.Point(240, 154);
+            this.chkBoxEnableWeightIndices.Location = new System.Drawing.Point(240, 180);
             this.chkBoxEnableWeightIndices.Name = "chkBoxEnableWeightIndices";
             this.chkBoxEnableWeightIndices.Size = new System.Drawing.Size(140, 17);
             this.chkBoxEnableWeightIndices.TabIndex = 25;
@@ -557,7 +569,7 @@
             // chkBoxEnableBitans
             // 
             this.chkBoxEnableBitans.AutoSize = true;
-            this.chkBoxEnableBitans.Location = new System.Drawing.Point(240, 131);
+            this.chkBoxEnableBitans.Location = new System.Drawing.Point(240, 157);
             this.chkBoxEnableBitans.Name = "chkBoxEnableBitans";
             this.chkBoxEnableBitans.Size = new System.Drawing.Size(112, 17);
             this.chkBoxEnableBitans.TabIndex = 24;
@@ -568,7 +580,7 @@
             // chkBoxEnableTans
             // 
             this.chkBoxEnableTans.AutoSize = true;
-            this.chkBoxEnableTans.Location = new System.Drawing.Point(240, 108);
+            this.chkBoxEnableTans.Location = new System.Drawing.Point(240, 134);
             this.chkBoxEnableTans.Name = "chkBoxEnableTans";
             this.chkBoxEnableTans.Size = new System.Drawing.Size(107, 17);
             this.chkBoxEnableTans.TabIndex = 23;
@@ -579,7 +591,7 @@
             // chkBoxEnableVertColors
             // 
             this.chkBoxEnableVertColors.AutoSize = true;
-            this.chkBoxEnableVertColors.Location = new System.Drawing.Point(240, 85);
+            this.chkBoxEnableVertColors.Location = new System.Drawing.Point(240, 111);
             this.chkBoxEnableVertColors.Name = "chkBoxEnableVertColors";
             this.chkBoxEnableVertColors.Size = new System.Drawing.Size(124, 17);
             this.chkBoxEnableVertColors.TabIndex = 22;
@@ -590,7 +602,7 @@
             // chkBoxEnableUVs
             // 
             this.chkBoxEnableUVs.AutoSize = true;
-            this.chkBoxEnableUVs.Location = new System.Drawing.Point(240, 62);
+            this.chkBoxEnableUVs.Location = new System.Drawing.Point(240, 88);
             this.chkBoxEnableUVs.Name = "chkBoxEnableUVs";
             this.chkBoxEnableUVs.Size = new System.Drawing.Size(82, 17);
             this.chkBoxEnableUVs.TabIndex = 21;
@@ -601,7 +613,7 @@
             // chkBoxEnableNormals
             // 
             this.chkBoxEnableNormals.AutoSize = true;
-            this.chkBoxEnableNormals.Location = new System.Drawing.Point(240, 39);
+            this.chkBoxEnableNormals.Location = new System.Drawing.Point(240, 65);
             this.chkBoxEnableNormals.Name = "chkBoxEnableNormals";
             this.chkBoxEnableNormals.Size = new System.Drawing.Size(100, 17);
             this.chkBoxEnableNormals.TabIndex = 20;
@@ -613,7 +625,7 @@
             // 
             this.chkBoxEnablePositions.AutoSize = true;
             this.chkBoxEnablePositions.Enabled = false;
-            this.chkBoxEnablePositions.Location = new System.Drawing.Point(240, 16);
+            this.chkBoxEnablePositions.Location = new System.Drawing.Point(240, 42);
             this.chkBoxEnablePositions.Name = "chkBoxEnablePositions";
             this.chkBoxEnablePositions.Size = new System.Drawing.Size(104, 17);
             this.chkBoxEnablePositions.TabIndex = 19;
@@ -624,7 +636,7 @@
             // chkBoxRecalcNormals
             // 
             this.chkBoxRecalcNormals.AutoSize = true;
-            this.chkBoxRecalcNormals.Location = new System.Drawing.Point(3, 131);
+            this.chkBoxRecalcNormals.Location = new System.Drawing.Point(3, 157);
             this.chkBoxRecalcNormals.Name = "chkBoxRecalcNormals";
             this.chkBoxRecalcNormals.Size = new System.Drawing.Size(124, 17);
             this.chkBoxRecalcNormals.TabIndex = 18;
@@ -651,7 +663,7 @@
             this.chkBoxTransformMatrix.AutoSize = true;
             this.chkBoxTransformMatrix.Checked = true;
             this.chkBoxTransformMatrix.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxTransformMatrix.Location = new System.Drawing.Point(3, 108);
+            this.chkBoxTransformMatrix.Location = new System.Drawing.Point(3, 134);
             this.chkBoxTransformMatrix.Name = "chkBoxTransformMatrix";
             this.chkBoxTransformMatrix.Size = new System.Drawing.Size(104, 17);
             this.chkBoxTransformMatrix.TabIndex = 14;
@@ -663,7 +675,7 @@
             // chkBoxRot90Y
             // 
             this.chkBoxRot90Y.AutoSize = true;
-            this.chkBoxRot90Y.Location = new System.Drawing.Point(3, 62);
+            this.chkBoxRot90Y.Location = new System.Drawing.Point(3, 88);
             this.chkBoxRot90Y.Name = "chkBoxRot90Y";
             this.chkBoxRot90Y.Size = new System.Drawing.Size(114, 17);
             this.chkBoxRot90Y.TabIndex = 13;
@@ -684,7 +696,7 @@
             // checkBox9
             // 
             this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(25, 158);
+            this.checkBox9.Location = new System.Drawing.Point(25, 184);
             this.checkBox9.Name = "checkBox9";
             this.checkBox9.Size = new System.Drawing.Size(130, 17);
             this.checkBox9.TabIndex = 11;
@@ -708,6 +720,7 @@
             this.comboBoxFormatFaces.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.comboBoxFormatFaces.ButtonColor = System.Drawing.Color.Empty;
             this.comboBoxFormatFaces.FormattingEnabled = true;
+            this.comboBoxFormatFaces.IsReadOnly = false;
             this.comboBoxFormatFaces.Location = new System.Drawing.Point(102, 7);
             this.comboBoxFormatFaces.Name = "comboBoxFormatFaces";
             this.comboBoxFormatFaces.Size = new System.Drawing.Size(157, 21);
@@ -807,6 +820,7 @@
             this.assimpMeshListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader2});
             this.assimpMeshListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.assimpMeshListView.HideSelection = false;
             this.assimpMeshListView.Location = new System.Drawing.Point(260, 97);
             this.assimpMeshListView.Name = "assimpMeshListView";
             this.assimpMeshListView.OwnerDraw = true;
@@ -826,6 +840,7 @@
             this.originalMeshListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this.originalMeshListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.originalMeshListView.HideSelection = false;
             this.originalMeshListView.Location = new System.Drawing.Point(395, 97);
             this.originalMeshListView.Name = "originalMeshListView";
             this.originalMeshListView.OwnerDraw = true;
@@ -904,6 +919,28 @@
             this.ogSkinCountChkBox.TabIndex = 34;
             this.ogSkinCountChkBox.Text = "Keep Original Skin Count (can help crashes)";
             this.ogSkinCountChkBox.UseVisualStyleBackColor = true;
+            // 
+            // gamePresetCB
+            // 
+            this.gamePresetCB.BorderColor = System.Drawing.Color.Empty;
+            this.gamePresetCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.gamePresetCB.ButtonColor = System.Drawing.Color.Empty;
+            this.gamePresetCB.FormattingEnabled = true;
+            this.gamePresetCB.IsReadOnly = false;
+            this.gamePresetCB.Location = new System.Drawing.Point(115, 9);
+            this.gamePresetCB.Name = "gamePresetCB";
+            this.gamePresetCB.Size = new System.Drawing.Size(244, 21);
+            this.gamePresetCB.TabIndex = 35;
+            this.gamePresetCB.SelectedIndexChanged += new System.EventHandler(this.gamePresetCB_SelectedIndexChanged);
+            // 
+            // stLabel3
+            // 
+            this.stLabel3.AutoSize = true;
+            this.stLabel3.Location = new System.Drawing.Point(13, 12);
+            this.stLabel3.Name = "stLabel3";
+            this.stLabel3.Size = new System.Drawing.Size(71, 13);
+            this.stLabel3.TabIndex = 36;
+            this.stLabel3.Text = "Game Preset:";
             // 
             // BfresModelImportSettings
             // 
@@ -1015,5 +1052,7 @@
         private Toolbox.Library.Forms.ListViewCustom originalMeshListView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private Toolbox.Library.Forms.ListViewCustom assimpMeshListView;
+        private Toolbox.Library.Forms.STLabel stLabel3;
+        private Toolbox.Library.Forms.STComboBox gamePresetCB;
     }
 }

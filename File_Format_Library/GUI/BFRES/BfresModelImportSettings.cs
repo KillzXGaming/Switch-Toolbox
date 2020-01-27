@@ -24,6 +24,12 @@ namespace FirstPlugin
 
             tabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
+            foreach (GamePreset val in Enum.GetValues(typeof(GamePreset))) {
+                gamePresetCB.Items.Add(val);
+            }
+
+            gamePresetCB.SelectedIndex = 0;
+
             ExternalMaterialPath = PluginRuntime.ExternalFMATPath;
             if (System.IO.File.Exists(PluginRuntime.ExternalFMATPath))
                 textBoxMaterialPath.Text = System.IO.Path.GetFileName(PluginRuntime.ExternalFMATPath);
@@ -34,6 +40,7 @@ namespace FirstPlugin
                 ExternalMaterialPath = "";
             }
         }
+
         public bool EnablePositions;
         public bool EnableNormals;
         public bool EnableUV0;
@@ -79,6 +86,14 @@ namespace FirstPlugin
         {
             textBoxMaterialPath.Visible = true;
             chkBoxImportMat.Checked = true;
+        }
+
+        public enum GamePreset
+        {
+            Default = 0,
+            BreathOfTheWild = 1,
+            WindWakerHD,
+            SuperMario3DWorld,
         }
 
         public void LoadNewMeshData(List<STGenericObject> Shapes)
@@ -169,7 +184,7 @@ namespace FirstPlugin
 
         public List<FSHP.VertexAttribute> CreateNewAttributes()
         {
-            List<FSHP.VertexAttribute> attribute = new List<FSHP.VertexAttribute>();
+            Dictionary<string, FSHP.VertexAttribute> attribute = new Dictionary<string, FSHP.VertexAttribute>();
 
             Console.WriteLine($"EnablePositions {EnablePositions}");
             Console.WriteLine($"EnableNormals {EnableNormals}");
@@ -189,72 +204,112 @@ namespace FirstPlugin
                 FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_p0";
                 att.Format = (AttribFormat)comboBoxFormatPositions.SelectedItem;
-                attribute.Add(att);
+                attribute.Add(att.Name, att);
             }
             if (EnableNormals)
             {
                 FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_n0";
                 att.Format = (AttribFormat)comboBoxFormatNormals.SelectedItem;
-                attribute.Add(att);
+                attribute.Add(att.Name, att);
             }
             if (EnableVertexColors)
             {
                 FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_c0";
                 att.Format = (AttribFormat)comboBoxFormatVertexColors.SelectedItem;
-                attribute.Add(att);
+                attribute.Add(att.Name, att);
             }
             if (EnableUV0)
             {
                 FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_u0";
                 att.Format = (AttribFormat)comboBoxFormatUvs.SelectedItem;
-                attribute.Add(att);
+                attribute.Add(att.Name, att);
             }
             if (EnableUV1 && EnableUV0)
             {
                 FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_u1";
                 att.Format = (AttribFormat)comboBoxFormatUvs.SelectedItem;
-                attribute.Add(att);
+                attribute.Add(att.Name, att);
             }
             if (EnableUV2 && EnableUV0)
             {
                 FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_u2";
                 att.Format = (AttribFormat)comboBoxFormatUvs.SelectedItem;
-                attribute.Add(att);
+                attribute.Add(att.Name, att);
             }
             if (EnableTangents)
             {
                 FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_t0";
                 att.Format = (AttribFormat)comboBoxFormatTangents.SelectedItem;
-                attribute.Add(att);
+                attribute.Add(att.Name, att);
             }
             if (EnableBitangents)
             {
                 FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_b0";
                 att.Format = (AttribFormat)comboBoxFormatBitans.SelectedItem;
-                attribute.Add(att);
+                attribute.Add(att.Name, att);
             }
             if (EnableWeights)
             {
                 FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_w0";
                 att.Format = (AttribFormat)comboBoxFormatWeights.SelectedItem;
-                attribute.Add(att);
+                attribute.Add(att.Name, att);
             }
             if (EnableIndices)
             {
                 FSHP.VertexAttribute att = new FSHP.VertexAttribute();
                 att.Name = "_i0";
                 att.Format = (AttribFormat)comboBoxFormatIndices.SelectedItem;
-                attribute.Add(att);
+                attribute.Add(att.Name, att);
             }
-            return attribute;
+
+            switch ((GamePreset)gamePresetCB.SelectedItem)
+            {
+                //Use single buffer
+                case GamePreset.WindWakerHD:
+                case GamePreset.SuperMario3DWorld:
+                    foreach (var att in attribute.Values)
+                        att.BufferIndex = 0;
+                    break;
+                case GamePreset.BreathOfTheWild:
+                    //A bit hacky. The position uses first buffer
+                    //Weight data uses 1
+                    //The rest besides bitangents use 2, bitans using 3
+                    //If no weight data, then it shifts by 1
+                    byte posIndex = 0;
+                    byte weightIndex = 1;
+                    byte dataIndex = 1;
+                    if (attribute.ContainsKey("_w0") || attribute.ContainsKey("_i0"))
+                        dataIndex += 1;
+                    byte bitanIndex = (byte)(dataIndex + 1);
+
+                    if (attribute.ContainsKey("_p0")) attribute["_p0"].BufferIndex = posIndex;
+                    if (attribute.ContainsKey("_i0")) attribute["_i0"].BufferIndex = weightIndex;
+                    if (attribute.ContainsKey("_w0")) attribute["_w0"].BufferIndex = weightIndex; //Same buffer as indices
+                    if (attribute.ContainsKey("_n0")) attribute["_n0"].BufferIndex = dataIndex;
+                    if (attribute.ContainsKey("_u0")) attribute["_u0"].BufferIndex = dataIndex;
+                    if (attribute.ContainsKey("_u1")) attribute["_u1"].BufferIndex = dataIndex;
+                    if (attribute.ContainsKey("_u2")) attribute["_u2"].BufferIndex = dataIndex;
+                    if (attribute.ContainsKey("_t0")) attribute["_t0"].BufferIndex = dataIndex;
+                    if (attribute.ContainsKey("_c0")) attribute["_c0"].BufferIndex = dataIndex;
+                    if (attribute.ContainsKey("_c1")) attribute["_c1"].BufferIndex = dataIndex;
+                    if (attribute.ContainsKey("_b0")) attribute["_b0"].BufferIndex = bitanIndex;
+                    break;
+                default:
+                    var attirbutes = attribute.Values.ToList();
+                    for (int i = 0; i < attirbutes.Count; i++)
+                        attirbutes[i].BufferIndex = (byte)i;
+                    return attirbutes;
+            }
+
+            return attribute.Values.ToList();
         }
         private string GetCmboxString(ComboBox comboBox)
         {
@@ -437,6 +492,50 @@ namespace FirstPlugin
                 objectNameTB.BackColor = System.Drawing.Color.DarkRed;
 
             NewMeshlist[assimpIndex].ObjectName = objectNameTB.Text;
+        }
+
+        private void gamePresetCB_SelectedIndexChanged(object sender, EventArgs e) {
+            UpdateFormatList((GamePreset)gamePresetCB.SelectedItem);
+        }
+
+        private void UpdateFormatList(GamePreset preset)
+        {
+            if (comboBoxFormatFaces.Items.Count == 0)
+                return;
+
+            switch (preset)
+            {
+                case GamePreset.BreathOfTheWild:
+                    comboBoxFormatPositions.SelectedItem = AttribFormat.Format_16_16_16_16_Single;
+                    comboBoxFormatNormals.SelectedItem = AttribFormat.Format_10_10_10_2_SNorm;
+                    comboBoxFormatTangents.SelectedItem = AttribFormat.Format_8_8_8_8_SNorm;
+                    comboBoxFormatBitans.SelectedItem = AttribFormat.Format_8_8_8_8_SNorm;
+                    comboBoxFormatVertexColors.SelectedItem = AttribFormat.Format_8_8_8_8_UNorm;
+                    comboBoxFormatUvs.SelectedItem = AttribFormat.Format_16_16_UNorm;
+                    comboBoxFormatIndices.SelectedItem = AttribFormat.Format_8_8_8_8_UInt;
+                    comboBoxFormatWeights.SelectedItem = AttribFormat.Format_8_8_8_8_UNorm;
+                    break;
+                case GamePreset.WindWakerHD:
+                    comboBoxFormatPositions.SelectedItem = AttribFormat.Format_32_32_32_Single;
+                    comboBoxFormatNormals.SelectedItem = AttribFormat.Format_32_32_32_Single;
+                    comboBoxFormatTangents.SelectedItem = AttribFormat.Format_32_32_32_32_Single;
+                    comboBoxFormatBitans.SelectedItem = AttribFormat.Format_32_32_32_32_Single;
+                    comboBoxFormatVertexColors.SelectedItem = AttribFormat.Format_32_32_32_32_Single;
+                    comboBoxFormatUvs.SelectedItem = AttribFormat.Format_32_32_Single;
+                    comboBoxFormatIndices.SelectedItem = AttribFormat.Format_32_32_32_32_UInt;
+                    comboBoxFormatWeights.SelectedItem = AttribFormat.Format_32_32_32_32_Single;
+                    break;
+                default:
+                    comboBoxFormatPositions.SelectedItem = AttribFormat.Format_32_32_32_32_Single;
+                    comboBoxFormatNormals.SelectedItem = AttribFormat.Format_10_10_10_2_SNorm;
+                    comboBoxFormatTangents.SelectedItem = AttribFormat.Format_8_8_8_8_SNorm;
+                    comboBoxFormatBitans.SelectedItem = AttribFormat.Format_8_8_8_8_SNorm;
+                    comboBoxFormatVertexColors.SelectedItem = AttribFormat.Format_8_8_8_8_UNorm;
+                    comboBoxFormatUvs.SelectedItem = AttribFormat.Format_16_16_UNorm;
+                    comboBoxFormatIndices.SelectedItem = AttribFormat.Format_8_8_8_8_UInt;
+                    comboBoxFormatWeights.SelectedItem = AttribFormat.Format_8_8_8_8_UNorm;
+                    break;
+            }
         }
     }
 }

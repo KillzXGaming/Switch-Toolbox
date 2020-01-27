@@ -1228,6 +1228,8 @@ namespace Bfres.Structs
             public string Name;
             public ResGFX.AttribFormat Format;
 
+            public byte BufferIndex { get; set; }
+
             public override string ToString()
             {
                 return Name;
