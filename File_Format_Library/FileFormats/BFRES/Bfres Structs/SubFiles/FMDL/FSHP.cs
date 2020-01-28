@@ -1684,7 +1684,7 @@ namespace Bfres.Structs
                 int MaxWeight = 255;
                 for (int i = 0; i < 4; i++)
                 {
-                    if (vtx.boneWeights.Count < i + 1)
+                    if (VertexSkinCount < i + 1)
                     {
                         weightsA[i] = 0;
                         MaxWeight = 0;
@@ -1707,13 +1707,13 @@ namespace Bfres.Structs
                     }
                 }
 
-                if (vtx.boneIds.Count >= 1)
+                if (vtx.boneIds.Count >= 1 && VertexSkinCount >= 1)
                     indicesA[0] = vtx.boneIds[0];
-                if (vtx.boneIds.Count >= 2)
+                if (vtx.boneIds.Count >= 2 && VertexSkinCount >= 2)
                     indicesA[1] = vtx.boneIds[1];
-                if (vtx.boneIds.Count >= 3)
+                if (vtx.boneIds.Count >= 3 && VertexSkinCount >= 3)
                     indicesA[2] = vtx.boneIds[2];
-                if (vtx.boneIds.Count >= 4)
+                if (vtx.boneIds.Count >= 4 && VertexSkinCount >= 4)
                     indicesA[3] = vtx.boneIds[3];
 
                 weights.Add(new Syroot.Maths.Vector4F(weightsA[0], weightsA[1], weightsA[2], weightsA[3]));
