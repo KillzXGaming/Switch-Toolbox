@@ -1684,7 +1684,7 @@ namespace Bfres.Structs
                 int MaxWeight = 255;
                 for (int i = 0; i < 4; i++)
                 {
-                    if (VertexSkinCount < i + 1)
+                    if (VertexSkinCount < i + 1 && vtx.boneWeights.Count < i + 1)
                     {
                         weightsA[i] = 0;
                         MaxWeight = 0;
