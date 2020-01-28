@@ -214,6 +214,10 @@ namespace FirstPlugin
                     VertexShaderIndex = reader.ReadInt32();
                     FragmentShaderIndex = reader.ReadInt32();
                     GeoemetryShaderIndex = reader.ReadInt32();
+
+                    VertexShaderIndex = 0;
+                    FragmentShaderIndex = 1;
+                    GeoemetryShaderIndex = -1;
                 }
                 Text = reader.ReadString((int)NameLength, true);
 
@@ -233,7 +237,7 @@ namespace FirstPlugin
                 variationFragmenMacroData.Read(reader, header.Version);
                 variationGeometryMacroData.Read(reader, header.Version);
 
-                if (header.Version >= 13)
+                if (header.Version >= 12)
                 {
                     variationComputeMacroData.Read(reader, header.Version);
                 }
