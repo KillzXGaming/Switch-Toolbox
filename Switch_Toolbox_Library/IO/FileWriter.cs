@@ -174,5 +174,21 @@ namespace Toolbox.Library.IO
             Write(v.Z);
             Write(v.W);
         }
+
+        /// <summary>
+        /// Aligns the data by writing bytes (rather than seeking)
+        /// </summary>
+        /// <param name="alignment"></param>
+        /// <param name="value"></param>
+        public void AlignBytes(int alignment, byte value = 0x00)
+        {
+            var startPos = Position;
+            long position = Seek((-Position % alignment + alignment) % alignment, SeekOrigin.Current);
+
+            Seek(startPos, System.IO.SeekOrigin.Begin);
+            while (Position != position) {
+                Write(value);
+            }
+        }
     }
 }
