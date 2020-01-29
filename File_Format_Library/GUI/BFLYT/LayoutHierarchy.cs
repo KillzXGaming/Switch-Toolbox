@@ -270,6 +270,19 @@ namespace LayoutBXLYT
                 else if (panes[i] is BCLYT.TXT1) textFolder.Nodes.Add(paneNode);
                 else if (panes[i] is BFLYT.TXT1) textFolder.Nodes.Add(paneNode);
                 else nullFolder.Nodes.Add(paneNode);
+
+                if (panes[i] is BFLYT.PRT1)
+                {
+                    var partPane = (BFLYT.PRT1)panes[i];
+                    foreach (var property in partPane.Properties)
+                    {
+                        if (property.Property != null)
+                        {
+                            var propertyNode = CreatePaneWrapper(property.Property);
+                            paneNode.Nodes.Add(propertyNode);
+                        }
+                    }
+                }
             }
 
             for (int i = 0; i < groupPanes.Count; i++)

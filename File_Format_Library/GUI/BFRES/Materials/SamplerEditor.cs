@@ -293,10 +293,15 @@ namespace FirstPlugin.Forms
                 {
                     if (ftexCont.ResourceNodes.ContainsKey(name))
                     {
+                        FTEX ftex = ((FTEX)ftexCont.ResourceNodes[name]);
+                        //Make sure to skip textures without image data! This is very important for botw tex2 files.
+                        if (ftex.texture.Data == null || ftex.texture.Data.Length == 0)
+                            continue;
+
                         Thread = new Thread((ThreadStart)(() =>
                         {
                             textureBP.Image = Toolbox.Library.Imaging.GetLoadingImage();
-                            textureBP.Image = ((FTEX)ftexCont.ResourceNodes[name]).GetBitmap();
+                            textureBP.Image = ftex.GetBitmap();
                         }));
                         Thread.Start();
                     }

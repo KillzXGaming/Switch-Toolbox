@@ -114,6 +114,31 @@ namespace FirstPlugin
                     reader.Seek((int)files[i].CompressedSize);
                     reader.Align((int)files[i].Alignment);
                 }
+
+                //Try to get file names from file formats inside
+                //The string table for this file uses a bunch of ids and not very ideal for viewing
+                for (int i = 0; i < FileCount; i++)
+                {
+                    if (files[i].CompressedSize == 0)
+                        continue;
+
+                    reader.SeekBegin(files[i].DataOffset);
+                    var data = reader.ReadBytes((int)files[i].CompressedSize);
+                    if (files[i].CompressedSize != files[i].UncompressedSize)
+                        data = STLibraryCompression.ZLIB.Decompress(data);
+
+                    using (var dataReader = new FileReader(data))
+                    {
+                        if (dataReader.CheckSignature(4, "FRES"))
+                        {
+                            dataReader.SetByteOrder(false);
+                            dataReader.SeekBegin(32);
+                            uint fileNameOffset = dataReader.ReadUInt32();
+                            dataReader.SeekBegin(fileNameOffset + 2);
+                            files[i].FileName = dataReader.ReadZeroTerminatedString();
+                        }
+                    }
+                }
             }
 
             public void Write(FileWriter writer, List<FileInfo> files)
@@ -159,18 +184,16 @@ namespace FirstPlugin
                 uint nameLength = reader.ReadUInt32();
                 uint hash = reader.ReadUInt32();
                 Alignment = reader.ReadUInt32();
-                CompressedSize = reader.ReadUInt32();
+                UncompressedSize = reader.ReadUInt32();
                 CompressedSize = reader.ReadUInt32();
                 uint nameOffset = reader.ReadUInt32();
                 uint unk = reader.ReadUInt32();
                 uint unk2 = reader.ReadUInt32();
 
-               // FileName = reader.ReadString(0x20, true);
-               // reader.ReadUInt32();
+                // FileName = reader.ReadString(0x20, true);
+                // reader.ReadUInt32();
 
                 long endpos = reader.Position;
-
-
                 reader.Seek(endpos, System.IO.SeekOrigin.Begin);
             }
         }

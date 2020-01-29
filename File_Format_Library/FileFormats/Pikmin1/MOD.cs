@@ -150,6 +150,9 @@ namespace FirstPlugin
             {
                 reader.SetByteOrder(true);
 
+                string[] JointNames = new string[0];
+                Joint[] Joints = new Joint[0];
+                Envelope[] Envelopes = new Envelope[0];
                 while (reader.EndOfStream == false)
                 {
                     long chunkStart = reader.Position;
@@ -175,12 +178,64 @@ namespace FirstPlugin
                         case ChunkNames.Mesh:
                             ReadMeshChunk(reader);
                             break;
+                        case ChunkNames.Envelope:
+                            Envelopes = ParseArray<Envelope>(reader);
+                            break;
+                        case ChunkNames.JointName:
+                            JointNames = ReadStrings(reader);
+                            break;
+                        case ChunkNames.Joint:
+                            Joints = ParseArray<Joint>(reader);
+                            break;
                         default:
                             reader.Seek(lengthOfStruct, System.IO.SeekOrigin.Current);
                             break;
                     }
                 }
+
+                for (int i = 0; i < Joints.Length; i++)
+                {
+                    STBone bone = new STBone(Skeleton);
+                    bone.parentIndex = Joints[i].ParentIndex;
+                    bone.position = new float[]
+                    {
+                        Joints[i].Position.X,
+                        Joints[i].Position.Y,
+                        Joints[i].Position.Z,
+                    };
+                    bone.scale = new float[]
+                    {
+                        Joints[i].Scale.X,
+                        Joints[i].Scale.Y,
+                        Joints[i].Scale.Z,
+                    };
+                    bone.rotation = new float[]
+                    {
+                        Joints[i].Rotation.X,
+                        Joints[i].Rotation.Y,
+                        Joints[i].Rotation.Z,
+                    };
+                    Skeleton.bones.Add(bone);
+                }
+                Skeleton.reset();
+                Skeleton.update();
             }
+        }
+
+        private T[] ParseArray<T>(FileReader reader) 
+            where T : IModChunk, new()
+        {
+            int count = reader.ReadInt32();
+
+            SkipPadding(reader, 0x20);
+            T[] values = new T[count];
+            for (int i = 0; i < count; i++) {
+                values[i] = new T();
+                values[i].Read(reader);
+            }
+
+            SkipPadding(reader, 0x20);
+            return values;
         }
 
         private Vector4[] ReadVertexColors(FileReader reader)
@@ -208,6 +263,21 @@ namespace FirstPlugin
             SkipPadding(reader, 0x20);
             for (int i = 0; i < count; i++)
                 vertexData[i] = reader.ReadVec3();
+
+            SkipPadding(reader, 0x20);
+            return vertexData;
+        }
+
+        private string[] ReadStrings(FileReader reader)
+        {
+            int count = reader.ReadInt32();
+            string[] vertexData = new string[count];
+
+            SkipPadding(reader, 0x20);
+            for (int i = 0; i < count; i++) {
+                uint length = reader.ReadUInt32();
+                vertexData[i] = reader.ReadString((int)length, true);
+            }
 
             SkipPadding(reader, 0x20);
             return vertexData;
@@ -382,23 +452,120 @@ namespace FirstPlugin
             return tris;
         }
 
+        public interface IModChunk
+        {
+            void Read(FileReader reader);
+            void Write(FileWriter writer);
+        }
+
+        public class Envelope : IModChunk
+        {
+            public float[] Weights;
+            public ushort[] Indices;
+
+            public void Read(FileReader reader)
+            {
+                ushort count = reader.ReadUInt16();
+
+                Weights = new float[count];
+                Indices = new ushort[count];
+                for (int i = 0; i < count; i++) {
+                    Indices[i] = reader.ReadUInt16();
+                    Weights[i] = reader.ReadSingle();
+                }
+            }
+
+            public void Write(FileWriter writer)
+            {
+                writer.Write((ushort)Indices.Length);
+                for (int i = 0; i < Indices.Length; i++) {
+                    writer.Write(Indices[i]);
+                    writer.Write(Weights[i]);
+                }
+            }
+        }
+
+        public class Joint : IModChunk
+        {
+            public int ParentIndex;
+
+            public bool UseVolume { get; set; }
+            public bool FoundLightGroup { get; set; }
+
+            public BoundingBox BoundingBox { get; set; }
+
+            public float VolumeRadius { get; set; }
+
+            public Vector3 Scale { get; set; }
+            public Vector3 Rotation { get; set; }
+            public Vector3 Position { get; set; }
+
+            public List<MatPoly> MatPolys = new List<MatPoly>();
+
+            private uint flags;
+
+            public void Read(FileReader reader)
+            {
+                ParentIndex = reader.ReadInt32();
+                flags = reader.ReadUInt32(); 
+                ushort usingIdentifier = (ushort)flags;
+                UseVolume = usingIdentifier > 0;
+                FoundLightGroup = (usingIdentifier & 0x4000) != 0; 
+                BoundingBox = new BoundingBox()
+                {
+                    Min = reader.ReadVec3(),
+                    Max = reader.ReadVec3(),
+                };
+                VolumeRadius = reader.ReadSingle();
+                Scale = reader.ReadVec3();
+                Rotation = reader.ReadVec3();
+                Position = reader.ReadVec3();
+
+                uint numMatPolys = reader.ReadUInt32();
+                for (int i = 0; i < numMatPolys; i++)
+                {
+                    MatPolys.Add(new MatPoly()
+                    {
+                        Index = reader.ReadUInt16(),
+                        Unknown = reader.ReadUInt16(),
+                    });
+                }
+            }
+
+            public void Write(FileWriter writer)
+            {
+                writer.Write(ParentIndex);
+                writer.Write(flags);
+                writer.Write(BoundingBox.Min);
+                writer.Write(BoundingBox.Max);
+                writer.Write(VolumeRadius);
+                writer.Write(Scale);
+                writer.Write(Rotation);
+                writer.Write(Position);
+                foreach (var matPoly in MatPolys) {
+                    writer.Write(matPoly.Index);
+                    writer.Write(matPoly.Unknown);
+                }
+            }
+        }
+
+        public struct MatPoly
+        {
+            public ushort Index { get; set; }
+            public ushort Unknown { get; set; }
+        }
+
+        public struct BoundingBox
+        {
+            public Vector3 Min { get; set; }
+            public Vector3 Max { get; set; }
+        }
+
         public class Triangle
         {
             public int A;
             public int B;
             public int C;
-        }
-
-        public class Vector3Holder
-        {
-            public Vector3 value;
-
-            public void Read(FileReader reader)
-            {
-                value.X = reader.ReadSingle();
-                value.Y = reader.ReadSingle();
-                value.Z = reader.ReadSingle();
-            }
         }
 
         public void Unload()

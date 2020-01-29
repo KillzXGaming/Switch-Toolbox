@@ -25,7 +25,7 @@ namespace FirstPlugin
         public bool CanRenameFiles { get; set; }
         public bool CanReplaceFiles { get; set; }
         public bool CanDeleteFiles { get; set; }
-
+        
         public bool Identify(System.IO.Stream stream)
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
@@ -107,9 +107,9 @@ namespace FirstPlugin
 
                 using (reader.TemporarySeek((int)Offset, System.IO.SeekOrigin.Begin))
                 {
-                    reader.ReadBytes(8);
-                    FileData = reader.ReadBytes((int)CompressedSize - 8);
-                    FileData = STLibraryCompression.LZSS.Decompress(FileData, DecompressedSize);
+                    reader.Seek(4);
+                    FileData = reader.ReadBytes((int)CompressedSize - 4);
+                 //   FileData = LZ11.decompress(FileData, DecompressedSize);
                 }
             }
         }

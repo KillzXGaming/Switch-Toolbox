@@ -24,6 +24,10 @@ namespace FirstPlugin
             Switch,
         }
 
+        public uint PlatformID;
+
+        private readonly uint ExtraDataFlag = 0x1000;
+
         public void Read(FileReader reader)
         {
             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
@@ -47,7 +51,7 @@ namespace FirstPlugin
             uint FileSize = reader.ReadUInt32();
             uint DataOffset = reader.ReadUInt32();
             uint TextureCount = reader.ReadUInt32();
-            uint unk = reader.ReadUInt32();
+            PlatformID = reader.ReadUInt32();
             uint unk2 = reader.ReadUInt32();
             uint[] unk3s = reader.ReadUInt32s((int)TextureCount);
 
@@ -65,20 +69,17 @@ namespace FirstPlugin
                 byte unknown3 = reader.ReadByte(); //1
                 byte unknown4 = reader.ReadByte(); //0
                 byte unknown5 = reader.ReadByte(); //1
-                byte unknown6 = reader.ReadByte(); //12
-                byte extraHeader = reader.ReadByte();
+                ushort flags = reader.ReadUInt16();
+                if ((flags & ExtraDataFlag) == ExtraDataFlag)
+                {
+                    var extSize = reader.ReadInt32();
+                    var ext = reader.ReadBytes(extSize - 4);
+                }
 
                 if (reader.ByteOrder == Syroot.BinaryData.ByteOrder.LittleEndian)
                 {
                     numMips = SwapEndianByte(numMips);
                     texDims = SwapEndianByte(texDims);
-                    extraHeader = SwapEndianByte(extraHeader);
-                }
-
-                if (extraHeader == 1)
-                {
-                    var extSize = reader.ReadInt32();
-                    var ext = reader.ReadBytes(extSize - 4);
                 }
 
                 uint Width = (uint)Math.Pow(2, texDims / 16);

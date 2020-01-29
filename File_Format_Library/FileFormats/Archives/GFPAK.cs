@@ -399,18 +399,22 @@ namespace FirstPlugin
                     string folder = file.FolderHash.Parent.hash.ToString();
 
                     BNTX bntx = file.FileFormat as BNTX;
-                    foreach (var tex in bntx.Textures)
+                    foreach (var tex in bntx.Textures.Values)
                     {
-                        tex.Value.OnTextureDeleted += OnTextureDeleted;
+                        tex.OnTextureDeleted += OnTextureDeleted;
                         //Set tree key for deletion
-                        tex.Value.Name = tex.Key;
-                        tex.Value.Tag = file;
+                        tex.Name = tex.Text;
+                        tex.Tag = file;
+                        var texNode = new TreeNode(tex.Text);
+                        texNode.Tag = tex;
+                        texNode.ImageKey = tex.ImageKey;
+                        texNode.SelectedImageKey = tex.SelectedImageKey;
 
                         if (folders.Count > 1)
-                            folders[folder].Nodes.Add(tex.Value);
+                            folders[folder].Nodes.Add(texNode);
                         else
-                            subNodes.Add(tex.Value);
-                        Textures.Add(tex.Value);
+                            subNodes.Add(texNode);
+                        Textures.Add(tex);
                     }
                 }
 
