@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Toolbox.Library.NodeWrappers;
 using Toolbox.Library.Animations;
 using SPICA.Formats.CtrH3D.Animation;
+using FirstPlugin.CtrLibrary.Forms;
+using System.Windows.Forms;
 
 namespace FirstPlugin.CtrLibrary
 {
@@ -15,6 +17,14 @@ namespace FirstPlugin.CtrLibrary
 
         public H3DAnimationController Animation = new H3DAnimationController();
 
+        private H3DAnimation H3DAnimation;
+
+        public override void OnClick(TreeView treeview)
+        {
+            var editor = BCHParent.LoadEditor<BCHAnimationEditor>();
+            editor.LoadAnimation(H3DAnimation);
+        }
+
         public H3DSkeletalAnimWrapper(H3DAnimation h3dAnim, BCH bch)
         {
             ImageKey = "anim";
@@ -22,6 +32,8 @@ namespace FirstPlugin.CtrLibrary
 
             BCHParent = bch;
             Text = h3dAnim.Name;
+
+            H3DAnimation = h3dAnim;
             Animation.FrameCount = h3dAnim.FramesCount;
             Animation.Name = h3dAnim.Name;
             Animation.Loop = h3dAnim.AnimationFlags.HasFlag(H3DAnimationFlags.IsLooping);
