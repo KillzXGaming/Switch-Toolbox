@@ -665,6 +665,12 @@ namespace LayoutBXLYT
                 }
             }
 
+            public void CopyWindows() {
+                Content = (BxlytWindowContent)Content.Clone();
+                for (int f = 0; f < WindowFrames.Count; f++)
+                    WindowFrames[f] = (BxlytWindowFrame)WindowFrames[f].Clone();
+            }
+
             [TypeConverter(typeof(ExpandableObjectConverter))]
             public BxlytWindowContent Content { get; set; }
 
@@ -860,6 +866,10 @@ namespace LayoutBXLYT
                 MaterialIndex = 0;
                 TexCoords = new TexCoord[1];
                 TexCoords[0] = new TexCoord();
+            }
+
+            public void CopyMaterial() {
+                Material = (BxlytMaterial)Material.Clone();
             }
 
             public PIC1(FileReader reader, BRLYT.Header header) : base(reader)
@@ -1114,6 +1124,14 @@ namespace LayoutBXLYT
                 else
                     return "";
             }
+
+            public override BxlytMaterial Clone()
+            {
+                Material mat = new Material();
+                return mat;
+            }
+
+            public Material() { }
 
             public Material(string name, Header header)
             {

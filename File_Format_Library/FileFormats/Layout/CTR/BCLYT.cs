@@ -692,6 +692,10 @@ namespace LayoutBXLYT
                 TexCoords[0] = new TexCoord();
             }
 
+            public void CopyMaterial() {
+                Material = (BxlytMaterial)Material.Clone();
+            }
+
             public PIC1(FileReader reader, BCLYT.Header header) : base(reader)
             {
                 ParentLayout = header;

@@ -151,6 +151,9 @@ namespace LayoutBXLYT
             LayoutFiles.Add(header);
             ActiveLayout = header;
 
+            //Update the saving for the layout
+            ActiveLayout.FileInfo.CanSave = true;
+
             LayoutViewer Viewport = new LayoutViewer(this, header, Textures);
             Viewport.DockContent = new DockContent();
             Viewport.DockContent.Text = header.FileName;
@@ -1115,7 +1118,28 @@ namespace LayoutBXLYT
                     name = name.Replace(numberedEnd, string.Empty);
             }
 
-            pane.Name = RenamePane(name);
+            name = RenamePane(name);
+            if (ActiveLayout.PaneLookup.ContainsKey(name))
+                throw new Exception("Pane name duplicate! " + name);
+
+
+            pane.Name = name;
+            pane.LayoutFile = ActiveLayout;
+
+            if (pane is IPicturePane)
+            {
+                ((IPicturePane)pane).Material.Name = pane.Name;
+                ((IPicturePane)pane).MaterialIndex = (ushort)ActiveLayout.AddMaterial(((IPicturePane)pane).Material);
+            }
+            if (pane is ITextPane)
+            {
+                ((ITextPane)pane).Material.Name = pane.Name;
+                ((ITextPane)pane).MaterialIndex = (ushort)ActiveLayout.AddMaterial(((ITextPane)pane).Material);
+            }
+            if (pane is IWindowPane)
+            {
+            }
+
             pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
             ActiveLayout.AddPane(pane, pane.Parent);
         }

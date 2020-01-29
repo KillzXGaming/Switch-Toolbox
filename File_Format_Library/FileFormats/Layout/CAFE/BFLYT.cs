@@ -1081,6 +1081,10 @@ namespace LayoutBXLYT.Cafe
             private float Unknown1 { get; set; }
             private float Unknown2 { get; set; }
 
+            public void CopyMaterial() {
+                Material = Material.Clone();
+            }
+
             public void UpdateTextRender()
             {
                 if (RenderableFont == null) return;
@@ -1123,8 +1127,9 @@ namespace LayoutBXLYT.Cafe
                 ShadowForeColor = STColor8.FromBytes(reader.ReadBytes(4));
                 ShadowBackColor = STColor8.FromBytes(reader.ReadBytes(4));
                 ShadowItalic = reader.ReadSingle();
+                uint perCharTransformOffset = reader.ReadUInt32();
+
                 if (header.VersionMajor >= 8) {
-                    Unknown1 = reader.ReadSingle();
                     Unknown2 = reader.ReadSingle();
                 }
 
@@ -1186,19 +1191,25 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(ShadowForeColor.ToBytes());
                 writer.Write(ShadowBackColor.ToBytes());
                 writer.Write(ShadowItalic);
+                if (header.VersionMajor > 2)
+                    writer.Write(0); //per character transform offset
+
                 if (header.VersionMajor >= 8)
                 {
-                    writer.Write(Unknown1);
                     writer.Write(Unknown2);
                 }
 
                 if (Text != null)
                 {
+                    Encoding encoding = Encoding.Unicode;
+                    if (writer.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian)
+                        encoding = Encoding.BigEndianUnicode;
+
                     writer.WriteUint32Offset(_ofsTextPos, pos);
                     if (RestrictedTextLengthEnabled)
-                        writer.WriteString(Text, MaxTextLength, Encoding.Unicode);
+                        writer.WriteString(Text, MaxTextLength, encoding);
                     else
-                        writer.WriteString(Text, TextLength, Encoding.Unicode);
+                        writer.WriteString(Text, TextLength, encoding);
 
                     writer.Align(4);
                 }
@@ -1220,6 +1231,12 @@ namespace LayoutBXLYT.Cafe
             public WND1() : base()
             {
 
+            }
+
+            public void CopyWindows() {
+                Content = (BxlytWindowContent)Content.Clone();
+                for (int f = 0; f < WindowFrames.Count; f++)
+                    WindowFrames[f] = (BxlytWindowFrame)WindowFrames[f].Clone();
             }
 
             public WND1(Header header, string name)
@@ -1761,6 +1778,7 @@ namespace LayoutBXLYT.Cafe
                                     if (openedFile == null)
                                         continue;
 
+                                    openedFile.CanSave = false;
                                     var bflan = openedFile as BXLAN;
                                     layoutFile.PartsManager.AddAnimation(bflan.BxlanHeader);
                                 }
@@ -1774,6 +1792,7 @@ namespace LayoutBXLYT.Cafe
                                 var openedFile = STFileLoader.OpenFileFormat(file);
                                 if (openedFile == null) continue;
 
+                                openedFile.CanSave = false;
                                 openedFile.IFileInfo = new IFileInfo();
                                 openedFile.IFileInfo.ArchiveParent = fileFormat.IFileInfo.ArchiveParent;
                                 return (BFLYT)openedFile;
@@ -2198,6 +2217,10 @@ namespace LayoutBXLYT.Cafe
                 Material = new Material(name, header);
             }
 
+            public void CopyMaterial() {
+                Material = Material.Clone();
+            }
+
             public PIC1(FileReader reader, BFLYT.Header header) : base(reader, header)
             {
                 ParentLayout = header;
@@ -2562,6 +2585,24 @@ namespace LayoutBXLYT.Cafe
                     return "";
             }
 
+            public override BxlytMaterial Clone()
+            {
+                Material mat = new Material();
+                return mat;
+            }
+
+            public Material() 
+            {
+                TextureMaps = new TextureRef[0];
+                TextureTransforms = new TextureTransform[0];
+                TexCoords = new TexCoordGen[0];
+                TevStages = new TevStage[0];
+                ProjTexGenParams = new ProjectionTexGenParam[0];
+
+                BlackColor = new STColor8(0, 0, 0, 0);
+                WhiteColor = STColor8.White;
+            }
+
             public Material(string name, BxlytHeader header)
             {
                 ParentLayout = header;
@@ -2611,6 +2652,18 @@ namespace LayoutBXLYT.Cafe
                 var hasIndParam = Convert.ToBoolean((flags >> 14) & 0x1);
                 var projTexGenParamCount = Convert.ToUInt32((flags >> 15) & 0x3);
                 var hasFontShadowParam = Convert.ToBoolean((flags >> 17) & 0x1);
+
+                Console.WriteLine($"texCount {texCount}");
+                Console.WriteLine($"mtxCount {mtxCount}");
+                Console.WriteLine($"texCoordGenCount {texCoordGenCount}");
+                Console.WriteLine($"tevStageCount {tevStageCount}");
+                Console.WriteLine($"hasAlphaCompare {hasAlphaCompare}");
+                Console.WriteLine($"hasBlendMode {hasBlendMode}");
+                Console.WriteLine($"useTextureOnly {useTextureOnly}");
+                Console.WriteLine($"seperateBlendMode {seperateBlendMode}");
+                Console.WriteLine($"hasIndParam {hasIndParam}");
+                Console.WriteLine($"projTexGenParamCount {projTexGenParamCount}");
+                Console.WriteLine($"hasFontShadowParam {hasFontShadowParam}");
 
                 EnableAlphaCompare = hasAlphaCompare;
                 EnableBlend = hasBlendMode;

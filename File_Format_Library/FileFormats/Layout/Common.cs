@@ -219,8 +219,15 @@ namespace LayoutBXLYT
         }
 
         public object Clone()
-        { 
-            return this.MemberwiseClone();
+        {
+            BasePane copiedPane = (BasePane)this.MemberwiseClone();
+            if (copiedPane is IPicturePane)
+                ((IPicturePane)copiedPane).CopyMaterial();
+            if (copiedPane is ITextPane)
+                ((ITextPane)copiedPane).CopyMaterial();
+            if (copiedPane is IWindowPane)
+                ((IWindowPane)copiedPane).CopyWindows();
+            return copiedPane;
         }
 
         public virtual UserData CreateUserData()
@@ -1210,6 +1217,8 @@ namespace LayoutBXLYT
         STColor8 ColorTopRight { get; set; }
         STColor8 ColorBottomLeft { get; set; }
         STColor8 ColorBottomRight { get; set; }
+
+        void CopyMaterial();
     }
 
     public interface IBoundryPane
@@ -1261,6 +1270,8 @@ namespace LayoutBXLYT
         bool ShadowEnabled { get; set; }
         string FontName { get; set; }
         ushort FontIndex { get; set; }
+
+        void CopyMaterial();
     }
 
     public interface IPartPane
@@ -1291,6 +1302,8 @@ namespace LayoutBXLYT
 
         [Browsable(false)]
         List<BxlytWindowFrame> WindowFrames { get; set; }
+
+        void CopyWindows();
     }
 
     public class BXLAN
@@ -1298,7 +1311,7 @@ namespace LayoutBXLYT
         public BxlanHeader BxlanHeader;
     }
 
-    public class BxlytWindowContent
+    public class BxlytWindowContent : ICloneable
     {
         public STColor8 ColorTopLeft { get; set; }
         public STColor8 ColorTopRight { get; set; }
@@ -1313,6 +1326,11 @@ namespace LayoutBXLYT
         public List<TexCoord> TexCoords = new List<TexCoord>();
 
         private BxlytHeader LayoutFile;
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
 
         public BxlytWindowContent(BxlytHeader header, string name)
         {
@@ -1372,13 +1390,18 @@ namespace LayoutBXLYT
         }
     }
 
-    public class BxlytWindowFrame
+    public class BxlytWindowFrame : ICloneable
     {
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public BxlytMaterial Material { get; set; }
 
         public ushort MaterialIndex;
         public WindowFrameTexFlip TextureFlip { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
 
         public BxlytWindowFrame(BxlytHeader header, string materialName)
         {
@@ -2150,7 +2173,7 @@ namespace LayoutBXLYT
         }
     }
 
-    public class BxlytMaterial
+    public class BxlytMaterial 
     {
         //Setup some enable booleans
         //These determine wether to switch to default values or not
@@ -2193,6 +2216,11 @@ namespace LayoutBXLYT
             return false;
         }
 
+        public virtual BxlytMaterial Clone()
+        {
+            return (BxlytMaterial)this.MemberwiseClone();
+        }
+
         public void RemoveNodeWrapper()
         {
             if (NodeWrapper != null && NodeWrapper.Parent != null)
@@ -2201,8 +2229,6 @@ namespace LayoutBXLYT
                 parent.Nodes.Remove(NodeWrapper);
             }
         }
-
-
 
         public virtual void AddTexture(string texture)
         {
