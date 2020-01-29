@@ -60,19 +60,19 @@ namespace Bfres.Structs
             {
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.ShaderParameter);
                 ShaderParamAnim.Name = Text;
-                LoadAnim(ShaderParamAnim, AnimationType.ShaderParam);
+                LoadAnim(ShaderParamAnim, AnimType);
             }
             else if (ext == ".bfcsh")
             {
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.Color);
                 ShaderParamAnim.Name = Text;
-                LoadAnim(ShaderParamAnim, AnimationType.Color);
+                LoadAnim(ShaderParamAnim, AnimType);
             }
             else if (ext == ".bftsh")
             {
                 ShaderParamAnim.Import(FileName, resFile, ShaderParamAnimType.TextureSRT);
                 ShaderParamAnim.Name = Text;
-                LoadAnim(ShaderParamAnim, AnimationType.TexturePattern);
+                LoadAnim(ShaderParamAnim, AnimType);
             }
             else if (ext == ".bfmaa")
             {
@@ -80,7 +80,7 @@ namespace Bfres.Structs
                 fmaa.Import(FileName);
                 ShaderParamAnim = BfresPlatformConverter.FSHUConvertSwitchToWiiU(fmaa);
                 ShaderParamAnim.Name = Text;
-                LoadAnim(ShaderParamAnim, AnimationType.ShaderParam);
+                LoadAnim(ShaderParamAnim, AnimType);
             }
             else if (ext == ".yaml")
             {
@@ -88,13 +88,13 @@ namespace Bfres.Structs
                 fmaa = YamlFmaa.FromYaml(FileName);
                 ShaderParamAnim = BfresPlatformConverter.FSHUConvertSwitchToWiiU(fmaa);
                 ShaderParamAnim.Name = Text;
-                LoadAnim(ShaderParamAnim, AnimationType.ShaderParam);
+                LoadAnim(ShaderParamAnim, AnimType);
             }
             else if (ext == ".clr0")
             {
                 ShaderParamAnim = BrawlboxHelper.FSHUConverter.Clr02Fshu(FileName);
                 ShaderParamAnim.Name = Text;
-                LoadAnim(ShaderParamAnim, AnimationType.Color);
+                LoadAnim(ShaderParamAnim, AnimType);
             }
 
             UpdateEditor();

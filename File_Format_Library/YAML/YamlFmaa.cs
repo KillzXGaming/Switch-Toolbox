@@ -131,10 +131,15 @@ namespace FirstPlugin
                     case "Scale X": return 4;
                     case "Scale Y": return 8;
                     case "Rotate": return 12;
+                    case "Rotation": return 12;
+                    case "Rotation X": return 12;
+                    case "Rotate X": return 12;
                     case "Translate X": return 16;
                     case "Translate Y": return 20;
                     default:
-                        uint.TryParse(offset, out val);
+                        bool isOffset = uint.TryParse(offset, out val);
+                        if (!isOffset)
+                            throw new Exception($"Invalid offset value {offset}");
                         break;
                 }
 
