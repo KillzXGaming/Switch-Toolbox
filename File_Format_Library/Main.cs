@@ -447,6 +447,7 @@ namespace FirstPlugin
             Formats.Add(typeof(APAK));
             Formats.Add(typeof(CtrLibrary.BCH));
             Formats.Add(typeof(LZS));
+            Formats.Add(typeof(WTA));
 
 
 

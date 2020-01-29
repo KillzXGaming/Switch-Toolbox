@@ -225,6 +225,7 @@
     <Compile Include="FileFormats\Archives\LZS.cs" />
     <Compile Include="FileFormats\Archives\QuickAccess\QuickAccessFile.cs" />
     <Compile Include="FileFormats\Archives\QuickAccess\QuickAccessFolder.cs" />
+    <Compile Include="FileFormats\Archives\WTA.cs" />
     <Compile Include="FileFormats\BCH\BCH.cs" />
     <Compile Include="FileFormats\BCH\MBN.cs" />
     <Compile Include="FileFormats\BCH\Wrappers\BCHGroupNode.cs" />
