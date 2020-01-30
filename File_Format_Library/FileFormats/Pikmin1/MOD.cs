@@ -90,6 +90,8 @@ namespace FirstPlugin
         private Vector3[] Vertices;
         private Vector3[] VertexNormals;
         private Vector4[] Colors;
+        private Envelope[] Envelopes;
+
         private enum ChunkNames
         {
             Header,
@@ -152,7 +154,7 @@ namespace FirstPlugin
 
                 string[] JointNames = new string[0];
                 Joint[] Joints = new Joint[0];
-                Envelope[] Envelopes = new Envelope[0];
+                Envelopes = new Envelope[0];
                 while (reader.EndOfStream == false)
                 {
                     long chunkStart = reader.Position;
@@ -219,6 +221,18 @@ namespace FirstPlugin
                 }
                 Skeleton.reset();
                 Skeleton.update();
+
+                foreach (var mesh in Renderer.Meshes)
+                {
+                    for (int v = 0; v < mesh.vertices.Count; v++) {
+                        var vertex = mesh.vertices[v];
+                        if (vertex.boneIds.Count == 1)
+                        {
+                            var transform = Skeleton.bones[vertex.boneIds[0]].Transform;
+                            vertex.pos = Vector3.TransformPosition(vertex.pos, transform);
+                        }
+                    }
+                }
             }
         }
 
@@ -364,6 +378,15 @@ namespace FirstPlugin
                                     {
                                         pos = Vertices[vtxIdx]
                                     };
+
+                                    int envIdx = 0;
+                                    if (Envelopes.Length > envIdx)
+                                    {
+                                        for (int i = 0; i < Envelopes[envIdx].Indices?.Length; i++) {
+                                            newVertex.boneIds.Add(Envelopes[envIdx].Indices[i]);
+                                            newVertex.boneWeights.Add(Envelopes[envIdx].Weights[i]);
+                                        }
+                                    }
 
                                     if (VertexNormals != null)
                                         newVertex.nrm = VertexNormals[nrmIdx];
