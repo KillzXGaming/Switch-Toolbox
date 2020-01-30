@@ -40,11 +40,26 @@ namespace FirstPlugin
             SelectedImageKey = "bntx";
         }
 
+        private long FilePosition = 0;
+        private byte[] ExtraHeader;
         public bool Identify(System.IO.Stream stream)
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "BNTX");
+                bool isBntx = reader.CheckSignature(4, "BNTX");
+                bool isKillLaKill = false;
+                if (stream.Length > 84)
+                {
+                    isKillLaKill = reader.CheckSignature(4, "BNTX", 80);
+                    if (isKillLaKill) {
+                        ExtraHeader = reader.ReadBytes(80);
+                        FilePosition = 80;
+                    }
+
+                    reader.Position = 0;
+                }
+
+                return isBntx || isKillLaKill;
             }
         }
 
@@ -576,6 +591,9 @@ namespace FirstPlugin
             Textures = new Dictionary<string, TextureData>(StringComparer.InvariantCultureIgnoreCase);
             TextureList = new List<STGenericTexture>();
 
+            if (FilePosition != 0)
+                stream = new SubStream(stream, FilePosition, stream.Length - FilePosition);
+
             BinaryTexFile = new BntxFile(stream);
             Text = BinaryTexFile.Name;
 
@@ -1053,7 +1071,18 @@ namespace FirstPlugin
                     BinaryTexFile.TextureDict.Add(tex.Text);
                 }
 
-                BinaryTexFile.Save(stream);
+                if (ExtraHeader != null)
+                {
+                    var mem = new MemoryStream();
+                    BinaryTexFile.Save(mem);
+                    using (var writer = new FileWriter(stream, true))
+                    {
+                        writer.Write(ExtraHeader);
+                        writer.Write(mem.ToArray());
+                    }
+                }
+                else
+                    BinaryTexFile.Save(stream);
             }
         }
 
@@ -1236,8 +1265,8 @@ namespace FirstPlugin
             Text = tex.Name;
             Width = tex.Width;
             Height = tex.Height;
-            ArrayCount = tex.Depth;
-        //    ArrayCount = (uint)tex.TextureData.Count;
+            Depth = tex.Depth;
+            ArrayCount = (uint)tex.TextureData.Count;
             MipCount = (uint)tex.TextureData[0].Count;
             Format = ConvertFormat(tex.Format);
 
