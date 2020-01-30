@@ -16,7 +16,7 @@ namespace FirstPlugin
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Hyrule Warriors Resource (bin.gz)" };
-        public string[] Extension { get; set; } = new string[] { "*.pac" };
+        public string[] Extension { get; set; } = new string[] { "*.bin.gz" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }

@@ -80,7 +80,6 @@ namespace FirstPlugin
 
                 uint Width = (uint)Math.Pow(2, texDims / 16);
                 uint Height = (uint)Math.Pow(2, texDims % 16);
-
                 if (flags > 0)
                 {
                     var extSize = reader.ReadInt32();
@@ -105,8 +104,8 @@ namespace FirstPlugin
                 tex.MipCount = (uint)mipSys >> 4;
                 uint texSys = (uint)mipSys & 0xF;
 
+                uint textureSize = 0;
                 uint mortonWidth = 0;
-                uint textureSize = (Width * Height * STGenericTexture.GetBytesPerPixel(tex.Format)) / 8;
                 switch (format)
                 {
                     case 0x00: //ABGR
@@ -172,6 +171,9 @@ namespace FirstPlugin
                     default:
                         throw new Exception("Unsupported format! " + format.ToString("x"));
                 }
+
+                if (textureSize == 0)
+                    textureSize = (Width * Height * STGenericTexture.GetBytesPerPixel(tex.Format)) / 8;
 
                 if (format == 0x09)
                     textureSize = (Width * Height * 64) / 8;
