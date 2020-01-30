@@ -26,8 +26,8 @@ namespace FirstPlugin
 
         public uint PlatformID;
 
-        private readonly uint ExtraDataFlag = 0x1000;
-
+        //Parse info help from
+        //https://github.com/Joschuka/fmt_g1m/blob/master/Noesis/plugins/python/fmt_g1m.py
         public void Read(FileReader reader)
         {
             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
@@ -63,27 +63,38 @@ namespace FirstPlugin
 
                 reader.SeekBegin(DataOffset + InfoOffset);
 
-                byte numMips = reader.ReadByte();
+                byte mipSys = reader.ReadByte();
                 byte format = reader.ReadByte();
                 byte texDims = reader.ReadByte();
                 byte unknown3 = reader.ReadByte(); //1
                 byte unknown4 = reader.ReadByte(); //0
                 byte unknown5 = reader.ReadByte(); //1
-                ushort flags = reader.ReadUInt16();
-                if ((flags & ExtraDataFlag) == ExtraDataFlag)
-                {
-                    var extSize = reader.ReadInt32();
-                    var ext = reader.ReadBytes(extSize - 4);
-                }
+                reader.ReadByte(); 
+                byte flags = reader.ReadByte();
 
                 if (reader.ByteOrder == Syroot.BinaryData.ByteOrder.LittleEndian)
                 {
-                    numMips = SwapEndianByte(numMips);
+                    mipSys = SwapEndianByte(mipSys);
                     texDims = SwapEndianByte(texDims);
                 }
 
                 uint Width = (uint)Math.Pow(2, texDims / 16);
                 uint Height = (uint)Math.Pow(2, texDims % 16);
+
+                if (flags > 0)
+                {
+                    var extSize = reader.ReadInt32();
+                    if (extSize < 0xC || extSize > 0x14)
+                        throw new Exception("Extra texture data is not between 0xC and 0x14 Bytes!!");
+
+                    uint param1 = reader.ReadUInt32();
+                    uint param2 = reader.ReadUInt32();
+
+                    if (extSize >= 0x10)
+                        Width = reader.ReadUInt32();
+                    if (extSize >= 0x14)
+                        Height = reader.ReadUInt32();
+                }
 
                 GITextureWrapper tex = new GITextureWrapper(this);
                 tex.ImageKey = "texture";
@@ -91,25 +102,45 @@ namespace FirstPlugin
                 tex.Text = $"Texture {i}  {format.ToString("x")}";
                 tex.Width = Width;
                 tex.Height = Height;
-                tex.MipCount = numMips;
+                tex.MipCount = (uint)mipSys >> 4;
+                uint texSys = (uint)mipSys & 0xF;
 
+                uint mortonWidth = 0;
+                uint textureSize = (Width * Height * STGenericTexture.GetBytesPerPixel(tex.Format)) / 8;
                 switch (format)
                 {
                     case 0x00: //ABGR
                     case 0x01: //BGRA 32 bit (no mip maps)
-                    case 0x02: //RGBA 32 bit
                     case 0x09:
                         tex.Format = TEX_FORMAT.R8G8B8A8_UNORM;
                         break;
+                    case 0x34:
+                        tex.Format = TEX_FORMAT.RGB565;
+                        textureSize = Width * Height * 2;
+                        break;
+                    case 0x02: 
                     case 0x06:
-                    case 0x10: //PC and xbox (swizzled)
+                    case 0x3C:
+                    case 0x3D:
                     case 0x59:
                     case 0x60: //Swizzled
                         tex.Format = TEX_FORMAT.BC1_UNORM;
                         break;
+                    case 0x10:
+                        tex.Format = TEX_FORMAT.BC1_UNORM;
+                        mortonWidth = 0x4;
+                        break;
+                    case 0x12:
+                        tex.Format = TEX_FORMAT.BC3_UNORM;
+                        mortonWidth = 0x8;
+                        break;
+                    case 0x36:
+                        tex.Format = TEX_FORMAT.B4G4R4A4_UNORM;
+                        textureSize = Width * Height * 2;
+                        break;
+                    case 0x3:
                     case 0x7:
                     case 0x8:
-                    case 0x12: //PC and xbox (swizzled)
                     case 0x5B:
                     case 0x62: //bc1 swizzled
                         tex.Format = TEX_FORMAT.BC3_UNORM;
@@ -126,11 +157,22 @@ namespace FirstPlugin
                     case 0x5F:
                         tex.Format = TEX_FORMAT.BC7_UNORM;
                         break;
+                    case 0xF:
+                        textureSize = Width * Height;
+                        tex.Format = TEX_FORMAT.A8_UNORM;
+                        break;
+                    case 0x56:
+                        tex.Format = TEX_FORMAT.ETC1_UNORM;
+                        textureSize = Width * Height % 2;
+                        break;
+                    case 0x6F:
+                        tex.Format = TEX_FORMAT.ETC1_UNORM;
+                        textureSize = Width * Height;
+                        break;
                     default:
                         throw new Exception("Unsupported format! " + format.ToString("x"));
                 }
 
-                uint textureSize = (Width * Height * STGenericTexture.GetBytesPerPixel(tex.Format)) / 8;
                 if (format == 0x09)
                     textureSize = (Width * Height * 64) / 8;
                 if (format == 0x01)
