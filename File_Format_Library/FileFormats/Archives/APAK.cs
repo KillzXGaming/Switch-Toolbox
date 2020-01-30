@@ -112,6 +112,7 @@ namespace FirstPlugin
 
                 long fileInfoPos = writer.Position;
                 for (int i = 0; i < files.Count; i++) {
+                    files[i].SaveFileFormat();
                     writer.Write(files[i].Hash);
                     writer.Write(uint.MaxValue);
                     writer.Write(files[i].FileData.Length);
