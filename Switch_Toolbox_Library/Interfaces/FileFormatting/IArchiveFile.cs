@@ -304,7 +304,7 @@ namespace Toolbox.Library
 {
                     new STToolStripItem("Save", SaveAction) { Enabled = ((IFileFormat)ArchiveFile).CanSave},
                     new STToolStripSeparator(),
-                    new STToolStripItem("Repack", RepackAction){ Enabled = ArchiveFile.CanReplaceFiles},
+                    new STToolStripItem("Repack", RepackAction){ Enabled = ArchiveFile.CanAddFiles },
                     new STToolStripItem("Extract All", ExtractAllAction),
                     new STToolStripSeparator(),
                     new STToolStripItem("Preview Archive", PreviewAction),
@@ -573,8 +573,6 @@ namespace Toolbox.Library
             }
             else //Else create directories by filename paths
             {
-
-                int I = 0;
                 foreach (var node in archiveFile.Files)
                 {
                     if (!node.CanLoadFile)

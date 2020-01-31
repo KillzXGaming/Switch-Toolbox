@@ -46,7 +46,7 @@ namespace FirstPlugin
 
         public void ClearFiles() { files.Clear(); }
 
-        public bool CanAddFiles { get; set; } = true;
+        public bool CanAddFiles { get; set; } = false;
         public bool CanRenameFiles { get; set; } = true;
         public bool CanReplaceFiles { get; set; } = true;
         public bool CanDeleteFiles { get; set; } = true;
