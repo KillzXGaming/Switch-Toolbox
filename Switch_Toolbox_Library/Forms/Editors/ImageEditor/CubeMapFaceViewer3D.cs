@@ -23,12 +23,13 @@ namespace Toolbox.Library.Forms
             InitializeComponent();
 
             if (Runtime.UseLegacyGL)
-            glControl = new GL_ControlLegacy();
+                glControl = new GL_ControlLegacy();
             else
                 glControl = new GL_ControlModern();
 
             glControl.Dock = DockStyle.Fill;
             glControl.ActiveCamera = new InspectCamera(Runtime.MaxCameraSpeed);
+            glControl.Fov = 1.8f;
             stPanel1.Controls.Add(glControl);
         }
 
