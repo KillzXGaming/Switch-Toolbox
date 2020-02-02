@@ -70,12 +70,13 @@ namespace FirstPlugin
             NutHeader = new Header();
             NutHeader.Read(new FileReader(stream));
 
+            string name = System.IO.Path.GetFileNameWithoutExtension(Text);
             foreach (var image in NutHeader.Images)
             {
                 if (NutHeader.Images.Count == 1)
-                    image.Text = $"{Text}";
+                    image.Text = $"{name}";
                 else
-                    image.Text = $"{Text}_{Nodes.Count}";
+                    image.Text = $"{name}_{Nodes.Count}";
                 Nodes.Add(image);
             }
         }

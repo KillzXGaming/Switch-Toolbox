@@ -110,6 +110,14 @@ namespace FirstPlugin
             Text = FileName;
 
             ReadGx2(new FileReader(stream));
+
+            string name = System.IO.Path.GetFileNameWithoutExtension(Text);
+            foreach (var image in textures) {
+                if (Nodes.Count == 1)
+                    image.Text = $"{name}";
+                else
+                    image.Text = $"{name}_{textures.IndexOf(image)}";
+            }
         }
 
         public ToolStripItem[] GetContextMenuItems()
