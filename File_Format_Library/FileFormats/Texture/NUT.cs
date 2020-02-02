@@ -13,7 +13,7 @@ using Syroot.NintenTools.Bfres.GX2;
 
 namespace FirstPlugin
 {
-    public class NUT : TreeNodeFile, IFileFormat
+    public class NUT : TreeNodeFile, IFileFormat, ITextureContainer
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -35,6 +35,21 @@ namespace FirstPlugin
                 else
                     return false;
             }
+        }
+
+        public bool DisplayIcons => true;
+
+        public List<STGenericTexture> TextureList
+        {
+            get
+            {
+                List<STGenericTexture> textures = new List<STGenericTexture>();
+                foreach (STGenericTexture node in Nodes)
+                    textures.Add(node);
+
+                return textures;
+            }
+            set { }
         }
 
         public Type[] Types
