@@ -71,7 +71,13 @@ namespace FirstPlugin
             NutHeader.Read(new FileReader(stream));
 
             foreach (var image in NutHeader.Images)
+            {
+                if (NutHeader.Images.Count == 1)
+                    image.Text = $"{Text}";
+                else
+                    image.Text = $"{Text}_{Nodes.Count}";
                 Nodes.Add(image);
+            }
         }
         public void Unload()
         {
