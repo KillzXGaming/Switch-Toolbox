@@ -120,5 +120,59 @@ namespace LayoutBXLYT
                     ParentEditor.ShowBxlanEditor(bxlan);
             }
         }
+
+        private void listView1_MouseClick(object sender, MouseEventArgs e)
+        {
+        
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e) {
+            Dictionary<string, byte[]> files = new Dictionary<string, byte[]>();
+
+            foreach (ListViewItem item in listView1.SelectedItems) {
+                var bxlan = item.Tag as BxlanHeader;
+                var fileFormat = bxlan.FileInfo;
+                //Check parent archive for raw data to export
+                if (!fileFormat.CanSave && fileFormat.IFileInfo.ArchiveParent != null)
+                {
+                    foreach (var file in fileFormat.IFileInfo.ArchiveParent.Files)
+                    {
+                        if (file.FileName == fileFormat.FileName) {
+                            files.Add(file.FileName, file.FileData);
+                        }
+                    }
+                }
+                else
+                {
+                    var mem = new System.IO.MemoryStream();
+                    bxlan.FileInfo.Save(mem);
+                    files.Add(fileFormat.FileName, mem.ToArray());
+                }
+            }
+
+            if (files.Count == 1)
+            {
+                string name = files.Keys.FirstOrDefault();
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.FileName = System.IO.Path.GetFileName(name);
+                sfd.DefaultExt = System.IO.Path.GetExtension(name);
+
+                if (sfd.ShowDialog() == DialogResult.OK) {
+                    System.IO.File.WriteAllBytes(sfd.FileName, files.Values.FirstOrDefault());
+                }
+            }
+            if (files.Count > 1)
+            {
+                FolderSelectDialog dlg = new FolderSelectDialog();
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (var file in files) {
+                        string name = System.IO.Path.GetFileName(file.Key);
+                        System.IO.File.WriteAllBytes($"{dlg.SelectedPath}/{name}", file.Value);
+                    }
+                }
+            }
+        }
     }
 }
