@@ -1144,9 +1144,9 @@ namespace LayoutBXLYT.Cafe
                     reader.SeekBegin(startPos + textOffset);
 
                     if (RestrictedTextLengthEnabled)
-                        Text = reader.ReadZeroTerminatedString(Encoding.Unicode);
+                        text = reader.ReadZeroTerminatedString(Encoding.Unicode);
                     else
-                        Text = reader.ReadZeroTerminatedString(Encoding.Unicode);
+                        text = reader.ReadZeroTerminatedString(Encoding.Unicode);
                 }
 
                 if (nameOffset != 0)
@@ -1161,8 +1161,6 @@ namespace LayoutBXLYT.Cafe
                 long pos = writer.Position - 8;
 
                 var textLength = TextLength;
-                if (!RestrictedTextLengthEnabled && text != null)
-                    textLength = (ushort)((text.Length * 2) + 2);
 
                 base.Write(writer, header);
                 writer.Write(textLength);
@@ -1704,6 +1702,8 @@ namespace LayoutBXLYT.Cafe
             public BasePane GetExternalPane()
             {
                 if (hasSearchedParts || LayoutFileName == string.Empty) return null;
+
+                ExternalLayout = layoutFile.PartsManager.TryGetLayout($"{LayoutFileName}.bflyt") as BFLYT;
 
                 if (ExternalLayout == null)
                     ExternalLayout = SearchExternalFile();
@@ -2753,7 +2753,7 @@ namespace LayoutBXLYT.Cafe
 
                 if (AlphaCompare != null && EnableAlphaCompare)
                 {
-                    flags += Bit.BitInsert(1, 1, 2, 22);
+                    flags += Bit.BitInsert(1, 1, 1, 22);
                     AlphaCompare.Write(writer);
                 }
                 if (BlendMode != null && EnableBlend)
