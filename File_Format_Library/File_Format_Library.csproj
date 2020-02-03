@@ -499,6 +499,12 @@
     <Compile Include="GUI\BFLYT\Animations\LytAnimationWindow.Designer.cs">
       <DependentUpon>LytAnimationWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\BFRES\BfresAnimationCopy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BFRES\BfresAnimationCopy.Designer.cs">
+      <DependentUpon>BfresAnimationCopy.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\BFRES\Materials\RenderState\RenderStateEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1607,6 +1613,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\Animations\LytAnimationWindow.resx">
       <DependentUpon>LytAnimationWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFRES\BfresAnimationCopy.resx">
+      <DependentUpon>BfresAnimationCopy.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Materials\RenderState\RenderStateEditor.resx">
       <DependentUpon>RenderStateEditor.cs</DependentUpon>

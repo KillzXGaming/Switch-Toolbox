@@ -10,6 +10,7 @@ using OpenTK;
 using Toolbox.Library.Animations;
 using Toolbox.Library.Forms;
 using SELib;
+using FirstPlugin.Forms;
 
 namespace Bfres.Structs
 {
@@ -49,15 +50,19 @@ namespace Bfres.Structs
             OpenAnimationData();
         }
 
-        public ToolStripItem[] GetContextMenuItems()
+        public override ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
             Items.AddRange(base.GetContextMenuItems());
+            Items.Add(new ToolStripMenuItem("Copy", null, CopyAction, Keys.Control | Keys.C));
             Items.Add(new ToolStripMenuItem("New Bone Target", null, NewAction, Keys.Control | Keys.W));
             return Items.ToArray();
         }
 
+        protected void CopyAction(object sender, EventArgs e) { CopyAnimForm(); }
+
         protected void NewAction(object sender, EventArgs e) { NewBoneAnim(); }
+
         public void NewBoneAnim()
         {
             var boneAnim = new BoneAnimNode("NewBoneTarget", true);
@@ -82,6 +87,49 @@ namespace Bfres.Structs
             {
                 boneAnim.BoneAnim = new BoneAnim() { Name = boneAnim.Text };
             }
+        }
+
+        public void CopyAnimForm()
+        {
+            BfresAnimationCopy copyDlg = new BfresAnimationCopy();
+
+            List<FSKA> anims = new List<FSKA>();
+            foreach (var node in Parent.Nodes)
+                anims.Add((FSKA)node);
+
+            copyDlg.LoadAnimationSections(this, anims);
+            if (copyDlg.ShowDialog() == DialogResult.OK)
+            {
+                foreach (var anim in copyDlg.GetAnimationCopies()) {
+                    anim.CopyAnimation(this, copyDlg.CopySettings, 
+                        copyDlg.CopyBoneAnims, copyDlg.CopyUserData);
+                }
+            }
+        }
+
+        public void CopyAnimation(FSKA target, bool copySettings, 
+            bool copyBoneAnims, bool copyUserData)
+        {
+            if (SkeletalAnim != null)
+            {
+                SkeletalAnim.Copy(target.SkeletalAnim, new SkeletalAnim.CopyFilter()
+                {
+                    CopyBoneAnims = copyBoneAnims,
+                    CopySettings = copySettings,
+                    CopyUserData = copyUserData,
+                });
+            }
+            else
+            {
+                SkeletalAnimU.Copy(target.SkeletalAnimU, new ResU.SkeletalAnim.CopyFilter()
+                {
+                    CopyBoneAnims = copyBoneAnims,
+                    CopySettings = copySettings,
+                    CopyUserData = copyUserData,
+                });
+            }
+
+            OpenAnimationData();
         }
 
         public ResFile GetResFile() {
@@ -164,6 +212,15 @@ namespace Bfres.Structs
                     SEANIM.SaveAnimation(FileName, this, skeleton);
                 else
                     throw new Exception("No skeleton found to assign!");
+            }
+            else if (ext == ".json")
+            {
+                if (SkeletalAnimU != null)
+                   System.IO.File.WriteAllText(FileName, Newtonsoft.Json.JsonConvert.SerializeObject(SkeletalAnimU,
+                       Newtonsoft.Json.Formatting.Indented));
+                else
+                    System.IO.File.WriteAllText(FileName, Newtonsoft.Json.JsonConvert.SerializeObject(SkeletalAnim, 
+                        Newtonsoft.Json.Formatting.Indented));
             }
         }
 
@@ -364,6 +421,10 @@ namespace Bfres.Structs
             var roty = boneNode.YROT.GetValue(0);
             var rotz = boneNode.ZROT.GetValue(0);
             var rotw = boneNode.WROT.GetValue(0);
+
+            var Value3One = Syroot.Maths.Vector3F.One;
+            var Value3Zero = Syroot.Maths.Vector3F.Zero;
+            var Value4Zero = Syroot.Maths.Vector4F.Zero;
 
             BoneAnimData boneBaseData = new BoneAnimData();
             boneBaseData.Translate = new Syroot.Maths.Vector3F(posx, posy, posz);
