@@ -53,8 +53,6 @@ namespace FirstPlugin
             AudioPlayerPanel form = new AudioPlayerPanel();
             form.Text = FileName;
             form.Dock = DockStyle.Fill;
-            form.LoadFile(waveSource, this);
-
             return form;
         }
 

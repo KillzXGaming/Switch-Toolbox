@@ -22,6 +22,13 @@ namespace LayoutBXLYT
                 PartLayouts.Add(header.FileName, header);
         }
 
+        public IFileFormat TryGetLayout(string fileName)
+        {
+            if (PartLayouts.ContainsKey(fileName))
+                return PartLayouts[fileName].FileInfo;
+            return null;
+        }
+
         public void AddAnimation(BxlanHeader header)
         {
             if (!PartAnimations.ContainsKey(header.FileName))

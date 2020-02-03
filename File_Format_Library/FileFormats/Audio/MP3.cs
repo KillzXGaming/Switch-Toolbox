@@ -14,7 +14,7 @@ using CSCore.Codecs;
 
 namespace FirstPlugin
 {
-    public class MP3 : IEditor<AudioPlayerPanel>, IFileFormat
+    public class MP3 : IEditor<AudioPlayerPanel>, IFileFormat, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Audio;
 
@@ -53,8 +53,6 @@ namespace FirstPlugin
             AudioPlayerPanel form = new AudioPlayerPanel();
             form.Text = FileName;
             form.Dock = DockStyle.Fill;
-            form.LoadFile(waveSource, this, false, mp3Struct);
-
             return form;
         }
 
