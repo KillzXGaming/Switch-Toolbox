@@ -26,7 +26,7 @@ uniform int tevStage3A;
 uniform int tevStage4A;
 uniform int tevStage5A;
 
-uniform int ThresholdingAlphaInterpolation;
+uniform int AlphaInterpolation;
 uniform int numTevStages;
 
 uniform sampler2D uvTestPattern;
@@ -38,15 +38,15 @@ vec3 ColorOP(int type, vec4 color)
     switch (type)
 	{
 	   case 0: return color.rgb;
-	   case 1: return vec3(1) - color.rgb;
+	   case 1: return vec3(1.0) - color.rgb;
 	   case 2: return color.aaa;
-	   case 3: return  vec3(1) - color.aaa;
+	   case 3: return  vec3(1.0) - color.aaa;
 	   case 4: return color.rrr;
-	   case 5: return  vec3(1) - color.rrr;
+	   case 5: return  vec3(1.0) - color.rrr;
 	   case 6: return color.ggg;
-	   case 7: return  vec3(1) - color.ggg;
+	   case 7: return  vec3(1.0) - color.ggg;
 	   case 8: return color.bbb;
-	   case 9: return  vec3(1) - color.bbb;
+	   case 9: return  vec3(1.0) - color.bbb;
 	   default: return color.rgb;
 	}
 }
@@ -159,7 +159,7 @@ void main()
 		}
 		else
 		{
-			if (ThresholdingAlphaInterpolation != 0)
+			if (AlphaInterpolation != 0)
 			{
 				//Todo these need to interpolate and be smoother
 				 if (textureMap0.a >= whiteColor.a) alpha = 1.0;

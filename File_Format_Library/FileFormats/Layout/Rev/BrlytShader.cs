@@ -27,7 +27,7 @@ namespace LayoutBXLYT
             SetInt("textures0", 0);
             SetInt("textures1", 0);
             SetInt("textures2", 0);
-            SetBool("ThresholdingAlphaInterpolation", false);
+            SetBool("AlphaInterpolation", false);
             var rotationMatrix = Matrix4.Identity;
             SetMatrix("rotationMatrix", ref rotationMatrix);
             SetInt("numTevStages", 0);
@@ -102,7 +102,7 @@ namespace LayoutBXLYT
             shader.SetVec2("uvTranslate0", new Vector2(0, 0));
             shader.SetInt("flipTexture", 0);
             shader.SetInt("numTevStages", 0);
-            shader.SetBool("ThresholdingAlphaInterpolation", material.ThresholdingAlphaInterpolation);
+            shader.SetBool("AlphaInterpolation", material.AlphaInterpolation);
             shader.SetVec4("IndirectMat0", new Vector4(1, 1, 0, 0));
             shader.SetVec4("IndirectMat1", new Vector4(1, 1, 0, 0));
             shader.SetInt("tevTexMode", 0);

@@ -27,7 +27,7 @@ namespace LayoutBXLYT
             SetInt("textures0", 0);
             SetInt("textures1", 0);
             SetInt("textures2", 0);
-            SetBool("ThresholdingAlphaInterpolation", false);
+            SetBool("AlphaInterpolation", false);
 
             SetVec2("uvScale0", new Vector2(1, 1));
             SetFloat("uvRotate0", 0);
@@ -56,7 +56,7 @@ namespace LayoutBXLYT
             shader.SetFloat("uvRotate0", 0);
             shader.SetVec2("uvTranslate0", new Vector2(0, 0));
             shader.SetInt("flipTexture", 0);
-            shader.SetBool("ThresholdingAlphaInterpolation", material.ThresholdingAlphaInterpolation);
+            shader.SetBool("AlphaInterpolation", material.AlphaInterpolation);
             shader.SetInt($"texCoords0GenType", 0);
             shader.SetInt($"texCoords0Source", 0);
 

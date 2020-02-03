@@ -30,7 +30,7 @@ uniform int tevStage5A;
 
 uniform int tevTexMode;
 
-uniform int ThresholdingAlphaInterpolation;
+uniform int AlphaInterpolation;
 uniform int numTevStages;
 
 uniform vec4 IndirectMat0;
@@ -144,6 +144,8 @@ void main()
 {
     fragColor = vec4(1);
 
+	return;
+
 	vec4 textureMap0 = vec4(1);
 	vec4 textureMap1 = vec4(1);
 	vec4 textureMap2 = vec4(1);
@@ -203,7 +205,7 @@ void main()
 		}
 		else
 		{
-			if (ThresholdingAlphaInterpolation != 0)
+			if (AlphaInterpolation != 0)
 			{
 				//Todo these need to interpolate and be smoother
 				 if (textureMap0.a >= whiteColor.a) alpha = 1.0;

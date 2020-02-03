@@ -1896,14 +1896,18 @@ namespace LayoutBXLYT.Cafe
                 writer.WriteString(LayoutFileName);
                 writer.Align(4);
 
-                for (int i = 0; i < Properties.Count; i++)
-                    Properties[i].WritePaneInfo(writer, header, startPos);
+              //  for (int i = 0; i < Properties.Count; i++)
+               //     Properties[i].WriteProperties(writer, header, startPos);
+
+             //   for (int i = 0; i < Properties.Count; i++)
+              //      Properties[i].WriteUserData(writer, header, startPos);
 
                 for (int i = 0; i < Properties.Count; i++)
-                    Properties[i].WriteUserData(writer, header, startPos);
-
-                for (int i = 0; i < Properties.Count; i++)
+                {
                     Properties[i].WriteProperties(writer, header, startPos);
+                    Properties[i].WriteUserData(writer, header, startPos);
+                    Properties[i].WritePaneInfo(writer, header, startPos);
+                }
             }
         }
 
@@ -2548,12 +2552,6 @@ namespace LayoutBXLYT.Cafe
                 TextureTransforms = TextureTransforms.AddToArray(new TextureTransform());
             }
 
-            [DisplayName("Thresholding Alpha Interpolation"), CategoryAttribute("Alpha")]
-            public override bool ThresholdingAlphaInterpolation
-            {
-                get { return Convert.ToBoolean((flags >> 18) & 0x1); }
-            }
-
             [DisplayName("Black Color"), CategoryAttribute("Color")]
             public override STColor8 BlackColor { get; set; }
 
@@ -2652,7 +2650,10 @@ namespace LayoutBXLYT.Cafe
                 var hasIndParam = Convert.ToBoolean((flags >> 14) & 0x1);
                 var projTexGenParamCount = Convert.ToUInt32((flags >> 15) & 0x3);
                 var hasFontShadowParam = Convert.ToBoolean((flags >> 17) & 0x1);
+                AlphaInterpolation = Convert.ToBoolean((flags >> 18) & 0x1);
 
+
+                Console.WriteLine($"MAT1 {Name}");
                 Console.WriteLine($"texCount {texCount}");
                 Console.WriteLine($"mtxCount {mtxCount}");
                 Console.WriteLine($"texCoordGenCount {texCoordGenCount}");
@@ -2664,6 +2665,7 @@ namespace LayoutBXLYT.Cafe
                 Console.WriteLine($"hasIndParam {hasIndParam}");
                 Console.WriteLine($"projTexGenParamCount {projTexGenParamCount}");
                 Console.WriteLine($"hasFontShadowParam {hasFontShadowParam}");
+                Console.WriteLine($"AlphaInterpolation {AlphaInterpolation}");
 
                 EnableAlphaCompare = hasAlphaCompare;
                 EnableBlend = hasBlendMode;
@@ -2750,7 +2752,6 @@ namespace LayoutBXLYT.Cafe
                     flags += Bit.BitInsert(1, 1, 2, 24);
                     ((TevStage)TevStages[i]).Write(writer);
                 }
-
                 if (AlphaCompare != null && EnableAlphaCompare)
                 {
                     flags += Bit.BitInsert(1, 1, 1, 22);
@@ -2784,8 +2785,10 @@ namespace LayoutBXLYT.Cafe
                     FontShadowParameter.Write(writer);
                 }
 
-                using (writer.TemporarySeek(flagPos, SeekOrigin.Begin))
-                {
+                if (AlphaInterpolation)
+                    flags += Bit.BitInsert(1, 1, 1, 13);
+
+                using (writer.TemporarySeek(flagPos, SeekOrigin.Begin)) {
                     writer.Write(flags);
                 }
             }

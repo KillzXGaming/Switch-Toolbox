@@ -6,6 +6,8 @@ in vec2 vTexCoord0;
 in vec2 vTexCoord1;
 in vec2 vTexCoord2;
 
+uniform mat4 rotationMatrix;
+
 uniform mat4 modelViewMatrix;
 uniform vec2 uvScale0;
 uniform vec2 uvRotate0;
@@ -52,5 +54,5 @@ void main()
 	TexCoord2 = SetFlip(texCoord0Transformed);
 
 	VertexColor = vColor;
-	gl_Position = modelViewMatrix * vec4(vPosition, 0, 1);
+	gl_Position = modelViewMatrix * rotationMatrix * vec4(vPosition, 0, 1);
 }

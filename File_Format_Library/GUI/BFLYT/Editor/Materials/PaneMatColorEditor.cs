@@ -32,7 +32,7 @@ namespace LayoutBXLYT
             whiteColorPB.Color = material.WhiteColor.Color;
             blackColorBP.Color = material.BlackColor.Color;
 
-            chkAlphaInterpolation.Bind(material, "ThresholdingAlphaInterpolation");
+            chkAlphaInterpolation.Bind(material, "AlphaInterpolation");
         }
 
         private STColorDialog colorDlg;

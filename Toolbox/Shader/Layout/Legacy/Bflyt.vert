@@ -1,4 +1,6 @@
-﻿uniform vec2 uvScale0;
+﻿#version 110
+
+uniform vec2 uvScale0;
 uniform float uvRotate0;
 uniform vec2 uvTranslate0;
 uniform int flipTexture;
@@ -24,27 +26,32 @@ vec2 SetFlip(vec2 tex)
 	else if (flipTexture == 2) //FlipV
 	      return vec2(1, -1) * tex + vec2(0, 1);
 	else if (flipTexture == 3) //Rotate90
-	      return rotateUV(tex, radians(90.0));
+	{
+	     float degreesR = 90.0;
+	     return rotateUV(tex, radians(degreesR));
+    }
 	else if (flipTexture == 4) //Rotate180
-	      return rotateUV(tex, radians(180.0));
+	{
+		  float degreesR = 180.0;
+	      return rotateUV(tex, radians(degreesR));
+	}
 	else if (flipTexture == 5) //Rotate270
-	      return rotateUV(tex, radians(270.0));
-
+	{
+		  float degreesR = 270.0;
+	      return rotateUV(tex, radians(degreesR));
+	}
 	return outTexCoord;
 }
 
 vec2 SetTexCoordType(int type, vec2 tex)
 {
      vec2 outTexCoord = tex;
-	 switch (type)
-	 {
-	     case 0: return tex; //Tex0
-	     case 1: return tex; //Tex1
-	     case 2: return tex; //Tex2
-	     case 3: return tex; //Ortho
-	     case 4: return tex; //Pane based
-	     case 5: return tex; //Proj
-	 }
+	 if (type == 0) return tex; //Tex0
+	 if (type == 1) return tex; //Tex1
+	 if (type == 2) return tex; //Tex3
+	 if (type == 3) return tex; //Ortho
+	 if (type == 4) return tex; //Pane based
+	 if (type == 5) return tex; //Proj
 	return outTexCoord;
 }
 

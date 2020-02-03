@@ -2277,8 +2277,8 @@ namespace LayoutBXLYT
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public BxlytAlphaCompare AlphaCompare { get; set; }
 
-        [DisplayName("Thresholding Alpha Interpolation"), CategoryAttribute("Alpha")]
-        public virtual bool ThresholdingAlphaInterpolation { get; set; }
+        [DisplayName("Alpha Interpolation"), CategoryAttribute("Alpha")]
+        public virtual bool AlphaInterpolation { get; set; }
 
         [DisplayName("Texture Maps"), CategoryAttribute("Texture")]
         public BxlytTextureRef[] TextureMaps { get; set; }
