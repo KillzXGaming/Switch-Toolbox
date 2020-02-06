@@ -104,13 +104,13 @@ namespace Toolbox.Library
 
         private bool CheckSupport()
         {
-            string ext = Utils.GetExtension(filePath);
+         /*   string ext = Utils.GetExtension(filePath);
             foreach (var format in FileManager.GetFileFormats())
             {
                 for (int i = 0; i < format.Extension.Length; i++)
                     if (format.Extension[i].Contains(ext))
                         return true;
-            }
+            }*/
 
             return false;
 

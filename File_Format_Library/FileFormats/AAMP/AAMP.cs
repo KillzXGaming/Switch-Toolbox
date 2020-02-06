@@ -5,9 +5,8 @@ using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using System.Windows.Forms;
-using aampv1 = AampV1Library;
-using aampv2 = AampV2Library;
 using FirstPlugin.Forms;
+using AampLibraryCSharp;
 
 namespace FirstPlugin
 {
@@ -54,20 +53,16 @@ namespace FirstPlugin
 
         #region Text Converter Interface
         public TextFileType TextFileType => TextFileType.Yaml;
-        public bool CanConvertBack => false;
+        public bool CanConvertBack => true;
 
         public string ConvertToString()
         {
-            if (aampFileV1 != null)
-                return AampYamlConverter.ToYaml(aampFileV1);
-            else
-                return AampYamlConverter.ToYaml(aampFileV2);
+            return YamlConverter.ToYaml(aampFile);
         }
 
         public void ConvertFromString(string text)
         {
-            if (aampFileV1 != null)
-                AampYamlConverter.ToAamp(aampFileV1, text);
+            aampFile = YamlConverter.FromYaml(text);
         }
 
         #endregion
@@ -98,54 +93,26 @@ namespace FirstPlugin
                     throw new Exception("File not a valid BFRES file!");
 
                 //Check version instance
-                if (((AAMP)File).aampFileV1 != null)
+                foreach (var val in ((AAMP)File).aampFile.RootNode.childParams)
                 {
-                    foreach (var val in ((AAMP)File).aampFileV1.RootNode.childParams)
-                    {
-                        foreach (var param in val.paramObjects)
-                        {
-                            switch (param.HashString)
-                            {
-                                case "grid":
-                                    GenerateGridData((BFRES)Bfres, param.paramEntries);
-                                    break;
-                            }
-                        }
-                    }
-
-                    foreach (var param in ((AAMP)File).aampFileV1.RootNode.paramObjects)
+                    foreach (var param in val.paramObjects)
                     {
                         switch (param.HashString)
                         {
-                            case "root_grid":
+                            case "grid":
                                 GenerateGridData((BFRES)Bfres, param.paramEntries);
                                 break;
                         }
                     }
                 }
-                else
-                {
-                    foreach (var val in ((AAMP)File).aampFileV2.RootNode.childParams)
-                    {
-                        foreach (var param in val.paramObjects)
-                        {
-                            switch (param.HashString)
-                            {
-                                case "grid":
-                                    GenerateGridData((BFRES)Bfres, param.paramEntries);
-                                    break;
-                            }
-                        }
-                    }
 
-                    foreach (var param in ((AAMP)File).aampFileV2.RootNode.paramObjects)
+                foreach (var param in ((AAMP)File).aampFile.RootNode.paramObjects)
+                {
+                    switch (param.HashString)
                     {
-                        switch (param.HashString)
-                        {
-                            case "root_grid":
-                                GenerateGridData((BFRES)Bfres, param.paramEntries);
-                                break;
-                        }
+                        case "root_grid":
+                            GenerateGridData((BFRES)Bfres, param.paramEntries);
+                            break;
                     }
                 }
 
@@ -162,7 +129,7 @@ namespace FirstPlugin
             }
         }
 
-        private static void GenerateGridData(BFRES bfres, aampv2.ParamEntry[] paramEntries)
+        private static void GenerateGridData(BFRES bfres, ParamEntry[] paramEntries)
         {
             //Load the grid min nad max and set them
             var boundings = bfres.GetBoundingBox();
@@ -176,35 +143,12 @@ namespace FirstPlugin
             }
         }
 
-        private static void GenerateGridData(BFRES bfres, aampv1.ParamEntry[] paramEntries)
-        {
-            var boundings = bfres.GetBoundingBox();
-
-            foreach (var entry in paramEntries)
-            {
-                if (entry.HashString == "aabb_min_pos")
-                    entry.Value = new Syroot.Maths.Vector3F(boundings.Min.X, boundings.Min.Y, boundings.Min.Z);
-                if (entry.HashString == "aabb_max_pos")
-                    entry.Value = new Syroot.Maths.Vector3F(boundings.Max.X, boundings.Max.Y, boundings.Max.Z);
-            }
-        }
-
         public AampEditorBase OpenForm()
         {
-            if (aampFileV1 != null)
-            {
-                AampV1Editor editor = new AampV1Editor(this, IsSaveDialog);
-                editor.Text = FileName;
-                editor.Dock = DockStyle.Fill;
-                return editor;
-            }
-            else
-            {
-                AampV2Editor editor = new AampV2Editor(this, IsSaveDialog);
-                editor.Text = FileName;
-                editor.Dock = DockStyle.Fill;
-                return editor;
-            }
+            AampEditor editor = new AampEditor(this, IsSaveDialog);
+            editor.Text = FileName;
+            editor.Dock = DockStyle.Fill;
+            return editor;
         }
 
         public void FillEditor(UserControl control)
@@ -212,8 +156,7 @@ namespace FirstPlugin
         }
 
 
-        public aampv1.AampFile aampFileV1;
-        public aampv2.AampFile aampFileV2;
+        public AampFile aampFile;
 
         public void Load(Stream stream)
         {
@@ -221,22 +164,9 @@ namespace FirstPlugin
 
             IsSaveDialog = IFileInfo != null && IFileInfo.InArchive;
 
-            uint Version = CheckVersion(stream);
-
-            if (Version == 1)
-            {
-                aampFileV1 = new aampv1.AampFile(stream);
-            }
-            else if (Version == 2)
-            {
-                aampFileV2 = new aampv2.AampFile(stream);
-            }
-            else
-            {
-                throw new Exception($"Unsupported AAMP version! {Version}");
-            }
+            aampFile = AampFile.LoadFile(stream);
         }
-            
+
         public void Unload()
         {
 
@@ -244,10 +174,8 @@ namespace FirstPlugin
 
         public void Save(System.IO.Stream stream)
         {
-            if (aampFileV1 != null)
-                aampFileV1.Save(stream);
-            else
-                aampFileV2.Save(stream);
+            if (aampFile != null)
+                aampFile.Save(stream);
         }
     }
 }

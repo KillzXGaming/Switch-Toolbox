@@ -41,38 +41,8 @@ namespace Toolbox.Library.Forms
                 {
                     scintilla1.Lexer = Lexer.Xml;
 
-                    // Enable folding
-                    scintilla1.SetProperty("fold", "1");
-                    scintilla1.SetProperty("fold.compact", "1");
+                    UpdateFolderMarkings();
                     scintilla1.SetProperty("fold.html", "1");
-
-                    scintilla1.Margins[0].Width = 20;
-
-                    // Use Margin 2 for fold markers
-                    scintilla1.Margins[2].Type = MarginType.Symbol;
-                    scintilla1.Margins[2].Mask = Marker.MaskFolders;
-                    scintilla1.Margins[2].Sensitive = true;
-                    scintilla1.Margins[2].Width = 20;
-
-                    // Reset folder markers
-                    for (int i = Marker.FolderEnd; i <= Marker.FolderOpen; i++)
-                    {
-                        scintilla1.Markers[i].SetForeColor(BACK_COLOR);
-                        scintilla1.Markers[i].SetBackColor(Color.Gray);
-                    }
-
-                    // Style the folder markers
-                    scintilla1.Markers[Marker.Folder].Symbol = MarkerSymbol.BoxPlus;
-               //     scintilla1.Markers[Marker.Folder].SetBackColor(FormThemes.BaseTheme.TextEditorBackColor);
-                    scintilla1.Markers[Marker.FolderOpen].Symbol = MarkerSymbol.BoxMinus;
-                    scintilla1.Markers[Marker.FolderEnd].Symbol = MarkerSymbol.BoxPlusConnected;
-                //    scintilla1.Markers[Marker.FolderEnd].SetBackColor(FormThemes.BaseTheme.TextEditorBackColor);
-                    scintilla1.Markers[Marker.FolderMidTail].Symbol = MarkerSymbol.TCorner;
-                    scintilla1.Markers[Marker.FolderOpenMid].Symbol = MarkerSymbol.BoxMinusConnected;
-                    scintilla1.Markers[Marker.FolderSub].Symbol = MarkerSymbol.VLine;
-                    scintilla1.Markers[Marker.FolderTail].Symbol = MarkerSymbol.LCorner;
-
-                    scintilla1.AutomaticFold = AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change;
 
                     scintilla1.Styles[Style.Xml.XmlStart].ForeColor = Color.FromArgb(128, 128, 128);
                     scintilla1.Styles[Style.Xml.XmlEnd].ForeColor = Color.FromArgb(128, 128, 128);
@@ -116,6 +86,11 @@ namespace Toolbox.Library.Forms
                     scintilla1.Styles[Style.Json.StringEol].BackColor = Color.Pink;
                     scintilla1.Styles[Style.Json.Operator].ForeColor = Color.Purple;
                     scintilla1.Lexer = Lexer.Json;
+
+                    UpdateFolderMarkings();
+
+                    scintilla1.SetFoldMarginColor(true, BACK_COLOR);
+                    scintilla1.SetFoldMarginHighlightColor(true, BACK_COLOR);
                 }
             }
         }
@@ -135,26 +110,59 @@ namespace Toolbox.Library.Forms
                 {
                     scintilla1.Lexer = (Lexer)48;
 
-                    scintilla1.Styles[Style.Xml.XmlStart].ForeColor = Color.FromArgb(86, 156, 214);
-                    scintilla1.Styles[Style.Xml.XmlEnd].ForeColor = Color.FromArgb(86, 156, 214);
-                    scintilla1.Styles[Style.Xml.Default].ForeColor = Color.FromArgb(214, 157, 133);
-                    scintilla1.Styles[Style.Xml.Comment].ForeColor = Color.FromArgb(87, 166, 74);
-                    scintilla1.Styles[Style.Xml.Number].ForeColor = Color.FromArgb(214, 157, 133);
+                    scintilla1.Styles[Style.Json.Default].ForeColor = Color.FromArgb(214, 157, 133);
+                    scintilla1.Styles[Style.Json.BlockComment].ForeColor = Color.FromArgb(87, 166, 74); // Green
+                    scintilla1.Styles[Style.Json.LineComment].ForeColor = Color.FromArgb(87, 166, 74); // Green
+                    scintilla1.Styles[Style.Json.Number].ForeColor = Color.FromArgb(214, 157, 133);
+                    scintilla1.Styles[Style.Json.PropertyName].ForeColor = Color.FromArgb(214, 157, 133);
+                    scintilla1.Styles[Style.Json.String].ForeColor = Color.FromArgb(86, 156, 214);
+                    scintilla1.Styles[Style.Json.StringEol].BackColor = Color.FromArgb(214, 157, 133);
+                    scintilla1.Styles[Style.Json.Operator].ForeColor = Color.FromArgb(180, 180, 180);
+                    scintilla1.Styles[Style.Json.Keyword].ForeColor = Color.FromArgb(146, 202, 244);
+                    scintilla1.Styles[Style.Json.EscapeSequence].ForeColor = Color.FromArgb(146, 202, 244);
 
+                    UpdateFolderMarkings();
 
-                    scintilla1.Styles[Style.Xml.DoubleString].ForeColor = Color.FromArgb(180, 180, 180);
-                    scintilla1.Styles[Style.Xml.SingleString].ForeColor = Color.FromArgb(180, 180, 180);
-                    scintilla1.Styles[Style.Xml.Tag].ForeColor = Color.FromArgb(214, 157, 133);
-                    scintilla1.Styles[Style.Xml.TagEnd].ForeColor = Color.FromArgb(86, 156, 214);
-                    scintilla1.Styles[Style.Xml.TagUnknown].ForeColor = Color.FromArgb(86, 156, 214);
-                    scintilla1.Styles[Style.Xml.Attribute].ForeColor = Color.FromArgb(86, 156, 214);
-                    scintilla1.Styles[Style.Xml.AttributeUnknown].ForeColor = Color.FromArgb(86, 156, 214);
-                    scintilla1.Styles[Style.Xml.CData].ForeColor = Color.FromArgb(214, 157, 133);
-
-                    scintilla1.SetKeywords(1, "!aamp !io");
-                    scintilla1.SetKeywords(4, "!color !vec2 !vec3 !vec4 !str32 !str64 !str128 !str256 !obj");
+               //     scintilla1.SetKeywords(0, "!aamp !io True False");
+                 //   scintilla1.SetKeywords(1, "!color !vec2 !vec3 !vec4 !str32 !str64 !str128 !str256 !obj");
                 }
             }
+        }
+
+        public void UpdateFolderMarkings()
+        {
+            // Enable folding
+            scintilla1.SetProperty("fold", "1");
+            scintilla1.SetProperty("fold.compact", "1");
+
+            scintilla1.Margins[0].Width = 20;
+
+            // Use Margin 2 for fold markers
+            scintilla1.Margins[2].Type = MarginType.Symbol;
+            scintilla1.Margins[2].Mask = Marker.MaskFolders;
+            scintilla1.Margins[2].Sensitive = true;
+            scintilla1.Margins[2].Width = 20;
+
+            // Reset folder markers
+            for (int i = Marker.FolderEnd; i <= Marker.FolderOpen; i++)
+            {
+                scintilla1.Markers[i].SetForeColor(BACK_COLOR);
+                scintilla1.Markers[i].SetBackColor(Color.Gray);
+            }
+
+            scintilla1.Markers[Marker.Folder].Symbol = MarkerSymbol.BoxPlus;
+            scintilla1.Markers[Marker.FolderOpen].Symbol = MarkerSymbol.BoxMinus;
+            scintilla1.Markers[Marker.FolderEnd].Symbol = MarkerSymbol.BoxPlusConnected;
+            scintilla1.Markers[Marker.FolderMidTail].Symbol = MarkerSymbol.TCorner;
+            scintilla1.Markers[Marker.FolderOpenMid].Symbol = MarkerSymbol.BoxMinusConnected;
+            scintilla1.Markers[Marker.FolderSub].Symbol = MarkerSymbol.VLine;
+            scintilla1.Markers[Marker.FolderTail].Symbol = MarkerSymbol.LCorner;
+
+            scintilla1.AutomaticFold = AutomaticFold.Show | AutomaticFold.Click | AutomaticFold.Change;
+
+            scintilla1.SetFoldMarginColor(true, BACK_COLOR);
+            scintilla1.SetFoldMarginHighlightColor(true, BACK_COLOR);
+
         }
 
         public static Color IntToColor(int rgb)
@@ -197,6 +205,11 @@ namespace Toolbox.Library.Forms
             stContextMenuStrip1.Items.Add(text, null, handler);
         }
 
+        public void ClearContextMenus()
+        {
+            stContextMenuStrip1.Items.Clear();
+        }
+
         public string GetText()
         {
             return scintilla1.Text;
@@ -227,6 +240,8 @@ namespace Toolbox.Library.Forms
             scintilla1.SetSelectionForeColor(true, FormThemes.BaseTheme.FormForeColor);
 
             scintilla1.SetWhitespaceBackColor(true, Color.FromArgb(50,50,50));
+            scintilla1.WrapMode = WrapMode.Word;
+            wordWrapToolStripMenuItem.Checked = true;
 
             scintilla1.Margins[0].Type = MarginType.Number;
             scintilla1.Margins[0].Width = 35;

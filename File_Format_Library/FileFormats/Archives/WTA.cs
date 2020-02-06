@@ -112,7 +112,9 @@ namespace FirstPlugin
                     files[i].FileName = $"File {i}";
                     files[i].DataOffset = reader.Position;
                     reader.Seek((int)files[i].CompressedSize);
-                    reader.Align((int)files[i].Alignment);
+
+                    if (files[i].Alignment != 0)
+                        reader.Align((int)files[i].Alignment);
                 }
 
                 //Try to get file names from file formats inside

@@ -83,11 +83,11 @@ namespace Toolbox.Library.Forms
             }
 
             AudioFileFormats.Add(fileFormat);
-            audioListView.AddObject(file);
 
             AudioChannel audioChannel = new AudioChannel();
             audioChannel.Name = $"Channel [0]";
             file.Channels.Add(audioChannel);
+
             audioChannel.audioPlayer.Open(source, activeDevice);
 
             audioChannel.audioPlayer.PlaybackStopped += (s, args) =>
@@ -99,6 +99,8 @@ namespace Toolbox.Library.Forms
 
                 }
             };
+
+            audioListView.AddObject(file);
             audioListView.UpdateObject(file);
 
         }

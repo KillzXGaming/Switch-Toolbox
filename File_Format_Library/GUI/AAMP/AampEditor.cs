@@ -1,202 +1,234 @@
-﻿using ByamlExt.Byaml;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.IO;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Syroot.BinaryData;
-using EditorCore;
-using Toolbox.Library.Forms;
+using AampLibraryCSharp;
+using Syroot.Maths;
 using Toolbox.Library;
-using ByamlExt;
+using Toolbox.Library.Forms;
 
 namespace FirstPlugin.Forms
 {
-    public partial class AampEditorBase : STUserControl, IFIleEditor
+    public partial class AampEditor : AampEditorBase
     {
-        public AAMP AampFile;
-
-        public List<IFileFormat> GetFileFormats()
+        public AampEditor(AAMP aamp, bool IsSaveDialog) : base(aamp, IsSaveDialog)
         {
-            return new List<IFileFormat>() { AampFile };
+            treeView1.Nodes.Add(aamp.FileName);
+            LoadFile(aamp.aampFile, treeView1.Nodes[0]);
         }
 
-        public AampEditorBase(AAMP aamp, bool IsSaveDialog)
+        public void LoadFile(AampFile aampFile, TreeNode parentNode)
         {
-            InitializeComponent();
-
-            treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
-            treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
-
-            AampFile = aamp;
-
-            if (AampFile.aampFileV1 != null)
-            {
-                Text = $"{AampFile.FileName} Type [{AampFile.aampFileV1.EffectType}]";
-            }
-            else
-            {
-                Text = $"{AampFile.FileName} Type [{AampFile.aampFileV2.EffectType}]";
-            }
-
-            STContextMenuStrip contextMenuStrip1 = new STContextMenuStrip();
-            contextMenuStrip1.Items.Add(new ToolStripMenuItem("Save", null, saveAsToolStripMenuItem_Click, Keys.Control | Keys.I));
-            contextMenuStrip1.Items.Add(new ToolStripSeparator());
-            contextMenuStrip1.Items.Add(new ToolStripMenuItem("Export as Yaml", null, ToYamlAction, Keys.Control | Keys.A));
-            contextMenuStrip1.Items.Add(new ToolStripMenuItem("Open as Yaml", null, OpenYamlEditorAction, Keys.Control | Keys.A));
-
-            this.treeView1.ContextMenuStrip = contextMenuStrip1;
-
+            LoadChildNodes(aampFile.RootNode, parentNode);
         }
 
-        private void OpenYamlEditorAction(object sender, EventArgs e)
+        public override void TreeView_AfterSelect()
         {
-            string yaml = "";
+            var node = treeView1.SelectedNode;
 
-            if (AampFile.aampFileV1 != null)
-                yaml = AampYamlConverter.ToYaml(AampFile.aampFileV1);
-            else
-                yaml = AampYamlConverter.ToYaml(AampFile.aampFileV2);
-
-            STForm form = new STForm();
-            form.Text = "YAML Text Editor";
-            var panel = new STPanel() { Dock = DockStyle.Fill, };
-            form.AddControl(panel);
-            var editor = new TextEditor() { Dock = DockStyle.Fill, };
-            editor.FillEditor(yaml);
-            editor.IsYAML = true;
-            panel.Controls.Add(editor);
-
-            if (form.ShowDialog() == DialogResult.OK)
+            if (node.Tag != null)
             {
-
+                if (node.Tag is ParamObject) {
+                    LoadObjectDataList((ParamObject)node.Tag);
+                }
             }
         }
 
-        private void ToYamlAction(object sender, EventArgs e)
+        public override void AddParamEntry(TreeNode parentNode)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "YAML|*.yaml;";
-
-            if (sfd.ShowDialog() == DialogResult.OK)
+            if (parentNode.Tag != null && parentNode.Tag is ParamObject)
             {
-                string yaml = "";
+                ParamEntry entry = new ParamEntry();
+                entry.ParamType = ParamType.Float;
+                entry.HashString = "NewEntry";
+                entry.Value = 0;
 
-                if (AampFile.aampFileV1 != null)
-                    yaml = AampYamlConverter.ToYaml(AampFile.aampFileV1);
-                else
-                    yaml = AampYamlConverter.ToYaml(AampFile.aampFileV2);
+                ListViewItem item = new ListViewItem();
+                SetListItemParamObject(entry, item);
 
-                File.WriteAllText(sfd.FileName, yaml);
+                OpenNewParamEditor(entry,(ParamObject)parentNode.Tag, item);
             }
         }
 
-        private void CopyNode_Click(object sender, EventArgs e)
+        public override void RenameParamEntry(ListViewItem SelectedItem)
         {
-            Clipboard.SetText(treeView1.SelectedNode.Text);
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog sav = new SaveFileDialog() { FileName = AampFile.FileName, Filter = "Parameter Archive | *.aamp" };
-            if (sav.ShowDialog() == DialogResult.OK)
+            if (SelectedItem.Tag != null && SelectedItem.Tag is ParamEntry)
             {
-                Toolbox.Library.IO.STFileSaver.SaveFileFormat(AampFile, sav.FileName);
+                RenameDialog dialog = new RenameDialog();
+                dialog.SetString(SelectedItem.Text);
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    string NewString = dialog.textBox1.Text;
+
+                    ((ParamEntry)SelectedItem.Tag).HashString = NewString;
+                }
             }
         }
 
-        private void editValueNodeMenuItem_Click(object sender, EventArgs e)
+        public override void OnEditorClick(ListViewItem SelectedItem)
         {
-            if (listViewCustom1.SelectedItems.Count <= 0)
-                return;
-
-            OnEditorClick(listViewCustom1.SelectedItems[0]);
+            if (SelectedItem.Tag != null && SelectedItem.Tag is ParamEntry)
+            {
+                OpenEditor((ParamEntry)SelectedItem.Tag, SelectedItem);
+            }
         }
 
-        private void ResetValues()
+        private void LoadObjectDataList(ParamObject paramObj)
         {
-            if (treeView1.SelectedNode == null)
-                return;
-
             listViewCustom1.Items.Clear();
-
-            var targetNodeCollection = treeView1.SelectedNode.Nodes;
-
-            dynamic target = treeView1.SelectedNode.Tag;
-        }
-
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e) {
-            ResetValues();
-            TreeView_AfterSelect();
-        }
-
-        private void addNodeToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (treeView1.SelectedNode == null)
-                return;
-
-            AddParamEntry(treeView1.SelectedNode);
-        }
-
-        public virtual void OnEditorClick(ListViewItem SelectedItem) { }
-        public virtual void TreeView_AfterSelect() { }
-        public virtual void AddParamEntry(TreeNode parent) { }
-        public virtual void RenameParamEntry(ListViewItem SelectedItem) { }
-        public virtual void OnEntryDeletion(object target, TreeNode parent) { }
-
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (listViewCustom1.SelectedItems.Count <= 0 && treeView1.SelectedNode != null) 
-                return;
-
-            var result = MessageBox.Show("Are you sure you want to remove this entry? This cannot be undone!",
-                $"Entry {listViewCustom1.SelectedItems[0].Text}", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result == DialogResult.Yes)
+            foreach (var entry in paramObj.paramEntries)
             {
-                OnEntryDeletion(listViewCustom1.SelectedItems[0].Tag, treeView1.SelectedNode);
-
-                int index = listViewCustom1.Items.IndexOf(listViewCustom1.SelectedItems[0]);
-                listViewCustom1.Items.RemoveAt(index);
+                ListViewItem item = new ListViewItem(entry.HashString);
+                SetListItemParamObject(entry, item);
+                listViewCustom1.Items.Add(item);
             }
         }
 
-        private void renameToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (listViewCustom1.SelectedItems.Count <= 0)
-                return;
+        private void SetListItemParamObject(ParamEntry entry, ListViewItem item)
+        {
+            item.SubItems.Clear();
+            item.Text = entry.HashString;
+            item.Tag = entry;
+            item.UseItemStyleForSubItems = false;
+            item.SubItems.Add(entry.ParamType.ToString());
+            string ValueText = "";
 
-            RenameParamEntry(listViewCustom1.SelectedItems[0]);
+            System.Drawing.Color color = System.Drawing.Color.Empty;
+
+            switch (entry.ParamType)
+            {
+                case ParamType.Boolean:
+                case ParamType.Float:
+                case ParamType.Int:
+                case ParamType.Uint:
+                    ValueText = $"{entry.Value}";
+                    break;
+                case ParamType.String64:
+                case ParamType.String32:
+                case ParamType.String256:
+                case ParamType.StringRef:
+                    ValueText = $"{((AampLibraryCSharp.StringEntry)entry.Value).ToString()}";
+                    break;
+                case ParamType.Vector2F:
+                    var vec2 = (Vector2F)entry.Value;
+                    ValueText = $"{vec2.X} {vec2.Y}";
+                    break;
+                case ParamType.Vector3F:
+                    var vec3 = (Vector3F)entry.Value;
+                    ValueText = $"{vec3.X} {vec3.Y} {vec3.Z}";
+                    break;
+                case ParamType.Vector4F:
+                    var vec4 = (Vector4F)entry.Value;
+                    ValueText = $"{vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
+                    break;
+                case ParamType.Color4F:
+                    var col = (Vector4F)entry.Value;
+                    ValueText = $"{col.X} {col.Y} {col.Z} {col.W}";
+
+                    int ImageIndex = Images.Count;
+
+                    color = System.Drawing.Color.FromArgb(
+                    EditBox.FloatToIntClamp(col.W),
+                    EditBox.FloatToIntClamp(col.X),
+                    EditBox.FloatToIntClamp(col.Y),
+                    EditBox.FloatToIntClamp(col.Z));
+                    break;
+                default:
+                    break;
+            }
+
+            item.SubItems.Add(ValueText);
+
+            if (color != System.Drawing.Color.Empty)
+                item.SubItems[2].BackColor = color;
         }
 
-        private void deleteNodeToolStripMenuItem_Click(object sender, EventArgs e)
+        public override void OnEntryDeletion(object obj, TreeNode objNode)
         {
-            if (treeView1.SelectedNode == null)
+            if (obj is ParamEntry)
             {
-                return;
+                var paramObjectParent = (ParamObject)objNode.Tag;
+
+                var entryList = new List<ParamEntry>();
+                for (int i = 0; i < paramObjectParent.paramEntries.Length; i++)
+                    entryList.Add(paramObjectParent.paramEntries[i]);
+
+                entryList.Remove((ParamEntry)obj);
+
+                paramObjectParent.paramEntries = entryList.ToArray();
             }
         }
 
-        private void contentContainer_Paint(object sender, PaintEventArgs e)
+        public void LoadChildNodes(ParamList paramList, TreeNode parentNode)
         {
+            TreeNode newNode = new TreeNode(paramList.HashString);
+            newNode.Tag = paramList;
 
+            parentNode.Nodes.Add(newNode);
+
+            //Add lists and objects if exits
+            if (paramList.childParams.Length > 0)
+                newNode.Nodes.Add("list", "Lists {}");
+            if (paramList.paramObjects.Length > 0)
+                newNode.Nodes.Add("obj", "Objects {}");
+
+            //Add child nodes
+            foreach (var child in paramList.childParams)
+                LoadChildNodes(child, newNode.Nodes["list"]);
+
+            //Add object nodes
+            foreach (var obj in paramList.paramObjects)
+                SetObjNode(obj, newNode.Nodes["obj"]);
         }
 
-        private void listViewCustom1_MouseClick(object sender, MouseEventArgs e)
+        List<Bitmap> Images = new List<Bitmap>();
+
+        void SetObjNode(ParamObject paramObj, TreeNode parentNode)
         {
-            if (e.Button == MouseButtons.Right)
+            string name = paramObj.HashString;
+
+            var objNode = new TreeNode(name);
+            objNode.Tag = paramObj;
+            parentNode.Nodes.Add(objNode);
+        }
+
+        private void OpenNewParamEditor(ParamEntry entry, ParamObject paramObject, ListViewItem SelectedItem)
+        {
+            EditBox editor = new EditBox();
+            editor.LoadEntry(entry);
+            editor.ToggleNameEditing(true);
+
+            if (editor.ShowDialog() == DialogResult.OK)
             {
-                Point pt = listViewCustom1.PointToScreen(e.Location);
-                stContextMenuStrip1.Show(pt);
+                editor.SaveEntry();
+                SetListItemParamObject(entry, SelectedItem);
+                listViewCustom1.Items.Add(SelectedItem);
+
+                var entryList = new List<ParamEntry>();
+                for (int i = 0; i < paramObject.paramEntries.Length; i++)
+                    entryList.Add(paramObject.paramEntries[i]);
+
+                entryList.Add(entry);
+                paramObject.paramEntries = entryList.ToArray();
             }
         }
 
-        private void stContextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void OpenEditor(ParamEntry entry, ListViewItem SelectedItem)
         {
+            EditBox editor = new EditBox();
+            editor.LoadEntry(entry);
+            editor.ToggleNameEditing(true);
 
+            if (editor.ShowDialog() == DialogResult.OK)
+            {
+                editor.SaveEntry();
+                SetListItemParamObject(entry, SelectedItem);
+            }
         }
     }
 }

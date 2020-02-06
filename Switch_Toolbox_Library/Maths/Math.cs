@@ -67,6 +67,19 @@ namespace Toolbox.Library
             return new Vector3(x, y, z) * -1;
         }
 
+        public static Quaternion FromEulerAngles(Vector3 rotation)
+        {
+            Quaternion xRotation = Quaternion.FromAxisAngle(Vector3.UnitX, rotation.X);
+            Quaternion yRotation = Quaternion.FromAxisAngle(Vector3.UnitY, rotation.Y);
+            Quaternion zRotation = Quaternion.FromAxisAngle(Vector3.UnitZ, rotation.Z);
+            Quaternion q = (zRotation * yRotation * xRotation);
+
+            if (q.W < 0)
+                q *= -1;
+
+            return q;
+        }
+
         public static float Clamp(float v, float min, float max)
         {
             if (v < min) return min;

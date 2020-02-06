@@ -39,17 +39,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AampCommon">
-      <HintPath>..\Toolbox\Lib\AampCommon.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="AampV1Library">
-      <HintPath>..\Toolbox\Lib\AampV1Library.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="AampV2Library">
-      <HintPath>..\Toolbox\Lib\AampV2Library.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="AampLibraryCSharp">
+      <HintPath>..\Toolbox\Lib\AampLibraryCSharp.dll</HintPath>
     </Reference>
     <Reference Include="BarsLibrary">
       <HintPath>..\Toolbox\Lib\BarsLibrary.dll</HintPath>
@@ -236,6 +227,8 @@
     <Compile Include="FileFormats\BCH\Wrappers\Model\H3DModelWrapper.cs" />
     <Compile Include="FileFormats\BCH\Wrappers\Model\H3DSkeletonWrapper.cs" />
     <Compile Include="FileFormats\BCH\Wrappers\SkeletalAnimation\H3DSkeletalAnimWrapper.cs" />
+    <Compile Include="FileFormats\Byaml\XmlByamlConverter.cs" />
+    <Compile Include="FileFormats\Byaml\YamlByamlConverter.cs" />
     <Compile Include="FileFormats\LM1\LM1_MDL.cs" />
     <Compile Include="FileFormats\MarioParty\HSF.cs" />
     <Compile Include="FileFormats\MKAGPDX\LM2_ARCADE_Model.cs" />
@@ -325,10 +318,10 @@
     <Compile Include="FileFormats\Effects\PTCL_3DS.cs" />
     <Compile Include="FileFormats\Effects\PTCL_WiiU.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
+    <Compile Include="FileFormats\Font\BFOTF.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
     <Compile Include="FileFormats\Font\BffntCharSet2Xlor.cs" />
     <Compile Include="FileFormats\Font\BFTTF.cs" />
-    <Compile Include="FileFormats\Font\BFOTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
     <Compile Include="FileFormats\Layout\Animation\LytAnimGroup.cs" />
@@ -404,6 +397,7 @@
     <Compile Include="GL\BFRES\BFRESRenderBase.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\CMB_Renderer.cs" />
+    <Compile Include="GL\G1M_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
@@ -852,11 +846,11 @@
     <Compile Include="FileFormats\Audio\BRSTM.cs" />
     <Compile Include="GL\Helpers\AlphaGLControl.cs" />
     <Compile Include="GL\Helpers\ColorGLControl.cs" />
-    <Compile Include="GUI\AAMP\AampEditor.cs">
+    <Compile Include="GUI\AAMP\AampEditorBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\AAMP\AampEditor.Designer.cs">
-      <DependentUpon>AampEditor.cs</DependentUpon>
+    <Compile Include="GUI\AAMP\AampEditorBase.Designer.cs">
+      <DependentUpon>AampEditorBase.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFRES\ParamAnim\ParamPatternMaterialEditor.cs">
       <SubType>Form</SubType>
@@ -969,7 +963,6 @@
     <Compile Include="Scenes\SMO\LevelObj.cs" />
     <Compile Include="Scenes\SMO_Scene.cs" />
     <Compile Include="Scenes\ZTP_Scene.cs" />
-    <Compile Include="YAML\YamlAamp.cs" />
     <Compile Include="GUI\BFRES\BoneVisualAnims\BoneVisualAnimEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1153,16 +1146,12 @@
       <DependentUpon>OdysseyCostumeLoader.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\SMO\MarioCostumeEditor.cs" />
-    <Compile Include="GUI\AAMP\AampV1Editor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\AAMP\AampV2Editor.cs">
+    <Compile Include="GUI\AAMP\AampEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\AAMP\EditBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\AAMP\EditBox.Designer.cs" />
     <Compile Include="GUI\BFRES\BfresEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1563,8 +1552,8 @@
     <None Include="Resources\InjectTexErrored.dds" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GUI\AAMP\AampEditor.resx">
-      <DependentUpon>AampEditor.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\AAMP\AampEditorBase.resx">
+      <DependentUpon>AampEditorBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\AAMP\EditBox.resx" />
     <EmbeddedResource Include="GUI\Advanced Editor\TextureViewer.resx">

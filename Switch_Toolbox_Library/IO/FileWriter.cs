@@ -19,6 +19,11 @@ namespace Toolbox.Library.IO
         {
         }
 
+        public FileWriter(Stream stream, Encoding encoding, bool leaveOpen = false)
+    : base(stream, encoding, leaveOpen)
+        {
+        }
+
         public FileWriter(string fileName)
              : this(new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
         {

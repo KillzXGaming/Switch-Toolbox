@@ -94,7 +94,6 @@ namespace Toolbox.Library.Forms
             }
 
             SelectNode(FileRoot);
-
             for (int i = 0; i < FileRoot.FileNodes.Count; i++)
             {
                 if (FileRoot.FileNodes[i].Item1.OpenFileFormatOnLoad)

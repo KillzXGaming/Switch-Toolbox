@@ -15,6 +15,7 @@ using Toolbox.Library.Forms;
 using Toolbox.Library;
 using ByamlExt;
 using FirstPlugin.Forms;
+using ByamlExt.Byaml;
 
 namespace FirstPlugin
 {
@@ -22,7 +23,7 @@ namespace FirstPlugin
     //Added as an editor form for saving data back via other plugins
     public partial class ByamlEditor : UserControl, IFIleEditor
     {
-        public IFileFormat FileFormat;
+        public BYAML FileFormat;
 
         public List<IFileFormat> GetFileFormats()
         {
@@ -30,14 +31,19 @@ namespace FirstPlugin
         }
 
         public ByteOrder byteOrder;
-        public dynamic byml;
+        public dynamic byml
+        {
+            get { return FileFormat.BymlData.RootNode; }
+            set { FileFormat.BymlData.RootNode = value; }
+        }
+
         public string FileName = "";
         bool pathSupport;
         ushort bymlVer;
 
         bool useMuunt = true;
 
-        private TextEditor xmlEditor;
+        private TextEditor textEditor;
 
         public ByamlEditor()
         {
@@ -55,6 +61,7 @@ namespace FirstPlugin
 
         private void Reload()
         {
+            chkShiftJISEncoding.Checked = BymlFileData.Encoding == Encoding.GetEncoding("shift_jis");
             treeView1.BackColor = FormThemes.BaseTheme.FormBackColor;
             treeView1.ForeColor = FormThemes.BaseTheme.FormForeColor;
             treeView1.Nodes.Clear();
@@ -91,10 +98,13 @@ namespace FirstPlugin
             if (byml == null) return;
             ParseBymlFirstNode();
 
-            xmlEditor = new TextEditor();
-            stPanel4.Controls.Add(xmlEditor);
-            xmlEditor.Dock = DockStyle.Fill;
-            xmlEditor.IsXML = true;
+            stPanel4.Controls.Clear();
+
+            textEditor = new TextEditor();
+            textEditor.ClearContextMenus();
+            textEditor.AddContextMenu("Decompile", TextEditorToYaml);
+            textEditor.AddContextMenu("Compile", TextEditorFromYaml);
+            stPanel4.Controls.Add(textEditor);
         }
 
         void ParseBymlFirstNode()
@@ -105,7 +115,7 @@ namespace FirstPlugin
             treeView1.SelectedNode = root;
 
             //the first node should always be a dictionary node
-            if (byml is Dictionary<string, dynamic>)
+            if (byml is IDictionary<string, dynamic>)
             {
                 parseDictNode(byml, root.Nodes);
             }
@@ -169,7 +179,7 @@ namespace FirstPlugin
         {
             foreach (string k in node.Keys)
             {
-                if ((node[k] is Dictionary<string, dynamic>) ||
+                if ((node[k] is IDictionary<string, dynamic>) ||
                 (node[k] is List<dynamic>) ||
                 (node[k] is List<ByamlPathPoint>))
                 {
@@ -206,7 +216,7 @@ namespace FirstPlugin
             int index = 0;
             foreach (dynamic k in list)
             {
-                if ((k is Dictionary<string, dynamic>) ||
+                if ((k is IDictionary<string, dynamic>) ||
                 (k is List<dynamic>) ||
                 (k is List<ByamlPathPoint>))
                 {
@@ -403,10 +413,20 @@ namespace FirstPlugin
 
         private void exportJsonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sav = new SaveFileDialog() { Filter = "Xml file | *.xml" };
+            SaveFileDialog sav = new SaveFileDialog() { Filter = TextFilter };
+            sav.FileName = Path.GetFileNameWithoutExtension(FileName);
+            sav.DefaultExt = ".yaml";
             if (sav.ShowDialog() != DialogResult.OK) return;
-            File.WriteAllText(sav.FileName,
-                XmlConverter.ToXml(new BymlFileData { Version = bymlVer, byteOrder = byteOrder, SupportPaths = pathSupport, RootNode = byml }));
+
+            string ext = Utils.GetExtension(sav.FileName);
+            if (ext == ".xml") {
+                File.WriteAllText(sav.FileName, XmlByamlConverter.ToXML(FileFormat.BymlData));
+            }
+            else {
+                File.WriteAllText(sav.FileName, YamlByamlConverter.ToYaml(FileFormat.BymlData));
+            }
+
+            MessageBox.Show("Byaml converted successfully!");
         }
 
         public static void ImportFromJson()
@@ -421,6 +441,18 @@ namespace FirstPlugin
             if (opn.ShowDialog() == DialogResult.OK)
             {
                 OpenByml(opn.FileName, new BYAML());
+            }
+        }
+
+        private static string TextFilter
+        {
+            get
+            {
+                return "Supported Formats|*.yaml;*.xml;|" +
+                        "YAML |*.yaml|" +
+                        "XML  |*.xml|" +
+                        "All files(*.*)|*.*";
+                ;
             }
         }
 
@@ -570,15 +602,17 @@ namespace FirstPlugin
                 return;
 
             dynamic targetNode = treeView1.SelectedNode.Tag;
-            dynamic target = listViewCustom1.SelectedItems[0].Tag;
-            if (targetNode is IDictionary<string, dynamic>)
-                ((IDictionary<string, dynamic>)targetNode).Remove(listViewCustom1.SelectedItems[0].Text);
-            if (targetNode is IList<dynamic>)
-                ((IList<dynamic>)targetNode).Remove(target);
+            foreach (ListViewItem item in listViewCustom1.SelectedItems)
+            {
+                dynamic target = item.Tag;
+                if (targetNode is IDictionary<string, dynamic>)
+                    ((IDictionary<string, dynamic>)targetNode).Remove(item.Text);
+                if (targetNode is IList<dynamic>)
+                    ((IList<dynamic>)targetNode).Remove(target);
 
-            int index = listViewCustom1.Items.IndexOf(listViewCustom1.SelectedItems[0]);
-
-            listViewCustom1.Items.RemoveAt(index);
+                int index = listViewCustom1.Items.IndexOf(item);
+                listViewCustom1.Items.RemoveAt(index);
+            }
         }
 
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -638,13 +672,14 @@ namespace FirstPlugin
                 target = treeView1.SelectedNode.Parent.Tag;
                 targetNode = treeView1.SelectedNode.Parent.Nodes;
             }
+
             int index = targetNode.IndexOf(treeView1.SelectedNode);
-            if (target is Dictionary<string, dynamic>)
-            {
-                target.Remove(((Dictionary<string, dynamic>)target).Keys.ToArray()[index]);
-            }
-            else
-                target.RemoveAt(targetNode.IndexOf(treeView1.SelectedNode));
+
+            if (target is IDictionary<string, dynamic>)
+                target.Remove(((Dictionary<string, dynamic>)target).ElementAt(index).Key);
+            if (target is IList<dynamic>)
+                target.RemoveAt(index);
+
             targetNode.RemoveAt(index);
         }
 
@@ -658,12 +693,19 @@ namespace FirstPlugin
         private void importFromXmlToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Filter = "xml file |*.xml| every file | *.*";
+            openFile.Filter = TextFilter;
             if (openFile.ShowDialog() != DialogResult.OK) return;
 
-            StreamReader t = new StreamReader(new FileStream(openFile.FileName, FileMode.Open), UnicodeEncoding.Unicode);
+            string ext = Utils.GetExtension(openFile.FileName);
+            if (ext == ".xml") {
+                StreamReader t = new StreamReader(new FileStream(openFile.FileName, FileMode.Open));
+                FileFormat.BymlData = XmlByamlConverter.FromXML(t.ReadToEnd());
+            }
+            else {
+                StreamReader t = new StreamReader(new FileStream(openFile.FileName, FileMode.Open));
+                FileFormat.BymlData = YamlByamlConverter.FromYaml(t.ReadToEnd());
+            }
             treeView1.Nodes.Clear();
-            byml = XmlConverter.ToByml(t.ReadToEnd()).RootNode;
             ParseBymlFirstNode();
         }
 
@@ -681,30 +723,28 @@ namespace FirstPlugin
             }
         }
 
-        private void btnToXml_Click(object sender, EventArgs e)
+        private void TextEditorToYaml(object sender, EventArgs e)
         {
-            xmlEditor.FillEditor(XmlConverter.ToXml(new BymlFileData {
-                Version = bymlVer,
-                byteOrder = byteOrder,
-                SupportPaths = pathSupport,
-                RootNode = byml
-            }));
+            var format = (IConvertableTextFormat)FileFormat;
+            textEditor.FillEditor(((IConvertableTextFormat)FileFormat).ConvertToString());
+
+            if (format.TextFileType == TextFileType.Xml)
+                textEditor.IsXML = true;
+            else
+                textEditor.IsYAML = true;
         }
 
-        private void btnXmlToByaml_Click(object sender, EventArgs e)
+        private void TextEditorFromYaml(object sender, EventArgs e)
         {
-            string editorText = xmlEditor.GetText();
+            string editorText = textEditor.GetText();
             if (editorText == string.Empty)
                 return;
 
             try
             {
-                byte[] TextData = Encoding.Unicode.GetBytes(xmlEditor.GetText());
-                StreamReader t = new StreamReader(new MemoryStream(TextData), Encoding.GetEncoding(932));
-                byml = XmlConverter.ToByml(t.ReadToEnd()).RootNode;
-
-                if (FileFormat != null)
-                    ((BYAML)FileFormat).UpdateByamlRoot(byml);
+                if (FileFormat != null) {
+                    FileFormat.ConvertFromString(textEditor.GetText());
+                }
             }
             catch (Exception ex)
             {
@@ -716,6 +756,26 @@ namespace FirstPlugin
             ParseBymlFirstNode();
 
             MessageBox.Show("Byaml converted successfully!");
+        }
+
+        private void treeView1_MouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                treeView1.SelectedNode = e.Node;
+            }
+        }
+
+        private void chkShiftJISEncoding_CheckedChanged(object sender, EventArgs e) {
+            if (FileFormat == null) return;
+
+            if (chkShiftJISEncoding.Checked)
+                FileFormat.ReloadEncoding(Encoding.GetEncoding("shift_jis"));
+            else
+                FileFormat.ReloadEncoding(Encoding.UTF8);
+
+            treeView1.Nodes.Clear();
+            ParseBymlFirstNode();
         }
     }
 }

@@ -10,11 +10,10 @@ using FirstPlugin.Turbo.CourseMuuntStructs;
 using GL_EditorFramework.EditorDrawables;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using aampv1 = AampV1Library;
-using aampv2 = AampV2Library;
 using Toolbox.Library.Rendering;
 using Toolbox.Library.IO;
 using FirstPlugin.Turbo;
+using AampLibraryCSharp;
 
 namespace FirstPlugin.Forms
 {
@@ -121,14 +120,7 @@ namespace FirstPlugin.Forms
             }
 
             foreach (AAMP aamp in scene.ParameterArchives)
-            {
-                if (aamp.aampFileV1 != null)
-                    LoadParameters(aamp.aampFileV1);
-                else if (aamp.aampFileV2 != null)
-                    LoadParameters(aamp.aampFileV2);
-                else
-                    throw new Exception("Failed to load parameter file " + aamp.FileName);
-            }
+                LoadParameters(aamp.aampFile);
 
             viewport.AddDrawable(new GL_EditorFramework.EditorDrawables.SingleObject(new OpenTK.Vector3(0)));
 
@@ -230,7 +222,7 @@ namespace FirstPlugin.Forms
 
         ProbeLighting probeLightingConfig;
 
-        private void LoadParameters(aampv1.AampFile aamp)
+        private void LoadParameters(AampFile aamp)
         {
             if (aamp.EffectType == "Probe Data")
             {
@@ -295,7 +287,7 @@ namespace FirstPlugin.Forms
             }
         }
 
-        private void LoadDataBuffer(aampv1.ParamEntry[] paramEntries, ProbeLighting.Entry probeEntry)
+        private void LoadDataBuffer(ParamEntry[] paramEntries, ProbeLighting.Entry probeEntry)
         {
             foreach (var entry in paramEntries)
             {
@@ -307,13 +299,13 @@ namespace FirstPlugin.Forms
                     probeEntry.MaxShDataNum = (uint)entry.Value;
                 if (entry.HashString == "data_buffer")
                 {
-                    if (entry.ParamType == aampv1.ParamType.BufferFloat)
+                    if (entry.ParamType == ParamType.BufferFloat)
                         probeEntry.DataBuffer = (float[])entry.Value;
                 }
             }
         }
 
-        private void LoadIndexBuffer(aampv1.ParamEntry[] paramEntries, ProbeLighting.Entry probeEntry)
+        private void LoadIndexBuffer(ParamEntry[] paramEntries, ProbeLighting.Entry probeEntry)
         {
             foreach (var entry in paramEntries)
             {
@@ -325,7 +317,7 @@ namespace FirstPlugin.Forms
                     probeEntry.MaxIndexNum = (uint)entry.Value;
                 if (entry.HashString == "index_buffer")
                 {
-                    if (entry.ParamType == aampv1.ParamType.BufferUint)
+                    if (entry.ParamType == ParamType.BufferUint)
                         probeEntry.IndexBuffer = (uint[])entry.Value;
 
                     //Experimental, just fill in indices
@@ -339,7 +331,7 @@ namespace FirstPlugin.Forms
             }
         }
 
-        private ProbeLighting.Grid LoadGridData(aampv1.ParamEntry[] paramEntries)
+        private ProbeLighting.Grid LoadGridData(ParamEntry[] paramEntries)
         {
             ProbeLighting.Grid grid = new ProbeLighting.Grid();
 
@@ -363,11 +355,6 @@ namespace FirstPlugin.Forms
             }*/
 
             return grid;
-        }
-
-        private void LoadParameters(aampv2.AampFile aamp)
-        {
-
         }
 
         private void AddPathDrawable(string Name, IEnumerable<BasePathPoint> Groups, Color color, bool CanConnect = true)

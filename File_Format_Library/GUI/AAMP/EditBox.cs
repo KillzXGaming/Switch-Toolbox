@@ -7,8 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AampV1Library;
-using Aampv2 = AampV2Library;
+using AampLibraryCSharp;
 using Syroot.Maths;
 
 namespace FirstPlugin.Forms
@@ -26,39 +25,6 @@ namespace FirstPlugin.Forms
         }
 
         ParamEntry paramEntry;
-        Aampv2.ParamEntry paramEntryV2;
-
-        public void LoadEntry(Aampv2.ParamEntry entry)
-        {
-            typeCB.Items.Clear();
-
-            foreach (var type in Enum.GetValues(typeof(AampV2Library.ParamType)).Cast<AampV2Library.ParamType>())
-                typeCB.Items.Add(type);
-
-            paramEntryV2 = entry;
-            nameTB.Text = entry.HashString;
-            typeCB.SelectedItem = entry.ParamType;
-
-            dataTB.Text = entry.Value.ToString();
-
-            switch (entry.ParamType)
-            {
-                case AampV2Library.ParamType.Vector2F:
-                    var vec2 = (Vector2F)entry.Value;
-                    dataTB.Text = $"{vec2.X} {vec2.Y}";
-                    break;
-                case AampV2Library.ParamType.Vector3F:
-                    var vec3 = (Vector3F)entry.Value;
-                    dataTB.Text = $"{vec3.X} {vec3.Y} {vec3.Z}";
-                    break;
-                case AampV2Library.ParamType.Vector4F:
-                case AampV2Library.ParamType.Color4F:
-                    var vec4 = (Vector4F)entry.Value;
-                    dataTB.Text = $"{vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
-                    break;
-            }
-        }
-
         public void LoadEntry(ParamEntry entry)
         {
             typeCB.Items.Clear();
@@ -86,6 +52,18 @@ namespace FirstPlugin.Forms
                 case ParamType.Color4F:
                     var vec4 = (Vector4F)entry.Value;
                     dataTB.Text = $"{vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
+                    break;
+                case ParamType.BufferBinary:
+                    dataTB.Text = string.Join(",", (byte[])entry.Value);
+                    break;
+                case ParamType.BufferFloat:
+                    dataTB.Text = string.Join(",", (float[])entry.Value);
+                    break;
+                case ParamType.BufferInt:
+                    dataTB.Text = string.Join(",", (int[])entry.Value);
+                    break;
+                case ParamType.BufferUint:
+                    dataTB.Text = string.Join(",", (uint[])entry.Value);
                     break;
             }
         }
@@ -116,43 +94,69 @@ namespace FirstPlugin.Forms
                         int.TryParse(dataTB.Text, out valueInt);
                         paramEntry.Value = valueInt;
                         break;
+                    case ParamType.BufferUint:
+                        {
+                            var strings = dataTB.Text.Split(',');
+                            var array = new uint[strings.Length];
+                            for (int i = 0; i < array.Length; i++)
+                                array[i] = uint.Parse(strings[i]);
+                            paramEntry.Value = array;
+                        }
+                        break;
+                    case ParamType.BufferInt:
+                        {
+                            var strings = dataTB.Text.Split(',');
+                            var array = new int[strings.Length];
+                            for (int i = 0; i < array.Length; i++)
+                                array[i] = int.Parse(strings[i]);
+                            paramEntry.Value = array;
+                        }
+                        break;
+                    case ParamType.BufferFloat:
+                        {
+                            var strings = dataTB.Text.Split(',');
+                            var array = new float[strings.Length];
+                            for (int i = 0; i < array.Length; i++)
+                                array[i] = float.Parse(strings[i]);
+                            paramEntry.Value = array;
+                        }
+                        break;
+                    case ParamType.BufferBinary:
+                        {
+                            var strings = dataTB.Text.Split(',');
+                            var array = new byte[strings.Length];
+                            for (int i = 0; i < array.Length; i++)
+                                array[i] = byte.Parse(strings[i]);
+                            paramEntry.Value = array;
+                        }
+                        break;
                     case ParamType.Vector2F:
                         var values2F = dataTB.Text.Split(' ');
-                        if (values2F.Length != 2)
-                        {
-
-                        }
-                        else
-                        {
+                        if (values2F.Length == 2) {
                             float x, y;
                             float.TryParse(values2F[0], out x);
                             float.TryParse(values2F[1], out y);
                             paramEntry.Value = new Vector2F(x, y);
                         }
+                        else
+                            throw new Exception("Invalid amount of values. Type requires 2 values.");
                         break;
                     case ParamType.Vector3F:
                         var values3F = dataTB.Text.Split(' ');
-                        if (values3F.Length != 3)
-                        {
-
-                        }
-                        else
-                        {
+                        if (values3F.Length == 3) {
                             float x, y, z;
                             float.TryParse(values3F[0], out x);
                             float.TryParse(values3F[1], out y);
                             float.TryParse(values3F[2], out z);
                             paramEntry.Value = new Vector3F(x, y, z);
                         }
+                        else
+                            throw new Exception("Invalid amount of values. Type requires 3 values.");
                         break;
                     case ParamType.Vector4F:
                     case ParamType.Color4F:
                         var values = dataTB.Text.Split(' ');
-                        if (values.Length != 4)
-                        {
-
-                        }
-                        else
+                        if (values.Length == 4)
                         {
                             float x, y, z, w;
                             float.TryParse(values[0], out x);
@@ -161,6 +165,8 @@ namespace FirstPlugin.Forms
                             float.TryParse(values[3], out w);
                             paramEntry.Value = new Vector4F(x, y, z, w);
                         }
+                        else
+                            throw new Exception("Invalid amount of values. Type requires 4 values.");
                         break;
                     case ParamType.Uint:
                         uint valueUInt = 0;
@@ -171,114 +177,19 @@ namespace FirstPlugin.Forms
                     case ParamType.String32:
                     case ParamType.String256:
                     case ParamType.StringRef:
-                        paramEntry.Value = new AampCommon.StringEntry(dataTB.Text);
+                        paramEntry.Value = new AampLibraryCSharp.StringEntry(dataTB.Text);
                         break;
                 }
             }
-            else
-            {
-                paramEntryV2.ParamType = (AampV2Library.ParamType)typeCB.SelectedItem;
-
-                if (nameTB.Enabled)
-                    paramEntryV2.HashString = nameTB.Text;
-
-                switch (paramEntryV2.ParamType)
-                {
-                    case AampV2Library.ParamType.Boolean:
-                        bool value = false;
-                        bool.TryParse(dataTB.Text, out value);
-                        paramEntryV2.Value = value;
-                        break;
-                    case AampV2Library.ParamType.Float:
-                        float valueF = 0;
-                        float.TryParse(dataTB.Text, out valueF);
-                        paramEntryV2.Value = valueF;
-                        break;
-                    case AampV2Library.ParamType.Int:
-                        int valueInt = 0;
-                        int.TryParse(dataTB.Text, out valueInt);
-                        paramEntryV2.Value = valueInt;
-                        break;
-                    case AampV2Library.ParamType.Vector2F:
-                        var values2F = dataTB.Text.Split(' ');
-                        if (values2F.Length != 2)
-                        {
-
-                        }
-                        else
-                        {
-                            float x, y;
-                            float.TryParse(values2F[0], out x);
-                            float.TryParse(values2F[1], out y);
-                            paramEntryV2.Value = new Vector2F(x, y);
-                        }
-                        break;
-                    case AampV2Library.ParamType.Vector3F:
-                        var values3F = dataTB.Text.Split(' ');
-                        if (values3F.Length != 3)
-                        {
-
-                        }
-                        else
-                        {
-                            float x, y, z;
-                            float.TryParse(values3F[0], out x);
-                            float.TryParse(values3F[1], out y);
-                            float.TryParse(values3F[2], out z);
-                            paramEntryV2.Value = new Vector3F(x, y, z);
-                        }
-                        break;
-                    case AampV2Library.ParamType.Vector4F:
-                    case AampV2Library.ParamType.Color4F:
-                        var values = dataTB.Text.Split(' ');
-                        if (values.Length != 4)
-                        {
-
-                        }
-                        else
-                        {
-                            float x, y, z, w;
-                            float.TryParse(values[0], out x);
-                            float.TryParse(values[1], out y);
-                            float.TryParse(values[2], out z);
-                            float.TryParse(values[3], out w);
-                            paramEntryV2.Value = new Vector4F(x, y, z, w);
-                        }
-                        break;
-                    case AampV2Library.ParamType.Uint:
-                        uint valueUInt = 0;
-                        uint.TryParse(dataTB.Text, out valueUInt);
-                        paramEntryV2.Value = valueUInt;
-                        break;
-                    case AampV2Library.ParamType.String64:
-                    case AampV2Library.ParamType.String32:
-                    case AampV2Library.ParamType.String256:
-                    case AampV2Library.ParamType.StringRef:
-                        paramEntryV2.Value = new AampCommon.StringEntry(dataTB.Text);
-                        break;
-                }
-            }    
         }
 
         private void dataTB_TextChanged(object sender, EventArgs e)
         {
-            if (paramEntry != null)
+            switch (paramEntry.ParamType)
             {
-                switch (paramEntry.ParamType)
-                {
-                    case ParamType.Color4F:
-                        UpdatePictureboxColor();
-                        break;
-                }
-            }
-            else
-            {
-                switch (paramEntryV2.ParamType)
-                {
-                    case AampV2Library.ParamType.Color4F:
-                        UpdatePictureboxColor();
-                        break;
-                }
+                case ParamType.Color4F:
+                    UpdatePictureboxColor();
+                    break;
             }
         }
 
@@ -330,24 +241,145 @@ namespace FirstPlugin.Forms
                     }
                 }
             }
-            else
-            {
-                if (paramEntryV2.ParamType == AampV2Library.ParamType.Color4F)
-                {
-                    ColorDialog dlg = new ColorDialog();
-                    if (dlg.ShowDialog() == DialogResult.OK)
-                    {
-                        paramEntryV2.Value = new Vector4F(
-                            dlg.Color.R / 255.0f,
-                            dlg.Color.G / 255.0f,
-                            dlg.Color.B / 255.0f,
-                            dlg.Color.A / 255.0f);
-
-                        var vec4 = (Vector4F)paramEntryV2.Value;
-                        dataTB.Text = $"{vec4.X} {vec4.Y} {vec4.Z} {vec4.W}";
-                    }
-                }
-            }
         }
+
+
+
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.nameTB = new System.Windows.Forms.TextBox();
+            this.typeCB = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.dataTB = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // nameTB
+            // 
+            this.nameTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.nameTB.Enabled = false;
+            this.nameTB.Location = new System.Drawing.Point(76, 12);
+            this.nameTB.Name = "nameTB";
+            this.nameTB.Size = new System.Drawing.Size(220, 20);
+            this.nameTB.TabIndex = 0;
+            // 
+            // typeCB
+            // 
+            this.typeCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.typeCB.FormattingEnabled = true;
+            this.typeCB.Location = new System.Drawing.Point(76, 38);
+            this.typeCB.Name = "typeCB";
+            this.typeCB.Size = new System.Drawing.Size(220, 21);
+            this.typeCB.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(38, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Name:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 41);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(34, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Type:";
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.button1.Location = new System.Drawing.Point(275, 187);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Save";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // dataTB
+            // 
+            this.dataTB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataTB.Location = new System.Drawing.Point(12, 74);
+            this.dataTB.Multiline = true;
+            this.dataTB.Name = "dataTB";
+            this.dataTB.Size = new System.Drawing.Size(346, 107);
+            this.dataTB.TabIndex = 6;
+            this.dataTB.TextChanged += new System.EventHandler(this.dataTB_TextChanged);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.Location = new System.Drawing.Point(302, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(56, 50);
+            this.pictureBox1.TabIndex = 7;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // EditBox
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(362, 216);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.dataTB);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.typeCB);
+            this.Controls.Add(this.nameTB);
+            this.Name = "EditBox";
+            this.Text = "EditBox";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.TextBox nameTB;
+        private System.Windows.Forms.ComboBox typeCB;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox dataTB;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

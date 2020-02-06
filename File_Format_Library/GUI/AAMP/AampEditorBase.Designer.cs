@@ -39,6 +39,10 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
+            this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.addItemToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,6 +53,9 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.stPanel1.SuspendLayout();
+            this.stTabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,7 +65,7 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(183, 398);
+            this.treeView1.Size = new System.Drawing.Size(217, 462);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -88,10 +95,11 @@
             this.columnHeader3});
             this.listViewCustom1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewCustom1.FullRowSelect = true;
+            this.listViewCustom1.HideSelection = false;
             this.listViewCustom1.Location = new System.Drawing.Point(0, 0);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
-            this.listViewCustom1.Size = new System.Drawing.Size(362, 398);
+            this.listViewCustom1.Size = new System.Drawing.Size(432, 462);
             this.listViewCustom1.TabIndex = 0;
             this.listViewCustom1.UseCompatibleStateImageBehavior = false;
             this.listViewCustom1.View = System.Windows.Forms.View.Details;
@@ -110,12 +118,12 @@
             // columnHeader3
             // 
             this.columnHeader3.Text = "Data";
-            this.columnHeader3.Width = 155;
+            this.columnHeader3.Width = 225;
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -125,18 +133,60 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listViewCustom1);
-            this.splitContainer1.Size = new System.Drawing.Size(549, 398);
-            this.splitContainer1.SplitterDistance = 183;
+            this.splitContainer1.Size = new System.Drawing.Size(653, 462);
+            this.splitContainer1.SplitterDistance = 217;
             this.splitContainer1.TabIndex = 14;
             // 
             // stPanel1
             // 
-            this.stPanel1.Controls.Add(this.splitContainer1);
+            this.stPanel1.Controls.Add(this.stTabControl1);
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel1.Location = new System.Drawing.Point(0, 0);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(549, 398);
+            this.stPanel1.Size = new System.Drawing.Size(667, 497);
             this.stPanel1.TabIndex = 15;
+            // 
+            // stTabControl1
+            // 
+            this.stTabControl1.Controls.Add(this.tabPage1);
+            this.stTabControl1.Controls.Add(this.tabPage2);
+            this.stTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stTabControl1.Location = new System.Drawing.Point(0, 0);
+            this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
+            this.stTabControl1.Name = "stTabControl1";
+            this.stTabControl1.SelectedIndex = 0;
+            this.stTabControl1.Size = new System.Drawing.Size(667, 497);
+            this.stTabControl1.TabIndex = 15;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.splitContainer1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(659, 468);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Editor";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.stPanel2);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(659, 468);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Text Editor";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // stPanel2
+            // 
+            this.stPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stPanel2.Location = new System.Drawing.Point(3, 3);
+            this.stPanel2.Name = "stPanel2";
+            this.stPanel2.Size = new System.Drawing.Size(653, 462);
+            this.stPanel2.TabIndex = 0;
             // 
             // addItemToolStripMenuItem
             // 
@@ -183,12 +233,15 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.stPanel1);
             this.Name = "AampEditorBase";
-            this.Size = new System.Drawing.Size(549, 398);
+            this.Size = new System.Drawing.Size(667, 497);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.stPanel1.ResumeLayout(false);
+            this.stTabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.stContextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -211,5 +264,9 @@
         private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private Toolbox.Library.Forms.STContextMenuStrip stContextMenuStrip1;
+        private Toolbox.Library.Forms.STTabControl stTabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private Toolbox.Library.Forms.STPanel stPanel2;
     }
 }

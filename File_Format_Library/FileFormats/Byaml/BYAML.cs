@@ -10,6 +10,9 @@ using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
 using ByamlExt.Byaml;
 using ByamlExt;
+using SharpYaml.Serialization;
+using SharpYaml;
+using Syroot.BinaryData;
 
 namespace FirstPlugin
 {
@@ -50,19 +53,23 @@ namespace FirstPlugin
         }
 
         #region Text Converter Interface
-        public TextFileType TextFileType => TextFileType.Xml;
+        public TextFileType TextFileType => TextFileType.Yaml;
         public bool CanConvertBack => true;
 
         public string ConvertToString()
         {
-            return XmlConverter.ToXml(data);
+            if (TextFileType == TextFileType.Xml)
+                return XmlByamlConverter.ToXML(BymlData);
+            else
+                return YamlByamlConverter.ToYaml(BymlData);
         }
 
         public void ConvertFromString(string text)
         {
-            byte[] TextData = Encoding.Unicode.GetBytes(text);
-            StreamReader t = new StreamReader(new MemoryStream(TextData), Encoding.GetEncoding(932));
-            data = XmlConverter.ToByml(t.ReadToEnd());
+            if (TextFileType == TextFileType.Xml)
+                BymlData = XmlByamlConverter.FromXML(text);
+            else
+                BymlData = YamlByamlConverter.FromYaml(text);
         }
 
         #endregion
@@ -97,7 +104,7 @@ namespace FirstPlugin
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     byamlF.Load(new FileStream(ofd.FileName, FileMode.Open));
-                    byamlF.data.byteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                    byamlF.BymlData.byteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 
                     SaveFileDialog sfd = new SaveFileDialog();
                     sfd.Filter = Utils.GetAllFilters(byamlF);
@@ -119,7 +126,7 @@ namespace FirstPlugin
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     byamlF.Load(new FileStream(ofd.FileName, FileMode.Open));
-                    byamlF.data.byteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+                    byamlF.BymlData.byteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
 
                     SaveFileDialog sfd = new SaveFileDialog();
                     sfd.Filter = Utils.GetAllFilters(byamlF);
@@ -157,7 +164,7 @@ namespace FirstPlugin
         }
 
         bool IsDialog = false;
-        BymlFileData data;
+        public BymlFileData BymlData;
 
         public ByamlEditor OpenForm()
         {
@@ -175,25 +182,48 @@ namespace FirstPlugin
             return editor;
         }
 
-        public void UpdateByamlRoot(dynamic root)
-        {
-            if (data != null)
-                data.RootNode = root;
-        }
-
         public void FillEditor(UserControl control)
         {
-            ((ByamlEditor)control).UpdateByaml(data.RootNode, data.SupportPaths, data.Version, data.byteOrder, IsDialog, this);
+            ((ByamlEditor)control).UpdateByaml(
+                BymlData.RootNode,
+                BymlData.SupportPaths,
+                BymlData.Version,
+                BymlData.byteOrder, 
+                IsDialog, this);
         }
 
         public void Load(Stream stream)
         {
             CanSave = true;
 
+            //Keep the stream open. 
+            //This is for the file to optionally be reloaded for different encoding types
             IsDialog = IFileInfo != null && IFileInfo.InArchive;
 
-            data = ByamlFile.LoadN(stream);
+            BymlData = ByamlFile.LoadN(stream);
         }
+
+        public void ReloadEncoding(Encoding encoding) {
+            BymlFileData.Encoding = encoding;
+
+            //Reopen and reload the byml data
+            if (IFileInfo.ArchiveParent != null)
+            {
+                foreach (var file in IFileInfo.ArchiveParent.Files)
+                {
+                    var name = Path.GetFileName(file.FileName);
+                    if (name == FileName)
+                        BymlData = ByamlFile.LoadN(new MemoryStream(file.FileData));
+                }
+            }
+            else if (File.Exists(FilePath))
+            {
+                var file = File.OpenRead(FilePath);
+                BymlData = ByamlFile.LoadN(file);
+                file.Close();
+            }
+        }
+
         public void Unload()
         {
 
@@ -203,10 +233,10 @@ namespace FirstPlugin
         {
             ByamlFile.SaveN(stream, new BymlFileData
             {
-                Version = data.Version,
-                byteOrder = data.byteOrder,
-                SupportPaths = data.SupportPaths,
-                RootNode = data.RootNode
+                Version = BymlData.Version,
+                byteOrder = BymlData.byteOrder,
+                SupportPaths = BymlData.SupportPaths,
+                RootNode = BymlData.RootNode
             });
         }   
     }

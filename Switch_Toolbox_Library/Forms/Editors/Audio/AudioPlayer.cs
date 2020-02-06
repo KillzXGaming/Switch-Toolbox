@@ -71,6 +71,8 @@ namespace Toolbox.Library.Forms
             if (ClearPlaylist)
                 audioListView.Items.Clear();
 
+            AudioFileFormats.Add(fileFormat);
+
             AudioFile file = new AudioFile();
             file.Title = fileFormat.FileName;
 
@@ -81,11 +83,6 @@ namespace Toolbox.Library.Forms
                 file.Title = mp3.Title;
                 file.Artist = mp3.Artist;
             }
-
-            AudioFileFormats.Add(fileFormat);
-
-
-            audioListView.AddObject(file);
 
             AudioChannel audioChannel = new AudioChannel();
             audioChannel.Name = $"Channel [0]";
@@ -101,8 +98,12 @@ namespace Toolbox.Library.Forms
 
                 }
             };
-            audioListView.UpdateObject(file);
 
+            audioListView.AddObject(file);
+         //   audioListView.UpdateObject(file);
+
+            if (audioListView.Items.Count != 0)
+                audioListView.SelectedIndex = 0;
         }
 
         public void LoadFile(AudioData audioData, IFileFormat fileFormat, bool ClearPlaylist = false)

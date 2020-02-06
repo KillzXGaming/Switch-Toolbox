@@ -254,6 +254,7 @@ namespace Toolbox.Library
                 v.uv0 = new Vector2(v.uv0.X, 1 - v.uv0.Y);
             }
         }
+
         public void FlipUvsHorizontal()
         {
             foreach (Vertex v in vertices)
@@ -261,6 +262,7 @@ namespace Toolbox.Library
                 v.uv0 = new Vector2(1 - v.uv0.X, v.uv0.Y);
             }
         }
+
         public void TransformUVs(Vector2 Translate, Vector2 Scale, int Index)
         {
             foreach (Vertex v in vertices)
@@ -551,12 +553,10 @@ namespace Toolbox.Library
                 return;
 
             Vector3[] normals = new Vector3[vertices.Count];
-
             for (int i = 0; i < normals.Length; i++)
                 normals[i] = new Vector3(0, 0, 0);
 
             List<int> f = GetFaces();
-
             for (int i = 0; i < f.Count; i += 3)
             {
                 Vertex v1 = vertices[f[i]];

@@ -31,7 +31,7 @@ namespace Toolbox.Library.IO
 
         public class ZSTD
         {
-        
+
 
         }
 
@@ -43,9 +43,12 @@ namespace Toolbox.Library.IO
 
                 using (var reader = new FileReader(stream, true))
                 {
-                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                     reader.Position = 0;
+                    reader.SetByteOrder(true);
                     uint chunkSize = reader.ReadUInt32();
+                    if (chunkSize == 256)
+                        reader.SetByteOrder(false);
+
                     uint chunkCount = reader.ReadUInt32();
                     uint decompressedSize = reader.ReadUInt32();
                     if (reader.BaseStream.Length > 8 + (chunkCount * 4) + 128)
@@ -58,7 +61,7 @@ namespace Toolbox.Library.IO
                         ushort magic = reader.ReadUInt16();
 
                         reader.Position = 0;
-                        if (magic == 0x78da)
+                        if (magic == 0x78da || magic == 0xda78)
                             return true;
                         else
                             return false;
@@ -74,10 +77,13 @@ namespace Toolbox.Library.IO
             {
                 using (var reader = new FileReader(stream, true))
                 {
-                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                    reader.SetByteOrder(true);
+                    uint chunkSize = reader.ReadUInt32();
+                    if (chunkSize == 256)
+                        reader.SetByteOrder(false);
+
                     try
                     {
-                        uint chunkSize = reader.ReadUInt32();
                         uint chunkCount = reader.ReadUInt32();
                         uint decompressedSize = reader.ReadUInt32();
                         uint[] chunkSizes = reader.ReadUInt32s((int)chunkCount); //Not very sure about this
@@ -106,6 +112,7 @@ namespace Toolbox.Library.IO
                             else //If the magic check fails, seek back 2. This shouldn't happen, but just incase
                                 reader.Seek(-2);
                         }
+
                         //Return the decompressed stream with all chunks combined
                         return new MemoryStream(Utils.CombineByteArray(DecompressedChunks.ToArray()));
                     }
@@ -360,12 +367,12 @@ namespace Toolbox.Library.IO
                                 op_len = op_len_ext;
                                 if (op_ofs >= 2)
                                 {
-                                     Loop1(ref flag, ref op_len, ref chunk, ref data, ref output);
+                                    Loop1(ref flag, ref op_len, ref chunk, ref data, ref output);
                                 }
                             }
                         }
 
-                         Loop2(ref flag, ref op_len, ref data, ref output, ref chunk);
+                        Loop2(ref flag, ref op_len, ref data, ref output, ref chunk);
                     }
                 }
 

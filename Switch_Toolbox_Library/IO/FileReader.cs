@@ -215,6 +215,14 @@ namespace Toolbox.Library.IO
             return new Syroot.IOExtension.Half(ReadUInt16());
         }
 
+        public Quaternion ReadQuaternion(bool invert = false)
+        {
+            var quat = new Quaternion(
+                ReadSingle(), ReadSingle(),
+                ReadSingle(), ReadSingle());
+            return invert ? quat.Inverted() : quat;
+        }
+
         public Matrix4 ReadMatrix4(bool SwapRows = false)
         {
             Matrix4 mat4 = new Matrix4();
