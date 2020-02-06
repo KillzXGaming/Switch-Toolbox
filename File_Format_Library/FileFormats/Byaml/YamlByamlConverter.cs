@@ -64,7 +64,7 @@ namespace FirstPlugin
             var buffer = new StringBuilder();
             using (var writer = new StringWriter(buffer)) {
                 stream.Save(writer, true);
-                return writer.ToString(); 
+                return writer.ToString();
             }
         }
 
@@ -89,7 +89,7 @@ namespace FirstPlugin
                     data.byteOrder = bool.Parse(value) ? ByteOrder.BigEndian : ByteOrder.LittleEndian;
                 if (key == "SupportPaths")
                     data.SupportPaths = bool.Parse(value);
-             
+
                 if (child.Value is YamlMappingNode)
                     data.RootNode = ParseNode(child.Value);
                 if (child.Value is YamlSequenceNode)
@@ -200,7 +200,7 @@ namespace FirstPlugin
                 return yamlNode;
             }
             else if (node is IDictionary<string, dynamic>)
-            { 
+            {
                 var yamlNode = new YamlMappingNode();
                 NodePaths.Add(node, yamlNode);
 
@@ -256,9 +256,7 @@ namespace FirstPlugin
 
         private static string ConvertValue(dynamic node)
         {
-            string getBooleanString(Boolean value) => value ? "true" : "false";
-
-            if (node is bool) return getBooleanString((bool)node);
+            if (node is bool) return ((bool)node)? "true" : "false";
             else return node.ToString();
         }
     }
