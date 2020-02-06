@@ -397,7 +397,6 @@
     <Compile Include="GL\BFRES\BFRESRenderBase.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\CMB_Renderer.cs" />
-    <Compile Include="GL\G1M_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />
