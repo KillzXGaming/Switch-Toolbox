@@ -64,7 +64,7 @@ namespace FirstPlugin
                     entry.FileName = $"file {i}";
                     entry.Read(reader);
 
-                    if (entry.Size != 0 && entry.CompFlags == 0)
+                    if (entry.CompFlags != 0)
                         files.Add(entry);
                 }
 
@@ -82,11 +82,12 @@ namespace FirstPlugin
             {
                 DataReader.SeekBegin(files[i].Offset);
                 var magicCheck = DataReader.ReadString(4);
-                Console.WriteLine("MAGIC=" + magicCheck);
                 if (magicCheck == "SARC")
                     files[i].FileName = $"Layout/{files[i].FileName}.szs";
                 else if (magicCheck == "SPKG")
                     files[i].FileName = $"ShaderPackage/{files[i].FileName}.spkg";
+                else if (files[i].CompFlags != 0)
+                    files[i].FileName = $"CompressedFiles/{files[i].FileName}.bin.gz";
                 else
                     files[i].FileName = $"UnknownTypes/{files[i].FileName}.bin";
             }

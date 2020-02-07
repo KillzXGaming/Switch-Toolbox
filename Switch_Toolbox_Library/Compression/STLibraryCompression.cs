@@ -44,9 +44,11 @@ namespace Toolbox.Library.IO
                 using (var reader = new FileReader(stream, true))
                 {
                     reader.Position = 0;
-                    reader.SetByteOrder(true);
-                    uint chunkSize = reader.ReadUInt32();
-                    if (chunkSize == 256)
+                    ushort check = reader.ReadUInt16();
+                    reader.ReadUInt16();
+                    if (check != 0)
+                        reader.SetByteOrder(true);
+                    else
                         reader.SetByteOrder(false);
 
                     uint chunkCount = reader.ReadUInt32();
@@ -77,9 +79,11 @@ namespace Toolbox.Library.IO
             {
                 using (var reader = new FileReader(stream, true))
                 {
-                    reader.SetByteOrder(true);
-                    uint chunkSize = reader.ReadUInt32();
-                    if (chunkSize == 256)
+                    ushort check = reader.ReadUInt16();
+                    reader.ReadUInt16();
+                    if (check != 0)
+                        reader.SetByteOrder(true);
+                    else
                         reader.SetByteOrder(false);
 
                     try
@@ -92,6 +96,8 @@ namespace Toolbox.Library.IO
 
                         List<byte[]> DecompressedChunks = new List<byte[]>();
 
+                        Console.WriteLine($"pos {reader.Position}");
+
                         //Now search for zlibbed chunks
                         while (!reader.EndOfStream)
                         {
@@ -101,7 +107,7 @@ namespace Toolbox.Library.IO
                             ushort magic = reader.ReadUInt16();
 
                             ///Check zlib magic
-                            if (magic == 0x78da)
+                            if (magic == 0x78da || magic == 0xda78)
                             {
                                 var data = STLibraryCompression.ZLIB.Decompress(reader.getSection((uint)pos, size));
                                 DecompressedChunks.Add(data);

@@ -652,18 +652,6 @@ namespace Toolbox.Library
             obj.vertices = GetVertices(msh, transform, obj);
             obj.VertexBufferIndex = Index;
 
-            //Correct the vertex colors because assimp is broken.
-            if (Geomerties.Count > Index)
-            {
-                Console.WriteLine($"v count {obj.vertices.Count}");
-                Console.WriteLine($"color count {Geomerties[Index].ColorList.Count}");
-
-                for (int v = 0; v < Geomerties[Index].ColorList.Count; v++) {
-                    if (v < obj.vertices.Count)
-                        obj.vertices[v].col = Geomerties[Index].ColorList[v];
-                }
-            }
-
             return obj;
         }
 
