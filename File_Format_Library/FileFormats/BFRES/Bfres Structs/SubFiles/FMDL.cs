@@ -1195,10 +1195,6 @@ namespace Bfres.Structs
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
 
-                            shape.OptmizeAttributeFormats();
-                            shape.SaveShape(IsWiiU);
-                            shape.SaveVertexBuffer(IsWiiU);
-
                             if (shape.VertexSkinCount == 1 && shape.BoneIndices.Count > 0)
                             {
                                 int boneIndex = shape.BoneIndices[0];
@@ -1206,6 +1202,10 @@ namespace Bfres.Structs
                             }
 
                             shape.BoneIndex = obj.BoneIndex;
+
+                            shape.OptmizeAttributeFormats();
+                            shape.SaveShape(IsWiiU);
+                            shape.SaveVertexBuffer(IsWiiU);
 
                             if (IsWiiU)
                             {
