@@ -199,24 +199,9 @@ namespace FirstPlugin
                 {
                     STBone bone = new STBone(Skeleton);
                     bone.parentIndex = Joints[i].ParentIndex;
-                    bone.position = new float[]
-                    {
-                        Joints[i].Position.X,
-                        Joints[i].Position.Y,
-                        Joints[i].Position.Z,
-                    };
-                    bone.scale = new float[]
-                    {
-                        Joints[i].Scale.X,
-                        Joints[i].Scale.Y,
-                        Joints[i].Scale.Z,
-                    };
-                    bone.rotation = new float[]
-                    {
-                        Joints[i].Rotation.X,
-                        Joints[i].Rotation.Y,
-                        Joints[i].Rotation.Z,
-                    };
+                    bone.Position = Joints[i].Position;
+                    bone.EulerRotation = Joints[i].Rotation;
+                    bone.Scale = Joints[i].Scale;
                     Skeleton.bones.Add(bone);
                 }
                 Skeleton.reset();

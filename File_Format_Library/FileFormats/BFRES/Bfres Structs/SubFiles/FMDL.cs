@@ -750,15 +750,6 @@ namespace Bfres.Structs
                             else
                                 shape.vertexAttributes = csvsettings.CreateNewAttributes();
 
-                            shape.BoneIndex = 0;
-                            shape.Text = obj.ObjectName;
-                            shape.lodMeshes = obj.lodMeshes;
-                            shape.CreateNewBoundingBoxes();
-                            shape.CreateBoneList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
-                            shape.CreateIndexList(obj, this);
-                            shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
-                            shape.BoneIndices = shape.GetIndices(Skeleton);
-
                             Console.WriteLine($"ForceSkinInfluence {ForceSkinInfluence}");
 
                             if (!ForceSkinInfluence)
@@ -767,6 +758,15 @@ namespace Bfres.Structs
                                 shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
 
                             Console.WriteLine($"VertexSkinCount { shape.VertexSkinCount}");
+
+                            shape.BoneIndex = 0;
+                            shape.Text = obj.ObjectName;
+                            shape.lodMeshes = obj.lodMeshes;
+                            shape.CreateNewBoundingBoxes();
+                            shape.CreateBoneList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
+                            shape.CreateIndexList(obj, this);
+                            shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
+                            shape.BoneIndices = shape.GetIndices(Skeleton);
 
                             if (shape.VertexSkinCount == 1)
                             {
@@ -1178,7 +1178,10 @@ namespace Bfres.Structs
                             else
                                 shape.vertexAttributes = settings.CreateNewAttributes();
 
-                            shape.BoneIndex = obj.BoneIndex;
+                            if (ForceSkinInfluence)
+                                shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
+                            else
+                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
                             if (obj.MaterialIndex + MatStartIndex < materials.Count && obj.MaterialIndex > 0)
                                 shape.MaterialIndex = obj.MaterialIndex + MatStartIndex;
@@ -1192,10 +1195,9 @@ namespace Bfres.Structs
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
 
-                            if (ForceSkinInfluence)
-                                shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
-                            else
-                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+                            shape.OptmizeAttributeFormats();
+                            shape.SaveShape(IsWiiU);
+                            shape.SaveVertexBuffer(IsWiiU);
 
                             if (shape.VertexSkinCount == 1 && shape.BoneIndices.Count > 0)
                             {
@@ -1203,9 +1205,7 @@ namespace Bfres.Structs
                                 shape.BoneIndex = boneIndex;
                             }
 
-                            shape.OptmizeAttributeFormats();
-                            shape.SaveShape(IsWiiU);
-                            shape.SaveVertexBuffer(IsWiiU);
+                            shape.BoneIndex = obj.BoneIndex;
 
                             if (IsWiiU)
                             {
@@ -1316,12 +1316,19 @@ namespace Bfres.Structs
             bn.FlagsTransformCumulative = BoneFlagsTransformCumulative.None;
             bn.Name = bone.Text;
             bn.RigidMatrixIndex = 0;
-            bn.Rotation = new Syroot.Maths.Vector4F(bone.rotation[0],
-                bone.rotation[1], bone.rotation[2], bone.rotation[3]);
-            bn.Position = new Syroot.Maths.Vector3F(bone.position[0],
-                bone.position[1], bone.position[2]);
-            bn.Scale = new Syroot.Maths.Vector3F(bone.scale[0],
-               bone.scale[1], bone.scale[2]);
+            bn.Rotation = new Syroot.Maths.Vector4F(
+                bone.Rotation.X,
+                bone.Rotation.Y,
+                bone.Rotation.Z,
+                bone.Rotation.W);
+            bn.Position = new Syroot.Maths.Vector3F(
+                bone.Position.X,
+                bone.Position.Y,
+                bone.Position.Z);
+            bn.Scale = new Syroot.Maths.Vector3F(
+                bone.Scale.X,
+                bone.Scale.Y,
+                bone.Scale.Z);
             bn.UserData = new List<UserData>();
             bn.UserDataDict = new ResDict();
         }

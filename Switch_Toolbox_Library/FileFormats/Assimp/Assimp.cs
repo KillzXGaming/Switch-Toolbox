@@ -73,7 +73,6 @@ namespace Toolbox.Library
 
                    
                     scene = Importer.ImportFile(FileName, settings.GetFlags());
-
                     if (Utils.GetExtension(FileName) == ".dae")
                         GetRealNodeNames(FileName);
 
@@ -220,16 +219,28 @@ namespace Toolbox.Library
 
             if (scene.RootNode != null)
             {
-                var idenity = Matrix4x4.Identity;
+                var rootTransform = scene.RootNode.Transform;
+                Matrix4 transformMat = AssimpHelper.TKMatrix(rootTransform);
+
+                var scale = transformMat.ExtractScale();
+                var rotation = transformMat.ExtractRotation();
+                var position = transformMat.ExtractTranslation();
+
+                STConsole.WriteLine($"-".Repeat(30));
+                STConsole.WriteLine($"rootTransform {transformMat}");
+                STConsole.WriteLine($"scale {scale}");
+                STConsole.WriteLine($"rotation {rotation}");
+                STConsole.WriteLine($"position {position}");
+                STConsole.WriteLine($"-".Repeat(30));
 
                 var SklRoot = GetSklRoot(scene.RootNode, BoneNames);
                 if (SklRoot != null)
                 {
-                    BuildSkeletonNodes(SklRoot, BoneNames, skeleton, ref idenity);
+                    BuildSkeletonNodes(SklRoot, BoneNames, skeleton, ref rootTransform);
                 }
                 else
                 {
-                    BuildSkeletonNodes(scene.RootNode, BoneNames, skeleton, ref idenity);
+                    BuildSkeletonNodes(scene.RootNode, BoneNames, skeleton, ref rootTransform);
                 }
 
                 skeleton.update();
@@ -513,12 +524,12 @@ namespace Toolbox.Library
             if (IsBone)
             {
                 var idenity = Matrix4x4.Identity;
-                CreateByNode(node, skeleton, ParentArmatureName, SmoothIndex, RigidIndex, true, ref idenity);
+                CreateByNode(node, skeleton, ParentArmatureName, SmoothIndex, RigidIndex, true, ref rootTransform);
             }
             else if (IsRootSkeleton && node.HasChildren)
             {
                 var idenity = Matrix4x4.Identity;
-                CreateByNode(node.Children[0], skeleton, ParentArmatureName, SmoothIndex, RigidIndex, true, ref idenity);
+                CreateByNode(node.Children[0], skeleton, ParentArmatureName, SmoothIndex, RigidIndex, true, ref world);
             }
             else
             {
@@ -535,7 +546,7 @@ namespace Toolbox.Library
             short SmoothIndex, short RigidIndex, bool IsRoot, ref Assimp.Matrix4x4 rootTransform)
         {
             Matrix4x4 trafo = node.Transform;
-            Matrix4x4 world = trafo;
+            Matrix4x4 world = trafo * rootTransform;
             var transformMat = AssimpHelper.TKMatrix(world);
 
             int matchedBoneIndex = skeleton.bones.FindIndex(item => item.Name == node.Name);
@@ -557,13 +568,6 @@ namespace Toolbox.Library
                 bone.SmoothMatrixIndex = (short)skeleton.bones.IndexOf(bone);
                 bone.RigidMatrixIndex = -1; //Todo calculate these
 
-                STConsole.WriteLine($"-".Repeat(30));
-                STConsole.WriteLine($"Processing Bone {bone.Text}");
-                STConsole.WriteLine($"SmoothMatrixIndex {bone.SmoothMatrixIndex}");
-                STConsole.WriteLine($"RigidMatrixIndex {bone.RigidMatrixIndex}");
-                STConsole.WriteLine($"Transform Matrix {transformMat}");
-                STConsole.WriteLine($"-".Repeat(30));
-
                 if (IsRoot)
                 {
                     bone.parentIndex = -1;
@@ -584,19 +588,25 @@ namespace Toolbox.Library
                 var rotation = transformMat.ExtractRotation();
                 var position = transformMat.ExtractTranslation();
 
+                STConsole.WriteLine($"-".Repeat(30));
+                STConsole.WriteLine($"Processing Bone {bone.Text}");
+                STConsole.WriteLine($"scale {scale}");
+                STConsole.WriteLine($"rotation {rotation}");
+                STConsole.WriteLine($"position {position}");
+                STConsole.WriteLine($"-".Repeat(30));
+
                 var rotEular = STMath.ToEulerAngles(rotation);
 
-                bone.position = new float[] { position.X, position.Y, position.Z };
-                bone.scale = new float[] { scale.X, scale.Y, scale.Z };
-                bone.rotation = new float[] { rotEular.X, rotEular.Y, rotEular.Z, 1 };
+                bone.Transform = transformMat;
             }
             else
             {
                 STConsole.WriteLine($"Duplicate node name found for bone {node.Name}!", Color.Red);
             }
 
+            var identity = Matrix4x4.Identity;
             foreach (Node child in node.Children)
-                CreateByNode(child, skeleton, ParentArmatureName, SmoothIndex, RigidIndex, false, ref rootTransform);
+                CreateByNode(child, skeleton, ParentArmatureName, SmoothIndex, RigidIndex, false, ref identity);
         }
         public STGenericObject CreateGenericObject(Node parentNode,Mesh msh, int Index, Matrix4 transform)
         {
@@ -623,6 +633,8 @@ namespace Toolbox.Library
             obj.HasTans = msh.HasTangentBasis;
             obj.HasBitans = msh.HasTangentBasis;
             obj.HasVertColors = msh.HasVertexColors(0);
+            obj.HasVertColors2 = msh.HasVertexColors(1);
+
             obj.ObjectName = msh.Name;
             if (parentNode != null && msh.Name == string.Empty)
                 obj.ObjectName = parentNode.Name;
@@ -640,6 +652,18 @@ namespace Toolbox.Library
             obj.vertices = GetVertices(msh, transform, obj);
             obj.VertexBufferIndex = Index;
 
+            //Correct the vertex colors because assimp is broken.
+            if (Geomerties.Count > Index)
+            {
+                Console.WriteLine($"v count {obj.vertices.Count}");
+                Console.WriteLine($"color count {Geomerties[Index].ColorList.Count}");
+
+                for (int v = 0; v < Geomerties[Index].ColorList.Count; v++) {
+                    if (v < obj.vertices.Count)
+                        obj.vertices[v].col = Geomerties[Index].ColorList[v];
+                }
+            }
+
             return obj;
         }
 
@@ -651,8 +675,7 @@ namespace Toolbox.Library
             {
                 foreach (Face f in msh.Faces)
                 {
-                    if (f.HasIndices)
-                    {
+                    if (f.HasIndices) {
                         foreach (int indx in f.Indices)
                             faces.Add(indx);
                     }
@@ -710,6 +733,8 @@ namespace Toolbox.Library
             {
                 Vertex vert = new Vertex();
 
+                Console.WriteLine($"{msh.Name} position {msh.Vertices[v]}");
+
                 if (msh.HasVertices)
                     vert.pos = Vector3.TransformPosition(AssimpHelper.FromVector(msh.Vertices[v]), transform);
                 if (msh.HasNormals)
@@ -722,10 +747,11 @@ namespace Toolbox.Library
                     vert.uv2 = new Vector2(msh.TextureCoordinateChannels[2][v].X, msh.TextureCoordinateChannels[2][v].Y);
                 if (msh.HasTangentBasis)
                     vert.tan = new Vector4(msh.Tangents[v].X, msh.Tangents[v].Y, msh.Tangents[v].Z, 1);
-                if (msh.HasVertexColors(0))
-                {
-                    vert.col = new Vector4(msh.VertexColorChannels[0][v].R, msh.VertexColorChannels[0][v].G, msh.VertexColorChannels[0][v].B, msh.VertexColorChannels[0][v].A);
-                }
+                //Todo Assimp always reads vertex colors wrong!
+                //    if (msh.HasVertexColors(0))
+                //        vert.col = new Vector4(msh.VertexColorChannels[0][v].R, msh.VertexColorChannels[0][v].G, msh.VertexColorChannels[0][v].B, msh.VertexColorChannels[0][v].A);
+                //     if (msh.HasVertexColors(1))
+                //      vert.col2 = new Vector4(msh.VertexColorChannels[1][v].R, msh.VertexColorChannels[1][v].G, msh.VertexColorChannels[1][v].B, msh.VertexColorChannels[1][v].A);
                 if (msh.HasTangentBasis)
                     vert.bitan = new Vector4(msh.BiTangents[v].X, msh.BiTangents[v].Y, msh.BiTangents[v].Z, 1);
                 vertices.Add(vert);

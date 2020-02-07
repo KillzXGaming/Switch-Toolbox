@@ -745,20 +745,19 @@ namespace Bfres.Structs
         {
             Text = genericBone.Text;
 
-            position = new float[3];
-            rotation = new float[4];
-            scale = new float[3];
+            Position = new OpenTK.Vector3(
+                genericBone.Position.X,
+                genericBone.Position.Y,
+                genericBone.Position.Z);
+            EulerRotation = new OpenTK.Vector3(
+                genericBone.Rotation.X,
+                genericBone.Rotation.Y,
+                genericBone.Rotation.Z);
+            Scale = new OpenTK.Vector3(
+                genericBone.Scale.X,
+                genericBone.Scale.Y,
+                genericBone.Scale.Z);
 
-            position[0] = genericBone.position[0];
-            position[1] = genericBone.position[1];
-            position[2] = genericBone.position[2];
-            rotation[0] = genericBone.rotation[0];
-            rotation[1] = genericBone.rotation[1];
-            rotation[2] = genericBone.rotation[2];
-            rotation[3] = genericBone.rotation[3];
-            scale[0] = genericBone.scale[0];
-            scale[1] = genericBone.scale[1];
-            scale[2] = genericBone.scale[2];
             RotationType = genericBone.RotationType;
             parentIndex = genericBone.parentIndex;
             RigidMatrixIndex = genericBone.RigidMatrixIndex;
@@ -769,9 +768,9 @@ namespace Bfres.Structs
         {
             if (BoneU != null)
             {
-                BoneU.Position = new Syroot.Maths.Vector3F(position[0], position[1], position[2]);
-                BoneU.Scale = new Syroot.Maths.Vector3F(scale[0], scale[1], scale[2]);
-                BoneU.Rotation = new Syroot.Maths.Vector4F(rotation[0], rotation[1], rotation[2], rotation[3]);
+                BoneU.Position = new Syroot.Maths.Vector3F(Position.X, Position.Y, Position.Z);
+                BoneU.Scale = new Syroot.Maths.Vector3F(Scale.X, Scale.Y, Scale.Z);
+                BoneU.Rotation = new Syroot.Maths.Vector4F(Rotation.X, Rotation.Y, Rotation.Z, Rotation.W);
                 BoneU.Name = Text;
                 BoneU.Flags = FlagVisible ? ResU.BoneFlags.Visible : 0;
                 BoneU.ParentIndex = (short)parentIndex;
@@ -782,9 +781,9 @@ namespace Bfres.Structs
             }
             else
             {
-                Bone.Position = new Syroot.Maths.Vector3F(position[0], position[1], position[2]);
-                Bone.Scale = new Syroot.Maths.Vector3F(scale[0], scale[1], scale[2]);
-                Bone.Rotation = new Syroot.Maths.Vector4F(rotation[0], rotation[1], rotation[2], rotation[3]);
+                Bone.Position = new Syroot.Maths.Vector3F(Position.X, Position.Y, Position.Z);
+                Bone.Scale = new Syroot.Maths.Vector3F(Scale.X, Scale.Y, Scale.Z);
+                Bone.Rotation = new Syroot.Maths.Vector4F(Rotation.X, Rotation.Y, Rotation.Z, Rotation.W);
                 Bone.Name = Text;
                 Bone.Flags = FlagVisible ? BoneFlags.Visible : 0;
                 Bone.ParentIndex = (short)parentIndex;

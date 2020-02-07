@@ -214,32 +214,31 @@ namespace FirstPlugin.PunchOutWii
                                     reader.ReadUInt32(); //unk
                                     reader.ReadUInt32(); //unk
                                     reader.ReadSingle(); //0
+
+                                    STBone bone = new STBone(Skeleton);
                                     var Scale = new OpenTK.Vector3(
                                        reader.ReadSingle(),
                                        reader.ReadSingle(),
                                        reader.ReadSingle());
                                     reader.ReadSingle(); //0
-                                    var Rotate = new OpenTK.Vector3(
+                                    bone.EulerRotation = new OpenTK.Vector3(
                                        reader.ReadSingle(),
                                        reader.ReadSingle(),
                                        reader.ReadSingle());
                                     reader.ReadSingle(); //0
-                                    var Position = new OpenTK.Vector3(
+                                    bone.Position = new OpenTK.Vector3(
                                         reader.ReadSingle(),
                                         reader.ReadSingle(),
                                         reader.ReadSingle());
                                     reader.ReadSingle(); //1
 
-                                    STBone bone = new STBone(Skeleton);
                                     bone.Text = HashID.ToString("X");
                                     if (NLG_Common.HashNames.ContainsKey(HashID))
                                         bone.Text = NLG_Common.HashNames[HashID];
                                     else
                                         Console.WriteLine($"bone hash {HashID}");
 
-                                    bone.position = new float[3] { Position.X, Position.Z, -Position.Y };
-                                    bone.rotation = new float[4] { Rotate.X, Rotate.Z, -Rotate.Y, 1 };
-                                    bone.scale = new float[3] { 0.2f, 0.2f, 0.2f };
+                                    bone.Scale = new Vector3(0.2f, 0.2f, 0.2f);
 
                                     bone.RotationType = STBone.BoneRotationType.Euler;
                                     Skeleton.bones.Add(bone);

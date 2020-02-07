@@ -41,19 +41,18 @@ namespace FirstPlugin.CtrLibrary
 
             parentIndex = bone.ParentIndex;
             RotationType = BoneRotationType.Euler;
-            position = new float[3];
-            scale = new float[3];
-            rotation = new float[4];
-            scale[0] = bone.Scale.X;
-            scale[1] = bone.Scale.Y;
-            scale[2] = bone.Scale.Z;
-            rotation[0] = bone.Rotation.X;
-            rotation[1] = bone.Rotation.Y;
-            rotation[2] = bone.Rotation.Z;
-            rotation[3] = 1;
-            position[0] = bone.Translation.X;
-            position[1] = bone.Translation.Y;
-            position[2] = bone.Translation.Z;
+            Position = new OpenTK.Vector3(
+                bone.Translation.X,
+                bone.Translation.Y,
+                bone.Translation.Z);
+            EulerRotation = new OpenTK.Vector3(
+                bone.Rotation.X,
+                bone.Rotation.Y,
+                bone.Rotation.Z);
+            Scale = new OpenTK.Vector3(
+                bone.Scale.X,
+                bone.Scale.Y,
+                bone.Scale.Z);
         }
     }
 }

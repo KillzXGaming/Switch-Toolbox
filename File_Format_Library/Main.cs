@@ -406,14 +406,13 @@ namespace FirstPlugin
             Formats.Add(typeof(GCDisk));
             Formats.Add(typeof(TPL));
             Formats.Add(typeof(BFTTF));
-            Formats.Add(typeof(BFOTF));
             Formats.Add(typeof(HedgehogLibrary.PACx));
-            Formats.Add(typeof(BinGzArchive));
             Formats.Add(typeof(GAR));
             Formats.Add(typeof(CTXB));
             Formats.Add(typeof(CSAB));
             Formats.Add(typeof(CMB));
             Formats.Add(typeof(G1T));
+            Formats.Add(typeof(HyruleWarriors.G1M.G1M));
             Formats.Add(typeof(LayoutBXLYT.Cafe.BFLYT));
             Formats.Add(typeof(LayoutBXLYT.BCLYT));
             Formats.Add(typeof(LayoutBXLYT.BRLYT));
@@ -449,6 +448,7 @@ namespace FirstPlugin
             Formats.Add(typeof(CtrLibrary.BCH));
             Formats.Add(typeof(LZS));
             Formats.Add(typeof(WTA));
+            Formats.Add(typeof(BinGzArchive));
 
 
 
@@ -458,10 +458,8 @@ namespace FirstPlugin
             //Unfinished wip formats not ready for use
             if (Runtime.DEVELOPER_DEBUG_MODE)
             {
-                Formats.Add(typeof(XLINK)); 
                 Formats.Add(typeof(BFSAR));
                 Formats.Add(typeof(GFA));
-                Formats.Add(typeof(HyruleWarriors.G1M.G1M));
             }
 
 

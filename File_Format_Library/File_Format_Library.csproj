@@ -229,8 +229,12 @@
     <Compile Include="FileFormats\BCH\Wrappers\SkeletalAnimation\H3DSkeletalAnimWrapper.cs" />
     <Compile Include="FileFormats\Byaml\XmlByamlConverter.cs" />
     <Compile Include="FileFormats\Byaml\YamlByamlConverter.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1M\G1MCommon.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1M\NUNO.cs" />
+    <Compile Include="FileFormats\HyruleWarriors\G1M\NUNV.cs" />
     <Compile Include="FileFormats\LM1\LM1_MDL.cs" />
     <Compile Include="FileFormats\MarioParty\HSF.cs" />
+    <Compile Include="FileFormats\Message\MSYT.cs" />
     <Compile Include="FileFormats\MKAGPDX\LM2_ARCADE_Model.cs" />
     <Compile Include="FileFormats\NLG\LM2\LM2_Material.cs" />
     <Compile Include="FileFormats\NLG\LM3\LM3_ChunkTable.cs" />
@@ -318,7 +322,6 @@
     <Compile Include="FileFormats\Effects\PTCL_3DS.cs" />
     <Compile Include="FileFormats\Effects\PTCL_WiiU.cs" />
     <Compile Include="FileFormats\Font\BFFNT.cs" />
-    <Compile Include="FileFormats\Font\BFOTF.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
     <Compile Include="FileFormats\Font\BffntCharSet2Xlor.cs" />
     <Compile Include="FileFormats\Font\BFTTF.cs" />
@@ -397,6 +400,7 @@
     <Compile Include="GL\BFRES\BFRESRenderBase.cs" />
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\CMB_Renderer.cs" />
+    <Compile Include="GL\G1M_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
     <Compile Include="GL\LM2_Render.cs" />

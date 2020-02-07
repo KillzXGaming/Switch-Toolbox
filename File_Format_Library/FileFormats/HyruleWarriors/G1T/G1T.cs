@@ -63,6 +63,8 @@ namespace FirstPlugin
             G1TFile.Read(new FileReader(stream));
             for (int i = 0; i < G1TFile.Textures.Count; i++)
                 Nodes.Add(G1TFile.Textures[i]);
+
+            PluginRuntime.G1TextureContainers.Add(this);
         }
 
         public void Save(System.IO.Stream stream)
@@ -73,7 +75,7 @@ namespace FirstPlugin
 
         public void Unload()
         {
-
+            PluginRuntime.G1TextureContainers.Remove(this);
         }
 
         public virtual ToolStripItem[] GetContextMenuItems()

@@ -611,11 +611,9 @@ namespace FirstPlugin.NLG
                             if (HashList.ContainsKey(bone.HashID))
                                 stBone.Text = HashList[bone.HashID];
 
-                            stBone.position = new float[3] { bone.Translate.X, bone.Translate.Z, -bone.Translate.Y };
-                            stBone.rotation = new float[4] { bone.Rotate.X, bone.Rotate.Z, -bone.Rotate.Y, 1 };
-
-                            //   stBone.scale = new float[3] { bone.Scale.X, bone.Scale.Y, bone.Scale.Z };
-                            stBone.scale = new float[3] { 0.2f, 0.2f, 0.2f };
+                            stBone.Position = bone.Translate;
+                            stBone.EulerRotation = bone.Rotate;
+                            stBone.Scale = new Vector3(0.2f, 0.2f, 0.2f);
 
                             stBone.RotationType = STBone.BoneRotationType.Euler;
                         }

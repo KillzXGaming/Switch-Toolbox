@@ -36,17 +36,17 @@ namespace Toolbox.Library.Animations
 
                     if (seanim.AnimType == AnimationType.Relative)
                     {
-                        PositionX = genericBone.position[0];
-                        PositionY = genericBone.position[1];
-                        PositionZ = genericBone.position[2];
+                        PositionX = genericBone.Position.X;
+                        PositionY = genericBone.Position.Y;
+                        PositionZ = genericBone.Position.Z;
 
-                        RotationX = genericBone.rotation[0];
-                        RotationY = genericBone.rotation[1];
-                        RotationZ = genericBone.rotation[2];
+                        RotationX = genericBone.EulerRotation.X;
+                        RotationY = genericBone.EulerRotation.Y;
+                        RotationZ = genericBone.EulerRotation.Z;
 
-                        ScaleX = genericBone.scale[0];
-                        ScaleY = genericBone.scale[1];
-                        ScaleZ = genericBone.scale[2];
+                        ScaleX = genericBone.Scale.X;
+                        ScaleY = genericBone.Scale.Y;
+                        ScaleZ = genericBone.Scale.Z;
                     }
 
                     System.Console.WriteLine(bone);

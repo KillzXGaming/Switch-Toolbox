@@ -75,12 +75,20 @@ namespace Toolbox.Library
             bone.Text = seBone.BoneName;
             bone.parentIndex = seBone.BoneParent;
             bone.RotationType = STBone.BoneRotationType.Euler;
-
-            Vector3 rotEular = ToEular(seBone.LocalRotation);
            
-            bone.position = new float[] { (float)seBone.LocalPosition.X, (float)seBone.LocalPosition.Y, (float)seBone.LocalPosition.Z };
-            bone.scale = new float[] { (float)seBone.Scale.X, (float)seBone.Scale.Y, (float)seBone.Scale.Z };
-            bone.rotation = new float[] { rotEular.X, rotEular.Y, rotEular.Z, 0 };
+            bone.Position = new Vector3(
+                (float)seBone.LocalPosition.X,
+                (float)seBone.LocalPosition.Y, 
+                (float)seBone.LocalPosition.Z);
+            bone.Scale = new Vector3(
+                (float)seBone.Scale.X, 
+                (float)seBone.Scale.Y,
+                (float)seBone.Scale.Z);
+            bone.Rotation = new Quaternion(
+                (float)seBone.LocalRotation.X,
+                (float)seBone.LocalRotation.Y,
+                (float)seBone.LocalRotation.Z, 
+                (float)seBone.LocalRotation.W);
 
             return bone;
         }
@@ -207,32 +215,6 @@ namespace Toolbox.Library
                                (float)(value.G / 255),
                                (float)(value.B / 255),
                                (float)(value.A / 255));
-        }
-
-        private static Vector3 ToEular(SELib.Utilities.Quaternion selibQuat)
-        {
-            OpenTK.Quaternion q = new Quaternion((float)selibQuat.X, (float)selibQuat.Y, (float)selibQuat.Z, (float)selibQuat.W);
-            Matrix4 mat = Matrix4.CreateFromQuaternion(q);
-            float x, y, z;
-            y = (float)Math.Asin(Clamp(mat.M13, -1, 1));
-
-            if (Math.Abs(mat.M13) < 0.99999)
-            {
-                x = (float)Math.Atan2(-mat.M23, mat.M33);
-                z = (float)Math.Atan2(-mat.M12, mat.M11);
-            }
-            else
-            {
-                x = (float)Math.Atan2(mat.M32, mat.M22);
-                z = 0;
-            }
-            return new Vector3(x, y, z) * -1;
-        }
-        private static float Clamp(float v, float min, float max)
-        {
-            if (v < min) return min;
-            if (v > max) return max;
-            return v;
         }
     }
 }

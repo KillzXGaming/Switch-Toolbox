@@ -296,11 +296,12 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                                         if (NLG_Common.HashNames.ContainsKey(HashID))
                                             bone.Text = NLG_Common.HashNames[HashID];
 
-                                        bone.position = new float[3] { Position.X, Position.Z, -Position.Y };
-                                        bone.rotation = new float[4] { Rotate.X, Rotate.Z, -Rotate.Y, 1 };
-                                        bone.scale = new float[3] { 0.2f, 0.2f, 0.2f };
 
+                                        bone.Position = Position;
+                                        bone.EulerRotation = Rotate;
+                                        bone.Scale = new OpenTK.Vector3(0.2f, 0.2f, 0.2f);
                                         bone.RotationType = STBone.BoneRotationType.Euler;
+
                                         currentModel.Skeleton.bones.Add(bone);
                                     }
 

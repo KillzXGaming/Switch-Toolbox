@@ -57,6 +57,7 @@ namespace Toolbox.Library.IO
         {
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
 
+            Console.WriteLine("bytes to struct isBigEndian " + isBigEndian);
             AdjustBigEndianByteOrder(typeof(T), buffer, isBigEndian);
 
             fixed (byte* pBuffer = buffer) 
@@ -82,6 +83,8 @@ namespace Toolbox.Library.IO
             if (!isBigEndian)
                 return;
 
+            Console.WriteLine("type " + type + " " + type.IsPrimitive);
+
             if (type.IsPrimitive)
             {
                 if (type == typeof(short) || type == typeof(ushort) ||
@@ -92,6 +95,8 @@ namespace Toolbox.Library.IO
                     return;
                 }
             }
+
+            Console.WriteLine("GetFields " + type.GetFields().Length);
 
             foreach (var field in type.GetFields())
             {

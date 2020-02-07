@@ -148,9 +148,9 @@ namespace FirstPlugin
 
                         if (node.RotationX.HasKeys || node.RotationY.HasKeys || node.RotationZ.HasKeys)
                         {
-                            float x = node.RotationX.HasKeys ? node.RotationX.GetFrameValue(Frame) : b.rotation[0];
-                            float y = node.RotationY.HasKeys ? node.RotationY.GetFrameValue(Frame) : b.rotation[1];
-                            float z = node.RotationZ.HasKeys ? node.RotationZ.GetFrameValue(Frame) : b.rotation[2];
+                            float x = node.RotationX.HasKeys ? node.RotationX.GetFrameValue(Frame) : b.EulerRotation.X;
+                            float y = node.RotationY.HasKeys ? node.RotationY.GetFrameValue(Frame) : b.EulerRotation.Y;
+                            float z = node.RotationZ.HasKeys ? node.RotationZ.GetFrameValue(Frame) : b.EulerRotation.Z;
                             b.rot = EulerToQuat(z, y, x);
                         }
                     }

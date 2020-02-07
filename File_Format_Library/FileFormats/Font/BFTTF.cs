@@ -17,7 +17,7 @@ namespace FirstPlugin
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Binary Cafe True Type Font" };
-        public string[] Extension { get; set; } = new string[] { "*.bfttf" };
+        public string[] Extension { get; set; } = new string[] { "*.bfttf", "*.bfotf" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }

@@ -174,30 +174,31 @@ namespace FirstPlugin
 
                 if (HasSkeleton)
                 {
-                    foreach (var bone in header.SectionData.SkeletonChunk.Bones)
+                    var bonesOrdered = header.SectionData.SkeletonChunk.Bones.OrderBy(x => x.ID).ToList(); 
+                    foreach (var bone in bonesOrdered)
                     {
                         STBone genericBone = new STBone(Skeleton);
                         genericBone.parentIndex = bone.ParentIndex;
-                        genericBone.position = new float[3];
-                        genericBone.scale = new float[3];
-                        genericBone.rotation = new float[4];
                         genericBone.Checked = true;
 
                         genericBone.Text = $"Bone {bone.ID}";
                         genericBone.RotationType = STBone.BoneRotationType.Euler;
 
-                        genericBone.position[0] = bone.Translation.X;
-                        genericBone.position[1] = bone.Translation.Y;
-                        genericBone.position[2] = bone.Translation.Z;
-
-                        genericBone.scale[0] = bone.Scale.X;
-                        genericBone.scale[1] = bone.Scale.Y;
-                        genericBone.scale[2] = bone.Scale.Z;
-
-                        genericBone.rotation[0] = bone.Rotation.X;
-                        genericBone.rotation[1] = bone.Rotation.Y;
-                        genericBone.rotation[2] = bone.Rotation.Z;
-
+                        genericBone.Position = new OpenTK.Vector3(
+                            bone.Translation.X,
+                            bone.Translation.Y,
+                            bone.Translation.Z
+                        );
+                        genericBone.EulerRotation = new OpenTK.Vector3(
+                                      bone.Rotation.X,
+                                      bone.Rotation.Y,
+                                      bone.Rotation.Z
+                        );
+                        genericBone.Scale = new OpenTK.Vector3(
+                                      bone.Scale.X,
+                                      bone.Scale.Y,
+                                      bone.Scale.Z
+                        );
                         Skeleton.bones.Add(genericBone);
                     }
 
@@ -289,8 +290,11 @@ namespace FirstPlugin
                         List<ushort> SkinnedBoneTable = new List<ushort>();
                         foreach (var prim in shape.Primatives)
                         {
-                            if (prim.BoneIndexTable != null)
+                            if (prim.BoneIndexTable != null) {
                                 SkinnedBoneTable.AddRange(prim.BoneIndexTable);
+                                foreach (var bone in prim.BoneIndexTable)
+                                    Console.WriteLine($"{genericMesh.Text} SkeletonB {Skeleton.bones[(int)bone].Text} index {bone}");
+                            }
                         }
 
                         //Now load the vertex and face data
@@ -363,12 +367,11 @@ namespace FirstPlugin
                                     var BoneIndices = shape.BoneIndices.VertexData[v];
                                     for (int j = 0; j < shape.boneDimension; j++)
                                     {
-                                        if (BoneIndices[j] < SkinnedBoneTable.Count)
-                                            vert.boneIds.Add((int)SkinnedBoneTable[(int)BoneIndices[j]]);
-                                     //   Console.WriteLine("boneIds " + BoneIndices[j]);
+                                          if (BoneIndices[j] < SkinnedBoneTable.Count)
+                                               vert.boneIds.Add((int)SkinnedBoneTable[(int)BoneIndices[j]]);
+                                        //   Console.WriteLine("boneIds " + BoneIndices[j]);
 
                                         //    ushort index = shape.Primatives[0].BoneIndexTable[(uint)BoneIndices[j]];
-                                     //   vert.boneIds.Add((int)BoneIndices[j]);
                                     }
                                 }
                                 if (shape.BoneWeights.VertexData != null && HasWeights && shape.BoneWeights.VertexData.Length > v)
@@ -376,7 +379,6 @@ namespace FirstPlugin
                                     var BoneWeights = shape.BoneWeights.VertexData[v];
                                     for (int j = 0; j < shape.boneDimension; j++)
                                     {
-                                        Console.WriteLine("weight " + BoneWeights[j]);
                                         vert.boneWeights.Add(BoneWeights[j]);
                                     }
                                 }

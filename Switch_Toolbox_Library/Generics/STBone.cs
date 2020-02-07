@@ -29,28 +29,91 @@ namespace Toolbox.Library
         public short RigidMatrixIndex;
         public short SmoothMatrixIndex;
 
-        public float[] position = new float[] { 0, 0, 0 };
-        public float[] rotation = new float[] { 0, 0, 0 };
-        public float[] scale = new float[] { 1, 1, 1 };
+        private Matrix4 transform;
+        private Quaternion rotation;
+        private Vector3 eulerRotation;
+
+        /// <summary>
+        /// Gets or sets the transformation of the bone.
+        /// Setting this will adjust the 
+        /// <see cref="Scale"/>, 
+        /// <see cref="Rotation"/>, and 
+        /// <see cref="Position"/> properties.
+        /// </summary>
+        public Matrix4 Transform
+        {
+            set
+            {
+             //   Scale = value.ExtractScale();
+              //  Rotation = value.ExtractRotation();
+             //   Position = value.ExtractTranslation();
+                transform = value;
+            }
+            get
+            {
+                return transform;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the position of the bone in world space.
+        /// </summary>
+        public Vector3 Position { get; set; }
+
+        /// <summary>
+        /// Gets or sets the scale of the bone in world space.
+        /// </summary>
+        public Vector3 Scale { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rotation of the bone in world space.
+        /// </summary>
+        public Quaternion Rotation
+        {
+            get { return rotation; }
+            set
+            {
+                if (RotationType == BoneRotationType.Euler)
+                {
+                    eulerRotation = new Vector3(value.X, value.Y, value.Z);
+                    rotation = STMath.FromEulerAngles(eulerRotation);
+                }
+                else
+                {
+                    eulerRotation = STMath.ToEulerAngles(Rotation);
+                    rotation = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="Rotation"/> using euler method. 
+        /// </summary>
+        public Vector3 EulerRotation
+        {
+            get { return eulerRotation; }
+            set {
+                eulerRotation = value;
+                rotation = STMath.FromEulerAngles(value); 
+            }
+        }
 
         public Vector3 pos = Vector3.Zero, sca = new Vector3(1f, 1f, 1f);
         public Quaternion rot = Quaternion.FromMatrix(Matrix3.Zero);
-        public Matrix4 Transform, invert;
-
+        public Matrix4 invert;
 
         public Matrix4 GetTransform()
         {
-            Vector3 mPos = new Vector3(position[0], position[1],position[2]);
+            return Matrix4.CreateScale(Scale) *
+                   Matrix4.CreateFromQuaternion(Rotation) * 
+                   Matrix4.CreateTranslation(Position);
+        }
 
-            Quaternion mRot;
-            if (RotationType == STBone.BoneRotationType.Quaternion)
-                mRot = (STSkeleton.FromQuaternionAngles(rotation[2], rotation[1],rotation[0], rotation[3]));
-            else
-                mRot = (STSkeleton.FromEulerAngles(rotation[2],rotation[1],rotation[0]));
-
-            Vector3 mSca = new Vector3(scale[0], scale[1],scale[2]);
-
-            return Matrix4.CreateScale(mSca) * Matrix4.CreateFromQuaternion(mRot) * Matrix4.CreateTranslation(mPos);
+        public void FromTransform(Matrix4 transform)
+        {
+            Scale = transform.ExtractScale();
+            Position = transform.ExtractTranslation();
+            Rotation = transform.ExtractRotation();
         }
 
         //Used for shifting models with the bones in the shader
@@ -71,72 +134,12 @@ namespace Toolbox.Library
             return sca;
         }
 
-        public void FromTransform(Matrix4 Transform)
-        {
-            var pos = Transform.ExtractTranslation();
-            var quat = Transform.ExtractRotation();
-            var scale = Transform.ExtractScale();
-
-            position[0] = pos.X;
-            position[1] = pos.X;
-            position[2] = pos.Z;
-
-            var eul = Toolbox.Library.Animations.ANIM.quattoeul(quat);
-            rotation = new float[] { eul.X, eul.Y, eul.Z, 1 };
-
-            scale[0] = scale.X;
-            scale[1] = scale.X;
-            scale[2] = scale.Z;
-        }
-
-        private void ApplyTransforms()
-        {
-            position = new float[] { pos.X, pos .Y, pos .Z};
-            if (RotationType == BoneRotationType.Quaternion)
-                rotation = new float[] { rot.X, rot.Y, rot.Z, rot.W };
-            else
-            {
-                var eul = Toolbox.Library.Animations.ANIM.quattoeul(rot);
-                rotation = new float[] { eul.X, eul.Y, eul.Z, 1 };
-            }
-
-            scale = new float[] { sca.X, sca.Y, sca.Z };
-        }
-
         public int GetIndex()
         {
             if (skeletonParent != null)
                 return skeletonParent.bones.IndexOf(this);
             else
                 return -1;
-        }
-
-        public void ConvertToQuaternion()
-        {
-            if (RotationType == BoneRotationType.Quaternion)
-                return;
-
-            RotationType = STBone.BoneRotationType.Quaternion;
-
-            ApplyTransforms();
-
-            //Update matrices
-            skeletonParent.reset();
-            skeletonParent.update();
-        }
-
-        public void ConvertToEular()
-        {
-            if (RotationType == BoneRotationType.Euler)
-                return;
-
-            RotationType = STBone.BoneRotationType.Euler;
-
-            ApplyTransforms();
-
-            //Update matrices
-            skeletonParent.reset();
-            skeletonParent.update();
         }
 
         public override void OnClick(TreeView treeView)
@@ -183,9 +186,9 @@ namespace Toolbox.Library
         public STBone(STSkeleton skl)
         {
             skeletonParent = skl;
+
             ImageKey = "bone";
             SelectedImageKey = "bone";
-
             Checked = true;
         }
 
@@ -193,6 +196,7 @@ namespace Toolbox.Library
         {
             ImageKey = "bone";
             SelectedImageKey = "bone";
+            Checked = true;
         }
 
         public void RenderLegacy()

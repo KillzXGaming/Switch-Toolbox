@@ -479,18 +479,9 @@ namespace FirstPlugin
                     boneNode.RotationType = STBone.BoneRotationType.Euler;
                     boneNode.Checked = true;
                     boneNode.Text = Node.Name;
-                    boneNode.position = new float[3];
-                    boneNode.scale = new float[3];
-                    boneNode.rotation = new float[4];
-                    boneNode.position[0] = Node.Translation.X;
-                    boneNode.position[1] = Node.Translation.Y;
-                    boneNode.position[2] = Node.Translation.Z;
-                    boneNode.rotation[0] = Node.Rotation.X;
-                    boneNode.rotation[1] = Node.Rotation.Y;
-                    boneNode.rotation[2] = Node.Rotation.Z;
-                    boneNode.scale[0] = Node.Scale.X;
-                    boneNode.scale[1] = Node.Scale.Y;
-                    boneNode.scale[2] = Node.Scale.Z;
+                    boneNode.Position = Node.Translation;
+                    boneNode.EulerRotation = Node.Rotation;
+                    boneNode.Scale = Node.Scale;
 
                     if (Node.IsBone)
                         Skeleton.bones.Add(boneNode);

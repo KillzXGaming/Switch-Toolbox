@@ -347,11 +347,6 @@ namespace Toolbox
                 editor.Show();
 
                 ((ObjectEditor)editor).SelectFirstNode();
-
-                if (file is TreeNodeFile)
-                {
-                    ((TreeNodeFile)file).OnAfterAdded();
-                }
             }
             else
             {
@@ -360,8 +355,10 @@ namespace Toolbox
                 else
                     AddObjectEditorFile(((TreeNode)file), (ObjectEditor)editor, false);
             }
-
             SetFormatSettings(GetActiveIFileFormat());
+
+            if (file is TreeNodeFile)
+                ((TreeNodeFile)file).OnAfterAdded();
         }
 
         private void AddObjectEditorFile(TreeNode file, ObjectEditor editor, bool ClearFiles)

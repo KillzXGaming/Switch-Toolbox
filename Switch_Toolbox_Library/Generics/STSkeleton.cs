@@ -287,6 +287,10 @@ namespace Toolbox.Library
             return bone;
         }
 
+        public Matrix4 GetBoneTransform(int index) {
+            return GetBoneTransform(bones[index]);
+        }
+
         public Matrix4 GetBoneTransform(STBone Bone)
         {
             if (Bone == null)
@@ -314,17 +318,19 @@ namespace Toolbox.Library
         {
             for (int i = 0; i < bones.Count; i++)
             {
-                bones[i].pos = new Vector3(bones[i].position[0], bones[i].position[1], bones[i].position[2]);
-
-                if (bones[i].RotationType == STBone.BoneRotationType.Quaternion)
-                {
-                    bones[i].rot = (FromQuaternionAngles(bones[i].rotation[2], bones[i].rotation[1], bones[i].rotation[0], bones[i].rotation[3]));
-                }
-                else
-                {
-                    bones[i].rot = (FromEulerAngles(bones[i].rotation[2], bones[i].rotation[1], bones[i].rotation[0]));
-                }
-                bones[i].sca = new Vector3(bones[i].scale[0], bones[i].scale[1], bones[i].scale[2]);
+                bones[i].pos = new Vector3(
+                    bones[i].Position.X,
+                    bones[i].Position.Y,
+                    bones[i].Position.Z);
+                bones[i].rot = new Quaternion(
+                    bones[i].Rotation.X, 
+                    bones[i].Rotation.Y, 
+                    bones[i].Rotation.Z, 
+                    bones[i].Rotation.W);
+                bones[i].sca = new Vector3(
+                    bones[i].Scale.X, 
+                    bones[i].Scale.Y, 
+                    bones[i].Scale.Z);
             }
             update(true);
             for (int i = 0; i < bones.Count; i++)

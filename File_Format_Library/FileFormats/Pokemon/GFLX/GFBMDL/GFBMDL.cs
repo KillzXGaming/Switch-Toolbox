@@ -370,9 +370,9 @@ namespace FirstPlugin
                 List<int> SkinningIndices = new List<int>();
                 foreach (var genericBone in skeleton.bones)
                 {
-                    var scale = genericBone.scale;
-                    var trans = genericBone.position;
-                    var rot = genericBone.rotation;
+                    var scale = genericBone.Scale;
+                    var trans = genericBone.Position;
+                    var rot = genericBone.EulerRotation;
 
                     Bone bone = new Bone();
                     bone.Name = genericBone.Text;
@@ -380,9 +380,9 @@ namespace FirstPlugin
                     bone.Parent = genericBone.parentIndex;
                     bone.Zero = 0;
                     bone.Visible = false;
-                    bone.Scale = new GFMDLStructs.Vector3(scale[0], scale[1], scale[2]);
-                    bone.Rotation = new GFMDLStructs.Vector3(rot[0], rot[1], rot[2]);
-                    bone.Translation = new GFMDLStructs.Vector3(trans[0], trans[1], trans[2]);
+                    bone.Scale = new GFMDLStructs.Vector3(scale.X, scale.Y, scale.Z);
+                    bone.Rotation = new GFMDLStructs.Vector3(rot.X, rot.Y, rot.Z);
+                    bone.Translation = new GFMDLStructs.Vector3(trans.X, trans.Y, trans.Z);
                     bone.RadiusStart = new GFMDLStructs.Vector3(0, 0, 0);
                     bone.RadiusEnd = new GFMDLStructs.Vector3(0, 0, 0);
 
@@ -524,7 +524,7 @@ namespace FirstPlugin
 
                     for (int j = 0; j < mesh.vertices[i].boneNames?.Count; j++)
                     {
-                        string boneName = mesh.vertices[i].boneNames[j];
+                        string boneName = mesh.vertices[i].boneNames[j] ;
                         int boneIndex = Model.Model.Bones.IndexOf(Model.Model.Bones.Where(p => p.Name == boneName).FirstOrDefault());
 
                         if (boneIndex != -1 && skinningIndices.IndexOf(boneIndex) != -1)

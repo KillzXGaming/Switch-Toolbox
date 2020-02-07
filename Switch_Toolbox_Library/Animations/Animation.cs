@@ -202,30 +202,6 @@ namespace Toolbox.Library.Animations
 
                 return sca;
             }
-
-            public void SetKeyFromBone(float frame, STBone bone)
-            {
-                Vector3 rot = ANIM.quattoeul(bone.rot);
-                if (rot.X != bone.rotation[0] || rot.Y != bone.rotation[1] || rot.Z != bone.rotation[2])
-                {
-                    XROT.GetKeyFrame(frame).Value = bone.rot.X;
-                    YROT.GetKeyFrame(frame).Value = bone.rot.Y;
-                    ZROT.GetKeyFrame(frame).Value = bone.rot.Z;
-                    WROT.GetKeyFrame(frame).Value = bone.rot.W;
-                }
-                if (bone.pos.X != bone.position[0] || bone.pos.Y != bone.position[1] || bone.pos.Z != bone.position[2])
-                {
-                    XPOS.GetKeyFrame(frame).Value = bone.pos.X;
-                    YPOS.GetKeyFrame(frame).Value = bone.pos.Y;
-                    ZPOS.GetKeyFrame(frame).Value = bone.pos.Z;
-                }
-                if (bone.sca.X != bone.scale[0] || bone.sca.Y != bone.scale[1] || bone.sca.Z != bone.scale[2])
-                {
-                    XSCA.GetKeyFrame(frame).Value = bone.sca.X;
-                    YSCA.GetKeyFrame(frame).Value = bone.sca.Y;
-                    ZSCA.GetKeyFrame(frame).Value = bone.sca.Z;
-                }
-            }
         }
 
         public void ReplaceMe(Animation a)
@@ -291,29 +267,22 @@ namespace Toolbox.Library.Animations
 
             public KeyFrame GetKeyFrame(float frame, bool InsertNewKey = true)
             {
-                KeyFrame key = null;
-                int i;
-                for (i = 0; i < Keys.Count; i++)
+                if (Keys.Count == 0) return null;
+                KeyFrame k1 = (KeyFrame)Keys[0], k2 = (KeyFrame)Keys[0];
+                foreach (KeyFrame k in Keys)
                 {
-                    if (Keys[i].Frame == frame)
+                    if (k.Frame < frame)
                     {
-                        key = Keys[i];
-                        break;
+                        k1 = k;
                     }
-                    if (Keys[i].Frame > frame)
+                    else
                     {
+                        k2 = k;
                         break;
                     }
                 }
 
-                if (key == null && InsertNewKey)
-                {
-                    key = new KeyFrame();
-                    key.Frame = frame;
-                    Keys.Insert(i, key);
-                }
-
-                return key;
+                return k1;
             }
 
             public bool SetValue(float Value, int frame)
@@ -330,36 +299,6 @@ namespace Toolbox.Library.Animations
                 return false;
             }
 
-            public KeyFrame GetLeft(int frame)
-            {
-                KeyFrame prev = Keys[0];
-
-                for (int i = 0; i < Keys.Count - 1; i++)
-                {
-                    KeyFrame key = Keys[i];
-                    if (key.Frame > frame && prev.Frame <= frame)
-                        break;
-                    prev = key;
-                }
-
-                return prev;
-            }
-            public KeyFrame GetRight(int frame)
-            {
-                KeyFrame cur = Keys[0];
-                KeyFrame prev = Keys[0];
-
-                for (int i = 1; i < Keys.Count; i++)
-                {
-                    KeyFrame key = Keys[i];
-                    cur = key;
-                    if (key.Frame > frame && prev.Frame <= frame)
-                        break;
-                    prev = key;
-                }
-
-                return cur;
-            }
 
             int LastFound = 0;
             float LastFrame;
@@ -368,70 +307,51 @@ namespace Toolbox.Library.Animations
                 if (Keys.Count == 0)
                     return 0;
 
-                KeyFrame k1 = (KeyFrame)Keys[0], k2 = (KeyFrame)Keys[0];
-                int i = 0;
-                if (frame < LastFrame)
-                    LastFound = 0;
-                for (i = LastFound; i < Keys.Count; i++)
+                float startFrame = Keys.First().Frame;
+
+                KeyFrame LK = Keys.First();
+                KeyFrame RK = Keys.Last();
+
+                foreach (KeyFrame keyFrame in Keys)
                 {
-                    LastFound = i % (Keys.Count);
-                    KeyFrame k = Keys[LastFound];
-                    if (k.Frame < frame)
+                    if (keyFrame.Frame <= frame) LK = keyFrame;
+                    if (keyFrame.Frame >= frame && keyFrame.Frame < RK.Frame) RK = keyFrame;
+                }
+
+                if (LK.Frame != RK.Frame)
+                {
+                    //  float FrameDiff = frame - LK.Frame;
+                    //  float Weight = 1.0f / (RK.Frame - LK.Frame);
+                    //  float Weight = FrameDiff / (RK.Frame - LK.Frame);
+
+                    float FrameDiff = frame - LK.Frame;
+                    float Weight = FrameDiff / (RK.Frame - LK.Frame);
+
+                    Console.WriteLine($"frame diff {FrameDiff} frame {frame} LK {LK.Frame} RK {RK} ratio {Weight}");
+
+                    switch (InterpolationType)
                     {
-                        k1 = k;
+                        case InterpolationType.CONSTANT: return LK.Value;
+                        case InterpolationType.STEP: return LK.Value;
+                        case InterpolationType.LINEAR: return InterpolationHelper.Lerp(LK.Value, RK.Value, Weight);
+                        case InterpolationType.HERMITE:
+                            //   return InterpolationHelper.GetCubicValue(Weight, LK.Value, LK.Slope1, LK.Slope2, LK.Delta);
+                            //   return CubicEval(LK.Value, LK.Slope1, LK.Slope2, LK.Delta, ratio);
+                            float length = RK.Frame - LK.Frame;
+
+                            float val = InterpolationHelper.HermiteInterpolate(frame,
+                                LK.Frame, 
+                                RK.Frame,
+                                RK.Slope1,
+                                LK.Slope2,
+                                LK.Value,
+                                RK.Value);
+
+                            return val;
                     }
-                    else
-                    {
-                        k2 = k;
-                        break;
-                    }
                 }
-                LastFound -= 1;
-                if (LastFound < 0)
-                    LastFound = 0;
-                if (LastFound >= Keys.Count - 2)
-                    LastFound = 0;
-                LastFrame = frame;
-
-                if (k1.InterType == InterpolationType.CONSTANT)
-                    return k1.Value;
-                if (k1.InterType == InterpolationType.STEP)
-                    return k1.Value;
-                if (k1.InterType == InterpolationType.LINEAR)
-                {
-                    return Lerp(k1.Value, k2.Value, k1.Frame, k2.Frame, frame);
-                }
-                if (k1.InterType == InterpolationType.HERMITE)
-                {
-                    float val = Hermite(frame, k1.Frame, k2.Frame, k1.In, k1.Out != -1 ? k1.Out : k2.In, k1.Value, k2.Value) * (k1.Degrees ? (float)Math.PI / 180 : 1);
-                    if (float.IsNaN(val)) val = k1._value;
-
-
-                    if (frame == k1.Frame) return k1.Value;
-                    if (frame == k2.Frame) return k2.Value;
-
-                    float distance = frame - k1.Frame;
-                    float invDuration = 1f / (k2.Frame - k1.Frame);
-                    float t = distance * invDuration;
-
-                    float p0 = k1.Value;
-                    float p1 = k2.Value;
-                    float s0 = k1.Out * distance;
-                    float s1 = k2.In * distance;
-                    float cf0 = (p0 * 2) + (p1 * -2) + (s0 * 1) + (s1 * 1);
-                    float cf1 = (p0 * -3) + (p1 * 3) + (s0 * -2) + (s1 * -1);
-                    float cf2 = (p0 * 0) + (p1 * 0) + (s0 * 1) + (s1 * 0);
-                    float cf3 = (p0 * 1) + (p1 * 0) + (s0 * 0) + (s1 * 0);
-
-                    return val;//k1.Out != -1 ? k1.Out : 
-
-                    return CubicEval(cf0, cf1, cf2, cf3, t);
-                }
-
-                return k1.Value;
+                return LK.Value;
             }
-
-
 
             public KeyFrame[] GetFrame(float frame)
             {
@@ -596,9 +516,9 @@ namespace Toolbox.Library.Animations
                     else
                     if (node.RotType == RotationType.EULER)
                     {
-                        float x = node.XROT.HasAnimation() ? node.XROT.GetValue(Frame) : b.rotation[0];
-                        float y = node.YROT.HasAnimation() ? node.YROT.GetValue(Frame) : b.rotation[1];
-                        float z = node.ZROT.HasAnimation() ? node.ZROT.GetValue(Frame) : b.rotation[2];
+                        float x = node.XROT.HasAnimation() ? node.XROT.GetValue(Frame) : b.EulerRotation.X;
+                        float y = node.YROT.HasAnimation() ? node.YROT.GetValue(Frame) : b.EulerRotation.Y;
+                        float z = node.ZROT.HasAnimation() ? node.ZROT.GetValue(Frame) : b.EulerRotation.Z;
                         b.rot = EulerToQuat(z, y, x);
                     }
                 }
@@ -644,32 +564,13 @@ namespace Toolbox.Library.Animations
 
         public static float CubicEval(float cf0, float cf1, float cf2, float cf3, float t)
         {
-            return (((cf0 * t + cf1) * t + cf2) * t + cf3);
+            return ((cf3 * t + cf2) * t) * t + (cf1 * t + cf0);
+
+           // return (((cf0 * t + cf1) * t + cf2) * t + cf3);
         }
 
-        public static float Hermite(float frame, float frame1, float frame2, float outslope, float inslope, float val1, float val2)
+        public static float Hermite(float frame, float frame1, float frame2, float outSlope, float inSlope, float val1, float val2)
         {
-            /*float offset = frame - frame1;
-            float span = frame2 - frame1;
-            if (offset == 0) return val1;
-            if (offset == span) return val2;
-            float diff = val2 - val1;
-            float time = offset / span;
-            
-            //bool prevDouble = prevframe1 >= 0 && prevframe1 == frame1 - 1;
-            //bool nextDouble = next._next._index >= 0 && next._next._index == next._index + 1;
-            bool oneApart = frame2 == frame1 + 1;
-            
-            float tan = outslope, nextTan = inslope;
-            if (oneApart)
-                tan = (val2 - val1) / (frame2 - frame1);
-            //if (oneApart)
-                nextTan = (val2 - val1) / (frame2 - frame1);
-            float inv = time - 1.0f; //-1 to 0
-            return val1
-                + (offset * inv * ((inv * tan) + (time * nextTan)))
-                + ((time * time) * (3.0f - 2.0f * time) * diff);*/
-
             if (frame == frame1) return val1;
             if (frame == frame2) return val2;
 
@@ -677,7 +578,7 @@ namespace Toolbox.Library.Animations
             float invDuration = 1f / (frame2 - frame1);
             float t = distance * invDuration;
             float t1 = t - 1f;
-            return (val1 + ((((val1 - val2) * ((2f * t) - 3f)) * t) * t)) + ((distance * t1) * ((t1 * outslope) + (t * inslope)));
+            return (val1 + ((((val1 - val2) * ((2f * t) - 3f)) * t) * t)) + ((distance * t1) * ((t1 * outSlope) + (t * inSlope)));
         }
 
         public static float Lerp(float av, float bv, float v0, float v1, float t)

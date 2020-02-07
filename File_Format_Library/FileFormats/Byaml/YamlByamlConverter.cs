@@ -26,24 +26,25 @@ namespace FirstPlugin
 
         public static string ToYaml(ByamlExt.Byaml.BymlFileData data)
         {
-            /*     var settings = new SerializerSettings()
-                 {
-                     EmitTags = false,
-                     EmitAlias = false,
-                     DefaultStyle = SharpYaml.YamlStyle.Flow,
-                     SortKeyForMapping = false,
-                     EmitShortTypeName = true,
-                     EmitCapacityForList = false,
-                     LimitPrimitiveFlowSequence = 4,
-                 };
+            var settings = new SerializerSettings()
+            {
+                EmitTags = false,
+                EmitAlias = false,
+                DefaultStyle = SharpYaml.YamlStyle.Flow,
+                SortKeyForMapping = false,
+                EmitShortTypeName = true,
+                EmitCapacityForList = false,
+                LimitPrimitiveFlowSequence = 4,
+            };
 
-                 settings.RegisterTagMapping("!u", typeof(uint));
-                 settings.RegisterTagMapping("!l", typeof(int));
-                 settings.RegisterTagMapping("!d", typeof(double));
-                 settings.RegisterTagMapping("!ul", typeof(ulong));
-                 settings.RegisterTagMapping("!ll", typeof(long));
+            settings.RegisterTagMapping("!u", typeof(uint));
+            settings.RegisterTagMapping("!l", typeof(int));
+            settings.RegisterTagMapping("!d", typeof(double));
+            settings.RegisterTagMapping("!ul", typeof(ulong));
+            settings.RegisterTagMapping("!ll", typeof(long));
 
-                 var serializer = new Serializer(settings);*/
+            var serializer = new Serializer(settings);
+            return serializer.Serialize(data);
 
             NodePaths.Clear();
             refNodeId = 0;
@@ -256,7 +257,8 @@ namespace FirstPlugin
 
         private static string ConvertValue(dynamic node)
         {
-            if (node is bool) return ((bool)node)? "true" : "false";
+            if (node is bool) return ((bool)node) ? "true" : "false";
+            else if (node is float) return string.Format("{0:0.000.00}", node);
             else return node.ToString();
         }
     }

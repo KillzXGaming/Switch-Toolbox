@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HyruleWarriors.G1M
 {
-    public enum VertexAttriubte
+    public enum VertexAttriubte : byte
     {
         Position,
         Weights,
@@ -18,5 +18,12 @@ namespace HyruleWarriors.G1M
         Bitangent,
         Color = 0x0A,
         Fog = 0x0B,
+    }
+
+    public enum FaceType : uint
+    {
+        Byte = 0x8,
+        UInt16 = 0x10,
+        UInt32 = 0x20,
     }
 }

@@ -160,7 +160,6 @@ namespace FirstPlugin
             {
                 if (bone.Parent == null)
                     SkeletonFolder.Nodes.Add(bone);
-
             }
 
             for (int i = 0; i < BMDFile.Shapes.Shapes.Count; i++)
@@ -284,6 +283,10 @@ namespace FirstPlugin
                     {
                         int matIndex = node.Parent.Index;
                         ((BMDShapeWrapper)Meshes[node.Index]).SetMaterial((STGenericMaterial)MaterialFolder.Nodes[matIndex]);
+
+                        ((BMDShapeWrapper)Meshes[node.Index]).Nodes.Add(MaterialFolder.Nodes[matIndex].Text);
+
+                        Console.WriteLine("" + '"' + MaterialFolder.Nodes[matIndex].Text + '"' + ",");
                     }
                 }
             }
@@ -294,21 +297,37 @@ namespace FirstPlugin
             for (int i = 1; i < INF1.FlatNodes.Count; i++)
             {
                 SuperBMDLib.Scenegraph.SceneNode curNode = INF1.FlatNodes[i];
+                if (curNode.Type == SuperBMDLib.Scenegraph.Enums.NodeType.Joint)
+                {
+                    var Bone = flatSkeleton[curNode.Index];
+                    var stBone = new STBone(skeleton);
+                    stBone.Text = Bone.Name;
+                    stBone.FromTransform(Bone.TransformationMatrix);
+                    skeleton.bones.Add(stBone);
+                }
+            }
+
+            int boneIndex = 0;
+            for (int i = 1; i < INF1.FlatNodes.Count; i++)
+            {
+                SuperBMDLib.Scenegraph.SceneNode curNode = INF1.FlatNodes[i];
 
                 if (curNode.Type == SuperBMDLib.Scenegraph.Enums.NodeType.Joint)
                 {
                     var Bone = flatSkeleton[curNode.Index];
 
-                    var stBone = new STBone(skeleton);
-                    stBone.Text = Bone.Name;
-                    stBone.FromTransform(Bone.TransformationMatrix);
+                    var stBone = skeleton.bones[boneIndex];
+                    if (curNode.Parent != null && curNode.Parent.Type == SuperBMDLib.Scenegraph.Enums.NodeType.Joint) {
+                        var parent = flatSkeleton[curNode.Parent.Index];
 
-                    if (Bone.Parent != null)
-                        stBone.parentIndex = flatSkeleton.IndexOf(Bone.Parent);
+                        var boneParent = skeleton.GetBone(parent.Name);
+                        if (boneParent != null)
+                            stBone.parentIndex = skeleton.bones.IndexOf(boneParent);
+                    }
                     else
                         stBone.parentIndex = -1;
 
-                    skeleton.bones.Add(stBone);
+                    boneIndex++;
                 }
             }
         }

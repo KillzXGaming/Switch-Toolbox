@@ -68,18 +68,15 @@ namespace Toolbox.Library.Animations
                         if (time == 0)
                         {
                             STBone b = BoneList[int.Parse(args[0])];
-                            b.position = new float[3];
-                            b.rotation = new float[3];
-                            b.scale = new float[3];
-                            b.position[0] = float.Parse(args[1]);
-                            b.position[1] = float.Parse(args[2]);
-                            b.position[2] = float.Parse(args[3]);
-                            b.rotation[0] = float.Parse(args[4]);
-                            b.rotation[1] = float.Parse(args[5]);
-                            b.rotation[2] = float.Parse(args[6]);
-                            b.scale[0] = 1f;
-                            b.scale[1] = 1f;
-                            b.scale[2] = 1f;
+                            b.Position = new Vector3(
+                                float.Parse(args[1]),
+                                float.Parse(args[2]),
+                                float.Parse(args[3]));
+                            b.EulerRotation = new Vector3(
+                                float.Parse(args[4]),
+                                float.Parse(args[5]),
+                                float.Parse(args[6]));
+                            b.Scale = Vector3.One;
 
                             b.pos = new Vector3(float.Parse(args[1]), float.Parse(args[2]), float.Parse(args[3]));
                             b.rot = STSkeleton.FromEulerAngles(float.Parse(args[6]), float.Parse(args[5]), float.Parse(args[4]));
@@ -113,7 +110,13 @@ namespace Toolbox.Library.Animations
                 for (int i = 0; i < Bones.bones.Count; i++)
                 {
                     STBone b = Bones.bones[i];
-                    o.AppendFormat("{0} {1} {2} {3} {4} {5} {6}\n", i, b.position[0], b.position[1], b.position[2], b.rotation[0], b.rotation[1], b.rotation[2]);
+                    o.AppendFormat("{0} {1} {2} {3} {4} {5} {6}\n", i, 
+                        b.Position.X,
+                        b.Position.Y,
+                        b.Position.Z,
+                        b.EulerRotation.X,
+                        b.EulerRotation.Y,
+                        b.EulerRotation.Z);
                 }
                 o.AppendLine("end");
             }
@@ -182,18 +185,15 @@ namespace Toolbox.Library.Animations
                     if (readBones && frame == 0)
                     {
                         STBone b = vbn.bones[int.Parse(args[0])];
-                        b.position = new float[3];
-                        b.rotation = new float[3];
-                        b.scale = new float[3];
-                        b.position[0] = float.Parse(args[1]);
-                        b.position[1] = float.Parse(args[2]);
-                        b.position[2] = float.Parse(args[3]);
-                        b.rotation[0] = float.Parse(args[4]);
-                        b.rotation[1] = float.Parse(args[5]);
-                        b.rotation[2] = float.Parse(args[6]);
-                        b.scale[0] = 1f;
-                        b.scale[1] = 1f;
-                        b.scale[2] = 1f;
+                        b.Position = new Vector3(
+                            float.Parse(args[1]),
+                            float.Parse(args[2]),
+                            float.Parse(args[3]));
+                        b.EulerRotation = new Vector3(
+                            float.Parse(args[4]),
+                            float.Parse(args[5]),
+                            float.Parse(args[6]));
+                        b.Scale = Vector3.One;
 
                         b.pos = new Vector3(float.Parse(args[1]), float.Parse(args[2]), float.Parse(args[3]));
                         b.rot = STSkeleton.FromEulerAngles(float.Parse(args[6]), float.Parse(args[5]), float.Parse(args[4]));

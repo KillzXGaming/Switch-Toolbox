@@ -356,7 +356,10 @@ namespace FirstPlugin
                         matTexture.Type = STGenericMatTexture.TextureType.Normal;
                         break;
                     case "AmbientTex":
-                        matTexture.Type = STGenericMatTexture.TextureType.AO;
+                        if (SwitchParams.ContainsKey("AmbientMapEnable")) {
+                            if (SwitchParams["AmbientMapEnable"].Value)
+                                matTexture.Type = STGenericMatTexture.TextureType.AO;
+                        }
                         break;
                     case "LightTblTex":
                         break;
@@ -441,30 +444,29 @@ namespace FirstPlugin
 
             if (bone.Translation != null)
             {
-                position = new float[3]
-                { bone.Translation.X,
+                Position = new OpenTK.Vector3(
+                  bone.Translation.X,
                   bone.Translation.Y,
                   bone.Translation.Z
-                };
+                );
             }
 
             if (bone.Rotation != null)
             {
-                rotation = new float[4]
-                { bone.Rotation.X,
+                EulerRotation = new OpenTK.Vector3(
+                  bone.Rotation.X,
                   bone.Rotation.Y,
-                  bone.Rotation.Z,
-                  1.0f,
-                };
+                  bone.Rotation.Z
+                );
             }
 
             if (bone.Scale != null)
             {
-                scale = new float[3]
-                { bone.Scale.X,
+                Scale = new OpenTK.Vector3(
+                  bone.Scale.X,
                   bone.Scale.Y,
                   bone.Scale.Z
-                 };
+                 );
             }
         }
     }

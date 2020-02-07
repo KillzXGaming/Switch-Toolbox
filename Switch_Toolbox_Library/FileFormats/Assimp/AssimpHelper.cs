@@ -11,15 +11,8 @@ namespace Toolbox.Library
 {
     public static class AssimpHelper
     {
-        public static Matrix4x4 GetBoneMatrix(STBone bone)
-        {
-            var pos = Matrix4x4.FromTranslation(new Vector3D(bone.position[0], bone.position[1], bone.position[2]));
-            var rotx = Matrix4x4.FromRotationX(bone.rotation[0]);
-            var roty = Matrix4x4.FromRotationY(bone.rotation[1]);
-            var rotz = Matrix4x4.FromRotationZ(bone.rotation[2]);
-            var sca = Matrix4x4.FromScaling(new Vector3D(bone.scale[0], bone.scale[1], bone.scale[2]));
-
-            return sca * (rotx * roty * rotz) * pos;
+        public static Matrix4x4 GetBoneMatrix(STBone bone) {
+            return AssimpFromTKMatrix(bone.Transform);
         }
 
         public static string GetSaveFilter()
@@ -33,11 +26,6 @@ namespace Toolbox.Library
              "3DS |*.3ds|" +
              "JSON WebGL |*.json|" +
              "All files(*.*)|*.*";
-        }
-
-        public static Syroot.Maths.Matrix3x4 CalculateInverseMatrix(STBone bone)
-        {
-            return FromAssimpMatrix(AssimpCalculateInverseMatrix(bone));
         }
 
         public static Syroot.Maths.Matrix3x4 FromAssimpMatrix(Assimp.Matrix4x4 mat)
@@ -62,30 +50,6 @@ namespace Toolbox.Library
             mat4.M44 = mat.D4;*/
 
             return mat4;
-        }
-
-        public static Assimp.Matrix4x4 AssimpCalculateInverseMatrix(STBone bone)
-        {
-            Assimp.Matrix4x4 transf;
-
-            //Get parent transform for a smooth matrix
-            if (bone.Parent != null && bone.Parent is STBone)
-                transf = AssimpCalculateInverseMatrix((STBone)bone.Parent);
-            else
-                transf = Assimp.Matrix4x4.Identity;
-
-            //Now calculate the matrix with TK matrices
-            var trans = Assimp.Matrix4x4.FromTranslation(new Vector3D(bone.position[0], bone.position[1], bone.position[2]));
-            var scale = Assimp.Matrix4x4.FromScaling(new Vector3D(bone.scale[0], bone.scale[1], bone.scale[2]));
-            var rotX = Assimp.Matrix4x4.FromRotationX(bone.rotation[0]);
-            var rotY = Assimp.Matrix4x4.FromRotationY(bone.rotation[1]);
-            var rotZ = Assimp.Matrix4x4.FromRotationZ(bone.rotation[2]);
-
-            var result = scale * (rotX * rotY * rotZ) * trans;
-            result.Inverse();
-
-            return transf;
-
         }
 
         public static Vector3 FromVector(Vector3D vec)

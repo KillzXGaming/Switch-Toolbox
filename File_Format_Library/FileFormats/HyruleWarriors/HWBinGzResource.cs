@@ -7,6 +7,7 @@ using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using HyruleWarriors.G1M;
 
 namespace FirstPlugin
 {
@@ -28,7 +29,13 @@ namespace FirstPlugin
 
         public bool Identify(System.IO.Stream stream)
         {
-            return (FileName.Contains(".bin.gz"));
+            using (var reader = new FileReader(stream, true))
+            {
+                bool isTexture = reader.CheckSignature(4, "G1TG") || reader.CheckSignature(4, "GT1G");
+                bool isModel = reader.CheckSignature(4, "_M1G") || reader.CheckSignature(4, "G1M_");
+
+                return (FileName.Contains(".bin.gz")) && !isTexture && !isModel;
+            }
         }
 
         public Type[] Types
@@ -63,6 +70,20 @@ namespace FirstPlugin
 
         public bool isBigEndian = true;
 
+
+        public override void OnAfterAdded()
+        {
+            var editor = LibraryGUI.GetObjectEditor();
+            foreach (var file in files)
+            {
+                if (file.FileFormat == null)
+                    continue;
+
+                if (file.FileFormat is G1M)
+                    editor.SelectNode((G1M)file.FileFormat);
+            }
+        }
+
         public void Load(Stream stream)
         {
             CanSave = true;
@@ -94,16 +115,21 @@ namespace FirstPlugin
                     reader.SeekBegin(Offsets[i]);
                     fileEntry.FileData = reader.ReadBytes((int)Sizes[i]);
                     fileEntry.FileName = $"File {i}";
+                    fileEntry.OpenFileFormatOnLoad = true;
 
                     switch (Magic)
                     {
                         case "GT1G": //Textures
                         case "G1TG": //Textures
-                            G1T GITextureU = new G1T();
-                            GITextureU.FileName = $"TextureContainer{i}.gt1";
-                            GITextureU.Load(new MemoryStream(fileEntry.FileData));
-                            Nodes.Add(GITextureU);
-                            fileEntry.FileFormat = GITextureU;
+                            fileEntry.FileName = $"TextureContainer_{i}.gt1";
+                            break;
+                        case "_M1G":
+                        case "G1M_":
+                            fileEntry.FileName = $"Model_{i}.g1m";
+                            break;
+                        case "_A1G":
+                        case "G1A_":
+                            fileEntry.FileName = $"Animation_{i}.g1a";
                             break;
                         default:
                             break;

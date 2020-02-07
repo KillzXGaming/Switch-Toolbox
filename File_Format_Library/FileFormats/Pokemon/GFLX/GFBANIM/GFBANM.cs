@@ -225,7 +225,7 @@ namespace FirstPlugin
                         }
                         else
                         {
-                            b.rot = EulerToQuat(b.rotation[2], b.rotation[1], b.rotation[0]);
+                            b.rot = EulerToQuat(b.EulerRotation.Z, b.EulerRotation.Y, b.EulerRotation.X);
                         }
                     }
                 }

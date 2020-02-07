@@ -576,23 +576,24 @@ namespace FirstPlugin
             if (SetParent)
                 bone.parentIndex = bn.ParentIndex;
 
-            bone.scale = new float[3];
-            bone.rotation = new float[4];
-            bone.position = new float[3];
             if (bn.FlagsRotation == BoneFlagsRotation.Quaternion)
                 bone.RotationType = STBone.BoneRotationType.Quaternion;
             else
                 bone.RotationType = STBone.BoneRotationType.Euler;
-            bone.scale[0] = bn.Scale.X;
-            bone.scale[1] = bn.Scale.Y;
-            bone.scale[2] = bn.Scale.Z;
-            bone.rotation[0] = bn.Rotation.X;
-            bone.rotation[1] = bn.Rotation.Y;
-            bone.rotation[2] = bn.Rotation.Z;
-            bone.rotation[3] = bn.Rotation.W;
-            bone.position[0] = bn.Position.X;
-            bone.position[1] = bn.Position.Y;
-            bone.position[2] = bn.Position.Z;
+
+            bone.Position = new OpenTK.Vector3(
+                           bn.Position.X,
+                           bn.Position.Y,
+                           bn.Position.Z);
+            bone.Rotation = new OpenTK.Quaternion(
+                          bn.Rotation.X,
+                          bn.Rotation.Y,
+                          bn.Rotation.Z,
+                          bn.Rotation.W);
+            bone.Scale = new OpenTK.Vector3(
+                          bn.Scale.X,
+                          bn.Scale.Y,
+                          bn.Scale.Z);
         }
 
         public static void SaveSkeleton(FSKL fskl, List<STBone> Bones)

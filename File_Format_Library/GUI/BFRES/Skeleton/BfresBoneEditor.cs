@@ -131,45 +131,61 @@ namespace FirstPlugin
 
         private void SetBoneTransform(BfresBone bn)
         {
-            bn.position[0] = (float)posXUD.Value;
-            bn.position[1] = (float)posYUD.Value;
-            bn.position[2] = (float)posZUD.Value;
+            bn.Position = new OpenTK.Vector3(
+                 (float)posXUD.Value,
+                 (float)posYUD.Value,
+                 (float)posZUD.Value
+            );
 
-            bn.rotation[0] = (float)RotXUD.Value;
-            bn.rotation[1] = (float)RotYUD.Value;
-            bn.rotation[2] = (float)RotZUD.Value;
-            bn.rotation[3] = (float)RotWUD.Value;
-
-            bn.scale[0] = (float)ScaXUD.Value;
-            bn.scale[1] = (float)ScaYUD.Value;
-            bn.scale[2] = (float)ScaZUD.Value;
-
-            if (bn.BoneU != null)
+            if ((BoneFlagsRotation)rotModeCB.SelectedItem == BoneFlagsRotation.Quaternion)
             {
-                bn.BoneU.Position = new Syroot.Maths.Vector3F(bn.position[0], bn.position[1], bn.position[2]);
-                bn.BoneU.Rotation = new Syroot.Maths.Vector4F(bn.rotation[0], bn.rotation[1], bn.rotation[2], bn.rotation[3]);
-                bn.BoneU.Scale = new Syroot.Maths.Vector3F(bn.scale[0], bn.scale[1], bn.scale[2]);
+                bn.Rotation = new OpenTK.Quaternion(
+                     (float)RotXUD.Value,
+                     (float)RotYUD.Value,
+                     (float)RotZUD.Value,
+                     (float)RotWUD.Value
+                );
             }
             else
             {
-                bn.Bone.Position = new Syroot.Maths.Vector3F(bn.position[0], bn.position[1], bn.position[2]);
-                bn.Bone.Rotation = new Syroot.Maths.Vector4F(bn.rotation[0], bn.rotation[1], bn.rotation[2], bn.rotation[3]);
-                bn.Bone.Scale = new Syroot.Maths.Vector3F(bn.scale[0], bn.scale[1], bn.scale[2]);
+                bn.EulerRotation = new OpenTK.Vector3(
+                     (float)RotXUD.Value,
+                     (float)RotYUD.Value,
+                     (float)RotZUD.Value
+                );
             }
+
+            bn.Scale = new OpenTK.Vector3(
+                 (float)ScaXUD.Value,
+                 (float)ScaYUD.Value,
+                 (float)ScaZUD.Value
+            );
+
+            bn.GenericToBfresBone();
         }
 
         private void GetBoneTransform(STBone bn)
         {
-            posXUD.Value = (decimal)bn.position[0];
-            posYUD.Value = (decimal)bn.position[1];
-            posZUD.Value = (decimal)bn.position[2];
-            RotXUD.Value = (decimal)bn.rotation[0];
-            RotYUD.Value = (decimal)bn.rotation[1];
-            RotZUD.Value = (decimal)bn.rotation[2];
-            RotWUD.Value = (decimal)bn.rotation[3];
-            ScaXUD.Value = (decimal)bn.scale[0];
-            ScaYUD.Value = (decimal)bn.scale[1];
-            ScaZUD.Value = (decimal)bn.scale[2];
+            posXUD.Value = (decimal)bn.Position.X;
+            posYUD.Value = (decimal)bn.Position.Y;
+            posZUD.Value = (decimal)bn.Position.Z;
+            if (bn.RotationType == STBone.BoneRotationType.Quaternion) {
+                RotXUD.Value = (decimal)bn.Rotation.X;
+                RotYUD.Value = (decimal)bn.Rotation.Y;
+                RotZUD.Value = (decimal)bn.Rotation.Z;
+                RotWUD.Value = (decimal)bn.Rotation.W;
+            }
+            else
+            {
+                RotXUD.Value = (decimal)bn.EulerRotation.X;
+                RotYUD.Value = (decimal)bn.EulerRotation.Y;
+                RotZUD.Value = (decimal)bn.EulerRotation.Z;
+                RotWUD.Value = (decimal)1.0f;
+            }
+
+            ScaXUD.Value = (decimal)bn.Scale.X;
+            ScaYUD.Value = (decimal)bn.Scale.Y;
+            ScaZUD.Value = (decimal)bn.Scale.Z;
         }
 
         private void rotMeasureCB_SelectedIndexChanged(object sender, EventArgs e)
@@ -206,17 +222,7 @@ namespace FirstPlugin
             if (activeBone == null || !IsLoaded)
                 return;
 
-            if ((BoneFlagsRotation)rotModeCB.SelectedItem == BoneFlagsRotation.Quaternion)
-            {
-                activeBone.ConvertToQuaternion();
-                SetBoneTransform(activeBone);
-            }
-            else
-            {
-                activeBone.ConvertToEular();
-                SetBoneTransform(activeBone);
-            }
-
+            SetBoneTransform(activeBone);
             LibraryGUI.UpdateViewport();
         }
 

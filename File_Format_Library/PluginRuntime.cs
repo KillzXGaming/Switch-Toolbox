@@ -30,6 +30,8 @@ namespace FirstPlugin
         public static List<CtrLibrary.BCHGroupNode> bchTexContainers = new List<CtrLibrary.BCHGroupNode>();
         public static List<NLG.StrikersRLT.TextureEntry> stikersTextures = new List<NLG.StrikersRLT.TextureEntry>();
 
+        public static List<G1T> G1TextureContainers = new List<G1T>();
+
         public static string ExternalFMATPath = "";
         public static string OdysseyGamePath = "";
         public static string Mk8GamePath = "";

@@ -7,7 +7,9 @@ using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
-using HyruleWarriors.G1M;
+using Toolbox.Library.Forms;
+using Toolbox.Library.Rendering;
+using OpenTK;
 
 namespace HyruleWarriors.G1M
 {
@@ -39,6 +41,54 @@ namespace HyruleWarriors.G1M
             }
         }
 
+        //Check for the viewport in the object editor
+        //This is attached to it to load multiple file formats within the object editor to the viewer
+        Viewport viewport
+        {
+            get
+            {
+                var editor = LibraryGUI.GetObjectEditor();
+                return editor.GetViewport();
+            }
+            set
+            {
+                var editor = LibraryGUI.GetObjectEditor();
+                editor.LoadViewport(value);
+            }
+        }
+
+        bool DrawablesLoaded = false;
+        public override void OnClick(TreeView treeView)
+        {
+            //Make sure opengl is enabled
+            if (Runtime.UseOpenGL)
+            {
+                //Open the viewport
+                if (viewport == null)
+                {
+                    viewport = new Viewport(ObjectEditor.GetDrawableContainers());
+                    viewport.Dock = DockStyle.Fill;
+                }
+
+                //Make sure to load the drawables only once so set it to true!
+                if (!DrawablesLoaded)
+                {
+                    ObjectEditor.AddContainer(DrawableContainer);
+                    DrawablesLoaded = true;
+                }
+
+                //Reload which drawable to display
+                viewport.ReloadDrawables(DrawableContainer);
+                LibraryGUI.LoadEditor(viewport);
+
+                viewport.Text = Text;
+            }
+        }
+
+        public G1M_Renderer Renderer;
+
+        public DrawableContainer DrawableContainer = new DrawableContainer();
+
         public void Load(System.IO.Stream stream)
         {
             Read(new FileReader(stream));
@@ -54,9 +104,20 @@ namespace HyruleWarriors.G1M
         }
 
         public G1MS Skeleton { get; set; }
+        public G1MG Model { get; set; }
+        public NUNO NUNO { get; set; }
+        public NUNV NUNV { get; set; }
+
+        TreeNode meshNode;
 
         public void Read(FileReader reader)
         {
+            Renderer = new G1M_Renderer();
+            Renderer.G1MFile = this;
+            DrawableContainer = new DrawableContainer();
+            DrawableContainer.Name = FileName;
+            DrawableContainer.Drawables.Add(Renderer);
+
             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
             string Magic = reader.ReadString(4);
 
@@ -84,52 +145,86 @@ namespace HyruleWarriors.G1M
             for (int i = 0; i < numChunks; i++)
             {
                 G1MChunkCommon chunk = new G1MChunkCommon();
-                long chunkPosition = reader.Position;
-                string chunkMagic = reader.ReadString(4, Encoding.ASCII);
-                uint chunkVersion = reader.ReadUInt32();
-                uint chunkSize = reader.ReadUInt32();
+                chunk.ChunkPosition = reader.Position;
+                chunk.Magic = reader.ReadString(4, Encoding.ASCII);
+                chunk.ChunkVersion = reader.ReadUInt32();
+                chunk.ChunkSize = reader.ReadUInt32();
 
-                if (chunkMagic == "G1MF")
+                Console.WriteLine("chunkMagic " +   chunk.Magic);
+                if (chunk.Magic == "G1MF")
                 {
 
                 }
-                else if (chunkMagic == "SM1G")
+                else if (chunk.Magic == "SM1G" || chunk.Magic == "G1MS")
                 {
                     Skeleton = new G1MS(reader);
+                    Renderer.Skeleton = Skeleton.GenericSkeleton;
+                    DrawableContainer.Drawables.Add(Skeleton.GenericSkeleton);
+
+                    TreeNode skeleton = new TreeNode("Skeleton");
+                    Nodes.Add(skeleton);
+                    foreach (var bn in Skeleton.GenericSkeleton.bones)
+                        if (bn.Parent == null)
+                        {
+                            skeleton.Nodes.Add(bn);
+                        }
                 }
-                else if (chunkMagic == "G1MS")
+                else if (chunk.Magic == "G1MM")
                 {
 
                 }
-                else if (chunkMagic == "G1MM")
+                else if (chunk.Magic == "G1MG")
+                {
+                    Model = new G1MG(reader);
+                    Renderer.Meshes.AddRange(Model.GenericMeshes);
+
+                    meshNode = new TreeNode("Meshes");
+                    Nodes.Add(meshNode);
+                    foreach (var mesh in Model.GenericMeshes)
+                        meshNode.Nodes.Add(mesh);
+
+                    if (Skeleton != null)
+                    {
+                        foreach (var mesh in Model.GenericMeshes)
+                        {
+                            bool isSingleBind = false;;
+
+                            if (isSingleBind)
+                            {
+                                for (int v = 0; v < mesh.vertices.Count; v++)
+                                {
+                                    var boneId = mesh.vertices[v].boneIds[0];
+                                    var transform = Skeleton.GenericSkeleton.bones[boneId].Transform;
+                                    mesh.vertices[v].pos = Vector3.TransformPosition(
+                                        mesh.vertices[v].pos, transform);
+                                    mesh.vertices[v].nrm = Vector3.TransformNormal(
+                                        mesh.vertices[v].nrm, transform);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (chunk.Magic == "COLL")
                 {
 
                 }
-                else if (chunkMagic == "G1MG")
+                else if (chunk.Magic == "HAIR")
                 {
 
                 }
-                else if (chunkMagic == "COLL")
+                else if (chunk.Magic == "NUNO")
+                {
+                    NUNO = new NUNO(reader, chunk.ChunkVersion);
+                }
+                else if (chunk.Magic == "NUNS")
                 {
 
                 }
-                else if (chunkMagic == "HAIR")
+                else if (chunk.Magic == "NUNV")
                 {
-
+                    NUNV = new NUNV(reader, chunk.ChunkVersion);
                 }
-                else if (chunkMagic == "NUNO")
-                {
-
-                }
-                else if (chunkMagic == "NUNS")
-                {
-
-                }
-                else if (chunkMagic == "NUNV")
-                {
-
-                }
-                else if (chunkMagic == "EXTR")
+                else if (chunk.Magic == "EXTR")
                 {
 
                 }
@@ -137,10 +232,137 @@ namespace HyruleWarriors.G1M
                 {
 
                 }
-
-
-
                 reader.SeekBegin(chunk.ChunkPosition + chunk.ChunkSize);
+            }
+
+            ComputeClothDrivers();
+            SetLevelOfDetailGroups();
+        }
+
+        /// <summary>
+        /// Computes mesh and bone cloth drivers
+        /// </summary>
+        public void ComputeClothDrivers()
+        {
+            var boneList = Skeleton.GenericSkeleton.bones;
+
+            var nunProps = new List<NUNO.NUNOType0303Struct>();
+            uint nunoOffset = 0;
+            if (NUNO != null)
+            {
+                nunoOffset = (uint)NUNO.NUNO0303StructList.Count;
+                foreach (var nuno0303 in NUNO.NUNO0303StructList)
+                    nunProps.Add(nuno0303);
+            }
+            if (NUNV != null) {
+                foreach (var nuno0303 in NUNV.NUNV0303StructList)
+                    nunProps.Add(nuno0303);
+            }
+
+            foreach (var prop in nunProps)
+            {
+                int boneStart = boneList.Count;
+                var parentBone = Model.JointInfos[prop.BoneParentID - 1].JointIndices[0];
+
+                GenericRenderedObject mesh = new GenericRenderedObject();
+                mesh.Text = $"driver_{boneList.Count}";
+                mesh.Checked = true;
+                Renderer.Meshes.Add(mesh);
+                meshNode.Nodes.Add(mesh);
+
+                var polyGroup = new STGenericPolygonGroup();
+                polyGroup.Material = new STGenericMaterial();
+                polyGroup.Material.Text = "driver_cloth";
+                polyGroup.PrimativeType = STPrimitiveType.Triangles;
+                mesh.PolygonGroups.Add(polyGroup);
+
+                for (int p = 0; p < prop.Points.Length; p++) {
+                    var point = prop.Points[p];
+                    var link = prop.Influences[p];
+
+                    STBone b = new STBone(Skeleton.GenericSkeleton);
+                    b.Text = $"CP_{boneList.Count}";
+                    b.FromTransform(OpenTK.Matrix4.Identity);
+                    b.Position = point.Xyz;
+                    b.parentIndex = link.P3;
+                    if (b.parentIndex == -1)
+                        b.parentIndex = (int)parentBone;
+                    else
+                    {
+                        b.parentIndex += boneStart;
+                        b.Position = OpenTK.Vector3.TransformPosition(
+                            point.Xyz, Skeleton.GenericSkeleton.GetBoneTransform((int)parentBone) *
+                            Skeleton.GenericSkeleton.GetBoneTransform(b.parentIndex).Inverted());
+                    }
+
+                    boneList.Add(b);
+
+                    Skeleton.GenericSkeleton.reset();
+                    Skeleton.GenericSkeleton.update();
+
+                    mesh.vertices.Add(new Vertex()
+                    {
+                        pos = Vector3.TransformPosition(Vector3.Zero,
+                        Skeleton.GenericSkeleton.GetBoneTransform(boneList.Count - 1)),
+                        boneWeights = new List<float>() { 1 },
+                        boneIds = new List<int>() { boneList.Count - 1 },
+                    });
+
+                    if (link.P1 > 0 && link.P3 > 0)
+                    {
+                        polyGroup.faces.Add(p);
+                        polyGroup.faces.Add(link.P1);
+                        polyGroup.faces.Add(link.P3);
+                    }
+                    if (link.P2 > 0 && link.P4 > 0)
+                    {
+                        polyGroup.faces.Add(p);
+                        polyGroup.faces.Add(link.P2);
+                        polyGroup.faces.Add(link.P4);
+                    }
+                }
+
+                mesh.CalculateNormals();
+            }
+        }
+
+        private void SetLevelOfDetailGroups()
+        {
+            foreach (var group in Model.LodGroups[0].Meshes)
+            {
+                var isCloth = (group.ID & 0xF) == 1;
+                var isPoint = (group.ID & 0xF) == 2;
+                var NunoSection = (group.ID2 - (group.ID2 % 10000)) / 10000;
+
+                foreach (var polyindex in group.Indices)
+                {
+                    if (polyindex > Model.SubMeshInfos.Length)
+                        continue;
+
+                    var poly = Model.SubMeshInfos[polyindex];
+                    var mesh = Model.GenericMeshes[(int)polyindex];
+
+                    mesh.Text = $"{group.Name}_" + (isPoint ? "point" : "") + (isCloth ? "cloth" : "") + $"_{polyindex}";
+                    mesh.Text = mesh.Text.Replace(@"\p{C}+", string.Empty);
+
+                    if (isPoint)
+                    {
+                        for (int i = 0; i < mesh.vertices.Count; i++)
+                        {
+                            var vert = mesh.vertices[i];
+                            vert.pos = Vector3.TransformPosition(vert.pos,
+                                Skeleton.GenericSkeleton.GetBoneTransform((int)Model.JointInfos[poly.IndexIntoJointMap].JointIndices[0]));
+                            vert.nrm = Vector3.TransformNormal(vert.nrm,
+                                Skeleton.GenericSkeleton.GetBoneTransform((int)Model.JointInfos[poly.IndexIntoJointMap].JointIndices[0]));
+
+                            mesh.vertices[i] = vert;
+                        }
+                    }
+                    if (isCloth)
+                    {
+
+                    }
+                }
             }
         }
     }

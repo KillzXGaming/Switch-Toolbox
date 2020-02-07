@@ -206,7 +206,7 @@ namespace Toolbox.Library.Rendering
 
         }
 
-        private static void SetBoneUniforms(GLControl control, ShaderProgram shader, STSkeleton Skeleton, STGenericObject mesh)
+        public virtual void SetBoneUniforms(GLControl control, ShaderProgram shader, STSkeleton Skeleton, STGenericObject mesh)
         {
             int i = 0;
             foreach (var bone in Skeleton.bones)
@@ -214,20 +214,6 @@ namespace Toolbox.Library.Rendering
                 Matrix4 transform = bone.invert * bone.Transform;
                 GL.UniformMatrix4(GL.GetUniformLocation(shader.programs[control], String.Format("bones[{0}]", i++)), false, ref transform);
             }
-
-            /*  foreach (var FaceGroup in fshp.Shape.FaceGroups)
-              {
-                  if (FaceGroup.BoneIndexList == null)
-                      continue;
-
-                  for (int i = 0; i < FaceGroup.BoneIndexList.Length; i++)
-                  {
-                      GL.Uniform1(GL.GetUniformLocation(shader.programs[control], String.Format("boneIds[{0}]", i)), FaceGroup.BoneIndexList[i]);
-
-                      Matrix4 transform = fmdl.Skeleton.Renderable.bones[(int)FaceGroup.BoneIndexList[i]].invert * fmdl.Skeleton.Renderable.bones[(int)FaceGroup.BoneIndexList[i]].Transform;
-                      GL.UniformMatrix4(GL.GetUniformLocation(shader.programs[control], String.Format("bones[{0}]", i)), false, ref transform);
-                  }
-              }*/
         }
 
         private void SetUniformBlocks(STGenericMaterial mat, ShaderProgram shader, STGenericObject m)
@@ -423,6 +409,9 @@ namespace Toolbox.Library.Rendering
                     if (group.faces.Count <= 3)
                         return;
 
+                    if (group.Material != null)
+                        Material = group.Material;
+
                     SetRenderData(Material, shader, m);
                     SetUniforms(Material, shader, m);
                     SetUniformBlocks(Material, shader, m);
@@ -430,7 +419,7 @@ namespace Toolbox.Library.Rendering
                     SetVertexAttributes(m, shader);
                     SetTextureUniforms(Material, m, shader);
 
-                    if (m.IsSelected || m.GetMaterial().IsSelected)
+                    if (m.IsSelected || Material.IsSelected)
                     {
                         DrawModelSelection(group, shader);
                     }
