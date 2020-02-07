@@ -1401,8 +1401,10 @@ namespace Toolbox
         {
             if (fileFormat == null) return;
 
-            if (fileFormat is STGenericTexture) 
-                ExportTexture(((STGenericTexture)fileFormat), $"{outputFolder}/{fileFormat.FileName}.{extension}");
+            if (fileFormat is STGenericTexture) {
+                string name = Path.GetFileNameWithoutExtension(fileFormat.FileName);
+                ExportTexture(((STGenericTexture)fileFormat), $"{outputFolder}/{name}.{extension}");
+            }
             else if (fileFormat is IArchiveFile)
                 SearchArchive(settings, (IArchiveFile)fileFormat, extension, outputFolder);
             else if (fileFormat is ITextureContainer)
