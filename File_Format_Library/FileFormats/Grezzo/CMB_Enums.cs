@@ -79,7 +79,7 @@ namespace Grezzo.CmbEnums
         _4 = 0x04,
     };
 
-    public enum CombineBufferInputDMP
+    public enum CombineBufferInputDMP : ushort
     {
         PREVIOUS = 0x8578,
         PREVIOUS_BUFFER = 0x8579,
@@ -113,7 +113,7 @@ namespace Grezzo.CmbEnums
         ONE_MINUS_SRC_B = 0x8585,
     };
 
-    public enum FresnelSelector
+    public enum FresnelSelector : ushort
     {
         No = 25280,
         Pri = 25281,

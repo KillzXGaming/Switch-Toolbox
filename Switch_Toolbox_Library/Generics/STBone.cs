@@ -113,7 +113,8 @@ namespace Toolbox.Library
         {
             Scale = transform.ExtractScale();
             Position = transform.ExtractTranslation();
-            Rotation = transform.ExtractRotation();
+            rotation = transform.ExtractRotation();
+            eulerRotation = STMath.ToEulerAngles(rotation);
         }
 
         //Used for shifting models with the bones in the shader

@@ -131,7 +131,7 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            CanSave = false;
+            CanSave = true;
 
             Renderer = new CMB_Renderer();
             DrawableContainer.Drawables.Add(Renderer);
@@ -646,8 +646,6 @@ namespace FirstPlugin
             public LUTSChunk LUTSChunk;
             public VertexAttributesChunk VertexAttributesChunk;
 
-            public ushort[] Indices;
-
             public void Read(FileReader reader, Header header)
             {
                 uint numIndices = reader.ReadUInt32();
@@ -935,7 +933,7 @@ namespace FirstPlugin
                     VertexAttributesChunk.Write(writer, header);
                 }
 
-                if (Indices != null && Indices.Length > 0)
+                if (SkeletalMeshChunk != null && SkeletalMeshChunk.ShapeChunk.SeperateShapes.Count > 0)
                 {
                     writer.WriteUint32Offset(pos + (_offsetPos += 4));
 
@@ -946,8 +944,6 @@ namespace FirstPlugin
                         {
                             foreach (var subprim in prim.Primatives) //Note 3DS usually only has one sub primative
                             {
-                                subprim.Indices = new uint[subprim.IndexCount];
-
                                 writer.SeekBegin(indexBufferPos + subprim.Offset);
 
                                 switch (subprim.IndexType)
@@ -970,6 +966,7 @@ namespace FirstPlugin
                             }
                         }
                     }
+                    writer.Align(64);
                 }
 
                 if (TextureChunk != null && TextureChunk.Textures.Count > 0)
@@ -978,10 +975,7 @@ namespace FirstPlugin
                     writer.WriteUint32Offset(pos + (_offsetPos += 4));
                     //Save image data
                     foreach (var tex in TextureChunk.Textures)
-                    {
-                        writer.SeekBegin(tex.DataOffset + dataStart);
                         writer.Write(tex.ImageData);
-                    }
                 }
             }
         }
@@ -1016,13 +1010,13 @@ namespace FirstPlugin
 
                 if (MeshChunk != null)
                 {
-                    writer.WriteUint32Offset(_offsetPos);
+                    writer.WriteUint32Offset(_offsetPos, pos);
                     MeshChunk.Write(writer, header);
                 }
 
                 if (ShapeChunk != null)
                 {
-                    writer.WriteUint32Offset(_offsetPos + 4);
+                    writer.WriteUint32Offset(_offsetPos + 4, pos);
                     ShapeChunk.Write(writer, header);
                 }
 
@@ -1056,14 +1050,13 @@ namespace FirstPlugin
 
                     mesh.SepdIndex = reader.ReadUInt16();
                     mesh.MaterialIndex = reader.ReadByte();
+                    mesh.ID = reader.ReadByte();
                     Meshes.Add(mesh);
 
-                    if (header.Version == CMBVersion.OOT3DS)
-                        mesh.unks = reader.ReadBytes(1);
-                    else if (header.Version == CMBVersion.MM3DS)
-                        mesh.unks = reader.ReadBytes(9);
+                    if (header.Version == CMBVersion.MM3DS)
+                        mesh.unks = reader.ReadBytes(8);
                     else if (header.Version >= CMBVersion.LM3DS)
-                        mesh.unks = reader.ReadBytes(85);
+                        mesh.unks = reader.ReadBytes(84);
 
                     Console.WriteLine($"SepdIndex {mesh.SepdIndex}");
                     Console.WriteLine($"MaterialIndex { mesh.MaterialIndex}");
@@ -1080,9 +1073,11 @@ namespace FirstPlugin
                 writer.Write(Unknown);
 
                 for (int i = 0; i < Meshes.Count; i++) {
-                    writer.Write(Meshes[i].unks);
                     writer.Write(Meshes[i].SepdIndex);
                     writer.Write(Meshes[i].MaterialIndex);
+                    writer.Write(Meshes[i].ID);
+                    if (Meshes[i].unks != null)
+                        writer.Write(Meshes[i].unks);
                 }
 
                 long endPos = writer.Position;
@@ -1097,6 +1092,7 @@ namespace FirstPlugin
 
                 public ushort SepdIndex { get; set; }
                 public byte MaterialIndex { get; set; }
+                public byte ID { get; set; }
             }
         }
 
@@ -1138,7 +1134,7 @@ namespace FirstPlugin
                 writer.Write(new ushort[SeperateShapes.Count]);
                 for (int i = 0; i < SeperateShapes.Count; i++)
                 {
-                    writer.WriteUint16Offset(offsetPos, pos);
+                    writer.WriteUint16Offset(offsetPos + (i * 2), pos);
                     SeperateShapes[i].Write(writer, header);
                 }
 
@@ -1166,6 +1162,7 @@ namespace FirstPlugin
             public List<PrimativesChunk> Primatives = new List<PrimativesChunk>();
 
             public ushort boneDimension;
+            public ushort Unknown;
 
             private byte[] unks;
 
@@ -1195,7 +1192,7 @@ namespace FirstPlugin
                 BoneWeights = ReadVertexAttrib(reader);
 
                 boneDimension = reader.ReadUInt16();
-                reader.ReadUInt16(); //padding
+                Unknown = reader.ReadUInt16();
 
                 ushort[] Offsets = reader.ReadUInt16s((int)count);
 
@@ -1214,7 +1211,7 @@ namespace FirstPlugin
 
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue); //section size
-                writer.Write(Primatives.Count);
+                writer.Write((ushort)Primatives.Count);
                 writer.Write(unks);
                 WriteVertexAttrib(writer, Position);
                 WriteVertexAttrib(writer, Normal);
@@ -1227,7 +1224,17 @@ namespace FirstPlugin
                 WriteVertexAttrib(writer, TexCoord2);
                 WriteVertexAttrib(writer, BoneIndices);
                 WriteVertexAttrib(writer, BoneWeights);
-                WriteVertexAttrib(writer, Tangent);
+                writer.Write((ushort)boneDimension);
+                writer.Write((ushort)Unknown);
+
+                long offsetPos = writer.Position;
+                writer.Write(new ushort[Primatives.Count]);
+                writer.Write((ushort)0);
+                for (int i = 0; i < Primatives.Count; i++)
+                {
+                    writer.WriteUint16Offset(offsetPos + (i * 2), pos);
+                    Primatives[i].Write(writer, header);
+                }
 
                 long endPos = writer.Position;
                 using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
@@ -1426,7 +1433,7 @@ namespace FirstPlugin
                 reader.ReadSignature(4, Magic);
                 uint sectionSize = reader.ReadUInt32();
 
-                data = reader.getSection((uint)reader.Position, sectionSize);
+                data = reader.getSection((uint)reader.Position, sectionSize - 8);
             }
 
             public void Write(FileWriter writer, Header header)
@@ -1462,6 +1469,8 @@ namespace FirstPlugin
 
             public uint MaxIndex;
 
+            private byte[] data;
+
             public void Read(FileReader reader, Header header)
             {
                 StartPosition = reader.Position;
@@ -1481,6 +1490,8 @@ namespace FirstPlugin
                 Texcoord2Slice = ReadSlice(reader);
                 BoneIndicesSlice = ReadSlice(reader);
                 BoneWeightsSlice = ReadSlice(reader);
+
+                data = reader.ReadBytes((int)(sectionSize - 76));
             }
 
             public void Write(FileWriter writer, Header header)
@@ -1501,6 +1512,8 @@ namespace FirstPlugin
                 WriteSlice(writer, Texcoord2Slice);
                 WriteSlice(writer, BoneIndicesSlice);
                 WriteSlice(writer, BoneWeightsSlice);
+
+                writer.Write(data);
 
                 long endPos = writer.Position;
                 using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
@@ -1560,19 +1573,26 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer, Header header)
             {
+                long pos = writer.Position;
+
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
                 writer.Write(Bones.Count);
                 writer.Write(Unknown);
                 for (int i = 0; i < Bones.Count; i++)
                 {
-                    writer.Write(Bones[i].ID);
-                    writer.Write(Bones[i].ParentIndex);
+                    writer.Write((ushort)Bones[i].ID);
+                    writer.Write((short)Bones[i].ParentIndex);
                     writer.Write(Bones[i].Scale);
                     writer.Write(Bones[i].Rotation);
                     writer.Write(Bones[i].Translation);
                     if (header.Version >= CMBVersion.MM3DS)
                         writer.Write(Bones[i].Unknown);
+                }
+
+                long endPos = writer.Position;
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)(endPos - pos));
                 }
             }
         }
@@ -1613,8 +1633,7 @@ namespace FirstPlugin
                 writer.Write(data);
 
                 long endPos = writer.Position;
-                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin))
-                {
+                using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
                     writer.Write((uint)(endPos - pos));
                 }
             }
@@ -1641,7 +1660,7 @@ namespace FirstPlugin
 
                 Console.WriteLine($"materialSize {materialSize.ToString("x")}");
 
-                textureCombinerSettingsTableOffs = (int)(pos + (count * materialSize));
+                textureCombinerSettingsTableOffs = (int)(pos + 12 + (count * materialSize));
 
                 for (int i = 0; i < count; i++)
                 {
@@ -1659,9 +1678,34 @@ namespace FirstPlugin
 
                 writer.WriteSignature(Magic);
                 writer.Write(uint.MaxValue);//SectionSize
+                writer.Write(Materials.Count);
 
                 for (int i = 0; i < Materials.Count; i++)
                     Materials[i].Write(writer, header);
+                for (int i = 0; i < Materials.Count; i++) {
+                    foreach (var combiner in Materials[i].TextureCombiners)
+                    {
+                        writer.Write(combiner.combineRGB, false);
+                        writer.Write(combiner.combineAlpha, false);
+                        writer.Write(combiner.scaleRGB, false);
+                        writer.Write(combiner.scaleAlpha, false);
+                        writer.Write(combiner.bufferInputRGB, false);
+                        writer.Write(combiner.bufferInputAlpha, false);
+                        writer.Write(combiner.source0RGB, false);
+                        writer.Write(combiner.source1RGB, false);
+                        writer.Write(combiner.source2RGB, false);
+                        writer.Write(combiner.op0RGB, false);
+                        writer.Write(combiner.op1RGB, false);
+                        writer.Write(combiner.op2RGB, false);
+                        writer.Write(combiner.source0Alpha, false);
+                        writer.Write(combiner.source1Alpha, false);
+                        writer.Write(combiner.source2Alpha, false);
+                        writer.Write(combiner.op0Alpha, false);
+                        writer.Write(combiner.op1Alpha, false);
+                        writer.Write(combiner.op2Alpha, false);
+                        writer.Write(combiner.constantIndex);
+                    }
+                }
 
                 long endPos = writer.Position;
                 using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
@@ -1697,10 +1741,13 @@ namespace FirstPlugin
             public CullMode CullMode { get; set; }
 
             public bool IsPolygonOffsetEnabled { get; set; }
-            public uint PolygonOffset { get; set; }
+            public ushort PolygonOffset { get; set; }
 
             public TextureMap[] TextureMaps { get; set; }
             public TextureMatrix[] TextureMaticies { get; set; }
+
+            public ushort LightSetIndex { get; set; }
+            public ushort FogIndex { get; set; }
 
             public List<TextureCombiner> TextureCombiners { get; set; }
 
@@ -2078,9 +2125,8 @@ namespace FirstPlugin
                 public uint fresnelSamplerScale;
             }
 
-            public uint Unknown1 { get; set; }
-            public ushort Unknown2 { get; set; }
-            public ushort Unknown3 { get; set; }
+            public uint TotalUsedTextures { get; set; }
+            public uint TotalUsedTextureCoords { get; set; }
 
             public void Read(FileReader reader, Header header, MaterialChunk materialChunkParent)
             {
@@ -2104,13 +2150,11 @@ namespace FirstPlugin
                 CullMode = reader.ReadEnum<CullMode>(true); //byte
                 IsPolygonOffsetEnabled = reader.ReadBoolean(); //byte
                 PolygonOffset = reader.ReadUInt16();
-                PolygonOffset = IsPolygonOffsetEnabled ? PolygonOffset / 0x10000 : 0;
-                Unknown1 = reader.ReadUInt32();
-                Unknown2 = reader.ReadUInt16();
-                Unknown3 = reader.ReadUInt16();
+                PolygonOffset = IsPolygonOffsetEnabled ? (ushort)((int)PolygonOffset / 0x10000) : (ushort)0;
+                TotalUsedTextures = reader.ReadUInt32();
+                TotalUsedTextureCoords = reader.ReadUInt32();
 
                 //Texture bind data
-             //   reader.SeekBegin(pos + 0x10);
                 for (int j = 0; j < 3; j++)
                 {
                     TextureMaps[j] = new TextureMap();
@@ -2128,13 +2172,19 @@ namespace FirstPlugin
                     TextureMaps[j].borderColorA = reader.ReadByte();
                 }
 
+                LightSetIndex = reader.ReadUInt16();
+                FogIndex = reader.ReadUInt16();
+
                 for (int j = 0; j < 3; j++)
                 {
                     TextureMaticies[j] = new TextureMatrix();
-                    TextureMaticies[j].Flags = reader.ReadUInt32();
                     TextureMaticies[j].Scale = reader.ReadVec2SY();
-                    TextureMaticies[j].Translate = reader.ReadVec2SY();
                     TextureMaticies[j].Rotate = reader.ReadSingle();
+                    TextureMaticies[j].Translate = reader.ReadVec2SY();
+                    TextureMaticies[j].MatrixMode = reader.ReadByte();
+                    TextureMaticies[j].ReferenceCamera = reader.ReadByte();
+                    TextureMaticies[j].MappingMethod = reader.ReadByte();
+                    TextureMaticies[j].CoordinateIndex = reader.ReadByte();
                 }
 
                 long dataPos = reader.Position;
@@ -2291,11 +2341,9 @@ namespace FirstPlugin
                 writer.Write(CullMode, true);
                 writer.Write(IsPolygonOffsetEnabled);
                 writer.Write(PolygonOffset);
-                writer.Write(Unknown1);
-                writer.Write(Unknown2);
-                writer.Write(Unknown3);
+                writer.Write(TotalUsedTextures);
+                writer.Write(TotalUsedTextureCoords);
 
-                writer.SeekBegin(pos + 0x10);
                 for (int j = 0; j < 3; j++)
                 {
                     writer.Write(TextureMaps[j].TextureIndex);
@@ -2304,19 +2352,26 @@ namespace FirstPlugin
                     writer.Write((ushort)TextureMaps[j].MagFiler);
                     writer.Write((ushort)TextureMaps[j].WrapS);
                     writer.Write((ushort)TextureMaps[j].WrapT);
-                    writer.Write((ushort)TextureMaps[j].LodBias);
+                    writer.Write(TextureMaps[j].MinLOD);
+                    writer.Write(TextureMaps[j].LodBias);
                     writer.Write(TextureMaps[j].borderColorR);
                     writer.Write(TextureMaps[j].borderColorG);
                     writer.Write(TextureMaps[j].borderColorB);
                     writer.Write(TextureMaps[j].borderColorA);
                 }
 
+                writer.Write(LightSetIndex);
+                writer.Write(FogIndex);
+
                 for (int j = 0; j < 3; j++)
                 {
-                    writer.Write(TextureMaticies[j].Flags);
                     writer.Write(TextureMaticies[j].Scale);
-                    writer.Write(TextureMaticies[j].Translate);
                     writer.Write(TextureMaticies[j].Rotate);
+                    writer.Write(TextureMaticies[j].Translate);
+                    writer.Write(TextureMaticies[j].MatrixMode);
+                    writer.Write(TextureMaticies[j].ReferenceCamera);
+                    writer.Write(TextureMaticies[j].MappingMethod);
+                    writer.Write(TextureMaticies[j].CoordinateIndex);
                 }
 
                 writer.Write(data);
@@ -2369,10 +2424,14 @@ namespace FirstPlugin
 
         public class TextureMatrix
         {
-            public uint Flags { get; set; }
             public Syroot.Maths.Vector2F Scale { get; set; }
             public Syroot.Maths.Vector2F Translate { get; set; }
             public float Rotate { get; set; }
+
+            public byte MatrixMode { get; set; }
+            public byte ReferenceCamera { get; set; }
+            public byte MappingMethod { get; set; }
+            public byte CoordinateIndex { get; set; }
         }
 
         public class TextureMap

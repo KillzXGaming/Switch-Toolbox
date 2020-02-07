@@ -32,7 +32,7 @@ namespace FirstPlugin
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
                 //File too small to have any data
-                if (stream.Length <= 16)
+                if (stream.Length <= 8)
                     return false;
 
                 if (reader.CheckSignature(2, "BY") || reader.CheckSignature(2, "YB"))

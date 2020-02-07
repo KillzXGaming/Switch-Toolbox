@@ -26,7 +26,7 @@ namespace FirstPlugin
 
         public static string ToYaml(ByamlExt.Byaml.BymlFileData data)
         {
-            var settings = new SerializerSettings()
+            /*var settings = new SerializerSettings()
             {
                 EmitTags = false,
                 EmitAlias = false,
@@ -44,7 +44,7 @@ namespace FirstPlugin
             settings.RegisterTagMapping("!ll", typeof(long));
 
             var serializer = new Serializer(settings);
-            return serializer.Serialize(data);
+            return serializer.Serialize(data);*/
 
             NodePaths.Clear();
             refNodeId = 0;

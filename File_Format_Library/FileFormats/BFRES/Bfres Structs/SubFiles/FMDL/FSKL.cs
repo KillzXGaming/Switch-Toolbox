@@ -750,9 +750,9 @@ namespace Bfres.Structs
                 genericBone.Position.Y,
                 genericBone.Position.Z);
             EulerRotation = new OpenTK.Vector3(
-                genericBone.Rotation.X,
-                genericBone.Rotation.Y,
-                genericBone.Rotation.Z);
+                genericBone.EulerRotation.X,
+                genericBone.EulerRotation.Y,
+                genericBone.EulerRotation.Z);
             Scale = new OpenTK.Vector3(
                 genericBone.Scale.X,
                 genericBone.Scale.Y,
@@ -770,7 +770,10 @@ namespace Bfres.Structs
             {
                 BoneU.Position = new Syroot.Maths.Vector3F(Position.X, Position.Y, Position.Z);
                 BoneU.Scale = new Syroot.Maths.Vector3F(Scale.X, Scale.Y, Scale.Z);
-                BoneU.Rotation = new Syroot.Maths.Vector4F(Rotation.X, Rotation.Y, Rotation.Z, Rotation.W);
+                if (RotationType == BoneRotationType.Euler)
+                    BoneU.Rotation = new Syroot.Maths.Vector4F(EulerRotation.X, EulerRotation.Y, EulerRotation.Z, 1.0f);
+                else
+                    BoneU.Rotation = new Syroot.Maths.Vector4F(Rotation.X, Rotation.Y, Rotation.Z, Rotation.W);
                 BoneU.Name = Text;
                 BoneU.Flags = FlagVisible ? ResU.BoneFlags.Visible : 0;
                 BoneU.ParentIndex = (short)parentIndex;
@@ -783,7 +786,10 @@ namespace Bfres.Structs
             {
                 Bone.Position = new Syroot.Maths.Vector3F(Position.X, Position.Y, Position.Z);
                 Bone.Scale = new Syroot.Maths.Vector3F(Scale.X, Scale.Y, Scale.Z);
-                Bone.Rotation = new Syroot.Maths.Vector4F(Rotation.X, Rotation.Y, Rotation.Z, Rotation.W);
+                if (RotationType == BoneRotationType.Euler)
+                    Bone.Rotation = new Syroot.Maths.Vector4F(EulerRotation.X, EulerRotation.Y, EulerRotation.Z, 1.0f);
+                else
+                    Bone.Rotation = new Syroot.Maths.Vector4F(Rotation.X, Rotation.Y, Rotation.Z, Rotation.W);
                 Bone.Name = Text;
                 Bone.Flags = FlagVisible ? BoneFlags.Visible : 0;
                 Bone.ParentIndex = (short)parentIndex;

@@ -595,9 +595,7 @@ namespace Toolbox.Library
                 STConsole.WriteLine($"position {position}");
                 STConsole.WriteLine($"-".Repeat(30));
 
-                var rotEular = STMath.ToEulerAngles(rotation);
-
-                bone.Transform = transformMat;
+                bone.FromTransform(transformMat);
             }
             else
             {

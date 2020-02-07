@@ -170,42 +170,38 @@ namespace FirstPlugin
                 DataOffset = reader.ReadUInt32();
                 Name = reader.ReadString(16).TrimEnd('\0');
 
-                PicaFormat = ToPica(Format);
+                PicaFormat = FormatList[Format];
             }
 
             public void Write(FileWriter writer)
             {
-                TextureFormat Format = TextureFormat.A8;
+                TextureFormat format = FormatList.FirstOrDefault(x => x.Value == PicaFormat).Key;
 
                 writer.Write(ImageSize);
                 writer.Write(MaxLevel);
                 writer.Write(Unknown);
                 writer.Write((ushort)Width);
                 writer.Write((ushort)Height);
-                writer.Write(Format, true);
+                writer.Write(format, true);
                 writer.Write(DataOffset);
-                writer.Write(DataOffset);
+                writer.WriteString(Name, 16);
             }
 
-            private static CTR_3DS.PICASurfaceFormat ToPica(TextureFormat format)
-            {
-                switch (format)
+            private static Dictionary<TextureFormat, CTR_3DS.PICASurfaceFormat> FormatList =
+                new Dictionary<TextureFormat, CTR_3DS.PICASurfaceFormat>()
                 {
-                    case TextureFormat.A8: return CTR_3DS.PICASurfaceFormat.A8;
-                    case TextureFormat.ETC1: return CTR_3DS.PICASurfaceFormat.ETC1;
-                    case TextureFormat.ETC1A4: return CTR_3DS.PICASurfaceFormat.ETC1A4;
-                    case TextureFormat.L4: return CTR_3DS.PICASurfaceFormat.L4;
-                    case TextureFormat.L8: return CTR_3DS.PICASurfaceFormat.L8;
-                    case TextureFormat.LA8: return CTR_3DS.PICASurfaceFormat.LA8;
-                    case TextureFormat.RGB565: return CTR_3DS.PICASurfaceFormat.RGB565;
-                    case TextureFormat.RGBA4444: return CTR_3DS.PICASurfaceFormat.RGBA4;
-                    case TextureFormat.RGBA5551: return CTR_3DS.PICASurfaceFormat.RGBA5551;
-                    case TextureFormat.RGBA8: return CTR_3DS.PICASurfaceFormat.RGBA8;
-                    case TextureFormat.RGB8: return CTR_3DS.PICASurfaceFormat.RGB8;
-                    default:
-                        throw new Exception($"Unsupported format! {format}");
-                }
-            }
+                    { TextureFormat.A8, CTR_3DS.PICASurfaceFormat.A8 },
+                    { TextureFormat.ETC1, CTR_3DS.PICASurfaceFormat.ETC1 },
+                    { TextureFormat.ETC1A4, CTR_3DS.PICASurfaceFormat.ETC1A4 },
+                    { TextureFormat.L4, CTR_3DS.PICASurfaceFormat.L4 },
+                    { TextureFormat.L8, CTR_3DS.PICASurfaceFormat.L8 },
+                    { TextureFormat.LA8, CTR_3DS.PICASurfaceFormat.LA8 },
+                    { TextureFormat.RGB565, CTR_3DS.PICASurfaceFormat.RGB565 },
+                    { TextureFormat.RGBA4444, CTR_3DS.PICASurfaceFormat.RGBA4 },
+                    { TextureFormat.RGBA5551, CTR_3DS.PICASurfaceFormat.RGBA5551 },
+                    { TextureFormat.RGBA8, CTR_3DS.PICASurfaceFormat.RGBA8 },
+                    { TextureFormat.RGB8, CTR_3DS.PICASurfaceFormat.RGB8 },
+                };
         }
 
         public class TextureWrapper : STGenericTexture
