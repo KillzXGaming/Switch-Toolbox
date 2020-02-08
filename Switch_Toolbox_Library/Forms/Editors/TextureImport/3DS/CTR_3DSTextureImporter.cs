@@ -125,6 +125,7 @@ namespace Toolbox.Library.Forms
                 SelectedTexSettings.IsFinishedCompressing = true;
 
                 bitmap = CTR_3DS.DecodeBlockToBitmap(mips[0], (int)SelectedTexSettings.TexWidth, (int)SelectedTexSettings.TexHeight, SelectedTexSettings.Format);
+                bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
 
                 if (pictureBox1.InvokeRequired)
                 {

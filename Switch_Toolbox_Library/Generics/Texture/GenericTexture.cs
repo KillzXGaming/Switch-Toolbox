@@ -203,13 +203,36 @@ namespace Toolbox.Library
             PaletteFormat = format;
         }
 
+        public List<Surface> Get3DSurfaces(int IndexStart = 0, bool GetAllSurfaces = true, int GetSurfaceAmount = 1)
+        {
+            if (GetAllSurfaces)
+                GetSurfaceAmount = (int)Depth;
+
+            var surfaces = new List<Surface>();
+            for (int depthLevel = 0; depthLevel < Depth; depthLevel++)
+            {
+                bool IsLower = depthLevel < IndexStart;
+                bool IsHigher = depthLevel >= (IndexStart + GetSurfaceAmount);
+                if (!IsLower && !IsHigher)
+                {
+                    List<byte[]> mips = new List<byte[]>();
+                    for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+                    {
+                        mips.Add(GetImageData(0, mipLevel, depthLevel));
+                    }
+
+                    surfaces.Add(new Surface() { mipmaps = mips });
+                }
+            }
+
+            return surfaces;
+        }
+
         //
         //Gets a list of surfaces given the start index of the array and the amount of arrays to obtain
         //
         public List<Surface> GetSurfaces(int ArrayIndexStart = 0, bool GetAllSurfaces = true, int GetSurfaceAmount = 1)
         {
-
-
             if (GetAllSurfaces)
                 GetSurfaceAmount = (int)ArrayCount;
 
@@ -526,7 +549,8 @@ namespace Toolbox.Library
             uint height = Math.Max(1, Height >> MipLevel);
             byte[] data = GetImageData(ArrayLevel, MipLevel, DepthLevel);
             byte[] paletteData = GetPaletteData();
-            if (Format == TEX_FORMAT.R8G8B8A8_UNORM) return BitmapExtension.GetBitmap(ConvertBgraToRgba(data), (int)width, (int)height);
+            if (Format == TEX_FORMAT.R8G8B8A8_UNORM && PlatformSwizzle == PlatformSwizzle.None) 
+                return BitmapExtension.GetBitmap(ConvertBgraToRgba(data), (int)width, (int)height);
 
             try
             {
@@ -898,6 +922,8 @@ namespace Toolbox.Library
             List<Surface> surfaces = null;
             if (ExportSurfaceLevel)
                 surfaces = GetSurfaces(SurfaceLevel, false);
+            else if (Depth > 1)
+                surfaces = Get3DSurfaces();
             else
                 surfaces = GetSurfaces();
 
@@ -984,6 +1010,8 @@ namespace Toolbox.Library
             List<Surface> surfaces = null;
             if (ExportSurfaceLevel)
                 surfaces = GetSurfaces(SurfaceLevel, false, 1);
+            else if (Depth > 1)
+                surfaces = Get3DSurfaces();
             else
                 surfaces = GetSurfaces();
 
@@ -1029,9 +1057,9 @@ namespace Toolbox.Library
                 dds.DX10header.ResourceDim = 3;
 
                 if (isCubeMap)
-                    dds.DX10header.arrayFlag = (uint)(surfaces.Count / 6);
+                    dds.DX10header.arrayFlag = (uint)(ArrayCount / 6);
                 else
-                    dds.DX10header.arrayFlag = (uint)surfaces.Count;
+                    dds.DX10header.arrayFlag = (uint)ArrayCount;
             }
 
 

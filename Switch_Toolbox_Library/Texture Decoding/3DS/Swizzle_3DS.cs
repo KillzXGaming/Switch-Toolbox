@@ -91,7 +91,7 @@ namespace Toolbox.Library
 
         public static System.Drawing.Bitmap DecodeBlockToBitmap(byte[] Input, int Width, int Height, PICASurfaceFormat picaFormat)
         {
-            return BitmapExtension.GetBitmap(DecodeBlock(Input, Width, Height, picaFormat),
+            return BitmapExtension.GetBitmap(STGenericTexture.ConvertBgraToRgba(DecodeBlock(Input, Width, Height, picaFormat)),
                   Width, Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
         }
 
@@ -201,7 +201,6 @@ namespace Toolbox.Library
         public static byte[] EncodeBlock(byte[] Input, int Width, int Height, TEX_FORMAT Format) {
             return EncodeBlock(Input, Width, Height, ConvertToPICAFormat(Format));
         }
-
 
         //Much help from encoding thanks to this
         // https://github.com/Cruel/3dstex/blob/master/src/Encoder.cpp
@@ -337,6 +336,9 @@ namespace Toolbox.Library
             }
 
             byte[] newOutput = mem.ToArray();
+            if (newOutput.Length != ImageSize)
+                throw new Exception($"Invalid image size! Expected {ImageSize} got {newOutput.Length}");
+
             if (newOutput.Length > 0)
                 return newOutput;
             else

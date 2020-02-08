@@ -245,7 +245,10 @@ namespace Toolbox.Library
                         };
 
                         writer.AddJoint(bone.Text, bone.parentIndex == -1 ? "" :
-                            skeleton.bones[bone.parentIndex].Text, Transform, InvTransform);
+                            skeleton.bones[bone.parentIndex].Text, Transform, InvTransform,
+                            new float[3] { bone.Position.X, bone.Position.Y, bone.Position.Z },
+                            new float[3] { bone.EulerRotation.X, bone.EulerRotation.Y, bone.EulerRotation.Z },
+                            new float[3] { bone.Scale.X, bone.Scale.Y, bone.Scale.Z });
                     }
                 }
 

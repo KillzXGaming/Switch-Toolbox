@@ -59,6 +59,7 @@ namespace FirstPlugin
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
+            CanSave = true;
 
             header = new Header();
             header.Read(new FileReader(stream), this);
@@ -69,8 +70,8 @@ namespace FirstPlugin
 
         }
 
-        public void Save(System.IO.Stream stream)
-        {
+        public void Save(System.IO.Stream stream) {
+            header.Write(new FileWriter(stream));
         }
 
         public class Header
@@ -97,6 +98,7 @@ namespace FirstPlugin
                         texWrapper.Text = $"Texture_{t}";
                         texWrapper.ImageKey = "texture";
                         texWrapper.SelectedImageKey = texWrapper.ImageKey;
+                        texWrapper.TextureInfo = Chunks[i].Textures[t];
 
                         if (Chunks[i].Textures[t].Name != string.Empty)
                             texWrapper.Text = Chunks[i].Textures[t].Name;
@@ -106,9 +108,45 @@ namespace FirstPlugin
                         texWrapper.Format = CTR_3DS.ConvertPICAToGenericFormat(Chunks[i].Textures[t].PicaFormat);
 
                         reader.SeekBegin(TextureDataOffset + Chunks[i].Textures[t].DataOffset);
-                        texWrapper.ImageData = reader.ReadBytes((int)Chunks[i].Textures[t].ImageSize);
+                        Chunks[i].Textures[t].ImageData = reader.ReadBytes((int)Chunks[i].Textures[t].ImageSize);
                         ctxb.Nodes.Add(texWrapper);
                     }
+                }
+            }
+
+            public void Write(FileWriter writer)
+            {
+                writer.WriteSignature("ctxb");
+                writer.Write(uint.MaxValue);
+                writer.Write(Chunks.Count);
+                writer.Write(0);
+                writer.Write(24);
+                writer.Write(24 + Chunks.Count * 8 + (Chunks.Sum(x => x.Textures.Count) * 40));
+
+                foreach (var chunk in Chunks) {
+                    long pos = writer.Position;
+                    writer.WriteSignature(chunk.Magic);
+                    writer.Write(uint.MaxValue);
+                    writer.Write(chunk.Textures.Count);
+                    foreach (var tex in chunk.Textures)
+                        tex.Write(writer);
+
+                    writer.WriteSectionSizeU32(pos + 4, pos, writer.Position);
+                }
+
+                uint dataOffset = 0;
+                foreach (var chunk in Chunks)
+                {
+                    foreach (var tex in chunk.Textures) {
+                        tex.DataOffset = dataOffset;
+                        writer.Write(tex.ImageData);
+
+                        dataOffset += (uint)tex.ImageData.Length;
+                    }
+                }
+
+                using (writer.TemporarySeek(4, System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)writer.BaseStream.Length);
                 }
             }
 
@@ -177,7 +215,7 @@ namespace FirstPlugin
             {
                 TextureFormat format = FormatList.FirstOrDefault(x => x.Value == PicaFormat).Key;
 
-                writer.Write(ImageSize);
+                writer.Write(ImageData.Length);
                 writer.Write(MaxLevel);
                 writer.Write(Unknown);
                 writer.Write((ushort)Width);
@@ -206,9 +244,16 @@ namespace FirstPlugin
 
         public class TextureWrapper : STGenericTexture
         {
-            public byte[] ImageData;
+            public Texture TextureInfo;
 
-            public override bool CanEdit { get; set; } = false;
+            public byte[] ImageData
+            {
+                get { return TextureInfo.ImageData; }
+                set { TextureInfo.ImageData = value; }
+            }
+
+            public override bool CanEdit { get; set; } = true;
+
             public override TEX_FORMAT[] SupportedFormats
             {
                 get
@@ -234,6 +279,10 @@ namespace FirstPlugin
             public TextureWrapper()
             {
                 PlatformSwizzle = PlatformSwizzle.Platform_3DS;
+
+                CanReplace = true;
+                CanRename = true;
+                CanDelete = true;
             }
 
             public override void OnClick(TreeView treeview)
@@ -256,9 +305,54 @@ namespace FirstPlugin
                 editor.LoadImage(this);
             }
 
+            public override void Replace(string FileName)
+            {
+                CTR_3DSTextureImporter importer = new CTR_3DSTextureImporter();
+                CTR_3DSImporterSettings settings = new CTR_3DSImporterSettings();
+
+                if (Utils.GetExtension(FileName) == ".dds" ||
+                    Utils.GetExtension(FileName) == ".dds2")
+                {
+                    settings.LoadDDS(FileName);
+                    importer.LoadSettings(new List<CTR_3DSImporterSettings>() { settings, });
+
+                    ApplySettings(settings);
+                    UpdateEditor();
+                }
+                else
+                {
+                    settings.LoadBitMap(FileName);
+                    importer.LoadSettings(new List<CTR_3DSImporterSettings>() { settings, });
+
+                    if (importer.ShowDialog() == DialogResult.OK)
+                    {
+                        if (settings.GenerateMipmaps && !settings.IsFinishedCompressing)
+                        {
+                            settings.DataBlockOutput.Clear();
+                            settings.DataBlockOutput.Add(settings.GenerateMips());
+                        }
+
+                        Console.WriteLine($"ImageSize {this.ImageData.Length} {settings.DataBlockOutput[0]}");
+
+                        ApplySettings(settings);
+                        UpdateEditor();
+                    }
+                }
+            }
+
+            private void ApplySettings(CTR_3DSImporterSettings settings)
+            {
+                this.ImageData = settings.DataBlockOutput[0];
+                this.Width = settings.TexWidth;
+                this.Height = settings.TexHeight;
+                this.Format = settings.GenericFormat;
+                this.MipCount = settings.MipCount;
+                this.Depth = settings.Depth;
+                this.ArrayCount = (uint)settings.DataBlockOutput.Count;
+            }
+
             public override void SetImageData(System.Drawing.Bitmap bitmap, int ArrayLevel)
             {
-
             }
 
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)

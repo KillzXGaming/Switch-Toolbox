@@ -144,7 +144,7 @@ namespace Toolbox.Library.Forms
             if (TexWidth != Image.Width || TexHeight != Image.Height)
                 Image = BitmapExtension.Resize(Image, TexWidth, TexHeight);
 
-            DecompressedData.Add(BitmapExtension.ImageToByte(Image));
+            DecompressedData.Add(STGenericTexture.ConvertBgraToRgba(BitmapExtension.ImageToByte(Image)));
 
             Image.Dispose();
             if (DecompressedData.Count == 0)
