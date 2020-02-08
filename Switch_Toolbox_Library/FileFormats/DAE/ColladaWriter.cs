@@ -513,6 +513,23 @@ namespace Toolbox.Library.Collada
             Writer.WriteEndElement();
         }
 
+        private void WriteTransform(float[] scale, float[] rotate, float[] translate)
+        {
+            WriteNodeElement("translate", "location", translate);
+            WriteNodeElement("rotate", "rotationZ", new float[] { 0, 0, 1, rotate[2] });
+            WriteNodeElement("rotate", "rotationY", new float[] { 0, 1, 0, rotate[1] });
+            WriteNodeElement("rotate", "rotationX", new float[] { 1, 0, 0, rotate[0] });
+            WriteNodeElement("scale", "scale", scale);
+        }
+
+        private void WriteNodeElement(string name, string sid, float[] values)
+        {
+            Writer.WriteStartElement(name);
+            Writer.WriteAttributeString("sid", sid);
+            Writer.WriteString(string.Join(" ", values));
+            Writer.WriteEndElement();
+        }
+
         private Joint[] GetChildren(Joint j)
         {
             int parentindex = Joints.IndexOf(j);
@@ -552,12 +569,17 @@ namespace Toolbox.Library.Collada
         /// <summary>
         /// Adds a new joint to the default skeletal tree
         /// </summary>
-        public void AddJoint(string name, string parentName, float[] Transform, float[] InvWorldTransform)
+        public void AddJoint(string name, string parentName,
+            float[] Transform, float[] InvWorldTransform,
+            float[] translate, float[] rotate, float[] scale)
         {
             Joint j = new Joint();
             j.Name = name;
             j.Transform = Transform;
             j.BindPose = InvWorldTransform;
+            j.Scale = scale;
+            j.Translate = translate;
+            j.Rotate = rotate;
             foreach (var joint in Joints)
                 if (joint.Name.Equals(parentName))
                     j.ParentIndex = Joints.IndexOf(joint);
@@ -1041,6 +1063,10 @@ namespace Toolbox.Library.Collada
         public int ParentIndex = -1;
         public float[] Transform;
         public float[] BindPose;
+
+        public float[] Rotate;
+        public float[] Translate;
+        public float[] Scale;
     }
 
     public class Animation
