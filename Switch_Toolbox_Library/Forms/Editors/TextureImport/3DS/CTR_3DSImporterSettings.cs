@@ -214,8 +214,6 @@ namespace Toolbox.Library.Forms
             mipmaps.Add(CTR_3DS.EncodeBlock(DecompressedData[SurfaceLevel],
                 (int)TexWidth, (int)TexHeight, Format));
 
-            //while (Image.Width / 2 > 0 && Image.Height / 2 > 0)
-            //      for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
                 int width = Image.Width / 2;

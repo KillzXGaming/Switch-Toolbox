@@ -404,6 +404,8 @@ namespace FirstPlugin
                 {
                     settings.LoadBitMap(FileName);
                     settings.Format = CTR_3DS.ConvertToPICAFormat(Format);
+                    if (MipCount == 1)
+                        settings.MipCount = 1;
                     importer.LoadSettings(new List<CTR_3DSImporterSettings>() { settings, });
 
                     if (importer.ShowDialog() == DialogResult.OK)

@@ -217,7 +217,7 @@ namespace FirstPlugin
                     int texIndex = 0;
                     foreach (var tex in header.SectionData.TextureChunk.Textures)
                     {
-                        var texWrapper = new CTXB.TextureWrapper();
+                        var texWrapper = new CTXB.TextureWrapper(tex);
                         texWrapper.Text = $"Texture {texIndex++}";
                         texWrapper.ImageKey = "texture";
                         texWrapper.SelectedImageKey = texWrapper.ImageKey;
@@ -794,13 +794,14 @@ namespace FirstPlugin
                     values[3] * VertexAttribute.Scale);
             }
 
-            private static void WriteVertexBufferData(FileWriter writer, BufferSlice Slice, 
+            private static void WriteVertexBufferData(FileWriter writer, long startPos, BufferSlice Slice, 
                 SepdVertexAttribute VertexAttribute, int elementCount)
             {
-                int StrideSize = CalculateStrideSize(VertexAttribute.Type, elementCount);
-                int VertexCount = (int)Slice.Size / StrideSize;
-                for (int v = 0; v < VertexCount; v++)
-                {
+                if (Slice == null || VertexAttribute == null)
+                    return;
+
+                writer.SeekBegin(startPos + VertexAttribute.StartPosition + Slice.Offset);
+                for (int v = 0; v < VertexAttribute.VertexData?.Length; v++) {
                     WriteVertexBufferData(writer, VertexAttribute, VertexAttribute.VertexData[v], elementCount);
                 }
             }
@@ -903,34 +904,54 @@ namespace FirstPlugin
                     QuadTreeChunk.Write(writer, header);
                 }
 
+                _offsetPos += 4;
                 if (MaterialChunk != null)
                 {
-                    writer.WriteUint32Offset(pos + (_offsetPos += 4));
+                    writer.WriteUint32Offset(pos + (_offsetPos));
                     MaterialChunk.Write(writer, header);
                 }
 
+                _offsetPos += 4;
                 if (TextureChunk != null)
                 {
-                    writer.WriteUint32Offset(pos + (_offsetPos += 4));
+                    writer.WriteUint32Offset(pos + (_offsetPos));
                     TextureChunk.Write(writer, header);
                 }
 
+                _offsetPos += 4;
                 if (SkeletalMeshChunk != null)
                 {
-                    writer.WriteUint32Offset(pos + (_offsetPos += 4));
+                    writer.WriteUint32Offset(pos + (_offsetPos));
                     SkeletalMeshChunk.Write(writer, header);
                 }
 
+                _offsetPos += 4;
                 if (LUTSChunk != null)
                 {
-                    writer.WriteUint32Offset(pos + (_offsetPos += 4));
+                    writer.WriteUint32Offset(pos + (_offsetPos));
                     LUTSChunk.Write(writer, header);
                 }
 
+                _offsetPos += 4;
                 if (VertexAttributesChunk != null)
                 {
-                    writer.WriteUint32Offset(pos + (_offsetPos += 4));
+                    writer.WriteUint32Offset(pos + (_offsetPos));
+                    long vatrPos = writer.Position;
                     VertexAttributesChunk.Write(writer, header);
+                    foreach (var shape in SkeletalMeshChunk.ShapeChunk.SeperateShapes)
+                    {
+                        WriteVertexBufferData(writer, vatrPos, VertexAttributesChunk.PositionSlice, shape.Position, 3);
+                        WriteVertexBufferData(writer, vatrPos, VertexAttributesChunk.NormalSlice, shape.Normal, 3);
+                        WriteVertexBufferData(writer, vatrPos, VertexAttributesChunk.TangentSlice, shape.Tangent, 3);
+                        WriteVertexBufferData(writer, vatrPos, VertexAttributesChunk.ColorSlice, shape.Color, 4);
+                        WriteVertexBufferData(writer, vatrPos, VertexAttributesChunk.Texcoord0Slice, shape.TexCoord0, 2);
+                        WriteVertexBufferData(writer, vatrPos, VertexAttributesChunk.Texcoord1Slice, shape.TexCoord1, 2);
+                        WriteVertexBufferData(writer, vatrPos, VertexAttributesChunk.Texcoord2Slice, shape.TexCoord2, 2);
+
+                        WriteVertexBufferData(writer, vatrPos, VertexAttributesChunk.BoneIndicesSlice, shape.BoneIndices, shape.boneDimension);
+                        WriteVertexBufferData(writer, vatrPos, VertexAttributesChunk.BoneWeightsSlice, shape.BoneWeights, shape.boneDimension);
+                    }
+                    writer.WriteSectionSizeU32(vatrPos + 4, vatrPos, writer.Position);
                 }
 
                 if (SkeletalMeshChunk != null && SkeletalMeshChunk.ShapeChunk.SeperateShapes.Count > 0)
@@ -1469,8 +1490,6 @@ namespace FirstPlugin
 
             public uint MaxIndex;
 
-            private byte[] data;
-
             public void Read(FileReader reader, Header header)
             {
                 StartPosition = reader.Position;
@@ -1490,8 +1509,6 @@ namespace FirstPlugin
                 Texcoord2Slice = ReadSlice(reader);
                 BoneIndicesSlice = ReadSlice(reader);
                 BoneWeightsSlice = ReadSlice(reader);
-
-                data = reader.ReadBytes((int)(sectionSize - 76));
             }
 
             public void Write(FileWriter writer, Header header)
@@ -1512,8 +1529,6 @@ namespace FirstPlugin
                 WriteSlice(writer, Texcoord2Slice);
                 WriteSlice(writer, BoneIndicesSlice);
                 WriteSlice(writer, BoneWeightsSlice);
-
-                writer.Write(data);
 
                 long endPos = writer.Position;
                 using (writer.TemporarySeek(pos + 4, System.IO.SeekOrigin.Begin)) {
