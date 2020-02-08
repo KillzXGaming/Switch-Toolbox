@@ -379,6 +379,10 @@ namespace Toolbox.Library.Forms
                     Console.WriteLine($"archiveMenus {archiveMenus.Count}");
                 }
 
+                if (e.Node is IExportableModel) {
+                    menuItems.Add(new ToolStripMenuItem("Export Model", null, ExportModelAction, Keys.Control | Keys.E));
+                }
+
                 bool IsRoot = e.Node.Parent == null;
                 bool HasChildren = e.Node.Nodes.Count > 0;
 
@@ -422,7 +426,12 @@ namespace Toolbox.Library.Forms
                     if (!HasExpand && HasChildren)
                         menuItems.Add(new ToolStripMenuItem("Expand All", null, ExpandAllAction, Keys.Control | Keys.P));
 
-                    if (archiveMenus.Count > 0)
+             
+                }
+
+                if (archiveMenus.Count > 0)
+                {
+                    if (menuItems.Count > 0)
                     {
                         STToolStipMenuItem archiveItem = new STToolStipMenuItem("Archive");
                         treeNodeContextMenu.Items.Add(archiveItem);
@@ -430,11 +439,11 @@ namespace Toolbox.Library.Forms
                         foreach (var item in archiveMenus)
                             archiveItem.DropDownItems.Add(item);
                     }
-                }
-                else
-                {
-                    if (archiveMenus.Count > 0)
-                        treeNodeContextMenu.Items.AddRange(archiveMenus.ToArray());
+                    else
+                    {
+                        if (archiveMenus.Count > 0)
+                            treeNodeContextMenu.Items.AddRange(archiveMenus.ToArray());
+                    }
                 }
 
                 var fileFormat = TryGetActiveFile(e.Node);
@@ -477,6 +486,34 @@ namespace Toolbox.Library.Forms
             }
             else
                 return null;
+        }
+
+        private void ExportModelAction(object sender, EventArgs args)
+        {
+            var node = treeViewCustom1.SelectedNode as IExportableModel;
+            if (node != null)
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "Supported Formats|*.dae;";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    ExportModelSettings exportDlg = new ExportModelSettings();
+                    if (exportDlg.ShowDialog() == DialogResult.OK)
+                        ExportModel(node, sfd.FileName, exportDlg.Settings);
+                }
+            }
+        }
+
+        public void ExportModel(IExportableModel exportableModel, string fileName, DAE.ExportSettings settings)
+        {
+            var model = new STGenericModel();
+            model.Materials = exportableModel.Materials;
+            model.Objects = exportableModel.Meshes;
+            var textures = new List<STGenericTexture>();
+            foreach (var tex in exportableModel.TextureList)
+                textures.Add(tex);
+
+            DAE.Export(fileName, settings, model, textures, exportableModel.Skeleton);
         }
 
         private void SelectFileInExplorer(object sender, EventArgs args)

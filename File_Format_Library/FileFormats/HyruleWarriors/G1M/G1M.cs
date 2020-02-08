@@ -13,7 +13,7 @@ using OpenTK;
 
 namespace HyruleWarriors.G1M
 {
-    public class G1M : TreeNodeFile, IFileFormat
+    public class G1M : TreeNodeFile, IFileFormat, IExportableModel
     {
         public FileType FileType { get; set; } = FileType.Model;
 
@@ -85,6 +85,45 @@ namespace HyruleWarriors.G1M
             }
         }
 
+        public List<STGenericObject> Meshes
+        {
+            get {
+                List<STGenericObject> meshes = new List<STGenericObject>();
+                foreach (var mesh in Model.GenericMeshes)
+                    meshes.Add(mesh);
+                return meshes;
+            }
+        }
+
+        public List<STGenericMaterial> Materials
+        {
+            get {
+                List<STGenericMaterial> materials = new List<STGenericMaterial>();
+                foreach (var mat in Model.Materials)
+                    materials.Add(mat);
+                return materials;
+            }
+        }
+
+        public STSkeleton Skeleton => G1MSkeleton.GenericSkeleton;
+
+        public List<STGenericTexture> TextureList
+        {
+            get
+            {
+                //Export all textures that use the same archive
+                List<STGenericTexture> textures = new List<STGenericTexture>();
+                foreach (var container in FirstPlugin.PluginRuntime.G1TextureContainers)
+                {
+                    if (this.IFileInfo.ArchiveParent == container.IFileInfo.ArchiveParent) {
+                        foreach (var texture in container.TextureList)
+                            textures.Add(texture);
+                    }
+                }
+                return textures;
+            }
+        }
+
         public G1M_Renderer Renderer;
 
         public DrawableContainer DrawableContainer = new DrawableContainer();
@@ -103,7 +142,7 @@ namespace HyruleWarriors.G1M
         {
         }
 
-        public G1MS Skeleton { get; set; }
+        public G1MS G1MSkeleton { get; set; }
         public G1MG Model { get; set; }
         public NUNO NUNO { get; set; }
         public NUNV NUNV { get; set; }
@@ -157,13 +196,13 @@ namespace HyruleWarriors.G1M
                 }
                 else if (chunk.Magic == "SM1G" || chunk.Magic == "G1MS")
                 {
-                    Skeleton = new G1MS(reader);
-                    Renderer.Skeleton = Skeleton.GenericSkeleton;
-                    DrawableContainer.Drawables.Add(Skeleton.GenericSkeleton);
+                    G1MSkeleton = new G1MS(reader);
+                    Renderer.Skeleton = G1MSkeleton.GenericSkeleton;
+                    DrawableContainer.Drawables.Add(G1MSkeleton.GenericSkeleton);
 
                     TreeNode skeleton = new TreeNode("Skeleton");
                     Nodes.Add(skeleton);
-                    foreach (var bn in Skeleton.GenericSkeleton.bones)
+                    foreach (var bn in G1MSkeleton.GenericSkeleton.bones)
                         if (bn.Parent == null)
                         {
                             skeleton.Nodes.Add(bn);
@@ -194,7 +233,7 @@ namespace HyruleWarriors.G1M
                                 for (int v = 0; v < mesh.vertices.Count; v++)
                                 {
                                     var boneId = mesh.vertices[v].boneIds[0];
-                                    var transform = Skeleton.GenericSkeleton.bones[boneId].Transform;
+                                    var transform = G1MSkeleton.GenericSkeleton.bones[boneId].Transform;
                                     mesh.vertices[v].pos = Vector3.TransformPosition(
                                         mesh.vertices[v].pos, transform);
                                     mesh.vertices[v].nrm = Vector3.TransformNormal(
@@ -244,7 +283,7 @@ namespace HyruleWarriors.G1M
         /// </summary>
         public void ComputeClothDrivers()
         {
-            var boneList = Skeleton.GenericSkeleton.bones;
+            var boneList = G1MSkeleton.GenericSkeleton.bones;
 
             var nunProps = new List<NUNO.NUNOType0303Struct>();
             uint nunoOffset = 0;
@@ -280,7 +319,7 @@ namespace HyruleWarriors.G1M
                     var point = prop.Points[p];
                     var link = prop.Influences[p];
 
-                    STBone b = new STBone(Skeleton.GenericSkeleton);
+                    STBone b = new STBone(G1MSkeleton.GenericSkeleton);
                     b.Text = $"CP_{boneList.Count}";
                     b.FromTransform(OpenTK.Matrix4.Identity);
                     b.Position = point.Xyz;
@@ -291,19 +330,19 @@ namespace HyruleWarriors.G1M
                     {
                         b.parentIndex += boneStart;
                         b.Position = OpenTK.Vector3.TransformPosition(
-                            point.Xyz, Skeleton.GenericSkeleton.GetBoneTransform((int)parentBone) *
-                            Skeleton.GenericSkeleton.GetBoneTransform(b.parentIndex).Inverted());
+                            point.Xyz, G1MSkeleton.GenericSkeleton.GetBoneTransform((int)parentBone) *
+                            G1MSkeleton.GenericSkeleton.GetBoneTransform(b.parentIndex).Inverted());
                     }
 
                     boneList.Add(b);
 
-                    Skeleton.GenericSkeleton.reset();
-                    Skeleton.GenericSkeleton.update();
+                    G1MSkeleton.GenericSkeleton.reset();
+                    G1MSkeleton.GenericSkeleton.update();
 
                     mesh.vertices.Add(new Vertex()
                     {
                         pos = Vector3.TransformPosition(Vector3.Zero,
-                        Skeleton.GenericSkeleton.GetBoneTransform(boneList.Count - 1)),
+                        G1MSkeleton.GenericSkeleton.GetBoneTransform(boneList.Count - 1)),
                         boneWeights = new List<float>() { 1 },
                         boneIds = new List<int>() { boneList.Count - 1 },
                     });
@@ -351,9 +390,9 @@ namespace HyruleWarriors.G1M
                         {
                             var vert = mesh.vertices[i];
                             vert.pos = Vector3.TransformPosition(vert.pos,
-                                Skeleton.GenericSkeleton.GetBoneTransform((int)Model.JointInfos[poly.IndexIntoJointMap].JointIndices[0]));
+                                G1MSkeleton.GenericSkeleton.GetBoneTransform((int)Model.JointInfos[poly.IndexIntoJointMap].JointIndices[0]));
                             vert.nrm = Vector3.TransformNormal(vert.nrm,
-                                Skeleton.GenericSkeleton.GetBoneTransform((int)Model.JointInfos[poly.IndexIntoJointMap].JointIndices[0]));
+                                G1MSkeleton.GenericSkeleton.GetBoneTransform((int)Model.JointInfos[poly.IndexIntoJointMap].JointIndices[0]));
 
                             mesh.vertices[i] = vert;
                         }

@@ -402,6 +402,7 @@
     <Compile Include="Interfaces\IArchiveQuickAccess.cs" />
     <Compile Include="Interfaces\IMainForm.cs" />
     <Compile Include="Interfaces\IMdiContainer.cs" />
+    <Compile Include="Interfaces\ModelData\IExportableModel.cs" />
     <Compile Include="Interfaces\Textures\ITextureIconLoader.cs" />
     <Compile Include="Interfaces\Utility\ICloneableNode.cs" />
     <Compile Include="Interfaces\ModelData\IMeshContainer.cs" />
