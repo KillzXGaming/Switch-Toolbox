@@ -54,6 +54,12 @@ namespace FirstPlugin
             set { }
         }
 
+        public override void OnAfterAdded()
+        {
+            if (Nodes.Count > 0 && this.TreeView != null)
+                this.TreeView.SelectedNode = Nodes[0];
+        }
+
         public Header header;
 
         public void Load(System.IO.Stream stream)
@@ -161,11 +167,10 @@ namespace FirstPlugin
                 {
                     for (int t = 0; t < Chunks[i].Textures.Count; t++)
                     {
-                        var texWrapper = new TextureWrapper();
+                        var texWrapper = new TextureWrapper(Chunks[i].Textures[t]);
                         texWrapper.Text = $"Texture_{t}";
                         texWrapper.ImageKey = "texture";
                         texWrapper.SelectedImageKey = texWrapper.ImageKey;
-                        texWrapper.TextureInfo = Chunks[i].Textures[t];
 
                         if (Chunks[i].Textures[t].Name != string.Empty)
                             texWrapper.Text = Chunks[i].Textures[t].Name;
@@ -264,6 +269,8 @@ namespace FirstPlugin
                 LA8 = 0x14016758,
             }
 
+            public Texture() { }
+
             public Texture(FileReader reader)
             {
                 ImageSize = reader.ReadUInt32();
@@ -343,8 +350,9 @@ namespace FirstPlugin
                 }
             }
 
-            public TextureWrapper()
+            public TextureWrapper(Texture textureInfo)
             {
+                TextureInfo = textureInfo;
                 PlatformSwizzle = PlatformSwizzle.Platform_3DS;
 
                 CanReplace = true;
@@ -370,6 +378,12 @@ namespace FirstPlugin
                 editor.Text = Text;
                 editor.LoadProperties(GenericProperties);
                 editor.LoadImage(this);
+            }
+
+            public void CreateNew(string fileName)
+            {
+                TextureInfo = new Texture();
+                Replace(fileName);
             }
 
             public override void Replace(string FileName)

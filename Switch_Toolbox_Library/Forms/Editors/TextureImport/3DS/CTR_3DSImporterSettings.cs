@@ -203,8 +203,6 @@ namespace Toolbox.Library.Forms
 
         public List<byte[]> GenerateMipList(int SurfaceLevel = 0)
         {
-            MipCount = 1;
-
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
 
             List<byte[]> mipmaps = new List<byte[]>();
@@ -215,7 +213,23 @@ namespace Toolbox.Library.Forms
             //      for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
-                Image = BitmapExtension.Resize(Image, Image.Width / 2, Image.Height / 2);
+                int width = Image.Width / 2;
+                int height = Image.Width / 2;
+                if (Format == CTR_3DS.PICASurfaceFormat.ETC1 || Format == CTR_3DS.PICASurfaceFormat.ETC1A4) {
+                    if (width < 16)
+                        break;
+                    if (height < 16)
+                        break;
+                }
+                else
+                {
+                    if (width < 8)
+                        break;
+                    if (height < 8)
+                        break;
+                }
+
+                Image = BitmapExtension.Resize(Image, width, height);
                 mipmaps.Add(CTR_3DS.EncodeBlock(BitmapExtension.ImageToByte(Image),
                     Image.Width, Image.Height, Format));
             }   
