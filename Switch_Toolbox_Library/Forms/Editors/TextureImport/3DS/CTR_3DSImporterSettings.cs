@@ -184,7 +184,12 @@ namespace Toolbox.Library.Forms
                 width = Pow2RoundDown(width);
                 height = Pow2RoundDown(height);
 
-                if (width <= 0 || height <= 0)
+                if (Format == CTR_3DS.PICASurfaceFormat.ETC1 || Format == CTR_3DS.PICASurfaceFormat.ETC1A4)
+                {
+                    if (width < 16 || height < 16)
+                        break;
+                }
+                else if (width < 8 || height < 8)
                     break;
 
                 if (num > 0)
