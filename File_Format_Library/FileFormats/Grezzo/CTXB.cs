@@ -389,6 +389,7 @@ namespace FirstPlugin
                 else
                 {
                     settings.LoadBitMap(FileName);
+                    settings.Format = CTR_3DS.ConvertToPICAFormat(Format);
                     importer.LoadSettings(new List<CTR_3DSImporterSettings>() { settings, });
 
                     if (importer.ShowDialog() == DialogResult.OK)

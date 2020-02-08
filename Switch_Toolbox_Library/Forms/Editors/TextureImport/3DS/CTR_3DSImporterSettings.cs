@@ -34,14 +34,27 @@ namespace Toolbox.Library.Forms
         public uint TexWidth
         {
             get { return _width; }
-            set { _width = Pow2RoundDown(value); }
+            set {
+                //3DS Limitations
+                _width = Pow2RoundDown(value);
+                if (_width > 1024)
+                    _width = 1024;
+                if (_width < 8)
+                    _width = 8;
+            }
         }
 
         private uint _height;
         public uint TexHeight
         {
             get { return _height; }
-            set { _height = Pow2RoundDown(value); }
+            set { 
+                _height = Pow2RoundDown(value);
+                if (_height > 1024)
+                    _height = 1024;
+                if (_height < 8)
+                    _height = 8;
+            }
         }
 
         public TEX_FORMAT GenericFormat

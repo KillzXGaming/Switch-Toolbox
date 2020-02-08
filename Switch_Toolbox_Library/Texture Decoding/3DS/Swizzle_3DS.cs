@@ -325,7 +325,6 @@ namespace Toolbox.Library
                             }
                             else if (PicaFormat == PICASurfaceFormat.A4)
                             {
-                                //Todo this has issues
                                 byte A1 = (byte)(Input[IOffs + 3] >> 4);
                                 byte A2 = (byte)(Input[IOffs + 7] & 0xF0);
                                 writer.Write((byte)(A1 | A2));
