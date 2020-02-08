@@ -461,6 +461,9 @@ namespace Toolbox.Library
                             if (group.MaterialIndex != -1 && Materials.Count > group.MaterialIndex)
                                 triangleList.Material = Materials[group.MaterialIndex].Text;
 
+                            if (group.Material != null)
+                                triangleList.Material = group.Material.Text;
+
                             List<int> faces = new List<int>();
                             if (group.PrimativeType == STPrimitiveType.TrangleStrips)
                                 faces = STGenericObject.ConvertTriangleStripsToTriangles(group.faces);
