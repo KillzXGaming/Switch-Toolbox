@@ -425,8 +425,6 @@ namespace Toolbox.Library.Forms
 
                     if (!HasExpand && HasChildren)
                         menuItems.Add(new ToolStripMenuItem("Expand All", null, ExpandAllAction, Keys.Control | Keys.P));
-
-             
                 }
 
                 if (archiveMenus.Count > 0)
