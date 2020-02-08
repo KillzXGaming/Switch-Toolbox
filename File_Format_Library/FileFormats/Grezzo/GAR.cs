@@ -72,6 +72,7 @@ namespace FirstPlugin
         {
             public VersionMagic Version;
 
+            public string Signature;
             public uint FileSize;
             public ushort FileGroupCount;
             public ushort FileCount;
@@ -86,7 +87,7 @@ namespace FirstPlugin
             public void Read(FileReader reader, List<FileEntry> files)
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
-                string Signature = reader.ReadString(4, Encoding.ASCII);
+                Signature = reader.ReadString(4, Encoding.ASCII);
                 switch (Signature)
                 {
                     case "ZAR\x01":
@@ -121,6 +122,15 @@ namespace FirstPlugin
                     default:
                         throw new Exception($"Unexpected codename! {Codename}");
                 }
+            }
+
+            public void Write(FileWriter writer)
+            {
+                writer.WriteSignature(Signature);
+                writer.Write(uint.MaxValue); //file size
+
+
+                writer.WriteSectionSizeU32(4, writer.BaseStream.Length);
             }
 
             private void ReadSystemGrezzoArchive(FileReader reader, List<FileEntry> files)
@@ -204,6 +214,14 @@ namespace FirstPlugin
                             FileData = reader.getSection(Offsets[i], ((GarFileInfo)GarFileInfos[i]).FileSize)
                         });
                     }
+                }
+            }
+
+            private void WriteZeldaArchive(FileWriter writer, List<FileEntry> files)
+            {
+                for (int i = 0; i < FileGroups.Count; i++)
+                {
+
                 }
             }
 

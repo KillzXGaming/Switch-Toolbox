@@ -121,10 +121,6 @@ namespace FirstPlugin
             }
             else if (byml is List<dynamic>)
             {
-                if (((List<dynamic>)byml).Count == 0)
-                {
-                    MessageBox.Show("This byml is empty");
-                }
                 parseArrayNode(byml, root.Nodes);
             }
             else if (byml is List<ByamlPathPoint>)

@@ -128,11 +128,14 @@ namespace Toolbox.Library.IO
         }
 
         //Writes the total size of a section as a uint. 
-        public void WriteSectionSizeU32(long position, long startPosition, long endPosition)
-        {
+        public void WriteSectionSizeU32(long position, long startPosition, long endPosition) {
+            WriteSectionSizeU32(position, endPosition - startPosition);
+        }
+
+        public void WriteSectionSizeU32(long position, long size) {
             using (TemporarySeek(position, System.IO.SeekOrigin.Begin))
             {
-                Write((uint)(endPosition - startPosition));
+                Write((uint)(size));
             }
         }
 

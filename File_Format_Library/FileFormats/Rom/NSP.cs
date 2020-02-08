@@ -36,7 +36,6 @@ namespace FirstPlugin
         }
 
         Nca Control { get; set; }
-        RomfsNodeWrapper romfsWrapper;
 
         public bool CanAddFiles { get; set; }
         public bool CanRenameFiles { get; set; }
