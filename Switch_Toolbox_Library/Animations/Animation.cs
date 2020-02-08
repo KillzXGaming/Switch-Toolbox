@@ -335,18 +335,7 @@ namespace Toolbox.Library.Animations
                         case InterpolationType.STEP: return LK.Value;
                         case InterpolationType.LINEAR: return InterpolationHelper.Lerp(LK.Value, RK.Value, Weight);
                         case InterpolationType.HERMITE:
-                            //   return InterpolationHelper.GetCubicValue(Weight, LK.Value, LK.Slope1, LK.Slope2, LK.Delta);
-                            //   return CubicEval(LK.Value, LK.Slope1, LK.Slope2, LK.Delta, ratio);
-                            float length = RK.Frame - LK.Frame;
-
-                            float val = InterpolationHelper.HermiteInterpolate(frame,
-                                LK.Frame, 
-                                RK.Frame,
-                                RK.Slope1,
-                                LK.Slope2,
-                                LK.Value,
-                                RK.Value);
-
+                            float val = Hermite(frame, LK.Frame, RK.Frame, LK.In, LK.Out != -1 ? LK.Out : RK.In, LK.Value, RK.Value);
                             return val;
                     }
                 }
