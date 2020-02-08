@@ -304,7 +304,6 @@ namespace Toolbox.Library
                             }
                             else if (PicaFormat == PICASurfaceFormat.L4)
                             {
-                                //Todo this has issues
                                 byte L1 = ConvertBRG8ToL(
                                     new byte[]
                                     {
@@ -312,8 +311,16 @@ namespace Toolbox.Library
                                             Input[IOffs + 1],
                                             Input[IOffs + 2]
                                     });
+                                byte L2 = ConvertBRG8ToL(
+                                    new byte[]
+                                    {
+                                                Input[IOffs + 3],
+                                                Input[IOffs + 4],
+                                                Input[IOffs + 5]
+                                    });
 
-                                writer.Write((byte)(L1 >> 4));
+                                writer.Write((byte)((L1 >> 4) | (L2 & 0xF0)));
+                                Px++;
                             }
                             else if (PicaFormat == PICASurfaceFormat.A4)
                             {
@@ -321,6 +328,7 @@ namespace Toolbox.Library
                                 byte A1 = (byte)(Input[IOffs] >> 4);
                                 byte A2 = (byte)(Input[IOffs + 3] & 0xF0);
                                 writer.Write((byte)(A1 | A2));
+                                Px++;
                             }
                             else if (PicaFormat == PICASurfaceFormat.HiLo8)
                             {
