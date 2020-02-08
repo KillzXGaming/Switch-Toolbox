@@ -98,7 +98,7 @@ namespace FirstPlugin
                 GITextureWrapper tex = new GITextureWrapper(this);
                 tex.ImageKey = "texture";
                 tex.SelectedImageKey = tex.ImageKey;
-                tex.Text = $"Texture {i}  {format.ToString("x")}";
+                tex.Text = $"Texture_{i}";
                 tex.Width = Width;
                 tex.Height = Height;
                 tex.MipCount = (uint)mipSys >> 4;

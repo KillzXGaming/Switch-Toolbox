@@ -94,7 +94,7 @@ namespace FirstPlugin
                     for (int t = 0; t < Chunks[i].Textures.Count; t++)
                     {
                         var texWrapper = new TextureWrapper();
-                        texWrapper.Text = $"Texture {t}";
+                        texWrapper.Text = $"Texture_{t}";
                         texWrapper.ImageKey = "texture";
                         texWrapper.SelectedImageKey = texWrapper.ImageKey;
 

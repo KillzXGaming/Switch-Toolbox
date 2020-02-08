@@ -99,8 +99,16 @@ namespace HyruleWarriors.G1M
         {
             get {
                 List<STGenericMaterial> materials = new List<STGenericMaterial>();
-                foreach (var mat in Model.Materials)
+                foreach (var mat in Model.Materials) {
                     materials.Add(mat);
+                    foreach (G1MTextureMap texMap in mat.TextureMaps)
+                    {
+                        var texList = TextureList;
+                        if (texList.Count > texMap.TextureIndex) {
+                            texMap.Name = texList[texMap.TextureIndex].Text;
+                        }
+                    }
+                }
                 return materials;
             }
         }

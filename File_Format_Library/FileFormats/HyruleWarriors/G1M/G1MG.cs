@@ -95,6 +95,7 @@ namespace HyruleWarriors.G1M
                 genericMesh.PolygonGroups.Add(polyGroup);
 
                 var mat = Materials[(int)meshInfo.TextureID];
+                mat.Text = $"Material_{meshInfo.TextureID}";
                 mat.Diffuse.TextureIndex = mat.TextureIndices[0][0];
                 polyGroup.Material = mat;
 
