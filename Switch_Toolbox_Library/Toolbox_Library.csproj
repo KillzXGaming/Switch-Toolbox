@@ -934,6 +934,7 @@
     <Compile Include="STToolStipMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Texture Decoding\3DS\ETC1_Encoder.cs" />
     <Compile Include="Texture Decoding\Gamecube\Color32.cs" />
     <Compile Include="Texture Decoding\Gamecube\Decode_Gamecube.cs" />
     <Compile Include="Texture Decoding\Wii U\GX2TexRegisters.cs" />

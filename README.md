@@ -109,7 +109,7 @@ In the event that the tool cannot compile, check references. All the libraries u
 
 ## Credits
 
-- Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc.) for some code ported over, specifically animation stuff and some rendering.
+- Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc.) for some code ported over, specifically animation stuff, ETC1 encoder and some rendering.
 - Ploaj for a base on the DAE writer.
 - Assimp devs for their massive asset library!
 - Wexos (helped figure out a few things, i.e. format list to assign each attribute)

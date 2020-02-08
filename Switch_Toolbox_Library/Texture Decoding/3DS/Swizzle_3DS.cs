@@ -208,13 +208,10 @@ namespace Toolbox.Library
         {
             int ImageSize = CalculateLength(Width, Height, PicaFormat);
 
-            if (PicaFormat == PICASurfaceFormat.ETC1 ||
-              PicaFormat == PICASurfaceFormat.ETC1A4)
-            {
-                return new byte[ImageSize];
-
-                return ETC1.ETC1Encode(Input, Width, Height, PicaFormat == PICASurfaceFormat.ETC1A4);
-            }
+            if (PicaFormat == PICASurfaceFormat.ETC1)
+                return SmashForge.RG_ETC1.encodeETC(BitmapExtension.GetBitmap(Input, Width, Height));
+            else if (PicaFormat == PICASurfaceFormat.ETC1A4)
+                return SmashForge.RG_ETC1.encodeETCa4(BitmapExtension.GetBitmap(Input, Width, Height));
 
             var mem = new System.IO.MemoryStream();
             using (var writer = new FileWriter(mem))
@@ -336,8 +333,8 @@ namespace Toolbox.Library
             }
 
             byte[] newOutput = mem.ToArray();
-            if (newOutput.Length != ImageSize)
-                throw new Exception($"Invalid image size! Expected {ImageSize} got {newOutput.Length}");
+        //    if (newOutput.Length != ImageSize)
+         //       throw new Exception($"Invalid image size! Expected {ImageSize} got {newOutput.Length}");
 
             if (newOutput.Length > 0)
                 return newOutput;
