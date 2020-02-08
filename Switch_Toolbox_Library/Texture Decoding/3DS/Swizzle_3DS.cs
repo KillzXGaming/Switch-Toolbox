@@ -304,6 +304,7 @@ namespace Toolbox.Library
                             }
                             else if (PicaFormat == PICASurfaceFormat.L4)
                             {
+                                //Skip alpha channel
                                 byte L1 = ConvertBRG8ToL(
                                     new byte[]
                                     {
@@ -314,9 +315,9 @@ namespace Toolbox.Library
                                 byte L2 = ConvertBRG8ToL(
                                     new byte[]
                                     {
-                                                Input[IOffs + 3],
                                                 Input[IOffs + 4],
-                                                Input[IOffs + 5]
+                                                Input[IOffs + 5],
+                                                Input[IOffs + 6]
                                     });
 
                                 writer.Write((byte)((L1 >> 4) | (L2 & 0xF0)));
@@ -325,8 +326,8 @@ namespace Toolbox.Library
                             else if (PicaFormat == PICASurfaceFormat.A4)
                             {
                                 //Todo this has issues
-                                byte A1 = (byte)(Input[IOffs] >> 4);
-                                byte A2 = (byte)(Input[IOffs + 3] & 0xF0);
+                                byte A1 = (byte)(Input[IOffs + 3] >> 4);
+                                byte A2 = (byte)(Input[IOffs + 7] & 0xF0);
                                 writer.Write((byte)(A1 | A2));
                                 Px++;
                             }
