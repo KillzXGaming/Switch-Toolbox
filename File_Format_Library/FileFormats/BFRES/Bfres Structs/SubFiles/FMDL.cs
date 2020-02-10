@@ -1178,11 +1178,6 @@ namespace Bfres.Structs
                             else
                                 shape.vertexAttributes = settings.CreateNewAttributes();
 
-                            if (ForceSkinInfluence)
-                                shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
-                            else
-                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
-
                             if (obj.MaterialIndex + MatStartIndex < materials.Count && obj.MaterialIndex > 0)
                                 shape.MaterialIndex = obj.MaterialIndex + MatStartIndex;
                             else
@@ -1195,17 +1190,22 @@ namespace Bfres.Structs
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
 
+                            if (ForceSkinInfluence)
+                                shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
+                            else
+                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+
                             if (shape.VertexSkinCount == 1 && shape.BoneIndices.Count > 0)
                             {
                                 int boneIndex = shape.BoneIndices[0];
                                 shape.BoneIndex = boneIndex;
                             }
 
-                            shape.BoneIndex = obj.BoneIndex;
-
                             shape.OptmizeAttributeFormats();
                             shape.SaveShape(IsWiiU);
                             shape.SaveVertexBuffer(IsWiiU);
+
+                            shape.BoneIndex = obj.BoneIndex;
 
                             if (IsWiiU)
                             {
