@@ -94,6 +94,9 @@ namespace Toolbox.Library.Animations
 
         public void Save(string FileName)
         {
+            System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+
             StringBuilder o = new StringBuilder();
 
             o.AppendLine("version 1");
