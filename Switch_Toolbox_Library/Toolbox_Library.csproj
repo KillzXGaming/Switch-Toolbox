@@ -389,6 +389,7 @@
     <Compile Include="Generics\Texture\ImageParameters.cs" />
     <Compile Include="Generics\Texture\STTextureFolder.cs" />
     <Compile Include="HashCalculate\FNV64A1.cs" />
+    <Compile Include="HashCalculate\SimpleHash.cs" />
     <Compile Include="Helpers\ArchiveNodeMenuHelper.cs" />
     <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Helpers\DragHelper.cs" />

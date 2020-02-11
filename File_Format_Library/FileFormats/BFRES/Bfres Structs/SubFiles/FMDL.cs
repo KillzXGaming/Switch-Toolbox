@@ -203,7 +203,7 @@ namespace Bfres.Structs
             for (int fshp = 0; fshp < shapes.Count; fshp++)
             {
                 if (shapes[fshp].Text == Name)
-                    return shapes[fshp]; 
+                    return shapes[fshp];
             }
 
             return null;
@@ -222,7 +222,7 @@ namespace Bfres.Structs
                 shape.FlipUvsVertical();
                 shape.SaveVertexBuffer(GetResFileU() != null);
             }
- 
+
             UpdateVertexData();
         }
         public void FlipUvsHorizontal()
@@ -386,7 +386,8 @@ namespace Bfres.Structs
                 bool UseUVLayer2 = false;
 
                 //for BOTW if it uses UV layer 2 for normal maps use second UV map
-                if (shp.GetFMAT().shaderassign.options.ContainsKey("uking_texture2_texcoord")) {
+                if (shp.GetFMAT().shaderassign.options.ContainsKey("uking_texture2_texcoord"))
+                {
                     float value = float.Parse(shp.GetFMAT().shaderassign.options["uking_texture2_texcoord"]);
 
                     if (value == 1)
@@ -505,7 +506,8 @@ namespace Bfres.Structs
             }
             else
             {
-                foreach (var shape in shapes) {
+                foreach (var shape in shapes)
+                {
                     shape.SaveVertexBuffer(GetResFileU() != null);
                 }
                 UpdateVertexData();
@@ -550,7 +552,7 @@ namespace Bfres.Structs
 
                     ExportModelSettings settings = new ExportModelSettings();
                     if (settings.ShowDialog() == DialogResult.OK)
-                        DAE.Export(FileName, settings.Settings, this, GetTextures(), 
+                        DAE.Export(FileName, settings.Settings, this, GetTextures(),
                             Skeleton, Skeleton.Node_Array.ToList());
 
                     break;
@@ -580,16 +582,18 @@ namespace Bfres.Structs
             return textures;
         }
 
-        public override void Replace(string FileName) {
+        public override void Replace(string FileName)
+        {
             AddOjects(FileName, GetResFile(), GetResFileU());
         }
 
-        public void Replace(string FileName, ResFile resFileNX, ResU.ResFile resFileU) {
+        public void Replace(string FileName, ResFile resFileNX, ResU.ResFile resFileU)
+        {
             AddOjects(FileName, resFileNX, resFileU);
         }
 
         //Function addes shapes, vertices and meshes
-        public void AddOjects(string FileName, ResFile resFileNX, ResU.ResFile resFileU,  bool Replace = true)
+        public void AddOjects(string FileName, ResFile resFileNX, ResU.ResFile resFileU, bool Replace = true)
         {
             //If using original attributes, this to look them up
             Dictionary<string, List<FSHP.VertexAttribute>> AttributeMatcher = new Dictionary<string, List<FSHP.VertexAttribute>>();
@@ -684,7 +688,8 @@ namespace Bfres.Structs
                     {
                         if (csvsettings.LimitSkinCount ||
                             csvsettings.MapOriginalMaterials ||
-                            csvsettings.UseOriginalAttributes) {
+                            csvsettings.UseOriginalAttributes)
+                        {
                             for (int i = 0; i < csvModel.objects.Count; i++)
                             {
                                 //Only one match should be found as shapes can't have duped names
@@ -699,7 +704,7 @@ namespace Bfres.Structs
                                 }
 
                                 if (csvsettings.MapOriginalMaterials && match != null)
-                                    {
+                                {
                                     csvModel.objects[i].MaterialIndex = match.MaterialIndex;
                                 }
 
@@ -750,15 +755,6 @@ namespace Bfres.Structs
                             else
                                 shape.vertexAttributes = csvsettings.CreateNewAttributes();
 
-                            Console.WriteLine($"ForceSkinInfluence {ForceSkinInfluence}");
-
-                            if (!ForceSkinInfluence)
-                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
-                            else
-                                shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
-
-                            Console.WriteLine($"VertexSkinCount { shape.VertexSkinCount}");
-
                             shape.BoneIndex = 0;
                             shape.Text = obj.ObjectName;
                             shape.lodMeshes = obj.lodMeshes;
@@ -767,6 +763,15 @@ namespace Bfres.Structs
                             shape.CreateIndexList(obj, this);
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
+
+                            Console.WriteLine($"ForceSkinInfluence {ForceSkinInfluence}");
+
+                            if (!ForceSkinInfluence)
+                                shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
+                            else
+                                shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;
+
+                            Console.WriteLine($"VertexSkinCount { shape.VertexSkinCount}");
 
                             if (shape.VertexSkinCount == 1)
                             {
@@ -827,7 +832,7 @@ namespace Bfres.Structs
 
 
                     string[] shapeSortCheck = shapes.Select(o => o.Text).ToArray();
-                  //  assimp.objects = assimp.objects.SortBy(shapeSortCheck, c => c.ObjectName).ToList();
+                    //  assimp.objects = assimp.objects.SortBy(shapeSortCheck, c => c.ObjectName).ToList();
 
                     if (ImportedObjects.Count == 0)
                     {
@@ -1178,6 +1183,8 @@ namespace Bfres.Structs
                             else
                                 shape.vertexAttributes = settings.CreateNewAttributes();
 
+                            shape.BoneIndex = obj.BoneIndex;
+
                             if (obj.MaterialIndex + MatStartIndex < materials.Count && obj.MaterialIndex > 0)
                                 shape.MaterialIndex = obj.MaterialIndex + MatStartIndex;
                             else
@@ -1204,8 +1211,6 @@ namespace Bfres.Structs
                             shape.OptmizeAttributeFormats();
                             shape.SaveShape(IsWiiU);
                             shape.SaveVertexBuffer(IsWiiU);
-
-                            shape.BoneIndex = obj.BoneIndex;
 
                             if (IsWiiU)
                             {
@@ -1298,7 +1303,8 @@ namespace Bfres.Structs
             UpdateEditor();
         }
 
-        public void UpdateEditor(){
+        public void UpdateEditor()
+        {
             ((BFRES)Parent?.Parent)?.LoadEditors(this);
         }
 
@@ -1317,10 +1323,10 @@ namespace Bfres.Structs
             bn.Name = bone.Text;
             bn.RigidMatrixIndex = 0;
             bn.Rotation = new Syroot.Maths.Vector4F(
-                bone.Rotation.X,
-                bone.Rotation.Y,
-                bone.Rotation.Z,
-                bone.Rotation.W);
+                       bone.Rotation.X,
+                       bone.Rotation.Y,
+                       bone.Rotation.Z,
+                       bone.Rotation.W);
             bn.Position = new Syroot.Maths.Vector3F(
                 bone.Position.X,
                 bone.Position.Y,
