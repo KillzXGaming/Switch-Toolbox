@@ -16,7 +16,7 @@ using LayoutBXLYT.Revolution;
 
 namespace LayoutBXLYT
 {
-    public class BRLYT : IFileFormat, IEditorForm<LayoutEditor>, IConvertableTextFormat
+    public class BRLYT : IFileFormat, IEditorForm<LayoutEditor>, IConvertableTextFormat, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Layout;
 

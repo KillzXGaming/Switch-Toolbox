@@ -110,12 +110,14 @@ namespace FirstPlugin
                 reader.SeekBegin(dataOffset);
                 for (int i = 0; i < FileCount; i++)
                 {
-                    if (files[i].CompressedSize == 0)
-                        continue;
-
                     files[i].FileName = $"File {i}";
                     files[i].DataOffset = reader.Position;
-                    reader.Seek((int)files[i].CompressedSize);
+                    if (files[i].CompressedSize != 0)
+                        reader.Seek((int)files[i].CompressedSize);
+                    else
+                        reader.Seek((int)files[i].UncompressedSize);
+
+                //    Console.WriteLine($"{i} {files[i].DataOffset} {files[i].CompressedSize} {files[i].Alignment}");
 
                     if (files[i].Alignment != 0)
                         reader.Align((int)files[i].Alignment);
@@ -130,7 +132,7 @@ namespace FirstPlugin
 
                     reader.SeekBegin(files[i].DataOffset);
                     var data = reader.ReadBytes((int)files[i].CompressedSize);
-                    if (files[i].CompressedSize != files[i].UncompressedSize && data[0] == 0x78 && data[1] == 0x5E)
+                    if (files[i].CompressedSize  != 0 && files[i].CompressedSize != files[i].UncompressedSize && data[0] == 0x78 && data[1] == 0x5E)
                         data = STLibraryCompression.ZLIB.Decompress(data);
 
                     using (var dataReader = new FileReader(data))
