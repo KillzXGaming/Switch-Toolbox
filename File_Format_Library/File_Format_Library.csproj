@@ -246,6 +246,7 @@
     <Compile Include="FileFormats\Layout\CAFE\Panes\TXT1.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Panes\WND1.cs" />
     <Compile Include="FileFormats\Layout\CAFE\USD1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\BCLAN.cs" />
     <Compile Include="FileFormats\Layout\CTR\GRP1.cs" />
     <Compile Include="FileFormats\Layout\CTR\MAT1.cs" />
     <Compile Include="FileFormats\Layout\CTR\Materials\TevStage.cs" />
@@ -264,6 +265,7 @@
     <Compile Include="FileFormats\Layout\Rev\MAT1.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\AlphaCompare.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\ChanCtrl.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Materials\Enums.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\IndirectTextureOrderEntry.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\TevSwapModeTable.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\TexCoordGenEntry.cs" />
@@ -273,6 +275,7 @@
     <Compile Include="FileFormats\Layout\Rev\Panes\PIC1.cs" />
     <Compile Include="FileFormats\Layout\Rev\Panes\TXT1.cs" />
     <Compile Include="FileFormats\Layout\Rev\Panes\WND1.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Shaders\ShaderGenerator.cs" />
     <Compile Include="FileFormats\LM1\LM1_MDL.cs" />
     <Compile Include="FileFormats\MarioParty\HSF.cs" />
     <Compile Include="FileFormats\Message\MSYT.cs" />
