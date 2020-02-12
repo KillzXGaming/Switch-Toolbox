@@ -100,7 +100,7 @@ namespace FirstPlugin
                 reader.ReadUInt32(); //0
                 reader.ReadUInt32(); //0
 
-                //Skip an unknown section that is 64 bytes in size
+                //Skip an unknown section that is 32 bytes in size
                 reader.Seek(unkSectionCount * 32);
 
                 for (int i = 0; i < FileCount; i++)

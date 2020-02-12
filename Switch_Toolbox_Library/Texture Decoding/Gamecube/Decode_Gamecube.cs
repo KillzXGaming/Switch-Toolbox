@@ -384,8 +384,8 @@ namespace Toolbox.Library
             stream.SetByteOrder(true);
 
             //4 bpp, 8 block width/height, block size 32 bytes, possible palettes (IA8, RGB565, RGB5A3)
-            uint numBlocksW = width / 8;
-            uint numBlocksH = height / 8;
+            uint numBlocksW = (width + 7) / 8;
+            uint numBlocksH = (height + 7) / 8;
 
             byte[] decodedData = new byte[width * height * 8];
 
@@ -399,9 +399,11 @@ namespace Toolbox.Library
                     {
                         for (int pX = 0; pX < 8; pX += 2)
                         {
-                            //Ensure we're not reading past the end of the image.
                             if ((xBlock * 8 + pX >= width) || (yBlock * 8 + pY >= height))
+                            {
+                                stream.Seek(1);
                                 continue;
+                            }
 
                             byte data = stream.ReadByte();
                             byte t = (byte)(data & 0xF0);
@@ -436,8 +438,8 @@ namespace Toolbox.Library
             stream.SetByteOrder(true);
 
             //4 bpp, 8 block width/4 block height, block size 32 bytes, possible palettes (IA8, RGB565, RGB5A3)
-            uint numBlocksW = width / 8;
-            uint numBlocksH = height / 4;
+            uint numBlocksW = (width + 7) / 8;
+            uint numBlocksH = (height + 3) / 4;
 
             byte[] decodedData = new byte[width * height * 8];
 
@@ -451,10 +453,11 @@ namespace Toolbox.Library
                     {
                         for (int pX = 0; pX < 8; pX++)
                         {
-                            //Ensure we're not reading past the end of the image.
                             if ((xBlock * 8 + pX >= width) || (yBlock * 4 + pY >= height))
+                            {
+                                stream.Seek(1);
                                 continue;
-
+                            }
 
                             byte data = stream.ReadByte();
                             decodedData[width * ((yBlock * 4) + pY) + (xBlock * 8) + pX] = data;
@@ -857,6 +860,9 @@ namespace Toolbox.Library
         /// <param name="destOffset">Offset into destination array to write RGBA pixel.</param>
         private static void RGB565ToRGBA8(ushort sourcePixel, ref byte[] dest, int destOffset)
         {
+            //This repo fixes some decoding bugs SuperBMD had
+            //https://github.com/RenolY2/SuperBMD/tree/master/SuperBMDLib/source
+
             byte r, g, b;
             r = (byte)((sourcePixel & 0xF100) >> 11);
             g = (byte)((sourcePixel & 0x7E0) >> 5);
@@ -887,17 +893,26 @@ namespace Toolbox.Library
             if ((sourcePixel & 0x8000) == 0x8000)
             {
                 a = 0xFF;
-                r = Expand5to8((sourcePixel >> 10) & 0x1F);
-                g = Expand5to8((sourcePixel >> 5) & 0x1F);
-                b = Expand5to8(sourcePixel & 0x1F);
+                r = (byte)((sourcePixel & 0x7C00) >> 10);
+                g = (byte)((sourcePixel & 0x3E0) >> 5);
+                b = (byte)(sourcePixel & 0x1F);
+
+                r = (byte)((r << (8 - 5)) | (r >> (10 - 8)));
+                g = (byte)((g << (8 - 5)) | (g >> (10 - 8)));
+                b = (byte)((b << (8 - 5)) | (b >> (10 - 8)));
             }
             //Alpha bits
             else
             {
-                a = Expand3to8(sourcePixel >> 12);
-                r = Expand4to8((sourcePixel >> 8) & 0x0F);
-                g = Expand4to8((sourcePixel >> 4) & 0x0F);
-                b = Expand4to8(sourcePixel & 0x0F);
+                a = (byte)((sourcePixel & 0x7000) >> 12);
+                r = (byte)((sourcePixel & 0xF00) >> 8);
+                g = (byte)((sourcePixel & 0xF0) >> 4);
+                b = (byte)(sourcePixel & 0xF);
+
+                a = (byte)((a << (8 - 3)) | (a << (8 - 6)) | (a >> (9 - 8)));
+                r = (byte)((r << (8 - 4)) | r);
+                g = (byte)((g << (8 - 4)) | g);
+                b = (byte)((b << (8 - 4)) | b);
             }
 
             dest[destOffset + 0] = b;

@@ -1441,7 +1441,7 @@ namespace LayoutBXLYT
                     BottomRight = reader.ReadVec2SY(),
                 });
 
-            Material = LayoutFile.GetMaterial(MaterialIndex);
+            Material = LayoutFile.Materials[MaterialIndex];
         }
 
         public void Write(FileWriter writer)
@@ -1491,7 +1491,7 @@ namespace LayoutBXLYT
             TextureFlip = (WindowFrameTexFlip)reader.ReadByte();
             reader.ReadByte(); //padding
 
-            Material = header.GetMaterial(MaterialIndex);
+            Material = header.Materials[MaterialIndex];
         }
 
         public void Write(FileWriter writer)
@@ -1793,6 +1793,7 @@ namespace LayoutBXLYT
         public BxlanPaiTagEntry CreateTarget(object TargetType, byte interpolationType)
         {
             byte target = (byte)TargetType;
+
             string tagType = Tag.Remove(0, 1);
             switch (tagType)
             {
@@ -1848,6 +1849,20 @@ namespace LayoutBXLYT
                 {"RLAC","AlphaTest" },
                 {"RLCT","FontShadow" },
                 {"RLCC","PerCharacterTransformCurve" },
+        };
+
+        public static Dictionary<string, string> CtrTypeDefine = new Dictionary<string, string>()
+        {
+                {"CLPA","PaneSRT" },
+                {"CLVI","Visibility" },
+                {"CLTS","TextureSRT" },
+                {"CLVC","VertexColor" },
+                {"CLMC","MaterialColor" },
+                {"CLTP","TexturePattern" },
+                {"CLIM","IndTextureSRT" },
+                {"CLAC","AlphaTest" },
+                {"CLCT","FontShadow" },
+                {"CLCC","PerCharacterTransformCurve" },
         };
 
         public static Dictionary<string, string> TypeDefine = new Dictionary<string, string>()

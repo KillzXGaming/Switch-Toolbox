@@ -62,25 +62,66 @@ namespace LayoutBXLYT
 
             BindTextureUniforms(shader, material);
 
-            string textureMap0 = "";
-            if (material.TextureMaps.Length > 0)
-                textureMap0 = material.GetTexture(0);
-
-            if (textures.ContainsKey(textureMap0))
+            int id = 1;
+            for (int i = 0; i < material.TextureMaps.Length; i++)
             {
-                GL.ActiveTexture(TextureUnit.Texture0);
-                shader.SetInt("textures0", 0);
-                bool isBinded = BxlytToGL.BindGLTexture(material.TextureMaps[0], textures[textureMap0]);
-                if (isBinded)
-                    shader.SetInt("hasTexture0", 1);
+                string TexName = material.TextureMaps[i].Name;
+                if (material.animController.TexturePatterns.ContainsKey((LTPTarget)i))
+                    TexName = material.animController.TexturePatterns[(LTPTarget)i];
+
+                shader.SetInt($"hasTexture{i}", 0);
+                if (textures.ContainsKey(TexName))
+                {
+                    GL.ActiveTexture(TextureUnit.Texture0 + id);
+                    shader.SetInt($"textures{i}", id);
+                    bool binded = BxlytToGL.BindGLTexture(material.TextureMaps[i], textures[TexName]);
+                    shader.SetInt($"hasTexture{i}", binded ? 1 : 0);
+                    id++;
+                }
             }
 
-            if (material.TextureTransforms.Length > 0)
-            {
-                var transform = material.TextureTransforms[0];
-                shader.SetVec2("uvScale0", new Vector2(transform.Scale.X, transform.Scale.Y));
-                shader.SetFloat("uvRotate0", transform.Rotate);
-                shader.SetVec2("uvTranslate0", new Vector2(transform.Translate.X, transform.Translate.Y));
+            for (int i = 0; i < 3; i++) {
+                Matrix4 matTransform = Matrix4.Identity;
+                shader.SetMatrix(String.Format("textureTransforms[{0}]", i), ref matTransform);
+            }
+
+            for (int i = 0; i < material.TextureMaps.Length; i++) {
+                var scale = new Syroot.Maths.Vector2F(1, 1);
+                float rotate = 0;
+                var translate = new Syroot.Maths.Vector2F(0, 0);
+
+                int index = i;
+               // if (material.TexCoordGens?.Length > i)
+               //     index = (int)material.TexCoordGens[i].Source / 3 - 10;
+
+                if (material.TextureTransforms.Length > index)
+                {
+                    var transform = material.TextureTransforms[index];
+                    scale = transform.Scale;
+                    rotate = transform.Rotate;
+                    translate = transform.Translate;
+
+                    foreach (var animItem in material.animController.TextureSRTS)
+                    {
+                        switch (animItem.Key)
+                        {
+                            case LTSTarget.ScaleS: scale.X = animItem.Value; break;
+                            case LTSTarget.ScaleT: scale.Y = animItem.Value; break;
+                            case LTSTarget.Rotate: rotate = animItem.Value; break;
+                            case LTSTarget.TranslateS: translate.X = animItem.Value; break;
+                            case LTSTarget.TranslateT: translate.Y = animItem.Value; break;
+                        }
+                    }
+                }
+
+                var matScale = Matrix4.CreateScale(scale.X, scale.Y, 1.0f);
+                var matRotate = Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.DegreesToRadians(rotate));
+                var matTranslate = Matrix4.CreateTranslation(
+                    translate.X / scale.X - 0.5f,
+                    translate.Y / scale.Y - 0.5f, 0);
+
+                Matrix4 matTransform = matRotate * matTranslate * matScale;
+                shader.SetMatrix(String.Format("textureTransforms[{0}]", i), ref matTransform);
             }
         }
 

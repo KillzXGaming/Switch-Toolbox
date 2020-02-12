@@ -301,6 +301,7 @@ namespace FirstPlugin.LuigisMansion.DarkMoon
                     }
 
                     genericObj.RemoveDuplicateVertices();
+                    genericObj.FlipUvsVertical();
                 }
             }
         }

@@ -330,7 +330,7 @@ namespace FirstPlugin
                                 {
                                     vert.uv0 = new OpenTK.Vector2(
                                     shape.TexCoord0.VertexData[v].X,
-                                    shape.TexCoord0.VertexData[v].Y);
+                                    1 - shape.TexCoord0.VertexData[v].Y);
                                 }
 
                                 if (shape.TexCoord1.VertexData != null)

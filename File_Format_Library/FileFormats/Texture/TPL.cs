@@ -188,6 +188,8 @@ namespace FirstPlugin
             public TplTextureWrapper(TPL tpl, ImageHeader header) {
                 TPLParent = tpl;
                 ImageHeader = header;
+
+                CanReplace = true;
             }
 
             public override TEX_FORMAT[] SupportedFormats
@@ -236,6 +238,64 @@ namespace FirstPlugin
 
                 editor.LoadProperties(ImageHeader);
                 editor.LoadImage(this);
+            }
+
+            public void UpdateEditor()
+            {
+                ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+                if (editor == null)
+                {
+                    editor = new ImageEditorBase();
+                    editor.Dock = DockStyle.Fill;
+                    LibraryGUI.LoadEditor(editor);
+                }
+
+                editor.LoadProperties(GenericProperties);
+                editor.LoadImage(this);
+            }
+
+            public override void Replace(string FileName)
+            {
+                GamecubeTextureImporterList importer = new GamecubeTextureImporterList(SupportedFormats);
+                GameCubeTextureImporterSettings settings = new GameCubeTextureImporterSettings();
+
+                importer.ForceMipCount = true;
+                importer.SelectedMipCount = 1;
+
+                if (Utils.GetExtension(FileName) == ".dds" ||
+                    Utils.GetExtension(FileName) == ".dds2")
+                {
+                    settings.LoadDDS(FileName);
+                    importer.LoadSettings(new List<GameCubeTextureImporterSettings>() { settings, });
+
+                    ApplySettings(settings);
+                    UpdateEditor();
+                }
+                else
+                {
+                    settings.LoadBitMap(FileName);
+                    importer.LoadSettings(new List<GameCubeTextureImporterSettings>() { settings, });
+
+                    if (importer.ShowDialog() == DialogResult.OK)
+                    {
+                        if (settings.GenerateMipmaps && !settings.IsFinishedCompressing)
+                            settings.Compress();
+
+                        ApplySettings(settings);
+                        UpdateEditor();
+                    }
+                }
+            }
+
+            private void ApplySettings(GameCubeTextureImporterSettings settings)
+            {
+                this.ImageData = settings.DataBlockOutput[0];
+                this.Width = settings.TexWidth;
+                this.Height = settings.TexHeight;
+                this.Format = settings.GenericFormat;
+                this.MipCount = 1; //Always 1
+                this.Depth = 1;
+                this.ArrayCount = (uint)settings.DataBlockOutput.Count;
             }
         }
 

@@ -76,7 +76,7 @@ namespace LayoutBXLYT
                 sizeRestrictUD.Value = 0;
 
             //BRLYT has no shader parameters. Text cannot do those so hide them
-            if (pane is Revolution.TXT1)
+            if (pane is Revolution.TXT1 || pane is CTR.TXT1)
             {
                 stDropDownPanel4.Visible = false;
             }

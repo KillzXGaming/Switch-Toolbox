@@ -130,28 +130,49 @@ namespace LayoutBXLYT
                 shader.SetInt($"tevStage{i}A",   (int)material.TevStages[i].AlphaMode);
             }
 
-            if (material.TextureTransforms.Length > 0)
-            {
-                var transform = material.TextureTransforms[0];
-                var scale = transform.Scale;
-                var rotate = transform.Rotate;
-                var translate = transform.Translate;
+            for (int i = 0; i < 3; i++) {
+                Matrix4 matTransform = Matrix4.Identity;
+                shader.SetMatrix(String.Format("textureTransforms[{0}]", i), ref matTransform);
+            }
 
-                foreach (var animItem in material.animController.TextureSRTS)
+            for (int i = 0; i < material.TextureMaps.Length; i++)
+            {
+                var scale = new Syroot.Maths.Vector2F(1, 1);
+                float rotate = 0;
+                var translate = new Syroot.Maths.Vector2F(0, 0);
+
+                int index = i;
+           //     if (material.TexCoordGens?.Length > i)
+           //         index = (int)material.TexCoordGens[i].Source / 3 - 10;
+
+                if (material.TextureTransforms.Length > index)
                 {
-                    switch (animItem.Key)
+                    var transform = material.TextureTransforms[index];
+                    scale = transform.Scale;
+                    rotate = transform.Rotate;
+                    translate = transform.Translate;
+
+                    foreach (var animItem in material.animController.TextureSRTS)
                     {
-                        case LTSTarget.ScaleS: scale.X = animItem.Value; break;
-                        case LTSTarget.ScaleT: scale.Y = animItem.Value; break;
-                        case LTSTarget.Rotate: rotate = animItem.Value; break;
-                        case LTSTarget.TranslateS: translate.X = animItem.Value; break;
-                        case LTSTarget.TranslateT: translate.Y = animItem.Value; break;
+                        switch (animItem.Key)
+                        {
+                            case LTSTarget.ScaleS: scale.X = animItem.Value; break;
+                            case LTSTarget.ScaleT: scale.Y = animItem.Value; break;
+                            case LTSTarget.Rotate: rotate = animItem.Value; break;
+                            case LTSTarget.TranslateS: translate.X = animItem.Value; break;
+                            case LTSTarget.TranslateT: translate.Y = animItem.Value; break;
+                        }
                     }
                 }
 
-                shader.SetVec2("uvScale0", new Vector2(scale.X, scale.Y));
-                shader.SetFloat("uvRotate0", rotate);
-                shader.SetVec2("uvTranslate0", new Vector2(translate.X, translate.Y));
+                var matScale = Matrix4.CreateScale(scale.X, scale.Y, 1.0f);
+                var matRotate = Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.DegreesToRadians(rotate));
+                var matTranslate = Matrix4.CreateTranslation(
+                    translate.X / scale.X - 0.5f,
+                    translate.Y / scale.Y - 0.5f, 0);
+
+                Matrix4 matTransform = matRotate * matTranslate * matScale;
+                shader.SetMatrix(String.Format("textureTransforms[{0}]", i), ref matTransform);
             }
 
 

@@ -50,6 +50,7 @@ namespace LayoutBXLYT
             vertexColorBox1.BottomRightColor = pane.ColorBottomRight.Color;
             vertexColorBox1.Refresh();
 
+            texCoordIndexCB.Items.Clear();
             for (int i = 0; i < pane.TexCoords?.Length; i++)
                 texCoordIndexCB.Items.Add($"TexCoord [{i}]");
 

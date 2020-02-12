@@ -418,6 +418,7 @@ namespace FirstPlugin
             Formats.Add(typeof(LayoutBXLYT.BRLYT));
             Formats.Add(typeof(LayoutBXLYT.BFLAN));
             Formats.Add(typeof(LayoutBXLYT.BRLAN));
+            Formats.Add(typeof(LayoutBXLYT.BCLAN));
             Formats.Add(typeof(ZSI));
             Formats.Add(typeof(IGZ_TEX));
             Formats.Add(typeof(MOD));

@@ -95,39 +95,27 @@ namespace FirstPlugin
             }
         }
 
-        ImageEditorBase form;
+        private ImageEditorBase form;
         public ImageEditorBase OpenForm()
         {
-            bool IsDialog = IFileInfo != null && IFileInfo.InArchive;
-
-            Properties prop = new Properties();
-            prop.Width = Width;
-            prop.Height = Height;
-            prop.Depth = Depth;
-            prop.MipCount = MipCount;
-            prop.ArrayCount = ArrayCount;
-            prop.ImageSize = (uint)ImageData.Length;
-            prop.Format = Format;
-
             form = new ImageEditorBase();
-            form.Text = Text;
-            form.Dock = DockStyle.Fill;
-            form.AddFileContextEvent("Save", Save);
-            form.AddFileContextEvent("Replace", Replace);
-            form.LoadProperties(prop);
-            form.LoadImage(this);
-
             return form;
+        }
+
+        public void UpdateForm()
+        {
+            UpdateForm(form);
         }
 
         public void FillEditor(UserControl control)
         {
-            UpdateForm();
+            form = (ImageEditorBase)control;
+            UpdateForm((ImageEditorBase)control);
         }
 
-        private void UpdateForm()
+        private void UpdateForm(ImageEditorBase form)
         {
-            if (form != null && image != null)
+            if (image != null)
             {
                 Properties prop = new Properties();
                 prop.Width = Width;
@@ -138,8 +126,15 @@ namespace FirstPlugin
                 prop.ImageSize = (uint)ImageData.Length;
                 prop.Format = Format;
 
+                form.Text = Text;
+                form.Dock = DockStyle.Fill;
+                form.ResetMenus();
+                form.AddFileContextEvent("Save", Save);
+                form.AddFileContextEvent("Replace", Replace);
                 form.LoadProperties(prop);
                 form.LoadImage(this);
+
+                Console.WriteLine("UpdateForm LoadImage");
             }
         }
 

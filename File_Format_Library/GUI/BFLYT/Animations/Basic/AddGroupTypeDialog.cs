@@ -49,6 +49,8 @@ namespace LayoutBXLYT
                 tagValue = BxlanPaiTag.CafeTypeDefine.FirstOrDefault(x => x.Value == (string)stComboBox1.SelectedItem).Key;
             if (ActiveGroup is BRLAN.PaiEntry)
                 tagValue = BxlanPaiTag.RevTypeDefine.FirstOrDefault(x => x.Value == (string)stComboBox1.SelectedItem).Key;
+            if (ActiveGroup is BCLAN.PaiEntry)
+                tagValue = BxlanPaiTag.CtrTypeDefine.FirstOrDefault(x => x.Value == (string)stComboBox1.SelectedItem).Key;
 
             return ActiveGroup.AddEntry(tagValue);
         }

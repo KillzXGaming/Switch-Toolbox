@@ -130,8 +130,8 @@ namespace LayoutBXLYT.Revolution
             TextureMaps = TextureMaps.AddToArray(textureRef);
             TexCoordGens.Add(new TexCoordGenEntry()
             {
-                MatrixSource = TexCoordGenEntry.TexCoordGenMatrixSource.GX_DTTMTX9 + (TexCoordGens.Count * 4),
-                Source = TexCoordGenEntry.TexCoordGenSource.GX_TG_TEX0 
+                MatrixSource = TexCoordGenMatrixSource.GX_DTTMTX9 + (TexCoordGens.Count * 4),
+                Source = TexCoordGenSource.GX_TG_TEX0 
             });
             TextureTransforms = TextureTransforms.AddToArray(new BxlytTextureTransform());
         }

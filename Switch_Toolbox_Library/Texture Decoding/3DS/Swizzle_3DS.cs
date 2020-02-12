@@ -102,7 +102,7 @@ namespace Toolbox.Library
         public static byte[] DecodeBlock(byte[] Input, int Width, int Height, PICASurfaceFormat picaFormat)
         {
             if (picaFormat == PICASurfaceFormat.ETC1 || picaFormat == PICASurfaceFormat.ETC1A4)
-                return ETC1.ETC1Decompress(Input, Width, Height, picaFormat == PICASurfaceFormat.ETC1A4);
+                return FlipVertical(Width, Height, ETC1.ETC1Decompress(Input, Width, Height, picaFormat == PICASurfaceFormat.ETC1A4));
 
             byte[] Output = new byte[Width * Height * 4];
 
@@ -195,7 +195,31 @@ namespace Toolbox.Library
                 }
             }
 
-            return Output;
+            return FlipVertical(Width, Height, Output);
+        }
+
+        private static byte[] FlipVertical(int Width, int Height, byte[] Input)
+        {
+            byte[] FlippedOutput = new byte[Width * Height * 4];
+
+            int Stride = Width * 4;
+            for (int Y = 0; Y < Height; Y++)
+            {
+                int IOffs = Stride * Y;
+                int OOffs = Stride * (Height - 1 - Y);
+
+                for (int X = 0; X < Width; X++)
+                {
+                    FlippedOutput[OOffs + 0] = Input[IOffs + 0];
+                    FlippedOutput[OOffs + 1] = Input[IOffs + 1];
+                    FlippedOutput[OOffs + 2] = Input[IOffs + 2];
+                    FlippedOutput[OOffs + 3] = Input[IOffs + 3];
+
+                    IOffs += 4;
+                    OOffs += 4;
+                }
+            }
+            return FlippedOutput;
         }
 
         public static byte[] EncodeBlock(byte[] Input, int Width, int Height, TEX_FORMAT Format) {

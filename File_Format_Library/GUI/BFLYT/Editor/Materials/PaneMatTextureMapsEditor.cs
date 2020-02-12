@@ -142,7 +142,7 @@ namespace LayoutBXLYT
         public override void OnControlClosing()
         {
             foreach (var img in Images)
-                img.Dispose();
+                img?.Dispose();
 
             Images.Clear();
         }

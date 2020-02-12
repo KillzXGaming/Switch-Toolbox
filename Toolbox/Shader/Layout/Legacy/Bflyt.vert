@@ -1,12 +1,10 @@
 ﻿#version 110
 
-uniform vec2 uvScale0;
-uniform float uvRotate0;
-uniform vec2 uvTranslate0;
 uniform int flipTexture;
 uniform mat4 rotationMatrix;
 uniform int texCoords0GenType;
 uniform int texCoords0Source;
+uniform mat4 textureTransforms[3];
 
 vec2 rotateUV(vec2 uv, float rotation)
 {
@@ -58,12 +56,8 @@ vec2 SetTexCoordType(int type, vec2 tex)
 void main()
 {
 	gl_FrontColor = gl_Color;
-	vec2 texCoord0 = vec2(0.5, 0.5) + uvScale0 * (gl_MultiTexCoord0.xy + (uvTranslate0 / uvScale0 - 0.5));
-	texCoord0 = SetTexCoordType(texCoords0GenType, texCoord0);
-    texCoord0 =	rotateUV(texCoord0, radians(-uvRotate0));
-
-	gl_TexCoord[0].st = SetFlip(texCoord0);
-
+	gl_TexCoord[0] =  textureTransforms[0] * gl_MultiTexCoord0;
+	gl_TexCoord[0].st = SetFlip(vec2(0.5, 0.5) + gl_TexCoord[0].st);
 	
 	gl_Position = gl_ModelViewProjectionMatrix * rotationMatrix * gl_Vertex;
 }

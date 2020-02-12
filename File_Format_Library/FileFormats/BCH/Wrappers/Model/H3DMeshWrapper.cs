@@ -83,6 +83,8 @@ namespace FirstPlugin.CtrLibrary
                 vertex.uv2 = ConvertVector2(vertices[v].TexCoord2);
                 vertex.col = ConvertVector4(vertices[v].Color);
 
+                //Flip UVs
+                vertex.uv0 = new Vector2(vertex.uv0.X, 1 - vertex.uv0.Y);
                 if (boneIndices.Count > 0)
                 {
                   /*  if (vertices[v].Indices.b0 != -1) vertex.boneIds.Add(boneIndices[vertices[v].Indices.b0]);

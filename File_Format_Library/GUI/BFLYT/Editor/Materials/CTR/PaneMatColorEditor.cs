@@ -58,8 +58,7 @@ namespace LayoutBXLYT.CTR
             };
             colorDlg.ColorChanged += delegate
             {
-                whiteColorPB.Color = colorDlg.NewColor;
-                ActiveMaterial.WhiteColor.Color = colorDlg.NewColor;
+                ((ColorAlphaBox)sender).Color = colorDlg.NewColor;
 
                 //Apply to all selected panes
                 foreach (BasePane pane in ParentEditor.SelectedPanes)

@@ -502,16 +502,16 @@ namespace LayoutBXLYT.Revolution
                             string alpha = "";
                             if ((byte)stage.AlphaConstantSel <= 7)
                             {
-                                switch ((byte)stage.AlphaConstantSel)
+                                switch (stage.AlphaConstantSel)
                                 {
-                                    case 0: alpha = "vec3(1.0)"; break;
-                                    case 1: alpha = "vec3(0.875)"; break;
-                                    case 2: alpha = "vec3(0.75)"; break;
-                                    case 3: alpha = "vec3(0.625)"; break;
-                                    case 4: alpha = "vec3(0.5)"; break;
-                                    case 5: alpha = "vec3(0.375)"; break;
-                                    case 6: alpha = "vec3(0.25)"; break;
-                                    case 7: alpha = "vec3(0.125)"; break;
+                                    case TevKAlphaSel.Constant1_1: alpha = "vec3(1.0)"; break;
+                                    case TevKAlphaSel.Constant7_8: alpha = "vec3(0.875)"; break;
+                                    case TevKAlphaSel.Constant3_4: alpha = "vec3(0.75)"; break;
+                                    case TevKAlphaSel.Constant5_8: alpha = "vec3(0.625)"; break;
+                                    case TevKAlphaSel.Constant1_2: alpha = "vec3(0.5)"; break;
+                                    case TevKAlphaSel.Constant3_8: alpha = "vec3(0.375)"; break;
+                                    case TevKAlphaSel.Constant1_4: alpha = "vec3(0.25)"; break;
+                                    case TevKAlphaSel.Constant1_8: alpha = "vec3(0.125)"; break;
                                 }
 
                             }

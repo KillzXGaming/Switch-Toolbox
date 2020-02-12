@@ -341,6 +341,9 @@ namespace LayoutBXLYT
                 reader.ReadUInt16(); //Padding
 
                 IsBigEndian = reader.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian;
+                TextureManager.LayoutFile = this;
+                TextureManager.Platform = TextureManager.PlatformType.ThreeDS;
+
                 bool setRoot = false;
                 bool setGroupRoot = false;
 

@@ -57,12 +57,4 @@ namespace LayoutBXLYT.Revolution
             return value;
         }
     }
-
-    public enum SwapChannel
-    {
-        Red,
-        Green,
-        Blue,
-        Alpha
-    }
 }

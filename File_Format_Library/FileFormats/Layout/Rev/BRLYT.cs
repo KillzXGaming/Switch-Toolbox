@@ -314,6 +314,8 @@ namespace LayoutBXLYT
                 ushort sectionCount = reader.ReadUInt16();
 
                 IsBigEndian = reader.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian;
+                TextureManager.LayoutFile = this;
+                TextureManager.Platform = TextureManager.PlatformType.Wii;
 
                 bool setRoot = false;
                 bool setGroupRoot = false;

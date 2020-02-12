@@ -68,6 +68,20 @@ namespace LayoutBXLYT.CTR
             PaneMagFlags = 0;
         }
 
+        enum OriginXRev : byte
+        {
+            Left = 0,
+            Center = 1,
+            Right = 2
+        };
+
+        enum OriginYRev : byte
+        {
+            Top = 0,
+            Center = 1,
+            Bottom = 2
+        };
+
         public PAN1(FileReader reader, BxlytHeader header) : base()
         {
             _flags1 = reader.ReadByte();
@@ -81,26 +95,17 @@ namespace LayoutBXLYT.CTR
             Width = reader.ReadSingle();
             Height = reader.ReadSingle();
 
-            int mainorigin = origin % 16;
-            int parentorigin = origin / 16;
-
-            originX = (OriginX)(mainorigin % 4);
-            originY = (OriginY)(mainorigin / 4);
-            ParentOriginX = (OriginX)(parentorigin % 4);
-            ParentOriginY = (OriginY)(parentorigin / 4);
+            originX = OriginXMap[(OriginXRev)(origin % 3)];
+            originY = OriginYMap[(OriginYRev)(origin / 3)];
         }
 
         public override void Write(FileWriter writer, LayoutHeader header)
         {
-            int originL = (int)originX;
-            int originH = (int)originY * 4;
-            int originPL = (int)ParentOriginX;
-            int originPH = (int)ParentOriginY * 4;
-            byte parentorigin = (byte)((originPL + originPH) * 16);
-            byte origin = (byte)(originL + originH + parentorigin);
+            byte originL = (byte)OriginXMap.FirstOrDefault(x => x.Value == originX).Key;
+            byte originH = (byte)OriginYMap.FirstOrDefault(x => x.Value == originY).Key;
 
             writer.Write(_flags1);
-            writer.Write(origin);
+            writer.Write((byte)(((int)originL) + ((int)originH * 3)));
             writer.Write(Alpha);
             writer.Write(PaneMagFlags);
             writer.WriteString(Name, 0x18);
@@ -110,6 +115,20 @@ namespace LayoutBXLYT.CTR
             writer.Write(Width);
             writer.Write(Height);
         }
+
+        private Dictionary<OriginYRev, OriginY> OriginYMap = new Dictionary<OriginYRev, OriginY>()
+        {
+            { OriginYRev.Center, OriginY.Center },
+            { OriginYRev.Top,    OriginY.Top },
+            { OriginYRev.Bottom, OriginY.Bottom },
+        };
+
+        private Dictionary<OriginXRev, OriginX> OriginXMap = new Dictionary<OriginXRev, OriginX>()
+        {
+            { OriginXRev.Center, OriginX.Center },
+            { OriginXRev.Left,    OriginX.Left },
+            { OriginXRev.Right, OriginX.Right },
+        };
 
         public bool ParentVisibility
         {

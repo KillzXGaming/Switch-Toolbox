@@ -280,7 +280,7 @@ namespace LayoutBXLYT
                     GL.ActiveTexture(TextureUnit.Texture0 + id);
                     mat.Shader.SetInt($"textures{i}", id);
                     bool binded = BindGLTexture(mat.TextureMaps[i], textures[TexName]);
-                    mat.Shader.SetInt($"hasTexture{i}", 1);
+                    mat.Shader.SetInt($"hasTexture{i}", binded ? 1 : 0);
 
                     var scale = new Syroot.Maths.Vector2F(1, 1);
                     float rotate = 0;
