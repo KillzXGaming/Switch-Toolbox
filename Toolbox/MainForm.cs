@@ -1378,9 +1378,9 @@ namespace Toolbox
                         var fileFormat = STFileLoader.OpenFileFormat(file);
                         SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder);
                     }
-                    catch   
+                    catch (Exception ex)
                     {
-                        failedFiles.Add(file);
+                        failedFiles.Add($"{file} \n Error:\n {ex} \n");
                     }
                 }
             }
@@ -1411,7 +1411,8 @@ namespace Toolbox
             {
                 if (settings.SeperateTextureContainers)
                 {
-                    outputFolder = Path.Combine(outputFolder, fileFormat.FileName);
+                    string name = fileFormat.FileName.Split('.').FirstOrDefault();
+                    outputFolder = Path.Combine(outputFolder, name);
                     if (!Directory.Exists(outputFolder))
                         Directory.CreateDirectory(outputFolder);
                 }
