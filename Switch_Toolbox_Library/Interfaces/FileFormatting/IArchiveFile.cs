@@ -213,6 +213,10 @@ namespace Toolbox.Library
             {
                 if (FileDataStream != null)
                 {
+                    Console.WriteLine($"Updating FileDataStream " + (FileDataStream is FileStream));
+                    if (FileDataStream is FileStream)
+                        FileDataStream.Close();
+
                     var mem = new System.IO.MemoryStream();
                     FileFormat.Save(mem);
                     FileDataStream = mem;
@@ -1038,10 +1042,9 @@ namespace Toolbox.Library
             {
                 activeForm = GetEditorForm(fileFormat);
                 activeForm.Text = (((IFileFormat)fileFormat).FileName);
-                if (fileFormat is IEditorFormParameters)
-                {
-                    ((IEditorFormParameters)fileFormat).OnSave += OnFormSaved;
-                }
+                if (activeForm is IArchiveEditor)
+                    ((IArchiveEditor)activeForm).UpdateArchiveFile += OnFormSaved;
+
                 activeForm.Show();
             }
         }

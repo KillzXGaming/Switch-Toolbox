@@ -17,8 +17,10 @@ using LayoutBXLYT.Cafe;
 
 namespace LayoutBXLYT
 {
-    public partial class LayoutEditor : Form
+    public partial class LayoutEditor : Form, IArchiveEditor
     {
+        public EventHandler UpdateArchiveFile { get; set; } = null;
+
         /// <summary>
         /// Enables or disables legacy opengl support
         /// Modern support is not quite finished yet so keep enabled!
@@ -864,9 +866,7 @@ namespace LayoutBXLYT
                 if (fileFormat.IFileInfo != null &&
                     fileFormat.IFileInfo.ArchiveParent != null && !ForceDialog)
                 {
-                    if (fileFormat is IEditorFormParameters)
-                        ((IEditorFormParameters)fileFormat).OnSave.Invoke(fileFormat, new EventArgs());
-
+                    UpdateArchiveFile?.Invoke(fileFormat, new EventArgs());
                     MessageBox.Show($"Saved {fileFormat.FileName} to archive!");
                 }
                 else

@@ -394,12 +394,12 @@
     <Compile Include="Helpers\DirectoryHelper.cs" />
     <Compile Include="Helpers\DragHelper.cs" />
     <Compile Include="Imaging\BitmapFont.cs" />
-    <Compile Include="Interfaces\FileFormatting\IFormEditorParameters.cs" />
     <Compile Include="Interfaces\FileFormatting\ILeaveOpenOnLoad.cs" />
     <Compile Include="Interfaces\FileFormatting\IPropertyContainer.cs" />
     <Compile Include="Interfaces\FileFormatting\ISaveOpenedFileStream.cs" />
     <Compile Include="Interfaces\Forms\IEditorForm.cs" />
     <Compile Include="Interfaces\IAnimationContainer.cs" />
+    <Compile Include="Interfaces\Forms\IArchiveEditor.cs" />
     <Compile Include="Interfaces\IArchiveQuickAccess.cs" />
     <Compile Include="Interfaces\IMainForm.cs" />
     <Compile Include="Interfaces\IMdiContainer.cs" />

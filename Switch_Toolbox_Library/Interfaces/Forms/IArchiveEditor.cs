@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Toolbox.Library
 {
-    public interface IEditorFormParameters
+    public interface IArchiveEditor
     {
-        bool KeepOpen { get; }
-        EventHandler OnSave { get; set; }
+        EventHandler UpdateArchiveFile { get; set; }
     }
 }

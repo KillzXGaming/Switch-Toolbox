@@ -16,8 +16,7 @@ using System.ComponentModel;
 
 namespace LayoutBXLYT.Cafe
 {
-    public class BFLYT : IFileFormat, IEditorForm<LayoutEditor>,
-        IEditorFormParameters, IConvertableTextFormat
+    public class BFLYT : IFileFormat, IEditorForm<LayoutEditor>, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
@@ -27,9 +26,6 @@ namespace LayoutBXLYT.Cafe
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
-
-        public bool KeepOpen { get; } = true;
-        public EventHandler OnSave { get; set; }
 
         public bool Identify(System.IO.Stream stream)
         {
