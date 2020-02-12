@@ -24,6 +24,7 @@ namespace LayoutBXLYT
             ColorInterpolation,
             TextureCombiners,
             Blending,
+            TevSwapTable,
         }
 
         public WindowPaneEditor()
@@ -62,28 +63,87 @@ namespace LayoutBXLYT
         private void LoadEditors()
         {
             var mat = GetActiveMaterial();
-            switch (EditorContentType)
+            if (mat is Revolution.Material)
             {
-                case ContentType.Textures:
-                    var textureEditor = GetActiveEditor<PaneMatTextureMapsEditor>();
-                    textureEditor.LoadMaterial(mat, ParentEditor, ParentEditor.GetTextures());
-                    break;
-                case ContentType.WindowContent:
-                    var contentEditor = GetActiveEditor<WindowContentEditor>();
-                    contentEditor.LoadPane(ActivePane, GetActiveFrame(), ParentEditor);
-                    break;
-                case ContentType.ColorInterpolation:
-                    var colorEditor = GetActiveEditor<PaneMatColorEditor>();
-                    colorEditor.LoadMaterial(mat, ParentEditor);
-                    break;
-                case ContentType.TextureCombiners:
-                    var texComb = GetActiveEditor<PaneMatTextureCombiner>();
-                    texComb.LoadMaterial(mat, ParentEditor);
-                    break;
-                case ContentType.Blending:
-                    var matBlend = GetActiveEditor<PaneMatBlending>();
-                    matBlend.LoadMaterial(mat, ParentEditor);
-                    break;
+                switch (EditorContentType)
+                {
+                    case ContentType.Textures:
+                        var textureEditor = GetActiveEditor<PaneMatTextureMapsEditor>();
+                        textureEditor.LoadMaterial(mat, ParentEditor, ParentEditor.GetTextures());
+                        break;
+                    case ContentType.WindowContent:
+                        var contentEditor = GetActiveEditor<WindowContentEditor>();
+                        contentEditor.LoadPane(ActivePane, GetActiveFrame(), ParentEditor);
+                        break;
+                    case ContentType.ColorInterpolation:
+                        var colorEditor = GetActiveEditor<PaneMatRevColorEditor>();
+                        colorEditor.LoadMaterial((Revolution.Material)mat, ParentEditor);
+                        break;
+                    case ContentType.TextureCombiners:
+                        var texComb = GetActiveEditor<Revolution.PaneMatRevTevEditor>();
+                        texComb.LoadMaterial((Revolution.Material)mat, ParentEditor);
+                        break;
+                    case ContentType.Blending:
+                        var matBlend = GetActiveEditor<PaneMatRevBlending>();
+                        matBlend.LoadMaterial((Revolution.Material)mat, ParentEditor);
+                        break;
+                    case ContentType.TevSwapTable:
+                        var tevSwapEditor = GetActiveEditor<PaneMatRevTevSwapTableEditor>();
+                        tevSwapEditor.LoadMaterial((Revolution.Material)mat, ParentEditor);
+                        break;
+                }
+            }
+            else if (mat is CTR.Material)
+            {
+                switch (EditorContentType)
+                {
+                    case ContentType.Textures:
+                        var textureEditor = GetActiveEditor<PaneMatTextureMapsEditor>();
+                        textureEditor.LoadMaterial(mat, ParentEditor, ParentEditor.GetTextures());
+                        break;
+                    case ContentType.WindowContent:
+                        var contentEditor = GetActiveEditor<WindowContentEditor>();
+                        contentEditor.LoadPane(ActivePane, GetActiveFrame(), ParentEditor);
+                        break;
+                    case ContentType.ColorInterpolation:
+                        var colorEditor = GetActiveEditor<CTR.PaneMatCTRColorEditor>();
+                        colorEditor.LoadMaterial((CTR.Material)mat, ParentEditor);
+                        break;
+                    case ContentType.TextureCombiners:
+                        var texComb = GetActiveEditor<CTR.PaneMatCTRTevEditor>();
+                        texComb.LoadMaterial((CTR.Material)mat, ParentEditor);
+                        break;
+                    case ContentType.Blending:
+                        var matBlend = GetActiveEditor<PaneMatBlending>();
+                        matBlend.LoadMaterial(mat, ParentEditor);
+                        break;
+                }
+            }
+            else
+                    {
+                switch (EditorContentType)
+                {
+                    case ContentType.Textures:
+                        var textureEditor = GetActiveEditor<PaneMatTextureMapsEditor>();
+                        textureEditor.LoadMaterial(mat, ParentEditor, ParentEditor.GetTextures());
+                        break;
+                    case ContentType.WindowContent:
+                        var contentEditor = GetActiveEditor<WindowContentEditor>();
+                        contentEditor.LoadPane(ActivePane, GetActiveFrame(), ParentEditor);
+                        break;
+                    case ContentType.ColorInterpolation:
+                        var colorEditor = GetActiveEditor<PaneMatColorEditor>();
+                        colorEditor.LoadMaterial(mat, ParentEditor);
+                        break;
+                    case ContentType.TextureCombiners:
+                        var texComb = GetActiveEditor<PaneMatTextureCombiner>();
+                        texComb.LoadMaterial(mat, ParentEditor);
+                        break;
+                    case ContentType.Blending:
+                        var matBlend = GetActiveEditor<PaneMatBlending>();
+                        matBlend.LoadMaterial(mat, ParentEditor);
+                        break;
+                }
             }
         }
 

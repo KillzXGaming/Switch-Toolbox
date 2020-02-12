@@ -81,8 +81,18 @@ namespace LayoutBXLYT
 
         private void AddItem(STGenericTexture texture)
         {
-            listViewCustom1.Items.Add(new ListViewItem(texture.Text)
-            { Name = texture.Text, Tag = texture, });
+            if (texture is FirstPlugin.TPL.TplTextureWrapper)
+            {
+                var tex = ((FirstPlugin.TPL.TplTextureWrapper)texture);
+               
+                listViewCustom1.Items.Add(new ListViewItem(tex.TPLParent.FileName)
+                { Name = tex.TPLParent.FileName , Tag = texture, });
+            }
+            else
+            {
+                listViewCustom1.Items.Add(new ListViewItem(texture.Text)
+                { Name = texture.Text, Tag = texture, });
+            }
         }
 
         private void listViewCustom1_SelectedIndexChanged(object sender, EventArgs e)

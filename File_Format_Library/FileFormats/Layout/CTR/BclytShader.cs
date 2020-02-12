@@ -39,7 +39,7 @@ namespace LayoutBXLYT
             SetInt($"texCoords0Source", 0);
         }
 
-        public static void SetMaterials(BxlytShader shader, BCLYT.Material material, BasePane pane, Dictionary<string, STGenericTexture> textures)
+        public static void SetMaterials(BxlytShader shader, CTR.Material material, BasePane pane, Dictionary<string, STGenericTexture> textures)
         {
             Matrix4 rotationX = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(pane.Rotate.X));
             Matrix4 rotationY = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(pane.Rotate.Y));
@@ -48,8 +48,8 @@ namespace LayoutBXLYT
 
             shader.SetMatrix("rotationMatrix", ref rotationMatrix);
 
-            shader.SetColor("whiteColor", material.TevConstantColors[0].Color);
-            shader.SetColor("blackColor", material.TevColor.Color);
+            shader.SetColor("whiteColor", material.WhiteColor.Color);
+            shader.SetColor("blackColor", material.BlackColor.Color);
             shader.SetInt("debugShading", (int)Runtime.LayoutEditor.Shading);
             shader.SetInt("numTextureMaps", material.TextureMaps.Length);
             shader.SetVec2("uvScale0", new Vector2(1, 1));

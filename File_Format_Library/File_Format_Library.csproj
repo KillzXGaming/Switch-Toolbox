@@ -210,6 +210,7 @@
     <Compile Include="FileFormats\AAMP\AAMP.cs" />
     <Compile Include="FileFormats\Archives\APAK.cs" />
     <Compile Include="FileFormats\Archives\ARC.cs" />
+    <Compile Include="FileFormats\Archives\BNR.cs" />
     <Compile Include="FileFormats\Archives\DARC.cs" />
     <Compile Include="FileFormats\Archives\DAT_Bayonetta.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
@@ -232,6 +233,46 @@
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1MCommon.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\NUNO.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\NUNV.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\GRP1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Header.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\LYT1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\MAT1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Panes\ALI1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Panes\BND1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Panes\PAN1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Panes\PIC1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Panes\PRT1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Panes\SCR1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Panes\TXT1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\Panes\WND1.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\USD1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\GRP1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\MAT1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\Materials\TevStage.cs" />
+    <Compile Include="FileFormats\Layout\CTR\Materials\TexCoordGen.cs" />
+    <Compile Include="FileFormats\Layout\CTR\Materials\TextureRef.cs" />
+    <Compile Include="FileFormats\Layout\CTR\Panes\BND1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\Panes\LYT1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\Panes\PAN1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\Panes\PIC1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\Panes\PRT1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\Panes\TXT1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\Panes\WND1.cs" />
+    <Compile Include="FileFormats\Layout\CTR\USD1.cs" />
+    <Compile Include="FileFormats\Layout\Rev\GRP1.cs" />
+    <Compile Include="FileFormats\Layout\Rev\LYT1.cs" />
+    <Compile Include="FileFormats\Layout\Rev\MAT1.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Materials\AlphaCompare.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Materials\ChanCtrl.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Materials\IndirectTextureOrderEntry.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Materials\TevSwapModeTable.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Materials\TexCoordGenEntry.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Materials\TextureRef.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Panes\BND1.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Panes\PAN1.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Panes\PIC1.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Panes\TXT1.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Panes\WND1.cs" />
     <Compile Include="FileFormats\LM1\LM1_MDL.cs" />
     <Compile Include="FileFormats\MarioParty\HSF.cs" />
     <Compile Include="FileFormats\Message\MSYT.cs" />
@@ -332,17 +373,16 @@
     <Compile Include="FileFormats\Layout\Animation\LytKeyFrame.cs" />
     <Compile Include="FileFormats\Layout\BxlytShader.cs" />
     <Compile Include="FileFormats\Layout\BxlytToGL.cs" />
-    <Compile Include="FileFormats\Layout\CAFE\FLAN.cs" />
-    <Compile Include="FileFormats\Layout\CAFE\Materials\FontShadowParameter.cs" />
-    <Compile Include="FileFormats\Layout\CAFE\Materials\IndirectParameter.cs" />
-    <Compile Include="FileFormats\Layout\CAFE\Materials\ProjectionTexGenParam.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\TextFormats\FLAN.cs" />
+    <Compile Include="FileFormats\Layout\Shared\FontShadowParameter.cs" />
+    <Compile Include="FileFormats\Layout\Shared\IndirectParameter.cs" />
+    <Compile Include="FileFormats\Layout\Shared\ProjectionTexGenParam.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\TevStage.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\TexCoordGen.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Materials\TextureRef.cs" />
-    <Compile Include="FileFormats\Layout\CAFE\Materials\TextureTransform.cs" />
     <Compile Include="FileFormats\Layout\ShaderLoader.cs" />
     <Compile Include="FileFormats\Layout\CTR\BCLYT.cs" />
-    <Compile Include="FileFormats\Layout\CAFE\FLYT.cs" />
+    <Compile Include="FileFormats\Layout\CAFE\TextFormats\FLYT.cs" />
     <Compile Include="FileFormats\Layout\CTR\BclytShader.cs" />
     <Compile Include="FileFormats\Layout\Animation\LytAnimation.cs" />
     <Compile Include="FileFormats\Layout\LayoutCustomPaneMapper.cs" />
@@ -356,7 +396,7 @@
     <Compile Include="FileFormats\Layout\Rev\BrlytShader.cs" />
     <Compile Include="FileFormats\Layout\Rev\BRLYT.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\TevStage.cs" />
-    <Compile Include="FileFormats\Layout\Rev\WiiLayoutEditor\Shader.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Shaders\Shader.cs" />
     <Compile Include="FileFormats\Layout\Wrappers\MatWrapper.cs" />
     <Compile Include="FileFormats\Message\MSBP.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_TEX.cs" />
@@ -496,6 +536,48 @@
     </Compile>
     <Compile Include="GUI\BFLYT\Animations\LytAnimationWindow.Designer.cs">
       <DependentUpon>LytAnimationWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\CTR\PaneMatColorEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\CTR\PaneMatColorEditor.Designer.cs">
+      <DependentUpon>PaneMatColorEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\CTR\PaneMatCTRTevEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\CTR\PaneMatCTRTevEditor.Designer.cs">
+      <DependentUpon>PaneMatCTRTevEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatBlending.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatBlending.Designer.cs">
+      <DependentUpon>PaneMatBlending.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatColorEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatColorEditor.Designer.cs">
+      <DependentUpon>PaneMatColorEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatRevTevSwapTableEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatRevTevSwapTableEditor.Designer.cs">
+      <DependentUpon>PaneMatRevTevSwapTableEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatRevTevEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatRevTevEditor.Designer.cs">
+      <DependentUpon>PaneMatRevTevEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Rev\SwapTableEntry.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BFLYT\Editor\Materials\Rev\SwapTableEntry.Designer.cs">
+      <DependentUpon>SwapTableEntry.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFRES\BfresAnimationCopy.cs">
       <SubType>Form</SubType>
@@ -1606,6 +1688,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\Animations\LytAnimationWindow.resx">
       <DependentUpon>LytAnimationWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\CTR\PaneMatColorEditor.resx">
+      <DependentUpon>PaneMatColorEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\CTR\PaneMatCTRTevEditor.resx">
+      <DependentUpon>PaneMatCTRTevEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatBlending.resx">
+      <DependentUpon>PaneMatBlending.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatColorEditor.resx">
+      <DependentUpon>PaneMatColorEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatRevTevSwapTableEditor.resx">
+      <DependentUpon>PaneMatRevTevSwapTableEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\Rev\PaneMatRevTevEditor.resx">
+      <DependentUpon>PaneMatRevTevEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BFLYT\Editor\Materials\Rev\SwapTableEntry.resx">
+      <DependentUpon>SwapTableEntry.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\BfresAnimationCopy.resx">
       <DependentUpon>BfresAnimationCopy.cs</DependentUpon>

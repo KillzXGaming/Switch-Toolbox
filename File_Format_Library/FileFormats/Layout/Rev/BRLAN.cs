@@ -404,7 +404,7 @@ namespace LayoutBXLYT
                             Entries.Add(new LVCTagEntry(reader, header));
                             break;
                         case "RLMC":
-                            Entries.Add(new LMCTagEntry(reader, header));
+                            Entries.Add(new RevLMCTagEntry(reader, header));
                             break;
                         case "RLTP":
                             Entries.Add(new LTPTagEntry(reader, header));
@@ -415,6 +415,7 @@ namespace LayoutBXLYT
                     }
                 }
             }
+            
 
             public void Write(FileWriter writer, LayoutHeader header, AnimationTarget target)
             {

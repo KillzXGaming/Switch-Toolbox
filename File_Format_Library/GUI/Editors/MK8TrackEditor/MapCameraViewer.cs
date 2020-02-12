@@ -151,6 +151,8 @@ namespace FirstPlugin.Turbo
 
             var cam = MapCamera.cameraData;
 
+            GL.PushMatrix();
+
             foreach (var kcl in ParentEditor.CollisionObjects)
                 kcl.Renderer.Draw(Camera.ModelViewMatrix);
 
@@ -176,6 +178,8 @@ namespace FirstPlugin.Turbo
                 Color.FromArgb(CameraMapTransparency, Color.White), false);
 
             GL.PopMatrix();
+            GL.PopMatrix();
+
             GL.DepthFunc(DepthFunction.Lequal);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.Disable(EnableCap.Texture2D);

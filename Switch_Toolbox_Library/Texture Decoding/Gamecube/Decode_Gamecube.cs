@@ -280,7 +280,7 @@ namespace Toolbox.Library
             Palette Palette = new Palette();
             Palette.Load(PaletteData);
 
-            return DecodeData(new FileReader(ImageData), width, height, format, Palette, palleteFormat);
+            return DecodeData(ImageData, width, height, format, Palette, palleteFormat);
         }
 
         public static byte[] DecodeData(byte[] ImageData, byte[] PaletteData, uint width, uint height, TextureFormats format, PaletteFormats palleteFormat)
@@ -288,39 +288,45 @@ namespace Toolbox.Library
             Palette Palette = new Palette();
             Palette.Load(PaletteData);
 
-            return DecodeData(new FileReader(ImageData), width, height, format, Palette, palleteFormat);
+            return DecodeData(ImageData, width, height, format, Palette, palleteFormat);
         }
 
-        private static byte[] DecodeData(FileReader stream, uint width, uint height, TextureFormats format, Palette imagePalette, PaletteFormats paletteFormat)
+        private static byte[] DecodeData(byte[] data, uint width, uint height, TextureFormats format)
         {
-            stream.SetByteOrder(true);
-
             switch (format)
             {
                 case TextureFormats.I4:
-                    return DecodeI4(stream, width, height);
+                    return ImageDataFormat.I4.ConvertFrom(data, (int)width, (int)height);
                 case TextureFormats.I8:
-                    return DecodeI8(stream, width, height);
+                    return ImageDataFormat.I8.ConvertFrom(data, (int)width, (int)height);
                 case TextureFormats.IA4:
-                    return DecodeIA4(stream, width, height);
+                    return ImageDataFormat.IA4.ConvertFrom(data, (int)width, (int)height);
                 case TextureFormats.IA8:
-                    return DecodeIA8(stream, width, height);
+                    return ImageDataFormat.IA8.ConvertFrom(data, (int)width, (int)height);
                 case TextureFormats.RGB565:
-                    return DecodeRgb565(stream, width, height);
+                    return ImageDataFormat.RGB565.ConvertFrom(data, (int)width, (int)height);
                 case TextureFormats.RGB5A3:
-                    return DecodeRgb5A3(stream, width, height);
+                    return ImageDataFormat.RGB5A3.ConvertFrom(data, (int)width, (int)height);
                 case TextureFormats.RGBA32:
-                    return DecodeRgba32(stream, width, height);
-                case TextureFormats.C4:
-                    return DecodeC4(stream, width, height, imagePalette, paletteFormat);
-                case TextureFormats.C8:
-                    return DecodeC8(stream, width, height, imagePalette, paletteFormat);
+                    return ImageDataFormat.Rgba32.ConvertFrom(data, (int)width, (int)height);
                 case TextureFormats.CMPR:
-                    return DecodeCmpr(stream, width, height);
-                case TextureFormats.C14X2:
+                    return ImageDataFormat.Cmpr.ConvertFrom(data, (int)width, (int)height);
                 default:
-                    Console.WriteLine("Unsupported Binary Texture Image format {0}, unable to decode!", format);
                     return new byte[0];
+                   // throw new Exception(string.Format("Unsupported Binary Texture Image format {0}, unable to decode!", format.ToString()));
+            }
+        }
+
+        private static byte[] DecodeData(byte[] data, uint width, uint height, TextureFormats format, Palette imagePalette, PaletteFormats paletteFormat)
+        {
+            switch (format)
+            {
+                case TextureFormats.C4:
+                    return DecodeC4(new FileReader(data), width, height, imagePalette, paletteFormat);
+                case TextureFormats.C8:
+                    return DecodeC8(new FileReader(data), width, height, imagePalette, paletteFormat);
+                default:
+                    return DecodeData(data, width, height, format);
             }
         }
 
@@ -375,6 +381,8 @@ namespace Toolbox.Library
 
         private static byte[] DecodeC4(FileReader stream, uint width, uint height, Palette imagePalette, PaletteFormats paletteFormat)
         {
+            stream.SetByteOrder(true);
+
             //4 bpp, 8 block width/height, block size 32 bytes, possible palettes (IA8, RGB565, RGB5A3)
             uint numBlocksW = width / 8;
             uint numBlocksH = height / 8;
@@ -425,6 +433,8 @@ namespace Toolbox.Library
 
         private static byte[] DecodeC8(FileReader stream, uint width, uint height, Palette imagePalette, PaletteFormats paletteFormat)
         {
+            stream.SetByteOrder(true);
+
             //4 bpp, 8 block width/4 block height, block size 32 bytes, possible palettes (IA8, RGB565, RGB5A3)
             uint numBlocksW = width / 8;
             uint numBlocksH = height / 4;
@@ -791,27 +801,20 @@ namespace Toolbox.Library
 
         private static byte[] DecodeRgb5A3(FileReader stream, uint width, uint height)
         {
-            uint numBlocksW = width / 4; //4 byte block width
-            uint numBlocksH = height / 4; //4 byte block height 
-
             byte[] decodedData = new byte[width * height * 4];
 
-            for (int yBlock = 0; yBlock < numBlocksH; yBlock++)
-            {
-                for (int xBlock = 0; xBlock < numBlocksW; xBlock++)
-                {
-                    //For each block, we're going to examine block width / block height number of 'pixels'
-                    for (int pY = 0; pY < 4; pY++)
-                    {
-                        for (int pX = 0; pX < 4; pX++)
-                        {
-                            //Ensure the pixel we're checking is within bounds of the image.
-                            if ((xBlock * 4 + pX >= width) || (yBlock * 4 + pY >= height))
+            for (int yy = 0; yy < height; yy += 4) {
+                for (int xx = 0; xx < width; xx += 4) {
+                    for (int y = 0; y < 4; y++) {
+                        for (int x = 0; x < 4; x++) {
+                            if (xx + x >= width || yy + y >= height)
                                 continue;
 
+                            int dstPixel = (int)((width * (yy + y)) + xx + x);
+                            int dstOffset = dstPixel * 4;
+
                             ushort sourcePixel = stream.ReadUInt16();
-                            RGB5A3ToRGBA8(sourcePixel, ref decodedData,
-                                (int)(4 * (width * ((yBlock * 4) + pY) + (xBlock * 4) + pX)));
+                            RGB5A3ToRGBA8(sourcePixel, ref decodedData, dstOffset);
                         }
                     }
                 }

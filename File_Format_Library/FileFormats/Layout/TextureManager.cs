@@ -87,6 +87,23 @@ namespace LayoutBXLYT
                         }
                     }
                     break;
+                case PlatformType.Wii:
+                    if (ArchiveParent == null) return null;
+                    foreach (var file in ArchiveParent.Files)
+                    {
+                        if (file.FileName == name)
+                        {
+                            var fileFormat = file.FileFormat;
+                            if (fileFormat == null)
+                                fileFormat = file.OpenFile();
+
+                            if (fileFormat is TPL)
+                            {
+
+                            }
+                        }
+                    }
+                    break;
             }
             return texture;
         }
@@ -123,6 +140,22 @@ namespace LayoutBXLYT
                             if (bntx.Textures.ContainsKey(texture.Text))
                                 bntx.RemoveTexture(bntx.Textures[texture.Text]);
                         }
+                    }
+                    break;
+                default:
+                    {
+                        var archive = ArchiveParent;
+                        if (archive == null) return;
+
+                        ArchiveFileInfo fileInfoDelete = null;
+                        foreach (var file in archive.Files)
+                        {
+                            if (file.FileName.Contains(texture.Text))
+                                fileInfoDelete = file;
+                        }
+
+                        if (fileInfoDelete != null)
+                            archive.DeleteFile(fileInfoDelete);
                     }
                     break;
             }

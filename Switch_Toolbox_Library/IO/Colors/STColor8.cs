@@ -34,6 +34,10 @@ namespace Toolbox.Library
             }
         }
 
+        public STColor16 ToColor16() {
+            return STColor16.FromShorts(new ushort[4] { R, G, B, A });
+        }
+
         public static STColor8 FromBytes(byte[] color)
         {
             STColor8 col = new STColor8();

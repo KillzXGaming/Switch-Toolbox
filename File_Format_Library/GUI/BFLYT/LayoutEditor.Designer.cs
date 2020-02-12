@@ -65,10 +65,10 @@
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGameWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAnimationWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stLabel2 = new Toolbox.Library.Forms.STLabel();
             this.editorModeCB = new Toolbox.Library.Forms.STComboBox();
             this.chkAutoKey = new Toolbox.Library.Forms.STCheckBox();
-            this.showAnimationWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.backColorDisplay)).BeginInit();
             this.stToolStrip1.SuspendLayout();
             this.stMenuStrip1.SuspendLayout();
@@ -389,7 +389,7 @@
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
@@ -408,6 +408,13 @@
             this.showGameWindowToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.showGameWindowToolStripMenuItem.Text = "Show Game Window";
             this.showGameWindowToolStripMenuItem.Click += new System.EventHandler(this.showGameWindowToolStripMenuItem_Click);
+            // 
+            // showAnimationWindowToolStripMenuItem
+            // 
+            this.showAnimationWindowToolStripMenuItem.Name = "showAnimationWindowToolStripMenuItem";
+            this.showAnimationWindowToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.showAnimationWindowToolStripMenuItem.Text = "Show Animation Window";
+            this.showAnimationWindowToolStripMenuItem.Click += new System.EventHandler(this.showAnimationWindowToolStripMenuItem_Click);
             // 
             // stLabel2
             // 
@@ -443,13 +450,6 @@
             this.chkAutoKey.Text = "Auto Key";
             this.chkAutoKey.UseVisualStyleBackColor = true;
             // 
-            // showAnimationWindowToolStripMenuItem
-            // 
-            this.showAnimationWindowToolStripMenuItem.Name = "showAnimationWindowToolStripMenuItem";
-            this.showAnimationWindowToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.showAnimationWindowToolStripMenuItem.Text = "Show Animation Window";
-            this.showAnimationWindowToolStripMenuItem.Click += new System.EventHandler(this.showAnimationWindowToolStripMenuItem_Click);
-            // 
             // LayoutEditor
             // 
             this.AllowDrop = true;
@@ -466,6 +466,7 @@
             this.Controls.Add(this.dockPanel1);
             this.Controls.Add(this.stToolStrip1);
             this.Controls.Add(this.stMenuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.Name = "LayoutEditor";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LayoutEditor_FormClosed);

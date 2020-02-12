@@ -39,7 +39,7 @@ namespace LayoutBXLYT.Cafe
         {
         }
 
-        public TextureRef(FileReader reader, BFLYT.Header header)
+        public TextureRef(FileReader reader, Header header)
         {
             ID = reader.ReadInt16();
             flag1 = reader.ReadByte();

@@ -133,9 +133,25 @@ namespace LayoutBXLYT
                 ActiveMaterial = ((IPicturePane)ActivePane).Material;
                 AddTab("Picture Pane", LoadPicturePane);
                 AddTab("Texture Maps", LoadTextureMaps);
-                AddTab("Colors", LoadColorBlending);
-                AddTab("Blending", LoadBlending);
-                AddTab("Combiners", LoadTextureCombiners);
+                if (ActiveMaterial is Revolution.Material)
+                {
+                    AddTab("Colors", LoadBRLYTColorBlending);
+                    AddTab("Blending", LoadBRLYTBlending);
+                    AddTab("SwapTable", LoadBRLYTTevSwapChannel);
+                    AddTab("Combiners", LoadBRLYTTextureCombiners);
+                }
+                else if (ActiveMaterial is CTR.Material)
+                {
+                    AddTab("Colors", LoadBCLYTColorBlending);
+                    AddTab("Blending", LoadBlending);
+                    AddTab("Combiners", LoadBCLYTTextureCombiners);
+                }
+                else
+                {
+                    AddTab("Colors", LoadColorBlending);
+                    AddTab("Blending", LoadBlending);
+                    AddTab("Combiners", LoadTextureCombiners);
+                }
             }
             if (pane is IWindowPane)
             {
@@ -143,6 +159,9 @@ namespace LayoutBXLYT
 
                 AddTab("Window Pane", LoadWindowPane);
                 AddTab("Texture Maps", LoadWindowLoadTextureMaps);
+                if (ActiveMaterial is Revolution.Material)
+                    AddTab("SwapTable", LoadWindowTevSwapChannel);
+
                 AddTab("Colors", LoadWindowColorBlending);
                 AddTab("Blending", LoadWindowMatBlending);
                 AddTab("Combiners", LoadWindowTextureCombiners);
@@ -152,8 +171,22 @@ namespace LayoutBXLYT
                 ActiveMaterial = ((ITextPane)ActivePane).Material;
 
                 AddTab("Text Pane", LoadTextPane);
-                AddTab("Colors", LoadColorBlending);
-                AddTab("Blending", LoadBlending);
+                if (ActiveMaterial is Revolution.Material)
+                {
+                    AddTab("Colors", LoadBRLYTColorBlending);
+                    AddTab("Blending", LoadBlending);
+                }
+                else if (ActiveMaterial is CTR.Material)
+                {
+                    AddTab("Colors", LoadBCLYTColorBlending);
+                    AddTab("Blending", LoadBlending);
+                    AddTab("Combiners", LoadBCLYTTextureCombiners);
+                }
+                else
+                {
+                    AddTab("Colors", LoadColorBlending);
+                    AddTab("Blending", LoadBlending);
+                }
             }
             if (pane is IPartPane)
             {
@@ -245,6 +278,20 @@ namespace LayoutBXLYT
             colorEditor.LoadMaterial(ActiveMaterial, this);
         }
 
+        private void LoadBRLYTColorBlending(object sender, EventArgs e)
+        {
+            UpdateTabIndex();
+            var colorEditor = GetActiveEditor<PaneMatRevColorEditor>();
+            colorEditor.LoadMaterial((Revolution.Material)ActiveMaterial, this);
+        }
+
+        private void LoadBCLYTColorBlending(object sender, EventArgs e)
+        {
+            UpdateTabIndex();
+            var colorEditor = GetActiveEditor<CTR.PaneMatCTRColorEditor>();
+            colorEditor.LoadMaterial((CTR.Material)ActiveMaterial, this);
+        }
+
         private void LoadBlending(object sender, EventArgs e)
         {
             UpdateTabIndex();
@@ -252,11 +299,39 @@ namespace LayoutBXLYT
             blendEditor.LoadMaterial(ActiveMaterial, this);
         }
 
+        private void LoadBRLYTBlending(object sender, EventArgs e)
+        {
+            UpdateTabIndex();
+            var blendEditor = GetActiveEditor<PaneMatRevBlending>();
+            blendEditor.LoadMaterial((Revolution.Material)ActiveMaterial, this);
+        }
+
+        private void LoadBRLYTTevSwapChannel(object sender, EventArgs e)
+        {
+            UpdateTabIndex();
+            var swapTableEditor = GetActiveEditor<PaneMatRevTevSwapTableEditor>();
+            swapTableEditor.LoadMaterial((Revolution.Material)ActiveMaterial, this);
+        }
+
         private void LoadTextureCombiners(object sender, EventArgs e)
         {
             UpdateTabIndex();
             var texCombEditor = GetActiveEditor<PaneMatTextureCombiner>();
             texCombEditor.LoadMaterial(ActiveMaterial, this);
+        }
+
+        private void LoadBRLYTTextureCombiners(object sender, EventArgs e)
+        {
+            UpdateTabIndex();
+            var texCombEditor = GetActiveEditor<Revolution.PaneMatRevTevEditor>();
+            texCombEditor.LoadMaterial((Revolution.Material)ActiveMaterial, this);
+        }
+
+        private void LoadBCLYTTextureCombiners(object sender, EventArgs e)
+        {
+            UpdateTabIndex();
+            var texCombEditor = GetActiveEditor<CTR.PaneMatCTRTevEditor>();
+            texCombEditor.LoadMaterial((CTR.Material)ActiveMaterial, this);
         }
 
         private void LoadTextPane(object sender, EventArgs e)
@@ -303,6 +378,13 @@ namespace LayoutBXLYT
             var windowEditor = GetActiveEditor<WindowPaneEditor>();
             windowEditor.LoadPane(ActivePane as IWindowPane,
                 WindowPaneEditor.ContentType.TextureCombiners, this);
+        }
+
+        public void LoadWindowTevSwapChannel(object sender, EventArgs e) {
+            UpdateTabIndex();
+            var windowEditor = GetActiveEditor<WindowPaneEditor>();
+            windowEditor.LoadPane(ActivePane as IWindowPane,
+                WindowPaneEditor.ContentType.TevSwapTable, this);
         }
 
         private void LoadWindowPane(object sender, EventArgs e)

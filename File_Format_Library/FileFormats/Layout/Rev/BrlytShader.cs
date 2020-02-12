@@ -41,7 +41,7 @@ namespace LayoutBXLYT
             SetInt($"texCoords0Source", 0);
         }
 
-        public static void SetMaterials(BxlytShader shader, BRLYT.Material material, BasePane pane,  Dictionary<string, STGenericTexture> textures)
+        public static void SetMaterials(BxlytShader shader, Revolution.Material material, BasePane pane,  Dictionary<string, STGenericTexture> textures)
         {
             var paneRotate = pane.Rotate;
             if (pane.animController.PaneSRT?.Count > 0)
@@ -131,7 +131,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            if (material.TextureTransforms.Count > 0)
+            if (material.TextureTransforms.Length > 0)
             {
                 var transform = material.TextureTransforms[0];
                 var scale = transform.Scale;

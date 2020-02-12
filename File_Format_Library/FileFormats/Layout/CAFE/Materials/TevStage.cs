@@ -7,7 +7,7 @@ namespace LayoutBXLYT.Cafe
         private byte colorFlags;
         private byte alphaFlags;
 
-        public TevStage(FileReader reader, BFLYT.Header header)
+        public TevStage(FileReader reader, Header header)
         {
             colorFlags = reader.ReadByte();
             alphaFlags = reader.ReadByte();

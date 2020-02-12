@@ -13,7 +13,6 @@ using Toolbox.Library.Forms;
 using Toolbox.Library;
 using Toolbox.Library.Rendering;
 using Toolbox.Library.IO;
-using LayoutBXLYT.Cafe;
 
 namespace LayoutBXLYT
 {
@@ -235,6 +234,7 @@ namespace LayoutBXLYT
             }
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.Disable(EnableCap.Texture2D);
 
             if (GlobalShader == null)
             {
@@ -267,14 +267,13 @@ namespace LayoutBXLYT
                 }
             }
 
-            GL.Enable(EnableCap.Texture2D);
-
             foreach (var layout in LayoutFiles)
                 RenderPanes(GlobalShader, layout.RootPane, true, 255, false, null, 0);
 
             Vector2 TopLeft = new Vector2();
             Vector2 BottomRight = new Vector2();
 
+            GL.Disable(EnableCap.Texture2D);
             GL.Disable(EnableCap.AlphaTest);
             GL.Disable(EnableCap.Blend);
             GL.UseProgram(0);
@@ -449,6 +448,11 @@ namespace LayoutBXLYT
                 translate = translate + pane.Translate;
                 scale = scale * pane.Scale;
                 rotate = rotate + pane.Rotate;
+
+                var prtPane = (Cafe.PRT1)partPane;
+                scale = new Syroot.Maths.Vector2F(
+                    scale.X * prtPane.MagnifyX, 
+                    scale.Y * prtPane.MagnifyY);
             }
 
 
@@ -489,7 +493,7 @@ namespace LayoutBXLYT
                     var textPane = (ITextPane)pane;
                     Bitmap bitmap = null;
 
-                    if (pane is BFLYT.TXT1)
+                    if (pane is Cafe.TXT1)
                     {
                         foreach (var fontFile in FirstPlugin.PluginRuntime.BxfntFiles)
                         {
@@ -504,12 +508,12 @@ namespace LayoutBXLYT
                     else
                         DrawDefaultPane(shader, pane, isSelected);
                 }
-                else if (pane is BFLYT.SCR1)
+                else if (pane is Cafe.SCR1)
                     BxlytToGL.DrawScissorPane(pane, GameWindow, effectiveAlpha, isSelected);
-                else if (pane is BFLYT.ALI1)
+                else if (pane is Cafe.ALI1)
                     BxlytToGL.DrawAlignmentPane(pane, GameWindow, effectiveAlpha, isSelected);
-                else if (pane is BFLYT.PRT1)
-                    DrawPartsPane(shader, (BFLYT.PRT1)pane, effectiveAlpha, isSelected, parentAlphaInfluence);
+                else if (pane is Cafe.PRT1)
+                    DrawPartsPane(shader, (Cafe.PRT1)pane, effectiveAlpha, isSelected, parentAlphaInfluence);
                 else
                     DrawDefaultPane(shader, pane, isSelected);
             }
@@ -583,7 +587,7 @@ namespace LayoutBXLYT
             shader.Disable();
         }
 
-        private void DrawPartsPane(BxlytShader shader, BFLYT.PRT1 pane, byte effectiveAlpha, bool isSelected, bool parentInfluenceAlpha)
+        private void DrawPartsPane(BxlytShader shader, Cafe.PRT1 pane, byte effectiveAlpha, bool isSelected, bool parentInfluenceAlpha)
         {
             if (Runtime.LayoutEditor.PartsAsNullPanes)
             {
@@ -895,8 +899,8 @@ namespace LayoutBXLYT
         {
             var pane = ParentEditor.AddNewTextPane();
             SetupNewPane(pane, pickOriginMouse);
-            if (pane is Cafe.BFLYT.TXT1)
-                ((Cafe.BFLYT.TXT1)pane).UpdateTextRender();
+            if (pane is Cafe.TXT1)
+                ((Cafe.TXT1)pane).UpdateTextRender();
         }
 
         private void CreateBoundryPaneAction(object sender, EventArgs e)

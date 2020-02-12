@@ -132,6 +132,9 @@ namespace LayoutBXLYT
         private void LoadTextureIcon(int index, STGenericTexture texture)
         {
             Bitmap temp = texture.GetBitmap();
+            if (temp == null)
+                return;
+
             temp = texture.GetComponentBitmap(temp, true);
 
             if (listViewCustom1.InvokeRequired)

@@ -4,25 +4,27 @@ using System.Linq;
 using System.Text;
 using LayoutBXLYT;
 using OpenTK.Graphics.OpenGL;
+using Toolbox.Library;
 
 //Code from Wii Layout Editor
 //https://github.com/Gericom/WiiLayoutEditor
 //This is so materials/tev display correctly for brlyt
-namespace WiiLayoutEditor.IO
+namespace LayoutBXLYT.Revolution
 {
-/*    public class Shader
+    public class Shader
     {
-        public BRLYT.Material.TevStage[] TevStages;
-        public int[] Textures;
+        public TevStage[] TevStages;
+        public uint TextureCount;
         private float[][] g_color_registers;
         private float[][] g_color_consts;
         private float[] MatColor;
         private byte color_matsrc;
         private byte alpha_matsrc;
-        public Shader(BRLYT.Material Material, int[] textures)
+        public Shader(Material Material, uint textureCount)
         {
-            this.color_matsrc = Material.ChanControl.ColorMaterialSource;
-            this.alpha_matsrc = Material.ChanControl.AlphaMaterialSource;
+            TextureCount = textureCount;
+            this.color_matsrc = Material.ChanControl.ColorMatSource;
+            this.alpha_matsrc = Material.ChanControl.AlphaMatSource;
             this.MatColor = new float[]
                 {
                     Material.MatColor.R/255f,
@@ -30,29 +32,32 @@ namespace WiiLayoutEditor.IO
                     Material.MatColor.B/255f,
                     Material.MatColor.A/255f
                 };
-            TevStages = Material.TevStageEntries;
-            Textures = textures;
+
+            TevStages = new TevStage[Material.TevStages.Length];
+            for (int i = 0; i < Material.TevStages?.Length; i++)
+                TevStages[i] = (TevStage)Material.TevStages[i];
+
             g_color_registers = new float[3][];
             g_color_registers[0] = new float[]
                 {
-                    Material.ForeColor.R/255f,
-                    Material.ForeColor.G/255f,
-                    Material.ForeColor.B/255f,
-                    Material.ForeColor.A/255f
+                    Material.BlackColor.R/255f,
+                    Material.BlackColor.G/255f,
+                    Material.BlackColor.B/255f,
+                    Material.BlackColor.A/255f
                 };
             g_color_registers[1] = new float[]
                 {
-                    Material.BackColor.R/255f,
-                    Material.BackColor.G/255f,
-                    Material.BackColor.B/255f,
-                    Material.BackColor.A/255f
+                    Material.WhiteColor.R/255f,
+                    Material.WhiteColor.G/255f,
+                    Material.WhiteColor.B/255f,
+                    Material.WhiteColor.A/255f
                 };
             g_color_registers[2] = new float[]
                 {
-                    Material.ColorReg3.R/255f,
-                    Material.ColorReg3.G/255f,
-                    Material.ColorReg3.B/255f,
-                    Material.ColorReg3.A/255f
+                    Material.ColorRegister3.R/255f,
+                    Material.ColorRegister3.G/255f,
+                    Material.ColorRegister3.B/255f,
+                    Material.ColorRegister3.A/255f
                 };
             g_color_consts = new float[4][];
             g_color_consts[0] = new float[]
@@ -84,76 +89,168 @@ namespace WiiLayoutEditor.IO
                     Material.TevColor4.A/255f
                 };
         }
-        public void RefreshColors(BRLYT.Material Material)
+        public void RefreshColors(Material Material)
         {
+            STColor8 WhiteColor = Material.WhiteColor;
+            STColor8 BlackColor = Material.BlackColor;
+            STColor8 MatColor = Material.MatColor;
+            STColor8 TevColor1 = Material.TevColor1;
+            STColor8 TevColor2 = Material.TevColor2;
+            STColor8 TevColor3 = Material.TevColor3;
+            STColor8 TevColor4 = Material.TevColor4;
+            STColor8 ColorRegister3 = Material.ColorRegister3;
+
+            foreach (var animItem in Material.animController.MaterialColors)
+            {
+                switch ((RevLMCTarget)animItem.Key)
+                {
+                    case RevLMCTarget.WhiteColorRed:
+                        WhiteColor.R = (byte)animItem.Value; break;
+                    case RevLMCTarget.WhiteColorGreen:
+                        WhiteColor.G = (byte)animItem.Value; break;
+                    case RevLMCTarget.WhiteColorBlue:
+                        WhiteColor.B = (byte)animItem.Value; break;
+                    case RevLMCTarget.WhiteColorAlpha:
+                        WhiteColor.A = (byte)animItem.Value; break;
+                    case RevLMCTarget.BlackColorRed:
+                        BlackColor.R = (byte)animItem.Value; break;
+                    case RevLMCTarget.BlackColorGreen:
+                        BlackColor.G = (byte)animItem.Value; break;
+                    case RevLMCTarget.BlackColorBlue:
+                        BlackColor.B = (byte)animItem.Value; break;
+                    case RevLMCTarget.BlackColorAlpha:
+                        BlackColor.A = (byte)animItem.Value; break;
+                    case RevLMCTarget.MatColorRed:
+                        MatColor.R = (byte)animItem.Value; break;
+                    case RevLMCTarget.MatColorGreen:
+                        MatColor.G = (byte)animItem.Value; break;
+                    case RevLMCTarget.MatColorBlue:
+                        MatColor.B = (byte)animItem.Value; break;
+                    case RevLMCTarget.MatColorAlpha:
+                        MatColor.A = (byte)animItem.Value; break;
+                    case RevLMCTarget.ColorReg3Red:
+                        ColorRegister3.R = (byte)animItem.Value; break;
+                    case RevLMCTarget.ColorReg3Green:
+                        ColorRegister3.G = (byte)animItem.Value; break;
+                    case RevLMCTarget.ColorReg3Blue:
+                        ColorRegister3.B = (byte)animItem.Value; break;
+                    case RevLMCTarget.ColorReg3Alpha:
+                        ColorRegister3.A = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor1Red:
+                        TevColor1.R = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor1Green:
+                        TevColor1.G = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor1Blue:
+                        TevColor1.B = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor1Alpha:
+                        TevColor1.A = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor2Red:
+                        TevColor2.R = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor2Green:
+                        TevColor2.G = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor2Blue:
+                        TevColor2.B = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor2Alpha:
+                        TevColor2.A = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor3Red:
+                        TevColor3.R = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor3Green:
+                        TevColor3.G = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor3Blue:
+                        TevColor3.B = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor3Alpha:
+                        TevColor3.A = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor4Red:
+                        TevColor4.R = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor4Green:
+                        TevColor4.G = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor4Blue:
+                        TevColor4.B = (byte)animItem.Value; break;
+                    case RevLMCTarget.TevColor4Alpha:
+                        TevColor4.A = (byte)animItem.Value; break;
+                }
+            }
+
             this.MatColor = new float[]
                 {
-                    Material.MatColor.R/255f,
-                    Material.MatColor.G/255f,
-                    Material.MatColor.B/255f,
-                    Material.MatColor.A/255f
+                    MatColor.R/255f,
+                    MatColor.G/255f,
+                    MatColor.B/255f,
+                    MatColor.A/255f
                 };
+
             g_color_registers = new float[3][];
             g_color_registers[0] = new float[]
                 {
-                    Material.ForeColor.R/255f,
-                    Material.ForeColor.G/255f,
-                    Material.ForeColor.B/255f,
-                    Material.ForeColor.A/255f
+                    BlackColor.R/255f,
+                    BlackColor.G/255f,
+                    BlackColor.B/255f,
+                    BlackColor.A/255f
                 };
             g_color_registers[1] = new float[]
                 {
-                    Material.BackColor.R/255f,
-                    Material.BackColor.G/255f,
-                    Material.BackColor.B/255f,
-                    Material.BackColor.A/255f
+                    WhiteColor.R/255f,
+                    WhiteColor.G/255f,
+                    WhiteColor.B/255f,
+                    WhiteColor.A/255f
                 };
             g_color_registers[2] = new float[]
                 {
-                    Material.ColorReg3.R/255f,
-                    Material.ColorReg3.G/255f,
-                    Material.ColorReg3.B/255f,
-                    Material.ColorReg3.A/255f
+                    ColorRegister3.R/255f,
+                    ColorRegister3.G/255f,
+                    ColorRegister3.B/255f,
+                    ColorRegister3.A/255f
                 };
             g_color_consts = new float[4][];
             g_color_consts[0] = new float[]
                 {
-                    Material.TevColor1.R/255f,
-                    Material.TevColor1.G/255f,
-                    Material.TevColor1.B/255f,
-                    Material.TevColor1.A/255f
+                    TevColor1.R/255f,
+                    TevColor1.G/255f,
+                    TevColor1.B/255f,
+                    TevColor1.A/255f
                 };
             g_color_consts[1] = new float[]
                 {
-                    Material.TevColor2.R/255f,
-                    Material.TevColor2.G/255f,
-                    Material.TevColor2.B/255f,
-                    Material.TevColor2.A/255f
+                    TevColor2.R/255f,
+                    TevColor2.G/255f,
+                    TevColor2.B/255f,
+                    TevColor2.A/255f
                 };
             g_color_consts[2] = new float[]
                 {
-                    Material.TevColor3.R/255f,
-                    Material.TevColor3.G/255f,
-                    Material.TevColor3.B/255f,
-                    Material.TevColor3.A/255f
+                    TevColor3.R/255f,
+                    TevColor3.G/255f,
+                    TevColor3.B/255f,
+                    TevColor3.A/255f
                 };
             g_color_consts[3] = new float[]
                 {
-                    Material.TevColor4.R/255f,
-                    Material.TevColor4.G/255f,
-                    Material.TevColor4.B/255f,
-                    Material.TevColor4.A/255f
+                    TevColor4.R/255f,
+                    TevColor4.G/255f,
+                    TevColor4.B/255f,
+                    TevColor4.A/255f
                 };
         }
-     
+
+        public void SetInt(string name, int value) {
+            GL.Uniform1(GL.GetUniformLocation(program, name), value);
+        }
+
+        public void SetMatrix4(string name, ref OpenTK.Matrix4 matrix) {
+            GL.UniformMatrix4(GL.GetUniformLocation(program, name), false, ref matrix);
+        }
+
+        public void SetVec3(string name, ref OpenTK.Vector3 value) {
+            GL.Uniform3(GL.GetUniformLocation(program, name), value);
+        }
+
+        public void SetVec2(string name, ref OpenTK.Vector2 value) {
+            GL.Uniform2(GL.GetUniformLocation(program, name), value);
+        }
+
         public void Enable()
         {
             GL.UseProgram(program);
-            //for (int i = 0; i < Textures.Length; ++i)
-            //{
-            //	String ss = "textures" + i;
-            //	Gl.glUniform1i(Gl.glGetUniformLocation(program, ss), (int)i);
-            //}
             for (int i = 0; i < 3; i++)
             {
                 String ss = "color_register" + i;
@@ -174,6 +271,8 @@ namespace WiiLayoutEditor.IO
         }
         public void Disable()
         {
+            GL.UseProgram(0);
+
             //Gl.glDeleteProgram(program);
             //Gl.glDeleteShader(vertex_shader);
             //Gl.glDeleteShader(fragment_shader);
@@ -183,8 +282,10 @@ namespace WiiLayoutEditor.IO
         public void Compile()
         {
             // w.e good for now
-            uint sampler_count = (uint)Textures.Length;
-            //if (sampler_count == 0)
+            uint sampler_count = (uint)TextureCount;
+            if (sampler_count == 0)
+                sampler_count = 1;
+            //if (sampler_count == 
             //{
             //	sampler_count = 1;
             //}
@@ -193,16 +294,58 @@ namespace WiiLayoutEditor.IO
             StringBuilder vert_ss = new StringBuilder();
             //String vert_ss = "";
 
+            string FlipTextureFunction = @"
+            vec2 rotateUV(vec2 uv, float rotation)
+            {
+                float mid = 0.5;
+                return vec2(
+                    cos(rotation) * (uv.x - mid) + sin(rotation) * (uv.y - mid) + mid,
+                    cos(rotation) * (uv.y - mid) - sin(rotation) * (uv.x - mid) + mid
+                );
+            }
+
+            vec2 SetFlip(vec2 tex)
+            {
+                vec2 outTexCoord = tex;
+
+	            if (flipTexture == 1) //FlipH
+	                    return vec2(-1.0, 1.0) * tex + vec2(1.0, 0.0);
+	            else if (flipTexture == 2) //FlipV
+	                    return vec2(1.0, -1.0) * tex + vec2(0.0, 1.0);
+	            else if (flipTexture == 3) //Rotate90
+	            {
+	                    float degreesR = 90.0;
+	                    return rotateUV(tex, radians(degreesR));
+                }
+	            else if (flipTexture == 4) //Rotate180
+	            {
+		                float degreesR = 180.0;
+	                    return rotateUV(tex, radians(degreesR));
+	            }
+	            else if (flipTexture == 5) //Rotate270
+	            {
+		                float degreesR = 270.0;
+	                    return rotateUV(tex, radians(degreesR));
+	            }
+	            return outTexCoord;
+            }";
+
+            vert_ss.AppendLine("uniform int flipTexture;");
+            vert_ss.AppendLine("uniform mat4 rotationMatrix;");
+            vert_ss.AppendLine("uniform mat4 textureTransforms[3];");
+            vert_ss.Append($"{FlipTextureFunction}");
             vert_ss.AppendLine("void main()");
             vert_ss.AppendLine("{");
             {
                 vert_ss.AppendLine("gl_FrontColor = gl_Color;");
                 vert_ss.AppendLine("gl_BackColor = gl_Color;");
 
-                for (uint i = 0; i != sampler_count; ++i)
-                    vert_ss.AppendFormat("gl_TexCoord[{0}] = gl_TextureMatrix[{0}] * gl_MultiTexCoord{0};\n", i);
+                for (uint i = 0; i != sampler_count; ++i) {
+                    vert_ss.AppendFormat("gl_TexCoord[{0}] = textureTransforms[{0}] * gl_MultiTexCoord{0};\n", i);
+                    vert_ss.AppendFormat("gl_TexCoord[{0}].st = SetFlip(vec2(0.5, 0.5) + gl_TexCoord[{0}].st);\n", i);
+                }
 
-                vert_ss.AppendLine("gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;");
+                vert_ss.AppendLine("gl_Position = gl_ModelViewProjectionMatrix * rotationMatrix * gl_Vertex;");
             }
             vert_ss.AppendLine("}");
 
@@ -224,8 +367,13 @@ namespace WiiLayoutEditor.IO
             StringBuilder frag_ss = new StringBuilder();
             //frag_ss += "uniform sampler2D tex;";
             // uniforms
-            for (uint i = 0; i != sampler_count; ++i)
+            for (uint i = 0; i != sampler_count; ++i) {
                 frag_ss.AppendFormat("uniform sampler2D textures{0};\n", i);
+                frag_ss.AppendFormat("uniform int hasTexture{0};\n", i);
+            }
+
+            frag_ss.AppendLine("uniform sampler2D uvTestPattern;");
+            frag_ss.AppendLine("uniform int debugShading;");
 
             //frag_ss += "uniform vec4 registers[3]" + ";";
 
@@ -315,14 +463,17 @@ namespace WiiLayoutEditor.IO
                         {
                             // current texture color
                             // 0xff is a common value for a disabled texture
-                            if (stage.TexCoord < sampler_count)
+                            if ((byte)stage.TexCoord < sampler_count)
                             {
-                                frag_ss.AppendFormat("color_texture = texture2D(textures{0}, gl_TexCoord[{1}].st);\n", (int)stage.TexCoord, (int)stage.TexCoord);
+                                frag_ss.AppendFormat("if (hasTexture{0} == 1)\n", (int)stage.TexCoord);
+                                frag_ss.AppendFormat("  color_texture = texture2D(textures{0}, gl_TexCoord[{1}].st);\n", (int)stage.TexCoord, (int)stage.TexCoord);
+                                frag_ss.AppendLine("else");
+                                frag_ss.AppendLine("    color_texture = vec4(1);");
                             }
                             string color = "";
-                            if (stage.ColorConstantSel <= 7)
+                            if ((byte)stage.ColorConstantSel <= 7)
                             {
-                                switch (stage.ColorConstantSel)
+                                switch ((byte)stage.ColorConstantSel)
                                 {
                                     case 0: color = "vec3(1.0)"; break;
                                     case 1: color = "vec3(0.875)"; break;
@@ -335,7 +486,7 @@ namespace WiiLayoutEditor.IO
                                 }
 
                             }
-                            else if (stage.ColorConstantSel < 0xc)
+                            else if ((byte)stage.ColorConstantSel < 0xc)
                             {
                                 //warn("getColorOp(): unknown konst %x", konst);
                                 //return "ERROR";
@@ -346,12 +497,12 @@ namespace WiiLayoutEditor.IO
                                 string[] v1 = { "color_consts0", "color_consts1", "color_consts2", "color_consts3" };
                                 string[] v2 = { ".rgb", ".rrr", ".ggg", ".bbb", ".aaa" };
 
-                                color = v1[(stage.ColorConstantSel - 0xc) % 4] + v2[(stage.ColorConstantSel - 0xc) / 4];
+                                color = v1[((byte)stage.ColorConstantSel - 0xc) % 4] + v2[((byte)stage.ColorConstantSel - 0xc) / 4];
                             }
                             string alpha = "";
-                            if (stage.AlphaConstantSel <= 7)
+                            if ((byte)stage.AlphaConstantSel <= 7)
                             {
-                                switch (stage.AlphaConstantSel)
+                                switch ((byte)stage.AlphaConstantSel)
                                 {
                                     case 0: alpha = "vec3(1.0)"; break;
                                     case 1: alpha = "vec3(0.875)"; break;
@@ -364,7 +515,7 @@ namespace WiiLayoutEditor.IO
                                 }
 
                             }
-                            else if (stage.AlphaConstantSel < 0x10)
+                            else if ((byte)stage.AlphaConstantSel < 0x10)
                             {
                                 //warn("getColorOp(): unknown konst %x", konst);
                                 //return "ERROR";
@@ -375,7 +526,7 @@ namespace WiiLayoutEditor.IO
                                 string[] v1 = { "color_consts0", "color_consts1", "color_consts2", "color_consts3" };
                                 string[] v2 = { ".r", ".g", ".b", ".a" };
 
-                                alpha = v1[(stage.AlphaConstantSel - 0x10) % 4] + v2[(stage.AlphaConstantSel - 0x10) / 4];
+                                alpha = v1[((byte)stage.AlphaConstantSel - 0x10) % 4] + v2[((byte)stage.AlphaConstantSel - 0x10) / 4];
                             }
                             frag_ss.AppendFormat("color_constant = vec4({0}, {1});\n", color, alpha);
 
@@ -384,22 +535,22 @@ namespace WiiLayoutEditor.IO
                             {
 
                                 // all 4 inputs
-                                frag_ss.AppendFormat("vec4 a = vec4({0}, {1});\n", color_inputs[stage.ColorA], alpha_inputs[stage.AlphaA]);
-                                frag_ss.AppendFormat("vec4 b = vec4({0}, {1});\n", color_inputs[stage.ColorB], alpha_inputs[stage.AlphaB]);
-                                frag_ss.AppendFormat("vec4 c = vec4({0}, {1});\n", color_inputs[stage.ColorC], alpha_inputs[stage.AlphaC]);
-                                frag_ss.AppendFormat("vec4 d = vec4({0}, {1});\n", color_inputs[stage.ColorD], alpha_inputs[stage.AlphaD]);
+                                frag_ss.AppendFormat("vec4 a = vec4({0}, {1});\n", color_inputs[(byte)stage.ColorA], alpha_inputs[(byte)stage.AlphaA]);
+                                frag_ss.AppendFormat("vec4 b = vec4({0}, {1});\n", color_inputs[(byte)stage.ColorB], alpha_inputs[(byte)stage.AlphaB]);
+                                frag_ss.AppendFormat("vec4 c = vec4({0}, {1});\n", color_inputs[(byte)stage.ColorC], alpha_inputs[(byte)stage.AlphaC]);
+                                frag_ss.AppendFormat("vec4 d = vec4({0}, {1});\n", color_inputs[(byte)stage.ColorD], alpha_inputs[(byte)stage.AlphaD]);
 
 
                                 // TODO: could eliminate this result variable
                                 frag_ss.AppendLine("vec4 result;");
 
-                                if (stage.ColorOp != stage.AlphaOp)
+                                if ((byte)stage.ColorOp != (byte)stage.AlphaOp)
                                 {
-                                    write_tevop(stage.ColorOp, ".rgb", ref frag_ss);
-                                    write_tevop(stage.AlphaOp, ".a", ref frag_ss);
+                                    write_tevop((byte)stage.ColorOp, ".rgb", ref frag_ss);
+                                    write_tevop((byte)stage.AlphaOp, ".a", ref frag_ss);
                                 }
                                 else
-                                    write_tevop(stage.ColorOp, "", ref frag_ss);
+                                    write_tevop((byte)stage.ColorOp, "", ref frag_ss);
 
                                 string[] bias =
                             {
@@ -416,31 +567,31 @@ namespace WiiLayoutEditor.IO
                                 "*0.5"
                             };
 
-                                if (stage.ColorOp < 2)
+                                if ((byte)stage.ColorOp < 2)
                                 {
-                                    frag_ss.AppendFormat("{0}.rgb = (result.rgb{1}){2};\n", output_registers[stage.ColorRegID], bias[stage.ColorBias], scale[stage.ColorScale]);
+                                    frag_ss.AppendFormat("{0}.rgb = (result.rgb{1}){2};\n", output_registers[(byte)stage.ColorRegID], bias[(byte)stage.ColorBias], scale[(byte)stage.ColorScale]);
                                 }
                                 else
                                 {
-                                    frag_ss.AppendFormat("{0}.rgb = result.rgb;\n", output_registers[stage.ColorRegID]);
+                                    frag_ss.AppendFormat("{0}.rgb = result.rgb;\n", output_registers[(byte)stage.ColorRegID]);
                                 }
 
-                                if (stage.AlphaOp < 2)
+                                if ((byte)stage.AlphaOp < 2)
                                 {
-                                    frag_ss.AppendFormat("{0}.a = (result.a{1}){2};\n", output_registers[stage.AlphaRegID], bias[stage.AlphaBias], scale[stage.AlphaScale]);
+                                    frag_ss.AppendFormat("{0}.a = (result.a{1}){2};\n", output_registers[(byte)stage.AlphaRegID], bias[(byte)stage.AlphaBias], scale[(byte)stage.AlphaScale]);
                                 }
                                 else
                                 {
-                                    frag_ss.AppendFormat("{0}.a = result.a;\n", output_registers[stage.AlphaRegID]);
+                                    frag_ss.AppendFormat("{0}.a = result.a;\n", output_registers[(byte)stage.AlphaRegID]);
                                 }
 
-                                if (stage.ColorClamp && stage.ColorOp < 2)
+                                if (stage.ColorClamp && (byte)stage.ColorOp < 2)
                                 {
-                                    frag_ss.AppendFormat("{0}.rgb = clamp({0}.rgb,vec3(0.0, 0.0, 0.0),vec3(1.0, 1.0, 1.0));\n", output_registers[stage.ColorRegID]);
+                                    frag_ss.AppendFormat("{0}.rgb = clamp({0}.rgb,vec3(0.0, 0.0, 0.0),vec3(1.0, 1.0, 1.0));\n", output_registers[(byte)stage.ColorRegID]);
                                 }
-                                if (stage.AlphaClamp && stage.AlphaOp < 2)
+                                if (stage.AlphaClamp && (byte)stage.AlphaOp < 2)
                                 {
-                                    frag_ss.AppendFormat("{0}.a = clamp({0}.a, 0.0, 1.0);\n", output_registers[stage.AlphaRegID]);
+                                    frag_ss.AppendFormat("{0}.a = clamp({0}.a, 0.0, 1.0);\n", output_registers[(byte)stage.AlphaRegID]);
                                 }
                             }
                             frag_ss.AppendLine("}");
@@ -458,7 +609,10 @@ namespace WiiLayoutEditor.IO
                             // 0xff is a common value for a disabled texture
                             if (i < sampler_count)
                             {
-                                frag_ss.AppendFormat("color_texture = texture2D(textures{0}, gl_TexCoord[{0}].st);\n", i);
+                                frag_ss.AppendFormat("if (hasTexture{0} == 1)\n", i);
+                                frag_ss.AppendFormat("  color_texture = texture2D(textures{0}, gl_TexCoord[{0}].st);\n", i);
+                                frag_ss.AppendLine("else");
+                                frag_ss.AppendLine("    color_texture = vec4(1);");
                             }
 
                             frag_ss.AppendLine("{");
@@ -485,7 +639,10 @@ namespace WiiLayoutEditor.IO
                             // 0xff is a common value for a disabled texture
                             if (i < sampler_count)
                             {
-                                frag_ss.AppendFormat("color_texture = texture2D(textures{0}, gl_TexCoord[{0}].st);\n", i);
+                                frag_ss.AppendFormat("if (hasTexture{0} == 1)\n", i);
+                                frag_ss.AppendFormat("  color_texture = texture2D(textures{0}, gl_TexCoord[{0}].st);\n", i);
+                                frag_ss.AppendLine("else");
+                                frag_ss.AppendLine("    color_texture = vec4(1);");
                             }
 
                             frag_ss.AppendLine("{");
@@ -513,6 +670,9 @@ namespace WiiLayoutEditor.IO
                     frag_ss.AppendLine("gl_FragColor = color_previous;");
                 }
             }
+
+            frag_ss.AppendLine("if (debugShading == 4)");
+            frag_ss.AppendLine("   gl_FragColor = texture2D(uvTestPattern, gl_TexCoord[0].st);");               
             frag_ss.AppendLine("}");
 
             //std::cout << frag_ss.str() << '\n';
@@ -537,8 +697,14 @@ namespace WiiLayoutEditor.IO
             GL.GetShader(vertex_shader, ShaderParameter.CompileStatus, out vert_compiled);
             GL.GetShader(fragment_shader, ShaderParameter.CompileStatus, out frag_compiled);
 
+            string vertlog = GL.GetShaderInfoLog(vertex_shader);
+            string fraglog = GL.GetShaderInfoLog(fragment_shader);
+            Console.WriteLine(vertlog);
+            Console.WriteLine(fraglog);
+
             if (vert_compiled == 0)
             {
+                Console.WriteLine($"");
                 //std::cout << "Failed to compile vertex shader\n";
             }
 
@@ -677,5 +843,5 @@ namespace WiiLayoutEditor.IO
             frag_ss.AppendLine(";");
         }
         public int program = 0, fragment_shader = 0, vertex_shader = 0;
-    }*/
+    }
 }

@@ -46,7 +46,7 @@ namespace LayoutBXLYT
                 }
                 else if ((AnimationTarget)typeCB.SelectedItem == AnimationTarget.Material)
                 {
-                    foreach (var mat in ParentLayout.GetMaterials())
+                    foreach (var mat in ParentLayout.Materials)
                         if (!AnimInfo.ContainsEntry(mat.Name))
                             objectTargetsCB.Items.Add(mat.Name);
                 }

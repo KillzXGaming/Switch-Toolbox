@@ -29,6 +29,21 @@ namespace LayoutBXLYT
             FrameCount = BxlanAnimation.AnimationTag.EndFrame;
             StartFrame = BxlanAnimation.AnimationTag.StartFrame;
 
+            if (StartFrame == 0 && FrameCount == 0)
+            {
+                foreach (var tag in BxlanAnimation.AnimationInfo.Entries)
+                {
+                    foreach (var tagEntry in tag.Tags)
+                    {
+                        foreach (var subEntry in tagEntry.Entries)
+                        {
+                            StartFrame = Math.Min(FrameCount, subEntry.KeyFrames.Min(x => x.Frame));
+                            FrameCount = Math.Max(FrameCount, subEntry.KeyFrames.Max(x => x.Frame));
+                        }
+                    }
+                }
+            }
+
             Textures.Clear();
             AnimGroups.Clear();
             foreach (var tex in BxlanAnimation.AnimationInfo.Textures)
@@ -45,7 +60,7 @@ namespace LayoutBXLYT
             foreach (var pane in parentLayout.PaneLookup.Values)
                 pane.animController.ResetAnim();
 
-            foreach (var mat in parentLayout.GetMaterials())
+            foreach (var mat in parentLayout.Materials)
                 mat.animController.ResetAnim();
         }
 
@@ -57,6 +72,23 @@ namespace LayoutBXLYT
             Name = header.FileName;
             FrameCount = (uint)header.AnimationTag.EndFrame;
             StartFrame = (uint)header.AnimationTag.StartFrame;
+
+            if (StartFrame == 0 && FrameCount == 0)
+            {
+                foreach (var tag in header.AnimationInfo.Entries)
+                {
+                    foreach (var tagEntry in tag.Tags)
+                    {
+                        foreach (var subEntry in tagEntry.Entries)
+                        {
+                            StartFrame = Math.Min(FrameCount, subEntry.KeyFrames.Min(x => x.Frame));
+                            FrameCount = Math.Max(FrameCount, subEntry.KeyFrames.Max(x => x.Frame));
+                        }
+                    }
+                }
+            }
+            Console.WriteLine($"FrameSize {BxlanAnimation.AnimationInfo.FrameSize}");
+            Console.WriteLine($"FrameCount {FrameCount}");
 
             Textures.Clear();
             AnimGroups.Clear();
@@ -200,7 +232,7 @@ namespace LayoutBXLYT
 
         private void LoadMaterialColorGroup(BxlytMaterial mat, LytMaterialColorGroup group)
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < (group.IsRLAN ? 30 : 8); i++)
             {
                 if (group.GetTrack(i).HasKeys)
                 {

@@ -1,10 +1,10 @@
 ﻿using Toolbox.Library.IO;
 
-namespace LayoutBXLYT.Cafe
+namespace LayoutBXLYT
 {
     public class IndirectParameter : BxlytIndTextureTransform
     {
-        public IndirectParameter(FileReader reader, BFLYT.Header header)
+        public IndirectParameter(FileReader reader, BxlytHeader header)
         {
             Rotation = reader.ReadSingle();
             ScaleX = reader.ReadSingle();

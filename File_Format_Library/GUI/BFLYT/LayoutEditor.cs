@@ -56,6 +56,8 @@ namespace LayoutBXLYT
         {
             InitializeComponent();
 
+            Text = $"Switch Toolbox Layout Editor";
+
             chkAutoKey.Enabled = false;
             chkAutoKey.ForeColor = FormThemes.BaseTheme.FormForeColor;
 
@@ -121,6 +123,7 @@ namespace LayoutBXLYT
         private bool isLoaded = false;
         public void LoadBxlyt(BxlytHeader header)
         {
+            Text = $"Switch Toolbox Layout Editor [{header.FileName}]";
          /*   if (PluginRuntime.BxfntFiles.Count > 0)
             {
                 var result = MessageBox.Show("Found font files opened. Would you like to save character images to disk? " +
@@ -236,6 +239,8 @@ namespace LayoutBXLYT
         private void ReloadEditors(BxlytHeader activeLayout)
         {
             if (!isLoaded) return;
+
+            Text = $"Switch Toolbox Layout Editor [{activeLayout.FileName}]";
 
             if (LayoutProperties != null)
                 LayoutProperties.Reset();
@@ -961,6 +966,15 @@ namespace LayoutBXLYT
         private void resetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AnimationPanel?.Reset();
+
+            if (ActiveLayout == null) return;
+
+            foreach (var pane in ActiveLayout.PaneLookup.Values)
+                pane.animController.ResetAnim();
+
+            foreach (var mat in ActiveLayout.Materials)
+                mat.animController.ResetAnim();
+
             ActiveViewport?.UpdateViewport();
         }
 
@@ -1041,10 +1055,7 @@ namespace LayoutBXLYT
                 int fontIndex = ActiveLayout.AddFont(font);
                 string text = newTextDlg.GetText();
 
-                BasePane pane = null;
-                if (ActiveLayout is BFLYT.Header)
-                    pane = new BFLYT.TXT1((BFLYT.Header)ActiveLayout, RenamePane("T_text"));
-
+                BasePane pane = ActiveLayout.CreateNewTextPane(RenamePane("T_text"));
                 if (pane != null)
                 {
                     ((ITextPane)pane).FontIndex = (ushort)fontIndex;
@@ -1063,10 +1074,7 @@ namespace LayoutBXLYT
 
         public BasePane AddNewBoundryPane()
         {
-            BasePane pane = null;
-            if (ActiveLayout is BFLYT.Header)
-                pane = new BFLYT.BND1((BFLYT.Header)ActiveLayout, RenamePane("B_bound"));
-
+            BasePane pane = ActiveLayout.CreateNewBoundryPane(RenamePane("B_bound"));
             if (pane != null)
             {
                 pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
@@ -1078,10 +1086,7 @@ namespace LayoutBXLYT
 
         public BasePane AddNewWindowPane()
         {
-            BasePane pane = null;
-            if (ActiveLayout is BFLYT.Header)
-                pane = new BFLYT.WND1((BFLYT.Header)ActiveLayout, RenamePane("W_window"));
-
+            BasePane pane = ActiveLayout.CreateNewWindowPane(RenamePane("W_window"));
             if (pane != null)
             {
                 pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
@@ -1093,14 +1098,35 @@ namespace LayoutBXLYT
 
         public BasePane AddNewPicturePane()
         {
-            BasePane pane = null;
-            if (ActiveLayout is BFLYT.Header)
-                pane = new BFLYT.PIC1((BFLYT.Header)ActiveLayout, RenamePane("P_pict"));
-
+            BasePane pane = ActiveLayout.CreateNewPicturePane(RenamePane("P_pict"));
             if (pane != null)
             {
                 pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
                 ((IPicturePane)pane).MaterialIndex = (ushort)ActiveLayout.AddMaterial(((IPicturePane)pane).Material);
+                ActiveLayout.AddPane(pane, ActiveLayout.RootPane);
+            }
+
+            return pane;
+        }
+
+        public BasePane AddNewPartPane()
+        {
+            BasePane pane = ActiveLayout.CreateNewPartPane(RenamePane("N_part")) as BasePane;
+            if (pane != null)
+            {
+                pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
+                ActiveLayout.AddPane(pane, ActiveLayout.RootPane);
+            }
+
+            return pane;
+        }
+
+        public BasePane AddNewNullPane()
+        {
+            BasePane pane = ActiveLayout.CreateNewNullPane(RenamePane("N_null"));
+            if (pane != null)
+            {
+                pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
                 ActiveLayout.AddPane(pane, ActiveLayout.RootPane);
             }
 
@@ -1142,36 +1168,6 @@ namespace LayoutBXLYT
 
             pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
             ActiveLayout.AddPane(pane, pane.Parent);
-        }
-
-        public BasePane AddNewPartPane()
-        {
-            BasePane pane = null;
-            if (ActiveLayout is BFLYT.Header)
-                pane = new BFLYT.PRT1((BFLYT.Header)ActiveLayout, RenamePane("N_part"));
-
-            if (pane != null)
-            {
-                pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
-                ActiveLayout.AddPane(pane, ActiveLayout.RootPane);
-            }
-
-            return pane;
-        }
-
-        public BasePane AddNewNullPane()
-        {
-            BasePane pane = null;
-            if (ActiveLayout is BFLYT.Header)
-                pane = new BFLYT.PAN1((BFLYT.Header)ActiveLayout, RenamePane("N_null"));
-
-            if (pane != null)
-            {
-                pane.NodeWrapper = LayoutHierarchy.CreatePaneWrapper(pane);
-                ActiveLayout.AddPane(pane, ActiveLayout.RootPane);
-            }
-
-            return pane;
         }
 
         private string RenamePane(string name)

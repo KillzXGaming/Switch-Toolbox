@@ -31,6 +31,7 @@ namespace LayoutBXLYT
             stDropDownPanel1.ResetColors();
             stDropDownPanel2.ResetColors();
             stDropDownPanel4.ResetColors();
+            stDropDownPanel4.Visible = true;
         }
 
         public void LoadPane(ITextPane pane, PaneEditor paneEditor)
@@ -62,7 +63,6 @@ namespace LayoutBXLYT
             vertexColorTopBottomBox1.BottomColor = activePane.FontBottomColor.Color;
 
             stTextBox1.Text = pane.Text;
-           // stTextBox1.Bind(pane, pane.Text);
 
             alighmentHCB.Bind(typeof(OriginX), pane, "HorizontalAlignment");
             alighmentVCB.Bind(typeof(OriginY), pane, "VerticalAlignment");
@@ -75,17 +75,25 @@ namespace LayoutBXLYT
             else
                 sizeRestrictUD.Value = 0;
 
-            shadowColorBox.BottomColor = pane.ShadowBackColor.Color;
-            shadowColorBox.TopColor = pane.ShadowForeColor.Color;
-            shadowItalicTiltUD.Maximum = sliderShadowItalicTilt.Maximum;
-            shadowItalicTiltUD.Value = pane.ShadowItalic;
-            sliderShadowItalicTilt.Value = (int)shadowItalicTiltUD.Value;
+            //BRLYT has no shader parameters. Text cannot do those so hide them
+            if (pane is Revolution.TXT1)
+            {
+                stDropDownPanel4.Visible = false;
+            }
+            else
+            {
+                shadowColorBox.BottomColor = pane.ShadowBackColor.Color;
+                shadowColorBox.TopColor = pane.ShadowForeColor.Color;
+                shadowItalicTiltUD.Maximum = sliderShadowItalicTilt.Maximum;
+                shadowItalicTiltUD.Value = pane.ShadowItalic;
+                sliderShadowItalicTilt.Value = (int)shadowItalicTiltUD.Value;
 
 
-            shadowOffseXUD.Value = pane.ShadowXY.X;
-            shadowOffseYUD.Value = pane.ShadowXY.Y;
-            shadowScaleXUD.Value = pane.ShadowXYSize.X;
-            shadowScaleYUD.Value = pane.ShadowXYSize.Y;
+                shadowOffseXUD.Value = pane.ShadowXY.X;
+                shadowOffseYUD.Value = pane.ShadowXY.Y;
+                shadowScaleXUD.Value = pane.ShadowXYSize.X;
+                shadowScaleYUD.Value = pane.ShadowXYSize.Y;
+            }
 
             loaded = true;
         }

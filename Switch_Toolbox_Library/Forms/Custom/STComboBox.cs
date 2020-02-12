@@ -174,6 +174,7 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        public Dictionary<string, Brush> ItemColorMapper = new Dictionary<string, Brush>();
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -183,7 +184,10 @@ namespace Toolbox.Library.Forms
 
             e.Graphics.FillRectangle(backBrush, this.ClientRectangle);
 
-            e.Graphics.DrawString(this.Text, this.Font, foreBrush, this.Location);
+            if (ItemColorMapper.ContainsKey(this.Text))
+                e.Graphics.DrawString(this.Text, this.Font, ItemColorMapper[this.Text], this.Location);
+            else
+                e.Graphics.DrawString(this.Text, this.Font, foreBrush, this.Location);
         }
 
         protected override void OnLostFocus(System.EventArgs e)

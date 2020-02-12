@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
+using System.ComponentModel;
 
 namespace FirstPlugin
 {
@@ -79,36 +80,39 @@ namespace FirstPlugin
                 {
                     reader.Position = 0;
                     uint ImageCount = reader.ReadUInt32();
-                    Console.WriteLine("ImageCount" + ImageCount);
                     for (int i = 0; i < ImageCount; i++)
                     {
                         reader.SeekBegin(4 + (i * 0x10));
 
-                        uint format = reader.ReadUInt32();
-                        uint offset = reader.ReadUInt32();
-                        uint width = reader.ReadUInt16();
-                        uint height = reader.ReadUInt16();
-                        uint mipCount = reader.ReadUInt16();
+                        var image = new ImageHeader();
+
+                        image.Format = (Decode_Gamecube.TextureFormats)reader.ReadUInt32();
+                        image.ImageOffset = reader.ReadUInt32();
+                        image.Width = reader.ReadUInt16();
+                        image.Height = reader.ReadUInt16();
+                        image.MaxLOD = (byte)reader.ReadUInt16();
                         ushort unknown = reader.ReadUInt16();
 
-                        if (format == 256)
+                        if ((uint)image.Format == 256)
                             break;
 
-                        Console.WriteLine(offset);
-                        Console.WriteLine(format);
-
-                        var GXFormat = (Decode_Gamecube.TextureFormats)format;
+                        Console.WriteLine(image.ImageOffset);
+                        Console.WriteLine(image.Format);
 
                         //Now create a wrapper
-                        var texWrapper = new TplTextureWrapper();
-                        texWrapper.Text = $"Texture {i}";
+                        var texWrapper = new TplTextureWrapper(this, image);
+                        string name = System.IO.Path.GetFileNameWithoutExtension(FileName);
+                        if (ImageCount == 1)
+                            texWrapper.Text = name;
+                        else
+                            texWrapper.Text = $"{name}_{i}";
                         texWrapper.ImageKey = "Texture";
                         texWrapper.SelectedImageKey = "Texture";
-                        texWrapper.Format = Decode_Gamecube.ToGenericFormat(GXFormat);
-                        texWrapper.Width = width;
-                        texWrapper.Height = height;
-                        texWrapper.MipCount = mipCount;
-                        texWrapper.ImageData = reader.getSection(offset, (uint)Decode_Gamecube.GetDataSize(GXFormat, (int)width, (int)height));
+                        texWrapper.Format = Decode_Gamecube.ToGenericFormat(image.Format);
+                        texWrapper.Width = image.Width;
+                        texWrapper.Height = image.Height;
+                        texWrapper.MipCount = image.MaxLOD;
+                        texWrapper.ImageData = reader.getSection(image.ImageOffset, (uint)Decode_Gamecube.GetDataSize(image.Format, (int)image.Width, (int)image.Height));
                         texWrapper.PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
                         Nodes.Add(texWrapper);
                     }
@@ -130,24 +134,28 @@ namespace FirstPlugin
                         image.Read(reader);
                         ImageHeaders.Add(image);
 
-                        var GXFormat = (Decode_Gamecube.TextureFormats)image.Format;
-
                         Console.WriteLine($"ImageOffset {image.ImageOffset}");
 
                         //Now create a wrapper
-                        var texWrapper = new TplTextureWrapper();
-                        texWrapper.Text = $"Texture {i}";
+                        var texWrapper = new TplTextureWrapper(this, image);
+                        string name = System.IO.Path.GetFileNameWithoutExtension(FileName);
+                        if (ImageCount == 1)
+                            texWrapper.Text = name;
+                        else
+                            texWrapper.Text = $"{name}_{i}";
+
                         texWrapper.ImageKey = "Texture";
                         texWrapper.SelectedImageKey = "Texture";
-                        texWrapper.Format = Decode_Gamecube.ToGenericFormat(GXFormat);
+                        texWrapper.Format = Decode_Gamecube.ToGenericFormat(image.Format);
                         texWrapper.Width = image.Width;
                         texWrapper.Height = image.Height;
                         texWrapper.MipCount = 1;
                         texWrapper.PlatformSwizzle = PlatformSwizzle.Platform_Gamecube;
                         texWrapper.ImageData = reader.getSection(image.ImageOffset, 
-                            (uint)Decode_Gamecube.GetDataSize(GXFormat, (int)image.Width, (int)image.Height));
+                            (uint)Decode_Gamecube.GetDataSize(image.Format, (int)image.Width, (int)image.Height));
 
                         Console.WriteLine($"PaletteHeaderOffset {PaletteHeaderOffset}");
+                        Console.WriteLine($"ImageData  {  texWrapper.ImageData.Length}");
 
                         //Palette is sometimes unused to check
                         if (PaletteHeaderOffset != 0)
@@ -158,6 +166,7 @@ namespace FirstPlugin
                             PaletteHeaders.Add(palette);
 
                             var GXPaletteFormat = (Decode_Gamecube.PaletteFormats)palette.PaletteFormat;
+                            image.PaletteFormat = GXPaletteFormat;
 
                             Console.WriteLine($"GXPaletteFormat {GXPaletteFormat}");
                             texWrapper.SetPaletteData(palette.Data, Decode_Gamecube.ToGenericPaletteFormat(GXPaletteFormat));
@@ -171,7 +180,15 @@ namespace FirstPlugin
 
         public class TplTextureWrapper : STGenericTexture
         {
+            public TPL TPLParent { get; set; }
+
             public byte[] ImageData { get; set; }
+            public ImageHeader ImageHeader;
+
+            public TplTextureWrapper(TPL tpl, ImageHeader header) {
+                TPLParent = tpl;
+                ImageHeader = header;
+            }
 
             public override TEX_FORMAT[] SupportedFormats
             {
@@ -217,7 +234,7 @@ namespace FirstPlugin
                     LibraryGUI.LoadEditor(editor);
                 }
 
-                editor.LoadProperties(GenericProperties);
+                editor.LoadProperties(ImageHeader);
                 editor.LoadImage(this);
             }
         }
@@ -257,30 +274,43 @@ namespace FirstPlugin
 
         public class ImageHeader
         {
+            [ReadOnly(true)]
+            public Decode_Gamecube.TextureFormats Format { get; set; }
+            [ReadOnly(true)]
+            public Decode_Gamecube.PaletteFormats PaletteFormat { get; set; }
+
+            [ReadOnly(true)]
             public ushort Width { get; set; }
+            [ReadOnly(true)]
             public ushort Height { get; set; }
-            public uint Format { get; set; }
+            [Browsable(false)]
             public uint ImageOffset { get; set; }
-            public uint WrapS { get; set; }
-            public uint WrapT { get; set; }
-            public uint MinFilter { get; set; }
-            public uint MagFilter { get; set; }
+
             public float LODBias { get; set; }
             public bool EdgeLODEnable { get; set; }
+
+            public WrapMode WrapS { get; set; }
+            public WrapMode WrapT { get; set; }
+            public FilterMode MinFilter { get; set; }
+            public FilterMode MagFilter { get; set; }
+
+            [Browsable(false)]
             public byte MinLOD { get; set; }
+            [Browsable(false)]
             public byte MaxLOD { get; set; }
+            [Browsable(false)]
             public byte Unpacked { get; set; }
 
             public void Read(FileReader reader)
             {
                 Height = reader.ReadUInt16();
                 Width = reader.ReadUInt16();
-                Format = reader.ReadUInt32();
+                Format = (Decode_Gamecube.TextureFormats)reader.ReadUInt32();
                 ImageOffset = reader.ReadUInt32();
-                WrapS = reader.ReadUInt32();
-                WrapT = reader.ReadUInt32();
-                MinFilter = reader.ReadUInt32();
-                MagFilter = reader.ReadUInt32();
+                WrapS = (WrapMode)reader.ReadUInt32();
+                WrapT = (WrapMode)reader.ReadUInt32();
+                MinFilter = (FilterMode)reader.ReadUInt32();
+                MagFilter = (FilterMode)reader.ReadUInt32();
                 LODBias = reader.ReadSingle();
                 EdgeLODEnable = reader.ReadBoolean();
                 MinLOD = reader.ReadByte();
@@ -292,18 +322,31 @@ namespace FirstPlugin
             {
                 writer.Write(Width);
                 writer.Write(Height);
-                writer.Write(Format);
+                writer.Write((uint)Format);
                 writer.Write(ImageOffset);
-                writer.Write(WrapS);
-                writer.Write(WrapT);
-                writer.Write(MinFilter);
-                writer.Write(MagFilter);
+                writer.Write((uint)WrapS);
+                writer.Write((uint)WrapT);
+                writer.Write((uint)MinFilter);
+                writer.Write((uint)MagFilter);
                 writer.Write(LODBias);
                 writer.Write(EdgeLODEnable);
                 writer.Write(MinLOD);
                 writer.Write(MaxLOD);
                 writer.Write(Unpacked);
             }
+        }
+
+        public enum WrapMode : uint
+        {
+            Clamp,
+            Repeat,
+            Mirror
+        }
+
+        public enum FilterMode : uint
+        {
+            Nearest,
+            Linear,
         }
 
         public void Unload()

@@ -407,7 +407,11 @@ namespace LayoutBXLYT
                 ActiveMaterial.TextureMaps[SelectedIndex].WrapModeV = (WrapMode)wrapModeVCB.SelectedValue;
                 ActiveMaterial.TextureMaps[SelectedIndex].MaxFilterMode = (FilterMode)expandCB.SelectedValue;
                 ActiveMaterial.TextureMaps[SelectedIndex].MinFilterMode = (FilterMode)shrinkCB.SelectedValue;
+
+                Console.WriteLine("Updating wrap mode! " + ActiveMaterial.TextureMaps[SelectedIndex].WrapModeU);
             }
+
+            ParentEditor.PropertyChanged?.Invoke(sender, e);
         }
     }
 

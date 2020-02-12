@@ -94,33 +94,36 @@ namespace Toolbox.Library.Forms
                     Vector2 v2 = new Vector2(0);
                     Vector2 v3 = new Vector2(0);
 
-                    if (f.Count < v + 2)
+                    if (f.Count <= v + 2)
                         continue;
 
-                    if (UvChannelIndex == 0)
+                    if (genericObject.vertices.Count > f[v + 2])
                     {
-                        v1 = genericObject.vertices[f[v]].uv0;
-                        v2 = genericObject.vertices[f[v + 1]].uv0;
-                        v3 = genericObject.vertices[f[v + 2]].uv0;
-                    }
-                    if (UvChannelIndex == 1)
-                    {
-                        v1 = genericObject.vertices[f[v]].uv1;
-                        v2 = genericObject.vertices[f[v + 1]].uv1;
-                        v3 = genericObject.vertices[f[v + 2]].uv1;
-                    }
-                    if (UvChannelIndex == 2)
-                    {
-                        v1 = genericObject.vertices[f[v]].uv2;
-                        v2 = genericObject.vertices[f[v + 1]].uv2;
-                        v3 = genericObject.vertices[f[v + 2]].uv2;
-                    }
+                        if (UvChannelIndex == 0)
+                        {
+                            v1 = genericObject.vertices[f[v]].uv0;
+                            v2 = genericObject.vertices[f[v + 1]].uv0;
+                            v3 = genericObject.vertices[f[v + 2]].uv0;
+                        }
+                        if (UvChannelIndex == 1)
+                        {
+                            v1 = genericObject.vertices[f[v]].uv1;
+                            v2 = genericObject.vertices[f[v + 1]].uv1;
+                            v3 = genericObject.vertices[f[v + 2]].uv1;
+                        }
+                        if (UvChannelIndex == 2)
+                        {
+                            v1 = genericObject.vertices[f[v]].uv2;
+                            v2 = genericObject.vertices[f[v + 1]].uv2;
+                            v3 = genericObject.vertices[f[v + 2]].uv2;
+                        }
 
-                    v1 = new Vector2(v1.X, 1 - v1.Y);
-                    v2 = new Vector2(v2.X, 1 - v2.Y);
-                    v3 = new Vector2(v3.X, 1 - v3.Y);
+                        v1 = new Vector2(v1.X, 1 - v1.Y);
+                        v2 = new Vector2(v2.X, 1 - v2.Y);
+                        v3 = new Vector2(v3.X, 1 - v3.Y);
 
-                    DrawUVTriangleAndGrid(v1, v2, v3, divisions, uvColor, lineWidth, gridColor, textureMap);
+                        DrawUVTriangleAndGrid(v1, v2, v3, divisions, uvColor, lineWidth, gridColor, textureMap);
+                    }
                 }
             }
         }

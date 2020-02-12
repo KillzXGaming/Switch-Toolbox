@@ -68,7 +68,7 @@ namespace LayoutBXLYT
             treeView1.Nodes.Add(new TreeNode("File Settings") {Tag = bxlyt });
             LoadTextures(bxlyt.Textures);
             LoadFonts(bxlyt.Fonts);
-            LoadMaterials(bxlyt.GetMaterials());
+            LoadMaterials(bxlyt.Materials);
             treeView1.Nodes.Add(new AnimatedPaneFolder(ParentEditor, "Animated Pane List") { Tag = bxlyt });
 
             LoadPane(bxlyt.RootGroup);
@@ -254,26 +254,16 @@ namespace LayoutBXLYT
             for (int i = 0; i < panes.Count; i++)
             {
                 var paneNode = CreatePaneWrapper(panes[i]);
-                if (panes[i] is BFLYT.WND1) windowFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BCLYT.WND1) windowFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BRLYT.WND1) windowFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BFLYT.PIC1) pictureFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BCLYT.PIC1) pictureFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BRLYT.PIC1) pictureFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BFLYT.BND1) boundryFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BCLYT.BND1) boundryFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BRLYT.BND1) boundryFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BCLYT.PRT1) partsFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BFLYT.PRT1) partsFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BRLYT.PRT1) partsFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BRLYT.TXT1) textFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BCLYT.TXT1) textFolder.Nodes.Add(paneNode);
-                else if (panes[i] is BFLYT.TXT1) textFolder.Nodes.Add(paneNode);
+                if (panes[i] is IWindowPane) windowFolder.Nodes.Add(paneNode);
+                else if (panes[i] is IPicturePane) pictureFolder.Nodes.Add(paneNode);
+                else if (panes[i] is IBoundryPane) boundryFolder.Nodes.Add(paneNode);
+                else if (panes[i] is IPartPane) partsFolder.Nodes.Add(paneNode);
+                else if (panes[i] is ITextPane) textFolder.Nodes.Add(paneNode);
                 else nullFolder.Nodes.Add(paneNode);
 
-                if (panes[i] is BFLYT.PRT1)
+                if (panes[i] is Cafe.PRT1)
                 {
-                    var partPane = (BFLYT.PRT1)panes[i];
+                    var partPane = (Cafe.PRT1)panes[i];
                     foreach (var property in partPane.Properties)
                     {
                         if (property.Property != null)
@@ -314,18 +304,10 @@ namespace LayoutBXLYT
             paneNode.Checked = true;
 
             string imageKey = "";
-            if (pane is BFLYT.WND1) imageKey = "WindowPane";
-            else if (pane is BCLYT.WND1) imageKey = "WindowPane";
-            else if (pane is BRLYT.WND1) imageKey = "WindowPane";
-            else if (pane is BFLYT.PIC1) imageKey = "PicturePane";
-            else if (pane is BCLYT.PIC1) imageKey = "PicturePane";
-            else if (pane is BRLYT.PIC1) imageKey = "PicturePane";
-            else if (pane is BFLYT.BND1) imageKey = "BoundryPane";
-            else if (pane is BCLYT.BND1) imageKey = "BoundryPane";
-            else if (pane is BRLYT.BND1) imageKey = "BoundryPane";
-            else if (pane is BFLYT.TXT1) imageKey = "TextPane";
-            else if (pane is BCLYT.TXT1) imageKey = "TextPane";
-            else if (pane is BRLYT.TXT1) imageKey = "TextPane";
+            if (pane is IWindowPane) imageKey = "WindowPane";
+            else if (pane is IPicturePane) imageKey = "PicturePane";
+            else if (pane is IBoundryPane) imageKey = "BoundryPane";
+            else if (pane is ITextPane) imageKey = "TextPane";
             else imageKey = "NullPane";
 
             paneNode.ImageKey = imageKey;

@@ -9,7 +9,7 @@ namespace LayoutBXLYT.Cafe
 
         byte[] unkData;
 
-        public TexCoordGen(FileReader reader, BFLYT.Header header)
+        public TexCoordGen(FileReader reader, BxlytHeader header)
         {
             GenType = reader.ReadEnum<MatrixType>(false);
             Source = reader.ReadEnum<TextureGenerationType>(false);

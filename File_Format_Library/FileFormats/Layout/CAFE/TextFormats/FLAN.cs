@@ -9,17 +9,16 @@ using LayoutBXLYT.Cafe;
 
 namespace LayoutBXLYT
 {
-    public class FLYT
+    public class FLAN
     {
-        public static BFLYT.Header FromXml(string text)
+        public static BFLAN.Header FromXml(string text)
         {
-            BFLYT.Header header = new BFLYT.Header();
+            BFLAN.Header header = new BFLAN.Header();
             return header;
         }
 
-        public static string ToXml(BFLYT.Header header)
+        public static string ToXml(BFLAN.Header header)
         {
-
             return "";
         }
     }

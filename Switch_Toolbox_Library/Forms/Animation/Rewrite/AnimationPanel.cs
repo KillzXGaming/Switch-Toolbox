@@ -88,35 +88,8 @@ namespace Toolbox.Library
         // Frame rate control
         public bool isOpen = true;
 
-        public float FrameCount
-        {
-            get
-            {
-                float frameCount = uint.MinValue;
-                for (int i = 0; i < currentAnimations.Count; i++)
-                    frameCount = Math.Max(frameCount, currentAnimations[i].FrameCount);
-
-                if (frameCount == uint.MinValue)
-                    frameCount = 1;
-
-                return frameCount;
-            }
-        }
-
-        public float StartFrame
-        {
-            get
-            {
-                float startFrame = float.MaxValue;
-                for (int i = 0; i < currentAnimations.Count; i++)
-                    startFrame = Math.Min(startFrame, currentAnimations[i].StartFrame);
-
-                if (startFrame == float.MaxValue)
-                    startFrame = 0;
-
-                return startFrame;
-            }
-        }
+        public float FrameCount;
+        public float StartFrame;
 
         private List<STAnimation> currentAnimations = new List<STAnimation>();
 
@@ -129,6 +102,23 @@ namespace Toolbox.Library
                 Reset();
 
             currentAnimations.Add(animation);
+
+            float frameCount = uint.MinValue;
+            float startFrame = uint.MaxValue;
+            for (int i = 0; i < currentAnimations.Count; i++)
+            {
+                frameCount = Math.Max(frameCount, currentAnimations[i].FrameCount);
+                startFrame = Math.Min(startFrame, currentAnimations[i].StartFrame);
+            }
+
+            if (frameCount != uint.MinValue && frameCount > startFrame)
+                FrameCount = frameCount;
+            else
+                FrameCount = 1;
+            if (startFrame != uint.MaxValue && frameCount > startFrame)
+                StartFrame = startFrame;
+            else
+                StartFrame = 0;
 
             ResetModels();
             animation.Reset();
@@ -149,6 +139,17 @@ namespace Toolbox.Library
         {
             currentAnimations.Clear();
             Frame = 0;
+            FrameCount = 1;
+            StartFrame = 0;
+
+            ResetModels();
+            totalFrame.Maximum = (decimal)FrameCount;
+            totalFrame.Value = (decimal)FrameCount;
+            currentFrameUpDown.Maximum = (decimal)FrameCount;
+            currentFrameUpDown.Minimum = (decimal)StartFrame;
+            animationTrackBar.FrameCount = (float)FrameCount;
+            animationTrackBar.StartTime = (int)StartFrame;
+            currentFrameUpDown.Value = (decimal)StartFrame;
         }
 
         public void ResetModels()

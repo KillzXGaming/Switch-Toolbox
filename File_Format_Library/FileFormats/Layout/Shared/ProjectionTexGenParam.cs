@@ -1,7 +1,7 @@
 ﻿using Toolbox.Library.IO;
 using System;
 
-namespace LayoutBXLYT.Cafe
+namespace LayoutBXLYT
 {
     public class ProjectionTexGenParam
     {
@@ -27,7 +27,7 @@ namespace LayoutBXLYT.Cafe
 
         byte flags;
 
-        public ProjectionTexGenParam(FileReader reader, BFLYT.Header header)
+        public ProjectionTexGenParam(FileReader reader, BxlytHeader header)
         {
             PosX = reader.ReadSingle();
             PosY = reader.ReadSingle();

@@ -59,13 +59,13 @@ namespace LayoutBXLYT
                 if (!header.PaneLookup.ContainsKey($"L_Chara_{i.ToString("00")}"))
                     continue;
 
-                var partPane = (Cafe.BFLYT.PRT1)header.PaneLookup[$"L_Chara_{i.ToString("00")}"];
+                var partPane = (Cafe.PRT1)header.PaneLookup[$"L_Chara_{i.ToString("00")}"];
                 var charPane = partPane.GetExternalPane();
                 if (charPane == null) return;
                 var iconPane = charPane.SearchPane("P_Chara_00");
                 if (iconPane == null) return;
 
-                var mat = ((BFLYT.PIC1)iconPane).Material;
+                var mat = ((IPicturePane)iconPane).Material;
 
                 string textureName = "Mario";
                 switch (i)

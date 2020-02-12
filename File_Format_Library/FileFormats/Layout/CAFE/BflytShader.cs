@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
-using LayoutBXLYT.Cafe;
 using Toolbox.Library;
 
 namespace LayoutBXLYT
@@ -41,7 +40,7 @@ namespace LayoutBXLYT
             SetInt($"texCoords0Source", 0);
         }
 
-        public static void SetMaterials(BxlytShader shader, BFLYT.Material material, BasePane pane, Dictionary<string, STGenericTexture> textures)
+        public static void SetMaterials(BxlytShader shader, Cafe.Material material, BasePane pane, Dictionary<string, STGenericTexture> textures)
         {
             var rotationMatrix = pane.GetRotationMatrix();
             shader.SetMatrix("rotationMatrix", ref rotationMatrix);
@@ -119,10 +118,10 @@ namespace LayoutBXLYT
                 }
             }
 
-            for (int i = 0; i < material.TexCoords?.Length; i++)
+            for (int i = 0; i < material.TexCoordGens?.Length; i++)
             {
-                shader.SetInt($"texCoords{i}GenType", (int)material.TexCoords[i].GenType);
-                shader.SetInt($"texCoords{i}Source", (int)material.TexCoords[i].Source);
+                shader.SetInt($"texCoords{i}GenType", (int)material.TexCoordGens[i].GenType);
+                shader.SetInt($"texCoords{i}Source", (int)material.TexCoordGens[i].Source);
             }
 
             for (int i = 0; i < material.TevStages?.Length; i++)

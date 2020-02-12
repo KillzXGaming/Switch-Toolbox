@@ -71,6 +71,10 @@ namespace Toolbox.Library.IO
             Write(color.ToBytes());
         }
 
+        public void Write(STColor16 color) {
+            Write(color.ToUShorts());
+        }
+
         public void Write(STColor8[] colors)
         {
             foreach (var color in colors)

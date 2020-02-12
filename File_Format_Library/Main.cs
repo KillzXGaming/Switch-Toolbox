@@ -449,6 +449,7 @@ namespace FirstPlugin
             Formats.Add(typeof(LZS));
             Formats.Add(typeof(WTA));
             Formats.Add(typeof(BinGzArchive));
+            Formats.Add(typeof(BNR));
 
 
 

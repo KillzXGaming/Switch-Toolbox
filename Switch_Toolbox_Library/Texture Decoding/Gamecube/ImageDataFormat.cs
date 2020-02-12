@@ -75,7 +75,7 @@ namespace Chadsoft.CTools.Image
             return height + ((BlockHeight - (height % BlockHeight)) % BlockHeight);
         }
 
-        public byte[] ConvertFrom(byte[] data, int width, int height, ProgressChangedEventHandler progress)
+        public byte[] ConvertFrom(byte[] data, int width, int height, ProgressChangedEventHandler progress = null)
         {
             byte[] result, blockResult, block;
             int step;
@@ -109,7 +109,7 @@ namespace Chadsoft.CTools.Image
             byte[] result, block, blockResult;
             int step;
 
-            step = Math.Max(width * height / BlockHeight / BlockWidth / 100, 2048);
+            step = Math.Max(width * height / BlockHeight / BlockWidth / 100, 1024);
             result = new byte[RoundWidth(width) / BlockWidth * RoundHeight(height) / BlockHeight * BlockStride];
             block = new byte[BlockWidth * BlockHeight << 2];
 
@@ -127,8 +127,8 @@ namespace Chadsoft.CTools.Image
                     blockResult = _convertTo(block);
                     blockResult.CopyTo(result, i * BlockStride);
 
-                    //if (i % step == 0 && progress != null)
-                    //progress(this, new ProgressChangedEventArgs((x + y * width * 100) / (width * height), null));
+                    if (i % step == 0 && progress != null)
+                        progress(this, new ProgressChangedEventArgs((x + y * width * 100) / (width * height), null));
                 }
             }
 

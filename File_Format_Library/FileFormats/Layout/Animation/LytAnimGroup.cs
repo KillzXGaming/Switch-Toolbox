@@ -120,6 +120,8 @@ namespace LayoutBXLYT
                         continue;
 
                     var targetGroup = ((IAnimationTarget)group).GetTrack(keyGroup.AnimationTarget);
+                    if (group is LytMaterialColorGroup)
+                        Console.WriteLine($"targetGroup {(RevLMCTarget)keyGroup.AnimationTarget} {targetGroup != null}");
                     if (targetGroup != null)
                     {
                         targetGroup.LoadKeyFrames(keyGroup.KeyFrames);
@@ -342,6 +344,13 @@ namespace LayoutBXLYT
 
     public class LytMaterialColorGroup : SubAnimGroup, IAnimationTarget
     {
+        public bool IsRLAN = false;
+
+        public LytAnimTrack MatColorR = new LytAnimTrack();
+        public LytAnimTrack MatColorG = new LytAnimTrack();
+        public LytAnimTrack MatColorB = new LytAnimTrack();
+        public LytAnimTrack MatColorA = new LytAnimTrack();
+
         public LytAnimTrack BlackColorR = new LytAnimTrack();
         public LytAnimTrack BlackColorG = new LytAnimTrack();
         public LytAnimTrack BlackColorB = new LytAnimTrack();
@@ -352,33 +361,96 @@ namespace LayoutBXLYT
         public LytAnimTrack WhiteColorB = new LytAnimTrack();
         public LytAnimTrack WhiteColorA = new LytAnimTrack();
 
+        public LytAnimTrack ColorReg3R = new LytAnimTrack();
+        public LytAnimTrack ColorReg3G = new LytAnimTrack();
+        public LytAnimTrack ColorReg3B = new LytAnimTrack();
+        public LytAnimTrack ColorReg3A = new LytAnimTrack();
+
+        public LytAnimTrack TevColor1R = new LytAnimTrack();
+        public LytAnimTrack TevColor1G = new LytAnimTrack();
+        public LytAnimTrack TevColor1B = new LytAnimTrack();
+        public LytAnimTrack TevColor1A = new LytAnimTrack();
+        public LytAnimTrack TevColor2R = new LytAnimTrack();
+        public LytAnimTrack TevColor2G = new LytAnimTrack();
+        public LytAnimTrack TevColor2B = new LytAnimTrack();
+        public LytAnimTrack TevColor2A = new LytAnimTrack();
+        public LytAnimTrack TevColor3R = new LytAnimTrack();
+        public LytAnimTrack TevColor3G = new LytAnimTrack();
+        public LytAnimTrack TevColor3B = new LytAnimTrack();
+        public LytAnimTrack TevColor3A = new LytAnimTrack();
+        public LytAnimTrack TevColor4R = new LytAnimTrack();
+        public LytAnimTrack TevColor4G = new LytAnimTrack();
+        public LytAnimTrack TevColor4B = new LytAnimTrack();
+        public LytAnimTrack TevColor4A = new LytAnimTrack();
+
         public override List<STAnimationTrack> GetTracks()
         {
             List<STAnimationTrack> tracks = new List<STAnimationTrack>();
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < (IsRLAN ? 30 : 8); i++)
                 tracks.Add(GetTrack(i));
             return tracks;
         }
 
         public LytAnimTrack GetTrack(int target)
         {
-            switch (target)
+            if (!IsRLAN)
             {
-                case 0: return BlackColorR;
-                case 1: return BlackColorG;
-                case 2: return BlackColorB;
-                case 3: return BlackColorA;
-                case 4: return WhiteColorR;
-                case 5: return WhiteColorG;
-                case 6: return WhiteColorB;
-                case 7: return WhiteColorA;
-                default: return null;
+                switch (target)
+                {
+                    case 0: return BlackColorR;
+                    case 1: return BlackColorG;
+                    case 2: return BlackColorB;
+                    case 3: return BlackColorA;
+                    case 4: return WhiteColorR;
+                    case 5: return WhiteColorG;
+                    case 6: return WhiteColorB;
+                    case 7: return WhiteColorA;
+                    default: return null;
+                }
+            }
+            else
+            {
+                switch (target)
+                {
+                    case 0: return MatColorR;
+                    case 1: return MatColorG;
+                    case 2: return MatColorB;
+                    case 3: return MatColorA;
+                    case 4: return BlackColorR;
+                    case 5: return BlackColorG;
+                    case 6: return BlackColorB;
+                    case 7: return BlackColorA;
+                    case 8: return WhiteColorR;
+                    case 9: return WhiteColorG;
+                    case 10: return WhiteColorB;
+                    case 11: return WhiteColorA;
+                    case 12: return ColorReg3R;
+                    case 13: return ColorReg3G;
+                    case 14: return ColorReg3B;
+                    case 15: return ColorReg3A;
+                    case 16: return TevColor1R;
+                    case 17: return TevColor1G;
+                    case 18: return TevColor1B;
+                    case 19: return TevColor1A;
+                    case 20: return TevColor2R;
+                    case 21: return TevColor2G;
+                    case 22: return TevColor2B;
+                    case 23: return TevColor2A;
+                    case 24: return TevColor3R;
+                    case 25: return TevColor3G;
+                    case 26: return TevColor3B;
+                    case 27: return TevColor3A;
+                    case 28: return TevColor4R;
+                    case 29: return TevColor4G;
+                    case 30: return TevColor4B;
+                    case 31: return TevColor4A;
+                    default: return null;
+                }
             }
         }
 
-        public LytMaterialColorGroup(BxlanPaiTag entry) : base(entry)
-        {
-
+        public LytMaterialColorGroup(BxlanPaiTag entry) : base(entry) {
+            IsRLAN = entry is BRLAN.PaiTag;
         }
     }
 
