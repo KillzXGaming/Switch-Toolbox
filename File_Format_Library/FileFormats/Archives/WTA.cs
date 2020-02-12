@@ -93,11 +93,15 @@ namespace FirstPlugin
                 uint stringTableOffset = reader.ReadUInt32();
                 uint stringTableSize = reader.ReadUInt32();
                 reader.ReadUInt32(); //64
-                reader.ReadUInt32(); //2
+                uint unkSectionCount = reader.ReadUInt32(); 
                 uint FileCount = reader.ReadUInt32();
                 reader.ReadUInt32(); //1
+                reader.ReadUInt32(); //0
+                reader.ReadUInt32(); //0
+                reader.ReadUInt32(); //0
 
-                reader.SeekBegin(128);
+                //Skip an unknown section that is 64 bytes in size
+                reader.Seek(unkSectionCount * 32);
 
                 for (int i = 0; i < FileCount; i++)
                     files.Add(new FileInfo(reader, dataOffset, stringTableOffset));
@@ -126,17 +130,17 @@ namespace FirstPlugin
 
                     reader.SeekBegin(files[i].DataOffset);
                     var data = reader.ReadBytes((int)files[i].CompressedSize);
-                    if (files[i].CompressedSize != files[i].UncompressedSize)
+                    if (files[i].CompressedSize != files[i].UncompressedSize && data[0] == 0x78 && data[1] == 0x5E)
                         data = STLibraryCompression.ZLIB.Decompress(data);
 
                     using (var dataReader = new FileReader(data))
                     {
-                        if (dataReader.CheckSignature(4, "FRES"))
+                        if (dataReader.CheckSignature(4, "FRES") || dataReader.CheckSignature(4, "BNTX"))
                         {
                             dataReader.SetByteOrder(false);
-                            dataReader.SeekBegin(32);
+                            dataReader.SeekBegin(16);
                             uint fileNameOffset = dataReader.ReadUInt32();
-                            dataReader.SeekBegin(fileNameOffset + 2);
+                            dataReader.SeekBegin(fileNameOffset );
                             files[i].FileName = dataReader.ReadZeroTerminatedString();
                         }
                     }
@@ -169,7 +173,7 @@ namespace FirstPlugin
                 {
                     reader.SeekBegin(DataOffset);
                     var data = reader.ReadBytes((int)CompressedSize);
-                    if (CompressedSize != UncompressedSize)
+                    if (CompressedSize != UncompressedSize && data[0] == 0x78 && data[1] == 0x5E)
                         data = STLibraryCompression.ZLIB.Decompress(data);
 
                     return new MemoryStream(data);
