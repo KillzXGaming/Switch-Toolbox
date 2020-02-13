@@ -67,6 +67,8 @@ uniform float ColorUVScaleU;
 uniform float ColorUVScaleV;
 uniform float ColorUVTranslateU;
 uniform float ColorUVTranslateV;
+uniform float ColorBaseU;
+uniform float ColorBaseV;
 
 uniform float NormalMapUVScaleU;
 uniform float NormalMapUVScaleV;
@@ -137,11 +139,12 @@ void main()
 	vec3 albedo = vec3(1);
     if (HasDiffuse == 1)
 	{
-	    vec2 colorUV = f_texcoord0;
-		colorUV.x *= ColorUVScaleU + ColorUVTranslateU;
-	    colorUV.y *= ColorUVScaleV + ColorUVTranslateV;
+       vec2 uvScale = vec2(ColorUVScaleU, ColorUVScaleV);
+        vec2 uvTranslate = vec2(ColorUVTranslateU, ColorUVTranslateV);
+        vec2 shift = vec2(ColorBaseU, ColorBaseV);
+	    vec2 texCoord0 = shift + uvScale * (f_texcoord0.xy + (uvTranslate));
 
-		vec4 DiffuseTex =  pow(texture(DiffuseMap, colorUV).rgba, vec4(gamma));
+		vec4 DiffuseTex =  pow(texture(DiffuseMap, texCoord0).rgba, vec4(gamma));
 
 		//Comp Selectors
 		albedo.r = GetComponent(RedChannel, DiffuseTex);
@@ -271,12 +274,13 @@ void main()
 	}
 	else if (renderType == 3) //DiffuseColor
 	{
-	    vec2 colorUV = displayTexCoord;
-		colorUV.x *= ColorUVScaleU + ColorUVTranslateU;
-	    colorUV.y *= ColorUVScaleV + ColorUVTranslateV;
+        vec2 uvScale = vec2(ColorUVScaleU, ColorUVScaleV);
+        vec2 uvTranslate = vec2(ColorUVTranslateU, ColorUVTranslateV);
+        vec2 shift = vec2(ColorBaseU, ColorBaseV);
+	    vec2 texCoord0 = shift + uvScale * (displayTexCoord.xy + (uvTranslate));
 
 		//Comp Selectors
-		vec4 diffuseMapColor = vec4(texture(DiffuseMap, colorUV).rgb, 1);
+		vec4 diffuseMapColor = vec4(texture(DiffuseMap, texCoord0).rgb, 1);
 		diffuseMapColor.r = GetComponent(RedChannel, diffuseMapColor);
 		diffuseMapColor.g = GetComponent(GreenChannel, diffuseMapColor);
 		diffuseMapColor.b = GetComponent(BlueChannel, diffuseMapColor);

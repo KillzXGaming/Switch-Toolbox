@@ -385,9 +385,14 @@ namespace FirstPlugin
                         ScaleY = ValueParams["ColorUVScaleV"].Value;
 
                     if (ValueParams.ContainsKey("ColorUVTranslateU"))
-                        TransX = ValueParams["ColorUVTranslateU"].Value;
+                        TransX += ValueParams["ColorUVTranslateU"].Value;
                     if (ValueParams.ContainsKey("ColorUVTranslateV"))
-                        TransY = ValueParams["ColorUVTranslateV"].Value;
+                        TransY += ValueParams["ColorUVTranslateV"].Value;
+
+                    if (ValueParams.ContainsKey("ColorBaseU"))
+                        TransX += ValueParams["ColorBaseU"].Value;
+                    if (ValueParams.ContainsKey("ColorBaseV"))
+                        TransY += ValueParams["ColorBaseV"].Value;
                 }
                 if (matTexture.Type == STGenericMatTexture.TextureType.Normal)
                 {

@@ -549,6 +549,10 @@ namespace FirstPlugin
                             param.Value.Value = 1;
                         if (param.Key.Contains("UVTranslate"))
                             param.Value.Value = 0;
+                        if (param.Key.Contains("ColorBaseU"))
+                            param.Value.Value = 0;
+                        if (param.Key.Contains("ColorBaseV"))
+                            param.Value.Value = 0;
                     }
                 }
             }

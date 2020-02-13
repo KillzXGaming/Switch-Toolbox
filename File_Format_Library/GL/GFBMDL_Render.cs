@@ -242,6 +242,8 @@ namespace FirstPlugin
             SetUniformData(mat, shader, "ColorUVScaleV");
             SetUniformData(mat, shader, "ColorUVTranslateU");
             SetUniformData(mat, shader, "ColorUVTranslateV");
+            SetUniformData(mat, shader, "ColorBaseU");
+            SetUniformData(mat, shader, "ColorBaseV");
         }
 
         private static void SetUniformData(GFLXMaterialData mat, ShaderProgram shader, string propertyName)
