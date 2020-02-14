@@ -56,6 +56,7 @@ namespace LayoutBXLYT
 
             ResetImagePanels();
             Images.Clear();
+            textureNameTB.Text = "";
 
             for (int i = 0; i < ActiveMaterial.TextureMaps?.Length; i++)
             {
@@ -93,6 +94,7 @@ namespace LayoutBXLYT
             }
             else
             {
+                textureNameTB.Text = "";
                 editBtn.Enabled = true;
                 removebtn.Enabled = true;
                 addbtn.Enabled = true;
@@ -165,6 +167,7 @@ namespace LayoutBXLYT
             wrapModeVCB.SelectedItem = texMap.WrapModeV;
             expandCB.SelectedItem = texMap.MaxFilterMode;
             shrinkCB.SelectedItem = texMap.MinFilterMode;
+            textureNameTB.Text = texMap.Name;
 
             if (ActiveMaterial.TextureTransforms?.Length > SelectedIndex)
             {

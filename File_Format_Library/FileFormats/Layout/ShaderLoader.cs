@@ -11,6 +11,7 @@ namespace LayoutBXLYT
         private static BflytShader cafeShader;
         private static BrlytShader revShader;
         private static BclytShader ctrShader;
+        private static BloShader bloShader;
 
         public static BflytShader CafeShader
         {
@@ -37,6 +38,15 @@ namespace LayoutBXLYT
                 if (ctrShader == null)
                     ctrShader = new BclytShader();
                 return ctrShader;
+            }
+        }
+        public static BloShader BLOShader
+        {
+            get
+            {
+                if (bloShader == null)
+                    bloShader = new BloShader();
+                return bloShader;
             }
         }
     }

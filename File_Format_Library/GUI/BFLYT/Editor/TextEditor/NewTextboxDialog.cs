@@ -49,7 +49,7 @@ namespace LayoutBXLYT
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = Utils.GetAllFilters(new Type[]
-            { typeof(BFFNT), typeof(BFTTF) });
+            { typeof(BXFNT), typeof(BXFNT) });
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -58,7 +58,7 @@ namespace LayoutBXLYT
                 btnOk.Enabled = true;
 
                 var file = STFileLoader.OpenFileFormat(ofd.FileName);
-                if (file is BFFNT)
+                if (file is BXFNT)
                 {
 
                 }

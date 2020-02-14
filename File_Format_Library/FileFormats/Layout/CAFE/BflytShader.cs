@@ -130,59 +130,8 @@ namespace LayoutBXLYT
                 shader.SetInt($"tevStage{i}A",   (int)material.TevStages[i].AlphaMode);
             }
 
-            for (int i = 0; i < 3; i++) {
-                Matrix4 matTransform = Matrix4.Identity;
-                shader.SetMatrix(String.Format("textureTransforms[{0}]", i), ref matTransform);
-            }
-
-            for (int i = 0; i < material.TextureMaps.Length; i++)
-            {
-                var scale = new Syroot.Maths.Vector2F(1, 1);
-                float rotate = 0;
-                var translate = new Syroot.Maths.Vector2F(0, 0);
-
-                int index = i;
-           //     if (material.TexCoordGens?.Length > i)
-           //         index = (int)material.TexCoordGens[i].Source / 3 - 10;
-
-                if (material.TextureTransforms.Length > index)
-                {
-                    var transform = material.TextureTransforms[index];
-                    scale = transform.Scale;
-                    rotate = transform.Rotate;
-                    translate = transform.Translate;
-
-                    foreach (var animItem in material.animController.TextureSRTS)
-                    {
-                        switch (animItem.Key)
-                        {
-                            case LTSTarget.ScaleS: scale.X = animItem.Value; break;
-                            case LTSTarget.ScaleT: scale.Y = animItem.Value; break;
-                            case LTSTarget.Rotate: rotate = animItem.Value; break;
-                            case LTSTarget.TranslateS: translate.X = animItem.Value; break;
-                            case LTSTarget.TranslateT: translate.Y = animItem.Value; break;
-                        }
-                    }
-                }
-
-                var matScale = Matrix4.CreateScale(scale.X, scale.Y, 1.0f);
-                var matRotate = Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.DegreesToRadians(rotate));
-                var matTranslate = Matrix4.CreateTranslation(
-                    translate.X / scale.X - 0.5f,
-                    translate.Y / scale.Y - 0.5f, 0);
-
-                Matrix4 matTransform = matRotate * matTranslate * matScale;
-                shader.SetMatrix(String.Format("textureTransforms[{0}]", i), ref matTransform);
-            }
-
-
-            GL.Enable(EnableCap.Blend);
-            GL.Enable(EnableCap.AlphaTest);
-            GL.AlphaFunc(AlphaFunction.Always, 0f);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.BlendEquation(BlendEquationMode.FuncAdd);
-            GL.Disable(EnableCap.ColorLogicOp);
-            GL.LogicOp(LogicOp.Noop);
+            LoadTextureUniforms(shader, material, textures);
+            LoadDefaultBlending();
 
             if (material.BlendMode != null && material.EnableBlend)
             {

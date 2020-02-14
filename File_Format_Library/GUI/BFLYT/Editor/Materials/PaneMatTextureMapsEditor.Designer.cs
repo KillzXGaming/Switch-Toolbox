@@ -58,6 +58,8 @@
             this.stLabel5 = new Toolbox.Library.Forms.STLabel();
             this.scaleYUD = new BarSlider.BarSlider();
             this.scaleXUD = new BarSlider.BarSlider();
+            this.stLabel8 = new Toolbox.Library.Forms.STLabel();
+            this.textureNameTB = new Toolbox.Library.Forms.STTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.stPanel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.stPanel2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.stPanel3)).BeginInit();
@@ -214,6 +216,8 @@
             // stDropDownPanel2
             // 
             this.stDropDownPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.stDropDownPanel2.Controls.Add(this.textureNameTB);
+            this.stDropDownPanel2.Controls.Add(this.stLabel8);
             this.stDropDownPanel2.Controls.Add(this.shrinkCB);
             this.stDropDownPanel2.Controls.Add(this.stLabel3);
             this.stDropDownPanel2.Controls.Add(this.expandCB);
@@ -243,7 +247,7 @@
             this.shrinkCB.ButtonColor = System.Drawing.Color.Empty;
             this.shrinkCB.FormattingEnabled = true;
             this.shrinkCB.IsReadOnly = false;
-            this.shrinkCB.Location = new System.Drawing.Point(263, 131);
+            this.shrinkCB.Location = new System.Drawing.Point(263, 152);
             this.shrinkCB.Name = "shrinkCB";
             this.shrinkCB.Size = new System.Drawing.Size(142, 21);
             this.shrinkCB.TabIndex = 14;
@@ -252,7 +256,7 @@
             // stLabel3
             // 
             this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(183, 134);
+            this.stLabel3.Location = new System.Drawing.Point(183, 155);
             this.stLabel3.Name = "stLabel3";
             this.stLabel3.Size = new System.Drawing.Size(65, 13);
             this.stLabel3.TabIndex = 13;
@@ -265,7 +269,7 @@
             this.expandCB.ButtonColor = System.Drawing.Color.Empty;
             this.expandCB.FormattingEnabled = true;
             this.expandCB.IsReadOnly = false;
-            this.expandCB.Location = new System.Drawing.Point(263, 104);
+            this.expandCB.Location = new System.Drawing.Point(263, 125);
             this.expandCB.Name = "expandCB";
             this.expandCB.Size = new System.Drawing.Size(142, 21);
             this.expandCB.TabIndex = 12;
@@ -274,7 +278,7 @@
             // stLabel4
             // 
             this.stLabel4.AutoSize = true;
-            this.stLabel4.Location = new System.Drawing.Point(183, 107);
+            this.stLabel4.Location = new System.Drawing.Point(183, 128);
             this.stLabel4.Name = "stLabel4";
             this.stLabel4.Size = new System.Drawing.Size(71, 13);
             this.stLabel4.TabIndex = 11;
@@ -287,7 +291,7 @@
             this.wrapModeVCB.ButtonColor = System.Drawing.Color.Empty;
             this.wrapModeVCB.FormattingEnabled = true;
             this.wrapModeVCB.IsReadOnly = false;
-            this.wrapModeVCB.Location = new System.Drawing.Point(263, 66);
+            this.wrapModeVCB.Location = new System.Drawing.Point(263, 87);
             this.wrapModeVCB.Name = "wrapModeVCB";
             this.wrapModeVCB.Size = new System.Drawing.Size(142, 21);
             this.wrapModeVCB.TabIndex = 10;
@@ -296,7 +300,7 @@
             // stLabel2
             // 
             this.stLabel2.AutoSize = true;
-            this.stLabel2.Location = new System.Drawing.Point(183, 69);
+            this.stLabel2.Location = new System.Drawing.Point(183, 90);
             this.stLabel2.Name = "stLabel2";
             this.stLabel2.Size = new System.Drawing.Size(76, 13);
             this.stLabel2.TabIndex = 9;
@@ -309,7 +313,7 @@
             this.wrapModeUCB.ButtonColor = System.Drawing.Color.Empty;
             this.wrapModeUCB.FormattingEnabled = true;
             this.wrapModeUCB.IsReadOnly = false;
-            this.wrapModeUCB.Location = new System.Drawing.Point(263, 39);
+            this.wrapModeUCB.Location = new System.Drawing.Point(263, 60);
             this.wrapModeUCB.Name = "wrapModeUCB";
             this.wrapModeUCB.Size = new System.Drawing.Size(142, 21);
             this.wrapModeUCB.TabIndex = 8;
@@ -318,7 +322,7 @@
             // stLabel1
             // 
             this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(183, 42);
+            this.stLabel1.Location = new System.Drawing.Point(183, 63);
             this.stLabel1.Name = "stLabel1";
             this.stLabel1.Size = new System.Drawing.Size(77, 13);
             this.stLabel1.TabIndex = 7;
@@ -590,6 +594,23 @@
             this.scaleXUD.Value = 30F;
             this.scaleXUD.ValueChanged += new System.EventHandler(this.transformUV_ValueChanged);
             // 
+            // stLabel8
+            // 
+            this.stLabel8.AutoSize = true;
+            this.stLabel8.Location = new System.Drawing.Point(183, 30);
+            this.stLabel8.Name = "stLabel8";
+            this.stLabel8.Size = new System.Drawing.Size(38, 13);
+            this.stLabel8.TabIndex = 15;
+            this.stLabel8.Text = "Name:";
+            // 
+            // textureNameTB
+            // 
+            this.textureNameTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textureNameTB.Location = new System.Drawing.Point(263, 28);
+            this.textureNameTB.Name = "textureNameTB";
+            this.textureNameTB.Size = new System.Drawing.Size(142, 20);
+            this.textureNameTB.TabIndex = 16;
+            // 
             // PaneMatTextureMapsEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -643,5 +664,7 @@
         private Toolbox.Library.Forms.STLabel stLabel5;
         private BarSlider.BarSlider scaleYUD;
         private BarSlider.BarSlider scaleXUD;
+        private Toolbox.Library.Forms.STTextBox textureNameTB;
+        private Toolbox.Library.Forms.STLabel stLabel8;
     }
 }

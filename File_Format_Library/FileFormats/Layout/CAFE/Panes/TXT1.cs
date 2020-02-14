@@ -252,6 +252,8 @@ namespace LayoutBXLYT.Cafe
 
             long startPos = reader.Position - 84;
 
+            Console.WriteLine($"{Name}");
+
             TextLength = reader.ReadUInt16();
             MaxTextLength = reader.ReadUInt16();
             MaterialIndex = reader.ReadUInt16();
@@ -301,7 +303,6 @@ namespace LayoutBXLYT.Cafe
                 reader.SeekBegin(startPos + nameOffset);
                 TextBoxName = reader.ReadZeroTerminatedString();
             }
-
 
             if (header.VersionMajor > 2 && PerCharTransformEnabled)
             {

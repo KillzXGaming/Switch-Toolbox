@@ -160,7 +160,7 @@ namespace FirstPlugin
 
                     OpenFileDialog ofd = new OpenFileDialog();
                     ofd.Multiselect = true;
-                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BFLIM), typeof(BFFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) });
+                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BFLIM), typeof(BXFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) });
 
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
@@ -169,7 +169,7 @@ namespace FirstPlugin
                         {
                             foreach (string file in ofd.FileNames)
                             {
-                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BFLIM), typeof(PTCL), typeof(BFRES), typeof(BFFNT), typeof(SARC) });
+                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BFLIM), typeof(PTCL), typeof(BFRES), typeof(BXFNT), typeof(SARC) });
                                 if (FileFormat == null)
                                     continue;
 
@@ -202,16 +202,16 @@ namespace FirstPlugin
 
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
-                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BFLIM), typeof(BFFNT), typeof(PTCL), typeof(BFRES), typeof(SARC) }, file.FileData);
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BFLIM), typeof(BXFNT), typeof(PTCL), typeof(BFRES), typeof(SARC) }, file.FileData);
                         if (archiveFile == null)
                             continue;
 
                         SearchBinary(archiveFile, ArchiveFilePath, Extension);
                     }
                 }
-                if (FileFormat is BFFNT)
+                if (FileFormat is BXFNT)
                 {
-                    foreach (STGenericTexture texture in ((BFFNT)FileFormat).bffnt.FontSection.TextureGlyph.Gx2Textures)
+                    foreach (STGenericTexture texture in ((BXFNT)FileFormat).bffnt.FontSection.TextureGlyph.Textures)
                         texture.Export(Path.Combine(Folder, $"{texture.Text}{Extension}"));
                 }
                 if (FileFormat is BFRES)
@@ -488,7 +488,7 @@ namespace FirstPlugin
         {
             [0] = TEX_FORMAT.L8,
             [1] = TEX_FORMAT.A8_UNORM,
-            [2] = TEX_FORMAT.A4,
+            [2] = TEX_FORMAT.LA4,
             [3] = TEX_FORMAT.LA8,
             [4] = TEX_FORMAT.HIL08,
             [5] = TEX_FORMAT.B5G6R5_UNORM,
@@ -512,7 +512,7 @@ namespace FirstPlugin
         {
             [0] = TEX_FORMAT.L8,
             [1] = TEX_FORMAT.A8_UNORM,
-            [2] = TEX_FORMAT.A4,
+            [2] = TEX_FORMAT.LA4,
             [3] = TEX_FORMAT.LA8,
             [4] = TEX_FORMAT.R8G8_UNORM, //HILO8
             [5] = TEX_FORMAT.B5G6R5_UNORM,

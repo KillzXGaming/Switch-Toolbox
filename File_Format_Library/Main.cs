@@ -349,7 +349,7 @@ namespace FirstPlugin
             Formats.Add(typeof(BEA));
             Formats.Add(typeof(BYAML));
             Formats.Add(typeof(XTX));
-            Formats.Add(typeof(BFFNT));
+            Formats.Add(typeof(BXFNT));
             Formats.Add(typeof(MSBT));
             Formats.Add(typeof(BARS));
             Formats.Add(typeof(GFPAK));
@@ -451,8 +451,7 @@ namespace FirstPlugin
             Formats.Add(typeof(WTA));
             Formats.Add(typeof(BinGzArchive));
             Formats.Add(typeof(BNR));
-
-
+            //   Formats.Add(typeof(LayoutBXLYT.BLO));
 
             //   Formats.Add(typeof(MSBP));
             //   Formats.Add(typeof(BFGRP));

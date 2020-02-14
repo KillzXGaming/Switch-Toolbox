@@ -169,6 +169,84 @@ namespace LayoutBXLYT
                 GL.Disable(EnableCap.Texture2D);
                 //  ShaderLoader.RevShader.Disable();
             }
+            else if (pane is GCBLO.PIC1)
+            {
+                var pic1Pane = pane as GCBLO.PIC1;
+
+                ShaderLoader.BLOShader.Enable();
+                BloShader.SetMaterials(ShaderLoader.BLOShader, (GCBLO.Material)pic1Pane.Material, pane, Textures);
+
+                Color[] Colors = new Color[] {
+                    pic1Pane.ColorBottomLeft.Color,
+                    pic1Pane.ColorBottomRight.Color,
+                    pic1Pane.ColorTopRight.Color,
+                    pic1Pane.ColorTopLeft.Color,
+                };
+
+                if (pic1Pane.TexCoords.Length > 0)
+                {
+                    TexCoords = new Vector2[] {
+                        pic1Pane.TexCoords[0].BottomLeft.ToTKVector2(),
+                        pic1Pane.TexCoords[0].BottomRight.ToTKVector2(),
+                        pic1Pane.TexCoords[0].TopRight.ToTKVector2(),
+                        pic1Pane.TexCoords[0].TopLeft.ToTKVector2(),
+                   };
+                }
+
+                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
+                ShaderLoader.BLOShader.Disable();
+            }
+            else if (pane is GCBLO.PIC2)
+            {
+                var pic1Pane = pane as GCBLO.PIC2;
+
+                ShaderLoader.BLOShader.Enable();
+                BloShader.SetMaterials(ShaderLoader.BLOShader, (GCBLO.Material)pic1Pane.Material, pane, Textures);
+
+                Color[] Colors = new Color[] {
+                    pic1Pane.ColorBottomLeft.Color,
+                    pic1Pane.ColorBottomRight.Color,
+                    pic1Pane.ColorTopRight.Color,
+                    pic1Pane.ColorTopLeft.Color,
+                };
+
+                if (pic1Pane.TexCoords.Length > 0)
+                {
+                    TexCoords = new Vector2[] {
+                        pic1Pane.TexCoords[0].BottomLeft.ToTKVector2(),
+                        pic1Pane.TexCoords[0].BottomRight.ToTKVector2(),
+                        pic1Pane.TexCoords[0].TopRight.ToTKVector2(),
+                        pic1Pane.TexCoords[0].TopLeft.ToTKVector2(),
+                   };
+                }
+
+                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
+                ShaderLoader.BLOShader.Disable();
+            }
+            else
+                    {
+                var pic1Pane = pane as IPicturePane;
+
+                Color[] Colors = new Color[] {
+                    pic1Pane.ColorBottomLeft.Color,
+                    pic1Pane.ColorBottomRight.Color,
+                    pic1Pane.ColorTopRight.Color,
+                    pic1Pane.ColorTopLeft.Color,
+                };
+
+                if (pic1Pane.TexCoords.Length > 0)
+                {
+                    TexCoords = new Vector2[] {
+                        pic1Pane.TexCoords[0].BottomLeft.ToTKVector2(),
+                        pic1Pane.TexCoords[0].BottomRight.ToTKVector2(),
+                        pic1Pane.TexCoords[0].TopRight.ToTKVector2(),
+                        pic1Pane.TexCoords[0].TopLeft.ToTKVector2(),
+                   };
+                }
+
+                DrawRectangle(pane, gameWindow, pane.Rectangle, TexCoords, Colors, false, effectiveAlpha, isSelected);
+
+            }
 
             //    GL.BindTexture(TextureTarget.Texture2D, 0);
             //   GL.Disable(EnableCap.Texture2D);
@@ -228,8 +306,8 @@ namespace LayoutBXLYT
             GL.LogicOp(logicOp);
 
             for (int i = 0; i < 3; i++) {
-                Matrix4 matTransform = Matrix4.Identity;
-                mat.Shader.SetMatrix4(String.Format("textureTransforms[{0}]", i), ref matTransform);
+                var matTranslate = Matrix4.CreateTranslation(0 / 1 - 0.5f, 0 / 1 - 0.5f, 0);
+                mat.Shader.SetMatrix4(String.Format("textureTransforms[{0}]", i), ref matTranslate);
             }
 
             mat.Shader.Enable();
@@ -576,6 +654,8 @@ namespace LayoutBXLYT
                 shader = ShaderLoader.CtrShader;
             if (pane is Revolution.PAN1)
                 shader = ShaderLoader.RevShader;
+            if (pane is GCBLO.PAN1)
+                shader = ShaderLoader.BLOShader;
 
             var window = (IWindowPane)pane;
 
@@ -1120,7 +1200,7 @@ namespace LayoutBXLYT
         {
             if (mat is Revolution.Material)
                 ((Revolution.Material)mat).Shader.SetInt("flipTexture", (int)flip);
-            else
+            else 
                 shader.SetInt("flipTexture", (int)flip);
         }
 
@@ -1251,6 +1331,11 @@ namespace LayoutBXLYT
             {
                 ShaderLoader.CtrShader.Enable();
                 BclytShader.SetMaterials(ShaderLoader.CtrShader, (CTR.Material)mat, pane, textures);
+            }
+            else if (mat is GCBLO.Material)
+            {
+                ShaderLoader.BLOShader.Enable();
+                BloShader.SetMaterials(ShaderLoader.CtrShader, (GCBLO.Material)mat, pane, textures);
             }
         }
 

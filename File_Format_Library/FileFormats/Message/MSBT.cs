@@ -11,7 +11,7 @@ using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class MSBT : IEditor<MSBTEditor>, IFileFormat
+    public class MSBT : IEditor<MSBTEditor>, IFileFormat, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Message;
 
@@ -39,6 +39,21 @@ namespace FirstPlugin
             }
         }
 
+
+        #region Text Converter Interface
+        public TextFileType TextFileType => TextFileType.Xml;
+        public bool CanConvertBack => false;
+
+        public string ConvertToString() {
+            return MSYT.ToYaml(this);
+        }
+
+        public void ConvertFromString(string text)
+        {
+        }
+
+        #endregion
+
         public MSBTEditor OpenForm()
         {
             MSBTEditor editor = new MSBTEditor();
@@ -56,7 +71,7 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            CanSave = false;
+            CanSave = true;
 
             header = new Header();
             header.Read(new FileReader(stream));
@@ -113,7 +128,13 @@ namespace FirstPlugin
                 uint FileSize = reader.ReadUInt32();
                 Reserved = reader.ReadBytes(10);
 
-                StringEncoding = (encoding == 0x01 ? Encoding.BigEndianUnicode : Encoding.UTF8);
+
+                if (encoding == 0x00)
+                    StringEncoding = Encoding.UTF8;
+                else if (reader.IsBigEndian)
+                    StringEncoding = Encoding.BigEndianUnicode;
+                else
+                    StringEncoding = Encoding.Unicode;
 
                 for (int i = 0; i < SectionCount; i++)
                 {
@@ -151,18 +172,13 @@ namespace FirstPlugin
                             MSBTEntry entry = new MSBTEntry();
                             entry.Signature = Signature;
                             entry.Padding = reader.ReadBytes(8);
-                            entry.EntryCount = reader.ReadUInt32();
                             entry.Data = reader.ReadBytes((int)SectionSize);
                             entries.Add(entry);
                             break;
                     }
 
                     reader.SeekBegin(pos + SectionSize + 0x10);
-
-                    while (reader.BaseStream.Position % 16 != 0 && reader.BaseStream.Position != reader.BaseStream.Length)
-                    {
-                        reader.ReadByte();
-                    }
+                    reader.Align(16);
                 }
 
                 //Setup labels to text properly
@@ -202,6 +218,16 @@ namespace FirstPlugin
                     writer.Write((uint)writer.BaseStream.Length);
                 }
             }
+
+            public override string ToString()
+            {
+                var builder = new StringBuilder();
+                using (var textWriter = new StringWriter(builder))
+                {
+                    textWriter.Write($"");
+                }
+                return builder.ToString();
+            }
         }
 
         public class LabelGroup
@@ -236,13 +262,15 @@ namespace FirstPlugin
         {
             private uint _index;
 
-            public StringEntry(byte[] data)
-            {
+            public StringEntry(byte[] data) {
                 Data = data;
             }
 
-            public StringEntry(string text, Encoding encoding)
-            {
+            public StringEntry(byte[] data, Encoding encoding) {
+                Data = data;
+            }
+
+            public StringEntry(string text, Encoding encoding) {
                 Data = encoding.GetBytes(text);
             }
 
@@ -264,6 +292,35 @@ namespace FirstPlugin
             {
                 return encoding.GetString(Data);
             }
+
+            public byte[] ToBytes(Encoding encoding, bool isBigEndian)
+            {
+                return Data;
+
+                var mem = new MemoryStream();
+                var text = GetText(encoding);
+                using (var writer = new FileWriter(mem, encoding)) {
+                    writer.SetByteOrder(isBigEndian);
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        var c = text[i];
+                        writer.Write(c);
+                        if (c == 0xE)
+                        {
+                            writer.Write((short)text[++i]);
+                            writer.Write((short)text[++i]);
+                            int count = text[++i];
+                            writer.Write((short)count);
+                            for (var j = 0; j < count; j++)
+                            {
+                                writer.Write((byte)text[++i]);
+                            }
+                        }
+                    }
+                    writer.Write('\0');
+                }
+                return mem.ToArray();
+            }
         }
 
         public class TXT2 : MSBTEntry
@@ -274,29 +331,33 @@ namespace FirstPlugin
 
             public override void Read(FileReader reader, Header header)
             {
+                reader.Seek(-4);
+                uint sectionSize = reader.ReadUInt32();
+
                 Padding = reader.ReadBytes(8);
 
-                long Position = reader.Position;
+                long pos = reader.Position;
                 EntryCount = reader.ReadUInt32();
                 Offsets = reader.ReadUInt32s((int)EntryCount);
 
                 for (int i = 0; i < EntryCount; i++)
                 {
-                    reader.SeekBegin(Offsets[i] + Position);
-                    ReadMessageString(reader, header, (uint)i);
+                    //Get the start and end position
+                    uint startPos = Offsets[i] + (uint)pos;
+                    uint endPos = i + 1 < EntryCount ? (uint)pos + Offsets[i + 1] :
+                                                       (uint)pos + sectionSize;
+
+                    reader.SeekBegin(startPos);
+                    ReadMessageString(reader, header, (uint)i, endPos - startPos);
                 }
             }
 
-            private void ReadMessageString(FileReader reader, Header header, uint index)
+            private void ReadMessageString(FileReader reader, Header header, uint index, uint size)
             {
-                string text = "";
-                if (header.StringEncoding == Encoding.BigEndianUnicode)
-                    text = reader.ReadUTF16String();
-                else
-                    text = reader.ReadZeroTerminatedString(header.StringEncoding);
+                byte[] textData = reader.ReadBytes((int)size);
 
-                TextData.Add(new StringEntry(text, header.StringEncoding) { Index = index, });
-                OriginalTextData.Add(new StringEntry(text, header.StringEncoding) { Index = index, });
+                TextData.Add(new StringEntry(textData, header.StringEncoding) { Index = index, });
+                OriginalTextData.Add(new StringEntry(textData, header.StringEncoding) { Index = index, });
             }
 
             public override void Write(FileWriter writer, Header header)
@@ -307,19 +368,9 @@ namespace FirstPlugin
                 writer.Write(TextData.Count);
                 writer.Write(new uint[TextData.Count]);
 
-                for (int i = 0; i < EntryCount; i++)
-                {
+                for (int i = 0; i < EntryCount; i++) {
                     writer.WriteUint32Offset(pos + 4 + (i * 4), pos);
-                    if (header.StringEncoding == Encoding.UTF8)
-                        writer.WriteString(TextData[i].ToString(), Encoding.UTF8);
-                    else
-                    {
-                        for (int j = 0; j < TextData[i].ToString().Length; j+= 2)
-                        {
-                            writer.Write(TextData[i].ToString()[j + 1]);
-                            writer.Write(TextData[i].ToString()[j]);
-                        }
-                    }
+                    writer.Write(TextData[i].ToBytes(header.StringEncoding, header.IsBigEndian));
                 }
             }
 
@@ -527,13 +578,11 @@ namespace FirstPlugin
                     for (int i = 0; i < group.NumberOfLabels; i++)
                     {
                         LabelEntry entry = new LabelEntry();
-                            entry.Length = reader.ReadByte();
+                        entry.Length = reader.ReadByte();
                         entry.Name = reader.ReadString((int)entry.Length);
                         entry.Index = reader.ReadUInt32();
                         entry.Checksum = (uint)Groups.IndexOf(group);
                         Labels.Add(entry);
-
-                        Console.WriteLine("label entry " + entry.Name);
                     }
                 }
 
@@ -542,11 +591,26 @@ namespace FirstPlugin
 
             public override void Write(FileWriter writer, Header header)
             {
-                writer.Write(Padding);
+                writer.Seek(8);
 
-                for (int i = 0; i < Groups.Count; i++)
-                {
+                long pos = writer.Position;
+                writer.Write(Groups.Count);
+                for (int i = 0; i < Groups.Count; i++) {
+                    writer.Write(Groups[i].NumberOfLabels);
+                    writer.Write(uint.MaxValue);
+                }
 
+                int index = 0;
+                for (int g = 0; g < Groups.Count; g++) {
+                    writer.WriteUint32Offset(pos + 8 + (g * 8), pos);
+                    for (int i = 0; i < Groups[g].NumberOfLabels; i++)
+                    {
+                        writer.Write((byte)Labels[index].Name.Length);
+                        writer.WriteString(Labels[index].Name, Labels[index].Length);
+                        writer.Write(Labels[index].Index);
+
+                        index++;
+                    }
                 }
             }
         }
@@ -557,23 +621,11 @@ namespace FirstPlugin
             writer.WriteSignature(magic);
             writer.Write(uint.MaxValue);
             section.Write(writer, header);
-            long endPos = writer.Position - 16;
-            WritePadding(writer);
+            long endPos = writer.Position;
 
-            using (writer.TemporarySeek(startPos + 4, System.IO.SeekOrigin.Begin))
-            {
-                writer.Write((uint)(endPos - startPos));
-            }
-        }
-
-        private static void WritePadding(FileWriter writer)
-        {
-            long alignedBytes = writer.BaseStream.Position % 16;
-            if (alignedBytes > 0)
-            {
-                for (int i = 0; i < 16 - alignedBytes; i++)
-                    writer.Write((byte)0xAB);
-            }
+            writer.AlignBytes(16, 0xAB);
+            //Skip 20 bytes from the header
+            writer.WriteSectionSizeU32(startPos + 4, startPos + 0x10, endPos);
         }
 
         public class MSBTEntry
@@ -590,7 +642,6 @@ namespace FirstPlugin
             public virtual void Write(FileWriter writer, Header header)
             {
                 writer.Write(Padding);
-                writer.Write(EntryCount);
                 writer.Write(Data);
             }
         }

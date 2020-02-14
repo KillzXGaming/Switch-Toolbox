@@ -9,7 +9,7 @@ namespace FirstPlugin
 {
     public class BffntCharSet2Xlor
     {
-        public static string ToXlor(BFFNT bffnt)
+        public static string ToXlor(BXFNT bffnt)
         {
             StringBuilder sb = new StringBuilder();
             using (var texWriter = new StringWriter(sb))

@@ -802,6 +802,29 @@ namespace Toolbox.Library
             return decodedData;
         }
 
+        public static byte[] DecodeC14X2(FileReader stream, uint width, uint height)
+        {
+            byte[] decodedData = new byte[width * height * 2];
+            uint numBlocksW = width / 4; //4 pixel block width
+            uint numBlocksH = height / 4; //4 pixel block height 
+
+            for (int yBlock = 0; yBlock < numBlocksH; yBlock++) {
+                for (int xBlock = 0; xBlock < numBlocksW; xBlock++) { 
+                    for (int pY = 0; pY < 4; pY++) {
+                        for (int pX = 0; pX < 4; pX++)
+                        {
+                            if ((xBlock * 4 + pX >= width) || (yBlock * 4 + pY >= height))
+                                continue;
+
+                            ushort value = stream.ReadUInt16();
+                        }
+                    }
+                }
+            }
+
+            return decodedData;
+        }
+
         private static byte[] DecodeRgb5A3(FileReader stream, uint width, uint height)
         {
             byte[] decodedData = new byte[width * height * 4];

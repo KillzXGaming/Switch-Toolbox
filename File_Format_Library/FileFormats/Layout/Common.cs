@@ -334,7 +334,7 @@ namespace LayoutBXLYT
 
         [Browsable(false)]
         [YamlIgnore]
-        public CustomRectangle Rectangle
+        public virtual CustomRectangle Rectangle
         {
             get
             {
@@ -1405,6 +1405,15 @@ namespace LayoutBXLYT
             return this.MemberwiseClone();
         }
 
+        public BxlytWindowContent(BxlytHeader header) {
+            LayoutFile = header;
+            ColorTopLeft = STColor8.White;
+            ColorTopRight = STColor8.White;
+            ColorBottomLeft = STColor8.White;
+            ColorBottomRight = STColor8.White;
+            TexCoords.Add(new TexCoord());
+        }
+
         public BxlytWindowContent(BxlytHeader header, string name)
         {
             LayoutFile = header;
@@ -1474,6 +1483,11 @@ namespace LayoutBXLYT
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public BxlytWindowFrame()
+        {
+
         }
 
         public BxlytWindowFrame(BxlytHeader header, string materialName)
@@ -2547,6 +2561,8 @@ namespace LayoutBXLYT
         public OpenTK.Vector2 TopRightPoint;
         public OpenTK.Vector2 BottomLeftPoint;
         public OpenTK.Vector2 BottomRightPoint;
+
+        public CustomRectangle() { }
 
         public CustomRectangle(OpenTK.Vector2 topLeft, OpenTK.Vector2 topRight,
             OpenTK.Vector2 bottomLeft, OpenTK.Vector2 bottomRight)

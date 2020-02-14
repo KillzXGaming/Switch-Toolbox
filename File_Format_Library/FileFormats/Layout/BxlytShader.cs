@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
+using Toolbox.Library;
 
 namespace LayoutBXLYT
 {
@@ -233,6 +234,120 @@ namespace LayoutBXLYT
             GL.DeleteShader(vertexShader);
             GL.DeleteShader(fragmentShader);
             return program;
+        }
+
+        public static void LoadDefaultBlending()
+        {
+            GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.AlphaTest);
+            GL.AlphaFunc(AlphaFunction.Always, 0f);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            GL.BlendEquation(BlendEquationMode.FuncAdd);
+            GL.Disable(EnableCap.ColorLogicOp);
+            GL.LogicOp(LogicOp.Noop);
+        }
+
+        public static void LoadTextureUniforms(BxlytShader shader, BxlytMaterial material,
+             Dictionary<string, STGenericTexture> textures)
+        {
+            shader.SetInt("hasTexture0", 0);
+            shader.SetInt("hasTexture1", 0);
+            shader.SetInt("hasTexture2", 0);
+            shader.SetInt("textures0", 0);
+            shader.SetInt("textures1", 0);
+            shader.SetInt("textures2", 0);
+
+            BindTextureUniforms(shader, material);
+
+            if (material.TextureMaps.Length > 0 || Runtime.LayoutEditor.Shading == Runtime.LayoutEditor.DebugShading.UVTestPattern)
+                GL.Enable(EnableCap.Texture2D);
+
+            for (int i = 0; i < 3; i++)
+            {
+                //Default UVs as centered
+                var matTranslate = Matrix4.CreateTranslation(0 / 1 - 0.5f, 0 / 1 - 0.5f, 0);
+                shader.SetMatrix(String.Format("textureTransforms[{0}]", i), ref matTranslate);
+            }
+
+            int id = 1;
+            for (int i = 0; i < material.TextureMaps.Length; i++)
+            {
+                string TexName = material.TextureMaps[i].Name;
+
+                if (material.animController.TexturePatterns.ContainsKey((LTPTarget)i))
+                    TexName = material.animController.TexturePatterns[(LTPTarget)i];
+
+                if (textures.ContainsKey(TexName))
+                {
+                    GL.ActiveTexture(TextureUnit.Texture0 + id);
+                    shader.SetInt($"textures{i}", id);
+                    bool isBinded = BxlytToGL.BindGLTexture(material.TextureMaps[i], textures[TexName]);
+                    if (isBinded)
+                        shader.SetInt($"hasTexture{i}", 1);
+
+                    var scale = new Syroot.Maths.Vector2F(1, 1);
+                    float rotate = 0;
+                    var translate = new Syroot.Maths.Vector2F(0, 0);
+
+                    int index = i;
+
+                    if (material.TextureTransforms.Length > index)
+                    {
+                        var transform = material.TextureTransforms[index];
+                        scale = transform.Scale;
+                        rotate = transform.Rotate;
+                        translate = transform.Translate;
+
+                        foreach (var animItem in material.animController.TextureSRTS)
+                        {
+                            switch (animItem.Key)
+                            {
+                                case LTSTarget.ScaleS: scale.X = animItem.Value; break;
+                                case LTSTarget.ScaleT: scale.Y = animItem.Value; break;
+                                case LTSTarget.Rotate: rotate = animItem.Value; break;
+                                case LTSTarget.TranslateS: translate.X = animItem.Value; break;
+                                case LTSTarget.TranslateT: translate.Y = animItem.Value; break;
+                            }
+                        }
+                    }
+
+
+                    var matScale = Matrix4.CreateScale(scale.X, scale.Y, 1.0f);
+                    var matRotate = Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.DegreesToRadians(rotate));
+                    var matTranslate = Matrix4.CreateTranslation(
+                        translate.X / scale.X - 0.5f,
+                        translate.Y / scale.Y - 0.5f, 0);
+
+                    Matrix4 matTransform = matRotate * matTranslate * matScale;
+                    shader.SetMatrix(String.Format("textureTransforms[{0}]", i), ref matTransform);
+
+                    id++;
+                }
+            }
+        }
+
+        private static void BindTextureUniforms(BxlytShader shader, BxlytMaterial material)
+        {
+            //Do uv test pattern
+            GL.ActiveTexture(TextureUnit.Texture10);
+            GL.Uniform1(GL.GetUniformLocation(shader.program, "uvTestPattern"), 10);
+            GL.BindTexture(TextureTarget.Texture2D, RenderTools.uvTestPattern.RenderableTex.TexID);
+
+            if (material.TextureMaps.Length > 0)
+            {
+                var tex = material.TextureMaps[0];
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, BxlytToGL.ConvertTextureWrap(tex.WrapModeU));
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, BxlytToGL.ConvertTextureWrap(tex.WrapModeV));
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, BxlytToGL.ConvertMagFilterMode(tex.MaxFilterMode));
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, BxlytToGL.ConvertMinFilterMode(tex.MinFilterMode));
+            }
+            else
+            {
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureParameterName.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureParameterName.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            }
         }
     }
 }

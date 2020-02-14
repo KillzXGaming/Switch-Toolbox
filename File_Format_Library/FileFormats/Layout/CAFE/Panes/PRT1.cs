@@ -336,6 +336,9 @@ namespace LayoutBXLYT.Cafe
             if (userDataOffset != 0)
             {
                 reader.SeekBegin(StartPosition + userDataOffset);
+                reader.ReadUInt32();//magic
+                reader.ReadUInt32();//section size
+
                 UserData = new USD1(reader, header);
             }
             if (panelInfoOffset != 0)
@@ -376,7 +379,12 @@ namespace LayoutBXLYT.Cafe
             if (UserData != null)
             {
                 writer.WriteUint32Offset(_ofsPos + 4, startPos);
+                long pos = writer.Position;
+                writer.WriteSignature("usd1");
+                writer.Write(uint.MaxValue);
                 UserData.Write(writer, header);
+                writer.Align(4);
+                writer.WriteSectionSizeU32(pos + 4, pos, writer.Position);
             }
         }
 

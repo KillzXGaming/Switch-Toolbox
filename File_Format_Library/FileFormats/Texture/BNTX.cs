@@ -190,7 +190,7 @@ namespace FirstPlugin
 
                     OpenFileDialog ofd = new OpenFileDialog();
                     ofd.Multiselect = true;
-                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BNTX), typeof(BFFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) });
+                    ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(BNTX), typeof(BXFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) });
 
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
@@ -199,7 +199,7 @@ namespace FirstPlugin
                         {
                             foreach (string file in ofd.FileNames)
                             {
-                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BNTX), typeof(BFFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) });
+                                var FileFormat = STFileLoader.OpenFileFormat(file, new Type[] { typeof(BNTX), typeof(BXFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) });
                                 if (FileFormat == null)
                                     continue;
 
@@ -230,7 +230,7 @@ namespace FirstPlugin
 
                     foreach (var file in ((SARC)FileFormat).Files)
                     {
-                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BNTX), typeof(BFFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) }, file.FileData);
+                        var archiveFile = STFileLoader.OpenFileFormat(file.FileName, new Type[] { typeof(BNTX), typeof(BXFNT), typeof(BFRES), typeof(PTCL), typeof(SARC) }, file.FileData);
                         if (archiveFile == null)
                             continue;
 
@@ -264,9 +264,9 @@ namespace FirstPlugin
                         bntx.Unload();
                     }
                 }
-                if (FileFormat is BFFNT)
+                if (FileFormat is BXFNT)
                 {
-                    var bntx = ((BFFNT)FileFormat).bffnt.FontSection.TextureGlyph.BinaryTextureFile;
+                    var bntx = ((BXFNT)FileFormat).bffnt.FontSection.TextureGlyph.BinaryTextureFile;
                     if (bntx != null)
                     {
                         foreach (var texture in bntx.Textures.Values)

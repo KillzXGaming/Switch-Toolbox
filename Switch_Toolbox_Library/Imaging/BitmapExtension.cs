@@ -730,6 +730,37 @@ namespace Toolbox.Library
             }
         }
 
+        public static Bitmap AdjustBrightness(Image image, float level)
+        {
+            ImageAttributes attributes = new ImageAttributes();
+
+            ColorMatrix cm = new ColorMatrix(new float[][]
+            {
+            new float[] { level, 0, 0, 0, 0},
+            new float[] {0, level, 0, 0, 0},
+            new float[] {0, 0, level, 0, 0},
+            new float[] {0, 0, 0, 1, 0},
+            new float[] {0, 0, 0, 0, 1},
+            });
+            attributes.SetColorMatrix(cm);
+
+            Point[] points =
+            {
+            new Point(0, 0),
+            new Point(image.Width, 0),
+            new Point(0, image.Height),
+           };
+            Rectangle rect = new Rectangle(0, 0, image.Width, image.Height);
+
+            Bitmap bm = new Bitmap(image.Width, image.Height);
+            using (Graphics gr = Graphics.FromImage(bm))
+            {
+                gr.DrawImage(image, points, rect,
+                    GraphicsUnit.Pixel, attributes);
+            }
+            return bm;
+        }
+
         public static Bitmap AdjustGamma(Image image, float gamma)
         {
             ImageAttributes attributes = new ImageAttributes();

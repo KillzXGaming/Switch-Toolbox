@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace FirstPlugin
 {
-    class BTI : STGenericTexture, IFileFormat, ISingleTextureIconLoader
+    public class BTI : STGenericTexture, IFileFormat, ISingleTextureIconLoader
     {
         public STGenericTexture IconTexture { get { return this; } }
 

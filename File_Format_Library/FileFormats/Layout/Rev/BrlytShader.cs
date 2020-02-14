@@ -108,60 +108,6 @@ namespace LayoutBXLYT
             shader.SetInt("tevTexMode", 0);
             shader.SetInt($"texCoords0GenType", 0);
             shader.SetInt($"texCoords0Source", 0);
-
-            BindTextureUniforms(shader, material);
-
-            int id = 1;
-            for (int i = 0; i < material.TextureMaps.Length; i++)
-            {
-                string TexName = material.TextureMaps[i].Name;
-
-                if (material.animController.TexturePatterns.ContainsKey((LTPTarget)i))
-                    TexName = material.animController.TexturePatterns[(LTPTarget)i];
-
-                if (textures.ContainsKey(TexName))
-                {
-                    GL.ActiveTexture(TextureUnit.Texture0 + id);
-                    shader.SetInt($"textures{i}", id);
-                    bool isBinded = BxlytToGL.BindGLTexture(material.TextureMaps[i], textures[TexName]);
-                    if (isBinded)
-                        shader.SetInt($"hasTexture{i}", 1);
-
-                    id++;
-                }
-            }
-
-            if (material.TextureTransforms.Length > 0)
-            {
-                var transform = material.TextureTransforms[0];
-                var scale = transform.Scale;
-                var rotate = transform.Rotate;
-                var translate = transform.Translate;
-
-                foreach (var animItem in material.animController.TextureSRTS)
-                {
-                    switch (animItem.Key)
-                    {
-                        case LTSTarget.ScaleS: scale.X = animItem.Value; break;
-                        case LTSTarget.ScaleT: scale.Y = animItem.Value; break;
-                        case LTSTarget.Rotate: rotate = animItem.Value; break;
-                        case LTSTarget.TranslateS: translate.X = animItem.Value; break;
-                        case LTSTarget.TranslateT: translate.Y = animItem.Value; break;
-                    }
-                }
-
-                shader.SetVec2("uvScale0", new Vector2(scale.X, scale.Y));
-                shader.SetFloat("uvRotate0", rotate);
-                shader.SetVec2("uvTranslate0", new Vector2(translate.X, translate.Y));
-            }
-
-            GL.Enable(EnableCap.Blend);
-            GL.Enable(EnableCap.AlphaTest);
-            GL.AlphaFunc(AlphaFunction.Always, 0f);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.BlendEquation(BlendEquationMode.FuncAdd);
-            GL.Disable(EnableCap.ColorLogicOp);
-            GL.LogicOp(LogicOp.Noop);
         }
 
         private static void BindTextureUniforms(BxlytShader shader, BxlytMaterial material)
