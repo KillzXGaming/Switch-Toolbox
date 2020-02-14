@@ -230,9 +230,34 @@
     <Compile Include="FileFormats\BCH\Wrappers\SkeletalAnimation\H3DSkeletalAnimWrapper.cs" />
     <Compile Include="FileFormats\Byaml\XmlByamlConverter.cs" />
     <Compile Include="FileFormats\Byaml\YamlByamlConverter.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\CMAP.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\FINF.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\FontKerningTable.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\Images\CtrImageBlock.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\CWDH.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\Images\Gx2ImageBlock.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\Images\RevImageBlock.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\TGLP.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\BxfntYamlConverter.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1MCommon.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\NUNO.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\NUNV.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BL0.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLO2\MAT1.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLO2\PAN2.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLO2\PIC2.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLO2\StringList.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLO2\TBX2.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLO2\WIN2.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLOHeader.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BloResource.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BloShader.cs" />
+    <Compile Include="FileFormats\Layout\BLO\INF1.cs" />
+    <Compile Include="FileFormats\Layout\BLO\Material.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLO1\PAN1.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLO1\PIC1.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLO1\TBX1.cs" />
+    <Compile Include="FileFormats\Layout\BLO\BLO1\WIN1.cs" />
     <Compile Include="FileFormats\Layout\CAFE\GRP1.cs" />
     <Compile Include="FileFormats\Layout\CAFE\Header.cs" />
     <Compile Include="FileFormats\Layout\CAFE\LYT1.cs" />
@@ -303,7 +328,6 @@
     <Compile Include="FileFormats\DKCTF\MSBT.cs" />
     <Compile Include="FileFormats\DKCTF\PAK.cs" />
     <Compile Include="FileFormats\Effects\ESET.cs" />
-    <Compile Include="FileFormats\Font\BXFNT.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HeaderCommon.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HedgeModel.cs" />
     <Compile Include="FileFormats\HedgehogEngine\PACx.cs" />
@@ -365,9 +389,9 @@
     <Compile Include="FileFormats\Effects\EFCF.cs" />
     <Compile Include="FileFormats\Effects\PTCL_3DS.cs" />
     <Compile Include="FileFormats\Effects\PTCL_WiiU.cs" />
-    <Compile Include="FileFormats\Font\BFFNT.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\BXFNT.cs" />
     <Compile Include="FileFormats\Audio\Archives\BFGRP.cs" />
-    <Compile Include="FileFormats\Font\BffntCharSet2Xlor.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\BffntCharSet2Xlor.cs" />
     <Compile Include="FileFormats\Font\BFTTF.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1M.cs" />
     <Compile Include="FileFormats\HyruleWarriors\LINKDATA.cs" />
@@ -532,6 +556,12 @@
     </Compile>
     <Compile Include="GUI\BCH\MetaData\UserDataParser.Designer.cs">
       <DependentUpon>UserDataParser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BXFNT\CharacterSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\BXFNT\CharacterSelector.Designer.cs">
+      <DependentUpon>CharacterSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\Animations\Basic\LayoutAnimTreeLoader.cs" />
     <Compile Include="GUI\BFLYT\Animations\LytAnimationWindow.cs">
@@ -872,10 +902,10 @@
     <Compile Include="GUI\BotwActorEditorControl.Designer.cs">
       <DependentUpon>BotwActorEditorControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\BFFNT\BffntEditor.cs">
+    <Compile Include="GUI\BXFNT\BffntEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\BFFNT\BffntEditor.Designer.cs">
+    <Compile Include="GUI\BXFNT\BffntEditor.Designer.cs">
       <DependentUpon>BffntEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\BFLYT\LayoutEditor.cs">
@@ -1689,6 +1719,9 @@
     <EmbeddedResource Include="GUI\BCH\MetaData\UserDataParser.resx">
       <DependentUpon>UserDataParser.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BXFNT\CharacterSelector.resx">
+      <DependentUpon>CharacterSelector.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\Animations\LytAnimationWindow.resx">
       <DependentUpon>LytAnimationWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -1743,7 +1776,7 @@
     <EmbeddedResource Include="GUI\ViewportEditor.resx">
       <DependentUpon>ViewportEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\BFFNT\BffntEditor.resx">
+    <EmbeddedResource Include="GUI\BXFNT\BffntEditor.resx">
       <DependentUpon>BffntEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFLYT\Animations\Basic\AddAnimGroupDialog.resx">
