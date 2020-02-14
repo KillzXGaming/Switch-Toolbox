@@ -43,6 +43,9 @@ namespace FirstPlugin
 
         public static string CMDL = GetFilter(".dae");
 
+        public static string CTR_TEX = GetFilter(".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+        public static string REV_TEX = GetFilter(".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
+
         public static string NUTEXB = GetFilter(".dds",".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
         public static string XTX = GetFilter(".dds", ".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
 

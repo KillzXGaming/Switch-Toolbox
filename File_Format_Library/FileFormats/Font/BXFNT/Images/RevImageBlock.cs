@@ -38,33 +38,25 @@ namespace FirstPlugin
         }
 
         public override bool CanEdit { get; set; } = true;
-        public override string ExportFilter => FileFilters.GTX;
-        public override string ReplaceFilter => FileFilters.GTX;
-
-        public override void Replace(string FileName)
-        {
-        
-        }
+        public override string ExportFilter => FileFilters.REV_TEX;
+        public override string ReplaceFilter => FileFilters.REV_TEX;
 
         public override TEX_FORMAT[] SupportedFormats
         {
             get
             {
                 return new TEX_FORMAT[] {
-                        TEX_FORMAT.R8_UNORM,
-                        TEX_FORMAT.BC1_UNORM_SRGB,
-                        TEX_FORMAT.BC1_UNORM,
-                        TEX_FORMAT.BC2_UNORM,
-                        TEX_FORMAT.BC2_UNORM_SRGB,
-                        TEX_FORMAT.BC3_UNORM,
-                        TEX_FORMAT.BC3_UNORM_SRGB,
-                        TEX_FORMAT.BC4_UNORM,
-                        TEX_FORMAT.BC5_UNORM,
-                        TEX_FORMAT.R8G8_UNORM,
-                        TEX_FORMAT.B5G6R5_UNORM,
-                        TEX_FORMAT.B5G5R5A1_UNORM,
-                        TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
-                        TEX_FORMAT.R8G8B8A8_UNORM,
+                    TEX_FORMAT.I4,
+                    TEX_FORMAT.I8,
+                    TEX_FORMAT.IA4,
+                    TEX_FORMAT.IA8,
+                    TEX_FORMAT.RGB565,
+                    TEX_FORMAT.RGB5A3,
+                    TEX_FORMAT.RGBA32,
+                    TEX_FORMAT.C4,
+                    TEX_FORMAT.C8,
+                    TEX_FORMAT.C14X2,
+                    TEX_FORMAT.CMPR,
                 };
             }
         }
@@ -77,6 +69,44 @@ namespace FirstPlugin
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             return TextureTGLP.SheetDataList[SheetIndex];
+        }
+
+        public override void Replace(string FileName)
+        {
+            GamecubeTextureImporterList importer = new GamecubeTextureImporterList(SupportedFormats);
+            GameCubeTextureImporterSettings settings = new GameCubeTextureImporterSettings();
+
+            importer.ForceMipCount = true;
+            importer.SelectedMipCount = 1;
+
+            settings.LoadBitMap(FileName);
+            importer.LoadSettings(new List<GameCubeTextureImporterSettings>() { settings, });
+            settings.MipCount = 1;
+            settings.Format = Decode_Gamecube.FromGenericFormat(Format);
+
+            if (importer.ShowDialog() == DialogResult.OK)
+            {
+                if (settings.GenerateMipmaps && !settings.IsFinishedCompressing)
+                    settings.Compress();
+
+                ApplySettings(settings);
+                UpdateEditor();
+            }
+        }
+
+        private void ApplySettings(GameCubeTextureImporterSettings settings)
+        {
+            if (this.Width != settings.TexWidth)
+                throw new Exception("The image should be the same width as the original!");
+            if (this.Height != settings.TexHeight)
+                throw new Exception("The image should be the same height as the original!");
+
+            this.TextureTGLP.SheetDataList[SheetIndex] = settings.DataBlockOutput[0];
+            this.TextureTGLP.Format = (ushort)Decode_Gamecube.FromGenericFormat(settings.GenericFormat);
+            this.Format = settings.GenericFormat;
+            this.MipCount = 1; //Always 1
+            this.Depth = 1;
+            this.ArrayCount = (uint)settings.DataBlockOutput.Count;
         }
 
         public override void OnClick(TreeView treeview)
