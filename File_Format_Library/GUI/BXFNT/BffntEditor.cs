@@ -218,7 +218,8 @@ namespace FirstPlugin.Forms
                 var image = ActiveFile.FontSection.TextureGlyph.GetImageSheet(ImageIndex);
                 bool IsBntx = ActiveFile.FontSection.TextureGlyph.BinaryTextureFile != null;
 
-                image.Parameters.FlipY = true;
+                if (ActiveFile.Platform >= FFNT.PlatformType.Cafe)
+                    image.Parameters.FlipY = true;
 
                 if (IsBntx)
                     image.ExportArrayImage(ImageIndex);
