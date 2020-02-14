@@ -802,18 +802,18 @@ namespace Bfres.Structs
 
         public void SetTransforms()
         {
-           /* if (BoneU != null)
+            if (BoneU != null)
             {
-                BoneU.TransformRotateZero = BoneU.Rotation == Syroot.Maths.Vector4F.Zero;
+                BoneU.TransformRotateZero = BoneU.Rotation == new Syroot.Maths.Vector4F(0,0,0,1);
                 BoneU.TransformScaleOne = BoneU.Scale == Syroot.Maths.Vector3F.One;
                 BoneU.TransformTranslateZero = BoneU.Position == Syroot.Maths.Vector3F.Zero;
             }
             else
             {
-                Bone.TransformRotateZero = Bone.Rotation == Syroot.Maths.Vector4F.Zero;
+                Bone.TransformRotateZero = Bone.Rotation == new Syroot.Maths.Vector4F(0, 0, 0, 1);
                 Bone.TransformScaleOne = Bone.Scale == Syroot.Maths.Vector3F.One;
                 Bone.TransformTranslateZero = Bone.Position == Syroot.Maths.Vector3F.Zero;
-            }*/
+            }
         }
 
         public ResFile GetResFile()
