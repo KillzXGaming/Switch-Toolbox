@@ -115,10 +115,18 @@ namespace Toolbox.Library.Forms
                      LoadColorDialog(TopLeftColor, 0);
                 if (TopRightHit.IsHit(e.Location))
                     LoadColorDialog(TopRightColor, 1);
-                if (BottomLefttHit.IsHit(e.Location))
+                if (BottomLeftHit.IsHit(e.Location))
                     LoadColorDialog(BottomLeftColor, 2);
                 if (BottomRightHit.IsHit(e.Location))
                     LoadColorDialog(BottomRightColor, 3);
+                if (TopHit.IsHit(e.Location))
+                    LoadColorDialogSides(TopRightColor, TopLeftColor,  0);
+                if (BottomHit.IsHit(e.Location))
+                    LoadColorDialogSides(BottomRightColor, BottomLeftColor, 1);
+                if (RightHit.IsHit(e.Location))
+                    LoadColorDialogSides(TopRightColor, BottomRightColor, 2);
+                if (LeftHit.IsHit(e.Location))
+                    LoadColorDialogSides(TopLeftColor, BottomLeftColor, 3);
                 if (AllHit.IsHit(e.Location))
                 {
                     if (dialogActive)
@@ -153,6 +161,55 @@ namespace Toolbox.Library.Forms
             this.Invalidate();
         }
 
+        private void LoadColorDialogSides(Color color1, Color color2, int index)
+        {
+            if (dialogActive)
+            {
+                colorDlg.Focus();
+                return;
+            }
+
+            Color[] colors = new Color[2]
+             { color1, color2 };
+
+            var color = Color.FromArgb(
+                    (int)colors.Average(a => a.A),
+                    (int)colors.Average(a => a.R),
+                    (int)colors.Average(a => a.G),
+                    (int)colors.Average(a => a.B));
+
+            dialogActive = true;
+            colorDlg = new STColorDialog(color);
+            colorDlg.FormClosed += delegate
+            {
+                dialogActive = false;
+            };
+            colorDlg.Show();
+            colorDlg.ColorChanged += delegate
+            {
+                if (index == 0)
+                {
+                    TopRightColor = colorDlg.NewColor;
+                    TopLeftColor = colorDlg.NewColor;
+                }
+                if (index == 1)
+                {
+                    BottomRightColor = colorDlg.NewColor;
+                    BottomLeftColor = colorDlg.NewColor;
+                }
+                if (index == 2)
+                {
+                    TopRightColor = colorDlg.NewColor;
+                    BottomRightColor = colorDlg.NewColor;
+                }
+                if (index == 3)
+                {
+                    TopLeftColor = colorDlg.NewColor;
+                    BottomLeftColor = colorDlg.NewColor;
+                }
+            };
+        }
+
         private void LoadColorDialog(Color color, int index)
         {
             if (dialogActive)
@@ -183,9 +240,15 @@ namespace Toolbox.Library.Forms
 
         private Rectangle TopLeftHit;
         private Rectangle TopRightHit;
-        private Rectangle BottomLefttHit;
+        private Rectangle BottomLeftHit;
         private Rectangle BottomRightHit;
+        private Rectangle TopHit;
+        private Rectangle RightHit;
+        private Rectangle LeftHit;
+        private Rectangle BottomHit;
         private Rectangle AllHit;
+
+        private bool DisplayHitboxes = false;
 
         protected override void OnPaint(PaintEventArgs pe)
         {
@@ -243,12 +306,41 @@ namespace Toolbox.Library.Forms
             int halfWidth = r.Width / 2;
             int halfHeight = r.Height / 2;
 
-            int LeftX = 10;
-            int RightX = r.Width - 30;
-            int topY = 10;
-            int BottomY = r.Height - 25;
+            int LeftX = 0;
+            int RightX = r.Width - 32;
+            int topY = 0;
+            int BottomY = r.Height - 32;
 
             var font = new Font(this.Font, FontStyle.Bold);
+
+            const int hitSize = 32;
+            TopLeftHit = new Rectangle(LeftX, topY, hitSize, hitSize);
+            TopRightHit = new Rectangle(RightX, topY, hitSize, hitSize);
+            BottomLeftHit = new Rectangle(LeftX, BottomY, hitSize, hitSize);
+            BottomRightHit = new Rectangle(RightX, BottomY, hitSize, hitSize);
+            TopHit = new Rectangle(halfWidth - 16, topY, hitSize, hitSize);
+            BottomHit = new Rectangle(halfWidth - 16, BottomY, hitSize, hitSize);
+            LeftHit = new Rectangle(LeftX, halfHeight - 16, hitSize, hitSize);
+            RightHit = new Rectangle(RightX, halfHeight - 16, hitSize, hitSize);
+            AllHit = new Rectangle(halfWidth - 16, halfHeight - 16, hitSize, hitSize);
+
+            LeftX = 10;
+            RightX = r.Width - 30;
+            topY = 10;
+            BottomY = r.Height - 25;
+
+            if (DisplayHitboxes)
+            {
+                pe.Graphics.FillRectangle(new SolidBrush(Color.Blue), TopLeftHit);
+                pe.Graphics.FillRectangle(new SolidBrush(Color.Purple), TopRightHit);
+                pe.Graphics.FillRectangle(new SolidBrush(Color.Green), BottomLeftHit);
+                pe.Graphics.FillRectangle(new SolidBrush(Color.Yellow), BottomRightHit);
+                pe.Graphics.FillRectangle(new SolidBrush(Color.Red), TopHit);
+                pe.Graphics.FillRectangle(new SolidBrush(Color.Red), RightHit);
+                pe.Graphics.FillRectangle(new SolidBrush(Color.Red), LeftHit);
+                pe.Graphics.FillRectangle(new SolidBrush(Color.Red), BottomHit);
+                pe.Graphics.FillRectangle(new SolidBrush(Color.Pink), AllHit);
+            }
 
             using (Brush br = new SolidBrush(AllColor.GrayScale(true).Inverse()))
                 pe.Graphics.DrawString("ALL", font, br, new Point(halfWidth - 10, halfHeight - 10));
@@ -264,14 +356,6 @@ namespace Toolbox.Library.Forms
 
             using (Brush br = new SolidBrush(BottomRightColor.GrayScale(true).Inverse()))
                 pe.Graphics.DrawString("BR", font, br, new Point(RightX, BottomY));
-            //  pe.Graphics.FillRectangle(linearGradientBrush, ClientRectangle);
-
-            const int hitSize = 40;
-            TopLeftHit = new Rectangle(LeftX, topY, hitSize, hitSize);
-            TopRightHit = new Rectangle(RightX, topY, hitSize, hitSize);
-            BottomLefttHit = new Rectangle(LeftX, BottomY, hitSize, hitSize);
-            BottomRightHit = new Rectangle(RightX, BottomY, hitSize, hitSize);
-            AllHit = new Rectangle(halfWidth - 10, halfHeight - 10, hitSize, hitSize);
 
             base.OnPaint(pe);
         }

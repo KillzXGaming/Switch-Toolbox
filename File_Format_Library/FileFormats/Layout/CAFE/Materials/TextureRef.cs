@@ -4,8 +4,8 @@ namespace LayoutBXLYT.Cafe
 {
     public class TextureRef : BxlytTextureRef
     {
-        byte flag1;
-        byte flag2;
+        byte flag1 = 0x06;
+        byte flag2 = 0x06;
 
         public override WrapMode WrapModeU
         {
@@ -28,6 +28,7 @@ namespace LayoutBXLYT.Cafe
         public override FilterMode MinFilterMode
         {
             get { return (FilterMode)((flag1 >> 2) & 0x3); }
+
         }
 
         public override FilterMode MaxFilterMode
@@ -44,6 +45,9 @@ namespace LayoutBXLYT.Cafe
             ID = reader.ReadInt16();
             flag1 = reader.ReadByte();
             flag2 = reader.ReadByte();
+
+            WrapModeU = (WrapMode)(flag1 & 0x3);
+            WrapModeV = (WrapMode)(flag2 & 0x3);
 
             if (header.Textures.Count > 0 && ID != -1)
                 Name = header.Textures[ID];

@@ -10,8 +10,8 @@ namespace LayoutBXLYT.CTR
     public class TextureRef : BxlytTextureRef
     {
         public short ID;
-        byte flag1;
-        byte flag2;
+        byte flag1 = 0x06;
+        byte flag2 = 0x06;
 
         public override WrapMode WrapModeU
         {
