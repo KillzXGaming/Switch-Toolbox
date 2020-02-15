@@ -497,17 +497,11 @@ namespace LayoutBXLYT
             if (updateBitmap)
                 BindFontBitmap(pane, fontBitmap);
 
-            var mat = textBox.Material as Cafe.Material;
-
-            BxlytShader shader = ShaderLoader.CafeShader;
-
-            ShaderLoader.CafeShader.Enable();
-            BflytShader.SetMaterials(ShaderLoader.CafeShader, mat, pane, Textures);
+            SetupShaders(pane, textBox.Material, Textures);
 
             GL.ActiveTexture(TextureUnit.Texture0 + 1);
-            shader.SetInt($"numTextureMaps", 1);
-            shader.SetInt($"textures0", 1);
-            shader.SetInt($"hasTexture0", 1);
+            SetupTextboxShader(pane, textBox.Material);
+
             GL.BindTexture(TextureTarget.Texture2D, textBox.RenderableFont.TexID);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleR, ConvertChannel(STChannelType.Red));
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureSwizzleG, ConvertChannel(STChannelType.Green));
@@ -533,8 +527,6 @@ namespace LayoutBXLYT
                 };
 
             DrawRectangle(pane, gameWindow, pane.Rectangle, texCoords, Colors, false, effectiveAlpha, isSelected);
-
-           ShaderLoader.CafeShader.Disable();
 
             GL.Disable(EnableCap.Texture2D);
             GL.BindTexture(TextureTarget.Texture2D, 0);
@@ -1336,6 +1328,44 @@ namespace LayoutBXLYT
             {
                 ShaderLoader.BLOShader.Enable();
                 BloShader.SetMaterials(ShaderLoader.CtrShader, (GCBLO.Material)mat, pane, textures);
+            }
+        }
+
+        //Todo make a method to get the shaders and set the values that way
+        //Shader loading for brlyt is still experimental and not done the same way
+        private static void SetupTextboxShader(BasePane pane, BxlytMaterial mat)
+        {
+            if (mat is Cafe.Material)
+            {
+                ShaderLoader.CafeShader.SetInt($"numTextureMaps", 1);
+                ShaderLoader.CafeShader.SetInt($"textures0", 1);
+                ShaderLoader.CafeShader.SetInt($"hasTexture0", 1);
+            }
+            else if (mat is CTR.Material)
+            {
+                ShaderLoader.CtrShader.SetInt($"numTextureMaps", 1);
+                ShaderLoader.CtrShader.SetInt($"textures0", 1);
+                ShaderLoader.CtrShader.SetInt($"hasTexture0", 1);
+            }
+            else if (mat is Revolution.Material)
+            {
+                //Make sure the text pane texture count is 1 to bind bitmap font to
+                if (((Revolution.Material)mat).Shader.TextureCount != 1) {
+                    ((Revolution.Material)mat).Shader.TextureCount = 1;
+                    ((Revolution.Material)mat).Shader.Compile();
+                    Console.WriteLine($"Updating text pane texture renderer {pane.Name}");
+                }
+
+                //Reload transforms
+                for (int i = 0; i < 3; i++) {
+                    var matTranslate = Matrix4.CreateTranslation(0 / 1 - 0.5f, 0 / 1 - 0.5f, 0);
+                    ((Revolution.Material)mat).Shader.SetMatrix4(String.Format("textureTransforms[{0}]", i), ref matTranslate);
+                }
+
+                //Load ids and enable the bitmap font texture
+                ((Revolution.Material)mat).Shader.SetInt($"numTextureMaps", 1);
+                ((Revolution.Material)mat).Shader.SetInt($"textures0", 1);
+                ((Revolution.Material)mat).Shader.SetInt($"hasTexture0", 1);
             }
         }
 

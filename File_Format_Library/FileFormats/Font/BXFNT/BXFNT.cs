@@ -139,8 +139,6 @@ namespace FirstPlugin
             }
         }
 
-        public string Name { get { return FileName; } }
-
         public BitmapFont GetBitmapFont(bool UseChannelComp = false)
         {
             return bffnt.GetBitmapFont(UseChannelComp);

@@ -149,7 +149,17 @@ namespace LayoutBXLYT.CTR
 
         public void UpdateTextRender()
         {
+            if (RenderableFont == null) return;
 
+            System.Drawing.Bitmap bitmap = null;
+            foreach (var fontFile in FirstPlugin.PluginRuntime.BxfntFiles)
+            {
+                if (Utils.CompareNoExtension(fontFile.FileName, FontName))
+                    bitmap = fontFile.GetBitmap(Text, false, this);
+            }
+
+            if (bitmap != null)
+                RenderableFont.UpdateFromBitmap(bitmap);
         }
 
         public void CopyMaterial()

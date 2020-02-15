@@ -493,13 +493,9 @@ namespace LayoutBXLYT
                     var textPane = (ITextPane)pane;
                     Bitmap bitmap = null;
 
-                    if (pane is Cafe.TXT1)
-                    {
-                        foreach (var fontFile in FirstPlugin.PluginRuntime.BxfntFiles)
-                        {
-                            if (Utils.CompareNoExtension(fontFile.Name, textPane.FontName))
-                                bitmap = fontFile.GetBitmap(textPane.Text, false, pane);
-                        }
+                    foreach (var fontFile in FirstPlugin.PluginRuntime.BxfntFiles) {
+                        if (Utils.CompareNoExtension(fontFile.FileName, textPane.FontName))
+                            bitmap = fontFile.GetBitmap(textPane.Text, false, pane);
                     }
 
                     if (bitmap != null)

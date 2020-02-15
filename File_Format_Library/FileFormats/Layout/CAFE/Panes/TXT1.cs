@@ -238,7 +238,7 @@ namespace LayoutBXLYT.Cafe
             System.Drawing.Bitmap bitmap = null;
             foreach (var fontFile in FirstPlugin.PluginRuntime.BxfntFiles)
             {
-                if (Utils.CompareNoExtension(fontFile.Name, FontName))
+                if (Utils.CompareNoExtension(fontFile.FileName, FontName))
                     bitmap = fontFile.GetBitmap(Text, false, this);
             }
 
