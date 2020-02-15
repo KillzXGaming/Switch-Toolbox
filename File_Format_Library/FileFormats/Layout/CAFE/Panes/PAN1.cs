@@ -25,9 +25,6 @@ namespace LayoutBXLYT.Cafe
             }
         }
 
-        [DisplayName("Parts Flag"), CategoryAttribute("Flags")]
-        public byte PaneMagFlags { get; set; }
-
         [DisplayName("Influence Alpha"), CategoryAttribute("Alpha")]
         public override bool InfluenceAlpha
         {
@@ -40,9 +37,6 @@ namespace LayoutBXLYT.Cafe
                     _flags1 &= 0xFD;
             }
         }
-
-        [DisplayName("User Data Info"), CategoryAttribute("User Data")]
-        public string UserDataInfo { get; set; }
 
         [DisplayName("User Data"), CategoryAttribute("User Data")]
         public UserData UserData { get; set; }

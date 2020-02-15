@@ -20,11 +20,15 @@ namespace LayoutBXLYT
         {
             InitializeComponent();
 
+            userNameTB.MaxLength = 8;
+
             stDropDownPanel1.ResetColors();
             stDropDownPanel2.ResetColors();
             stDropDownPanel3.ResetColors();
             stDropDownPanel4.ResetColors();
             stDropDownPanel5.ResetColors();
+
+            partPaneScalingCB.LoadEnum(typeof(PartPaneScaling));
 
             alphaSelectorHorizontalPanel1.AlphaChanged += OnAlphaSliderChanged;
             alphaUD.ValueChanged += OnAlphaChanged;
@@ -77,6 +81,8 @@ namespace LayoutBXLYT
             SetUIState();
 
             nameTB.Bind(pane, "Name");
+            userNameTB.Bind(pane, "UserDataInfo");
+            partPaneScalingCB.SelectedItem = (PartPaneScaling)pane.PaneMagFlags;
 
             SetTransform();
 
@@ -475,6 +481,12 @@ namespace LayoutBXLYT
 
         private void BasePaneEditor_MouseEnter(object sender, EventArgs e) {
             RefreshEditor();
+        }
+
+        private void partPaneScalingCB_SelectedIndexChanged(object sender, EventArgs e) {
+            if (!Loaded) return;
+            var scalingMode = (PartPaneScaling)partPaneScalingCB.SelectedItem;
+            ActivePane.PaneMagFlags = (byte)scalingMode;
         }
     }
 }

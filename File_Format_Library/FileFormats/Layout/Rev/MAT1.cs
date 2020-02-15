@@ -88,6 +88,20 @@ namespace LayoutBXLYT.Revolution
             return mat;
         }
 
+        public override bool RemoveTexCoordSources(int index)
+        {
+            foreach (var texGen in TexCoordGens)
+            {
+                //Shift all tex coord types down when an index is removed
+                if (texGen.Source >= TexCoordGenSource.GX_TG_TEX1 &&
+                    texGen.Source < TexCoordGenSource.GX_TG_TEX7)
+                {
+                    texGen.Source = texGen.Source - 1;
+                }
+            }
+            return true;
+        }
+
         public bool HasMaterialColor { get; set; }
         public bool HasChannelControl { get; set; }
         public bool HasBlendMode { get; set; }

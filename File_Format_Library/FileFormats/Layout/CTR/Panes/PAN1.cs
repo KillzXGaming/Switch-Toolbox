@@ -38,10 +38,6 @@ namespace LayoutBXLYT.CTR
             }
         }
 
-        public byte PartsScale { get; set; }
-
-        public byte PaneMagFlags { get; set; }
-
         [DisplayName("User Data"), CategoryAttribute("User Data")]
         public UserData UserData { get; set; }
 

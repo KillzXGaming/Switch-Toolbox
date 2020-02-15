@@ -21,6 +21,8 @@ namespace LayoutBXLYT
         {
             InitializeComponent();
 
+            projectionParamsPanel.Visible = false;
+
             stDropDownPanel1.ResetColors();
             stDropDownPanel2.ResetColors();
             stDropDownPanel3.ResetColors();
@@ -39,10 +41,12 @@ namespace LayoutBXLYT
         private List<Bitmap> Images = new List<Bitmap>();
         private int SelectedIndex = -1;
         private bool Loaded = false;
+        private int TexCoordinateCount = 1;
 
         public void LoadMaterial(BxlytMaterial material, PaneEditor paneEditor, 
-            Dictionary<string, STGenericTexture> textures)
+            Dictionary<string, STGenericTexture> textures, int numTextureCoordinates = 1)
         {
+            TexCoordinateCount = numTextureCoordinates;
             textureList = textures;
             ParentEditor = paneEditor;
             ActiveMaterial = material;
@@ -56,6 +60,8 @@ namespace LayoutBXLYT
 
             ResetImagePanels();
             Images.Clear();
+            transformTypeCB.Items.Clear();
+
             textureNameTB.Text = "";
 
             for (int i = 0; i < ActiveMaterial.TextureMaps?.Length; i++)
@@ -72,6 +78,13 @@ namespace LayoutBXLYT
                 if (i == 1) SetPanel(stPanel2, bitmap);
                 if (i == 2) SetPanel(stPanel3, bitmap);
             }
+
+            for (int i = 0; i < TexCoordinateCount; i++)
+                transformTypeCB.Items.Add((TexGenType)i);
+
+            transformTypeCB.Items.Add(TexGenType.OrthographicProjection);
+            transformTypeCB.Items.Add(TexGenType.PaneBasedProjection);
+            transformTypeCB.Items.Add(TexGenType.PerspectiveProjection);
 
             ReloadButtons();
 
@@ -180,6 +193,12 @@ namespace LayoutBXLYT
             }
             else
                 ResetUVTransformUI();
+
+            if (ActiveMaterial.TexCoordGens?.Length > SelectedIndex)
+            {
+                var texGen = ActiveMaterial.TexCoordGens[SelectedIndex];
+                transformTypeCB.SelectedItem = texGen.Source;
+            }
 
             texLoaded = true;
         }
@@ -415,6 +434,18 @@ namespace LayoutBXLYT
             }
 
             ParentEditor.PropertyChanged?.Invoke(sender, e);
+        }
+
+        private void transformTypeCB_SelectedIndexChanged(object sender, EventArgs e) {
+            if (transformTypeCB.SelectedIndex != -1)
+            {
+                var type = transformTypeCB.SelectedItem;
+                if (type.ToString().Contains("Projection")) {
+                    projectionParamsPanel.Visible = true;
+                }
+                else
+                    projectionParamsPanel.Visible = false;
+            }
         }
     }
 

@@ -75,6 +75,8 @@
             this.radioBottomBtnParent = new Toolbox.Library.Forms.STRadioButton();
             this.radioTopBtnParent = new Toolbox.Library.Forms.STRadioButton();
             this.radioCenterBtnParent = new Toolbox.Library.Forms.STRadioButton();
+            this.partPaneScalingCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel8 = new Toolbox.Library.Forms.STLabel();
             this.stFlowLayoutPanel1.SuspendLayout();
             this.stDropDownPanel1.SuspendLayout();
             this.stDropDownPanel2.SuspendLayout();
@@ -158,6 +160,8 @@
             // stDropDownPanel2
             // 
             this.stDropDownPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.stDropDownPanel2.Controls.Add(this.stLabel8);
+            this.stDropDownPanel2.Controls.Add(this.partPaneScalingCB);
             this.stDropDownPanel2.Controls.Add(this.rotZUD);
             this.stDropDownPanel2.Controls.Add(this.tranZUD);
             this.stDropDownPanel2.Controls.Add(this.sizeYUD);
@@ -182,7 +186,7 @@
             this.stDropDownPanel2.SetIcon = null;
             this.stDropDownPanel2.SetIconAlphaColor = System.Drawing.SystemColors.Control;
             this.stDropDownPanel2.SetIconColor = System.Drawing.SystemColors.Control;
-            this.stDropDownPanel2.Size = new System.Drawing.Size(477, 166);
+            this.stDropDownPanel2.Size = new System.Drawing.Size(477, 181);
             this.stDropDownPanel2.TabIndex = 5;
             // 
             // rotZUD
@@ -204,7 +208,7 @@
             this.rotZUD.IncrementAmount = 0.01F;
             this.rotZUD.InputName = "Z";
             this.rotZUD.LargeChange = 5F;
-            this.rotZUD.Location = new System.Drawing.Point(347, 60);
+            this.rotZUD.Location = new System.Drawing.Point(335, 59);
             this.rotZUD.Maximum = 300000F;
             this.rotZUD.Minimum = -300000F;
             this.rotZUD.Name = "rotZUD";
@@ -247,7 +251,7 @@
             this.tranZUD.IncrementAmount = 0.01F;
             this.tranZUD.InputName = "Z";
             this.tranZUD.LargeChange = 5F;
-            this.tranZUD.Location = new System.Drawing.Point(347, 29);
+            this.tranZUD.Location = new System.Drawing.Point(335, 28);
             this.tranZUD.Maximum = 300000F;
             this.tranZUD.Minimum = -300000F;
             this.tranZUD.Name = "tranZUD";
@@ -290,7 +294,7 @@
             this.sizeYUD.IncrementAmount = 0.01F;
             this.sizeYUD.InputName = "Y";
             this.sizeYUD.LargeChange = 5F;
-            this.sizeYUD.Location = new System.Drawing.Point(234, 122);
+            this.sizeYUD.Location = new System.Drawing.Point(222, 121);
             this.sizeYUD.Maximum = 300000F;
             this.sizeYUD.Minimum = -300000F;
             this.sizeYUD.Name = "sizeYUD";
@@ -333,7 +337,7 @@
             this.scaleYUD.IncrementAmount = 0.01F;
             this.scaleYUD.InputName = "Y";
             this.scaleYUD.LargeChange = 5F;
-            this.scaleYUD.Location = new System.Drawing.Point(234, 91);
+            this.scaleYUD.Location = new System.Drawing.Point(222, 90);
             this.scaleYUD.Maximum = 300000F;
             this.scaleYUD.Minimum = -300000F;
             this.scaleYUD.Name = "scaleYUD";
@@ -376,7 +380,7 @@
             this.rotYUD.IncrementAmount = 0.01F;
             this.rotYUD.InputName = "Y";
             this.rotYUD.LargeChange = 5F;
-            this.rotYUD.Location = new System.Drawing.Point(234, 60);
+            this.rotYUD.Location = new System.Drawing.Point(222, 59);
             this.rotYUD.Maximum = 300000F;
             this.rotYUD.Minimum = -300000F;
             this.rotYUD.Name = "rotYUD";
@@ -419,7 +423,7 @@
             this.tranYUD.IncrementAmount = 0.01F;
             this.tranYUD.InputName = "Y";
             this.tranYUD.LargeChange = 5F;
-            this.tranYUD.Location = new System.Drawing.Point(234, 29);
+            this.tranYUD.Location = new System.Drawing.Point(222, 28);
             this.tranYUD.Maximum = 300000F;
             this.tranYUD.Minimum = -300000F;
             this.tranYUD.Name = "tranYUD";
@@ -462,7 +466,7 @@
             this.sizeXUD.IncrementAmount = 0.01F;
             this.sizeXUD.InputName = "X";
             this.sizeXUD.LargeChange = 5F;
-            this.sizeXUD.Location = new System.Drawing.Point(121, 122);
+            this.sizeXUD.Location = new System.Drawing.Point(109, 121);
             this.sizeXUD.Maximum = 300000F;
             this.sizeXUD.Minimum = -300000F;
             this.sizeXUD.Name = "sizeXUD";
@@ -505,7 +509,7 @@
             this.scaleXUD.IncrementAmount = 0.01F;
             this.scaleXUD.InputName = "X";
             this.scaleXUD.LargeChange = 5F;
-            this.scaleXUD.Location = new System.Drawing.Point(121, 91);
+            this.scaleXUD.Location = new System.Drawing.Point(109, 90);
             this.scaleXUD.Maximum = 300000F;
             this.scaleXUD.Minimum = -300000F;
             this.scaleXUD.Name = "scaleXUD";
@@ -548,7 +552,7 @@
             this.rotXUD.IncrementAmount = 0.01F;
             this.rotXUD.InputName = "X";
             this.rotXUD.LargeChange = 5F;
-            this.rotXUD.Location = new System.Drawing.Point(121, 60);
+            this.rotXUD.Location = new System.Drawing.Point(109, 59);
             this.rotXUD.Maximum = 300000F;
             this.rotXUD.Minimum = -300000F;
             this.rotXUD.Name = "rotXUD";
@@ -591,7 +595,7 @@
             this.tranXUD.IncrementAmount = 0.01F;
             this.tranXUD.InputName = "X";
             this.tranXUD.LargeChange = 5F;
-            this.tranXUD.Location = new System.Drawing.Point(121, 29);
+            this.tranXUD.Location = new System.Drawing.Point(109, 28);
             this.tranXUD.Maximum = 300000F;
             this.tranXUD.Minimum = -300000F;
             this.tranXUD.Name = "tranXUD";
@@ -661,7 +665,7 @@
             this.stDropDownPanel3.Controls.Add(this.stLabel7);
             this.stDropDownPanel3.ExpandedHeight = 105;
             this.stDropDownPanel3.IsExpanded = true;
-            this.stDropDownPanel3.Location = new System.Drawing.Point(0, 271);
+            this.stDropDownPanel3.Location = new System.Drawing.Point(0, 286);
             this.stDropDownPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.stDropDownPanel3.Name = "stDropDownPanel3";
             this.stDropDownPanel3.PanelName = "Visibilty";
@@ -767,7 +771,7 @@
             this.stDropDownPanel4.Controls.Add(this.radioCenterBtn);
             this.stDropDownPanel4.ExpandedHeight = 0;
             this.stDropDownPanel4.IsExpanded = true;
-            this.stDropDownPanel4.Location = new System.Drawing.Point(0, 376);
+            this.stDropDownPanel4.Location = new System.Drawing.Point(0, 391);
             this.stDropDownPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.stDropDownPanel4.Name = "stDropDownPanel4";
             this.stDropDownPanel4.PanelName = "Orientation";
@@ -891,7 +895,7 @@
             this.stDropDownPanel5.Controls.Add(this.radioCenterBtnParent);
             this.stDropDownPanel5.ExpandedHeight = 0;
             this.stDropDownPanel5.IsExpanded = true;
-            this.stDropDownPanel5.Location = new System.Drawing.Point(0, 485);
+            this.stDropDownPanel5.Location = new System.Drawing.Point(0, 500);
             this.stDropDownPanel5.Margin = new System.Windows.Forms.Padding(0);
             this.stDropDownPanel5.Name = "stDropDownPanel5";
             this.stDropDownPanel5.PanelName = "Parent Orientation";
@@ -1001,6 +1005,28 @@
             this.radioCenterBtnParent.Text = "Center";
             this.radioCenterBtnParent.UseVisualStyleBackColor = true;
             // 
+            // partPaneScalingCB
+            // 
+            this.partPaneScalingCB.BorderColor = System.Drawing.Color.Empty;
+            this.partPaneScalingCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.partPaneScalingCB.ButtonColor = System.Drawing.Color.Empty;
+            this.partPaneScalingCB.FormattingEnabled = true;
+            this.partPaneScalingCB.IsReadOnly = false;
+            this.partPaneScalingCB.Location = new System.Drawing.Point(109, 152);
+            this.partPaneScalingCB.Name = "partPaneScalingCB";
+            this.partPaneScalingCB.Size = new System.Drawing.Size(180, 21);
+            this.partPaneScalingCB.TabIndex = 52;
+            this.partPaneScalingCB.SelectedIndexChanged += new System.EventHandler(this.partPaneScalingCB_SelectedIndexChanged);
+            // 
+            // stLabel8
+            // 
+            this.stLabel8.AutoSize = true;
+            this.stLabel8.Location = new System.Drawing.Point(34, 155);
+            this.stLabel8.Name = "stLabel8";
+            this.stLabel8.Size = new System.Drawing.Size(67, 13);
+            this.stLabel8.TabIndex = 53;
+            this.stLabel8.Text = "Part Scaling:";
+            // 
             // BasePaneEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1074,5 +1100,7 @@
         private Toolbox.Library.Forms.STRadioButton radioBottomBtnParent;
         private Toolbox.Library.Forms.STRadioButton radioCenterBtnParent;
         private Toolbox.Library.Forms.STRadioButton radioTopBtnParent;
+        private Toolbox.Library.Forms.STLabel stLabel8;
+        private Toolbox.Library.Forms.STComboBox partPaneScalingCB;
     }
 }

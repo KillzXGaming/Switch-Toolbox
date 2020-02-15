@@ -45,10 +45,6 @@ namespace LayoutBXLYT.Revolution
 
         public byte PartsScale { get; set; }
 
-        public byte PaneMagFlags { get; set; }
-
-        public string UserDataInfo { get; set; }
-
         public PAN1() { }
 
         public PAN1(BxlytHeader header, string name) : base()

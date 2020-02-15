@@ -261,7 +261,11 @@ namespace LayoutBXLYT
         {
             UpdateTabIndex();
             var textureEditor = GetActiveEditor<PaneMatTextureMapsEditor>();
-            textureEditor.LoadMaterial(ActiveMaterial, this, ParentEditor.GetTextures());
+            int numTexCoord = 1;
+            if (ActivePane is IPicturePane)
+                numTexCoord = ((IPicturePane)ActivePane).TexCoords.Length;
+
+            textureEditor.LoadMaterial(ActiveMaterial, this, ParentEditor.GetTextures(), numTexCoord);
         }
 
         private void LoadPartPane(object sender, EventArgs e)

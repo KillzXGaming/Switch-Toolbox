@@ -41,6 +41,8 @@
             this.stFlowLayoutPanel1 = new Toolbox.Library.Forms.STFlowLayoutPanel();
             this.stDropDownPanel1 = new Toolbox.Library.Forms.STDropDownPanel();
             this.stDropDownPanel2 = new Toolbox.Library.Forms.STDropDownPanel();
+            this.textureNameTB = new Toolbox.Library.Forms.STTextBox();
+            this.stLabel8 = new Toolbox.Library.Forms.STLabel();
             this.shrinkCB = new Toolbox.Library.Forms.STComboBox();
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.expandCB = new Toolbox.Library.Forms.STComboBox();
@@ -50,6 +52,16 @@
             this.wrapModeUCB = new Toolbox.Library.Forms.STComboBox();
             this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.stDropDownPanel3 = new Toolbox.Library.Forms.STDropDownPanel();
+            this.projectionParamsPanel = new Toolbox.Library.Forms.STPanel();
+            this.stLabel11 = new Toolbox.Library.Forms.STLabel();
+            this.barSlider5 = new BarSlider.BarSlider();
+            this.barSlider2 = new BarSlider.BarSlider();
+            this.barSlider4 = new BarSlider.BarSlider();
+            this.barSlider3 = new BarSlider.BarSlider();
+            this.stLabel12 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel10 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel9 = new Toolbox.Library.Forms.STLabel();
+            this.transformTypeCB = new Toolbox.Library.Forms.STComboBox();
             this.rotUD = new BarSlider.BarSlider();
             this.transYUD = new BarSlider.BarSlider();
             this.transXUD = new BarSlider.BarSlider();
@@ -58,8 +70,6 @@
             this.stLabel5 = new Toolbox.Library.Forms.STLabel();
             this.scaleYUD = new BarSlider.BarSlider();
             this.scaleXUD = new BarSlider.BarSlider();
-            this.stLabel8 = new Toolbox.Library.Forms.STLabel();
-            this.textureNameTB = new Toolbox.Library.Forms.STTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.stPanel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.stPanel2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.stPanel3)).BeginInit();
@@ -68,6 +78,7 @@
             this.stDropDownPanel1.SuspendLayout();
             this.stDropDownPanel2.SuspendLayout();
             this.stDropDownPanel3.SuspendLayout();
+            this.projectionParamsPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // addbtn
@@ -240,6 +251,23 @@
             this.stDropDownPanel2.Size = new System.Drawing.Size(408, 214);
             this.stDropDownPanel2.TabIndex = 1;
             // 
+            // textureNameTB
+            // 
+            this.textureNameTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textureNameTB.Location = new System.Drawing.Point(263, 28);
+            this.textureNameTB.Name = "textureNameTB";
+            this.textureNameTB.Size = new System.Drawing.Size(142, 20);
+            this.textureNameTB.TabIndex = 16;
+            // 
+            // stLabel8
+            // 
+            this.stLabel8.AutoSize = true;
+            this.stLabel8.Location = new System.Drawing.Point(183, 30);
+            this.stLabel8.Name = "stLabel8";
+            this.stLabel8.Size = new System.Drawing.Size(38, 13);
+            this.stLabel8.TabIndex = 15;
+            this.stLabel8.Text = "Name:";
+            // 
             // shrinkCB
             // 
             this.shrinkCB.BorderColor = System.Drawing.Color.Empty;
@@ -331,6 +359,9 @@
             // stDropDownPanel3
             // 
             this.stDropDownPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.stDropDownPanel3.Controls.Add(this.projectionParamsPanel);
+            this.stDropDownPanel3.Controls.Add(this.stLabel9);
+            this.stDropDownPanel3.Controls.Add(this.transformTypeCB);
             this.stDropDownPanel3.Controls.Add(this.rotUD);
             this.stDropDownPanel3.Controls.Add(this.transYUD);
             this.stDropDownPanel3.Controls.Add(this.transXUD);
@@ -349,8 +380,239 @@
             this.stDropDownPanel3.SetIcon = null;
             this.stDropDownPanel3.SetIconAlphaColor = System.Drawing.SystemColors.Control;
             this.stDropDownPanel3.SetIconColor = System.Drawing.SystemColors.Control;
-            this.stDropDownPanel3.Size = new System.Drawing.Size(408, 150);
+            this.stDropDownPanel3.Size = new System.Drawing.Size(408, 282);
             this.stDropDownPanel3.TabIndex = 2;
+            // 
+            // projectionParamsPanel
+            // 
+            this.projectionParamsPanel.Controls.Add(this.stLabel11);
+            this.projectionParamsPanel.Controls.Add(this.barSlider5);
+            this.projectionParamsPanel.Controls.Add(this.barSlider2);
+            this.projectionParamsPanel.Controls.Add(this.barSlider4);
+            this.projectionParamsPanel.Controls.Add(this.barSlider3);
+            this.projectionParamsPanel.Controls.Add(this.stLabel12);
+            this.projectionParamsPanel.Controls.Add(this.stLabel10);
+            this.projectionParamsPanel.Location = new System.Drawing.Point(14, 155);
+            this.projectionParamsPanel.Name = "projectionParamsPanel";
+            this.projectionParamsPanel.Size = new System.Drawing.Size(341, 124);
+            this.projectionParamsPanel.TabIndex = 61;
+            // 
+            // stLabel11
+            // 
+            this.stLabel11.AutoSize = true;
+            this.stLabel11.Location = new System.Drawing.Point(18, 6);
+            this.stLabel11.Name = "stLabel11";
+            this.stLabel11.Size = new System.Drawing.Size(95, 13);
+            this.stLabel11.TabIndex = 62;
+            this.stLabel11.Text = "Projection Params:";
+            // 
+            // barSlider5
+            // 
+            this.barSlider5.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.barSlider5.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.barSlider5.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.barSlider5.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.barSlider5.BarPenColorTop = System.Drawing.Color.Empty;
+            this.barSlider5.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.barSlider5.DataType = null;
+            this.barSlider5.DrawSemitransparentThumb = false;
+            this.barSlider5.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider5.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.barSlider5.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.barSlider5.ElapsedPenColorTop = System.Drawing.Color.Empty;
+            this.barSlider5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.barSlider5.IncrementAmount = 0.01F;
+            this.barSlider5.InputName = "U";
+            this.barSlider5.LargeChange = 5F;
+            this.barSlider5.Location = new System.Drawing.Point(68, 32);
+            this.barSlider5.Maximum = 300000F;
+            this.barSlider5.Minimum = -300000F;
+            this.barSlider5.Name = "barSlider5";
+            this.barSlider5.Precision = 0.01F;
+            this.barSlider5.ScaleDivisions = 1;
+            this.barSlider5.ScaleSubDivisions = 2;
+            this.barSlider5.ShowDivisionsText = false;
+            this.barSlider5.ShowSmallScale = false;
+            this.barSlider5.Size = new System.Drawing.Size(107, 25);
+            this.barSlider5.SmallChange = 0.01F;
+            this.barSlider5.TabIndex = 62;
+            this.barSlider5.Text = "barSlider2";
+            this.barSlider5.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider5.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider5.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
+            this.barSlider5.ThumbSize = new System.Drawing.Size(1, 1);
+            this.barSlider5.TickAdd = 0F;
+            this.barSlider5.TickColor = System.Drawing.Color.White;
+            this.barSlider5.TickDivide = 0F;
+            this.barSlider5.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.barSlider5.UseInterlapsedBar = false;
+            this.barSlider5.Value = 1F;
+            // 
+            // barSlider2
+            // 
+            this.barSlider2.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.barSlider2.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.barSlider2.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.barSlider2.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.barSlider2.BarPenColorTop = System.Drawing.Color.Empty;
+            this.barSlider2.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.barSlider2.DataType = null;
+            this.barSlider2.DrawSemitransparentThumb = false;
+            this.barSlider2.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider2.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.barSlider2.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.barSlider2.ElapsedPenColorTop = System.Drawing.Color.Empty;
+            this.barSlider2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.barSlider2.IncrementAmount = 0.01F;
+            this.barSlider2.InputName = "V";
+            this.barSlider2.LargeChange = 5F;
+            this.barSlider2.Location = new System.Drawing.Point(181, 63);
+            this.barSlider2.Maximum = 300000F;
+            this.barSlider2.Minimum = -300000F;
+            this.barSlider2.Name = "barSlider2";
+            this.barSlider2.Precision = 0.01F;
+            this.barSlider2.ScaleDivisions = 1;
+            this.barSlider2.ScaleSubDivisions = 2;
+            this.barSlider2.ShowDivisionsText = false;
+            this.barSlider2.ShowSmallScale = false;
+            this.barSlider2.Size = new System.Drawing.Size(107, 25);
+            this.barSlider2.SmallChange = 0.01F;
+            this.barSlider2.TabIndex = 68;
+            this.barSlider2.Text = "barSlider2";
+            this.barSlider2.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider2.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider2.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
+            this.barSlider2.ThumbSize = new System.Drawing.Size(1, 1);
+            this.barSlider2.TickAdd = 0F;
+            this.barSlider2.TickColor = System.Drawing.Color.White;
+            this.barSlider2.TickDivide = 0F;
+            this.barSlider2.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.barSlider2.UseInterlapsedBar = false;
+            this.barSlider2.Value = 0F;
+            // 
+            // barSlider4
+            // 
+            this.barSlider4.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.barSlider4.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.barSlider4.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.barSlider4.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.barSlider4.BarPenColorTop = System.Drawing.Color.Empty;
+            this.barSlider4.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.barSlider4.DataType = null;
+            this.barSlider4.DrawSemitransparentThumb = false;
+            this.barSlider4.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider4.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.barSlider4.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.barSlider4.ElapsedPenColorTop = System.Drawing.Color.Empty;
+            this.barSlider4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.barSlider4.IncrementAmount = 0.01F;
+            this.barSlider4.InputName = "V";
+            this.barSlider4.LargeChange = 5F;
+            this.barSlider4.Location = new System.Drawing.Point(181, 32);
+            this.barSlider4.Maximum = 300000F;
+            this.barSlider4.Minimum = -300000F;
+            this.barSlider4.Name = "barSlider4";
+            this.barSlider4.Precision = 0.01F;
+            this.barSlider4.ScaleDivisions = 1;
+            this.barSlider4.ScaleSubDivisions = 2;
+            this.barSlider4.ShowDivisionsText = false;
+            this.barSlider4.ShowSmallScale = false;
+            this.barSlider4.Size = new System.Drawing.Size(107, 25);
+            this.barSlider4.SmallChange = 0.01F;
+            this.barSlider4.TabIndex = 63;
+            this.barSlider4.Text = "barSlider2";
+            this.barSlider4.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider4.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider4.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
+            this.barSlider4.ThumbSize = new System.Drawing.Size(1, 1);
+            this.barSlider4.TickAdd = 0F;
+            this.barSlider4.TickColor = System.Drawing.Color.White;
+            this.barSlider4.TickDivide = 0F;
+            this.barSlider4.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.barSlider4.UseInterlapsedBar = false;
+            this.barSlider4.Value = 1F;
+            // 
+            // barSlider3
+            // 
+            this.barSlider3.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.barSlider3.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.barSlider3.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.barSlider3.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.barSlider3.BarPenColorTop = System.Drawing.Color.Empty;
+            this.barSlider3.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.barSlider3.DataType = null;
+            this.barSlider3.DrawSemitransparentThumb = false;
+            this.barSlider3.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider3.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.barSlider3.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.barSlider3.ElapsedPenColorTop = System.Drawing.Color.Empty;
+            this.barSlider3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.barSlider3.IncrementAmount = 0.01F;
+            this.barSlider3.InputName = "U";
+            this.barSlider3.LargeChange = 5F;
+            this.barSlider3.Location = new System.Drawing.Point(68, 63);
+            this.barSlider3.Maximum = 300000F;
+            this.barSlider3.Minimum = -300000F;
+            this.barSlider3.Name = "barSlider3";
+            this.barSlider3.Precision = 0.01F;
+            this.barSlider3.ScaleDivisions = 1;
+            this.barSlider3.ScaleSubDivisions = 2;
+            this.barSlider3.ShowDivisionsText = false;
+            this.barSlider3.ShowSmallScale = false;
+            this.barSlider3.Size = new System.Drawing.Size(107, 25);
+            this.barSlider3.SmallChange = 0.01F;
+            this.barSlider3.TabIndex = 67;
+            this.barSlider3.Text = "barSlider2";
+            this.barSlider3.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider3.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.barSlider3.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
+            this.barSlider3.ThumbSize = new System.Drawing.Size(1, 1);
+            this.barSlider3.TickAdd = 0F;
+            this.barSlider3.TickColor = System.Drawing.Color.White;
+            this.barSlider3.TickDivide = 0F;
+            this.barSlider3.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.barSlider3.UseInterlapsedBar = false;
+            this.barSlider3.Value = 0F;
+            // 
+            // stLabel12
+            // 
+            this.stLabel12.AutoSize = true;
+            this.stLabel12.Location = new System.Drawing.Point(4, 37);
+            this.stLabel12.Name = "stLabel12";
+            this.stLabel12.Size = new System.Drawing.Size(37, 13);
+            this.stLabel12.TabIndex = 64;
+            this.stLabel12.Text = "Scale:";
+            // 
+            // stLabel10
+            // 
+            this.stLabel10.AutoSize = true;
+            this.stLabel10.Location = new System.Drawing.Point(5, 68);
+            this.stLabel10.Name = "stLabel10";
+            this.stLabel10.Size = new System.Drawing.Size(54, 13);
+            this.stLabel10.TabIndex = 66;
+            this.stLabel10.Text = "Translate:";
+            // 
+            // stLabel9
+            // 
+            this.stLabel9.AutoSize = true;
+            this.stLabel9.Location = new System.Drawing.Point(19, 28);
+            this.stLabel9.Name = "stLabel9";
+            this.stLabel9.Size = new System.Drawing.Size(34, 13);
+            this.stLabel9.TabIndex = 60;
+            this.stLabel9.Text = "Type:";
+            // 
+            // transformTypeCB
+            // 
+            this.transformTypeCB.BorderColor = System.Drawing.Color.Empty;
+            this.transformTypeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.transformTypeCB.ButtonColor = System.Drawing.Color.Empty;
+            this.transformTypeCB.FormattingEnabled = true;
+            this.transformTypeCB.IsReadOnly = false;
+            this.transformTypeCB.Location = new System.Drawing.Point(82, 25);
+            this.transformTypeCB.Name = "transformTypeCB";
+            this.transformTypeCB.Size = new System.Drawing.Size(175, 21);
+            this.transformTypeCB.TabIndex = 59;
+            this.transformTypeCB.SelectedIndexChanged += new System.EventHandler(this.transformTypeCB_SelectedIndexChanged);
             // 
             // rotUD
             // 
@@ -370,7 +632,7 @@
             this.rotUD.IncrementAmount = 0.01F;
             this.rotUD.InputName = "";
             this.rotUD.LargeChange = 5F;
-            this.rotUD.Location = new System.Drawing.Point(86, 73);
+            this.rotUD.Location = new System.Drawing.Point(82, 81);
             this.rotUD.Maximum = 300000F;
             this.rotUD.Minimum = -300000F;
             this.rotUD.Name = "rotUD";
@@ -413,7 +675,7 @@
             this.transYUD.IncrementAmount = 0.01F;
             this.transYUD.InputName = "V";
             this.transYUD.LargeChange = 5F;
-            this.transYUD.Location = new System.Drawing.Point(199, 104);
+            this.transYUD.Location = new System.Drawing.Point(195, 112);
             this.transYUD.Maximum = 300000F;
             this.transYUD.Minimum = -300000F;
             this.transYUD.Name = "transYUD";
@@ -456,7 +718,7 @@
             this.transXUD.IncrementAmount = 0.01F;
             this.transXUD.InputName = "U";
             this.transXUD.LargeChange = 5F;
-            this.transXUD.Location = new System.Drawing.Point(86, 104);
+            this.transXUD.Location = new System.Drawing.Point(82, 112);
             this.transXUD.Maximum = 300000F;
             this.transXUD.Minimum = -300000F;
             this.transXUD.Name = "transXUD";
@@ -484,7 +746,7 @@
             // stLabel7
             // 
             this.stLabel7.AutoSize = true;
-            this.stLabel7.Location = new System.Drawing.Point(23, 109);
+            this.stLabel7.Location = new System.Drawing.Point(19, 117);
             this.stLabel7.Name = "stLabel7";
             this.stLabel7.Size = new System.Drawing.Size(54, 13);
             this.stLabel7.TabIndex = 55;
@@ -493,7 +755,7 @@
             // stLabel6
             // 
             this.stLabel6.AutoSize = true;
-            this.stLabel6.Location = new System.Drawing.Point(22, 80);
+            this.stLabel6.Location = new System.Drawing.Point(18, 88);
             this.stLabel6.Name = "stLabel6";
             this.stLabel6.Size = new System.Drawing.Size(42, 13);
             this.stLabel6.TabIndex = 54;
@@ -502,7 +764,7 @@
             // stLabel5
             // 
             this.stLabel5.AutoSize = true;
-            this.stLabel5.Location = new System.Drawing.Point(22, 47);
+            this.stLabel5.Location = new System.Drawing.Point(18, 55);
             this.stLabel5.Name = "stLabel5";
             this.stLabel5.Size = new System.Drawing.Size(37, 13);
             this.stLabel5.TabIndex = 53;
@@ -526,7 +788,7 @@
             this.scaleYUD.IncrementAmount = 0.01F;
             this.scaleYUD.InputName = "V";
             this.scaleYUD.LargeChange = 5F;
-            this.scaleYUD.Location = new System.Drawing.Point(199, 42);
+            this.scaleYUD.Location = new System.Drawing.Point(195, 50);
             this.scaleYUD.Maximum = 300000F;
             this.scaleYUD.Minimum = -300000F;
             this.scaleYUD.Name = "scaleYUD";
@@ -569,7 +831,7 @@
             this.scaleXUD.IncrementAmount = 0.01F;
             this.scaleXUD.InputName = "U";
             this.scaleXUD.LargeChange = 5F;
-            this.scaleXUD.Location = new System.Drawing.Point(86, 42);
+            this.scaleXUD.Location = new System.Drawing.Point(82, 50);
             this.scaleXUD.Maximum = 300000F;
             this.scaleXUD.Minimum = -300000F;
             this.scaleXUD.Name = "scaleXUD";
@@ -594,23 +856,6 @@
             this.scaleXUD.Value = 30F;
             this.scaleXUD.ValueChanged += new System.EventHandler(this.transformUV_ValueChanged);
             // 
-            // stLabel8
-            // 
-            this.stLabel8.AutoSize = true;
-            this.stLabel8.Location = new System.Drawing.Point(183, 30);
-            this.stLabel8.Name = "stLabel8";
-            this.stLabel8.Size = new System.Drawing.Size(38, 13);
-            this.stLabel8.TabIndex = 15;
-            this.stLabel8.Text = "Name:";
-            // 
-            // textureNameTB
-            // 
-            this.textureNameTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textureNameTB.Location = new System.Drawing.Point(263, 28);
-            this.textureNameTB.Name = "textureNameTB";
-            this.textureNameTB.Size = new System.Drawing.Size(142, 20);
-            this.textureNameTB.TabIndex = 16;
-            // 
             // PaneMatTextureMapsEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -629,6 +874,8 @@
             this.stDropDownPanel2.PerformLayout();
             this.stDropDownPanel3.ResumeLayout(false);
             this.stDropDownPanel3.PerformLayout();
+            this.projectionParamsPanel.ResumeLayout(false);
+            this.projectionParamsPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -666,5 +913,15 @@
         private BarSlider.BarSlider scaleXUD;
         private Toolbox.Library.Forms.STTextBox textureNameTB;
         private Toolbox.Library.Forms.STLabel stLabel8;
+        private Toolbox.Library.Forms.STPanel projectionParamsPanel;
+        private BarSlider.BarSlider barSlider5;
+        private BarSlider.BarSlider barSlider2;
+        private BarSlider.BarSlider barSlider4;
+        private BarSlider.BarSlider barSlider3;
+        private Toolbox.Library.Forms.STLabel stLabel12;
+        private Toolbox.Library.Forms.STLabel stLabel10;
+        private Toolbox.Library.Forms.STLabel stLabel9;
+        private Toolbox.Library.Forms.STComboBox transformTypeCB;
+        private Toolbox.Library.Forms.STLabel stLabel11;
     }
 }

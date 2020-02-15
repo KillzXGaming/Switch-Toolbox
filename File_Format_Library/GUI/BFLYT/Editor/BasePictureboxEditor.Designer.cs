@@ -47,6 +47,8 @@
             this.topLeftYUD = new BarSlider.BarSlider();
             this.topLeftXUD = new BarSlider.BarSlider();
             this.stLabel6 = new Toolbox.Library.Forms.STLabel();
+            this.btnAdd = new Toolbox.Library.Forms.STButton();
+            this.btnRemove = new Toolbox.Library.Forms.STButton();
             this.stFlowLayoutPanel1.SuspendLayout();
             this.stDropDownPanel1.SuspendLayout();
             this.stDropDownPanel3.SuspendLayout();
@@ -111,6 +113,8 @@
             // stDropDownPanel3
             // 
             this.stDropDownPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.stDropDownPanel3.Controls.Add(this.btnRemove);
+            this.stDropDownPanel3.Controls.Add(this.btnAdd);
             this.stDropDownPanel3.Controls.Add(this.texCoordIndexCB);
             this.stDropDownPanel3.Controls.Add(this.bottomRightYUD);
             this.stDropDownPanel3.Controls.Add(this.bottomRightXUD);
@@ -166,7 +170,6 @@
             this.bottomRightYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
             this.bottomRightYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.bottomRightYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.bottomRightYUD.ForeColor = System.Drawing.Color.White;
             this.bottomRightYUD.IncrementAmount = 0.01F;
             this.bottomRightYUD.InputName = "Y";
             this.bottomRightYUD.LargeChange = 5F;
@@ -210,7 +213,6 @@
             this.bottomRightXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
             this.bottomRightXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.bottomRightXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.bottomRightXUD.ForeColor = System.Drawing.Color.White;
             this.bottomRightXUD.IncrementAmount = 0.01F;
             this.bottomRightXUD.InputName = "X";
             this.bottomRightXUD.LargeChange = 5F;
@@ -263,7 +265,6 @@
             this.bottomLeftYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
             this.bottomLeftYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.bottomLeftYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.bottomLeftYUD.ForeColor = System.Drawing.Color.White;
             this.bottomLeftYUD.IncrementAmount = 0.01F;
             this.bottomLeftYUD.InputName = "Y";
             this.bottomLeftYUD.LargeChange = 5F;
@@ -307,7 +308,6 @@
             this.bottomLeftXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
             this.bottomLeftXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.bottomLeftXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.bottomLeftXUD.ForeColor = System.Drawing.Color.White;
             this.bottomLeftXUD.IncrementAmount = 0.01F;
             this.bottomLeftXUD.InputName = "X";
             this.bottomLeftXUD.LargeChange = 5F;
@@ -360,7 +360,6 @@
             this.topRightYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
             this.topRightYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.topRightYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.topRightYUD.ForeColor = System.Drawing.Color.White;
             this.topRightYUD.IncrementAmount = 0.01F;
             this.topRightYUD.InputName = "Y";
             this.topRightYUD.LargeChange = 5F;
@@ -404,7 +403,6 @@
             this.topRightXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
             this.topRightXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.topRightXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.topRightXUD.ForeColor = System.Drawing.Color.White;
             this.topRightXUD.IncrementAmount = 0.01F;
             this.topRightXUD.InputName = "X";
             this.topRightXUD.LargeChange = 5F;
@@ -457,7 +455,6 @@
             this.topLeftYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
             this.topLeftYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.topLeftYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.topLeftYUD.ForeColor = System.Drawing.Color.White;
             this.topLeftYUD.IncrementAmount = 0.01F;
             this.topLeftYUD.InputName = "Y";
             this.topLeftYUD.LargeChange = 5F;
@@ -501,7 +498,6 @@
             this.topLeftXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
             this.topLeftXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.topLeftXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.topLeftXUD.ForeColor = System.Drawing.Color.White;
             this.topLeftXUD.IncrementAmount = 0.01F;
             this.topLeftXUD.InputName = "X";
             this.topLeftXUD.LargeChange = 5F;
@@ -537,6 +533,28 @@
             this.stLabel6.Size = new System.Drawing.Size(50, 13);
             this.stLabel6.TabIndex = 47;
             this.stLabel6.Text = "Top Left:";
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAdd.Location = new System.Drawing.Point(187, 22);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(27, 23);
+            this.btnAdd.TabIndex = 60;
+            this.btnAdd.Text = "+";
+            this.btnAdd.UseVisualStyleBackColor = false;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRemove.Location = new System.Drawing.Point(154, 22);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(27, 23);
+            this.btnRemove.TabIndex = 61;
+            this.btnRemove.Text = "-";
+            this.btnRemove.UseVisualStyleBackColor = false;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // BasePictureboxEditor
             // 
@@ -574,5 +592,7 @@
         private BarSlider.BarSlider topLeftXUD;
         private Toolbox.Library.Forms.STLabel stLabel6;
         private Toolbox.Library.Forms.STComboBox texCoordIndexCB;
+        private Toolbox.Library.Forms.STButton btnRemove;
+        private Toolbox.Library.Forms.STButton btnAdd;
     }
 }

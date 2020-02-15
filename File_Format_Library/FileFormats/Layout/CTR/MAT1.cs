@@ -60,9 +60,6 @@ namespace LayoutBXLYT.CTR
     {
         public STColor8[] TevConstantColors { get; set; }
 
-        [DisplayName("Texture Coordinate Params"), CategoryAttribute("Texture")]
-        public TexCoordGen[] TexCoordGens { get; set; }
-
         [DisplayName("Indirect Parameter"), CategoryAttribute("Texture")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public IndirectParameter IndParameter { get; set; }
@@ -82,6 +79,20 @@ namespace LayoutBXLYT.CTR
                 return ParentLayout.Textures[TextureMaps[index].ID];
             else
                 return "";
+        }
+
+        public override bool RemoveTexCoordSources(int index)
+        {
+            foreach (var texGen in TexCoordGens)
+            {
+                //Shift all tex coord types down when an index is removed
+                if (texGen.Source > TexGenType.TextureCoord0 &&
+                    texGen.Source <= TexGenType.TextureCoord2)
+                {
+                    texGen.Source = texGen.Source - 1;
+                }
+            }
+            return true;
         }
 
         public Material()
@@ -217,7 +228,7 @@ namespace LayoutBXLYT.CTR
             for (int i = 0; i < TexCoordGens?.Length; i++)
             {
                 flags += Bit.BitInsert(1, 1, 2, 26);
-                TexCoordGens[i].Write(writer);
+                ((TexCoordGen)TexCoordGens[i]).Write(writer);
             }
 
             for (int i = 0; i < TevStages?.Length; i++)

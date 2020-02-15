@@ -2,17 +2,14 @@
 
 namespace LayoutBXLYT.Cafe
 {
-    public class TexCoordGen
+    public class TexCoordGen : BxlytTexCoordGen
     {
-        public MatrixType GenType { get; set; }
-        public TextureGenerationType Source { get; set; }
-
         byte[] unkData;
 
         public TexCoordGen(FileReader reader, BxlytHeader header)
         {
-            GenType = reader.ReadEnum<MatrixType>(false);
-            Source = reader.ReadEnum<TextureGenerationType>(false);
+            Matrix = reader.ReadEnum<TexGenMatrixType>(false);
+            Source = reader.ReadEnum<TexGenType>(false);
             if (header.VersionMajor >= 8)
                 unkData = reader.ReadBytes(0xE);
             else
@@ -21,24 +18,9 @@ namespace LayoutBXLYT.Cafe
 
         public void Write(FileWriter writer)
         {
-            writer.Write(GenType, false);
+            writer.Write(Matrix, false);
             writer.Write(Source, false);
             writer.Write(unkData);
-        }
-
-        public enum MatrixType : byte
-        {
-            Matrix2x4 = 0
-        }
-
-        public enum TextureGenerationType : byte
-        {
-            Tex0 = 0,
-            Tex1 = 1,
-            Tex2 = 2,
-            Ortho = 3,
-            PaneBased = 4,
-            PerspectiveProj = 5
         }
     }
 }

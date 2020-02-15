@@ -120,7 +120,7 @@ namespace LayoutBXLYT
 
             for (int i = 0; i < material.TexCoordGens?.Length; i++)
             {
-                shader.SetInt($"texCoords{i}GenType", (int)material.TexCoordGens[i].GenType);
+                shader.SetInt($"texCoords{i}GenType", (int)material.TexCoordGens[i].Matrix);
                 shader.SetInt($"texCoords{i}Source", (int)material.TexCoordGens[i].Source);
             }
 

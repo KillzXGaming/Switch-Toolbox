@@ -90,15 +90,9 @@ namespace LayoutBXLYT.Cafe
         [DisplayName("White Color"), CategoryAttribute("Color")]
         public override STColor8 WhiteColor { get; set; }
 
-        [DisplayName("Texture Coordinate Params"), CategoryAttribute("Texture")]
-        public TexCoordGen[] TexCoordGens { get; set; }
-
         [DisplayName("Indirect Parameter"), CategoryAttribute("Texture")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public IndirectParameter IndParameter { get; set; }
-
-        [DisplayName("Projection Texture Coord Parameters"), CategoryAttribute("Texture")]
-        public ProjectionTexGenParam[] ProjTexGenParams { get; set; }
 
         [DisplayName("Font Shadow Parameters"), CategoryAttribute("Font")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -113,6 +107,20 @@ namespace LayoutBXLYT.Cafe
                 return ((Header)ParentLayout).TextureList.Textures[TextureMaps[index].ID];
             else
                 return "";
+        }
+
+        public override bool RemoveTexCoordSources(int index)
+        {
+            foreach (var texGen in TexCoordGens)
+            {
+                //Shift all tex coord types down when an index is removed
+                if (texGen.Source > TexGenType.TextureCoord0 &&
+                    texGen.Source <= TexGenType.TextureCoord2)
+                {
+                    texGen.Source = texGen.Source - 1;
+                }
+            }
+            return true;
         }
 
         public override BxlytMaterial Clone()
@@ -269,7 +277,7 @@ namespace LayoutBXLYT.Cafe
             for (int i = 0; i < TexCoordGens.Length; i++)
             {
                 flags += Bit.BitInsert(1, 1, 2, 26);
-                TexCoordGens[i].Write(writer);
+                ((TexCoordGen)TexCoordGens[i]).Write(writer);
             }
 
             for (int i = 0; i < TevStages.Length; i++)

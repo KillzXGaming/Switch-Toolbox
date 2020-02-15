@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library.Forms;
+using Toolbox.Library.IO;
 
 namespace LayoutBXLYT
 {
@@ -50,14 +51,28 @@ namespace LayoutBXLYT
             vertexColorBox1.BottomRightColor = pane.ColorBottomRight.Color;
             vertexColorBox1.Refresh();
 
-            texCoordIndexCB.Items.Clear();
-            for (int i = 0; i < pane.TexCoords?.Length; i++)
-                texCoordIndexCB.Items.Add($"TexCoord [{i}]");
-
-            if (pane.TexCoords?.Length > 0)
-                texCoordIndexCB.SelectedIndex = 0;
+            ReloadTexCoord(0);
 
             Loaded = true;
+        }
+
+        private void ReloadTexCoord(int index) {
+            texCoordIndexCB.Items.Clear();
+            for (int i = 0; i < ActivePane.TexCoords?.Length; i++)
+                texCoordIndexCB.Items.Add($"TexCoord [{i}]");
+
+            if (ActivePane.TexCoords?.Length > index)
+                texCoordIndexCB.SelectedIndex = index;
+
+            if (ActivePane.TexCoords.Length == 3)
+                btnAdd.Enabled = false;
+            else
+                btnAdd.Enabled = true;
+
+            if (ActivePane.TexCoords.Length == 1)
+                btnRemove.Enabled = false;
+            else
+                btnRemove.Enabled = true;
         }
 
         private void OnColorChanged(object sender, EventArgs e)
@@ -130,6 +145,35 @@ namespace LayoutBXLYT
 
         public override void OnControlClosing() {
             vertexColorBox1.DisposeControl();
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e) {
+            if (ActivePane.Material == null) return;
+
+            if (ActivePane.Material.TextureMaps.Length <= ActivePane.TexCoords.Length) {
+                MessageBox.Show($"You should have atleast {ActivePane.Material.TextureMaps.Length + 1} " +
+                                 "textures to add new texture coordinates!");
+                return;
+            }
+
+            ActivePane.TexCoords = ActivePane.TexCoords.AddToArray(new TexCoord()); 
+            ReloadTexCoord(ActivePane.TexCoords.Length - 1);
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e) {
+            int index = texCoordIndexCB.SelectedIndex;
+            if (index == -1 || ActivePane.Material == null) return;
+
+            var result = MessageBox.Show($"Are you sure you want to remove texture coordinate {index}? This will make any texture mapped to this to the first one.", 
+                                    "Layout Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes) {
+                bool removed = ActivePane.Material.RemoveTexCoordSources(index);
+                if (removed)
+                    ActivePane.TexCoords = ActivePane.TexCoords.RemoveAt(index);
+
+                ReloadTexCoord(ActivePane.TexCoords.Length - 1);
+            }
         }
     }
 }
