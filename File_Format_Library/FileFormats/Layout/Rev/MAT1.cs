@@ -70,7 +70,7 @@ namespace LayoutBXLYT.Revolution
         public TevSwapModeTable TevSwapModeTable { get; set; } = new TevSwapModeTable();
         public List<BxlytTextureTransform> IndirectTexTransforms { get; set; }
 
-        public List<IndirectTextureOrderEntry> IndirectTextureOrderEntries { get; set; }
+        public List<IndirectStage> IndirectStages { get; set; }
 
         private uint flags;
 
@@ -106,7 +106,7 @@ namespace LayoutBXLYT.Revolution
             TextureTransforms = new BxlytTextureTransform[0];
             TexCoordGens = new List<TexCoordGenEntry>();
             IndirectTexTransforms = new List<BxlytTextureTransform>();
-            IndirectTextureOrderEntries = new List<IndirectTextureOrderEntry>();
+            IndirectStages = new List<IndirectStage>();
             TevSwapModeTable = new TevSwapModeTable();
             ChanControl = new ChanCtrl();
             BlackColor = new STColor8(0, 0, 0, 0);
@@ -144,7 +144,7 @@ namespace LayoutBXLYT.Revolution
             AlphaCompare = new AlphaCompare();
             TexCoordGens = new List<TexCoordGenEntry>();
             IndirectTexTransforms = new List<BxlytTextureTransform>();
-            IndirectTextureOrderEntries = new List<IndirectTextureOrderEntry>();
+            IndirectStages = new List<IndirectStage>();
 
             Name = reader.ReadString(0x14, true);
 
@@ -197,7 +197,7 @@ namespace LayoutBXLYT.Revolution
                 IndirectTexTransforms.Add(new BxlytTextureTransform(reader));
 
             for (int i = 0; i < indTexOrderCount; i++)
-                IndirectTextureOrderEntries.Add(new IndirectTextureOrderEntry(reader));
+                IndirectStages.Add(new IndirectStage(reader));
 
             for (int i = 0; i < tevStagesCount; i++)
                 TevStages[i] = new TevStage(reader, header);
@@ -234,7 +234,7 @@ namespace LayoutBXLYT.Revolution
                 flags |= (1 << 23);
 
             flags |= (uint)((TevStages.Length & 31) << 18);
-            flags |= (uint)((IndirectTextureOrderEntries.Count & 0x7) << 15);
+            flags |= (uint)((IndirectStages.Count & 0x7) << 15);
             flags |= (uint)((IndirectTexTransforms.Count & 0x3) << 13);
             if (HasTevSwapTable)
                 flags |= (1 << 12);
@@ -273,8 +273,8 @@ namespace LayoutBXLYT.Revolution
             for (int i = 0; i < IndirectTexTransforms.Count; i++)
                 IndirectTexTransforms[i].Write(writer);
 
-            for (int i = 0; i < IndirectTextureOrderEntries.Count; i++)
-                IndirectTextureOrderEntries[i].Write(writer);
+            for (int i = 0; i < IndirectStages.Count; i++)
+                IndirectStages[i].Write(writer);
 
             for (int i = 0; i < TevStages.Length; i++)
                 ((TevStage)TevStages[i]).Write(writer);

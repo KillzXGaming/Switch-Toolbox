@@ -31,6 +31,8 @@
             this.stPropertyGrid1 = new Toolbox.Library.Forms.STPropertyGrid();
             this.tevStageCB = new Toolbox.Library.Forms.STComboBox();
             this.stageCounterLbl = new Toolbox.Library.Forms.STLabel();
+            this.btnAdd = new Toolbox.Library.Forms.STButton();
+            this.btnRemove = new Toolbox.Library.Forms.STButton();
             this.SuspendLayout();
             // 
             // stPropertyGrid1
@@ -68,8 +70,32 @@
             this.stageCounterLbl.TabIndex = 2;
             this.stageCounterLbl.Text = "Stage 0 of 5";
             // 
+            // btnAdd
+            // 
+            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAdd.Location = new System.Drawing.Point(244, 10);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(31, 23);
+            this.btnAdd.TabIndex = 3;
+            this.btnAdd.Text = "+";
+            this.btnAdd.UseVisualStyleBackColor = false;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRemove.Location = new System.Drawing.Point(281, 10);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(31, 23);
+            this.btnRemove.TabIndex = 4;
+            this.btnRemove.Text = "-";
+            this.btnRemove.UseVisualStyleBackColor = false;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
             // PaneMatRevTevEditor
             // 
+            this.Controls.Add(this.btnRemove);
+            this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.stageCounterLbl);
             this.Controls.Add(this.tevStageCB);
             this.Controls.Add(this.stPropertyGrid1);
@@ -85,5 +111,7 @@
         private Toolbox.Library.Forms.STPropertyGrid stPropertyGrid1;
         private Toolbox.Library.Forms.STComboBox tevStageCB;
         private Toolbox.Library.Forms.STLabel stageCounterLbl;
+        private Toolbox.Library.Forms.STButton btnAdd;
+        private Toolbox.Library.Forms.STButton btnRemove;
     }
 }

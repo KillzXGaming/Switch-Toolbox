@@ -291,7 +291,7 @@
     <Compile Include="FileFormats\Layout\Rev\Materials\AlphaCompare.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\ChanCtrl.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\Enums.cs" />
-    <Compile Include="FileFormats\Layout\Rev\Materials\IndirectTextureOrderEntry.cs" />
+    <Compile Include="FileFormats\Layout\Rev\Materials\IndirectStage.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\TevSwapModeTable.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\TexCoordGenEntry.cs" />
     <Compile Include="FileFormats\Layout\Rev\Materials\TextureRef.cs" />

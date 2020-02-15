@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using Toolbox.Library;
 using Toolbox.Library.Forms;
 using LayoutBXLYT.Revolution;
 
@@ -63,34 +63,46 @@ namespace LayoutBXLYT
             {
                 ((ColorAlphaBox)sender).Color = colorDlg.NewColor;
 
+                ApplyColors(ActiveMaterial, sender);
+
                 //Apply to all selected panes
                 foreach (BasePane pane in ParentEditor.SelectedPanes)
                 {
                     var mat = pane.TryGetActiveMaterial() as Revolution.Material;
-                    if (mat != null)
-                    {
-                        if (sender == whiteColorPB)
-                            mat.WhiteColor.Color = colorDlg.NewColor;
-                        else if (sender == blackColorBP)
-                            mat.BlackColor.Color = colorDlg.NewColor;
-                        else if (sender == materialColorPB)
-                            mat.MatColor.Color = colorDlg.NewColor;
-                        else if (sender == colorReg3PB)
-                            mat.ColorRegister3.Color = colorDlg.NewColor;
-                        else if (sender == tevColor1PB)
-                            mat.TevColor1.Color = colorDlg.NewColor;
-                        else if (sender == tevColor2PB)
-                            mat.TevColor2.Color = colorDlg.NewColor;
-                        else if (sender == tevColor3PB)
-                            mat.TevColor3.Color = colorDlg.NewColor;
-                        else if (sender == tevColor4PB)
-                            mat.TevColor4.Color = colorDlg.NewColor;
+                    if (mat != null) {
+                        ApplyColors(mat, sender);
                     }
                 }
 
                 ParentEditor.PropertyChanged?.Invoke(sender, e);
             };
             colorDlg.Show();
+        }
+
+        private void ApplyColors(Material mat, object sender)
+        {
+            if (sender == whiteColorPB)
+                mat.WhiteColor.Color = colorDlg.NewColor;
+            else if (sender == blackColorBP)
+                mat.BlackColor.Color = colorDlg.NewColor;
+            else if (sender == materialColorPB)
+                mat.MatColor.Color = colorDlg.NewColor;
+            else if (sender == colorReg3PB)
+                mat.ColorRegister3.Color = colorDlg.NewColor;
+            else if (sender == tevColor1PB)
+                mat.TevColor1.Color = colorDlg.NewColor;
+            else if (sender == tevColor2PB)
+                mat.TevColor2.Color = colorDlg.NewColor;
+            else if (sender == tevColor3PB)
+                mat.TevColor3.Color = colorDlg.NewColor;
+            else if (sender == tevColor4PB)
+                mat.TevColor4.Color = colorDlg.NewColor;
+
+            if (!mat.HasMaterialColor && mat.MatColor != STColor8.White) {
+                mat.HasMaterialColor = true;
+                mat.Shader.Compile();
+            }
+
         }
     }
 }

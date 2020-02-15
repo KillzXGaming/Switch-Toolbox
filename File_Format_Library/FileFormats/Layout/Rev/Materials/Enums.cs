@@ -84,10 +84,17 @@ namespace LayoutBXLYT.Revolution
 
 	public enum TevAlphaOp
 	{
-		And,//ALPHAOP_AND = 0,
-		Or,//ALPHAOP_OR,
-		ExclusiveOr,//ALPHAOP_XOR,
-		InverseExclusiveOr//ALPHAOP_XNOR
+		Add = 0,
+		Subtract = 1,
+
+		CompR8Greater = 8,
+		CompR8Equal = 9,
+		CompGR16Greater = 10,
+		CompGR16Equal = 11,
+		CompBGR24Greater = 12,
+		CompBGR24Equal = 13,
+		CompA8Greater = 14,
+		CompA8Equal = 15,
 	}
 
 	public enum TevScale

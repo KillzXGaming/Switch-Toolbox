@@ -80,7 +80,48 @@ namespace LayoutBXLYT.Revolution
 		[Category("Indirect Texturing")]
 		public IndTexAlphaSel Alpha { get; set; }
 
-        public TevStage(FileReader reader, BxlytHeader header)
+		public TevStage()
+		{
+			TexCoord = TexCoordID.TexCoord0;
+			Color = 255;
+			TexMap = TexMapID.TexMap0;
+			RasSel = TevSwapSel.Swap0;
+			TexSel = TevSwapSel.Swap0;
+
+			ColorA = ColorArg.Zero;
+			ColorB = ColorArg.Zero;
+			ColorC = ColorArg.Zero;
+			ColorD = ColorArg.Zero;
+			ColorOp = TevColorOp.Add;
+			ColorBias = Bias.Zero;
+			ColorScale = TevScale.MultiplyBy1;
+			ColorClamp = true;
+			ColorRegID = TevColorRegID.OutputColor;
+			ColorConstantSel = TevKColorSel.Constant1_1;
+
+			AlphaA = AlphaArg.Zero;
+			AlphaB = AlphaArg.Zero;
+			AlphaC = AlphaArg.Zero;
+			AlphaD = AlphaArg.Zero;
+			AlphaOp = TevAlphaOp.Add;
+			AlphaBias = Bias.Zero;
+			AlphaScale = TevScale.MultiplyBy1;
+			AlphaClamp = true;
+			AlphaRegID = TevAlphaRegID.OutputAlpha;
+			AlphaConstantSel = TevKAlphaSel.Constant1_1;
+
+			TexID = 0;
+			Format = IndTexFormat.F_8_Bit_Offsets;
+			IndBias = Bias.Zero;
+			Matrix = IndTexMtxID.Matrix0;
+			WrapS = IndTexWrap.NoWrap;
+			WrapT = IndTexWrap.NoWrap;
+			UsePreviousStage = 0;
+			UnmodifiedLOD = 0;
+			Alpha = IndTexAlphaSel.Off;
+		}
+
+		public TevStage(FileReader reader, BxlytHeader header)
         {
 			TexCoord = (TexCoordID)reader.ReadByte();
 			Color = reader.ReadByte();

@@ -7,14 +7,14 @@ using Toolbox.Library.IO;
 
 namespace LayoutBXLYT.Revolution
 {
-    public class IndirectTextureOrderEntry
+    public class IndirectStage
     {
         public byte TexCoord { get; set; }
         public byte TexMap { get; set; }
         public byte ScaleS { get; set; }
         public byte ScaleT { get; set; }
 
-        public IndirectTextureOrderEntry(FileReader reader)
+        public IndirectStage(FileReader reader)
         {
             TexCoord = reader.ReadByte();
             TexMap = reader.ReadByte();

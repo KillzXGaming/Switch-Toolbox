@@ -153,6 +153,30 @@ namespace LayoutBXLYT
             //   private List<SectionCommon> Sections;
             //  public List<PAN1> Panes = new List<PAN1>();
 
+            public override int AddFont(string name)
+            {
+                if (!FontList.Fonts.Contains(name))
+                    FontList.Fonts.Add(name);
+
+                return FontList.Fonts.IndexOf(name);
+            }
+
+            public override int AddTexture(string name)
+            {
+                if (!TextureList.Textures.Contains(name))
+                    TextureList.Textures.Add(name);
+
+                return TextureList.Textures.IndexOf(name);
+            }
+
+            public override void RemoveTexture(string name)
+            {
+                if (TextureList.Textures.Contains(name))
+                    TextureList.Textures.Remove(name);
+
+                RemoveTextureReferences(name);
+            }
+
             public int TotalPaneCount()
             {
                 int panes = GetPanes().Count;

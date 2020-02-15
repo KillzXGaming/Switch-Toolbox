@@ -60,30 +60,35 @@ namespace LayoutBXLYT.CTR
             {
                 ((ColorAlphaBox)sender).Color = colorDlg.NewColor;
 
+                ApplyColors(ActiveMaterial, sender);
+
                 //Apply to all selected panes
                 foreach (BasePane pane in ParentEditor.SelectedPanes)
                 {
                     var mat = pane.TryGetActiveMaterial() as CTR.Material;
                     if (mat != null)
-                    {
-                        if (sender == whiteColorPB)
-                            mat.WhiteColor.Color = colorDlg.NewColor;
-                        else if (sender == blackColorBP)
-                            mat.BlackColor.Color = colorDlg.NewColor;
-                        else if (sender == tevColor1PB)
-                            mat.TevConstantColors[0].Color = colorDlg.NewColor;
-                        else if (sender == tevColor2PB)
-                            mat.TevConstantColors[1].Color = colorDlg.NewColor;
-                        else if (sender == tevColor3PB)
-                            mat.TevConstantColors[2].Color = colorDlg.NewColor;
-                        else if (sender == tevColor4PB)
-                            mat.TevConstantColors[3].Color = colorDlg.NewColor;
-                    }
+                        ApplyColors(mat, sender);
                 }
 
                 ParentEditor.PropertyChanged?.Invoke(sender, e);
             };
             colorDlg.Show();
+        }
+
+        private void ApplyColors(Material mat, object sender)
+        {
+            if (sender == whiteColorPB)
+                mat.WhiteColor.Color = colorDlg.NewColor;
+            else if (sender == blackColorBP)
+                mat.BlackColor.Color = colorDlg.NewColor;
+            else if (sender == tevColor1PB)
+                mat.TevConstantColors[0].Color = colorDlg.NewColor;
+            else if (sender == tevColor2PB)
+                mat.TevConstantColors[1].Color = colorDlg.NewColor;
+            else if (sender == tevColor3PB)
+                mat.TevConstantColors[2].Color = colorDlg.NewColor;
+            else if (sender == tevColor4PB)
+                mat.TevConstantColors[3].Color = colorDlg.NewColor;
         }
     }
 }

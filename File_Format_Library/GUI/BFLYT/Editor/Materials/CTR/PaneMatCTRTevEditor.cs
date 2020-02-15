@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LayoutBXLYT.Revolution;
+using Toolbox.Library.IO;
 
 namespace LayoutBXLYT.CTR
 {
@@ -15,8 +16,6 @@ namespace LayoutBXLYT.CTR
     {
         private PaneEditor ParentEditor;
         private Material ActiveMaterial;
-
-        private bool loaded = false;
 
         public PaneMatCTRTevEditor()
         {
@@ -28,18 +27,24 @@ namespace LayoutBXLYT.CTR
             ParentEditor = paneEditor;
             ActiveMaterial = material;
 
-            tevStageCB.Items.Clear();
             stPropertyGrid1.LoadProperty(null);
-
-            stageCounterLbl.Text = $"Stage 0 of {material.TevStages.Length}";
-            for (int i = 0; i < material.TevStages.Length; i++)
-                tevStageCB.Items.Add($"Stage[[{i}]");
-
-            if (tevStageCB.Items.Count > 0)
-                tevStageCB.SelectedIndex = 0;
+            UpdateMaterial(0);
         }
 
-        private void tevStageCB_SelectedIndexChanged(object sender, EventArgs e) {
+        private void UpdateMaterial(int stageIndex)
+        {
+            tevStageCB.Items.Clear();
+
+            stageCounterLbl.Text = $"Stage 0 of {ActiveMaterial.TevStages.Length}";
+            for (int i = 0; i < ActiveMaterial.TevStages.Length; i++)
+                tevStageCB.Items.Add($"Stage[[{i}]");
+
+            if (tevStageCB.Items.Count > stageIndex)
+                tevStageCB.SelectedIndex = stageIndex;
+        }
+
+        private void tevStageCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
             if (tevStageCB.SelectedIndex == -1)
                 return;
 
@@ -49,12 +54,40 @@ namespace LayoutBXLYT.CTR
             LoadTevStage((TevStage)ActiveMaterial.TevStages[index]);
         }
 
-        private void LoadTevStage(TevStage stage) {
+        private void LoadTevStage(TevStage stage)
+        {
             stPropertyGrid1.LoadProperty(stage, OnPropertyChanged);
         }
 
-        private void OnPropertyChanged() {
+        private void OnPropertyChanged()
+        {
             ParentEditor.PropertyChanged?.Invoke(EventArgs.Empty, null);
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            if (ActiveMaterial.TevStages.Length < 3)
+            {
+                ActiveMaterial.TevStages = ActiveMaterial.TevStages.AddToArray(new TevStage());
+                UpdateMaterial(ActiveMaterial.TevStages.Length - 1);
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            int index = tevStageCB.SelectedIndex;
+            if (index != -1)
+            {
+                ActiveMaterial.TevStages = ActiveMaterial.TevStages.RemoveAt(index);
+                UpdateMaterial(ActiveMaterial.TevStages.Length - 1);
+
+                if (ActiveMaterial.TevStages.Length == 0)
+                {
+                    tevStageCB.Items.Clear();
+                    tevStageCB.SelectedIndex = -1;
+                    stPropertyGrid1.LoadProperty(null);
+                }
+            }
         }
     }
 }
