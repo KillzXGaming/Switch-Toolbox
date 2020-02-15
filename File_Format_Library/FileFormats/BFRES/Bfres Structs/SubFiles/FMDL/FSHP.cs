@@ -994,16 +994,21 @@ namespace Bfres.Structs
 
             bool UseRigidSkinning = ob.VertexSkinCount == 1;
 
+            if (mdl.Skeleton.Node_Array == null || mdl.Skeleton.Node_Array.Length == 0)
+                return;
+
             var bones = new Dictionary<string, STBone>();
-            foreach (var bone in mdl.Skeleton.bones)
-            {
-                if (bones.ContainsKey(bone.Text))
-                {
-                    STConsole.WriteLine($"There are multiple bones named {bone.Text}. Using the first one.", System.Drawing.Color.Red);
-                }
-                else
-                {
-                    bones.Add(bone.Text, bone);
+            foreach (var index in mdl.Skeleton.Node_Array) {
+                if (index < mdl.Skeleton.bones.Count) {
+                    var bone = mdl.Skeleton.bones[index];
+                    if (bones.ContainsKey(bone.Text))
+                    {
+                        STConsole.WriteLine($"There are multiple bones named {bone.Text}. Using the first one.", System.Drawing.Color.Red);
+                    }
+                    else
+                    {
+                        bones.Add(bone.Text, bone);
+                    }
                 }
             }
 

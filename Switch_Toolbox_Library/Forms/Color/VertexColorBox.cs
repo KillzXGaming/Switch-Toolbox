@@ -87,6 +87,8 @@ namespace Toolbox.Library.Forms
             this.BackgroundImage = Properties.Resources.CheckerBackground;
             this.BackColor = Color.Transparent;
             this.MouseClick += OnMouseClick;
+            this.MouseUp += OnMouseUp;
+            this.MouseHover += new EventHandler(OnMouseHover);
             this.SetStyle(
             ControlStyles.AllPaintingInWmPaint |
             ControlStyles.UserPaint |
@@ -103,14 +105,33 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        
+        private void OnMouseHover(object sender, EventArgs e)
+        {
+            isHovered = true;
+            mouseLoc = Control.MousePosition;
+            this.Invalidate();
+        }
+
+        private void OnMouseUp(object sender, MouseEventArgs e) {
+            leftClicked = false;
+        }
+
+        private bool isHovered;
         private bool dialogActive;
         private STColorDialog colorDlg;
+        private Point mouseLoc;
+        private bool leftClicked = false;
         private void OnMouseClick(object sender, MouseEventArgs e)
         {
             if (TopLeftHit == null) return;
 
             if (e.Button == MouseButtons.Left)
             {
+                leftClicked = true;
+                mouseLoc = e.Location;
+                this.Invalidate();
+
                 if (TopLeftHit.IsHit(e.Location))
                      LoadColorDialog(TopLeftColor, 0);
                 if (TopRightHit.IsHit(e.Location))
@@ -156,6 +177,8 @@ namespace Toolbox.Library.Forms
                         ColorChanged();
                     };
                 }
+
+                leftClicked = false;
             }
 
             this.Invalidate();
@@ -357,7 +380,33 @@ namespace Toolbox.Library.Forms
             using (Brush br = new SolidBrush(BottomRightColor.GrayScale(true).Inverse()))
                 pe.Graphics.DrawString("BR", font, br, new Point(RightX, BottomY));
 
+            if (mouseLoc != null)
+            {
+                if (AllHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, AllHit);
+                if (TopLeftHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, TopLeftHit);
+                if (TopRightHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, TopRightHit);
+                if (BottomLeftHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, BottomLeftHit);
+                if (BottomRightHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, BottomRightHit);
+                if (TopHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, TopHit);
+                if (BottomHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, BottomHit);
+                if (RightHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, RightHit);
+                if (LeftHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, LeftHit);
+            }
+
             base.OnPaint(pe);
+        }
+
+        private void DrawSelectionOutline(PaintEventArgs pe, Rectangle rect) {
+            pe.Graphics.DrawRectangle(new Pen(new SolidBrush(Color.Black), 1), rect);
         }
     }
 }
