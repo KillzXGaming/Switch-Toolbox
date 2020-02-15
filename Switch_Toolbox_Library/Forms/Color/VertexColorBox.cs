@@ -87,8 +87,8 @@ namespace Toolbox.Library.Forms
             this.BackgroundImage = Properties.Resources.CheckerBackground;
             this.BackColor = Color.Transparent;
             this.MouseClick += OnMouseClick;
-            this.MouseUp += OnMouseUp;
-            this.MouseHover += new EventHandler(OnMouseHover);
+            this.MouseMove += OnMouseMove;
+            this.MouseLeave += OnMouseLeave;
             this.SetStyle(
             ControlStyles.AllPaintingInWmPaint |
             ControlStyles.UserPaint |
@@ -105,30 +105,32 @@ namespace Toolbox.Library.Forms
             }
         }
 
-        
-        private void OnMouseHover(object sender, EventArgs e)
-        {
-            isHovered = true;
-            mouseLoc = Control.MousePosition;
-            this.Invalidate();
+
+        private void OnMouseMove(object sender, MouseEventArgs e) {
+            if (dialogActive) return;
+
+            mouseLoc = e.Location;
+            Invalidate();
+        }
+
+        private void OnMouseLeave(object sender, EventArgs e) {
+            if (dialogActive) return;
+
+            mouseLoc = Point.Empty;
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e) {
-            leftClicked = false;
         }
 
-        private bool isHovered;
         private bool dialogActive;
         private STColorDialog colorDlg;
-        private Point mouseLoc;
-        private bool leftClicked = false;
+        private Point mouseLoc = Point.Empty;
         private void OnMouseClick(object sender, MouseEventArgs e)
         {
             if (TopLeftHit == null) return;
 
             if (e.Button == MouseButtons.Left)
             {
-                leftClicked = true;
                 mouseLoc = e.Location;
                 this.Invalidate();
 
@@ -161,6 +163,8 @@ namespace Toolbox.Library.Forms
                     colorDlg.Show();
                     colorDlg.FormClosed += delegate
                     {
+                        mouseLoc = Point.Empty;
+                        this.Invalidate();
                         dialogActive = false;
                     };
                     colorDlg.ColorChanged += delegate
@@ -177,8 +181,6 @@ namespace Toolbox.Library.Forms
                         ColorChanged();
                     };
                 }
-
-                leftClicked = false;
             }
 
             this.Invalidate();
@@ -205,6 +207,8 @@ namespace Toolbox.Library.Forms
             colorDlg = new STColorDialog(color);
             colorDlg.FormClosed += delegate
             {
+                mouseLoc = Point.Empty;
+                this.Invalidate();
                 dialogActive = false;
             };
             colorDlg.Show();
@@ -245,6 +249,8 @@ namespace Toolbox.Library.Forms
             colorDlg = new STColorDialog(color);
             colorDlg.FormClosed += delegate
             {
+                mouseLoc = Point.Empty;
+                this.Invalidate();
                 dialogActive = false;
             };
             colorDlg.Show();
@@ -380,7 +386,7 @@ namespace Toolbox.Library.Forms
             using (Brush br = new SolidBrush(BottomRightColor.GrayScale(true).Inverse()))
                 pe.Graphics.DrawString("BR", font, br, new Point(RightX, BottomY));
 
-            if (mouseLoc != null)
+            if (mouseLoc != Point.Empty)
             {
                 if (AllHit.IsHit(mouseLoc))
                     DrawSelectionOutline(pe, AllHit);
@@ -406,7 +412,16 @@ namespace Toolbox.Library.Forms
         }
 
         private void DrawSelectionOutline(PaintEventArgs pe, Rectangle rect) {
-            pe.Graphics.DrawRectangle(new Pen(new SolidBrush(Color.Black), 1), rect);
+            //Select entire regions
+            Rectangle selection = rect;
+            if (rect == TopHit || rect == BottomHit) {
+                selection = new Rectangle(0, rect.Y, pe.ClipRectangle.Width, rect.Height);
+            }
+            if (rect == LeftHit || rect == RightHit) {
+                selection = new Rectangle(rect.X,0, rect.Width, pe.ClipRectangle.Height);
+            }
+
+            pe.Graphics.DrawRectangle(new Pen(new SolidBrush(Color.Black), 1), selection);
         }
     }
 }
