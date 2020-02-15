@@ -21,6 +21,13 @@ namespace LayoutBXLYT.Revolution
             Unknown2 = 0;
         }
 
+        public bool HasDefaults() {
+            return ColorMatSource == 1 &&
+                   AlphaMatSource == 1 && 
+                   Unknown1 == 0 &&
+                   Unknown2 == 0;
+        }
+
         public ChanCtrl(FileReader reader)
         {
             ColorMatSource = reader.ReadByte();

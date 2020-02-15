@@ -766,6 +766,14 @@ namespace LayoutBXLYT
             LogicOp = GX2LogicOp.Set;
         }
 
+        public bool HasDefaults()
+        {
+            return BlendOp == GX2BlendOp.Add &&
+                   SourceFactor == GX2BlendFactor.SourceAlpha &&
+                   DestFactor == GX2BlendFactor.SourceInvAlpha &&
+                   LogicOp == GX2LogicOp.Set;
+        }
+
         public BxlytBlendMode(FileReader reader, BxlytHeader header)
         {
             BlendOp = (GX2BlendOp)reader.ReadByte();
@@ -1496,6 +1504,7 @@ namespace LayoutBXLYT
 
             var mat = header.CreateNewMaterial(materialName);
             MaterialIndex = (ushort)header.AddMaterial(mat);
+            Console.WriteLine($"NEW MAT {mat.Name} {MaterialIndex}");
             Material = mat;
         }
 

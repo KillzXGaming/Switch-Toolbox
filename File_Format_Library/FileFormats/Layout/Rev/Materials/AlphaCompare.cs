@@ -24,6 +24,14 @@ namespace LayoutBXLYT.Revolution
             Ref1 = 0;
         }
 
+        public bool HasDefaults() {
+            return Comp0 == GfxAlphaFunction.Always &&
+                   Comp1 == GfxAlphaFunction.Always &&
+                   AlphaOp == GfxAlphaOp.And &&
+                   Ref0 == 0 &&
+                   Ref1 == 0;
+        }
+
         public AlphaCompare(FileReader reader) : base()
         {
             byte c = reader.ReadByte();

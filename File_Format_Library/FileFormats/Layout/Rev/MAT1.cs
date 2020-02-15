@@ -211,6 +211,39 @@ namespace LayoutBXLYT.Revolution
 
         public void Write(FileWriter writer, LayoutHeader header)
         {
+            if (MatColor != STColor8.White)
+                HasMaterialColor = true;
+            if (!ChanControl.HasDefaults())
+                HasChannelControl = true;
+            if (!BlendMode.HasDefaults())
+                HasBlendMode = true;
+            if (!((AlphaCompare)AlphaCompare).HasDefaults())
+                HasAlphaCompare = true;
+
+            flags = 0;
+            if (HasMaterialColor)
+                flags |= (1 << 27);
+
+            if (HasChannelControl)
+                flags |= (1 << 25);
+
+            if (HasBlendMode)
+                flags |= (1 << 24);
+
+            if (HasAlphaCompare)
+                flags |= (1 << 23);
+
+            flags |= (uint)((TevStages.Length & 31) << 18);
+            flags |= (uint)((IndirectTextureOrderEntries.Count & 0x7) << 15);
+            flags |= (uint)((IndirectTexTransforms.Count & 0x3) << 13);
+            if (HasTevSwapTable)
+                flags |= (1 << 12);
+
+            flags |= (uint)((TexCoordGens.Count & 0xF) << 8);
+            flags |= (uint)((TextureTransforms.Length & 0xF) << 4);
+            flags |= (uint)((TextureMaps.Length & 0xF) << 0);
+
+
             writer.WriteString(Name, 0x14);
             writer.Write(BlackColor.ToColor16());
             writer.Write(WhiteColor.ToColor16());
@@ -225,7 +258,7 @@ namespace LayoutBXLYT.Revolution
                 ((TextureRef)TextureMaps[i]).Write(writer);
 
             for (int i = 0; i < TextureTransforms.Length; i++)
-                ((BxlytTextureTransform)TextureTransforms[i]).Write(writer);
+                TextureTransforms[i].Write(writer);
 
             for (int i = 0; i < TexCoordGens.Count; i++)
                 TexCoordGens[i].Write(writer);

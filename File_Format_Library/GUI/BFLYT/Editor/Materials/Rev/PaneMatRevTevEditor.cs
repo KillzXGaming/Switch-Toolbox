@@ -46,10 +46,10 @@ namespace LayoutBXLYT.Revolution
             int index = tevStageCB.SelectedIndex;
             stageCounterLbl.Text = $"Stage {index + 1} of {ActiveMaterial.TevStages.Length}";
 
-            LoadTevStage((CTR.TevStage)ActiveMaterial.TevStages[index]);
+            LoadTevStage((TevStage)ActiveMaterial.TevStages[index]);
         }
 
-        private void LoadTevStage(CTR.TevStage stage) {
+        private void LoadTevStage(TevStage stage) {
             stPropertyGrid1.LoadProperty(stage, OnPropertyChanged);
         }
 

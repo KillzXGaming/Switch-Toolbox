@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.Forms;
 using LayoutBXLYT.Cafe;
+using FirstPlugin.Forms;
 
 namespace LayoutBXLYT
 {
@@ -399,6 +400,33 @@ namespace LayoutBXLYT
                 //    ContexMenu.Items.Add(new STToolStipMenuItem("Display Children Panes", null, TogglePane, Keys.Control | Keys.H));
                     ContexMenu.Show(Cursor.Position);
                 }
+
+                //Check fonts to open editor if possible
+                if (e.Node.ImageKey == "font") {
+                    ContexMenu.Items.Clear();
+                    ContexMenu.Items.Add(new STToolStipMenuItem("Load Font File", null, loadFontFile, Keys.Control | Keys.L));
+                    ContexMenu.Show(Cursor.Position);
+                }
+            }
+        }
+
+        private void loadFontFile(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = true;
+            ofd.Filter = Utils.GetAllFilters(new Type[] { typeof(FirstPlugin.BXFNT ), });
+            if (ofd.ShowDialog() == DialogResult.OK) {
+                var fileFormat = Toolbox.Library.IO.STFileLoader.OpenFileFormat(ofd.FileName);
+                if (fileFormat is IArchiveFile)
+                {
+                    foreach (var file in ((IArchiveFile)fileFormat).Files) {
+                        var archiveFile = file.OpenFile();
+                        if (archiveFile is FirstPlugin.BXFNT) {
+
+                        }
+                    }
+                }
+                ParentEditor.UpdateViewport();
             }
         }
 
@@ -423,6 +451,26 @@ namespace LayoutBXLYT
             if (e.Button == MouseButtons.Left) {
                 if (e.Node.Tag is BasePane)
                     ParentEditor.ShowPaneEditor(e.Node.Tag as BasePane);
+
+                //Check fonts to open editor if possible
+                if (e.Node.ImageKey == "font")
+                {
+                    foreach (var file in FirstPlugin.PluginRuntime.BxfntFiles) {
+                        if (file.FileName == e.Node.Text)
+                        {
+                            Form frm = new Form();
+
+                            BffntEditor editor = new BffntEditor();
+                            editor.Text = "Font Editor";
+                            editor.Dock = DockStyle.Fill;
+                            editor.LoadFontFile(file);
+                            editor.OnFontEdited += bxfntEditor_FontEdited;
+                            frm.Controls.Add(editor);
+
+                            frm.Show(ParentEditor);
+                        }
+                    }
+                }
             }
         }
 
@@ -529,6 +577,11 @@ namespace LayoutBXLYT
                     ParentEditor.UpdateViewport();
                 }
             }
+        }
+
+        private void bxfntEditor_FontEdited(object sender, EventArgs e)
+        {
+
         }
 
         private void treeView1_DragEnter(object sender, DragEventArgs e)

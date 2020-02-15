@@ -16,6 +16,8 @@ namespace FirstPlugin.Forms
 {
     public partial class BffntEditor : STUserControl, IFIleEditor
     {
+        public EventHandler OnFontEdited = null;
+
         public BffntEditor()
         {
             InitializeComponent();
@@ -207,6 +209,7 @@ namespace FirstPlugin.Forms
                 }
 
                 UpdateImagePanel(ImageIndex);
+                OnFontEdited?.Invoke(this, EventArgs.Empty);
             }
         }
 
