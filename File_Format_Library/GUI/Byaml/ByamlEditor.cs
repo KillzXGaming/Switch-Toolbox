@@ -44,9 +44,11 @@ namespace FirstPlugin
         bool useMuunt = true;
 
         bool IsXML => xmlToolstrip.Checked;
+        bool IsOldXML => xmlToolstrip.Checked;
 
         private TextEditor textEditor;
         private STToolStipMenuItem xmlToolstrip;
+        private STToolStipMenuItem xmlOldToolstrip;
         private STToolStipMenuItem yamlToolstrip;
 
         public ByamlEditor()
@@ -54,7 +56,8 @@ namespace FirstPlugin
             InitializeComponent();
             Reload();
 
-            xmlToolstrip = new STToolStipMenuItem("XML", null, OnFormatChanged);
+            xmlOldToolstrip = new STToolStipMenuItem("XML (Toolbox/Editorcore)", null, OnFormatChanged);
+            xmlToolstrip = new STToolStipMenuItem("XML (YamlConv)", null, OnFormatChanged);
             yamlToolstrip = new STToolStipMenuItem("YAML", null, OnFormatChanged);
             yamlToolstrip.Checked = true;
         }
@@ -114,6 +117,7 @@ namespace FirstPlugin
             textEditor.AddContextMenu("Compile", TextEditorFromYaml);
 
             var formatMenu = new STToolStripItem("Change Formatting");
+            formatMenu.DropDownItems.Add(xmlOldToolstrip);
             formatMenu.DropDownItems.Add(xmlToolstrip);
             formatMenu.DropDownItems.Add(yamlToolstrip);
 
@@ -126,6 +130,7 @@ namespace FirstPlugin
         {
             yamlToolstrip.Checked = false;
             xmlToolstrip.Checked = false;
+            xmlOldToolstrip.Checked = false;
 
             var menu = sender as STToolStipMenuItem;
             menu.Checked = true;
@@ -760,6 +765,11 @@ namespace FirstPlugin
                 textEditor.FillEditor(XmlByamlConverter.ToXML(FileFormat.BymlData));
                 textEditor.IsXML = true;
             }
+            else if (IsOldXML)
+            {
+                textEditor.FillEditor(XmlConverter.ToXml(FileFormat.BymlData));
+                textEditor.IsXML = true;
+            }
             else
             {
                 textEditor.FillEditor(YamlByamlConverter.ToYaml(FileFormat.BymlData));
@@ -778,6 +788,8 @@ namespace FirstPlugin
                 if (FileFormat != null) {
                     if (IsXML)
                         FileFormat.BymlData = XmlByamlConverter.FromXML(textEditor.GetText());
+                    else if (IsOldXML)
+                        FileFormat.BymlData = XmlConverter.ToByml(textEditor.GetText());
                     else
                         FileFormat.BymlData = YamlByamlConverter.FromYaml(textEditor.GetText());
                 }
