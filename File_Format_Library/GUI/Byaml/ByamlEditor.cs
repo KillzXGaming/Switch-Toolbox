@@ -44,7 +44,7 @@ namespace FirstPlugin
         bool useMuunt = true;
 
         bool IsXML => xmlToolstrip.Checked;
-        bool IsOldXML => xmlToolstrip.Checked;
+        bool IsOldXML => xmlOldToolstrip.Checked;
 
         private TextEditor textEditor;
         private STToolStipMenuItem xmlToolstrip;
