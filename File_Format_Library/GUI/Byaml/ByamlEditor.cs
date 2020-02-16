@@ -43,12 +43,20 @@ namespace FirstPlugin
 
         bool useMuunt = true;
 
+        bool IsXML => xmlToolstrip.Checked;
+
         private TextEditor textEditor;
+        private STToolStipMenuItem xmlToolstrip;
+        private STToolStipMenuItem yamlToolstrip;
 
         public ByamlEditor()
         {
             InitializeComponent();
             Reload();
+
+            xmlToolstrip = new STToolStipMenuItem("XML", null, OnFormatChanged);
+            yamlToolstrip = new STToolStipMenuItem("YAML", null, OnFormatChanged);
+            yamlToolstrip.Checked = true;
         }
 
         public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, BYAML byaml = null)
@@ -104,7 +112,27 @@ namespace FirstPlugin
             textEditor.ClearContextMenus();
             textEditor.AddContextMenu("Decompile", TextEditorToYaml);
             textEditor.AddContextMenu("Compile", TextEditorFromYaml);
+
+            var formatMenu = new STToolStripItem("Change Formatting");
+            formatMenu.DropDownItems.Add(xmlToolstrip);
+            formatMenu.DropDownItems.Add(yamlToolstrip);
+
+            textEditor.AddContextMenu(formatMenu, TextEditorFromYaml);
+
             stPanel4.Controls.Add(textEditor);
+        }
+
+        private void OnFormatChanged(object sender, EventArgs e)
+        {
+            yamlToolstrip.Checked = false;
+            xmlToolstrip.Checked = false;
+
+            var menu = sender as STToolStipMenuItem;
+            menu.Checked = true;
+
+            if (textEditor.GetText() != string.Empty) {
+                UpdateTextEditor();
+            }
         }
 
         void ParseBymlFirstNode()
@@ -719,15 +747,24 @@ namespace FirstPlugin
             }
         }
 
-        private void TextEditorToYaml(object sender, EventArgs e)
-        {
-            var format = (IConvertableTextFormat)FileFormat;
-            textEditor.FillEditor(((IConvertableTextFormat)FileFormat).ConvertToString());
+        private void TextEditorToYaml(object sender, EventArgs e) {
+            UpdateTextEditor();
+        }
 
-            if (format.TextFileType == TextFileType.Xml)
+        private void UpdateTextEditor() {
+            textEditor.IsXML = false;
+            textEditor.IsYAML = false;
+
+            if (IsXML)
+            {
+                textEditor.FillEditor(XmlByamlConverter.ToXML(FileFormat.BymlData));
                 textEditor.IsXML = true;
+            }
             else
+            {
+                textEditor.FillEditor(YamlByamlConverter.ToYaml(FileFormat.BymlData));
                 textEditor.IsYAML = true;
+            }
         }
 
         private void TextEditorFromYaml(object sender, EventArgs e)
@@ -739,7 +776,10 @@ namespace FirstPlugin
             try
             {
                 if (FileFormat != null) {
-                    FileFormat.ConvertFromString(textEditor.GetText());
+                    if (IsXML)
+                        FileFormat.BymlData = XmlByamlConverter.FromXML(textEditor.GetText());
+                    else
+                        FileFormat.BymlData = YamlByamlConverter.FromYaml(textEditor.GetText());
                 }
             }
             catch (Exception ex)

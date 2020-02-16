@@ -196,6 +196,15 @@ namespace Toolbox.Library.Forms
         private Color BACK_COLOR = Color.FromArgb(30, 30, 30);
         private Color FORE_COLOR = Color.White;
 
+        public void AddContextMenu(STToolStripItem menu, EventHandler handler)
+        {
+            foreach (ToolStripItem item in stContextMenuStrip1.Items)
+                if (item.Text == menu.Text)
+                    return;
+
+            stContextMenuStrip1.Items.Add(menu);
+        }
+
         public void AddContextMenu(string text, EventHandler handler)
         {
             foreach (ToolStripItem item in stContextMenuStrip1.Items)

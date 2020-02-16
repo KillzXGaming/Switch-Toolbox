@@ -180,7 +180,7 @@ namespace FirstPlugin
             if (node == null) {
                 return new YamlScalarNode("null");
             }
-            else if (NodePaths.ContainsKey(node))
+            else if (IsReferenceNode(node))
             {
                 if (NodePaths[node].Tag == null)
                     NodePaths[node].Tag = $"!ref{refNodeId++}";
@@ -189,7 +189,7 @@ namespace FirstPlugin
             else if ((node is IList<dynamic>))
             {
                 var yamlNode = new YamlSequenceNode();
-                NodePaths.Add(node, yamlNode);
+              //  NodePaths.Add(node, yamlNode);
 
                 if (!HasEnumerables((IList<dynamic>)node) &&
                     ((IList<dynamic>)node).Count < 6)
@@ -203,7 +203,7 @@ namespace FirstPlugin
             else if (node is IDictionary<string, dynamic>)
             {
                 var yamlNode = new YamlMappingNode();
-                NodePaths.Add(node, yamlNode);
+              //  NodePaths.Add(node, yamlNode);
 
                 if (!HasEnumerables((IDictionary<string, dynamic>)node) &&
                     ((IDictionary<string, dynamic>)node).Count < 6)
@@ -225,6 +225,11 @@ namespace FirstPlugin
                 if (tag != null) yamlNode.Tag = tag;
                 return yamlNode;
             }
+        }
+
+        private static bool IsReferenceNode(dynamic node)
+        {
+            return false;
         }
 
         private static bool HasEnumerables(IDictionary<string, dynamic> node)

@@ -633,7 +633,6 @@ namespace LayoutBXLYT
 
         //Huge thanks to layout studio for the window pane rendering code
         //https://github.com/Treeki/LayoutStudio/blob/master/layoutgl/widget.cpp
-        //Note i still need to fix UV coordinates being flips and transformed!
         public static void DrawWindowPane(BasePane pane, LayoutViewer.Camera2D camera, bool gameWindow, byte effectiveAlpha, Dictionary<string, STGenericTexture> Textures, bool isSelected)
         {
             if (!Runtime.LayoutEditor.DisplayWindowPane)
