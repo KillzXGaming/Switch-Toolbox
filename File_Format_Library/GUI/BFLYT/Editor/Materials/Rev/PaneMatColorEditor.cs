@@ -100,7 +100,6 @@ namespace LayoutBXLYT
 
             if (!mat.HasMaterialColor && mat.MatColor != STColor8.White) {
                 mat.HasMaterialColor = true;
-                mat.Shader.Compile();
             }
 
         }

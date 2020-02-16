@@ -566,6 +566,10 @@ namespace LayoutBXLYT
             LayoutTextureList?.LoadTextures(this, ActiveLayout, Textures);
         }
 
+        public void DeselectTextureList() {
+            LayoutTextureList?.DeselectTextureList();
+        }
+
         private void OnAnimationPlaying(object sender, EventArgs e)
         {
             if (LayoutAnimEditor != null)

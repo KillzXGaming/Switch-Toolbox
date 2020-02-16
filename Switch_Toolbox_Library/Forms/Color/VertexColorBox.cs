@@ -422,7 +422,8 @@ namespace Toolbox.Library.Forms
                 selection = new Rectangle(rect.X,0, rect.Width, pe.ClipRectangle.Height);
             }
 
-            pe.Graphics.DrawRectangle(new Pen(new SolidBrush(Color.Black), 1), selection);
+            pe.Graphics.DrawRectangle(new Pen(new SolidBrush(Color.Black), 1), new Rectangle(
+                selection.X + 1, selection.Y + 1, selection.Width - 1, selection.Height - 1));
         }
     }
 }

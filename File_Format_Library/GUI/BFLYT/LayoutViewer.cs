@@ -1487,6 +1487,8 @@ namespace LayoutBXLYT
             {
                 var item = e.Data.GetData(typeof(ListViewItem)) as ListViewItem;
                 string texture = item.Text;
+
+                ParentEditor.DeselectTextureList();
                 if (Textures.ContainsKey(texture))
                 {
                     var point = this.PointToClient(new Point(e.X, e.Y));
