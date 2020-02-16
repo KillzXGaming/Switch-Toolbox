@@ -730,6 +730,43 @@ namespace Toolbox.Library
             }
         }
 
+        public static Bitmap CreateImageThumbnail(Bitmap image, int width, int height)
+        {
+            int tw, th, tx, ty;
+
+            int w = image.Width;
+            int h = image.Height;
+
+            double whRatio = (double)w / h;
+            if (image.Width >= image.Height)
+            {
+                tw = width;
+                th = (int)(tw / whRatio);
+            }
+            else
+            {
+                th = height;
+                tw = (int)(th * whRatio);
+            }
+
+            tx = (width - tw) / 2;
+            ty = (height - th) / 2;
+
+            Bitmap thumb = new Bitmap(width, height, image.PixelFormat);
+
+            Graphics g = Graphics.FromImage(thumb);
+
+          //  g.Clear(Color.White);
+            g.InterpolationMode = InterpolationMode.NearestNeighbor;
+            g.DrawImage(image, new Rectangle(tx, ty, tw, th),
+            new Rectangle(0, 0, w, h),
+
+            GraphicsUnit.Pixel);
+
+            return thumb;
+
+        }
+
         public static Bitmap AdjustBrightness(Image image, float level)
         {
             ImageAttributes attributes = new ImageAttributes();

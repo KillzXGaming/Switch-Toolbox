@@ -873,6 +873,10 @@ namespace LayoutBXLYT
             Entries = new List<UserDataEntry>();
         }
 
+        public virtual UserDataEntry CreateUserData() {
+            return new UserDataEntry();
+        }
+
         public override void Write(FileWriter writer, LayoutHeader header)
         {
         }

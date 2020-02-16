@@ -110,7 +110,7 @@ namespace LayoutBXLYT
         {
             if (activePane == null) return;
 
-            UserDataEntry userDataNew = new UserDataEntry();
+            UserDataEntry userDataNew = ActiveUserData.CreateUserData();
             userDataNew.SetValue(new int[0]);
             SelectedEntry = userDataNew;
             bool IsEdited = EditData();

@@ -114,6 +114,7 @@ namespace LayoutBXLYT.Cafe
             originY = (OriginY)(mainorigin / 4);
             ParentOriginX = (OriginX)(parentorigin % 4);
             ParentOriginY = (OriginY)(parentorigin / 4);
+            UserData = new USD1();
         }
 
         public override void Write(FileWriter writer, LayoutHeader header)

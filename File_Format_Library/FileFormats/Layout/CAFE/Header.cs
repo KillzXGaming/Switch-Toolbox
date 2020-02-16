@@ -514,7 +514,8 @@ namespace LayoutBXLYT.Cafe
             WriteSection(writer, pane.Signature, pane, () => pane.Write(writer, header));
             sectionCount++;
 
-            if (pane is IUserDataContainer && ((IUserDataContainer)pane).UserData != null)
+            if (pane is IUserDataContainer && ((IUserDataContainer)pane).UserData != null &&
+                ((IUserDataContainer)pane).UserData.Entries.Count > 0)
             {
                 var userData = ((IUserDataContainer)pane).UserData;
                 WriteSection(writer, "usd1", userData, () => userData.Write(writer, this));

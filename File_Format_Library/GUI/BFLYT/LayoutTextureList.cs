@@ -140,6 +140,7 @@ namespace LayoutBXLYT
                 return;
 
             temp = texture.GetComponentBitmap(temp, true);
+            temp = BitmapExtension.CreateImageThumbnail(temp, 80, 80);
 
             if (listViewCustom1.InvokeRequired)
             {

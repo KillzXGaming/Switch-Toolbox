@@ -14,6 +14,10 @@ namespace LayoutBXLYT.Cafe
             Entries = new List<UserDataEntry>();
         }
 
+        public override UserDataEntry CreateUserData() {
+            return new USD1Entry();
+        }
+
         public USD1(FileReader reader, Header header) : base()
         {
             long startPos = reader.Position - 8;
@@ -68,6 +72,8 @@ namespace LayoutBXLYT.Cafe
 
     public class USD1Entry : UserDataEntry
     {
+        public USD1Entry() { }
+
         public USD1Entry(FileReader reader, long startPos, Header header)
         {
             long pos = reader.Position;
