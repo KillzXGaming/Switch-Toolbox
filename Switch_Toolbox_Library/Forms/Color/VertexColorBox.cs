@@ -131,26 +131,29 @@ namespace Toolbox.Library.Forms
 
             if (e.Button == MouseButtons.Left)
             {
-                mouseLoc = e.Location;
-                this.Invalidate();
+                if (!dialogActive) {
+                    mouseLoc = e.Location;
+                    this.Invalidate();
+                }
+      
 
                 if (TopLeftHit.IsHit(e.Location))
                      LoadColorDialog(TopLeftColor, 0);
-                if (TopRightHit.IsHit(e.Location))
+                else if (TopRightHit.IsHit(e.Location))
                     LoadColorDialog(TopRightColor, 1);
-                if (BottomLeftHit.IsHit(e.Location))
+                else if (BottomLeftHit.IsHit(e.Location))
                     LoadColorDialog(BottomLeftColor, 2);
-                if (BottomRightHit.IsHit(e.Location))
+                else if (BottomRightHit.IsHit(e.Location))
                     LoadColorDialog(BottomRightColor, 3);
-                if (TopHit.IsHit(e.Location))
+                else if (TopHit.IsHit(e.Location))
                     LoadColorDialogSides(TopRightColor, TopLeftColor,  0);
-                if (BottomHit.IsHit(e.Location))
+                else if (BottomHit.IsHit(e.Location))
                     LoadColorDialogSides(BottomRightColor, BottomLeftColor, 1);
-                if (RightHit.IsHit(e.Location))
+                else if (RightHit.IsHit(e.Location))
                     LoadColorDialogSides(TopRightColor, BottomRightColor, 2);
-                if (LeftHit.IsHit(e.Location))
+                else if (LeftHit.IsHit(e.Location))
                     LoadColorDialogSides(TopLeftColor, BottomLeftColor, 3);
-                if (AllHit.IsHit(e.Location))
+                else if (AllHit.IsHit(e.Location))
                 {
                     if (dialogActive)
                     {
@@ -164,8 +167,8 @@ namespace Toolbox.Library.Forms
                     colorDlg.FormClosed += delegate
                     {
                         mouseLoc = Point.Empty;
-                        this.Invalidate();
                         dialogActive = false;
+                        this.Invalidate();
                     };
                     colorDlg.ColorChanged += delegate
                     {
@@ -182,8 +185,6 @@ namespace Toolbox.Library.Forms
                     };
                 }
             }
-
-            this.Invalidate();
         }
 
         private void LoadColorDialogSides(Color color1, Color color2, int index)
@@ -208,8 +209,8 @@ namespace Toolbox.Library.Forms
             colorDlg.FormClosed += delegate
             {
                 mouseLoc = Point.Empty;
-                this.Invalidate();
                 dialogActive = false;
+                this.Invalidate();
             };
             colorDlg.Show();
             colorDlg.ColorChanged += delegate
@@ -250,8 +251,8 @@ namespace Toolbox.Library.Forms
             colorDlg.FormClosed += delegate
             {
                 mouseLoc = Point.Empty;
-                this.Invalidate();
                 dialogActive = false;
+                this.Invalidate();
             };
             colorDlg.Show();
             colorDlg.ColorChanged += delegate

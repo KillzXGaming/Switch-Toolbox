@@ -29,7 +29,7 @@ namespace Toolbox.Library.Forms
 
             //Wait until the user can lose focus for closing control
             //This prevents window from popping up and closing instantly
-            Utils.DelayAction(2000,delegate
+            Utils.DelayAction(100,delegate
             {
                 CanCloseOnLostFocus = true;
             });
