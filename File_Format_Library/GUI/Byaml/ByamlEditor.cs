@@ -789,7 +789,11 @@ namespace FirstPlugin
                     if (IsXML)
                         FileFormat.BymlData = XmlByamlConverter.FromXML(textEditor.GetText());
                     else if (IsOldXML)
-                        FileFormat.BymlData = XmlConverter.ToByml(textEditor.GetText());
+                    {
+                        byte[] TextData = Encoding.Unicode.GetBytes(textEditor.GetText());
+                        StreamReader t = new StreamReader(new MemoryStream(TextData), Encoding.GetEncoding(932));
+                        FileFormat.BymlData = XmlConverter.ToByml(t.ReadToEnd());
+                    }
                     else
                         FileFormat.BymlData = YamlByamlConverter.FromYaml(textEditor.GetText());
                 }
