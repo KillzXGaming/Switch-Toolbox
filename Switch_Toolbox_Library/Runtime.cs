@@ -70,6 +70,17 @@ namespace Toolbox.Library
             public static int FontSize = 12;
         }
 
+        public class ByamlEditor {
+            public static ByamlTextFormat TextFormat = ByamlTextFormat.YAML;
+        }
+
+        public enum ByamlTextFormat
+        {
+            XML_EditorCore,
+            XML_YamlConv,
+            YAML,
+        }
+
         public class MuuntEditor
         {
             public static bool Enable3DViewport = false;

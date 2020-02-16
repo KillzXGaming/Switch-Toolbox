@@ -298,6 +298,11 @@ namespace Toolbox.Library
                     case "DumpShadersDEBUG":
                         bool.TryParse(node.InnerText, out Runtime.DumpShadersDEBUG);
                         break;
+                    case "BymlTextFormat":
+                        Runtime.ByamlTextFormat textFormat;
+                        Enum.TryParse(node.InnerText, out textFormat);
+                        Runtime.ByamlEditor.TextFormat = textFormat;
+                        break;
 
                 }
             }
@@ -406,6 +411,7 @@ namespace Toolbox.Library
             AppendResourceTableSettings(doc, mainNode);
             AppendDeveloperSettings(doc, mainNode);
             AppendLayoutEditorSettings(doc, mainNode);
+            AppendByamlEditorSettings(doc, mainNode);
 
             return doc;
         }
@@ -489,6 +495,13 @@ namespace Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "ProdKeys", Runtime.SwitchKeys.ProdKeys.ToString()));
         }
 
+        private static void AppendByamlEditorSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode PathsNode = doc.CreateElement("ByamlEditor");
+            parentNode.AppendChild(PathsNode);
+            PathsNode.AppendChild(createNode(doc, "BymlTextFormat", Runtime.ByamlEditor.TextFormat.ToString()));
+        }
+        
         private static void AppenPBRSettings(XmlDocument doc, XmlNode parentNode)
         {
             XmlNode SettingsNode = doc.CreateElement("PBR");

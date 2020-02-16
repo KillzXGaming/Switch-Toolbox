@@ -59,7 +59,13 @@ namespace FirstPlugin
             xmlOldToolstrip = new STToolStipMenuItem("XML (Toolbox/Editorcore)", null, OnFormatChanged);
             xmlToolstrip = new STToolStipMenuItem("XML (YamlConv)", null, OnFormatChanged);
             yamlToolstrip = new STToolStipMenuItem("YAML", null, OnFormatChanged);
-            yamlToolstrip.Checked = true;
+
+            if (Runtime.ByamlEditor.TextFormat == Runtime.ByamlTextFormat.YAML)
+                yamlToolstrip.Checked = true;
+            else if (Runtime.ByamlEditor.TextFormat == Runtime.ByamlTextFormat.XML_YamlConv)
+                xmlToolstrip.Checked = true;
+            else if (Runtime.ByamlEditor.TextFormat == Runtime.ByamlTextFormat.XML_EditorCore)
+                xmlOldToolstrip.Checked = true;
         }
 
         public ByamlEditor(System.Collections.IEnumerable by, bool _pathSupport, ushort _ver, ByteOrder defaultOrder = ByteOrder.LittleEndian, bool IsSaveDialog = false, BYAML byaml = null)
@@ -134,6 +140,15 @@ namespace FirstPlugin
 
             var menu = sender as STToolStipMenuItem;
             menu.Checked = true;
+
+            if (yamlToolstrip.Checked)
+                Runtime.ByamlEditor.TextFormat = Runtime.ByamlTextFormat.YAML;
+            if (xmlToolstrip.Checked)
+                Runtime.ByamlEditor.TextFormat = Runtime.ByamlTextFormat.XML_YamlConv;
+            if (xmlOldToolstrip.Checked)
+                Runtime.ByamlEditor.TextFormat = Runtime.ByamlTextFormat.XML_EditorCore;
+
+            Toolbox.Library.Config.Save();
 
             if (textEditor.GetText() != string.Empty) {
                 UpdateTextEditor();
