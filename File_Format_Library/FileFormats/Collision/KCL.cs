@@ -234,12 +234,14 @@ namespace FirstPlugin
                 writer.Write(data);
             }
 
-            if (AttributeByml != null)
-                SaveAttributeByml();
+            SaveAttributeByml();
         }
 
         private void SaveAttributeByml(bool UpdateArchive = false)
         {
+            if (AttributeByml == null || AttributeByml.RootNode == null)
+                return;
+
             string byml = $"{Path.GetFileNameWithoutExtension(Text)}Attribute.byml";
             if (IFileInfo.ArchiveParent != null)
             {
