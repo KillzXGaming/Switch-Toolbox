@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using System.Drawing;
 
 namespace FirstPlugin
 {
@@ -17,6 +18,14 @@ namespace FirstPlugin
         {
             get { return textures; }
             set { textures = value; }
+        }
+
+        public Bitmap GetBitmap(int index)
+        {
+            if (BinaryTextureFile != null)
+                return GetImageSheet(index).GetBitmap(index);
+            else
+                return GetImageSheet(index).GetBitmap();
         }
 
         public uint SectionSize;

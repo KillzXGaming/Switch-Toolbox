@@ -30,17 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PaneTextBoxEditor));
             this.stFlowLayoutPanel1 = new Toolbox.Library.Forms.STFlowLayoutPanel();
-            this.stDropDownPanel1 = new Toolbox.Library.Forms.STDropDownPanel();
-            this.fontFileCB = new Toolbox.Library.Forms.STComboBox();
-            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
-            this.scaleYUD = new BarSlider.BarSlider();
-            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
-            this.scaleXUD = new BarSlider.BarSlider();
-            this.sliderItalicTilt = new Toolbox.Library.Forms.STTrackBar();
-            this.italicTiltUD = new BarSlider.BarSlider();
-            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.stDropDownPanel2 = new Toolbox.Library.Forms.STDropDownPanel();
-            this.stLabel7 = new Toolbox.Library.Forms.STLabel();
+            this.stLabel10 = new Toolbox.Library.Forms.STLabel();
+            this.textBoxTB = new Toolbox.Library.Forms.STTextBox();
             this.chkSizeRestrict = new Toolbox.Library.Forms.STCheckBox();
             this.sizeRestrictUD = new BarSlider.BarSlider();
             this.stLabel6 = new Toolbox.Library.Forms.STLabel();
@@ -50,6 +42,20 @@
             this.stLabel5 = new Toolbox.Library.Forms.STLabel();
             this.stLabel4 = new Toolbox.Library.Forms.STLabel();
             this.alighmentVCB = new Toolbox.Library.Forms.STComboBox();
+            this.stDropDownPanel1 = new Toolbox.Library.Forms.STDropDownPanel();
+            this.spacingYTB = new BarSlider.BarSlider();
+            this.stLabel9 = new Toolbox.Library.Forms.STLabel();
+            this.spacingXTB = new BarSlider.BarSlider();
+            this.stLabel7 = new Toolbox.Library.Forms.STLabel();
+            this.fontFileCB = new Toolbox.Library.Forms.STComboBox();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
+            this.scaleYUD = new BarSlider.BarSlider();
+            this.vertexColorTopBottomBox1 = new Toolbox.Library.Forms.VertexColorTopBottomBox();
+            this.stLabel2 = new Toolbox.Library.Forms.STLabel();
+            this.scaleXUD = new BarSlider.BarSlider();
+            this.sliderItalicTilt = new Toolbox.Library.Forms.STTrackBar();
+            this.italicTiltUD = new BarSlider.BarSlider();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.stDropDownPanel4 = new Toolbox.Library.Forms.STDropDownPanel();
             this.stLabel8 = new Toolbox.Library.Forms.STLabel();
             this.sliderShadowItalicTilt = new Toolbox.Library.Forms.STTrackBar();
@@ -62,12 +68,11 @@
             this.shadowScaleYUD = new BarSlider.BarSlider();
             this.stLabel11 = new Toolbox.Library.Forms.STLabel();
             this.shadowScaleXUD = new BarSlider.BarSlider();
-            this.vertexColorTopBottomBox1 = new Toolbox.Library.Forms.VertexColorTopBottomBox();
             this.shadowColorBox = new Toolbox.Library.Forms.VertexColorTopBottomBox();
             this.stFlowLayoutPanel1.SuspendLayout();
+            this.stDropDownPanel2.SuspendLayout();
             this.stDropDownPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sliderItalicTilt)).BeginInit();
-            this.stDropDownPanel2.SuspendLayout();
             this.stDropDownPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sliderShadowItalicTilt)).BeginInit();
             this.SuspendLayout();
@@ -75,8 +80,8 @@
             // stFlowLayoutPanel1
             // 
             this.stFlowLayoutPanel1.AutoScroll = true;
-            this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel1);
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel2);
+            this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel1);
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel4);
             this.stFlowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stFlowLayoutPanel1.FixedHeight = false;
@@ -87,9 +92,199 @@
             this.stFlowLayoutPanel1.Size = new System.Drawing.Size(350, 726);
             this.stFlowLayoutPanel1.TabIndex = 59;
             // 
+            // stDropDownPanel2
+            // 
+            this.stDropDownPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.stDropDownPanel2.Controls.Add(this.stLabel10);
+            this.stDropDownPanel2.Controls.Add(this.textBoxTB);
+            this.stDropDownPanel2.Controls.Add(this.chkSizeRestrict);
+            this.stDropDownPanel2.Controls.Add(this.sizeRestrictUD);
+            this.stDropDownPanel2.Controls.Add(this.stLabel6);
+            this.stDropDownPanel2.Controls.Add(this.stTextBox1);
+            this.stDropDownPanel2.Controls.Add(this.alighmentLineCB);
+            this.stDropDownPanel2.Controls.Add(this.alighmentHCB);
+            this.stDropDownPanel2.Controls.Add(this.stLabel5);
+            this.stDropDownPanel2.Controls.Add(this.stLabel4);
+            this.stDropDownPanel2.Controls.Add(this.alighmentVCB);
+            this.stDropDownPanel2.ExpandedHeight = 0;
+            this.stDropDownPanel2.IsExpanded = true;
+            this.stDropDownPanel2.Location = new System.Drawing.Point(0, 0);
+            this.stDropDownPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.stDropDownPanel2.Name = "stDropDownPanel2";
+            this.stDropDownPanel2.PanelName = "Text";
+            this.stDropDownPanel2.PanelValueName = "";
+            this.stDropDownPanel2.SetIcon = null;
+            this.stDropDownPanel2.SetIconAlphaColor = System.Drawing.SystemColors.Control;
+            this.stDropDownPanel2.SetIconColor = System.Drawing.SystemColors.Control;
+            this.stDropDownPanel2.Size = new System.Drawing.Size(350, 264);
+            this.stDropDownPanel2.TabIndex = 1;
+            // 
+            // stLabel10
+            // 
+            this.stLabel10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.stLabel10.AutoSize = true;
+            this.stLabel10.Location = new System.Drawing.Point(22, 126);
+            this.stLabel10.Name = "stLabel10";
+            this.stLabel10.Size = new System.Drawing.Size(83, 13);
+            this.stLabel10.TabIndex = 61;
+            this.stLabel10.Text = "Text Box Name:";
+            // 
+            // textBoxTB
+            // 
+            this.textBoxTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxTB.Location = new System.Drawing.Point(134, 124);
+            this.textBoxTB.Name = "textBoxTB";
+            this.textBoxTB.Size = new System.Drawing.Size(157, 20);
+            this.textBoxTB.TabIndex = 60;
+            // 
+            // chkSizeRestrict
+            // 
+            this.chkSizeRestrict.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkSizeRestrict.AutoSize = true;
+            this.chkSizeRestrict.Location = new System.Drawing.Point(24, 235);
+            this.chkSizeRestrict.Name = "chkSizeRestrict";
+            this.chkSizeRestrict.Size = new System.Drawing.Size(99, 17);
+            this.chkSizeRestrict.TabIndex = 59;
+            this.chkSizeRestrict.Text = "Size Restriction";
+            this.chkSizeRestrict.UseVisualStyleBackColor = true;
+            this.chkSizeRestrict.CheckedChanged += new System.EventHandler(this.chkSizeRestrict_CheckedChanged);
+            // 
+            // sizeRestrictUD
+            // 
+            this.sizeRestrictUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.sizeRestrictUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.sizeRestrictUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.sizeRestrictUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.sizeRestrictUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.sizeRestrictUD.BarPenColorTop = System.Drawing.Color.Empty;
+            this.sizeRestrictUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.sizeRestrictUD.DataType = null;
+            this.sizeRestrictUD.DrawSemitransparentThumb = false;
+            this.sizeRestrictUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.sizeRestrictUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.sizeRestrictUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.sizeRestrictUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
+            this.sizeRestrictUD.Enabled = false;
+            this.sizeRestrictUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.sizeRestrictUD.IncrementAmount = 0.01F;
+            this.sizeRestrictUD.InputName = "X";
+            this.sizeRestrictUD.LargeChange = 5F;
+            this.sizeRestrictUD.Location = new System.Drawing.Point(134, 230);
+            this.sizeRestrictUD.Maximum = 300000F;
+            this.sizeRestrictUD.Minimum = -300000F;
+            this.sizeRestrictUD.Name = "sizeRestrictUD";
+            this.sizeRestrictUD.Precision = 0.01F;
+            this.sizeRestrictUD.ScaleDivisions = 1;
+            this.sizeRestrictUD.ScaleSubDivisions = 2;
+            this.sizeRestrictUD.ShowDivisionsText = false;
+            this.sizeRestrictUD.ShowSmallScale = false;
+            this.sizeRestrictUD.Size = new System.Drawing.Size(121, 25);
+            this.sizeRestrictUD.SmallChange = 0.01F;
+            this.sizeRestrictUD.TabIndex = 54;
+            this.sizeRestrictUD.Text = "barSlider2";
+            this.sizeRestrictUD.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.sizeRestrictUD.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.sizeRestrictUD.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
+            this.sizeRestrictUD.ThumbSize = new System.Drawing.Size(1, 1);
+            this.sizeRestrictUD.TickAdd = 0F;
+            this.sizeRestrictUD.TickColor = System.Drawing.Color.White;
+            this.sizeRestrictUD.TickDivide = 0F;
+            this.sizeRestrictUD.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.sizeRestrictUD.UseInterlapsedBar = false;
+            this.sizeRestrictUD.Value = 30F;
+            this.sizeRestrictUD.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sizeRestrictUD_Scroll);
+            // 
+            // stLabel6
+            // 
+            this.stLabel6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.stLabel6.AutoSize = true;
+            this.stLabel6.Location = new System.Drawing.Point(22, 207);
+            this.stLabel6.Name = "stLabel6";
+            this.stLabel6.Size = new System.Drawing.Size(81, 13);
+            this.stLabel6.TabIndex = 58;
+            this.stLabel6.Text = "Linel Alignment:";
+            // 
+            // stTextBox1
+            // 
+            this.stTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.stTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.stTextBox1.Location = new System.Drawing.Point(3, 21);
+            this.stTextBox1.Multiline = true;
+            this.stTextBox1.Name = "stTextBox1";
+            this.stTextBox1.Size = new System.Drawing.Size(340, 97);
+            this.stTextBox1.TabIndex = 3;
+            this.stTextBox1.TextChanged += new System.EventHandler(this.stTextBox1_TextChanged);
+            // 
+            // alighmentLineCB
+            // 
+            this.alighmentLineCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.alighmentLineCB.BorderColor = System.Drawing.Color.Empty;
+            this.alighmentLineCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.alighmentLineCB.ButtonColor = System.Drawing.Color.Empty;
+            this.alighmentLineCB.FormattingEnabled = true;
+            this.alighmentLineCB.IsReadOnly = false;
+            this.alighmentLineCB.Location = new System.Drawing.Point(134, 203);
+            this.alighmentLineCB.Name = "alighmentLineCB";
+            this.alighmentLineCB.Size = new System.Drawing.Size(157, 21);
+            this.alighmentLineCB.TabIndex = 57;
+            this.alighmentLineCB.SelectedIndexChanged += new System.EventHandler(this.alighmentH_SelectedIndexChanged);
+            // 
+            // alighmentHCB
+            // 
+            this.alighmentHCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.alighmentHCB.BorderColor = System.Drawing.Color.Empty;
+            this.alighmentHCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.alighmentHCB.ButtonColor = System.Drawing.Color.Empty;
+            this.alighmentHCB.FormattingEnabled = true;
+            this.alighmentHCB.IsReadOnly = false;
+            this.alighmentHCB.Location = new System.Drawing.Point(134, 149);
+            this.alighmentHCB.Name = "alighmentHCB";
+            this.alighmentHCB.Size = new System.Drawing.Size(157, 21);
+            this.alighmentHCB.TabIndex = 0;
+            this.alighmentHCB.SelectedIndexChanged += new System.EventHandler(this.alighmentH_SelectedIndexChanged);
+            // 
+            // stLabel5
+            // 
+            this.stLabel5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.stLabel5.AutoSize = true;
+            this.stLabel5.Location = new System.Drawing.Point(22, 179);
+            this.stLabel5.Name = "stLabel5";
+            this.stLabel5.Size = new System.Drawing.Size(94, 13);
+            this.stLabel5.TabIndex = 56;
+            this.stLabel5.Text = "Vertical Alignment:";
+            // 
+            // stLabel4
+            // 
+            this.stLabel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.stLabel4.AutoSize = true;
+            this.stLabel4.Location = new System.Drawing.Point(22, 152);
+            this.stLabel4.Name = "stLabel4";
+            this.stLabel4.Size = new System.Drawing.Size(106, 13);
+            this.stLabel4.TabIndex = 54;
+            this.stLabel4.Text = "Horizontal Alignment:";
+            // 
+            // alighmentVCB
+            // 
+            this.alighmentVCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.alighmentVCB.BorderColor = System.Drawing.Color.Empty;
+            this.alighmentVCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.alighmentVCB.ButtonColor = System.Drawing.Color.Empty;
+            this.alighmentVCB.FormattingEnabled = true;
+            this.alighmentVCB.IsReadOnly = false;
+            this.alighmentVCB.Location = new System.Drawing.Point(134, 176);
+            this.alighmentVCB.Name = "alighmentVCB";
+            this.alighmentVCB.Size = new System.Drawing.Size(157, 21);
+            this.alighmentVCB.TabIndex = 55;
+            this.alighmentVCB.SelectedIndexChanged += new System.EventHandler(this.alighmentH_SelectedIndexChanged);
+            // 
             // stDropDownPanel1
             // 
             this.stDropDownPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.stDropDownPanel1.Controls.Add(this.spacingYTB);
+            this.stDropDownPanel1.Controls.Add(this.stLabel9);
+            this.stDropDownPanel1.Controls.Add(this.spacingXTB);
             this.stDropDownPanel1.Controls.Add(this.stLabel7);
             this.stDropDownPanel1.Controls.Add(this.fontFileCB);
             this.stDropDownPanel1.Controls.Add(this.stLabel1);
@@ -102,7 +297,7 @@
             this.stDropDownPanel1.Controls.Add(this.stLabel3);
             this.stDropDownPanel1.ExpandedHeight = 311;
             this.stDropDownPanel1.IsExpanded = true;
-            this.stDropDownPanel1.Location = new System.Drawing.Point(0, 0);
+            this.stDropDownPanel1.Location = new System.Drawing.Point(0, 264);
             this.stDropDownPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.stDropDownPanel1.Name = "stDropDownPanel1";
             this.stDropDownPanel1.PanelName = "Font";
@@ -110,8 +305,113 @@
             this.stDropDownPanel1.SetIcon = null;
             this.stDropDownPanel1.SetIconAlphaColor = System.Drawing.SystemColors.Control;
             this.stDropDownPanel1.SetIconColor = System.Drawing.SystemColors.Control;
-            this.stDropDownPanel1.Size = new System.Drawing.Size(350, 162);
+            this.stDropDownPanel1.Size = new System.Drawing.Size(350, 178);
             this.stDropDownPanel1.TabIndex = 0;
+            // 
+            // spacingYTB
+            // 
+            this.spacingYTB.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.spacingYTB.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.spacingYTB.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.spacingYTB.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.spacingYTB.BarPenColorTop = System.Drawing.Color.Empty;
+            this.spacingYTB.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.spacingYTB.DataType = null;
+            this.spacingYTB.DrawSemitransparentThumb = false;
+            this.spacingYTB.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.spacingYTB.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.spacingYTB.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.spacingYTB.ElapsedPenColorTop = System.Drawing.Color.Empty;
+            this.spacingYTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.spacingYTB.IncrementAmount = 0.01F;
+            this.spacingYTB.InputName = "Y";
+            this.spacingYTB.LargeChange = 5F;
+            this.spacingYTB.Location = new System.Drawing.Point(171, 96);
+            this.spacingYTB.Maximum = 300000F;
+            this.spacingYTB.Minimum = -300000F;
+            this.spacingYTB.Name = "spacingYTB";
+            this.spacingYTB.Precision = 0.01F;
+            this.spacingYTB.ScaleDivisions = 1;
+            this.spacingYTB.ScaleSubDivisions = 2;
+            this.spacingYTB.ShowDivisionsText = false;
+            this.spacingYTB.ShowSmallScale = false;
+            this.spacingYTB.Size = new System.Drawing.Size(98, 25);
+            this.spacingYTB.SmallChange = 0.01F;
+            this.spacingYTB.TabIndex = 63;
+            this.spacingYTB.Text = "colorSlider2";
+            this.spacingYTB.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.spacingYTB.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.spacingYTB.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
+            this.spacingYTB.ThumbSize = new System.Drawing.Size(1, 1);
+            this.spacingYTB.TickAdd = 0F;
+            this.spacingYTB.TickColor = System.Drawing.Color.White;
+            this.spacingYTB.TickDivide = 0F;
+            this.spacingYTB.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.spacingYTB.UseInterlapsedBar = false;
+            this.spacingYTB.Value = 30F;
+            this.spacingYTB.ValueChanged += new System.EventHandler(this.scaleUD_ValueChanged);
+            // 
+            // stLabel9
+            // 
+            this.stLabel9.AutoSize = true;
+            this.stLabel9.Location = new System.Drawing.Point(2, 103);
+            this.stLabel9.Name = "stLabel9";
+            this.stLabel9.Size = new System.Drawing.Size(49, 13);
+            this.stLabel9.TabIndex = 61;
+            this.stLabel9.Text = "Spacing:";
+            // 
+            // spacingXTB
+            // 
+            this.spacingXTB.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.spacingXTB.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.spacingXTB.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.spacingXTB.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.spacingXTB.BarPenColorTop = System.Drawing.Color.Empty;
+            this.spacingXTB.BorderRoundRectSize = new System.Drawing.Size(32, 32);
+            this.spacingXTB.DataType = null;
+            this.spacingXTB.DrawSemitransparentThumb = false;
+            this.spacingXTB.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.spacingXTB.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.spacingXTB.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.spacingXTB.ElapsedPenColorTop = System.Drawing.Color.Empty;
+            this.spacingXTB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.spacingXTB.IncrementAmount = 0.01F;
+            this.spacingXTB.InputName = "X";
+            this.spacingXTB.LargeChange = 5F;
+            this.spacingXTB.Location = new System.Drawing.Point(73, 96);
+            this.spacingXTB.Maximum = 300000F;
+            this.spacingXTB.Minimum = -300000F;
+            this.spacingXTB.Name = "spacingXTB";
+            this.spacingXTB.Precision = 0.01F;
+            this.spacingXTB.ScaleDivisions = 1;
+            this.spacingXTB.ScaleSubDivisions = 2;
+            this.spacingXTB.ShowDivisionsText = false;
+            this.spacingXTB.ShowSmallScale = false;
+            this.spacingXTB.Size = new System.Drawing.Size(92, 25);
+            this.spacingXTB.SmallChange = 0.01F;
+            this.spacingXTB.TabIndex = 62;
+            this.spacingXTB.Text = "colorSlider2";
+            this.spacingXTB.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.spacingXTB.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.spacingXTB.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
+            this.spacingXTB.ThumbSize = new System.Drawing.Size(1, 1);
+            this.spacingXTB.TickAdd = 0F;
+            this.spacingXTB.TickColor = System.Drawing.Color.White;
+            this.spacingXTB.TickDivide = 0F;
+            this.spacingXTB.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.spacingXTB.UseInterlapsedBar = false;
+            this.spacingXTB.Value = 30F;
+            this.spacingXTB.ValueChanged += new System.EventHandler(this.scaleUD_ValueChanged);
+            // 
+            // stLabel7
+            // 
+            this.stLabel7.AutoSize = true;
+            this.stLabel7.Location = new System.Drawing.Point(271, 41);
+            this.stLabel7.Name = "stLabel7";
+            this.stLabel7.Size = new System.Drawing.Size(31, 13);
+            this.stLabel7.TabIndex = 60;
+            this.stLabel7.Text = "Color";
+            this.stLabel7.Click += new System.EventHandler(this.stLabel7_Click);
             // 
             // fontFileCB
             // 
@@ -138,20 +438,18 @@
             // scaleYUD
             // 
             this.scaleYUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.scaleYUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.scaleYUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.scaleYUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.scaleYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.scaleYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.scaleYUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.scaleYUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.scaleYUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.scaleYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.scaleYUD.DataType = null;
             this.scaleYUD.DrawSemitransparentThumb = false;
             this.scaleYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.scaleYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.scaleYUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.scaleYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.scaleYUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.scaleYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.scaleYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.scaleYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.scaleYUD.ForeColor = System.Drawing.Color.White;
             this.scaleYUD.IncrementAmount = 0.01F;
             this.scaleYUD.InputName = "Y";
             this.scaleYUD.LargeChange = 5F;
@@ -180,6 +478,19 @@
             this.scaleYUD.Value = 30F;
             this.scaleYUD.ValueChanged += new System.EventHandler(this.scaleUD_ValueChanged);
             // 
+            // vertexColorTopBottomBox1
+            // 
+            this.vertexColorTopBottomBox1.AutoScroll = true;
+            this.vertexColorTopBottomBox1.BackColor = System.Drawing.Color.Transparent;
+            this.vertexColorTopBottomBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("vertexColorTopBottomBox1.BackgroundImage")));
+            this.vertexColorTopBottomBox1.BottomColor = System.Drawing.Color.Empty;
+            this.vertexColorTopBottomBox1.Location = new System.Drawing.Point(274, 65);
+            this.vertexColorTopBottomBox1.Name = "vertexColorTopBottomBox1";
+            this.vertexColorTopBottomBox1.Size = new System.Drawing.Size(58, 88);
+            this.vertexColorTopBottomBox1.TabIndex = 1;
+            this.vertexColorTopBottomBox1.TopColor = System.Drawing.Color.Empty;
+            this.vertexColorTopBottomBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.vertexColorTopBottomBox1_Paint);
+            // 
             // stLabel2
             // 
             this.stLabel2.AutoSize = true;
@@ -192,20 +503,18 @@
             // scaleXUD
             // 
             this.scaleXUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.scaleXUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.scaleXUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.scaleXUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.scaleXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.scaleXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.scaleXUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.scaleXUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.scaleXUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.scaleXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.scaleXUD.DataType = null;
             this.scaleXUD.DrawSemitransparentThumb = false;
             this.scaleXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.scaleXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.scaleXUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.scaleXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.scaleXUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.scaleXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.scaleXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.scaleXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.scaleXUD.ForeColor = System.Drawing.Color.White;
             this.scaleXUD.IncrementAmount = 0.01F;
             this.scaleXUD.InputName = "X";
             this.scaleXUD.LargeChange = 5F;
@@ -236,7 +545,7 @@
             // 
             // sliderItalicTilt
             // 
-            this.sliderItalicTilt.Location = new System.Drawing.Point(170, 96);
+            this.sliderItalicTilt.Location = new System.Drawing.Point(171, 127);
             this.sliderItalicTilt.Name = "sliderItalicTilt";
             this.sliderItalicTilt.Size = new System.Drawing.Size(98, 45);
             this.sliderItalicTilt.TabIndex = 53;
@@ -245,24 +554,22 @@
             // italicTiltUD
             // 
             this.italicTiltUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.italicTiltUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.italicTiltUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.italicTiltUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.italicTiltUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.italicTiltUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.italicTiltUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.italicTiltUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.italicTiltUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.italicTiltUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.italicTiltUD.DataType = null;
             this.italicTiltUD.DrawSemitransparentThumb = false;
             this.italicTiltUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.italicTiltUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.italicTiltUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.italicTiltUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.italicTiltUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.italicTiltUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.italicTiltUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.italicTiltUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.italicTiltUD.ForeColor = System.Drawing.Color.White;
             this.italicTiltUD.IncrementAmount = 0.01F;
             this.italicTiltUD.InputName = "X";
             this.italicTiltUD.LargeChange = 5F;
-            this.italicTiltUD.Location = new System.Drawing.Point(73, 96);
+            this.italicTiltUD.Location = new System.Drawing.Point(74, 127);
             this.italicTiltUD.Maximum = 300000F;
             this.italicTiltUD.Minimum = -300000F;
             this.italicTiltUD.Name = "italicTiltUD";
@@ -290,178 +597,11 @@
             // stLabel3
             // 
             this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(1, 102);
+            this.stLabel3.Location = new System.Drawing.Point(2, 133);
             this.stLabel3.Name = "stLabel3";
             this.stLabel3.Size = new System.Drawing.Size(62, 13);
             this.stLabel3.TabIndex = 51;
             this.stLabel3.Text = "Italic Angle:";
-            // 
-            // stDropDownPanel2
-            // 
-            this.stDropDownPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.stDropDownPanel2.Controls.Add(this.chkSizeRestrict);
-            this.stDropDownPanel2.Controls.Add(this.sizeRestrictUD);
-            this.stDropDownPanel2.Controls.Add(this.stLabel6);
-            this.stDropDownPanel2.Controls.Add(this.stTextBox1);
-            this.stDropDownPanel2.Controls.Add(this.alighmentLineCB);
-            this.stDropDownPanel2.Controls.Add(this.alighmentHCB);
-            this.stDropDownPanel2.Controls.Add(this.stLabel5);
-            this.stDropDownPanel2.Controls.Add(this.stLabel4);
-            this.stDropDownPanel2.Controls.Add(this.alighmentVCB);
-            this.stDropDownPanel2.ExpandedHeight = 0;
-            this.stDropDownPanel2.IsExpanded = true;
-            this.stDropDownPanel2.Location = new System.Drawing.Point(0, 162);
-            this.stDropDownPanel2.Margin = new System.Windows.Forms.Padding(0);
-            this.stDropDownPanel2.Name = "stDropDownPanel2";
-            this.stDropDownPanel2.PanelName = "Text";
-            this.stDropDownPanel2.PanelValueName = "";
-            this.stDropDownPanel2.SetIcon = null;
-            this.stDropDownPanel2.SetIconAlphaColor = System.Drawing.SystemColors.Control;
-            this.stDropDownPanel2.SetIconColor = System.Drawing.SystemColors.Control;
-            this.stDropDownPanel2.Size = new System.Drawing.Size(350, 223);
-            this.stDropDownPanel2.TabIndex = 1;
-            // 
-            // stLabel7
-            // 
-            this.stLabel7.AutoSize = true;
-            this.stLabel7.Location = new System.Drawing.Point(271, 41);
-            this.stLabel7.Name = "stLabel7";
-            this.stLabel7.Size = new System.Drawing.Size(31, 13);
-            this.stLabel7.TabIndex = 60;
-            this.stLabel7.Text = "Color";
-            this.stLabel7.Click += new System.EventHandler(this.stLabel7_Click);
-            // 
-            // chkSizeRestrict
-            // 
-            this.chkSizeRestrict.AutoSize = true;
-            this.chkSizeRestrict.Location = new System.Drawing.Point(24, 194);
-            this.chkSizeRestrict.Name = "chkSizeRestrict";
-            this.chkSizeRestrict.Size = new System.Drawing.Size(99, 17);
-            this.chkSizeRestrict.TabIndex = 59;
-            this.chkSizeRestrict.Text = "Size Restriction";
-            this.chkSizeRestrict.UseVisualStyleBackColor = true;
-            this.chkSizeRestrict.CheckedChanged += new System.EventHandler(this.chkSizeRestrict_CheckedChanged);
-            // 
-            // sizeRestrictUD
-            // 
-            this.sizeRestrictUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.sizeRestrictUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.sizeRestrictUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.sizeRestrictUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.sizeRestrictUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.sizeRestrictUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.sizeRestrictUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
-            this.sizeRestrictUD.DataType = null;
-            this.sizeRestrictUD.DrawSemitransparentThumb = false;
-            this.sizeRestrictUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.sizeRestrictUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.sizeRestrictUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.sizeRestrictUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.sizeRestrictUD.Enabled = false;
-            this.sizeRestrictUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.sizeRestrictUD.ForeColor = System.Drawing.Color.White;
-            this.sizeRestrictUD.IncrementAmount = 0.01F;
-            this.sizeRestrictUD.InputName = "X";
-            this.sizeRestrictUD.LargeChange = 5F;
-            this.sizeRestrictUD.Location = new System.Drawing.Point(134, 189);
-            this.sizeRestrictUD.Maximum = 300000F;
-            this.sizeRestrictUD.Minimum = -300000F;
-            this.sizeRestrictUD.Name = "sizeRestrictUD";
-            this.sizeRestrictUD.Precision = 0.01F;
-            this.sizeRestrictUD.ScaleDivisions = 1;
-            this.sizeRestrictUD.ScaleSubDivisions = 2;
-            this.sizeRestrictUD.ShowDivisionsText = false;
-            this.sizeRestrictUD.ShowSmallScale = false;
-            this.sizeRestrictUD.Size = new System.Drawing.Size(121, 25);
-            this.sizeRestrictUD.SmallChange = 0.01F;
-            this.sizeRestrictUD.TabIndex = 54;
-            this.sizeRestrictUD.Text = "barSlider2";
-            this.sizeRestrictUD.ThumbInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.sizeRestrictUD.ThumbPenColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.sizeRestrictUD.ThumbRoundRectSize = new System.Drawing.Size(1, 1);
-            this.sizeRestrictUD.ThumbSize = new System.Drawing.Size(1, 1);
-            this.sizeRestrictUD.TickAdd = 0F;
-            this.sizeRestrictUD.TickColor = System.Drawing.Color.White;
-            this.sizeRestrictUD.TickDivide = 0F;
-            this.sizeRestrictUD.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.sizeRestrictUD.UseInterlapsedBar = false;
-            this.sizeRestrictUD.Value = 30F;
-            // 
-            // stLabel6
-            // 
-            this.stLabel6.AutoSize = true;
-            this.stLabel6.Location = new System.Drawing.Point(22, 166);
-            this.stLabel6.Name = "stLabel6";
-            this.stLabel6.Size = new System.Drawing.Size(81, 13);
-            this.stLabel6.TabIndex = 58;
-            this.stLabel6.Text = "Linel Alignment:";
-            // 
-            // stTextBox1
-            // 
-            this.stTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.stTextBox1.Location = new System.Drawing.Point(3, 28);
-            this.stTextBox1.Multiline = true;
-            this.stTextBox1.Name = "stTextBox1";
-            this.stTextBox1.Size = new System.Drawing.Size(340, 67);
-            this.stTextBox1.TabIndex = 3;
-            this.stTextBox1.TextChanged += new System.EventHandler(this.stTextBox1_TextChanged);
-            // 
-            // alighmentLineCB
-            // 
-            this.alighmentLineCB.BorderColor = System.Drawing.Color.Empty;
-            this.alighmentLineCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.alighmentLineCB.ButtonColor = System.Drawing.Color.Empty;
-            this.alighmentLineCB.FormattingEnabled = true;
-            this.alighmentLineCB.IsReadOnly = false;
-            this.alighmentLineCB.Location = new System.Drawing.Point(134, 162);
-            this.alighmentLineCB.Name = "alighmentLineCB";
-            this.alighmentLineCB.Size = new System.Drawing.Size(157, 21);
-            this.alighmentLineCB.TabIndex = 57;
-            this.alighmentLineCB.SelectedIndexChanged += new System.EventHandler(this.alighmentH_SelectedIndexChanged);
-            // 
-            // alighmentHCB
-            // 
-            this.alighmentHCB.BorderColor = System.Drawing.Color.Empty;
-            this.alighmentHCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.alighmentHCB.ButtonColor = System.Drawing.Color.Empty;
-            this.alighmentHCB.FormattingEnabled = true;
-            this.alighmentHCB.IsReadOnly = false;
-            this.alighmentHCB.Location = new System.Drawing.Point(134, 108);
-            this.alighmentHCB.Name = "alighmentHCB";
-            this.alighmentHCB.Size = new System.Drawing.Size(157, 21);
-            this.alighmentHCB.TabIndex = 0;
-            this.alighmentHCB.SelectedIndexChanged += new System.EventHandler(this.alighmentH_SelectedIndexChanged);
-            // 
-            // stLabel5
-            // 
-            this.stLabel5.AutoSize = true;
-            this.stLabel5.Location = new System.Drawing.Point(22, 138);
-            this.stLabel5.Name = "stLabel5";
-            this.stLabel5.Size = new System.Drawing.Size(94, 13);
-            this.stLabel5.TabIndex = 56;
-            this.stLabel5.Text = "Vertical Alignment:";
-            // 
-            // stLabel4
-            // 
-            this.stLabel4.AutoSize = true;
-            this.stLabel4.Location = new System.Drawing.Point(22, 111);
-            this.stLabel4.Name = "stLabel4";
-            this.stLabel4.Size = new System.Drawing.Size(106, 13);
-            this.stLabel4.TabIndex = 54;
-            this.stLabel4.Text = "Horizontal Alignment:";
-            // 
-            // alighmentVCB
-            // 
-            this.alighmentVCB.BorderColor = System.Drawing.Color.Empty;
-            this.alighmentVCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.alighmentVCB.ButtonColor = System.Drawing.Color.Empty;
-            this.alighmentVCB.FormattingEnabled = true;
-            this.alighmentVCB.IsReadOnly = false;
-            this.alighmentVCB.Location = new System.Drawing.Point(134, 135);
-            this.alighmentVCB.Name = "alighmentVCB";
-            this.alighmentVCB.Size = new System.Drawing.Size(157, 21);
-            this.alighmentVCB.TabIndex = 55;
-            this.alighmentVCB.SelectedIndexChanged += new System.EventHandler(this.alighmentH_SelectedIndexChanged);
             // 
             // stDropDownPanel4
             // 
@@ -480,7 +620,7 @@
             this.stDropDownPanel4.Controls.Add(this.shadowColorBox);
             this.stDropDownPanel4.ExpandedHeight = 0;
             this.stDropDownPanel4.IsExpanded = true;
-            this.stDropDownPanel4.Location = new System.Drawing.Point(0, 385);
+            this.stDropDownPanel4.Location = new System.Drawing.Point(0, 442);
             this.stDropDownPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.stDropDownPanel4.Name = "stDropDownPanel4";
             this.stDropDownPanel4.PanelName = "Shadows";
@@ -488,7 +628,7 @@
             this.stDropDownPanel4.SetIcon = null;
             this.stDropDownPanel4.SetIconAlphaColor = System.Drawing.SystemColors.Control;
             this.stDropDownPanel4.SetIconColor = System.Drawing.SystemColors.Control;
-            this.stDropDownPanel4.Size = new System.Drawing.Size(350, 256);
+            this.stDropDownPanel4.Size = new System.Drawing.Size(350, 175);
             this.stDropDownPanel4.TabIndex = 3;
             // 
             // stLabel8
@@ -521,20 +661,18 @@
             // shadowItalicTiltUD
             // 
             this.shadowItalicTiltUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.shadowItalicTiltUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.shadowItalicTiltUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.shadowItalicTiltUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.shadowItalicTiltUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.shadowItalicTiltUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.shadowItalicTiltUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.shadowItalicTiltUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.shadowItalicTiltUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.shadowItalicTiltUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.shadowItalicTiltUD.DataType = null;
             this.shadowItalicTiltUD.DrawSemitransparentThumb = false;
             this.shadowItalicTiltUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.shadowItalicTiltUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.shadowItalicTiltUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.shadowItalicTiltUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.shadowItalicTiltUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.shadowItalicTiltUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.shadowItalicTiltUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.shadowItalicTiltUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.shadowItalicTiltUD.ForeColor = System.Drawing.Color.White;
             this.shadowItalicTiltUD.IncrementAmount = 0.01F;
             this.shadowItalicTiltUD.InputName = "X";
             this.shadowItalicTiltUD.LargeChange = 5F;
@@ -575,20 +713,18 @@
             // shadowOffseYUD
             // 
             this.shadowOffseYUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.shadowOffseYUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.shadowOffseYUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.shadowOffseYUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.shadowOffseYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.shadowOffseYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.shadowOffseYUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.shadowOffseYUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.shadowOffseYUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.shadowOffseYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.shadowOffseYUD.DataType = null;
             this.shadowOffseYUD.DrawSemitransparentThumb = false;
             this.shadowOffseYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.shadowOffseYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.shadowOffseYUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.shadowOffseYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.shadowOffseYUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.shadowOffseYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.shadowOffseYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.shadowOffseYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.shadowOffseYUD.ForeColor = System.Drawing.Color.White;
             this.shadowOffseYUD.IncrementAmount = 0.01F;
             this.shadowOffseYUD.InputName = "Y";
             this.shadowOffseYUD.LargeChange = 5F;
@@ -628,20 +764,18 @@
             // shadowOffseXUD
             // 
             this.shadowOffseXUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.shadowOffseXUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.shadowOffseXUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.shadowOffseXUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.shadowOffseXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.shadowOffseXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.shadowOffseXUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.shadowOffseXUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.shadowOffseXUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.shadowOffseXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.shadowOffseXUD.DataType = null;
             this.shadowOffseXUD.DrawSemitransparentThumb = false;
             this.shadowOffseXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.shadowOffseXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.shadowOffseXUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.shadowOffseXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.shadowOffseXUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.shadowOffseXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.shadowOffseXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.shadowOffseXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.shadowOffseXUD.ForeColor = System.Drawing.Color.White;
             this.shadowOffseXUD.IncrementAmount = 0.01F;
             this.shadowOffseXUD.InputName = "X";
             this.shadowOffseXUD.LargeChange = 5F;
@@ -673,20 +807,18 @@
             // shadowScaleYUD
             // 
             this.shadowScaleYUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.shadowScaleYUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.shadowScaleYUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.shadowScaleYUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.shadowScaleYUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.shadowScaleYUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.shadowScaleYUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.shadowScaleYUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.shadowScaleYUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.shadowScaleYUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.shadowScaleYUD.DataType = null;
             this.shadowScaleYUD.DrawSemitransparentThumb = false;
             this.shadowScaleYUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.shadowScaleYUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.shadowScaleYUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.shadowScaleYUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.shadowScaleYUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.shadowScaleYUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.shadowScaleYUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.shadowScaleYUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.shadowScaleYUD.ForeColor = System.Drawing.Color.White;
             this.shadowScaleYUD.IncrementAmount = 0.01F;
             this.shadowScaleYUD.InputName = "Y";
             this.shadowScaleYUD.LargeChange = 5F;
@@ -726,20 +858,18 @@
             // shadowScaleXUD
             // 
             this.shadowScaleXUD.ActiveEditColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.shadowScaleXUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.shadowScaleXUD.BarInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.shadowScaleXUD.BarPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.shadowScaleXUD.BarPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.shadowScaleXUD.BarPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.shadowScaleXUD.BarPenColorBottom = System.Drawing.Color.Empty;
+            this.shadowScaleXUD.BarPenColorMiddle = System.Drawing.Color.Empty;
+            this.shadowScaleXUD.BarPenColorTop = System.Drawing.Color.Empty;
             this.shadowScaleXUD.BorderRoundRectSize = new System.Drawing.Size(32, 32);
             this.shadowScaleXUD.DataType = null;
             this.shadowScaleXUD.DrawSemitransparentThumb = false;
             this.shadowScaleXUD.ElapsedInnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.shadowScaleXUD.ElapsedPenColorBottom = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            this.shadowScaleXUD.ElapsedPenColorMiddle = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
-            this.shadowScaleXUD.ElapsedPenColorTop = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.shadowScaleXUD.ElapsedPenColorBottom = System.Drawing.Color.Empty;
+            this.shadowScaleXUD.ElapsedPenColorMiddle = System.Drawing.Color.Empty;
+            this.shadowScaleXUD.ElapsedPenColorTop = System.Drawing.Color.Empty;
             this.shadowScaleXUD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.shadowScaleXUD.ForeColor = System.Drawing.Color.White;
             this.shadowScaleXUD.IncrementAmount = 0.01F;
             this.shadowScaleXUD.InputName = "X";
             this.shadowScaleXUD.LargeChange = 5F;
@@ -767,19 +897,6 @@
             this.shadowScaleXUD.UseInterlapsedBar = false;
             this.shadowScaleXUD.Value = 30F;
             // 
-            // vertexColorTopBottomBox1
-            // 
-            this.vertexColorTopBottomBox1.AutoScroll = true;
-            this.vertexColorTopBottomBox1.BackColor = System.Drawing.Color.Transparent;
-            this.vertexColorTopBottomBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("vertexColorTopBottomBox1.BackgroundImage")));
-            this.vertexColorTopBottomBox1.BottomColor = System.Drawing.Color.Empty;
-            this.vertexColorTopBottomBox1.Location = new System.Drawing.Point(274, 65);
-            this.vertexColorTopBottomBox1.Name = "vertexColorTopBottomBox1";
-            this.vertexColorTopBottomBox1.Size = new System.Drawing.Size(58, 88);
-            this.vertexColorTopBottomBox1.TabIndex = 1;
-            this.vertexColorTopBottomBox1.TopColor = System.Drawing.Color.Empty;
-            this.vertexColorTopBottomBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.vertexColorTopBottomBox1_Paint);
-            // 
             // shadowColorBox
             // 
             this.shadowColorBox.BackColor = System.Drawing.Color.Transparent;
@@ -799,11 +916,11 @@
             this.Name = "PaneTextBoxEditor";
             this.Size = new System.Drawing.Size(350, 726);
             this.stFlowLayoutPanel1.ResumeLayout(false);
+            this.stDropDownPanel2.ResumeLayout(false);
+            this.stDropDownPanel2.PerformLayout();
             this.stDropDownPanel1.ResumeLayout(false);
             this.stDropDownPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sliderItalicTilt)).EndInit();
-            this.stDropDownPanel2.ResumeLayout(false);
-            this.stDropDownPanel2.PerformLayout();
             this.stDropDownPanel4.ResumeLayout(false);
             this.stDropDownPanel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sliderShadowItalicTilt)).EndInit();
@@ -848,5 +965,10 @@
         private BarSlider.BarSlider sizeRestrictUD;
         private Toolbox.Library.Forms.STLabel stLabel7;
         private Toolbox.Library.Forms.STLabel stLabel8;
+        private BarSlider.BarSlider spacingYTB;
+        private Toolbox.Library.Forms.STLabel stLabel9;
+        private BarSlider.BarSlider spacingXTB;
+        private Toolbox.Library.Forms.STLabel stLabel10;
+        private Toolbox.Library.Forms.STTextBox textBoxTB;
     }
 }

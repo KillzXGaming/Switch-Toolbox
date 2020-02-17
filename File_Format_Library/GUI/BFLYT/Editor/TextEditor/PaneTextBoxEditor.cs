@@ -52,6 +52,7 @@ namespace LayoutBXLYT
                 fontFileCB.SelectedItem = pane.FontName;
 
 
+            textBoxTB.Bind(pane, "TextBoxName");
             scaleXUD.Value = pane.FontSize.X;
             scaleYUD.Value = pane.FontSize.Y;
 
@@ -63,6 +64,11 @@ namespace LayoutBXLYT
             vertexColorTopBottomBox1.BottomColor = activePane.FontBottomColor.Color;
 
             stTextBox1.Text = pane.Text;
+
+            spacingXTB.Value = pane.CharacterSpace;
+            spacingYTB.Value = pane.LineSpace;
+
+          //  pane.TextBoxName
 
             alighmentHCB.Bind(typeof(OriginX), pane, "HorizontalAlignment");
             alighmentVCB.Bind(typeof(OriginY), pane, "VerticalAlignment");
@@ -118,6 +124,7 @@ namespace LayoutBXLYT
         private void italicTiltUD_ValueChanged(object sender, EventArgs e)
         {
             if (changing || !loaded) return;
+
             if (italicTiltUD.Value > sliderItalicTilt.Maximum)
                 return;
 
@@ -143,6 +150,9 @@ namespace LayoutBXLYT
 
             activePane.FontSize = new Syroot.Maths.Vector2F(
                 scaleXUD.Value, scaleYUD.Value);
+
+            activePane.CharacterSpace = spacingXTB.Value;
+            activePane.LineSpace = spacingYTB.Value;
 
             parentEditor.PropertyChanged?.Invoke(sender, e);
         }
@@ -218,6 +228,10 @@ namespace LayoutBXLYT
             activePane.FontName = (string)fontFileCB.SelectedItem;
             activePane.FontIndex = (ushort)fontFileCB.SelectedIndex;
             parentEditor.PropertyChanged?.Invoke(sender, e);
+        }
+
+        private void sizeRestrictUD_Scroll(object sender, ScrollEventArgs e) {
+
         }
     }
 }

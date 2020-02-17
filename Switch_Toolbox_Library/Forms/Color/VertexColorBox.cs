@@ -117,6 +117,7 @@ namespace Toolbox.Library.Forms
             if (dialogActive) return;
 
             mouseLoc = Point.Empty;
+            Invalidate();
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e) {
@@ -414,6 +415,7 @@ namespace Toolbox.Library.Forms
 
         private void DrawSelectionOutline(PaintEventArgs pe, Rectangle rect) {
             //Select entire regions
+            int lineThickness = 2;
             Rectangle selection = rect;
             if (rect == TopHit || rect == BottomHit) {
                 selection = new Rectangle(0, rect.Y, pe.ClipRectangle.Width, rect.Height);
@@ -421,9 +423,14 @@ namespace Toolbox.Library.Forms
             if (rect == LeftHit || rect == RightHit) {
                 selection = new Rectangle(rect.X,0, rect.Width, pe.ClipRectangle.Height);
             }
+            if (rect == AllHit) {
+                selection = ClientRectangle;
+                lineThickness = 2;
+            }
 
-            pe.Graphics.DrawRectangle(new Pen(new SolidBrush(Color.Black), 1), new Rectangle(
-                selection.X + 1, selection.Y + 1, selection.Width - 1, selection.Height - 1));
+            pe.Graphics.DrawRectangle(new Pen(new SolidBrush(Color.Black), lineThickness), new Rectangle(
+                selection.X + (lineThickness / 2), selection.Y + (lineThickness / 2), 
+                selection.Width - lineThickness, selection.Height - lineThickness));
         }
     }
 }

@@ -82,6 +82,7 @@ namespace Toolbox.Library.Forms
             BaseTheme.ValueBarSliderElapseBottmColor = Color.FromArgb(190, 190, 190);
 
             BaseTheme.KeyFrameColor = Color.FromArgb(222, 222, 18);
+            BaseTheme.TreeViewHighlightColor = SystemColors.Highlight;
 
             //Timeline
 
@@ -118,7 +119,7 @@ namespace Toolbox.Library.Forms
             BaseTheme.CheckBoxForeColor = Color.White;
             BaseTheme.CheckBoxEnabledBackColor = Color.FromArgb(83, 121, 180);
             BaseTheme.CheckBoxEnabledForeColor = Color.White;
-
+            BaseTheme.TreeViewHighlightColor = SystemColors.Highlight;
 
             BaseTheme.ValueBarSliderElapseTopColor = Color.FromArgb(180, 180, 180);
             BaseTheme.ValueBarSliderElapseMiddleColor = Color.FromArgb(185, 185, 185);
@@ -188,6 +189,7 @@ namespace Toolbox.Library.Forms
             public static Color TextBackColor { get; set; }
             public static Color TreeViewBackColor { get; set; }
             public static Color TreeViewForeColor { get; set; }
+            public static Color TreeViewHighlightColor { get; set; }
             public static Color FormContextMenuBackColor { get; set; }
             public static Color FormContextMenuForeColor { get; set; }
             public static Color FormContextMenuSelectColor { get; set; }

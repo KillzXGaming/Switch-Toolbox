@@ -1442,7 +1442,7 @@ namespace LayoutBXLYT
                 ParentEditor.UpdateUndo();
                 glControl1.Invalidate();
             }
-            else if (e.Control && e.KeyCode == Keys.R) // Ctrl + Z undo
+            else if (e.Control && e.KeyCode == Keys.R) // Ctrl + R redo
             {
                 UndoManger.Redo();
                 ParentEditor.UpdateUndo();
@@ -1502,6 +1502,8 @@ namespace LayoutBXLYT
                     pane.Height = Textures[texture].Height;
                     ((IPicturePane)pane).Material.AddTexture(texture);
                     SetupNewPane(pane, coords);
+
+                    this.Focus();
                 }
             }
         }
