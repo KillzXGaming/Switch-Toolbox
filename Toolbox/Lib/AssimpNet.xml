@@ -533,7 +533,7 @@
             <summary>
             Represents a single bone of a mesh. A bone has a name which allows it to be found in the frame
             hierarchy and by which it can be addressed by animations. In addition it has a number of
-            influences on vertices.
+            influences on vertices and a matrix relating the mesh position to the position of the bone at the time of binding.
             </summary>
         </member>
         <member name="P:Assimp.Bone.Name">
@@ -553,12 +553,16 @@
         </member>
         <member name="P:Assimp.Bone.VertexWeights">
             <summary>
-            Gets the vertex weights owned by the bone.
+            Gets the influence weights of this bone, by vertex index.
             </summary>
         </member>
         <member name="P:Assimp.Bone.OffsetMatrix">
             <summary>
-            Gets or sets the matrix that transforms from mesh space to bone space in bind pose.
+            Gets or sets the matrix that transforms from bone space to mesh space in bind pose. This matrix describes the
+            position of the mesh in the local space of this bone when the skeleton was bound. Thus it can be used directly to determine a desired vertex
+            position, given the world-space transform of the bone when animated, and the position of the vertex in mesh space.
+            
+            It is sometimes called an inverse-bind matrix or inverse-bind pose matrix.
             </summary>
         </member>
         <member name="M:Assimp.Bone.#ctor">
@@ -598,6 +602,74 @@
             </summary>
             <param name="nativeValue">Native value to free</param>
             <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>
+        </member>
+        <member name="T:Assimp.BoundingBox">
+            <summary>
+            Represents an axis-aligned bounding box
+            </summary>
+        </member>
+        <member name="F:Assimp.BoundingBox.Min">
+            <summary>
+            Minimum point of the bounding box.
+            </summary>
+        </member>
+        <member name="F:Assimp.BoundingBox.Max">
+            <summary>
+            Maximum point of the bounding box.
+            </summary>
+        </member>
+        <member name="M:Assimp.BoundingBox.#ctor(Assimp.Vector3D,Assimp.Vector3D)">
+            <summary>
+            Constructs a new BoundingBox.
+            </summary>
+            <param name="min">Minimum point.</param>
+            <param name="max">Maximum point.</param>
+        </member>
+        <member name="M:Assimp.BoundingBox.op_Equality(Assimp.BoundingBox,Assimp.BoundingBox)">
+            <summary>
+            Tests equality between two Bounding Boxes.
+            </summary>
+            <param name="a">First BoundingBox</param>
+            <param name="b">Second BoundingBox</param>
+            <returns>True if the Bounding Boxes are equal, false otherwise</returns>
+        </member>
+        <member name="M:Assimp.BoundingBox.op_Inequality(Assimp.BoundingBox,Assimp.BoundingBox)">
+            <summary>
+            Tests inequality between two Bounding Boxes.
+            </summary>
+            <param name="a">First BoundingBox</param>
+            <param name="b">Second BoundingBox</param>
+            <returns>True if the Bounding Boxes are not equal, false otherwise</returns>
+        </member>
+        <member name="M:Assimp.BoundingBox.Equals(Assimp.BoundingBox)">
+            <summary>
+            Tests equality between this BoundingBox and another BoundingBox.
+            </summary>
+            <param name="other">BoundingBox to test against</param>
+            <returns>True if components are equal</returns>
+        </member>
+        <member name="M:Assimp.BoundingBox.Equals(System.Object)">
+            <summary>
+            Tests equality between this vector and another object.
+            </summary>
+            <param name="obj">Object to test against</param>
+            <returns>True if the object is a vector and the components are equal</returns>
+        </member>
+        <member name="M:Assimp.BoundingBox.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:Assimp.BoundingBox.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
         </member>
         <member name="T:Assimp.Camera">
             <summary>
@@ -1713,6 +1785,24 @@
             </summary>
             <param name="episilon">Episilon for animation value comparisons.</param>
         </member>
+        <member name="T:Assimp.Configs.IgnoreTextureCoordinatesConfig">
+            <summary>
+            Configuration for the <see cref="F:Assimp.PostProcessSteps.FindInvalidData"/> step. Set to true to
+            ignore texture coordinates. This may be useful if you have to assign different kinds of textures,
+            like seasonally variable ones - one for summer and one for winter. Default is false.
+            </summary>
+        </member>
+        <member name="P:Assimp.Configs.IgnoreTextureCoordinatesConfig.IgnoreTextureCoordinatesConfigName">
+            <summary>
+            Gets the string name used by IgnoreTextureCoordinatesConfig.
+            </summary>
+        </member>
+        <member name="M:Assimp.Configs.IgnoreTextureCoordinatesConfig.#ctor(System.Boolean)">
+            <summary>
+            Constructs a new IgnoreTextureCoordinatesConfig.
+            </summary>
+            <param name="ignoreTexCoords">True if texture coordinates should be ignored, false otherwise.</param>
+        </member>
         <member name="T:Assimp.Configs.TransformUVConfig">
             <summary>
             Configuration for the <see cref="F:Assimp.PostProcessSteps.TransformUVCoords"/> step that
@@ -1840,7 +1930,7 @@
         <member name="T:Assimp.Configs.GlobalScaleConfig">
             <summary>
             Configures the <see cref="F:Assimp.PostProcessSteps.GlobalScale"/> step to scale the entire scene by a certain amount. Some importers provide a mechanism to define a scaling unit for the model,
-            which this processing step can utilize.
+            which this processing step can utilize. Default is 1.0.
             </summary>
             <seealso cref="T:Assimp.Configs.FloatPropertyConfig" />
         </member>
@@ -1854,6 +1944,22 @@
             Constructs a new GlobalScaleConfig.
             </summary>
             <param name="globalScale">Value to scale the entire scene by.</param>
+        </member>
+        <member name="T:Assimp.Configs.AppScaleConfig">
+            <summary>
+            Applies an application-specific scaling to the <see cref="T:Assimp.Configs.GlobalScaleConfig"/> to allow for backwards compatibility. Default is 1.0.
+            </summary>
+        </member>
+        <member name="P:Assimp.Configs.AppScaleConfig.AppScaleConfigName">
+            <summary>
+            Gets the string name used by AppScaleConfig.
+            </summary>
+        </member>
+        <member name="M:Assimp.Configs.AppScaleConfig.#ctor(System.Single)">
+            <summary>
+            Constructs a new AppScaleConfig.
+            </summary>
+            <param name="appScale">Value to scale the global scale by.</param>
         </member>
         <member name="T:Assimp.Configs.GlobalKeyFrameImportConfig">
             <summary>
@@ -2343,6 +2449,24 @@
             </summary>
             <param name="ignoreUpDirection">True if the loader should ignore the up direction, false otherwise.</param>
         </member>
+        <member name="T:Assimp.Configs.ColladaUseColladaNamesConfig">
+            <summary>
+            Specifies whether the Collada loader should use Collada names as node names.
+            If this property is set to true, the Collada names will be used as the node name. The behavior is to use the id tag (resp. sid tag, if no id tag is present) instead.
+            Default is false.
+            </summary>
+        </member>
+        <member name="P:Assimp.Configs.ColladaUseColladaNamesConfig.ColladaUseColladaNamesConfigName">
+            <summary>
+            Gets the string name used by ColladaUseColladaNamesConfig.
+            </summary>
+        </member>
+        <member name="M:Assimp.Configs.ColladaUseColladaNamesConfig.#ctor(System.Boolean)">
+            <summary>
+            Constructs a new ColladaUseColladaNamesConfig.
+            </summary>
+            <param name="useColladaNames">True if collada names should be used as node names, false otherwise.</param>
+        </member>
         <member name="T:Assimp.Configs.FBXImportAllGeometryLayersConfig">
             <summary>
             Specifies whether the FBX importer will merge all geometry layers present in the source file or import only the first. Default is true.
@@ -2409,17 +2533,17 @@
             </summary>
             <param name="importTextures">True if the FBX importer should import embedded textures, false otherwise.</param>
         </member>
-        <member name="T:Assimp.Configs.FBXImportSearchEmbeddedTexturesConfig">
+        <member name="T:Assimp.Configs.FBXImportEmbeddedTexturesLegacyNamingConfig">
             <summary>
             Specifies if the FBX importer should search for embedded loaded textures, where no embedded texture data is provided. Default is false.
             </summary>
         </member>
-        <member name="P:Assimp.Configs.FBXImportSearchEmbeddedTexturesConfig.FBXImportSearchEmbeddedTexturesConfigName">
+        <member name="P:Assimp.Configs.FBXImportEmbeddedTexturesLegacyNamingConfig.FBXImportEmbeddedTexturesLegacyNamingConfigName">
             <summary>
             Gets the string name used by FBXImportSearchEmbeddedTexturesConfig.
             </summary>
         </member>
-        <member name="M:Assimp.Configs.FBXImportSearchEmbeddedTexturesConfig.#ctor(System.Boolean)">
+        <member name="M:Assimp.Configs.FBXImportEmbeddedTexturesLegacyNamingConfig.#ctor(System.Boolean)">
             <summary>
             Constructs a new FBXImportSearchEmbeddedTexturesConfig.
             </summary>
@@ -2525,6 +2649,55 @@
             </summary>
             <param name="optimizeEmptyAnimations">True if empty animation curves should be dropped, false otherwise.</param>
         </member>
+        <member name="T:Assimp.Configs.FBXConvertToMetersConfig">
+            <summary>
+            Specifies whether the importer shall convert the unit from centimeter (cm) to meter (m). Default value is false.
+            </summary>
+        </member>
+        <member name="P:Assimp.Configs.FBXConvertToMetersConfig.FBXConvertToMetersConfigName">
+            <summary>
+            Gets the string name used by FBXConvertToMetersConfig.
+            </summary>
+        </member>
+        <member name="M:Assimp.Configs.FBXConvertToMetersConfig.#ctor(System.Boolean)">
+            <summary>
+            Constructs a new FBXConvertToMetersConfig.
+            </summary>
+            <param name="convertToMeters">True if the importer converts the unit from cm to m, false if do not do a conversion.</param>
+        </member>
+        <member name="T:Assimp.Configs.SmdLoadAnimationListConfig">
+            <summary>
+            Specifies whether the importer will load multiple animations. Default value is true.
+            </summary>
+        </member>
+        <member name="P:Assimp.Configs.SmdLoadAnimationListConfig.SmdLoadAnimationListConfigName">
+            <summary>
+            Gets the string name used by SmdLoadAnimationListConfig.
+            </summary>
+        </member>
+        <member name="M:Assimp.Configs.SmdLoadAnimationListConfig.#ctor(System.Boolean)">
+            <summary>
+            Constructs a new SmdLoadAnimationListConfig.
+            </summary>
+            <param name="loadAnimList">True if the importer should load multiple animations, false if only one animation should be loaded.</param>
+        </member>
+        <member name="T:Assimp.Configs.RemoveEmptyBonesConfig">
+            <summary>
+            Specifies whether the importer removes empty bones or not. Empty bones are often used to define connections for other models (e.g.
+            attachment points). Default value is true.
+            </summary>
+        </member>
+        <member name="P:Assimp.Configs.RemoveEmptyBonesConfig.RemoveEmptyBonesConfigName">
+            <summary>
+            Gets the string name used by RemoveEmptyBonesConfig.
+            </summary>
+        </member>
+        <member name="M:Assimp.Configs.RemoveEmptyBonesConfig.#ctor(System.Boolean)">
+            <summary>
+            Constructs a new RemoveEmptyBonesConfig.
+            </summary>
+            <param name="removeEmptyBones">True if the importer should remove empty bones, false if they should be kept.</param>
+        </member>
         <member name="T:Assimp.Configs.XFileUseDoublesConfig">
             <summary>
             Specifies if the X-file exporter should use 64-bit doubles rather than 32-bit floats.
@@ -2541,6 +2714,23 @@
             </summary>
             <param name="useDoubles">True if the x file uses 64-bit double values rather than 32-bit float values.</param>
         </member>
+        <member name="T:Assimp.Configs.ExportPointCloudsConfig">
+            <summary>
+            Specifies if the export process should disable a validation step that would remove data that does not contain faces. This will
+            enable point cloud data to be exported, since the 3D data is a collection of vertices without face data.
+            </summary>
+        </member>
+        <member name="P:Assimp.Configs.ExportPointCloudsConfig.ExportPointCloudsConfigName">
+            <summary>
+            Gets the string name used by ExportPointCloudsConfig.
+            </summary>
+        </member>
+        <member name="M:Assimp.Configs.ExportPointCloudsConfig.#ctor(System.Boolean)">
+            <summary>
+            Constructs a new ExportPointCloudConfig.
+            </summary>
+            <param name="exportPointCloud">True if the exporter should treat vertices not grouped in faces as point clouds, false otherwise.</param>
+        </member>
         <member name="T:Assimp.EmbeddedTexture">
             <summary>
             Represents an embedded texture. Some file formats directly embed texture assets.
@@ -2549,6 +2739,11 @@
             file bytes are given so the application must utilize an image decoder (e.g. DevIL) to
             get access to the actual color data. This object represents both types, so some properties may or may not be valid depending
             if it is compressed or not.
+            </summary>
+        </member>
+        <member name="P:Assimp.EmbeddedTexture.Filename">
+            <summary>
+            Gets or sets the texture's original filename.
             </summary>
         </member>
         <member name="P:Assimp.EmbeddedTexture.IsCompressed">
@@ -2608,15 +2803,16 @@
             reading from a native value.
             </summary>
         </member>
-        <member name="M:Assimp.EmbeddedTexture.#ctor(System.String,System.Byte[])">
+        <member name="M:Assimp.EmbeddedTexture.#ctor(System.String,System.Byte[],System.String)">
             <summary>
             Constructs a new instance of the <see cref="T:Assimp.EmbeddedTexture"/> class. This creates a compressed
             embedded texture.
             </summary>
             <param name="compressedFormatHint">The 3 character format hint.</param>
             <param name="compressedData">The compressed data.</param>
+            <param name="originalFileName">Optional file name for the texture.</param>
         </member>
-        <member name="M:Assimp.EmbeddedTexture.#ctor(System.Int32,System.Int32,Assimp.Texel[])">
+        <member name="M:Assimp.EmbeddedTexture.#ctor(System.Int32,System.Int32,Assimp.Texel[],System.String)">
             <summary>
             Constructs a new instance of the <see cref="T:Assimp.EmbeddedTexture"/> class. This creates an uncompressed
             embedded texture.
@@ -2624,6 +2820,7 @@
             <param name="width">Width of the texture</param>
             <param name="height">Height of the texture</param>
             <param name="uncompressedData">Color data</param>
+            <param name="originalFileName">Optional file name for the texture.</param>
             <exception cref="T:System.ArgumentException">Thrown if the data size does not match width * height.</exception>
         </member>
         <member name="P:Assimp.EmbeddedTexture.Assimp#IMarshalable{Assimp#EmbeddedTexture,Assimp#Unmanaged#AiTexture}#IsNativeBlittable">
@@ -2961,6 +3158,10 @@
             </item>
             </list>
             <para>
+            This step also removes very small triangles with a surface area smaller than 10^-6. If you rely on having these small triangles, or notice holes
+            in your model, set the property <see cref="T:Assimp.Configs.RemoveDegeneratePrimitivesCheckAreaConfig"/> to false.
+            </para>
+            <para>
             Degenerated polygons are not necessarily evil and that's why they are not removed by default. There are several
             file formats which do not support lines or points where exporters bypass the format specification and write
             them as degenerated triangles instead.
@@ -3086,8 +3287,31 @@
         </member>
         <member name="F:Assimp.PostProcessSteps.GlobalScale">
             <summary>
-            This step will perform a global scale of the model. Some importers provide a mechanism to define a scaling unit for the model, which this processing step can utilize. 
-            Use AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY to control this.
+            This step will perform a global scale of the model. Some importers provide a mechanism to define a scaling unit for the model, which this processing step can utilize.
+            Use AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY to setup the global scaling factor.
+            </summary>
+        </member>
+        <member name="F:Assimp.PostProcessSteps.EmbedTextures">
+            <summary>
+            A post processting step to embed textures. This will remove external data dependencies for textures. If a texture's file does not exist at the specified path (due, for instance, to
+            an absolute path generate on another system), it will check if a file with the same name exists at the root folder of the imported model, and if so, embeds that.
+            </summary>
+        </member>
+        <member name="F:Assimp.PostProcessSteps.ForceGenerateNormals">
+            <summary>
+            If the step to generate normals is set, it will not run if normals already exist. This flag will force that step to run even if normals are present.
+            </summary>
+        </member>
+        <member name="F:Assimp.PostProcessSteps.DropNormals">
+            <summary>
+            Drops normals for all faces of all meshes. This is ignored if no normals are present. Face normals are shared between all points of a single face,
+            so a single point can have multiple normals, which forces the library to duplicate vertices in some cases. <see cref="F:Assimp.PostProcessSteps.JoinIdenticalVertices"/> is
+            *senseless* then. This process gives sense back to <see cref="F:Assimp.PostProcessSteps.JoinIdenticalVertices"/>.
+            </summary>
+        </member>
+        <member name="F:Assimp.PostProcessSteps.GenerateBoundingBoxes">
+            <summary>
+            Generate bounding boxes for each mesh.
             </summary>
         </member>
         <member name="T:Assimp.ExcludeComponent">
@@ -3597,6 +3821,36 @@
         <member name="F:Assimp.TextureType.Reflection">
             <summary>
             A reflection texture. Contains the color of a perfect mirror reflection. This is rarely used, almost never for real-time applications.
+            </summary>
+        </member>
+        <member name="F:Assimp.TextureType.BaseColor">
+            <summary>
+            PBR texture property. Diffuse/albedo map containing base color regardless of the object surface type.
+            </summary>
+        </member>
+        <member name="F:Assimp.TextureType.NormalCamera">
+            <summary>
+            PBR texture property. This is not documented in assimp native, but is a normal map in a PBR workflow.
+            </summary>
+        </member>
+        <member name="F:Assimp.TextureType.EmissionColor">
+            <summary>
+            PBR texture property. Emissive color map, similar to <see cref="F:Assimp.TextureType.Emissive"/>.
+            </summary>
+        </member>
+        <member name="F:Assimp.TextureType.Metalness">
+            <summary>
+            PBR texture property. Describes how reflective the object surface is.
+            </summary>
+        </member>
+        <member name="F:Assimp.TextureType.Roughness">
+            <summary>
+            PBR texture property. Describes how rough or smooth the object surface is.
+            </summary>
+        </member>
+        <member name="F:Assimp.TextureType.AmbientOcclusion">
+            <summary>
+            Dedicated ambient occlusion map, some older formats may set this as a <see cref="F:Assimp.TextureType.Lightmap"/> texture.
             </summary>
         </member>
         <member name="F:Assimp.TextureType.Unknown">
@@ -4678,6 +4932,16 @@
             Gets the opacity. Default value is 1.0f.
             </summary>
         </member>
+        <member name="P:Assimp.Material.HasTransparencyFactor">
+            <summary>
+            Checks if the material has a transparency factor property.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.TransparencyFactor">
+            <summary>
+            Gets the transparency factor.  This is used to make a surface more or less opaque (0 = opaque, 1 = transparent). Default value is 0.0f.
+            </summary>
+        </member>
         <member name="P:Assimp.Material.HasBumpScaling">
             <summary>
             Checks if the material has a bump scaling property.
@@ -4868,6 +5132,16 @@
             Gets or sets light map texture properties in the first texture index.
             </summary>
         </member>
+        <member name="P:Assimp.Material.HasTextureAmbientOcclusion">
+            <summary>
+            Gets if the material has an ambient occlusion map in in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.TextureAmbientOcclusion">
+            <summary>
+            Gets or sets ambient occlusion texture properties in the first texture index.
+            </summary>
+        </member>
         <member name="P:Assimp.Material.HasTextureReflection">
             <summary>
             Gets if the material has a reflection texture in the first texture index.
@@ -4876,6 +5150,26 @@
         <member name="P:Assimp.Material.TextureReflection">
             <summary>
             Gets or sets reflection texture properties in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.IsPBRMaterial">
+            <summary>
+            Determines if the material is part of a PBR workflow or not.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBR">
+            <summary>
+            Gets a group accessor for any PBR properties in the material.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.HasShaders">
+            <summary>
+            Gets if the material has embedded shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.Shaders">
+            <summary>
+            Gets a group accessor for any embedded shader source code in the material.
             </summary>
         </member>
         <member name="M:Assimp.Material.#ctor">
@@ -5068,6 +5362,148 @@
             </summary>
             <param name="nativeValue">Native value to free</param>
             <param name="freeNative">True if the unmanaged memory should be freed, false otherwise.</param>
+        </member>
+        <member name="T:Assimp.Material.PBRMaterialProperties">
+            <summary>
+            Groups all PBR workflow properties into a single accessor.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBRMaterialProperties.HasTextureBaseColor">
+            <summary>
+            Gets if the material has a base color map (albedo/diffuse) texture in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBRMaterialProperties.TextureBaseColor">
+            <summary>
+            Gets or sets the base color map (albedo/diffuse) texture properties in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBRMaterialProperties.HasTextureNormalCamera">
+            <summary>
+            Gets if the material has a normal map texture in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBRMaterialProperties.TextureNormalCamera">
+            <summary>
+            Gets or sets the normal map texture properties in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBRMaterialProperties.HasTextureEmissionColor">
+            <summary>
+            Gets if the material has an emission color map texture in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBRMaterialProperties.TextureEmissionColor">
+            <summary>
+            Gets or sets the emission color map texture properties in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBRMaterialProperties.HasTextureMetalness">
+            <summary>
+            Gets if the material has a metalness map texture in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBRMaterialProperties.TextureMetalness">
+            <summary>
+            Gets or sets the metalness map texture properties in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBRMaterialProperties.HasTextureRoughness">
+            <summary>
+            Gets if the material has a roughness map texture in the first texture index.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.PBRMaterialProperties.TextureRoughness">
+            <summary>
+            Gets or sets the roughness map texture properties in the first texture index.
+            </summary>
+        </member>
+        <member name="M:Assimp.Material.PBRMaterialProperties.#ctor(Assimp.Material)">
+            <summary>
+            Constructs new property group accessor.
+            </summary>
+            <param name="parent">Material</param>
+        </member>
+        <member name="T:Assimp.Material.ShaderMaterialProperties">
+            <summary>
+            Groups all the properties for shader sources in a single accessor.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.HasShaderLanguageType">
+            <summary>
+            Gets if the material has a property for shader language type.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.ShaderLanguageType">
+            <summary>
+            Gets or sets what language (HLSL, GLSL, etc) any shader source code in this material is of.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.HasVertexShader">
+            <summary>
+            Gets if the material has a property for vertex shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.VertexShader">
+            <summary>
+            Gets or sets vertex shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.HasFragmentShader">
+            <summary>
+            Gets if the material has a property for fragment (pixel) shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.FragmentShader">
+            <summary>
+            Gets or sets fragment (pixel) shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.HasGeometryShader">
+            <summary>
+            Gets if the material has a property for geometry shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.GeometryShader">
+            <summary>
+            Gets or sets geometry shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.HasTesselationShader">
+            <summary>
+            Gets if the material has a property for tesselation shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.TesselationShader">
+            <summary>
+            Gets or sets tesselation shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.HasPrimitiveShader">
+            <summary>
+            Gets if the material has a property for primitive (domain) shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.PrimitiveShader">
+            <summary>
+            Gets or sets primitive (domain) shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.HasComputeShader">
+            <summary>
+            Gets if the material has a property for compute shader source code.
+            </summary>
+        </member>
+        <member name="P:Assimp.Material.ShaderMaterialProperties.ComputeShader">
+            <summary>
+            Gets or sets compute shader source code.
+            </summary>
+        </member>
+        <member name="M:Assimp.Material.ShaderMaterialProperties.#ctor(Assimp.Material)">
+            <summary>
+            Constructs new property group accessor.
+            </summary>
+            <param name="parent">Material</param>
         </member>
         <member name="T:Assimp.MaterialProperty">
             <summary>
@@ -6479,6 +6915,11 @@
             Gets or sets the morph method used when animation attachments are used.
             </summary>
         </member>
+        <member name="P:Assimp.Mesh.BoundingBox">
+            <summary>
+            Gets or sets the axis aligned bounding box that contains the extents of the mesh.
+            </summary>
+        </member>
         <member name="M:Assimp.Mesh.#ctor">
             <summary>
             Constructs a new instance of the <see cref="T:Assimp.Mesh"/> class.
@@ -6580,6 +7021,11 @@
             vertex data streams at a particular time. Each mesh stores 'n' attached meshes. The actual
             relationship between the time line and mesh attachments is established by the mesh animation channel,
             which references singular mesh attachments by their ID and binds them to a time offset.
+            </summary>
+        </member>
+        <member name="P:Assimp.MeshAnimationAttachment.Name">
+            <summary>
+            Gets or sets the mesh animation name.
             </summary>
         </member>
         <member name="P:Assimp.MeshAnimationAttachment.VertexCount">
@@ -7856,6 +8302,12 @@
             Gets the materials in the scene.
             </summary>
         </member>
+        <member name="P:Assimp.Scene.Metadata">
+            <summary>
+            Gets the metadata of the scene. This data contains global metadata which belongs to the scene like 
+            unit-conversions, versions, vendors or other model-specific data. This can be used to store format-specific metadata as well.
+            </summary>
+        </member>
         <member name="M:Assimp.Scene.#ctor">
             <summary>
             Constructs a new instance of the <see cref="T:Assimp.Scene"/> class.
@@ -7865,6 +8317,14 @@
             <summary>
             Clears the scene of all components.
             </summary>
+        </member>
+        <member name="M:Assimp.Scene.GetEmbeddedTexture(System.String)">
+            <summary>
+            Gets an embedded texture by a string. The string may be a texture ID in the format of "*1" or is the
+            file name of the texture.
+            </summary>
+            <param name="fileName">Texture ID or original file name.</param>
+            <returns>Embedded texture or null if it could not be found.</returns>
         </member>
         <member name="M:Assimp.Scene.ToUnmanagedScene(Assimp.Scene)">
             <summary>
@@ -8252,6 +8712,14 @@
             <para>Type: float. Default: 0.0f (comparisons are exact)</para>
             </summary>
         </member>
+        <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_PP_FID_IGNORE_TEXTURECOORDS">
+            <summary>
+            Input parameter to the <see cref="F:Assimp.PostProcessSteps.FindInvalidData"/> step. Set to true to
+            ignore texture coordinates. This may be useful if you have to assign different kinds of textures,
+            like seasonally variable ones - one for summer and one for winter.
+            <para>Type: Bool. Default: false.</para>
+            </summary>
+        </member>
         <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_PP_TUV_EVALUATE">
             <summary>
             Input parameter to the <see cref="F:Assimp.PostProcessSteps.TransformUVCoords"/> step.
@@ -8312,6 +8780,12 @@
             <summary>
             Configures the <see cref="F:Assimp.PostProcessSteps.GlobalScale"/> step to scale the entire scene by a certain amount. Some importers provide a mechanism to define a scaling unit for the model,
             which this processing step can utilize.
+            <para>Type: Float. Default: 1.0f.</para>
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_APP_SCALE_KEY">
+            <summary>
+            Applies application-specific scale to the global scale factor to allow for backwards compatibility.
             <para>Type: Float. Default: 1.0f.</para>
             </summary>
         </member>
@@ -8531,6 +9005,14 @@
             <para>Type: Bool. Default: false</para>
             </summary>
         </member>
+        <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_IMPORT_COLLADA_USE_COLLADA_NAMES">
+            <summary>
+            Specifies whether the Collada loader should use Collada names as node names.
+            If this property is set to true, the Collada names will be used as the
+            node name. The default is to use the id tag (resp. sid tag, if no id tag is present) instead.
+            <para>Type: Bool. Default: false.</para>
+            </summary>
+        </member>
         <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_IMPORT_FBX_READ_ALL_GEOMETRY_LAYERS">
             <summary>
             Specifies whether the FBX importer will merge all geometry layers present in the source file or take only the first.
@@ -8556,9 +9038,9 @@
             <para>Type: Bool. Default: true.</para>
             </summary>
         </member>
-        <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_IMPORT_FBX_SEARCH_EMBEDDED_TEXTURES">
+        <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_IMPORT_FBX_EMBEDDED_TEXTURES_LEGACY_NAMING">
             <summary>
-            Specifies whether the FBX importer will search for embedded loaded textures, where no embedded texture data is provided.
+            Specifies whether the fbx importer will use the legacy embedded texture naming.
             <para>Type: Bool. Default: false.</para>
             </summary>
         </member>
@@ -8602,9 +9084,37 @@
             <para>Type: Bool. Default: true.</para>
             </summary>
         </member>
+        <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_FBX_CONVERT_TO_M">
+            <summary>
+            Specifies whether the importer shall convert the unit from centimeter (cm) to meter (m).
+            <para>Type: Bool. Default: false.</para>
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_IMPORT_SMD_LOAD_ANIMATION_LIST">
+            <summary>
+            Specifies whether the importer will load multiple animations.
+            <para>Type: Bool. Default: true.</para>
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_IMPORT_REMOVE_EMPTY_BONES">
+            <summary>
+            Specifies whether the importer removes empty bones or not. Empty bones are often used to define connections for other models (e.g.
+            attachment points).
+            <para>Type: Bool. Default: true.</para>
+            </summary>
+        </member>
         <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_EXPORT_XFILE_64BIT">
             <summary>
             Specifies if the X-file exporter should use 64-bit doubles rather than 32-bit floats.
+            <para>Type: Bool. Default: false.</para>
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_EXPORT_POINT_CLOUDS">
+            <summary>
+            Specifies whether the export should be able to export point clouds. When this flag is not defined
+            the render data has to contain valid faces. Point  clouds are only a collection of vertices which have no spatial
+            organization by a face and the validation process will remove them. Enabling this feature will switch off the
+            flag and enable the functionality to export pure point clouds.
             <para>Type: Bool. Default: false.</para>
             </summary>
         </member>
@@ -8761,6 +9271,16 @@
         <member name="F:Assimp.Unmanaged.AiMatKeys.OPACITY">
             <summary>
             Opacity (float)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.TRANSPARENCYFACTOR_BASE">
+            <summary>
+            Transparency Factor (float)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.TRANSPARENCYFACTOR">
+            <summary>
+            Transparency Factor (float)
             </summary>
         </member>
         <member name="F:Assimp.Unmanaged.AiMatKeys.BUMPSCALING_BASE">
@@ -8931,6 +9451,76 @@
         <member name="F:Assimp.Unmanaged.AiMatKeys.TEXFLAGS_BASE">
             <summary>
             Texture flags base name
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.GLOBAL_SHADERLANG_BASE">
+            <summary>
+            Shader language type (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.GLOBAL_SHADERLANG">
+            <summary>
+            Shader language type (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_VERTEX_BASE">
+            <summary>
+            Vertex shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_VERTEX">
+            <summary>
+            Vertex shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_FRAGMENT_BASE">
+            <summary>
+            Fragment/Pixel shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_FRAGMENT">
+            <summary>
+            Fragment/Pixel shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_GEO_BASE">
+            <summary>
+            Geometry shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_GEO">
+            <summary>
+            Geometry shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_TESSELATION_BASE">
+            <summary>
+            Tesselation shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_TESSELATION">
+            <summary>
+            Tesselation shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_PRIMITIVE_BASE">
+            <summary>
+            Primitive/Domain shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_PRIMITIVE">
+            <summary>
+            Primitive/Domain shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_COMPUTE_BASE">
+            <summary>
+            Compute shader source code (string)
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiMatKeys.SHADER_COMPUTE">
+            <summary>
+            Compute shader source code (string)
             </summary>
         </member>
         <member name="M:Assimp.Unmanaged.AiMatKeys.GetFullTextureName(System.String,Assimp.TextureType,System.Int32)">
@@ -9347,6 +9937,12 @@
             </summary>
             <returns>Assimp revision version number</returns>
         </member>
+        <member name="M:Assimp.Unmanaged.AssimpLibrary.GetBranchName">
+            <summary>
+            Returns the branchname of the Assimp runtime.
+            </summary>
+            <returns>The current branch name.</returns>
+        </member>
         <member name="M:Assimp.Unmanaged.AssimpLibrary.GetVersion">
             <summary>
             Gets the native Assimp DLL's current version number as "major.minor.revision" string. This is the
@@ -9702,6 +10298,15 @@
             aiCamera**, cameras in the scene.
             </summary>
         </member>
+        <member name="F:Assimp.Unmanaged.AiScene.Metadata">
+            <summary>
+            aiMetadata*, The global metadata assigned to the scene itself.
+            
+            This data contains global metadata which belongs to the scene like 
+            unit-conversions, versions, vendors or other model-specific data. This 
+            can be used to store format-specific metadata as well.
+            </summary>
+        </member>
         <member name="F:Assimp.Unmanaged.AiScene.PrivateData">
             <summary>
             void*, Private data do not touch!
@@ -9884,6 +10489,11 @@
             unsigned int, method of morphing when anim meshes are specified.
             </summary>
         </member>
+        <member name="F:Assimp.Unmanaged.AiMesh.AABB">
+            <summary>
+            Axis aligned bounding box.
+            </summary>
+        </member>
         <member name="T:Assimp.Unmanaged.AiTexture">
             <summary>
             Represents an aiTexture struct.
@@ -9908,6 +10518,11 @@
         <member name="F:Assimp.Unmanaged.AiTexture.Data">
             <summary>
             aiTexel*, array of texel data.
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiTexture.Filename">
+            <summary>
+            Texture original filename.
             </summary>
         </member>
         <member name="M:Assimp.Unmanaged.AiTexture.SetFormatHint(System.String)">
@@ -10326,7 +10941,7 @@
         </member>
         <member name="F:Assimp.Unmanaged.AiString.Length">
             <summary>
-            Byte length of the UTF-8 string.
+            Byte length of the UTF-8 string, NOT logical length.
             </summary>
         </member>
         <member name="F:Assimp.Unmanaged.AiString.Data">
@@ -10432,6 +11047,11 @@
         <member name="T:Assimp.Unmanaged.AiAnimMesh">
             <summary>
             Represents an aiAnimMesh struct. Note: This structure requires marshaling, due to the array of IntPtrs.
+            </summary>
+        </member>
+        <member name="F:Assimp.Unmanaged.AiAnimMesh.Name">
+            <summary>
+            Anim Mesh name 
             </summary>
         </member>
         <member name="F:Assimp.Unmanaged.AiAnimMesh.Vertices">
