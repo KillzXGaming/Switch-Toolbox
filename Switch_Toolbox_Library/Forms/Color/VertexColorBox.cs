@@ -391,30 +391,45 @@ namespace Toolbox.Library.Forms
             if (mouseLoc != Point.Empty)
             {
                 if (AllHit.IsHit(mouseLoc))
-                    DrawSelectionOutline(pe, AllHit);
+                    DrawSelectionOutline(pe, AllHit, AllColor);
                 if (TopLeftHit.IsHit(mouseLoc))
-                    DrawSelectionOutline(pe, TopLeftHit);
+                    DrawSelectionOutline(pe, TopLeftHit, TopLeftColor);
                 if (TopRightHit.IsHit(mouseLoc))
-                    DrawSelectionOutline(pe, TopRightHit);
+                    DrawSelectionOutline(pe, TopRightHit, TopRightColor);
                 if (BottomLeftHit.IsHit(mouseLoc))
-                    DrawSelectionOutline(pe, BottomLeftHit);
+                    DrawSelectionOutline(pe, BottomLeftHit, BottomLeftColor);
                 if (BottomRightHit.IsHit(mouseLoc))
-                    DrawSelectionOutline(pe, BottomRightHit);
+                    DrawSelectionOutline(pe, BottomRightHit, BottomRightColor);
                 if (TopHit.IsHit(mouseLoc))
-                    DrawSelectionOutline(pe, TopHit);
+                    DrawSelectionOutline(pe, TopHit, ColorBlend(TopRightColor, TopLeftColor));
                 if (BottomHit.IsHit(mouseLoc))
-                    DrawSelectionOutline(pe, BottomHit);
+                    DrawSelectionOutline(pe, BottomHit, ColorBlend(BottomRightColor, BottomLeftColor));
                 if (RightHit.IsHit(mouseLoc))
-                    DrawSelectionOutline(pe, RightHit);
+                    DrawSelectionOutline(pe, RightHit, ColorBlend(BottomRightColor, TopRightColor));
                 if (LeftHit.IsHit(mouseLoc))
-                    DrawSelectionOutline(pe, LeftHit);
+                    DrawSelectionOutline(pe, LeftHit, ColorBlend(BottomLeftColor, TopLeftColor));
             }
 
             base.OnPaint(pe);
         }
 
-        private void DrawSelectionOutline(PaintEventArgs pe, Rectangle rect) {
+        private static Color ColorBlend(Color A, Color B)
+        {
+            Color[] colors = new Color[2]
+            { A, B };
+
+            return Color.FromArgb(
+                (int)colors.Average(a => a.A),
+                (int)colors.Average(a => a.R),
+                (int)colors.Average(a => a.G),
+                (int)colors.Average(a => a.B));
+        }
+
+        private void DrawSelectionOutline(PaintEventArgs pe, Rectangle rect, Color color) {
             //Select entire regions
+
+            var colorAmount = color.GrayScale(true).Inverse();
+
             int lineThickness = 2;
             Rectangle selection = rect;
             if (rect == TopHit || rect == BottomHit) {
@@ -428,7 +443,7 @@ namespace Toolbox.Library.Forms
                 lineThickness = 2;
             }
 
-            pe.Graphics.DrawRectangle(new Pen(new SolidBrush(Color.Black), lineThickness), new Rectangle(
+            pe.Graphics.DrawRectangle(new Pen(new SolidBrush(colorAmount), lineThickness), new Rectangle(
                 selection.X + (lineThickness / 2), selection.Y + (lineThickness / 2), 
                 selection.Width - lineThickness, selection.Height - lineThickness));
         }

@@ -14,6 +14,7 @@ namespace Toolbox.Library.Forms
     {
         public EventHandler OnColorChanged;
 
+        private Point mouseLoc = Point.Empty;
         private Color TColor;
         private Color BColor;
 
@@ -65,6 +66,8 @@ namespace Toolbox.Library.Forms
             this.BackgroundImage = Properties.Resources.CheckerBackground;
             this.BackColor = Color.Transparent;
             this.MouseClick += OnMouseClick;
+            this.MouseMove += OnMouseMove;
+            this.MouseLeave += OnMouseLeave;
             this.SetStyle(
             ControlStyles.AllPaintingInWmPaint |
             ControlStyles.UserPaint |
@@ -72,8 +75,23 @@ namespace Toolbox.Library.Forms
             true);
         }
 
+        private void OnMouseMove(object sender, MouseEventArgs e) {
+            if (dialogActive) return;
+
+            mouseLoc = e.Location;
+            Invalidate();
+        }
+
+        private void OnMouseLeave(object sender, EventArgs e) {
+            if (dialogActive) return;
+
+            mouseLoc = Point.Empty;
+            Invalidate();
+        }
+
         public void DisposeControl()
         {
+            mouseLoc = Point.Empty;
             if (colorDlg != null)
             {
                 colorDlg.Close();
@@ -102,7 +120,9 @@ namespace Toolbox.Library.Forms
                     colorDlg.Show();
                     colorDlg.FormClosed += delegate
                     {
+                        mouseLoc = Point.Empty;
                         dialogActive = false;
+                        this.Invalidate();
                     };
                     colorDlg.ColorChanged += delegate
                     {
@@ -137,7 +157,9 @@ namespace Toolbox.Library.Forms
             colorDlg = new STColorDialog(color);
             colorDlg.FormClosed += delegate
             {
+                mouseLoc = Point.Empty;
                 dialogActive = false;
+                this.Invalidate();
             };
             colorDlg.Show();
             colorDlg.ColorChanged += delegate
@@ -153,6 +175,8 @@ namespace Toolbox.Library.Forms
         private Rectangle BottomHit;
         private Rectangle AllHit;
 
+        private bool DisplayHitboxes = true;
+
         protected override void OnPaint(PaintEventArgs pe)
         {
             pe.Graphics.InterpolationMode = InterpolationMode.Bilinear;
@@ -163,15 +187,13 @@ namespace Toolbox.Library.Forms
             int halfWidth = r.Width / 2;
             int halfHeight = r.Height / 2;
 
-            int LeftX = 10;
-            int RightX = r.Width - 30;
-            int topY = 10;
-            int BottomY = r.Height - 25;
-
             var linearGradientBrush = new LinearGradientBrush(r, 
                 TopColor, BottomColor, LinearGradientMode.Vertical);
 
             pe.Graphics.FillRectangle(linearGradientBrush, r);
+
+            int topY = 10;
+            int BottomY = r.Height - 25;
 
             var font = new Font(this.Font, FontStyle.Bold);
 
@@ -184,14 +206,50 @@ namespace Toolbox.Library.Forms
             using (Brush br = new SolidBrush(BottomColor.GrayScale(true).Inverse()))
                 pe.Graphics.DrawString("B", font, br, new Point(halfWidth - 7, BottomY));
 
+            topY = 0;
+            BottomY = r.Height - 32;
+
+            const int hitSize = 32;
+            TopHit = new Rectangle(r.X, topY, r.Width, hitSize);
+            BottomHit = new Rectangle(r.X, BottomY, r.Width, hitSize);
+            AllHit = new Rectangle(r.X, halfHeight - 16, r.Width, hitSize);
+
+            if (mouseLoc != Point.Empty)
+            {
+                if (AllHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, AllHit, AllColor);
+                if (TopHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, TopHit, TopColor);
+                if (BottomHit.IsHit(mouseLoc))
+                    DrawSelectionOutline(pe, BottomHit, BottomColor);
+            }
+
             //  pe.Graphics.FillRectangle(linearGradientBrush, ClientRectangle);
 
-            const int hitSize = 40;
-            TopHit = new Rectangle(halfWidth - 10, topY, hitSize, hitSize);
-            BottomHit = new Rectangle(halfWidth - 10, BottomY, hitSize, hitSize);
-            AllHit = new Rectangle(halfWidth - 10, halfHeight - 10, hitSize, hitSize);
-
             base.OnPaint(pe);
+        }
+
+        private void DrawSelectionOutline(PaintEventArgs pe, Rectangle rect, Color color)
+        {
+            //Select entire regions
+
+            var colorAmount = color.GrayScale(true).Inverse();
+
+            int lineThickness = 2;
+            Rectangle selection = rect;
+            if (rect == TopHit || rect == BottomHit)
+            {
+                selection = new Rectangle(rect.X, rect.Y, pe.ClipRectangle.Width, rect.Height);
+            }
+            if (rect == AllHit)
+            {
+                selection = ClientRectangle;
+                lineThickness = 2;
+            }
+
+            pe.Graphics.DrawRectangle(new Pen(new SolidBrush(colorAmount), lineThickness), new Rectangle(
+                selection.X + (lineThickness / 2), selection.Y + (lineThickness / 2),
+                selection.Width - lineThickness, selection.Height - lineThickness));
         }
     }
 }
