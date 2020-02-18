@@ -10,7 +10,7 @@ using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class U8 : IArchiveFile, IFileFormat, IDirectoryContainer
+    public class U8 : IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -50,13 +50,11 @@ namespace FirstPlugin
             }
         }
 
-        public List<INode> nodes = new List<INode>();
         public List<FileEntry> files = new List<FileEntry>();
 
         public IEnumerable<ArchiveFileInfo> Files => files;
-        public IEnumerable<INode> Nodes => nodes;
 
-        public void ClearFiles() { nodes.Clear(); }
+        public void ClearFiles() { files.Clear(); }
 
         public string Name
         {
@@ -112,54 +110,49 @@ namespace FirstPlugin
                 }
 
                 //Set the strings
-                for (int i = 0; i < TotalNodeCount; i++)
-                {
+                for (int i = 0; i < TotalNodeCount; i++) {
                     entries[i].Name = StringTable[entries[i].StringPoolOffset];
                 }
 
                 entries[0].Name = "Root";
 
-               //Setup our directory entries for loading to the tree
-               DirectoryEntry[] dirs = new DirectoryEntry[TotalNodeCount];
-                for (int i = 0; i < dirs.Length; i++)
-                    dirs[i] = new DirectoryEntry();
+                SetFileNames(entries, 1, entries.Count, "");
 
-                DirectoryEntry currentDir = dirs[1];
-                nodes.Add(dirs[0]);
-
-                //Skip root so start index at 1
-                int dirIndex = 1;
-                for (int i = 0; i < TotalNodeCount; i++)
+                for (int i = 0; i < entries.Count - 1; i++)
                 {
-                    var node = entries[i];
-                    if (node.Name == string.Empty)
-                        continue;
-
-                    Console.WriteLine($"{ node.Name} {i} {node.nodeType} {node.Setting1}");
-
-                    if (node.nodeType == NodeEntry.NodeType.Directory)
-                    {
-                        dirs[i].Name = node.Name;
-                        dirs[i].nodeEntry = node;
-                        currentDir = dirs[i];
-
-                        if (i != 0)
-                            dirs[node.Setting1].AddNode(currentDir);
-                    }
-                    else
+                    if (entries[i].nodeType != NodeEntry.NodeType.Directory)
                     {
                         FileEntry entry = new FileEntry();
-                        entry.FileName = node.Name;
-                        entry.Name = node.Name;
-                        entry.nodeEntry = node;
-                        currentDir.nodes.Add(entry);
-
-                        reader.SeekBegin(entry.nodeEntry.Setting1);
-                        entry.FileData = reader.ReadBytes((int)entry.nodeEntry.Setting2);
+                        reader.SeekBegin(entries[i].Setting1);
+                        entry.FileData = reader.ReadBytes((int)entries[i].Setting2);
+                        entry.FileName = entries[i].FullPath;
                         files.Add(entry);
                     }
                 }
             }
+        }
+
+        private int SetFileNames(List<NodeEntry> fileEntries, int firstIndex, int lastIndex, string directory)
+        {
+            int currentIndex = firstIndex;
+            while (currentIndex < lastIndex)
+            {
+                NodeEntry entry = fileEntries[currentIndex];
+                string filename = entry.Name;
+                entry.FullPath = directory + filename;
+
+                if (entry.nodeType == NodeEntry.NodeType.Directory)
+                {
+                    entry.FullPath += "/";
+                    currentIndex = SetFileNames(fileEntries, currentIndex + 1, (int)entry.Setting2, entry.FullPath);
+                }
+                else
+                {
+                    ++currentIndex;
+                }
+            }
+
+            return currentIndex;
         }
 
         public void SaveFile(FileWriter writer)
@@ -193,6 +186,8 @@ namespace FirstPlugin
 
         public class NodeEntry : INode
         {
+            public string FullPath { get; set; }
+
             public NodeType nodeType
             {
                 get { return (NodeType)(flags >> 24); }

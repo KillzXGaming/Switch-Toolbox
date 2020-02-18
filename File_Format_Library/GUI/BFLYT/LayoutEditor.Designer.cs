@@ -66,6 +66,12 @@
             this.windowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGameWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAnimationWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dockPanelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showTimelineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showPropertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showPanelHiearchyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showTextureListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAnimationListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stLabel2 = new Toolbox.Library.Forms.STLabel();
             this.editorModeCB = new Toolbox.Library.Forms.STComboBox();
             this.chkAutoKey = new Toolbox.Library.Forms.STCheckBox();
@@ -81,6 +87,7 @@
             this.dockPanel1.Name = "dockPanel1";
             this.dockPanel1.Size = new System.Drawing.Size(955, 504);
             this.dockPanel1.TabIndex = 6;
+            this.dockPanel1.ContentRemoved += new System.EventHandler<WeifenLuo.WinFormsUI.Docking.DockContentEventArgs>(this.dockPanel1_ContentRemoved);
             this.dockPanel1.ActiveDocumentChanged += new System.EventHandler(this.dockPanel1_ActiveDocumentChanged);
             // 
             // backColorDisplay
@@ -168,7 +175,8 @@
             this.editToolStripMenuItem,
             this.viewToolStripMenuItem,
             this.animationToolStripMenuItem,
-            this.windowToolStripMenuItem});
+            this.windowToolStripMenuItem,
+            this.dockPanelsToolStripMenuItem});
             this.stMenuStrip1.Location = new System.Drawing.Point(0, 0);
             this.stMenuStrip1.Name = "stMenuStrip1";
             this.stMenuStrip1.Size = new System.Drawing.Size(955, 24);
@@ -416,6 +424,58 @@
             this.showAnimationWindowToolStripMenuItem.Text = "Show Animation Window";
             this.showAnimationWindowToolStripMenuItem.Click += new System.EventHandler(this.showAnimationWindowToolStripMenuItem_Click);
             // 
+            // dockPanelsToolStripMenuItem
+            // 
+            this.dockPanelsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showTimelineToolStripMenuItem,
+            this.showPropertiesToolStripMenuItem,
+            this.showPanelHiearchyToolStripMenuItem,
+            this.showTextureListToolStripMenuItem,
+            this.showAnimationListToolStripMenuItem});
+            this.dockPanelsToolStripMenuItem.Name = "dockPanelsToolStripMenuItem";
+            this.dockPanelsToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
+            this.dockPanelsToolStripMenuItem.Text = "Dock Panels";
+            // 
+            // showTimelineToolStripMenuItem
+            // 
+            this.showTimelineToolStripMenuItem.CheckOnClick = true;
+            this.showTimelineToolStripMenuItem.Name = "showTimelineToolStripMenuItem";
+            this.showTimelineToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.showTimelineToolStripMenuItem.Text = "Show Timeline";
+            this.showTimelineToolStripMenuItem.Click += new System.EventHandler(this.showDockedPanel_Click);
+            // 
+            // showPropertiesToolStripMenuItem
+            // 
+            this.showPropertiesToolStripMenuItem.CheckOnClick = true;
+            this.showPropertiesToolStripMenuItem.Name = "showPropertiesToolStripMenuItem";
+            this.showPropertiesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.showPropertiesToolStripMenuItem.Text = "Show Properties";
+            this.showPropertiesToolStripMenuItem.Click += new System.EventHandler(this.showDockedPanel_Click);
+            // 
+            // showPanelHiearchyToolStripMenuItem
+            // 
+            this.showPanelHiearchyToolStripMenuItem.CheckOnClick = true;
+            this.showPanelHiearchyToolStripMenuItem.Name = "showPanelHiearchyToolStripMenuItem";
+            this.showPanelHiearchyToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.showPanelHiearchyToolStripMenuItem.Text = "Show Panel Hiearchy";
+            this.showPanelHiearchyToolStripMenuItem.Click += new System.EventHandler(this.showDockedPanel_Click);
+            // 
+            // showTextureListToolStripMenuItem
+            // 
+            this.showTextureListToolStripMenuItem.CheckOnClick = true;
+            this.showTextureListToolStripMenuItem.Name = "showTextureListToolStripMenuItem";
+            this.showTextureListToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.showTextureListToolStripMenuItem.Text = "Show Texture List";
+            this.showTextureListToolStripMenuItem.Click += new System.EventHandler(this.showDockedPanel_Click);
+            // 
+            // showAnimationListToolStripMenuItem
+            // 
+            this.showAnimationListToolStripMenuItem.CheckOnClick = true;
+            this.showAnimationListToolStripMenuItem.Name = "showAnimationListToolStripMenuItem";
+            this.showAnimationListToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.showAnimationListToolStripMenuItem.Text = "Show Animation List";
+            this.showAnimationListToolStripMenuItem.Click += new System.EventHandler(this.showDockedPanel_Click);
+            // 
             // stLabel2
             // 
             this.stLabel2.AutoSize = true;
@@ -526,5 +586,11 @@
         private Toolbox.Library.Forms.STComboBox editorModeCB;
         private Toolbox.Library.Forms.STCheckBox chkAutoKey;
         private System.Windows.Forms.ToolStripMenuItem showAnimationWindowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dockPanelsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showTimelineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showPropertiesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showTextureListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showAnimationListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showPanelHiearchyToolStripMenuItem;
     }
 }

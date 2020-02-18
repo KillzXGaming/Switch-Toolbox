@@ -98,7 +98,13 @@ namespace LayoutBXLYT
             displayGridToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayGrid;
             displayTextPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.DisplayTextPane;
             transformChildrenToolStripMenuItem.Checked = Runtime.LayoutEditor.TransformChidlren;
-           viewPartsAsNullPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.PartsAsNullPanes;
+            viewPartsAsNullPanesToolStripMenuItem.Checked = Runtime.LayoutEditor.PartsAsNullPanes;
+
+            showAnimationListToolStripMenuItem.Checked = true;
+            showPropertiesToolStripMenuItem.Checked = true;
+            showAnimationListToolStripMenuItem.Checked = true;
+            showPanelHiearchyToolStripMenuItem.Checked = true;
+            showTextureListToolStripMenuItem.Checked = true;
 
             ObjectSelected += OnObjectSelected;
             ObjectChanged += OnObjectChanged;
@@ -126,32 +132,32 @@ namespace LayoutBXLYT
         public void LoadBxlyt(BxlytHeader header)
         {
             Text = $"Switch Toolbox Layout Editor [{header.FileName}]";
-         /*   if (PluginRuntime.BxfntFiles.Count > 0)
-            {
-                var result = MessageBox.Show("Found font files opened. Would you like to save character images to disk? " +
-                    "(Allows for faster loading and won't need to be reopened)", "Layout Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
-                    var cacheDir = $"{Runtime.ExecutableDir}/Cached/Font";
-                    if (!System.IO.Directory.Exists(cacheDir))
-                        System.IO.Directory.CreateDirectory(cacheDir);
+            /*   if (PluginRuntime.BxfntFiles.Count > 0)
+               {
+                   var result = MessageBox.Show("Found font files opened. Would you like to save character images to disk? " +
+                       "(Allows for faster loading and won't need to be reopened)", "Layout Editor", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                   if (result == DialogResult.Yes)
+                   {
+                       var cacheDir = $"{Runtime.ExecutableDir}/Cached/Font";
+                       if (!System.IO.Directory.Exists(cacheDir))
+                           System.IO.Directory.CreateDirectory(cacheDir);
 
-                    foreach (var bffnt in PluginRuntime.BxfntFiles)
-                    {
-                        if (!System.IO.Directory.Exists($"{cacheDir}/{bffnt.Name}"))
-                            System.IO.Directory.CreateDirectory($"{cacheDir}/{bffnt.Name}");
+                       foreach (var bffnt in PluginRuntime.BxfntFiles)
+                       {
+                           if (!System.IO.Directory.Exists($"{cacheDir}/{bffnt.Name}"))
+                               System.IO.Directory.CreateDirectory($"{cacheDir}/{bffnt.Name}");
 
-                        var fontBitmap = bffnt.GetBitmapFont(true);
-                        foreach (var character in fontBitmap.Characters)
-                        {
-                            var charaMap = character.Value;
-                            charaMap.CharBitmap.Save($"{cacheDir}/{bffnt.Name}/cmap_{Convert.ToUInt16(character.Key).ToString("x2")}_{charaMap.CharWidth}_{charaMap.GlyphWidth}_{charaMap.LeftOffset}.png");
-                        }
+                           var fontBitmap = bffnt.GetBitmapFont(true);
+                           foreach (var character in fontBitmap.Characters)
+                           {
+                               var charaMap = character.Value;
+                               charaMap.CharBitmap.Save($"{cacheDir}/{bffnt.Name}/cmap_{Convert.ToUInt16(character.Key).ToString("x2")}_{charaMap.CharWidth}_{charaMap.GlyphWidth}_{charaMap.LeftOffset}.png");
+                           }
 
-                        fontBitmap.Dispose();
-                    }
-                }
-            }*/
+                           fontBitmap.Dispose();
+                       }
+                   }
+               }*/
 
             LayoutFiles.Add(header);
             ActiveLayout = header;
@@ -302,6 +308,7 @@ namespace LayoutBXLYT
             {
                 if (e is TreeViewEventArgs) {
                     var node = ((TreeViewEventArgs)e).Node;
+                    var mutliSelectedNodes = LayoutHierarchy.GetSelectedPanes();
 
                     if (Runtime.LayoutEditor.AnimationEditMode)
                         OnSelectedAnimationMode();
@@ -310,7 +317,7 @@ namespace LayoutBXLYT
                         ActiveViewport?.SelectedPanes.Clear();
 
                     if (node.Tag is BasePane)
-                        LoadPaneEditorOnSelect(node.Tag as BasePane);
+                        LoadPaneEditorOnSelect(mutliSelectedNodes);
                     else if (node.Tag is BxlytMaterial)
                     {
                         LayoutPaneEditor.Text = $"Properties [{((BxlytMaterial)node.Tag).Name}]";
@@ -340,15 +347,21 @@ namespace LayoutBXLYT
         {
             if (AnimationPanel == null) return;
 
-            
+
         }
 
         public void UpdateViewport() {
             ActiveViewport?.UpdateViewport();
         }
 
-        public void LoadPaneEditorOnSelect(BasePane pane)
+        public void LoadPaneEditorOnSelect(BasePane pane) {
+            LoadPaneEditorOnSelect(new List<BasePane>() { pane });
+        }
+
+        public void LoadPaneEditorOnSelect(List<BasePane> panes)
         {
+            var pane = panes.FirstOrDefault();
+
             if (pane is IPicturePane)
                 LayoutPaneEditor.Text = $"Properties [{pane.Name}]    |   (Picture Pane)";
             else if (pane is ITextPane)
@@ -366,8 +379,10 @@ namespace LayoutBXLYT
 
             if (ActiveViewport == null) return;
 
-            if (!ActiveViewport.SelectedPanes.Contains(pane))
-                ActiveViewport.SelectedPanes.Add(pane);
+            foreach (var pn in panes) {
+                if (!ActiveViewport.SelectedPanes.Contains(pn))
+                    ActiveViewport.SelectedPanes.Add(pn);
+            }
 
             if (AnimationWindow != null && !AnimationWindow.Disposing && !AnimationWindow.IsDisposed)
                 AnimationWindow.LoadPane(pane, this);
@@ -455,18 +470,18 @@ namespace LayoutBXLYT
 
             dock.Show(this);
 
-        /*    if (LayoutAnimEditor != null) {
-                LayoutAnimEditor.LoadFile(bxlan.GetGenericAnimation());
-                return;
-            }
+            /*    if (LayoutAnimEditor != null) {
+                    LayoutAnimEditor.LoadFile(bxlan.GetGenericAnimation());
+                    return;
+                }
 
-            LayoutAnimEditor = new LayoutAnimEditor();
-            AnimationPanel.OnNodeSelected = LayoutAnimEditor.OnNodeSelected;
-            LayoutAnimEditor.LoadFile(bxlan.GetGenericAnimation());
-            if (LayoutHierarchy != null)
-                LayoutAnimEditor.Show(LayoutHierarchy.Pane, DockAlignment.Bottom, 0.5);
-            else
-                LayoutAnimEditor.Show(dockPanel1, DockState.DockRight);*/
+                LayoutAnimEditor = new LayoutAnimEditor();
+                AnimationPanel.OnNodeSelected = LayoutAnimEditor.OnNodeSelected;
+                LayoutAnimEditor.LoadFile(bxlan.GetGenericAnimation());
+                if (LayoutHierarchy != null)
+                    LayoutAnimEditor.Show(LayoutHierarchy.Pane, DockAlignment.Bottom, 0.5);
+                else
+                    LayoutAnimEditor.Show(dockPanel1, DockState.DockRight);*/
         }
 
         private void AnimPropertyChanged(object sender, EventArgs e)
@@ -478,11 +493,13 @@ namespace LayoutBXLYT
         {
             if (LayoutPaneEditor == null)
                 LayoutPaneEditor = new PaneEditor();
+            else if (LayoutPaneEditor.IsDisposed)
+                LayoutPaneEditor = new PaneEditor();
 
             LayoutPaneEditor.Text = "Properties";
             LayoutPaneEditor.PropertyChanged += OnPanePropertyChanged;
 
-            if (LayoutHierarchy != null)
+            if (LayoutHierarchy != null && !LayoutHierarchy.IsDisposed)
                 LayoutPaneEditor.Show(LayoutHierarchy.Pane, DockAlignment.Bottom, 0.5);
             else
                 LayoutPaneEditor.Show(dockPanel1, DockState.DockRight);
@@ -500,17 +517,17 @@ namespace LayoutBXLYT
 
         public void ShowPaneEditor(BasePane pane)
         {
-       /*     if (LayoutPaneEditor == null)
-                LayoutPaneEditor = new PaneEditor();
+            /*     if (LayoutPaneEditor == null)
+                     LayoutPaneEditor = new PaneEditor();
 
-            LayoutPaneEditor.PropertyChanged += OnPanePropertyChanged;
-            LayoutPaneEditor.LoadPane(pane);
-            LayoutPaneEditor.Show();*/
+                 LayoutPaneEditor.PropertyChanged += OnPanePropertyChanged;
+                 LayoutPaneEditor.LoadPane(pane);
+                 LayoutPaneEditor.Show();*/
         }
 
         public void ShowAnimationHierarchy()
         {
-            if (LayoutAnimList != null)
+            if (LayoutAnimList != null && !LayoutAnimList.IsDisposed)
                 return;
 
             LayoutAnimList = new LayoutAnimList(this, ObjectSelected);
@@ -520,7 +537,7 @@ namespace LayoutBXLYT
 
         private void ShowPaneHierarchy()
         {
-            if (LayoutHierarchy != null)
+            if (LayoutHierarchy != null && !LayoutHierarchy.IsDisposed)
                 return;
 
             LayoutHierarchy = new LayoutHierarchy(this);
@@ -531,7 +548,7 @@ namespace LayoutBXLYT
 
         private void ShowTextureList()
         {
-            if (LayoutTextureList != null)
+            if (LayoutTextureList != null && !LayoutTextureList.IsDisposed)
                 return;
 
             LayoutTextureList = new LayoutTextureList();
@@ -548,7 +565,6 @@ namespace LayoutBXLYT
             AnimationPanel.AnimationPlaying += OnAnimationPlaying;
             AnimationPanel.SetViewport(ActiveViewport.GetGLControl());
             dockContent.Controls.Add(AnimationPanel);
-            LayoutTextureList.Show(dockPanel1, DockState.DockRight);
 
             if (ActiveViewport != null)
                 dockContent.Show(ActiveViewport.Pane, DockAlignment.Bottom, 0.2);
@@ -732,6 +748,11 @@ namespace LayoutBXLYT
                     layouts.Add(fileFormat);
                 }
                 else if (fileFormat is BCLYT)
+                {
+                    fileFormat.IFileInfo.ArchiveParent = archiveFile;
+                    layouts.Add(fileFormat);
+                }
+                else if (fileFormat is BRLYT)
                 {
                     fileFormat.IFileInfo.ArchiveParent = archiveFile;
                     layouts.Add(fileFormat);
@@ -930,7 +951,7 @@ namespace LayoutBXLYT
                 else
                     toolstripOrthoBtn.Image = FirstPlugin.Properties.Resources.OrthoView;
 
-                Runtime.LayoutEditor.UseOrthographicView = orthographicViewToolStripMenuItem.Checked; 
+                Runtime.LayoutEditor.UseOrthographicView = orthographicViewToolStripMenuItem.Checked;
                 ActiveViewport.ResetCamera();
                 ActiveViewport.UpdateViewport();
             }
@@ -985,7 +1006,7 @@ namespace LayoutBXLYT
         {
             if (GamePreviewWindow == null || GamePreviewWindow.Disposing || GamePreviewWindow.IsDisposed)
             {
-                GamePreviewWindow = new LayoutViewer(this,ActiveLayout, Textures);
+                GamePreviewWindow = new LayoutViewer(this, ActiveLayout, Textures);
                 GamePreviewWindow.GameWindow = true;
                 GamePreviewWindow.Dock = DockStyle.Fill;
                 STForm form = new STForm();
@@ -1139,7 +1160,7 @@ namespace LayoutBXLYT
         public void AddNewPastedPane(BasePane pane)
         {
             string name = pane.Name;
-            string numberedEnd  = pane.Name.Split('_').LastOrDefault().Replace("_", string.Empty);
+            string numberedEnd = pane.Name.Split('_').LastOrDefault().Replace("_", string.Empty);
             if (numberedEnd.All(char.IsDigit)) {
                 if (name.Contains($"_{numberedEnd}"))
                     name = name.Replace($"_{numberedEnd}", string.Empty);
@@ -1211,6 +1232,71 @@ namespace LayoutBXLYT
                     AnimationWindow.LoadPane(SelectedPanes[0], this);
                 AnimationWindow.Show(this);
             }
+        }
+
+        private void showDockedPanel_Click(object sender, EventArgs e)
+        {
+            if (ActiveViewport == null || ActiveLayout == null)
+                return;
+
+            var menu = sender as ToolStripMenuItem;
+            if (menu == null) return;
+
+            Console.WriteLine($"menu {menu.Checked}");
+
+            if (menu.Checked)
+            {
+                if (menu == showTimelineToolStripMenuItem) {
+                    ShowAnimationPanel();
+                    LayoutAnimList.LoadAnimation(ActiveAnimation);
+                }
+                if (menu == showPropertiesToolStripMenuItem)
+                    ShowPropertiesPanel();
+                if (menu == showPanelHiearchyToolStripMenuItem)
+                    ShowPaneHierarchy();
+                if (menu == showTextureListToolStripMenuItem)
+                    ShowTextureList();
+                if (menu == showAnimationListToolStripMenuItem)
+                    ShowAnimationHierarchy();
+            }
+            else
+            {
+                if (menu == showTimelineToolStripMenuItem)
+                    CloseAnimationPanel();
+                if (menu == showPropertiesToolStripMenuItem)
+                    LayoutProperties?.Close();
+                if (menu == showPanelHiearchyToolStripMenuItem)
+                    LayoutHierarchy?.Close();
+                if (menu == showTextureListToolStripMenuItem)
+                    LayoutTextureList?.Close();
+                if (menu == showAnimationListToolStripMenuItem)
+                    LayoutAnimList?.Close();
+            }
+        }
+
+        private void UpdateMenuBar() {
+            showTimelineToolStripMenuItem.Checked = ControlIsActive(AnimationPanel);
+            showPropertiesToolStripMenuItem.Checked = ControlIsActive(LayoutProperties);
+            showPanelHiearchyToolStripMenuItem.Checked = ControlIsActive(LayoutHierarchy);
+            showTextureListToolStripMenuItem.Checked = ControlIsActive(LayoutTextureList);
+            showAnimationListToolStripMenuItem.Checked = ControlIsActive(LayoutAnimList);
+        }
+
+        private bool ControlIsActive(Control control) {
+            if (control == null) return false;
+            return !control.IsDisposed && !control.Disposing;
+        }
+
+        private void CloseAnimationPanel()
+        {
+            if (AnimationPanel == null) return;
+
+            var dock = AnimationPanel.Parent as DockContent;
+            dock.Close();
+        }
+
+        private void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e) {
+            UpdateMenuBar();
         }
     }
 }
