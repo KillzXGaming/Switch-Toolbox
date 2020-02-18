@@ -49,6 +49,8 @@ namespace LayoutBXLYT.Revolution
 
         public PAN1(BxlytHeader header, string name) : base()
         {
+            LayoutFile = header;
+
             LoadDefaults();
             Name = name;
         }
@@ -73,8 +75,9 @@ namespace LayoutBXLYT.Revolution
             Bottom = 2
         };
 
-        public PAN1(FileReader reader) : base()
+        public PAN1(FileReader reader, BxlytHeader header) : base()
         {
+            LayoutFile = header;
             _flags1 = reader.ReadByte();
             byte origin = reader.ReadByte();
             Alpha = reader.ReadByte();

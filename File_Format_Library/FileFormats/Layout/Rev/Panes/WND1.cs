@@ -175,7 +175,7 @@ namespace LayoutBXLYT.Revolution
             SetFrames(header);
         }
 
-        public WND1(BxlytHeader header, FileReader reader) : base(reader)
+        public WND1(BxlytHeader header, FileReader reader) : base(reader, header)
         {
             layoutHeader = header;
             WindowFrames = new List<BxlytWindowFrame>();

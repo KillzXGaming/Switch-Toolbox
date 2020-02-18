@@ -48,6 +48,7 @@ namespace LayoutBXLYT.Cafe
 
         public PAN1(BxlytHeader header, string name) : base()
         {
+            LayoutFile = header;
             LoadDefaults();
             Name = name;
         }

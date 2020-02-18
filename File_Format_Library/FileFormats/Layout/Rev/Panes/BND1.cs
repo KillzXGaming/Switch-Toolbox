@@ -22,7 +22,7 @@ namespace LayoutBXLYT.Revolution
             Name = name;
         }
 
-        public BND1(FileReader reader) : base(reader)
+        public BND1(FileReader reader, BxlytHeader header) : base(reader, header)
         {
 
         }

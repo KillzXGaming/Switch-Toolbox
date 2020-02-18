@@ -47,6 +47,7 @@ namespace LayoutBXLYT.CTR
         }
 
         public PAN1(BxlytHeader header, string name) : base() {
+            LayoutFile = header;
             LoadDefaults();
             Name = name;
         }
@@ -80,6 +81,7 @@ namespace LayoutBXLYT.CTR
 
         public PAN1(FileReader reader, BxlytHeader header) : base()
         {
+            LayoutFile = header;
             _flags1 = reader.ReadByte();
             byte origin = reader.ReadByte();
             Alpha = reader.ReadByte();

@@ -113,8 +113,8 @@ namespace LayoutBXLYT
                             foreach (var tex in tpl.TextureList)
                             {
                                 //Only need the first texture
-                                if (!textures.ContainsKey(file.FileName))
-                                    textures.Add(file.FileName, tex);
+                                if (!textures.ContainsKey(tpl.FileName))
+                                    textures.Add(tpl.FileName, tex);
                             }
                         }
                     }
@@ -374,7 +374,7 @@ namespace LayoutBXLYT
                             MaterialList = new MAT1(reader, this);
                             break;
                         case "pan1":
-                            var panel = new PAN1(reader);
+                            var panel = new PAN1(reader, this);
                             AddPaneToTable(panel);
                             if (!setRoot)
                             {
@@ -400,7 +400,7 @@ namespace LayoutBXLYT
                             currentPane = textPanel;
                             break;
                         case "bnd1":
-                            var boundsPanel = new BND1(reader);
+                            var boundsPanel = new BND1(reader, this);
                             AddPaneToTable(boundsPanel);
 
                             SetPane(boundsPanel, parentPane);

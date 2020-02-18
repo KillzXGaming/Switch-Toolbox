@@ -208,7 +208,7 @@ namespace LayoutBXLYT.Revolution
             ShadowItalic = 0;
         }
 
-        public TXT1(FileReader reader, BxlytHeader header) : base(reader)
+        public TXT1(FileReader reader, BxlytHeader header) : base(reader, header)
         {
             layoutFile = header;
 

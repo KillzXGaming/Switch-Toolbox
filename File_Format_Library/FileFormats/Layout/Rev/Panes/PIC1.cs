@@ -70,7 +70,7 @@ namespace LayoutBXLYT.Revolution
             Material = (BxlytMaterial)Material.Clone();
         }
 
-        public PIC1(FileReader reader, BRLYT.Header header) : base(reader)
+        public PIC1(FileReader reader, BRLYT.Header header) : base(reader, header)
         {
             ParentLayout = header;
 
