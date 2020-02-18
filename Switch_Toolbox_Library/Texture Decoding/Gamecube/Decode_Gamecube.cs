@@ -232,13 +232,18 @@ namespace Toolbox.Library
 
         public static int GetDataSizeWithMips(uint format, uint Width, uint Height, uint MipCount)
         {
+            if (MipCount == 0)
+                MipCount = 1;
+
             int size = 0;
             for (int m = 0; m < MipCount; m++)
             {
                 uint width = (uint)Math.Max(1, Width >> m);
                 uint height = (uint)Math.Max(1, Height >> m);
 
-                size =+ Decode_Gamecube.GetDataSize(format, width, height);
+                size += Decode_Gamecube.GetDataSize(format, width, height);
+
+                System.Console.WriteLine($"size {m} {width} {height} {size}");
             }
 
             return size;

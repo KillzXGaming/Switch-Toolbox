@@ -158,6 +158,16 @@ namespace LayoutBXLYT
             isLoaded = false;
         }
 
+        public List<BasePane> GetSelectedPanes()
+        {
+            List<BasePane> nodes = new List<BasePane>();
+            foreach (var node in treeView1.SelectedNodes) {
+                if (node.Tag != null && node.Tag is BasePane)
+                    nodes.Add((BasePane)node.Tag);
+            }
+            return nodes;
+        }
+
         private void LoadTextures(List<string> textures)
         {
             ActiveLayout.TextureFolder = new TreeNode("Textures");
@@ -357,7 +367,8 @@ namespace LayoutBXLYT
 
         private void TogglePane(object sender, EventArgs e)
         {
-            TogglePane(treeView1.SelectedNode);
+            foreach (TreeNode node in treeView1.SelectedNodes)
+                TogglePane(node);
         }
 
         private void TogglePane(TreeNode node)
@@ -373,14 +384,15 @@ namespace LayoutBXLYT
 
         private void treeView1_KeyDown(object sender, KeyEventArgs e)
         {
-            var node = treeView1.SelectedNode;
-            if (node == null || node.Tag == null)
-                return;
+            foreach (var node in treeView1.SelectedNodes) {
+                if (node == null || node.Tag == null)
+                    continue;
 
-            if (e.KeyCode == Keys.H && e.Control)
-            {
-                if (node.Tag is BasePane)
-                    TogglePane(node);
+                if (e.KeyCode == Keys.H)
+                {
+                    if (node.Tag is BasePane)
+                        TogglePane(node);
+                }
             }
         }
 
@@ -391,7 +403,8 @@ namespace LayoutBXLYT
 
             if (e.Button == MouseButtons.Right)
             {
-                treeView1.SelectedNode = e.Node;
+                if (treeView1.SelectedNodes.Count == 0)
+                    treeView1.SelectedNode = e.Node;
 
                 if (e.Node.Tag is BasePane)
                 {

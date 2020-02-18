@@ -1691,16 +1691,32 @@ namespace LayoutBXLYT
             {
                 reader.SetByteOrder(true);
 
-                reader.ReadUInt32(); //magic
-                ushort byteOrderMark = reader.ReadUInt16();
-                reader.CheckByteOrderMark(byteOrderMark);
-                ushort HeaderSize = reader.ReadUInt16();
-                uint Version = reader.ReadUInt32();
-                uint FileSize = reader.ReadUInt32();
-                ushort sectionCount = reader.ReadUInt16();
-                reader.ReadUInt16(); //Padding
+                ushort sectionCount = 0;
 
-                reader.SeekBegin(HeaderSize);
+                string signature = reader.ReadString(4, Encoding.ASCII);
+                if (signature == "RLAN")
+                {
+                    ushort byteOrderMark = reader.ReadUInt16();
+                    reader.CheckByteOrderMark(byteOrderMark);
+                    uint Version = reader.ReadUInt16();
+                    uint FileSize = reader.ReadUInt32();
+                    ushort HeaderSize = reader.ReadUInt16();
+                    sectionCount = reader.ReadUInt16();
+                    reader.ReadUInt16(); //Padding
+                    reader.SeekBegin(HeaderSize);
+                }
+                else
+                {
+                    ushort byteOrderMark = reader.ReadUInt16();
+                    reader.CheckByteOrderMark(byteOrderMark);
+                    ushort HeaderSize = reader.ReadUInt16();
+                    uint Version = reader.ReadUInt32();
+                    uint FileSize = reader.ReadUInt32();
+                    sectionCount = reader.ReadUInt16();
+                    reader.ReadUInt16(); //Padding
+                    reader.SeekBegin(HeaderSize);
+                }
+
                 for (int i = 0; i < sectionCount; i++)
                 {
                     long pos = reader.Position;
@@ -1720,12 +1736,20 @@ namespace LayoutBXLYT
                         for (int e = 0; e < numEntries; e++)
                         {
                             reader.SeekBegin(pos + entryOffsets[e]);
-                            string name = reader.ReadString(28, true);
-                            if (EntryNames.Contains(name))
-                                return true;
+                            if (signature == "RLAN")
+                            {
+                                string name = reader.ReadString(0x14, true);
+                                if (EntryNames.Contains(name))
+                                    return true;
+                            }
+                            else
+                            {
+                                string name = reader.ReadString(28, true);
+                                if (EntryNames.Contains(name))
+                                    return true;
+                            }
                         }
                     }
-
                     reader.SeekBegin(pos + SectionSize);
                 }
             }

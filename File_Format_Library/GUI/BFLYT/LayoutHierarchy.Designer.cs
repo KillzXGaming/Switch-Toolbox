@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.treeView1 = new Toolbox.Library.Forms.MultiselectTreeView();
             this.SuspendLayout();
             // 
             // treeView1
@@ -64,6 +64,6 @@
 
         #endregion
 
-        private System.Windows.Forms.TreeView treeView1;
+        private Toolbox.Library.Forms.MultiselectTreeView treeView1;
     }
 }

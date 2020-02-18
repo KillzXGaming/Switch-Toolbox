@@ -314,6 +314,9 @@
     <Compile Include="Forms\Custom\STRadioButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\Custom\Treeview\MultiselectTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\Custom\Treeview\TreeviewDragSorter.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -65,6 +65,8 @@ namespace LayoutBXLYT
 
         private void SearchActiveAnimations(BasePane pane)
         {
+            Console.WriteLine($"SearchActiveAnimations {pane.Name} {pane.LayoutFile == null}");
+
             if (pane.LayoutFile == null) return;
 
             var animations = GetAnimations();
@@ -72,12 +74,14 @@ namespace LayoutBXLYT
             string matName = material != null ? material.Name : "";
 
             var archive = pane.LayoutFile.FileInfo.IFileInfo.ArchiveParent;
+
             if (archive != null)
             {
                 foreach (var file in archive.Files)
                 {
-                    if (Utils.GetExtension(file.FileName) == ".bflan" &&
-                        !animations.Any(x => x.FileName == file.FileName))
+                    string ext = Utils.GetExtension(file.FileName);
+                    bool isBxlan = ext == ".bflan" || ext == ".bclan" || ext == ".brlan";
+                    if (isBxlan && !animations.Any(x => x.FileName == file.FileName))
                     {
                         if (BxlanHeader.ContainsEntry(file.FileData, new string[2] { pane.Name, matName }))
                             animationCB.Items.Add(new AnimationComboboxItem(file.FileName) { Tag = file });
@@ -87,8 +91,7 @@ namespace LayoutBXLYT
 
             for (int i = 0; i < animations?.Count; i++)
             {
-                if (animations[i].ContainsEntry(pane.Name) || animations[i].ContainsEntry(matName))
-                {
+                if (animations[i].ContainsEntry(pane.Name) || animations[i].ContainsEntry(matName)) {
                     animationCB.Items.Add(new AnimationComboboxItem(animations[i].FileName) { Tag = animations[i] });
                 }
             }
