@@ -1402,7 +1402,7 @@ namespace Toolbox
             if (fileFormat == null) return;
 
             if (fileFormat is STGenericTexture) {
-                string name = Path.GetFileNameWithoutExtension(fileFormat.FileName);
+                string name = ((STGenericTexture)fileFormat).Text;
                 ExportTexture(((STGenericTexture)fileFormat), $"{outputFolder}/{name}.{extension}");
             }
             else if (fileFormat is IArchiveFile)
