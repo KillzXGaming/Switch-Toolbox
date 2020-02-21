@@ -228,6 +228,7 @@ namespace LayoutBXLYT
             ShowPropertiesPanel();
             UpdateBackColor();
             ShowAnimationPanel();
+            UpdateMenuBar();
         }
 
         private void ResetEditors()

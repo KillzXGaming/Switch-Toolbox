@@ -83,6 +83,9 @@ namespace LayoutBXLYT
 
         public void LoadAnimation(BxlanHeader bxlan)
         {
+            if (bxlan == null)
+                return;
+
             isLoaded = false;
             listView1.BeginUpdate();
             listView1.Items.Add(new ListViewItem(bxlan.FileName)
