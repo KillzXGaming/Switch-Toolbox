@@ -562,7 +562,11 @@ namespace FirstPlugin
                 if (!hashList.ContainsKey(hash))
                     hashList.Add(hash, HashString);
 
-                if (HashString.Contains("pm0000"))
+                if (HashString.Contains("pm0000") || 
+                    HashString.Contains("poke_XXXX") || 
+                    HashString.Contains("poke_ball_0000") ||
+                    HashString.Contains("poke_face_0000") ||
+                    HashString.Contains("poke_motion_0000"))
                     GeneratePokeStrings(HashString);
 
                 string[] hashPaths = HashString.Split('/');
@@ -590,7 +594,12 @@ namespace FirstPlugin
 
             for (int i = 0; i < 1000; i++)
             {
-                string pokeStr = hashStr.Replace("pm0000", $"pm{i.ToString("D4")}");
+                string pokeStr = string.Empty;
+                if (hashStr.Contains("pm0000")) pokeStr = hashStr.Replace("pm0000", $"pm{i.ToString("D4")}");
+                else if (hashStr.Contains("poke_XXXX")) pokeStr = hashStr.Replace("poke_XXXX", $"poke_{i.ToString("D4")}");
+                else if (hashStr.Contains("poke_ball_0000")) pokeStr = hashStr.Replace("poke_ball_0000", $"poke_ball_{i.ToString("D4")}");
+                else if (hashStr.Contains("poke_face_0000")) pokeStr = hashStr.Replace("poke_face_0000", $"poke_face_{i.ToString("D4")}");
+                else if (hashStr.Contains("poke_motion_0000")) pokeStr = hashStr.Replace("poke_motion_0000", $"poke_motion_{i.ToString("D4")}");
 
                 ulong hash = FNV64A1.Calculate(pokeStr);
                 if (!hashList.ContainsKey(hash))
