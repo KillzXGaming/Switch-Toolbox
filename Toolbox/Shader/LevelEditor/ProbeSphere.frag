@@ -43,39 +43,8 @@ vec3 CalculateIrradiance()
     );
 }
 
-vec3 aglSH2Rgb( vec3 normal,
-                vec4 sh00,
-                vec4 sh01,
-                vec4 sh02,
-                vec4 sh10,
-                vec4 sh11,
-                vec4 sh12,
-                vec4 sh2 )
-{
-    vec4 normal4 = vec4( normal.x, normal.y, normal.z, 1.0 );
-
-    vec3 x0;
-    x0.r         = dot( sh00, normal4 );
-    x0.g         = dot( sh01, normal4 );
-    x0.b         = dot( sh02, normal4 );
-
-    vec4 v_b     = normal4.xyzz * normal4.yzzx;
-    vec3 x1;
-    x1.r         = dot( sh10, v_b );
-    x1.g         = dot( sh11, v_b );
-    x1.b         = dot( sh12, v_b );
-
-    float v_c    = normal4.x * normal4.x - normal4.y * normal4.y;
-    vec3  x2     = sh2.rgb * v_c;
-
-    return max( ( x0 + x1 + x2 ), 0.0 );
-}
-
 void main()
 {
-    vec3 irr = aglSH2Rgb(vec3(1,1,1), 
-    coefficent0,coefficent1,coefficent2,
-    coefficent3,coefficent4,coefficent5,coefficent6);
- //   irr = CalculateIrradiance();
+    vec3 irr = CalculateIrradiance();
     FragColor = vec4(irr, 1.0);
 }

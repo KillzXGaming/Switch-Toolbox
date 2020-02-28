@@ -76,6 +76,8 @@ namespace Toolbox.Library.IO
                     if (fileFormat.Identify(stream) && fileFormat.GetType() == type)
                     {
                         fileFormat.IFileInfo = new IFileInfo();
+                        fileFormat.FileName = Path.GetFileName(FileName);
+                        fileFormat.FilePath = FileName;
                         return OpenFileFormat(stream, FileName);
                     }
                 }

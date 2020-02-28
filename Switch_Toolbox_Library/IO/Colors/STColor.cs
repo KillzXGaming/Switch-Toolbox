@@ -60,6 +60,11 @@ namespace Toolbox.Library
             return col;
         }
 
+        public OpenTK.Vector4 ToVector4()
+        {
+            return new OpenTK.Vector4(R,G,B,A);
+        }
+
         public STColor(Color color)
         {
             R = color.R / 255f;

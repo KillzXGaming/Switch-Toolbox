@@ -296,6 +296,9 @@
     <Compile Include="Forms\Color\VertexColorTopBottomBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\Custom\STButtonToggle.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\Custom\ComboBox\ImagedComboBox.cs">
       <SubType>Component</SubType>
     </Compile>

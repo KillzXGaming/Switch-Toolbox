@@ -20,6 +20,8 @@ namespace Toolbox.Library
         public bool RotateSkeleton = false;
         public float RotateSkeletonAmount = 90;
 
+        static bool isDae;
+
         public Scene scene;
 
         public List<STGenericObject> objects = new List<STGenericObject>();
@@ -73,8 +75,10 @@ namespace Toolbox.Library
 
                    
                     scene = Importer.ImportFile(FileName, settings.GetFlags());
-                    if (Utils.GetExtension(FileName) == ".dae")
+                    if (Utils.GetExtension(FileName) == ".dae") {
                         GetRealNodeNames(FileName);
+                        isDae = true;
+                    }
 
                     STConsole.WriteLine($"UnitScale {UnitScale}");
 
@@ -733,9 +737,9 @@ namespace Toolbox.Library
                     vert.uv2 = new Vector2(msh.TextureCoordinateChannels[2][v].X, msh.TextureCoordinateChannels[2][v].Y);
                 if (msh.HasTangentBasis)
                     vert.tan = new Vector4(msh.Tangents[v].X, msh.Tangents[v].Y, msh.Tangents[v].Z, 1);
-                if (msh.HasVertexColors(0))
+                if (msh.HasVertexColors(0) && !isDae)
                     vert.col = new Vector4(msh.VertexColorChannels[0][v].R, msh.VertexColorChannels[0][v].G, msh.VertexColorChannels[0][v].B, msh.VertexColorChannels[0][v].A);
-                if (msh.HasVertexColors(1))
+                if (msh.HasVertexColors(1) && !isDae)
                     vert.col2 = new Vector4(msh.VertexColorChannels[1][v].R, msh.VertexColorChannels[1][v].G, msh.VertexColorChannels[1][v].B, msh.VertexColorChannels[1][v].A);
                 if (msh.HasTangentBasis)
                     vert.bitan = new Vector4(msh.BiTangents[v].X, msh.BiTangents[v].Y, msh.BiTangents[v].Z, 1);

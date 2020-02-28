@@ -1142,6 +1142,40 @@ namespace Toolbox.Library
                     break;
             }
         }
+
+        public static Tuple<List<byte[]>, ushort[]> GenerateMipList(byte[] uncompressedData, uint TexWidth, uint TexHeight,
+      uint MipCount, TextureFormats Format, PaletteFormats PaletteFormat)
+        {
+            Bitmap Image = BitmapExtension.GetBitmap(uncompressedData, (int)TexWidth, (int)TexHeight);
+            return GenerateMipList(Image, TexWidth, TexHeight, MipCount, Format, PaletteFormat);
+        }
+
+        public static Tuple<List<byte[]>, ushort[]> GenerateMipList(Bitmap Image, uint TexWidth, uint TexHeight,
+            uint MipCount, TextureFormats Format, PaletteFormats PaletteFormat)
+        {
+            ushort[] paletteData = new ushort[0];
+
+            List<byte[]> mipmaps = new List<byte[]>();
+            for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
+            {
+                int MipWidth = Math.Max(1, (int)TexWidth >> mipLevel);
+                int MipHeight = Math.Max(1, (int)TexHeight >> mipLevel);
+
+                if (mipLevel != 0)
+                    Image = BitmapExtension.Resize(Image, MipWidth, MipHeight);
+
+                var EncodedData = Decode_Gamecube.EncodeData(BitmapExtension.ImageToByte(Image), Format, PaletteFormat, MipWidth, MipHeight);
+
+                mipmaps.Add(EncodedData.Item1);
+
+                if (mipLevel == 0) //Set palette data once
+                    paletteData = EncodedData.Item2;
+            }
+            Image.Dispose();
+
+            return Tuple.Create(mipmaps, paletteData);
+        }
+
         #endregion
     }
 }

@@ -99,7 +99,7 @@ namespace Toolbox.Library
             else
             {
                 return STFileLoader.OpenFileFormat(new MemoryStream(FileData),
-                IOExtensions.RemoveIllegaleFolderNameCharacters( FileName), false, true);
+                IOExtensions.RemoveIllegaleFolderNameCharacters(FileName), false, true);
             }
         }
 
