@@ -26,6 +26,8 @@ namespace FirstPlugin.Forms
             return new List<IFileFormat>() { AampFile };
         }
 
+        public void BeforeFileSaved() { }
+
         private TextEditor textEditor;
         public AampEditorBase(AAMP aamp, bool IsSaveDialog)
         {
@@ -48,7 +50,7 @@ namespace FirstPlugin.Forms
 
             textEditor = new TextEditor();
             textEditor.Dock = DockStyle.Fill;
-            textEditor.ClearContextMenus();
+            textEditor.ClearContextMenus(new string[] { "Search" });
             textEditor.AddContextMenu("Decompile", TextEditorToYaml);
             textEditor.AddContextMenu("Compile", TextEditorFromYaml);
             stPanel2.Controls.Add(textEditor);

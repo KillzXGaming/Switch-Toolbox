@@ -30,6 +30,8 @@ namespace FirstPlugin
             return new List<IFileFormat>() { FileFormat };
         }
 
+        public void BeforeFileSaved() { }
+
         public ByteOrder byteOrder;
         public dynamic byml
         {
@@ -118,7 +120,7 @@ namespace FirstPlugin
             stPanel4.Controls.Clear();
 
             textEditor = new TextEditor();
-            textEditor.ClearContextMenus();
+            textEditor.ClearContextMenus(new string[] { "Search" });
             textEditor.AddContextMenu("Decompile", TextEditorToYaml);
             textEditor.AddContextMenu("Compile", TextEditorFromYaml);
 

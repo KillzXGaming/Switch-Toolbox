@@ -21,6 +21,8 @@ namespace Toolbox.Library.Forms
             return new List<IFileFormat>() { FileFormat };
         }
 
+        public void BeforeFileSaved() { }
+
         FindReplace findReplaceDialog;
 
         private void ResetTypes()
@@ -214,9 +216,15 @@ namespace Toolbox.Library.Forms
             stContextMenuStrip1.Items.Add(text, null, handler);
         }
 
-        public void ClearContextMenus()
+        public void ClearContextMenus(string[] filter)
         {
-            stContextMenuStrip1.Items.Clear();
+            var menuItemsRemove = new List<ToolStripMenuItem>();
+            foreach (ToolStripMenuItem item in stContextMenuStrip1.Items)
+                if (!filter.Contains(item.Text))
+                    menuItemsRemove.Add(item);
+
+            foreach (var item in menuItemsRemove)
+                stContextMenuStrip1.Items.Remove(item);
         }
 
         public string GetText()
