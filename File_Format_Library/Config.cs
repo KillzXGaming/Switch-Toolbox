@@ -73,7 +73,7 @@ namespace FirstPlugin
         public static void Save()
         {
             XmlDocument doc = CreateXmlFromSettings();
-            doc.Save("Lib/Plugins/config.xml");
+            doc.Save(Runtime.ExecutableDir + "/Lib/Plugins/config.xml");
         }
         private static XmlDocument CreateXmlFromSettings()
         {
