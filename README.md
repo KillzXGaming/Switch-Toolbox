@@ -128,7 +128,7 @@ In the event that the tool cannot compile, check references. All the libraries u
 - Ac_K for ASTC decoder c# port from Ryujinx. 
 - pkNX and kwsch for Fnv hashing and useful pkmn code/structure references.
 - Dragonation for useful code on the structure for some flatbuffers in pokemon switch
-- mvitand Rei for help with gfpak hash strings and also research for formats.
+- mvit and Rei for help with gfpak hash strings and also research for formats.
 
 ##  Resources
 - [TreeView Icons by icons8](https://icons8.com/)

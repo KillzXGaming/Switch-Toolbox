@@ -303,6 +303,11 @@ namespace Toolbox.Library
                         Enum.TryParse(node.InnerText, out textFormat);
                         Runtime.ByamlEditor.TextFormat = textFormat;
                         break;
+                    case "cameraMovement":
+                        Runtime.CameraMovement cameraMovement;
+                        Enum.TryParse(node.InnerText, out cameraMovement);
+                        Runtime.cameraMovement = cameraMovement;
+                        break;
 
                 }
             }
@@ -553,6 +558,7 @@ namespace Toolbox.Library
             renderSettingsNode.AppendChild(createNode(doc, "bonePointSize", Runtime.bonePointSize.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "MaxCameraSpeed", Runtime.MaxCameraSpeed.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "FrameCamera", Runtime.FrameCamera.ToString()));
+            renderSettingsNode.AppendChild(createNode(doc, "cameraMovement", Runtime.cameraMovement.ToString()));
         }
         
         private static void AppendResourceTableSettings(XmlDocument doc, XmlNode parentNode)
