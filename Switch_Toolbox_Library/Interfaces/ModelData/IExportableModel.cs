@@ -8,9 +8,9 @@ namespace Toolbox.Library
 {
     public interface IExportableModel
     {
-        List<STGenericObject> Meshes { get; }
-        List<STGenericMaterial> Materials { get; }
-        STSkeleton Skeleton { get; }
-        List<STGenericTexture> TextureList { get; }
+        IEnumerable<STGenericObject> ExportableMeshes { get; }
+        IEnumerable<STGenericMaterial> ExportableMaterials { get; }
+        IEnumerable<STGenericTexture> ExportableTextures { get; }
+        STSkeleton ExportableSkeleton { get; }
     }
 }

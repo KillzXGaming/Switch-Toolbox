@@ -391,6 +391,12 @@ namespace Toolbox
                     if (!format.CanSave)
                         return;
 
+                    if (ActiveMdiChild is IFIleEditor)
+                    {
+                        if (((IFIleEditor)ActiveMdiChild).GetFileFormats().Count > 0)
+                            ((IFIleEditor)ActiveMdiChild).BeforeFileSaved();
+                    }
+
                     string FileName = format.FilePath;
                     if (!File.Exists(FileName))
                         UseSaveDialog = true;
@@ -1355,6 +1361,58 @@ namespace Toolbox
             }
         }
 
+
+        private void batchExportModelsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                FolderSelectDialog folderDlg = new FolderSelectDialog();
+                if (folderDlg.ShowDialog() == DialogResult.OK) {
+                    BatchExportModels(ofd.FileNames, folderDlg.SelectedPath);
+                }
+            }
+        }
+
+        private void BatchExportModels(string[] files, string outputFolder)
+        {
+            List<string> Formats = new List<string>();
+            Formats.Add("DAE (.dae)");
+
+            List<string> failedFiles = new List<string>();
+
+            BatchFormatExport form = new BatchFormatExport(Formats);
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                string extension = form.GetSelectedExtension();
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        var fileFormat = STFileLoader.OpenFileFormat(file);
+                        SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Models);
+                    }
+                    catch (Exception ex)
+                    {
+                        failedFiles.Add($"{file} \n Error:\n {ex} \n");
+                    }
+                }
+            }
+
+            if (failedFiles.Count > 0)
+            {
+                string detailList = "";
+                foreach (var file in failedFiles)
+                    detailList += $"{file}\n";
+
+                STErrorDialog.Show("Some files failed to export! See detail list of failed files.", "Switch Toolbox", detailList);
+            }
+            else
+                MessageBox.Show("Files batched successfully!");
+        }
+
         private void BatchExportTextures(string[] files, string outputFolder)
         {
             List<string> Formats = new List<string>();
@@ -1376,7 +1434,7 @@ namespace Toolbox
                     try
                     {
                         var fileFormat = STFileLoader.OpenFileFormat(file);
-                        SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder);
+                        SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Textures);
                     }
                     catch (Exception ex)
                     {
@@ -1397,17 +1455,18 @@ namespace Toolbox
                 MessageBox.Show("Files batched successfully!");
         }
 
-        private void SearchFileFormat(BatchFormatExport.Settings settings, IFileFormat fileFormat, string extension, string outputFolder)
+        private void SearchFileFormat(BatchFormatExport.Settings settings, IFileFormat fileFormat, 
+            string extension, string outputFolder, ExportMode exportMode)
         {
             if (fileFormat == null) return;
 
-            if (fileFormat is STGenericTexture) {
+            if (fileFormat is STGenericTexture && exportMode == ExportMode.Textures) {
                 string name = ((STGenericTexture)fileFormat).Text;
                 ExportTexture(((STGenericTexture)fileFormat), $"{outputFolder}/{name}.{extension}");
             }
             else if (fileFormat is IArchiveFile)
-                SearchArchive(settings, (IArchiveFile)fileFormat, extension, outputFolder);
-            else if (fileFormat is ITextureContainer)
+                SearchArchive(settings, (IArchiveFile)fileFormat, extension, outputFolder, exportMode);
+            else if (fileFormat is ITextureContainer && exportMode == ExportMode.Textures)
             {
                 if (settings.SeperateTextureContainers)
                 {
@@ -1421,15 +1480,35 @@ namespace Toolbox
                     ExportTexture(tex, $"{outputFolder}/{tex.Text}.{extension}");
                 }
             }
+            else if (fileFormat is IExportableModel && exportMode == ExportMode.Models)
+            {
+                DAE.ExportSettings daesettings = new DAE.ExportSettings();
+                daesettings.SuppressConfirmDialog = true;
+
+                var model = new STGenericModel();
+                model.Materials = ((IExportableModel)fileFormat).ExportableMaterials;
+                model.Objects = ((IExportableModel)fileFormat).ExportableMeshes;
+                var textures = ((IExportableModel)fileFormat).ExportableTextures.ToList();
+                var skeleton = ((IExportableModel)fileFormat).ExportableSkeleton;
+                string name = Path.GetFileNameWithoutExtension(fileFormat.FileName);
+                DAE.Export($"{outputFolder}/{name}.{extension}", daesettings, model, textures, skeleton);
+            }
 
             fileFormat.Unload();
+        }
+
+        public enum ExportMode
+        {
+            Models,
+            Textures,
         }
 
         private void ExportTexture(STGenericTexture tex, string filePath) {
             tex.Export(filePath);
         }
 
-        private void SearchArchive(BatchFormatExport.Settings settings, IArchiveFile archiveFile, string extension, string outputFolder)
+        private void SearchArchive(BatchFormatExport.Settings settings, IArchiveFile archiveFile,
+            string extension, string outputFolder, ExportMode exportMode)
         {
             string ArchiveFilePath = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(((IFileFormat)archiveFile).FileName));
             if (!Directory.Exists(ArchiveFilePath))
@@ -1438,7 +1517,7 @@ namespace Toolbox
                 ArchiveFilePath = outputFolder;
 
             foreach (var file in archiveFile.Files)
-                SearchFileFormat(settings, file.OpenFile(), extension, ArchiveFilePath);
+                SearchFileFormat(settings, file.OpenFile(), extension, ArchiveFilePath, exportMode);
         }
     }
 }

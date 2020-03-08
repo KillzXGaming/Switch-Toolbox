@@ -16,7 +16,7 @@ using SPICA.PICA.Commands;
 
 namespace FirstPlugin
 {
-    public class CMB : TreeNodeFile, IFileFormat, IContextMenuNode
+    public class CMB : TreeNodeFile, IFileFormat, IContextMenuNode, IExportableModel
     {
         public FileType FileType { get; set; } = FileType.Layout;
 
@@ -44,11 +44,15 @@ namespace FirstPlugin
             }
         }
 
+        public IEnumerable<STGenericObject> ExportableMeshes => Renderer.Meshes;
+        public IEnumerable<STGenericMaterial> ExportableMaterials => Materials;
+        public IEnumerable<STGenericTexture> ExportableTextures => Renderer.TextureList;
+        public STSkeleton ExportableSkeleton => Skeleton;
+
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
             Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
-            Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
             return Items.ToArray();
         }
 
@@ -62,30 +66,6 @@ namespace FirstPlugin
             {
                 STFileSaver.SaveFileFormat(this, sfd.FileName);
             }
-        }
-
-        private void ExportAction(object sender, EventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Supported Formats|*.dae;";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                ExportModelSettings exportDlg = new ExportModelSettings();
-                if (exportDlg.ShowDialog() == DialogResult.OK)
-                    ExportModel(sfd.FileName, exportDlg.Settings);
-            }
-        }
-
-        public void ExportModel(string fileName, DAE.ExportSettings settings)
-        {
-            var model = new STGenericModel();
-            model.Materials = Materials;
-            model.Objects = Renderer.Meshes;
-            var textures = new List<STGenericTexture>();
-            foreach (var tex in Renderer.TextureList)
-                textures.Add(tex);
-
-            DAE.Export(fileName, settings, model, textures, Skeleton);
         }
 
         bool DrawablesLoaded = false;

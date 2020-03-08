@@ -505,13 +505,13 @@ namespace Toolbox.Library.Forms
         public void ExportModel(IExportableModel exportableModel, string fileName, DAE.ExportSettings settings)
         {
             var model = new STGenericModel();
-            model.Materials = exportableModel.Materials;
-            model.Objects = exportableModel.Meshes;
+            model.Materials = exportableModel.ExportableMaterials;
+            model.Objects = exportableModel.ExportableMeshes;
             var textures = new List<STGenericTexture>();
-            foreach (var tex in exportableModel.TextureList)
+            foreach (var tex in exportableModel.ExportableTextures)
                 textures.Add(tex);
 
-            DAE.Export(fileName, settings, model, textures, exportableModel.Skeleton);
+            DAE.Export(fileName, settings, model, textures, exportableModel.ExportableSkeleton);
         }
 
         private void SelectFileInExplorer(object sender, EventArgs args)

@@ -85,35 +85,10 @@ namespace HyruleWarriors.G1M
             }
         }
 
-        public List<STGenericObject> Meshes
-        {
-            get {
-                List<STGenericObject> meshes = new List<STGenericObject>();
-                foreach (var mesh in Model.GenericMeshes)
-                    meshes.Add(mesh);
-                return meshes;
-            }
-        }
-
-        public List<STGenericMaterial> Materials
-        {
-            get {
-                List<STGenericMaterial> materials = new List<STGenericMaterial>();
-                foreach (var mat in Model.Materials) {
-                    materials.Add(mat);
-                    foreach (G1MTextureMap texMap in mat.TextureMaps)
-                    {
-                        var texList = TextureList;
-                        if (texList.Count > texMap.TextureIndex) {
-                            texMap.Name = texList[texMap.TextureIndex].Text;
-                        }
-                    }
-                }
-                return materials;
-            }
-        }
-
-        public STSkeleton Skeleton => G1MSkeleton.GenericSkeleton;
+        public IEnumerable<STGenericObject> ExportableMeshes => Model.GenericMeshes;
+        public IEnumerable<STGenericMaterial> ExportableMaterials => Model.Materials;
+        public IEnumerable<STGenericTexture> ExportableTextures => TextureList;
+        public STSkeleton ExportableSkeleton => G1MSkeleton.GenericSkeleton;
 
         public List<STGenericTexture> TextureList
         {
@@ -230,7 +205,7 @@ namespace HyruleWarriors.G1M
                     foreach (var mesh in Model.GenericMeshes)
                         meshNode.Nodes.Add(mesh);
 
-                    if (Skeleton != null)
+                    if (G1MSkeleton != null)
                     {
                         foreach (var mesh in Model.GenericMeshes)
                         {
