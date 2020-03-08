@@ -393,8 +393,8 @@ namespace Toolbox
 
                     if (ActiveMdiChild is IFIleEditor)
                     {
-                        if (((IFIleEditor)ActiveMdiChild).GetFileFormats().Count > 0)
-                            ((IFIleEditor)ActiveMdiChild).BeforeFileSaved();
+                       // if (((IFIleEditor)ActiveMdiChild).GetFileFormats().Count > 0)
+                        //    ((IFIleEditor)ActiveMdiChild).BeforeFileSaved();
                     }
 
                     string FileName = format.FilePath;
