@@ -27,7 +27,12 @@ namespace Toolbox.Library.Forms
         private int startTime = 0;
         public int StartTime
         {
-            set { startTime = value; }
+            set {
+                if (value == FrameCount)
+                    startTime = value - 1;
+                else
+                    startTime = value;
+            }
         }
 
         public event EventHandler FrameChanged;
@@ -92,7 +97,10 @@ namespace Toolbox.Library.Forms
             get { return lastFrame + 1; }
             set
             {
-                lastFrame = value;
+                if (value == startTime)
+                    lastFrame = value + 1;
+                else
+                    lastFrame = value;
 
                 if (value == 1)
                 {
@@ -156,7 +164,7 @@ namespace Toolbox.Library.Forms
                 step = Math.Round(Math.Max(1, step));
             }
 
-            if (lastFrame != startTime)
+            if (frameRight != frameLeft)
             {
                 double max;
                 if (frameRight < lastFrame)
@@ -201,7 +209,8 @@ namespace Toolbox.Library.Forms
             double currentFrameX = 20 + margin + (currentFrame - frameLeft) * (Width - 40 - margin) / (frameRight - frameLeft);
 
             base.OnPaint(e);
-            e.Graphics.DrawLine(pen2, new Point((int)currentFrameX, barHeight), new Point((int)currentFrameX, Height));
+            if (frameLeft != frameRight)
+                e.Graphics.DrawLine(pen2, new Point((int)currentFrameX, barHeight), new Point((int)currentFrameX, Height));
 
             e.Graphics.DrawString("" + currentFrame, font, brush1, new Point((int)currentFrameX - TextRenderer.MeasureText("" + currentFrame, font).Width / 2, 0));
         }
