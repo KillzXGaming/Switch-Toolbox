@@ -403,8 +403,7 @@ namespace LayoutBXLYT
 
             if (e.Button == MouseButtons.Right)
             {
-                if (treeView1.SelectedNodes.Count == 0)
-                    treeView1.SelectedNode = e.Node;
+                treeView1.SelectedNode = e.Node;
 
                 if (e.Node.Tag is BasePane)
                 {
