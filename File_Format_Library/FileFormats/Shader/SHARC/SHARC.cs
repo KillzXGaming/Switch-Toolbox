@@ -237,7 +237,7 @@ namespace FirstPlugin
                 variationFragmenMacroData.Read(reader, header.Version);
                 variationGeometryMacroData.Read(reader, header.Version);
 
-                if (header.Version >= 12)
+                if (header.Version >= 13)
                 {
                     variationComputeMacroData.Read(reader, header.Version);
                 }
@@ -245,17 +245,14 @@ namespace FirstPlugin
                 variationSymbolData.Read(reader);
                 variationSymbolDataFull.Read(reader);
 
+                UniformVariables.Read(reader, header.Version, true);
                 if (header.Version <= 12)
                 {
-                    UniformVariables.Read(reader);
-
                     if (header.Version >= 11)
-                    {
                         UniformBlocks.Read(reader, header.Version, true);
-                    }
 
-                    SamplerVariables.Read(reader);
-                    AttributeVariables.Read(reader);
+                    SamplerVariables.Read(reader, header.Version);
+                    AttributeVariables.Read(reader, header.Version);
                 }
 
 
