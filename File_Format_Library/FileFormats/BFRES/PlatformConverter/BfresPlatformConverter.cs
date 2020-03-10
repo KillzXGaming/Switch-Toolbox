@@ -113,6 +113,7 @@ namespace FirstPlugin
                     paramInfoU.FloatCurveCount = paramInfoNX.FloatCurveCount;
                     paramInfoU.IntCurveCount = paramInfoNX.IntCurveCount;
                     paramInfoU.SubBindIndex = paramInfoNX.SubBindIndex;
+                    paramInfoU.ConstantCount = paramInfoNX.ConstantCount;
                     matAnimData.ParamAnimInfos.Add(paramInfoU);
                 }
             }

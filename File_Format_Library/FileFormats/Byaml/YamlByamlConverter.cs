@@ -8,7 +8,7 @@ using AampLibraryCSharp.IO;
 using SharpYaml.Serialization;
 using System.Globalization;
 using Syroot.BinaryData;
-using System.Collections.Generic;
+using ByamlExt.Byaml;
 
 namespace FirstPlugin
 {
@@ -213,6 +213,17 @@ namespace FirstPlugin
                     yamlNode.Add(item.Key, SaveNode(item.Key, item.Value));
                 return yamlNode;
             }
+            else if (node is ByamlPathPoint)
+            {
+                return ConvertPathPoint((ByamlPathPoint)node);
+            }
+            else if (node is List<ByamlPathPoint>)
+            {
+                var yamlNode = new YamlSequenceNode();
+                foreach (var pt in (List<ByamlPathPoint>)node)
+                    yamlNode.Add(ConvertPathPoint(pt));
+                return yamlNode;
+            }
             else
             {
                 string tag = null;
@@ -225,6 +236,20 @@ namespace FirstPlugin
                 if (tag != null) yamlNode.Tag = tag;
                 return yamlNode;
             }
+        }
+
+        private static YamlMappingNode ConvertPathPoint(ByamlPathPoint point)
+        {
+            YamlMappingNode node = new YamlMappingNode();
+            node.Style = SharpYaml.YamlStyle.Flow;
+            node.Add("X", point.Position.X.ToString());
+            node.Add("Y", point.Position.Y.ToString());
+            node.Add("Z", point.Position.Z.ToString());
+            node.Add("NX", point.Normal.X.ToString());
+            node.Add("NY", point.Normal.Y.ToString());
+            node.Add("NZ", point.Normal.Z.ToString());
+            node.Add("Value", point.Unknown.ToString());
+            return node;
         }
 
         private static bool IsReferenceNode(dynamic node)
