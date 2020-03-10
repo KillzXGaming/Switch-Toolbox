@@ -1741,10 +1741,20 @@ namespace FirstPlugin
             public TextureMap[] TextureMaps { get; set; }
             public TextureMatrix[] TextureMaticies { get; set; }
 
-            public ushort LightSetIndex { get; set; }
-            public ushort FogIndex { get; set; }
+            public uint TotalUsedTextures { get; set; }
+            public uint TotalUsedTextureCoords { get; set; }
 
             public List<TextureCombiner> TextureCombiners { get; set; }
+
+            public STColor8 EmissionColor { get; set; }
+
+            public STColor8 AmbientColor { get; set; }
+
+            public STColor8 Diffuse { get; set; }
+
+            public STColor8 Specular0 { get; set; }
+
+            public STColor8 Specular1 { get; set; }
 
             public STColor8[] ConstantColors { get; set; }
 
@@ -1780,8 +1790,8 @@ namespace FirstPlugin
             public float BufferColorB { get; set; }
             public float BufferColorA { get; set; }
 
-            public short BumpMapIndex { get; set; }
-            public ushort BumpMapMode { get; set; }
+            public TextureUnit BumpMapIndex { get; set; }
+            public BumpMode BumpMapMode { get; set; }
             public short IsBumpRenormalize { get; set; }
 
             public LayerConfig LayerConfig { get; set; }
@@ -1856,10 +1866,10 @@ namespace FirstPlugin
                     matParams.TextureCoords[i].Rotation = TextureMaticies[i].Rotate;
                 }
 
-                matParams.DiffuseColor = new SPICA.Math3D.RGBA(255,255,255,255);
-                matParams.Specular0Color = new SPICA.Math3D.RGBA(0, 0, 0, 255);
-                matParams.Specular1Color = new SPICA.Math3D.RGBA(0, 0, 0, 255);
-                matParams.EmissionColor = new SPICA.Math3D.RGBA(0, 0, 0, 255);
+                matParams.DiffuseColor   = ConvertRGBA(Diffuse);
+                matParams.Specular0Color = ConvertRGBA(Specular0);
+                matParams.Specular1Color = ConvertRGBA(Specular1);
+                matParams.EmissionColor  = ConvertRGBA(EmissionColor);
                 matParams.Constant0Color = ConvertRGBA(ConstantColors[0]);
                 matParams.Constant1Color = ConvertRGBA(ConstantColors[1]);
                 matParams.Constant2Color = ConvertRGBA(ConstantColors[2]);
@@ -2096,42 +2106,41 @@ namespace FirstPlugin
             public struct LightTable
             {
                 public bool reflectanceRSamplerIsAbs;
+                public sbyte reflectanceRSamplerIndex;
                 public LUTInput reflectanceRSamplerInput;
-                public uint reflectanceRSamplerScale;
+                public float reflectanceRSamplerScale;
 
                 public bool reflectanceGSamplerIsAbs;
+                public sbyte reflectanceGSamplerIndex;
                 public LUTInput reflectanceGSamplerInput;
-                public uint reflectanceGSamplerScale;
+                public float reflectanceGSamplerScale;
 
                 public bool reflectanceBSamplerIsAbs;
+                public sbyte reflectanceBSamplerIndex;
                 public LUTInput reflectanceBSamplerInput;
-                public uint reflectanceBSamplerScale;
+                public float reflectanceBSamplerScale;
 
                 public bool reflectance0SamplerIsAbs;
+                public sbyte reflectance0SamplerIndex;
                 public LUTInput reflectance0SamplerInput;
-                public uint reflectance0SamplerScale;
+                public float reflectance0SamplerScale;
 
                 public bool reflectance1SamplerIsAbs;
+                public sbyte reflectance1SamplerIndex;
                 public LUTInput reflectance1SamplerInput;
-                public uint reflectance1SamplerScale;
+                public float reflectance1SamplerScale;
 
                 public bool fresnelSamplerIsAbs;
+                public sbyte fresnelSamplerIndex;
                 public LUTInput fresnelSamplerInput;
-                public uint fresnelSamplerScale;
+                public float fresnelSamplerScale;
             }
-
-            public uint TotalUsedTextures { get; set; }
-            public uint TotalUsedTextureCoords { get; set; }
 
             public void Read(FileReader reader, Header header, MaterialChunk materialChunkParent)
             {
-                int materialSize = 0x15C;
-                if (header.Version >= CMBVersion.MM3DS)
-                    materialSize = 0x16C;
-
                 CMBHeader = header;
 
-                 TextureMaps = new TextureMap[3];
+                TextureMaps = new TextureMap[3];
                 TextureMaticies = new TextureMatrix[3];
                 TextureCombiners = new List<TextureCombiner>();
 
@@ -2140,6 +2149,8 @@ namespace FirstPlugin
                 IsFragmentLightingEnabled = reader.ReadBoolean();
                 IsVertexLightingEnabled = reader.ReadBoolean();
                 IsHemiSphereLightingEnabled = reader.ReadBoolean();
+
+                //Tip: IsHemiSphereOcclusionEnabled cannot be enabled unless "IsHemiSphereOcclusionEnabled" is enabled first
                 IsHemiSphereOcclusionEnabled = reader.ReadBoolean();
 
                 CullMode = reader.ReadEnum<CullMode>(true); //byte
@@ -2167,26 +2178,23 @@ namespace FirstPlugin
                     TextureMaps[j].borderColorA = reader.ReadByte();
                 }
 
-                LightSetIndex = reader.ReadUInt16();
-                FogIndex = reader.ReadUInt16();
-
                 for (int j = 0; j < 3; j++)
                 {
                     TextureMaticies[j] = new TextureMatrix();
-                    TextureMaticies[j].Scale = reader.ReadVec2SY();
-                    TextureMaticies[j].Rotate = reader.ReadSingle();
-                    TextureMaticies[j].Translate = reader.ReadVec2SY();
                     TextureMaticies[j].MatrixMode = reader.ReadByte();
                     TextureMaticies[j].ReferenceCamera = reader.ReadByte();
                     TextureMaticies[j].MappingMethod = reader.ReadByte();
                     TextureMaticies[j].CoordinateIndex = reader.ReadByte();
+                    TextureMaticies[j].Scale = reader.ReadVec2SY();
+                    TextureMaticies[j].Rotate = reader.ReadSingle();
+                    TextureMaticies[j].Translate = reader.ReadVec2SY();
                 }
 
-                long dataPos = reader.Position;
-                data = reader.ReadBytes(materialSize - (int)(dataPos - pos));
-                reader.SeekBegin(dataPos);
-
-                uint unkColor0 = reader.ReadUInt32();
+                EmissionColor = STColor8.FromBytes(reader.ReadBytes(4));
+                AmbientColor = STColor8.FromBytes(reader.ReadBytes(4));
+                Diffuse = STColor8.FromBytes(reader.ReadBytes(4));
+                Specular0 = STColor8.FromBytes(reader.ReadBytes(4));
+                Specular1 = STColor8.FromBytes(reader.ReadBytes(4));
 
                 ConstantColors = new STColor8[6];
                 ConstantColors[0] = STColor8.FromBytes(reader.ReadBytes(4));
@@ -2201,8 +2209,8 @@ namespace FirstPlugin
                 BufferColorB = reader.ReadSingle();
                 BufferColorA = reader.ReadSingle();
 
-                BumpMapIndex = reader.ReadInt16();
-                BumpMapMode = reader.ReadUInt16();
+                BumpMapIndex = (TextureUnit)reader.ReadUInt16();
+                BumpMapMode = (BumpMode)reader.ReadUInt16();
                 IsBumpRenormalize = reader.ReadInt16();
                 reader.ReadInt16(); //padding
                 LayerConfig = (LayerConfig)reader.ReadUInt16();
@@ -2217,31 +2225,38 @@ namespace FirstPlugin
 
                 // Fragment lighting table.
                 LUTTable.reflectanceRSamplerIsAbs = reader.ReadBoolean();
+                LUTTable.reflectanceRSamplerIndex = reader.ReadSByte();
                 LUTTable.reflectanceRSamplerInput = (LUTInput)reader.ReadUInt16();
-                LUTTable.reflectanceRSamplerScale = reader.ReadUInt32();
+                LUTTable.reflectanceRSamplerScale = reader.ReadSingle();
 
                 LUTTable.reflectanceGSamplerIsAbs = reader.ReadBoolean();
+                LUTTable.reflectanceGSamplerIndex = reader.ReadSByte();
                 LUTTable.reflectanceGSamplerInput = (LUTInput)reader.ReadUInt16();
-                LUTTable.reflectanceGSamplerScale = reader.ReadUInt32();
+                LUTTable.reflectanceGSamplerScale = reader.ReadSingle();
 
                 LUTTable.reflectanceBSamplerIsAbs = reader.ReadBoolean();
+                LUTTable.reflectanceBSamplerIndex = reader.ReadSByte();
                 LUTTable.reflectanceBSamplerInput = (LUTInput)reader.ReadUInt16();
-                LUTTable.reflectanceBSamplerScale = reader.ReadUInt32();
+                LUTTable.reflectanceBSamplerScale = reader.ReadSingle();
 
                 LUTTable.reflectance0SamplerIsAbs = reader.ReadBoolean();
+                LUTTable.reflectance0SamplerIndex = reader.ReadSByte();
                 LUTTable.reflectance0SamplerInput = (LUTInput)reader.ReadUInt16();
-                LUTTable.reflectance0SamplerScale = reader.ReadUInt32();
+                LUTTable.reflectance0SamplerScale = reader.ReadSingle();
 
                 LUTTable.reflectance1SamplerIsAbs = reader.ReadBoolean();
+                LUTTable.reflectance1SamplerIndex = reader.ReadSByte();
                 LUTTable.reflectance1SamplerInput = (LUTInput)reader.ReadUInt16();
-                LUTTable.reflectance1SamplerScale = reader.ReadUInt32();
+                LUTTable.reflectance1SamplerScale = reader.ReadSingle();
 
                 LUTTable.fresnelSamplerIsAbs = reader.ReadBoolean();
+                LUTTable.fresnelSamplerIndex = reader.ReadSByte();
                 LUTTable.fresnelSamplerInput = (LUTInput)reader.ReadUInt16();
-                LUTTable.fresnelSamplerScale = reader.ReadUInt32();
+                LUTTable.fresnelSamplerScale = reader.ReadSingle();
 
                 reader.SeekBegin(pos + 0x120);
                 uint textureCombinerTableCount = reader.ReadUInt32();
+                var skip = reader.Position;
                 int textureCombinerTableIdx = (int)pos + 0x124;
                 for (int i = 0; i < textureCombinerTableCount; i++)
                 {
@@ -2274,7 +2289,9 @@ namespace FirstPlugin
                     textureCombinerTableIdx += 0x2;
                 }
 
-                reader.ReadUInt16(); //padding
+                //Skip TexEnvStages indices. (always 0x6)
+                reader.SeekBegin(skip + 0x0C);
+
                 AlphaTestEnable = reader.ReadBoolean();
                 AlphaTestReference = reader.ReadByte() / 0xFF;
                 AlphaTestFunction = (AlphaFunction)reader.ReadUInt16();
@@ -2298,11 +2315,11 @@ namespace FirstPlugin
 
                 BlendingFactorSrcAlpha = (BlendingFactor)reader.ReadUInt16();
                 BlendingFactorDestAlpha = (BlendingFactor)reader.ReadUInt16();
-                BlendingEquationAlpha = (BlendEquationMode)reader.ReadUInt16();
+                BlendingEquationAlpha = (BlendEquationMode)reader.ReadUInt32();
 
                 BlendingFactorSrcRGB = (BlendingFactor)reader.ReadUInt16();
                 BlendingFactorDestRGB = (BlendingFactor)reader.ReadUInt16();
-                BlendingEquationRGB = (BlendEquationMode)reader.ReadUInt16();
+                BlendingEquationRGB = (BlendEquationMode)reader.ReadUInt32();
 
                 BlendColorR = reader.ReadSingle();
                 BlendColorG = reader.ReadSingle();
@@ -2321,7 +2338,8 @@ namespace FirstPlugin
                     ushort FailOP = reader.ReadUInt16();
                     ushort ZFailOP = reader.ReadUInt16();
                     ushort ZPassOP = reader.ReadUInt16();
-                    float unk6 = reader.ReadSingle();
+                    ushort unk6 = reader.ReadUInt16();
+                    ushort unk7 = reader.ReadUInt16();
                 }
             }
 
@@ -2354,9 +2372,6 @@ namespace FirstPlugin
                     writer.Write(TextureMaps[j].borderColorB);
                     writer.Write(TextureMaps[j].borderColorA);
                 }
-
-                writer.Write(LightSetIndex);
-                writer.Write(FogIndex);
 
                 for (int j = 0; j < 3; j++)
                 {
