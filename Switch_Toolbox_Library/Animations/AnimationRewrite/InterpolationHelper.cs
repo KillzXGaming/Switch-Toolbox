@@ -23,8 +23,18 @@ namespace Toolbox.Library.Animations
             return Result;
         }
 
-        public static float HermiteInterpolate(float frame, float frame1, float frame2,
+        public static float BezierInterpolate(float frame, float frame1, float frame2,
     float inSlope, float outSlope, float p0, float p1)
+        {
+            if (frame == frame1) return p0;
+            if (frame == frame2) return p1;
+
+            float t = (frame - frame1) / (frame2 - frame1);
+            return GetPointBezier(p0, p1, outSlope, inSlope, t);
+        }
+
+        public static float HermiteInterpolate(float frame, float frame1, float frame2,
+            float inSlope, float outSlope, float p0, float p1)
         {
             if (frame == frame1) return p0;
             if (frame == frame2) return p1;
@@ -38,6 +48,14 @@ namespace Toolbox.Library.Animations
             float cf1 = (p0 * -3) + (p1 * 3) + (s0 * -2) + (s1 * -1);
             float cf2 = (p0 * 0) + (p1 * 0) + (s0 * 1) + (s1 * 0);
             float cf3 = (p0 * 1) + (p1 * 0) + (s0 * 0) + (s1 * 0);
+            return GetPointCubic(cf0, cf1, cf2, cf3, t);
+        }
+
+        private static float GetPointBezier(float p0, float p1, float p2, float p3, float t)  {
+            float cf0 = (p0 * -1) + (p1 * 3) + (p2 * -3) + (p3 * 1);
+            float cf1 = (p0 * 3) + (p1 * -6) + (p2 * 3) + (p3 * 0);
+            float cf2 = (p0 * -3) + (p1 * 3) + (p2 * 0) + (p3 * 0);
+            float cf3 = (p0 * 1) + (p1 * 0) + (p2 * 0) + (p3 * 0);
             return GetPointCubic(cf0, cf1, cf2, cf3, t);
         }
 

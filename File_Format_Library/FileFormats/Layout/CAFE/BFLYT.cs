@@ -181,9 +181,11 @@ namespace LayoutBXLYT.Cafe
             {
                 foreach (var file in IFileInfo.ArchiveParent.Files)
                 {
-                    if (Utils.GetExtension(file.FileName) == ".bflan")
+                    if (Utils.GetExtension(file.FileName) == ".bflan" && file.FileFormat == null)
                     {
                         BFLAN bflan = (BFLAN)file.OpenFile();
+                        file.FileFormat = bflan;
+                        bflan.IFileInfo.ArchiveParent = IFileInfo.ArchiveParent;
 
                         //Disable saving unless the file gets edited
                         //Prevents broken files if version is unsupported

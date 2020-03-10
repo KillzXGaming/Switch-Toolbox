@@ -12,6 +12,8 @@ namespace Toolbox.Library.Animations
         Step,
         Linear,
         Hermite,
+        Bezier,
+        Bitmap,
     }
 
     /// <summary>

@@ -26,6 +26,12 @@ namespace Toolbox.Library.Animations
         }
     }
 
+    public class STBezierKeyFrame : STKeyFrame
+    {
+        public float SlopeIn;
+        public float SlopeOut;
+    }
+
     public class STHermiteCubicKeyFrame : STHermiteKeyFrame
     {
         public float Coef0 { get; set; }

@@ -408,6 +408,10 @@ namespace LayoutBXLYT
         {
             var archiveNode = node.Tag as ArchiveFileInfo;
             var fileFormat = archiveNode.OpenFile();
+            if (archiveNode.FileWrapper != null)
+                fileFormat.IFileInfo.ArchiveParent = archiveNode.FileWrapper.ArchiveFile;
+
+            archiveNode.FileFormat = fileFormat;
 
             //Update the tag so this doesn't run again
             node.Tag = "Expanded";
@@ -880,8 +884,8 @@ namespace LayoutBXLYT
         }
 
         private void saveAnimationToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (ActiveAnimation != null)
-                SaveActiveFile(ActiveAnimation.FileInfo);
+            foreach (var anim in AnimationFiles)
+                SaveActiveFile(anim.FileInfo);
         }
 
         private void SaveActiveFile(IFileFormat fileFormat, bool ForceDialog = false)
@@ -1298,6 +1302,16 @@ namespace LayoutBXLYT
 
         private void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e) {
             UpdateMenuBar();
+        }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saveWorkspaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

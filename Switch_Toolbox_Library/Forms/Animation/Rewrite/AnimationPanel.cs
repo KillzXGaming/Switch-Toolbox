@@ -373,7 +373,7 @@ namespace Toolbox.Library
 
             foreach (var anim in currentAnimations)
             {
-                if (frameNum > anim.FrameCount)
+                if (frameNum < anim.StartFrame || frameNum > anim.FrameCount)
                     continue;
 
                 float animFrameNum = frameNum;
