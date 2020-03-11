@@ -154,4 +154,11 @@ namespace Grezzo.CmbEnums
         IncrementWrap = 34055,
         DecrementWrap = 34055
     }
+
+    public enum BumpMode
+    {
+        NotUsed = 25288,
+        AsBump = 25289,
+        AsTangent = 25290//Doesn't exist in OoT3D
+    }
 }
