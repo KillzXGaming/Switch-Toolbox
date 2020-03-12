@@ -15,7 +15,7 @@ using ByamlExt.Byaml;
 
 namespace FirstPlugin
 {
-    public class KCL : TreeNodeFile, IFileFormat
+    public class KCL : TreeNodeFile, IContextMenuNode, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Collision;
 
@@ -46,17 +46,23 @@ namespace FirstPlugin
         }
 
         private byte[] data;
-        private STToolStripItem EndiannessToolstrip;
+
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            return new ToolStripItem[]
+            {
+                new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.S),
+                new ToolStripMenuItem("Export", null, Export, Keys.Control | Keys.E),
+                new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R),
+                new ToolStripSeparator(),
+                new ToolStripMenuItem("Open Material Editor", null, OpenMaterialEditor, Keys.Control | Keys.M),
+                new ToolStripMenuItem("Big Endian Mode", null, SwapEndianess, Keys.Control | Keys.B)
+                { Checked = (Endianness == Syroot.BinaryData.ByteOrder.BigEndian), },
+            };
+        }
 
         public KCL()
         {
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new STToolStripItem("Save", Save));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Export", Export));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Replace", Replace));
-            ContextMenuStrip.Items.Add(new STToolStripItem("Open Material Editor", OpenMaterialEditor));
-            EndiannessToolstrip = new STToolStripItem("Big Endian Mode", SwapEndianess) { Checked = true };
-            ContextMenuStrip.Items.Add(EndiannessToolstrip);
             CanSave = true;
             IFileInfo = new IFileInfo();
 
@@ -67,6 +73,18 @@ namespace FirstPlugin
             MarioKart.MK7.KCL.CollisionPresets.Clear();
             MarioKart.MK7.KCL.LoadPresets(Directory.GetFiles(path));
             MarioKart.MK7.KCL.LoadDefaultPresets();
+        }
+
+        public bool UseOverlay
+        {
+            get { return Renderer.UseOverlay; }
+            set { Renderer.UseOverlay = value; }
+        }
+
+        public bool Visible
+        {
+            get { return Renderer.Visible; }
+            set { Renderer.Visible = value; }
         }
 
         private void OpenMaterialEditor(object sender, EventArgs args)
@@ -197,7 +215,9 @@ namespace FirstPlugin
                 OpenFileDialog opn = new OpenFileDialog();
                 opn.Filter = "Supported Formats|*.obj";
                 if (opn.ShowDialog() != DialogResult.OK) return;
+
                 var mod = EditorCore.Common.OBJ.Read(new MemoryStream(File.ReadAllBytes(opn.FileName)), null);
+
                 var f = MarioKart.MK7.KCL.FromOBJ(mod);
 
                 string name = System.IO.Path.GetFileNameWithoutExtension(opn.FileName);
@@ -297,6 +317,7 @@ namespace FirstPlugin
         {
 
         }
+
         public enum CollisionType_MK8D : ushort
         {
             Road_Default = 0,
@@ -369,10 +390,6 @@ namespace FirstPlugin
             set
             {
                 endianness = value;
-                if (value == Syroot.BinaryData.ByteOrder.BigEndian)
-                    EndiannessToolstrip.Checked = true;
-                else
-                    EndiannessToolstrip.Checked = false;
             }
         }
 
@@ -416,16 +433,10 @@ namespace FirstPlugin
 
         private void SwapEndianess(object sender, EventArgs args)
         {
-            if (EndiannessToolstrip.Checked)
-            {
-                EndiannessToolstrip.Checked = false;
+            if (Endianness == Syroot.BinaryData.ByteOrder.BigEndian)
                 Endianness = Syroot.BinaryData.ByteOrder.LittleEndian;
-            }
             else
-            {
-                EndiannessToolstrip.Checked = true;
                 Endianness = Syroot.BinaryData.ByteOrder.BigEndian;
-            }
         }
 
         private Viewport viewport
@@ -485,6 +496,68 @@ namespace FirstPlugin
 
 
             Read(kcl);
+        }
+
+        public float DropToGround(Vector3 position)
+        {
+            List<float> found = new List<float>();
+
+            foreach (var model in kcl.Models) {
+                for (int p = 0; p < model.Planes.Length; p++) {
+                    var triangle = model.GetTriangle(model.Planes[p]);
+                    Vector3 a = Vec3D_To_Vec3(triangle.PointA);
+                    Vector3 b = Vec3D_To_Vec3(triangle.PointB);
+                    Vector3 c = Vec3D_To_Vec3(triangle.PointC);
+                    if (PointInTriangle(position.Xz, a.Xz, b.Xz, c.Xz))
+                        found.Add(barryCentric(a, b, c, position));
+                }
+            }
+
+            if (found.Count == 0)
+                return position.Y;
+
+            int closest_index = 0;
+            float closest_abs = 9999999.0f;
+            for (int i = 0; i < found.Count; i++)
+            {
+                float abs = Math.Abs(position.Y - found[i]);
+                if (abs < closest_abs)
+                {
+                    closest_abs = abs;
+                    closest_index = i;
+                }
+            }
+
+            Console.WriteLine($"found closest Y {found[closest_index]}");
+
+            return found[closest_index];
+        }
+
+        public static float barryCentric(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 pos)
+        {
+            float det = (p2.Z - p3.Z) * (p1.X - p3.X) + (p3.X - p2.X) * (p1.Z - p3.Z);
+            float l1 = ((p2.Z - p3.Z) * (pos.X - p3.X) + (p3.X - p2.X) * (pos.Z - p3.Z)) / det;
+            float l2 = ((p3.Z - p1.Z) * (pos.X - p3.X) + (p1.X - p3.X) * (pos.Z - p3.Z)) / det;
+            float l3 = 1.0f - l1 - l2;
+            return l1 * p1.Y + l2 * p2.Y + l3 * p3.Y;
+        }
+
+        public static bool PointInTriangle(Vector2 p, Vector2 p0, Vector2 p1, Vector2 p2)
+        {
+            var s = p0.Y * p2.X - p0.X * p2.Y + (p2.Y - p0.Y) * p.X + (p0.X - p2.X) * p.Y;
+            var t = p0.X * p1.Y - p0.Y * p1.X + (p0.Y - p1.Y) * p.X + (p1.X - p0.X) * p.Y;
+
+            if ((s < 0) != (t < 0))
+                return false;
+
+            var A = -p1.Y * p2.X + p0.Y * (p2.X - p1.X) + p0.X * (p1.Y - p2.Y) + p1.X * p2.Y;
+            if (A < 0.0)
+            {
+                s = -s;
+                t = -t;
+                A = -A;
+            }
+            return s > 0 && t > 0 && (s + t) <= A;
         }
 
         private void LoadModelTree(TreeNode parent, MarioKart.ModelOctree[] modelOctrees)
