@@ -26,6 +26,8 @@ namespace FirstPlugin
 
         public Vector3 position = new Vector3(0, 0, 0);
 
+        public bool UseOverlay = false;
+
         protected bool Selected = false;
         protected bool Hovered = false;
 
@@ -213,7 +215,7 @@ namespace FirstPlugin
         }
         public override void Draw(GL_ControlLegacy control, Pass pass)
         {
-            if (!Runtime.OpenTKInitialized || defaultShaderProgram == null)
+            if (!Runtime.OpenTKInitialized || defaultShaderProgram == null || !Visible)
                 return;
 
             Matrix4 mvpMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
@@ -251,10 +253,13 @@ namespace FirstPlugin
 
         public override void Draw(GL_ControlModern control, Pass pass)
         {
-            CheckBuffers();
-
-            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT || defaultShaderProgram == null)
+            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT || defaultShaderProgram == null || !Visible)
                 return;
+
+            if (UseOverlay && pass == Pass.PICKING)
+                return;
+
+            CheckBuffers();
 
             Matrix4 camMat = control.ModelMatrix * control.CameraMatrix * control.ProjectionMatrix;
 
@@ -263,8 +268,17 @@ namespace FirstPlugin
 
             control.CurrentShader = defaultShaderProgram;
 
-            control.UpdateModelMatrix(
-            Matrix4.CreateScale(Runtime.previewScale));
+            if (UseOverlay)
+            {
+                control.UpdateModelMatrix(
+                  Matrix4.CreateScale(1.0002f));
+            }
+            else
+            {
+                control.UpdateModelMatrix(
+                  Matrix4.CreateScale(Runtime.previewScale));
+            }
+          
 
             SetRenderSettings(defaultShaderProgram);
 
@@ -306,7 +320,11 @@ namespace FirstPlugin
 
             if (m.Checked)
             {
-                if ((m.IsSelected))
+                if (UseOverlay)
+                {
+                    DrawOverlayWireframe(m, shader);
+                }
+                else if ((m.IsSelected))
                 {
                     DrawModelSelection(m, shader);
                 }
@@ -351,6 +369,24 @@ namespace FirstPlugin
             GL.VertexAttribPointer(shader.GetAttribute("vColor"), 3, VertexAttribPointerType.Float, false, KCL.DisplayVertex.Size, 24);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ibo_elements);
         }
+
+        private static void DrawOverlayWireframe(KCL.KCLModel p, ShaderProgram shader)
+        {
+            GL.Enable(EnableCap.PolygonOffsetFill);
+            GL.PolygonOffset(0, -1);
+
+            // use vertex color for wireframe color
+            GL.Uniform1(shader["colorOverride"], 1);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            GL.Enable(EnableCap.LineSmooth);
+            GL.LineWidth(1.2f);
+            GL.DrawElements(PrimitiveType.Triangles, p.displayFaceSize, DrawElementsType.UnsignedInt, p.Offset);
+            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            GL.Uniform1(shader["colorOverride"], 0);
+
+            GL.Disable(EnableCap.PolygonOffsetFill);
+        }
+
         private static void DrawModelWireframe(KCL.KCLModel p, ShaderProgram shader)
         {
             // use vertex color for wireframe color
