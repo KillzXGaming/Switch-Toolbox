@@ -108,9 +108,25 @@ namespace LayoutBXLYT
             stToolStrip1.Items.Clear();
 
             AddTab("Texture Maps", LoadTextureMaps);
-            AddTab("Colors", LoadColorBlending);
-            AddTab("Blending", LoadBlending);
-            AddTab("Combiners", LoadTextureCombiners);
+            if (ActiveMaterial is Revolution.Material)
+            {
+                AddTab("Colors", LoadBRLYTColorBlending);
+                AddTab("Blending", LoadBRLYTBlending);
+                AddTab("SwapTable", LoadBRLYTTevSwapChannel);
+                AddTab("Combiners", LoadBRLYTTextureCombiners);
+            }
+            else if (ActiveMaterial is CTR.Material)
+            {
+                AddTab("Colors", LoadBCLYTColorBlending);
+                AddTab("Blending", LoadBlending);
+                AddTab("Combiners", LoadBCLYTTextureCombiners);
+            }
+            else
+            {
+                AddTab("Colors", LoadColorBlending);
+                AddTab("Blending", LoadBlending);
+                AddTab("Combiners", LoadTextureCombiners);
+            }
 
             stToolStrip1.Items[Runtime.LayoutEditor.MaterialTabIndex].PerformClick();
 
