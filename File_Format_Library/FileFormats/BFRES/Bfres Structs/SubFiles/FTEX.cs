@@ -526,7 +526,7 @@ namespace Bfres.Structs
             //Determine tex2 botw files to get mip maps
             string Tex1 = GetFilePath();
 
-            if (!IsReplaced && Tex1 != null && Tex1.Contains(".Tex1"))
+            if (!IsEdited && !IsReplaced && Tex1 != null && Tex1.Contains(".Tex1"))
             {
                 string Tex2 = Tex1.Replace(".Tex1", ".Tex2");
                 Console.WriteLine(Tex2 + " " + System.IO.File.Exists(Tex2) + " " + texture.Name);
@@ -548,7 +548,7 @@ namespace Bfres.Structs
 
         private void LoadTex2MipMaps()
         {
-            if (ResFileTexture2 == null || IsReplaced)
+            if (ResFileTexture2 == null || IsEdited || IsReplaced)
                 return;
 
             Console.WriteLine((ResFileTexture2.Textures.ContainsKey(texture.Name)));
