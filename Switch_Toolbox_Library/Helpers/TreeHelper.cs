@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using Toolbox.Library.Forms;
 using System.Windows.Forms;
 using System.IO;
@@ -90,56 +90,84 @@ namespace Toolbox.Library
             progressBar.StartPosition = FormStartPosition.CenterScreen;
             progressBar.Show();
 
-            var Collection = TreeViewExtensions.Collect(Nodes);
-
-            int Curfile = 0;
-            foreach (TreeNode node in Collection)
+            Thread Thread = new Thread((ThreadStart)(() =>
             {
-                ArchiveFileInfo file = null;
+                var Collection = TreeViewExtensions.Collect(Nodes).ToList();
+                Console.WriteLine($"Collection {Collection.Count}");
 
-                if (node.Tag != null && node.Tag is ArchiveFileInfo)
-                    file = (ArchiveFileInfo)node.Tag;
-                else if (node is ArchiveFileWrapper)
-                    file = ((ArchiveFileWrapper)node).ArchiveFileInfo;
-
-                if (file != null)
+                int Curfile = 0;
+                foreach (TreeNode node in Collection)
                 {
-                    string FilePath = file.FileName;
-                    string FolderPath = Path.GetDirectoryName(FilePath.RemoveIllegaleFolderNameCharacters());
-                    string FolderPathDir = Path.Combine(overridePath, FolderPath);
+                    if (progressBar.IsDisposed || progressBar.Disposing) {
+                        break;
+                    }
 
-                    if (!Directory.Exists(FolderPathDir))
-                        Directory.CreateDirectory(FolderPathDir);
+                    ArchiveFileInfo file = null;
 
-                    string FileName = Path.GetFileName(file.FileName).RemoveIllegaleFileNameCharacters();
+                    if (node.Tag != null && node.Tag is ArchiveFileInfo)
+                        file = (ArchiveFileInfo)node.Tag;
+                    else if (node is ArchiveFileWrapper)
+                        file = ((ArchiveFileWrapper)node).ArchiveFileInfo;
 
-                    FilePath = Path.Combine(FolderPath, FileName);
+                    if (file != null)
+                    {
+                        string FilePath = file.FileName;
+                        string FolderPath = Path.GetDirectoryName(FilePath.RemoveIllegaleFolderNameCharacters());
+                        string FolderPathDir = Path.Combine(overridePath, FolderPath);
 
-                    if (ParentPath != string.Empty)
-                        FilePath = FilePath.Replace(ParentPath, string.Empty);
+                        if (!Directory.Exists(FolderPathDir))
+                            Directory.CreateDirectory(FolderPathDir);
 
-                    var path = $"{overridePath}/{FilePath}";
+                        string FileName = Path.GetFileName(file.FileName).RemoveIllegaleFileNameCharacters();
 
-                    progressBar.Task = $"Extracting File {FileName}";
-                    progressBar.Value = (Curfile++ * 100) / Collection.Count();
-                    progressBar.Refresh();
-                    CreateDirectoryIfExists($"{path}");
+                        FilePath = Path.Combine(FolderPath, FileName);
 
-                    filesExtracted.Add($"{path}");
+                        if (ParentPath != string.Empty)
+                            FilePath = FilePath.Replace(ParentPath, string.Empty);
 
-                    if (file.FileFormat != null && file.FileFormat.CanSave)
-                        file.SaveFileFormat();
+                        var path = $"{overridePath}/{FilePath}";
 
-                    if (file.FileDataStream != null)
-                        file.FileDataStream.ExportToFile(path);
-                    else
-                        File.WriteAllBytes($"{path}", file.FileData);
+                        if (progressBar.InvokeRequired)
+                        {
+                            progressBar.Invoke((MethodInvoker)delegate {
+                                // Running on the UI thread
+                                progressBar.Task = $"Extracting File {FileName}";
+                                progressBar.Value = (Curfile++ * 100) / Collection.Count;
+                                progressBar.Refresh();
+                            });
+                        }
+
+                        CreateDirectoryIfExists($"{path}");
+
+                        filesExtracted.Add($"{path}");
+
+                        if (file.FileFormat != null && file.FileFormat.CanSave)
+                            file.SaveFileFormat();
+
+                        if (file.FileDataStream != null)
+                            file.FileDataStream.ExportToFile(path);
+                        else
+                            File.WriteAllBytes($"{path}", file.FileData);
+                    }
                 }
-            }
 
-            progressBar.Value = 100;
-            progressBar.Refresh();
-            progressBar.Close();
+                if (progressBar.InvokeRequired)
+                {
+                    progressBar.Invoke((MethodInvoker)delegate {
+                        progressBar.Value = 100;
+                        progressBar.Refresh();
+                        progressBar.Close();
+                    });
+                }
+                else
+                {
+                    progressBar.Value = 100;
+                    progressBar.Refresh();
+                    progressBar.Close();
+                }
+
+            }));
+            Thread.Start();
 
             return filesExtracted.ToArray();
         }
