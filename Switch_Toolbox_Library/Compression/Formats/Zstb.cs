@@ -20,6 +20,7 @@ namespace Toolbox.Library
             using (var reader = new FileReader(stream, true))
             {
                 uint magic = reader.ReadUInt32();
+                reader.Position = 0;
                 return magic == 0x28B52FFD || magic == 0xFD2FB528;
             }
         }
