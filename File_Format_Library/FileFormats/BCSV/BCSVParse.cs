@@ -22,6 +22,17 @@ namespace FirstPlugin
             public Dictionary<string, object> Fields;
         }
 
+        static Dictionary<uint, string> hashes = new Dictionary<uint, string>();
+        public static Dictionary<uint, string> Hashes
+        {
+            get
+            {
+               // if (hashes.Count == 0)
+                    //CalculateHashes();
+                return hashes;
+            }
+        }
+
         public List<DataEntry> Entries = new List<DataEntry>();
 
         public void Read(FileReader reader)
@@ -90,11 +101,20 @@ namespace FirstPlugin
                             break;
                     }
 
+                    if (Hashes.ContainsKey(fields[f].Hash))
+                        name = Hashes[fields[f].Hash];
+
                     entry.Fields.Add(name, value);
                 }
 
                 reader.SeekBegin(pos + entrySize);
             }
+        }
+
+        private bool IsFloatValue(int value)
+        {
+            // Use a very dumb "algorithm" to check if the resulting integer would be "too long".
+            return value.ToString().Length > 6;
         }
 
         public enum DataType
@@ -110,6 +130,11 @@ namespace FirstPlugin
         public void Write(FileWriter writer)
         {
             writer.Write(Entries.FirstOrDefault().Fields.Count);
+        }
+
+        private static void CalculateHashes()
+        {
+
         }
     }
 }

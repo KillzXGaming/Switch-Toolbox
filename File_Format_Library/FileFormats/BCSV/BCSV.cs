@@ -41,7 +41,10 @@ namespace FirstPlugin
 
         public TextEditor OpenForm()
         {
-            return new TextEditor();
+            var textEditor = new TextEditor();
+            textEditor.ClearContextMenus(new string[] { "Search" });
+            textEditor.AddContextMenu("Export as CSV", ExportCSV);
+            return textEditor;
         }
 
         public void FillEditor(UserControl control)
@@ -70,6 +73,30 @@ namespace FirstPlugin
                         textWriter.WriteLine($"  {field.Key}: {field.Value}");
                     }
                 }
+            }
+            return strBuilder.ToString();
+        }
+
+        private void ExportCSV(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "CSV |*.csv;";
+            sfd.FileName = System.IO.Path.GetFileNameWithoutExtension(FileName);
+            sfd.DefaultExt = ".csv";
+            if (sfd.ShowDialog() == DialogResult.OK)
+                System.IO.File.WriteAllText(sfd.FileName, ConvertToCSV());
+        }
+
+        public string ConvertToCSV()
+        {
+            StringBuilder strBuilder = new StringBuilder();
+            using (var textWriter = new System.IO.StringWriter(strBuilder))
+            {
+                var fields = BCVFile.Entries.FirstOrDefault().Fields;
+                textWriter.WriteLine($"{string.Join(",", fields.Keys)}");
+
+                for (int i = 0; i < BCVFile.Entries.Count; i++)
+                    textWriter.WriteLine($"{string.Join(",", BCVFile.Entries[i].Fields.Values)}");
             }
             return strBuilder.ToString();
         }
