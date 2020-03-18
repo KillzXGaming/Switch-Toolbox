@@ -758,15 +758,9 @@ namespace FirstPlugin
             return editor;
         }
 
-
-        public BFRESRenderBase BFRESRender;
-        public void Load(System.IO.Stream stream)
+        public static bool CheckWiiU(Stream stream)
         {
-            CanSave = true;
-
-            ImageKey = "bfres";
-            SelectedImageKey = "bfres";
-
+            bool IsWiiU = false;
             using (FileReader reader = new FileReader(stream, true))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
@@ -777,9 +771,19 @@ namespace FirstPlugin
 
                 reader.Position = 0;
             }
+            return IsWiiU;
+        }
 
+        public BFRESRenderBase BFRESRender;
+        public void Load(System.IO.Stream stream)
+        {
+            CanSave = true;
+
+            ImageKey = "bfres";
+            SelectedImageKey = "bfres";
+
+            IsWiiU = CheckWiiU(stream);
             LoadMenus(IsWiiU);
-
        
             BFRESRender = new BFRESRender();
             DrawableContainer.Name = FileName;
@@ -934,6 +938,9 @@ namespace FirstPlugin
         public List<STGenericTexture> GetTextures()
         {
             List<STGenericTexture> textures = new List<STGenericTexture>();
+            var bntx = GetBNTX;
+            if (bntx != null)
+                return bntx.TextureList;
 
             foreach (TreeNode folder in Nodes)
             {

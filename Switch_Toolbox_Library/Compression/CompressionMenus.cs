@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Toolbox.Library.Forms;
 
 namespace Toolbox.Library.IO
 {
@@ -87,29 +88,6 @@ namespace Toolbox.Library.IO
             else throw new Exception("Unimplimented Type! " + Name);
         }
 
-        public void CompressData(ICompressionFormat CompressionFormat, Stream data)
-        {
-            try
-            {
-                SaveFileForCompression(true, data, CompressionFormat);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"File failed to compress with {CompressionFormat} compression! {ex.ToString()}");
-            }
-        }
-        public void DecompressData(ICompressionFormat CompressionFormat, Stream data)
-        {
-            try
-            {
-                SaveFileForCompression(false, data, CompressionFormat);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"File not compressed with {CompressionFormat} compression! {ex.ToString()}");
-            }
-        }
-
         private void OpenFileForCompression(ICompressionFormat compressionFormat, bool Compress)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -119,40 +97,103 @@ namespace Toolbox.Library.IO
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 Cursor.Current = Cursors.WaitCursor;
-                foreach (string file in ofd.FileNames)
-                {
-                    if (Compress)
-                        CompressData(compressionFormat, File.OpenRead(ofd.FileName));
-                    else
-                        DecompressData(compressionFormat,  File.OpenRead(ofd.FileName));
-                }
+                SaveFileForCompression(Compress, ofd.FileNames, compressionFormat);
             }
         }
 
-        private void SaveFileForCompression(bool Compress, Stream data, ICompressionFormat compressionFormat)
+        private void SaveFileForCompression(bool Compress, string[] fileNames, ICompressionFormat compressionFormat)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "All files(*.*)|*.*";
+            if (fileNames.Length == 0)
+                return;
 
-            Cursor.Current = Cursors.Default;
-            if (sfd.ShowDialog() == DialogResult.OK)
+            string ext = Compress ? ".comp" : ".dec";
+            if (compressionFormat.Extension.Length > 0 && Compress)
+                ext = compressionFormat.Extension[0];
+
+            List<string> failedFiles = new List<string>();
+            if (fileNames.Length > 1)
             {
-                Stream stream;
-                if (Compress)
-                    stream = compressionFormat.Compress(data);
-                else
+                FolderSelectDialog ofd = new FolderSelectDialog();
+                if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    compressionFormat.Identify(data, sfd.FileName);
-                    stream = compressionFormat.Decompress(data);
+                    foreach (var file in fileNames)
+                    {
+                        string name = Path.GetFileName(file);
+                        using (var data = new FileStream(file, FileMode.Open, FileAccess.Read))
+                        {
+                            try
+                            {
+                                Stream stream;
+                                if (Compress)
+                                    stream = compressionFormat.Compress(data);
+                                else
+                                {
+                                    compressionFormat.Identify(data, file);
+                                    stream = compressionFormat.Decompress(data);
+                                }
+
+                                if (stream != null)
+                                {
+                                    stream.ExportToFile($"{ofd.SelectedPath}/{name}{ext}");
+                                    stream.Flush();
+                                    stream.Close();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                failedFiles.Add($"{file} \n\n {ex} \n\n");
+                            }
+                        }
+                    }
+
+                    if (failedFiles.Count > 0)
+                    {
+                        string action = Compress ? "compress" : "decompress";
+                        STErrorDialog.Show($"Some files failed to {action}! See detail list of failed files.", "Switch Toolbox",
+                            string.Join("\n", failedFiles.ToArray()));
+                    }
+                    else
+                        MessageBox.Show("Files batched successfully!");
                 }
+            }
+            else
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                string name = Path.GetFileName(fileNames[0]);
+                sfd.FileName = name + ext;
+                sfd.Filter = "All files(*.*)|*.*";
 
-                if (stream != null)
+                Cursor.Current = Cursors.Default;
+                if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    stream.ExportToFile(sfd.FileName);
-                    stream.Flush();
-                    stream.Close();
+                    try
+                    {
+                        using (var data = new FileStream(fileNames[0], FileMode.Open, FileAccess.Read))
+                        {
+                            Stream stream;
+                            if (Compress)
+                                stream = compressionFormat.Compress(data);
+                            else
+                            {
+                                compressionFormat.Identify(data, sfd.FileName);
+                                stream = compressionFormat.Decompress(data);
+                            }
 
-                    MessageBox.Show($"File has been saved to {sfd.FileName}", "Save Notification");
+                            if (stream != null)
+                            {
+                                stream.ExportToFile(sfd.FileName);
+                                stream.Flush();
+                                stream.Close();
+
+                                MessageBox.Show($"File has been saved to {sfd.FileName}", "Save Notification");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        string action = Compress ? "compress" : "decompress";
+                        STErrorDialog.Show($"Failed to {action}! See details for info.", "Switch Toolbox", ex.ToString());
+                    }
                 }
             }
         }

@@ -653,6 +653,8 @@ namespace Toolbox
                     RegisterMenuExtIndex(toolsToolStripMenuItem, ext.ToolsMenuExtensions);
                 if (ext.TitleBarExtensions != null)
                     RegisterMenuExtIndex(menuStrip1, ext.TitleBarExtensions, menuStrip1.Items.Count);
+                if (ext.MapEditorMenuExtensions != null)
+                    RegisterMenuExtIndex(mapEditorsToolStripMenuItem, ext.MapEditorMenuExtensions, mapEditorsToolStripMenuItem.DropDownItems.Count);
             }
         }
 
@@ -1400,6 +1402,8 @@ namespace Toolbox
                     }
                 }
             }
+            else
+                return;
 
             if (failedFiles.Count > 0)
             {
@@ -1468,7 +1472,7 @@ namespace Toolbox
                 SearchArchive(settings, (IArchiveFile)fileFormat, extension, outputFolder, exportMode);
             else if (fileFormat is ITextureContainer && exportMode == ExportMode.Textures)
             {
-                if (settings.SeperateTextureContainers)
+                if (settings.SeperateTextureContainers && ((ITextureContainer)fileFormat).TextureList.Count > 0)
                 {
                     string name = fileFormat.FileName.Split('.').FirstOrDefault();
                     outputFolder = Path.Combine(outputFolder, name);
@@ -1511,10 +1515,7 @@ namespace Toolbox
             string extension, string outputFolder, ExportMode exportMode)
         {
             string ArchiveFilePath = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(((IFileFormat)archiveFile).FileName));
-            if (!Directory.Exists(ArchiveFilePath))
-                Directory.CreateDirectory(ArchiveFilePath);
-            else
-                ArchiveFilePath = outputFolder;
+            ArchiveFilePath = outputFolder;
 
             foreach (var file in archiveFile.Files)
                 SearchFileFormat(settings, file.OpenFile(), extension, ArchiveFilePath, exportMode);
