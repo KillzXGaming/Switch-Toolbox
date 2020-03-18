@@ -63,9 +63,6 @@ namespace FirstPlugin
                         type = DataType.Uint16;
                     if (size == 4)
                         type = DataType.Uint32;
-                    if (size == 32)
-                        type = DataType.Uint32;
-
 
                     reader.SeekBegin(pos + fields[f].Offset);
                     object value = 0;
@@ -108,59 +105,7 @@ namespace FirstPlugin
 
         public void Write(FileWriter writer)
         {
-
-        }
-
-
-
-        private static Dictionary<uint, string> hashes = new Dictionary<uint, string>();
-        public static Dictionary<uint, string> Hashes
-        {
-            get {
-                if (hashes.Count == 0)
-                    CalculateHashes();
-                return hashes; }
-        }
-
-        public static void CalculateHashes()
-        {
-            if (hashes.Count > 0)
-                return;
-
-            foreach (string hashStr in Properties.Resources.ACNH.Split('\n'))
-            {
-                string HashString = hashStr.TrimEnd();
-
-                uint hash = (uint)Toolbox.Library.Security.Cryptography.Crc32.Compute(HashString);
-                if (!hashes.ContainsKey(hash))
-                    hashes.Add(hash, HashString);
-            }
-
-            foreach (var hash in AampLibraryCSharp.Hashes.hashName)
-                if (!hashes.ContainsKey(hash.Key))
-                    hashes.Add(hash.Key, hash.Value);
-        }
-
-        static uint NameHash(string name)
-        {
-            uint result = 0;
-            for (int i = 0; i < name.Length; i++)
-            {
-                result = name[i] + result * 0x00000065;
-            }
-            return result;
-        }
-
-        public static uint stringToHash(string name)
-        {
-            int hash = 0;
-            for (int i = 0; i < name.Length; i++)
-            {
-                hash *= 0x1F;
-                hash += name[i];
-            }
-
-            return (uint)hash;
+            writer.Write(Entries.FirstOrDefault().Fields.Count);
         }
     }
 }
