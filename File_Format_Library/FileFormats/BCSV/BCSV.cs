@@ -26,7 +26,7 @@ namespace FirstPlugin
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "VSCB", 12);
+                return reader.CheckSignature(4, "VSCB", 12) || Utils.GetExtension(FileName) == ".bcsv";
             }
         }
 

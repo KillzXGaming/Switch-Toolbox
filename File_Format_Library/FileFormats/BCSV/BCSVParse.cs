@@ -29,11 +29,15 @@ namespace FirstPlugin
             uint numEntries = reader.ReadUInt32();
             uint entrySize = reader.ReadUInt32();
             ushort numFields = reader.ReadUInt16();
-            ushort version = reader.ReadUInt16();
-            uint magic = reader.ReadUInt32();
-            uint unk = reader.ReadUInt32(); //Always 100000
-            reader.ReadUInt32();//0
-            reader.ReadUInt32();//0
+            byte flag1 = reader.ReadByte();
+            byte flag2 = reader.ReadByte();
+            if (flag1 == 1)
+            {
+                uint magic = reader.ReadUInt32();
+                uint unk = reader.ReadUInt32(); //Always 100000
+                reader.ReadUInt32();//0
+                reader.ReadUInt32();//0
+            }
 
             Field[] fields = new Field[numFields];
             for (int i = 0; i < numFields; i++) {
