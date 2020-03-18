@@ -653,8 +653,8 @@ namespace Toolbox
                     RegisterMenuExtIndex(toolsToolStripMenuItem, ext.ToolsMenuExtensions);
                 if (ext.TitleBarExtensions != null)
                     RegisterMenuExtIndex(menuStrip1, ext.TitleBarExtensions, menuStrip1.Items.Count);
-                if (ext.MapEditorMenuExtensions != null)
-                    RegisterMenuExtIndex(mapEditorsToolStripMenuItem, ext.MapEditorMenuExtensions, mapEditorsToolStripMenuItem.DropDownItems.Count);
+               // if (ext.MapEditorMenuExtensions != null)
+                //    RegisterMenuExtIndex(mapEditorsToolStripMenuItem, ext.MapEditorMenuExtensions, mapEditorsToolStripMenuItem.DropDownItems.Count);
             }
         }
 
