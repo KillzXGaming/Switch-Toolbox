@@ -1472,10 +1472,11 @@ namespace Toolbox
                 SearchArchive(settings, (IArchiveFile)fileFormat, extension, outputFolder, exportMode);
             else if (fileFormat is ITextureContainer && exportMode == ExportMode.Textures)
             {
-                if (settings.SeperateTextureContainers && ((ITextureContainer)fileFormat).TextureList.Count > 0)
+                string name = fileFormat.FileName.Split('.').FirstOrDefault();
+                outputFolder = Path.Combine(outputFolder, name);
+
+                if (((ITextureContainer)fileFormat).TextureList.Count > 0)
                 {
-                    string name = fileFormat.FileName.Split('.').FirstOrDefault();
-                    outputFolder = Path.Combine(outputFolder, name);
                     if (!Directory.Exists(outputFolder))
                         Directory.CreateDirectory(outputFolder);
                 }
