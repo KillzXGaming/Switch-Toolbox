@@ -92,6 +92,7 @@ namespace FirstPlugin
             public STToolStripItem[] TitleBarExtensions => null;
 
             readonly STToolStripItem[] toolsExt = new STToolStripItem[3];
+
             public MenuExt()
             {
                 toolsExt[0] = new STToolStripItem("Super Mario Odyssey");
@@ -100,7 +101,6 @@ namespace FirstPlugin
 
                 toolsExt[1] = new STToolStripItem("Mario Kart 8");
                 toolsExt[1].DropDownItems.Add(new STToolStripItem("Probe Light Converter", GenerateProbeLightBounds));
-
 
                 toolsExt[2] = new STToolStripItem("Breath Of The Wild");
                 toolsExt[2].DropDownItems.Add(new STToolStripItem("Actor Editor", ActorEditor));
@@ -341,6 +341,7 @@ namespace FirstPlugin
         {
             List<Type> Formats = new List<Type>();
             Formats.Add(typeof(BFRES));
+            Formats.Add(typeof(BCSV));
             Formats.Add(typeof(TVOL));
             Formats.Add(typeof(BTI));
             Formats.Add(typeof(TXE));
@@ -451,9 +452,9 @@ namespace FirstPlugin
             Formats.Add(typeof(WTA));
             Formats.Add(typeof(BinGzArchive));
             Formats.Add(typeof(BNR));
-           // Formats.Add(typeof(MPBIN));
+          //  Formats.Add(typeof(MPBIN));
           //  Formats.Add(typeof(HSF));
-          //  Formats.Add(typeof(ATB));
+         //   Formats.Add(typeof(ATB));
 
             //   Formats.Add(typeof(LayoutBXLYT.BLO));
 
