@@ -59,9 +59,7 @@ namespace Toolbox.Library
         }
         public static void CreateMdiWindow(STForm form, bool Show = true)
         {
-            var mainform = Application.OpenForms[0];
-
-            ((IMdiContainer)mainform).AddChildContainer(form);
+            ((IMdiContainer)Runtime.MainForm).AddChildContainer(form);
         }
         public static ObjectEditor GetObjectEditor()
         {

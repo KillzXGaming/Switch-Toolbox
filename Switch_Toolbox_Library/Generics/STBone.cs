@@ -30,7 +30,7 @@ namespace Toolbox.Library
         public short SmoothMatrixIndex;
 
         private Matrix4 transform;
-        private Quaternion rotation;
+        private Quaternion rotation = Quaternion.Identity;
         private Vector3 eulerRotation;
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Toolbox.Library
         /// <summary>
         /// Gets or sets the scale of the bone in world space.
         /// </summary>
-        public Vector3 Scale { get; set; }
+        public Vector3 Scale { get; set; } = Vector3.One;
 
         /// <summary>
         /// Gets or sets the rotation of the bone in world space.
@@ -94,12 +94,14 @@ namespace Toolbox.Library
             get { return eulerRotation; }
             set {
                 eulerRotation = value;
-                rotation = STMath.FromEulerAngles(value); 
+                rotation = STMath.FromEulerAngles(value);
+                if (rotation.W == 0)
+                    rotation.W = 1;
             }
         }
 
         public Vector3 pos = Vector3.Zero, sca = new Vector3(1f, 1f, 1f);
-        public Quaternion rot = Quaternion.FromMatrix(Matrix3.Zero);
+        public Quaternion rot = Quaternion.Identity;
         public Matrix4 invert;
 
         public Matrix4 GetTransform()

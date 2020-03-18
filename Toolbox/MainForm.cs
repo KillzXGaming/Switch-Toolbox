@@ -1473,7 +1473,8 @@ namespace Toolbox
             else if (fileFormat is ITextureContainer && exportMode == ExportMode.Textures)
             {
                 string name = fileFormat.FileName.Split('.').FirstOrDefault();
-                outputFolder = Path.Combine(outputFolder, name);
+                if (settings.SeperateTextureContainers)
+                    outputFolder = Path.Combine(outputFolder, name);
 
                 if (((ITextureContainer)fileFormat).TextureList.Count > 0)
                 {
