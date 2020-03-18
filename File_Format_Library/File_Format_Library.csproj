@@ -228,6 +228,8 @@
     <Compile Include="FileFormats\BCH\Wrappers\Model\H3DModelWrapper.cs" />
     <Compile Include="FileFormats\BCH\Wrappers\Model\H3DSkeletonWrapper.cs" />
     <Compile Include="FileFormats\BCH\Wrappers\SkeletalAnimation\H3DSkeletalAnimWrapper.cs" />
+    <Compile Include="FileFormats\BCSV\BCSV.cs" />
+    <Compile Include="FileFormats\BCSV\BCSVParse.cs" />
     <Compile Include="FileFormats\Byaml\XmlByamlConverter.cs" />
     <Compile Include="FileFormats\Byaml\YamlByamlConverter.cs" />
     <Compile Include="FileFormats\Font\BXFNT\CMAP.cs" />
