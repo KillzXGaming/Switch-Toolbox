@@ -23,6 +23,8 @@ namespace Toolbox
             hashTypeCB.Items.Add("NLG_Hash");
             hashTypeCB.Items.Add("FNV64A1");
             hashTypeCB.Items.Add("CRC32");
+            hashTypeCB.Items.Add("BCSV");
+            hashTypeCB.Items.Add("SARC");
 
             hashTypeCB.SelectedIndex = 0;
 
@@ -54,7 +56,33 @@ namespace Toolbox
                 return FNV64A1.Calculate(text);
             else if (type == "CRC32")
                 return Toolbox.Library.Security.Cryptography.Crc32.Compute(text);
+            else if (type == "BCSV")
+                return stringToHash(text);
+            else if (type == "SARC")
+                return NameHash(text);
             return 0;
+        }
+
+        public static uint stringToHash(string name)
+        {
+            int hash = 0;
+            for (int i = 0; i < name.Length; i++)
+            {
+                hash *= 0x1F;
+                hash += name[i];
+            }
+
+            return (uint)hash;
+        }
+
+        static uint NameHash(string name)
+        {
+            uint result = 0;
+            for (int i = 0; i < name.Length; i++)
+            {
+                result = name[i] + result * 0x00000065;
+            }
+            return result;
         }
 
         public static uint StringToHash(string name, bool caseSensative = false)
