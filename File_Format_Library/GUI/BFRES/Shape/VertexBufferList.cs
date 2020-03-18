@@ -117,6 +117,11 @@ namespace FirstPlugin.Forms
             if (result == DialogResult.Yes)
             {
                 var attriubte = attributeListView.SelectedItems[0];
+                if (attriubte.Text == "_p0")
+                {
+                    MessageBox.Show("Cannot remove position attribute! You should remove a mesh instead or hide by materials.");
+                    return;
+                }
 
                 for (int att = 0; att < activeShape.vertexAttributes.Count; att++)
                 {
@@ -124,7 +129,17 @@ namespace FirstPlugin.Forms
 
                     if (CurrentAttribute.Name == attriubte.Text)
                     {
+                        var buffer = CurrentAttribute.BufferIndex;
                         activeShape.vertexAttributes.Remove(CurrentAttribute);
+
+                        //Check if the index is no longer used for any attribute
+                        if (!activeShape.vertexAttributes.Any(x => x.BufferIndex == buffer))
+                        {
+                            foreach (var attr in activeShape.vertexAttributes)
+                                if (attr.BufferIndex > buffer)
+                                    attr.BufferIndex -= 1;
+                        }
+
                         attributeListView.Items.Remove(attriubte);
                     }
                 }
