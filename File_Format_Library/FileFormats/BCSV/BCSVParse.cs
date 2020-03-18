@@ -75,9 +75,9 @@ namespace FirstPlugin
                     if (size == 1)
                         type = DataType.Byte;
                     if (size == 2)
-                        type = DataType.Uint16;
+                        type = DataType.Int16;
                     if (size == 4)
-                        type = DataType.Uint32;
+                        type = DataType.Int32;
 
                     reader.SeekBegin(pos + fields[f].Offset);
                     object value = 0;
@@ -90,11 +90,16 @@ namespace FirstPlugin
                         case DataType.Float:
                             value = reader.ReadSingle();
                             break;
-                        case DataType.Uint16:
-                            value = reader.ReadUInt16();
+                        case DataType.Int16:
+                            value = reader.ReadInt16();
                             break;
-                        case DataType.Uint32:
-                            value = reader.ReadUInt32();
+                        case DataType.Int32:
+                            value = reader.ReadInt32();
+                            if (IsFloatValue((int)value))
+                            {
+                                reader.Seek(-4);
+                                value = reader.ReadSingle();
+                            }
                             break;
                         case DataType.String:
                             value = reader.ReadZeroTerminatedString(Encoding.UTF8);
@@ -111,18 +116,16 @@ namespace FirstPlugin
             }
         }
 
-        private bool IsFloatValue(int value)
-        {
-            // Use a very dumb "algorithm" to check if the resulting integer would be "too long".
+        private bool IsFloatValue(int value) {
             return value.ToString().Length > 6;
         }
 
         public enum DataType
         {
             Byte,
-            Uint16,
-            Uint32,
-            Uint64,
+            Int16,
+            Int32,
+            Int64,
             Float,
             String,
         }
