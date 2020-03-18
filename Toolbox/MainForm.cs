@@ -654,7 +654,7 @@ namespace Toolbox
                 if (ext.TitleBarExtensions != null)
                     RegisterMenuExtIndex(menuStrip1, ext.TitleBarExtensions, menuStrip1.Items.Count);
                // if (ext.MapEditorMenuExtensions != null)
-                //    RegisterMenuExtIndex(mapEditorsToolStripMenuItem, ext.MapEditorMenuExtensions, mapEditorsToolStripMenuItem.DropDownItems.Count);
+               //     RegisterMenuExtIndex(mapEditorsToolStripMenuItem, ext.MapEditorMenuExtensions, mapEditorsToolStripMenuItem.DropDownItems.Count);
             }
         }
 
@@ -1514,8 +1514,9 @@ namespace Toolbox
         private void SearchArchive(BatchFormatExport.Settings settings, IArchiveFile archiveFile,
             string extension, string outputFolder, ExportMode exportMode)
         {
-            string ArchiveFilePath = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(((IFileFormat)archiveFile).FileName));
-            ArchiveFilePath = outputFolder;
+            string ArchiveFilePath = outputFolder;
+            if (settings.SeperateArchiveFiles)
+                ArchiveFilePath = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(((IFileFormat)archiveFile).FileName));
 
             foreach (var file in archiveFile.Files)
                 SearchFileFormat(settings, file.OpenFile(), extension, ArchiveFilePath, exportMode);
