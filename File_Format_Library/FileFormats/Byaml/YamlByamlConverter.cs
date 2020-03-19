@@ -164,6 +164,8 @@ namespace FirstPlugin
                 return UInt64.Parse(value, CultureInfo.InvariantCulture);
             else if (tag == "!ll")
                 return Int64.Parse(value, CultureInfo.InvariantCulture);
+            else if (tag == "!p")
+                return new ByamlPathIndex() { Index = Int32.Parse(value, CultureInfo.InvariantCulture) };
             else
             {
                 float floatValue = 0;
@@ -171,7 +173,15 @@ namespace FirstPlugin
                 if (isFloat)
                     return floatValue;
                 else
+                {
+                    if (BYAML.IsHash(value))
+                    {
+                        uint hash = Convert.ToUInt32(value, 16);
+                        if (BYAML.Hashes.ContainsKey(hash))
+                            return $"!h {BYAML.Hashes[hash]}";
+                    }
                     return value;
+                }
             }
         }
 
@@ -210,7 +220,16 @@ namespace FirstPlugin
                     yamlNode.Style = SharpYaml.YamlStyle.Flow;
 
                 foreach (var item in (IDictionary<string, dynamic>)node)
-                    yamlNode.Add(item.Key, SaveNode(item.Key, item.Value));
+                {
+                    string key = item.Key;
+                    if (BYAML.IsHash(key))
+                    {
+                        uint hash = Convert.ToUInt32(key, 16);
+                        if (BYAML.Hashes.ContainsKey(hash))
+                            key = $"!h {BYAML.Hashes[hash]}";
+                    }
+                    yamlNode.Add(key, SaveNode(item.Key, item.Value));
+                }
                 return yamlNode;
             }
             else if (node is ByamlPathPoint)
@@ -231,6 +250,7 @@ namespace FirstPlugin
                 else if (node is uint) tag = "!u";
                 else if (node is Int64) tag = "!ul";
                 else if (node is double) tag = "!d";
+                else if (node is ByamlPathIndex) tag = "!p";
 
                 var yamlNode = new YamlScalarNode(ConvertValue(node));
                 if (tag != null) yamlNode.Tag = tag;
@@ -288,6 +308,7 @@ namespace FirstPlugin
         private static string ConvertValue(dynamic node)
         {
             if (node is bool) return ((bool)node) ? "true" : "false";
+            else if (node is ByamlPathIndex) return ((ByamlPathIndex)node).Index.ToString();
             else if (node is float) return string.Format("{0:0.000.00}", node);
             else return node.ToString();
         }

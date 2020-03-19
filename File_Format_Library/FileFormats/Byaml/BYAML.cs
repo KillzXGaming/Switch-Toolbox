@@ -16,7 +16,7 @@ using Syroot.BinaryData;
 
 namespace FirstPlugin
 {
-    public class BYAML : IEditor<ByamlEditor>, IFileFormat, IConvertableTextFormat
+    public class BYAML : IEditor<UserControl>, IFileFormat, IConvertableTextFormat
     {
         public FileType FileType { get; set; } = FileType.Parameter;
 
@@ -51,6 +51,8 @@ namespace FirstPlugin
                 return types.ToArray();
             }
         }
+
+        public static Dictionary<uint, string> Hashes = new Dictionary<uint, string>();
 
         #region Text Converter Interface
         public TextFileType TextFileType => TextFileType.Yaml;
@@ -115,7 +117,6 @@ namespace FirstPlugin
                 }
             }
 
-
             public void ConvertBEtoLE(object sender, EventArgs args)
             {
                 var byamlF = new BYAML();
@@ -138,52 +139,52 @@ namespace FirstPlugin
             }
         }
 
-
-        class EditableNode
+        public static bool IsHash(string k)
         {
-            public Type type { get { return Node[Index].GetType(); } }
-            dynamic Node;
-            dynamic Index;
+            if (k == null) return false;
 
-            public dynamic Get() { return Node[Index]; }
+            return IsHex(k.ToArray());
+        }
 
-            public void Set(dynamic value) {  Node[Index] = value; }
-            public string GetTreeViewString()
+        private static bool IsHex(IEnumerable<char> chars)
+        {
+            bool isHex;
+            foreach (var c in chars)
             {
-                if (Index is int)
-                    return Node[Index].ToString();
-                else
-                    return Index + " : " + Node[Index].ToString();
-            }
+                isHex = ((c >= '0' && c <= '9') ||
+                         (c >= 'a' && c <= 'f') ||
+                         (c >= 'A' && c <= 'F'));
 
-            public EditableNode(dynamic _node, dynamic _index)
-            {
-                Node = _node;
-                Index = _index;
+                if (!isHex)
+                    return false;
             }
+            return true;
         }
 
         bool IsDialog = false;
         public BymlFileData BymlData;
 
-        public ByamlEditor OpenForm()
+        public UserControl OpenForm()
         {
             ByamlEditor editor = new ByamlEditor();
             editor.FileFormat = this;
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
 
-         /*   if (FileName.Contains("_muunt"))
+            if (FileName.Contains("_muunt"))
             {
-                var muuntEditor = new MuuntEditor.MuuntEditor();
-                muuntEditor.LoadByaml(data.RootNode, FileName);
-                muuntEditor.Show();
-            }*/
+                var muuntEditor = new Turbo.TurboMuuntEditor();
+                muuntEditor.LoadByaml(this, Path.GetDirectoryName(FilePath));
+                return muuntEditor;
+            }
             return editor;
         }
 
         public void FillEditor(UserControl control)
         {
+            if (control is Turbo.TurboMuuntEditor)
+                return;
+
             ((ByamlEditor)control).UpdateByaml(
                 BymlData.RootNode,
                 BymlData.SupportPaths,
