@@ -48,6 +48,7 @@
             this.bruteForceHashTB = new Toolbox.Library.Forms.STTextBox();
             this.stLabel5 = new Toolbox.Library.Forms.STLabel();
             this.stLabel4 = new Toolbox.Library.Forms.STLabel();
+            this.chkLittleEndian = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.stPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.maxLengthUD)).BeginInit();
@@ -55,6 +56,7 @@
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.chkLittleEndian);
             this.contentContainer.Controls.Add(this.stLabel4);
             this.contentContainer.Controls.Add(this.stPanel1);
             this.contentContainer.Controls.Add(this.chkUseHex);
@@ -74,6 +76,7 @@
             this.contentContainer.Controls.SetChildIndex(this.chkUseHex, 0);
             this.contentContainer.Controls.SetChildIndex(this.stPanel1, 0);
             this.contentContainer.Controls.SetChildIndex(this.stLabel4, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkLittleEndian, 0);
             // 
             // stringTB
             // 
@@ -276,6 +279,19 @@
             this.stLabel4.TabIndex = 19;
             this.stLabel4.Text = "Brute Force:";
             // 
+            // chkLittleEndian
+            // 
+            this.chkLittleEndian.AutoSize = true;
+            this.chkLittleEndian.Checked = true;
+            this.chkLittleEndian.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkLittleEndian.Location = new System.Drawing.Point(559, 45);
+            this.chkLittleEndian.Name = "chkLittleEndian";
+            this.chkLittleEndian.Size = new System.Drawing.Size(139, 17);
+            this.chkLittleEndian.TabIndex = 20;
+            this.chkLittleEndian.Text = "Preview as Little Endian";
+            this.chkLittleEndian.UseVisualStyleBackColor = true;
+            this.chkLittleEndian.CheckedChanged += new System.EventHandler(this.chkLittleEndian_CheckedChanged);
+            // 
             // HashCalculatorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -314,5 +330,6 @@
         private Library.Forms.STTextBox characterStartTB;
         private Library.Forms.STLabel stLabel8;
         private Library.Forms.STCheckBox chkSearchNumbered;
+        private Library.Forms.STCheckBox chkLittleEndian;
     }
 }

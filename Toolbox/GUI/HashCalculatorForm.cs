@@ -16,6 +16,8 @@ namespace Toolbox
     {
         private bool IsHex => chkUseHex.Checked;
 
+        private bool IsLittleEndian => chkLittleEndian.Checked;
+
         public HashCalculatorForm()
         {
             InitializeComponent();
@@ -37,18 +39,27 @@ namespace Toolbox
 
         private void UpdateHash()
         {
-            ulong Hash = CalculateHash(hashTypeCB.GetSelectedText(), stringTB.Text);
+            dynamic Hash = CalculateHash(hashTypeCB.GetSelectedText(), stringTB.Text);
             if (IsHex)
-                resultTB.Text = Hash.ToString("X");
+                resultTB.Text = IsLittleEndian ? LittleEndian(Hash) : Hash.ToString("X");
             else
                 resultTB.Text = Hash.ToString();
+        }
+
+        static string LittleEndian(dynamic number)
+        {
+            byte[] bytes = BitConverter.GetBytes(number);
+            string retval = "";
+            foreach (byte b in bytes)
+                retval += b.ToString("X2");
+            return retval;
         }
 
         private void chkUseHex_CheckedChanged(object sender, EventArgs e) {
             UpdateHash();
         }
 
-        public static ulong CalculateHash(string type, string text)
+        public static dynamic CalculateHash(string type, string text)
         {
             if (type == "NLG_Hash")
                 return StringToHash(text);
@@ -326,6 +337,10 @@ namespace Toolbox
         }
 
         private void hashTypeCB_SelectedIndexChanged(object sender, EventArgs e) {
+            UpdateHash();
+        }
+
+        private void chkLittleEndian_CheckedChanged(object sender, EventArgs e) {
             UpdateHash();
         }
     }
