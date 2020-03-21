@@ -171,19 +171,19 @@ namespace FirstPlugin
             editor.Text = FileName;
             editor.Dock = DockStyle.Fill;
 
-            if (FileName.Contains("_muunt"))
+          /*  if (FileName.Contains("_muunt"))
             {
                 var muuntEditor = new Turbo.TurboMuuntEditor();
                 muuntEditor.LoadByaml(this, Path.GetDirectoryName(FilePath));
                 return muuntEditor;
-            }
+            }*/
             return editor;
         }
 
         public void FillEditor(UserControl control)
         {
-            if (control is Turbo.TurboMuuntEditor)
-                return;
+        //    if (control is Turbo.TurboMuuntEditor)
+          //      return;
 
             ((ByamlEditor)control).UpdateByaml(
                 BymlData.RootNode,
