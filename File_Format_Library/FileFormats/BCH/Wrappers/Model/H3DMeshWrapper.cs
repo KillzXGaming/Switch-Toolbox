@@ -45,6 +45,8 @@ namespace FirstPlugin.CtrLibrary
             ImageKey = "mesh";
             SelectedImageKey = "mesh";
 
+            MaterialIndex = Mesh.MaterialIndex;
+
             foreach (var subMesh in mesh.SubMeshes)
             {
                 STGenericPolygonGroup group = new STGenericPolygonGroup();
