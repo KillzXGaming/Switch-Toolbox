@@ -653,7 +653,7 @@ namespace Toolbox
                     RegisterMenuExtIndex(toolsToolStripMenuItem, ext.ToolsMenuExtensions);
                 if (ext.TitleBarExtensions != null)
                     RegisterMenuExtIndex(menuStrip1, ext.TitleBarExtensions, menuStrip1.Items.Count);
-               // if (ext.MapEditorMenuExtensions != null)
+             //   if (ext.MapEditorMenuExtensions != null)
                //     RegisterMenuExtIndex(mapEditorsToolStripMenuItem, ext.MapEditorMenuExtensions, mapEditorsToolStripMenuItem.DropDownItems.Count);
             }
         }
@@ -1497,7 +1497,7 @@ namespace Toolbox
                 var textures = ((IExportableModel)fileFormat).ExportableTextures.ToList();
                 var skeleton = ((IExportableModel)fileFormat).ExportableSkeleton;
                 string name = Path.GetFileNameWithoutExtension(fileFormat.FileName);
-                //DAE.Export($"{outputFolder}/{name}.{extension}", daesettings, model, textures, skeleton);
+                DAE.Export($"{outputFolder}/{name}.{extension}", daesettings, model, textures, skeleton);
             }
 
             fileFormat.Unload();
