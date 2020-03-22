@@ -170,8 +170,6 @@ namespace FirstPlugin
             shader.SetMatrix4x4("mtxMdl", ref mdlMat);
             shader.SetVector3("cameraPosition", control.CameraPosition);
 
-            SetRenderSettings(shader);
-
             Vector4 pickingColor = control.NextPickingColor();
 
             shader.SetVector3("difLightColor", new Vector3(1));
@@ -236,9 +234,9 @@ namespace FirstPlugin
             shader.DisableVertexAttributes();
         }
 
-        private void SetRenderSettings(SF.Shader shader)
+        private void SetRenderSettings(SF.Shader shader, bool useVertexColors)
         {
-            shader.SetBoolToInt("renderVertColor", Runtime.renderVertColor);
+            shader.SetBoolToInt("renderVertColor", Runtime.renderVertColor && useVertexColors);
             shader.SetBoolToInt("useNormalMap", Runtime.useNormalMap);
             shader.SetBoolToInt("renderR", Runtime.renderR);
             shader.SetBoolToInt("renderG", Runtime.renderG);
@@ -491,6 +489,7 @@ namespace FirstPlugin
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)MatTexture.magfilter[tex.MagFilter]);
             GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, 0.0f);
         }
+
         private void DrawModel(FSHP m, FMDL mdl, SF.Shader shader, bool ModelSelected)
         {
             if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
@@ -500,6 +499,11 @@ namespace FirstPlugin
 
             if (shader != OpenTKSharedResources.shaders["BFRES_Normals"])
             {
+                bool useVertexColors = true;
+                if (mat.shaderassign.ShaderArchive == "Park_UBER")
+                    useVertexColors = false;
+
+                SetRenderSettings(shader, useVertexColors);
                 SetRenderPass(mat);
                 SetUniforms(mat, shader, m, m.DisplayId);
                 SetTextureUniforms(mat, m, shader);
@@ -944,6 +948,7 @@ namespace FirstPlugin
                 }
             }
         }
+
         private void SetVertexAttributes(FSHP m, SF.Shader shader)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_position);
