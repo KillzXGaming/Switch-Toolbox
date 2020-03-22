@@ -11,7 +11,7 @@ namespace LayoutBXLYT.Revolution
 
 		public TexCoordGenEntry()
 		{
-			Type = TexCoordGenTypes.GX_TG_MTX3x4;
+			Type = TexCoordGenTypes.GX_TG_MTX2x4;
 			Source = TexCoordGenSource.GX_TG_TEX0;
 			MatrixSource = TexCoordGenMatrixSource.GX_TEXMTX0;
 			Unknown = 0;

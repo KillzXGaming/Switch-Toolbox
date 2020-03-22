@@ -144,6 +144,7 @@ namespace LayoutBXLYT.Revolution
             TextureMaps = TextureMaps.AddToArray(textureRef);
             TexCoordGens.Add(new TexCoordGenEntry()
             {
+                Type = TexCoordGenTypes.GX_TG_MTX2x4,
                 MatrixSource = TexCoordGenMatrixSource.GX_DTTMTX9 + (TexCoordGens.Count * 4),
                 Source = TexCoordGenSource.GX_TG_TEX0 
             });
@@ -182,6 +183,18 @@ namespace LayoutBXLYT.Revolution
             uint texCoordGenCount = ExtractBits(flags, 4, 20);
             uint mtxCount = ExtractBits(flags, 4, 24);
             uint texCount = ExtractBits(flags, 4, 28);
+
+            Console.WriteLine($"HasMaterialColor {HasMaterialColor}");
+            Console.WriteLine($"HasChannelControl {HasChannelControl}");
+            Console.WriteLine($"HasBlendMode {HasBlendMode}");
+            Console.WriteLine($"HasAlphaCompare {HasAlphaCompare}");
+            Console.WriteLine($"tevStagesCount {tevStagesCount}");
+            Console.WriteLine($"indTexOrderCount {indTexOrderCount}");
+            Console.WriteLine($"indSrtCount {indSrtCount}");
+            Console.WriteLine($"HasTevSwapTable {HasTevSwapTable}");
+            Console.WriteLine($"texCoordGenCount {texCoordGenCount}");
+            Console.WriteLine($"mtxCount {mtxCount}");
+            Console.WriteLine($"texCount {texCount}");
 
             TextureMaps = new TextureRef[texCount];
             TevStages = new TevStage[tevStagesCount];
