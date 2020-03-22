@@ -1204,6 +1204,7 @@ namespace FirstPlugin
                     TEX_FORMAT.R8G8B8A8_UNORM_SRGB,
                     TEX_FORMAT.R8G8B8A8_UNORM,
                     TEX_FORMAT.R8_UNORM,
+                    TEX_FORMAT.R16_UINT,
                     TEX_FORMAT.R8G8_UNORM,
                     TEX_FORMAT.R32G8X24_FLOAT,
                     TEX_FORMAT.ASTC_10x10_SRGB,
@@ -1316,6 +1317,7 @@ namespace FirstPlugin
                 case TEX_FORMAT.R8G8B8A8_UNORM: return SurfaceFormat.R8_G8_B8_A8_UNORM;
                 case TEX_FORMAT.R8G8B8A8_SNORM: return SurfaceFormat.R8_G8_B8_A8_SNORM;
                 case TEX_FORMAT.R8_UNORM: return SurfaceFormat.R8_UNORM;
+                case TEX_FORMAT.R16_UINT: return SurfaceFormat.R16_UINT;
                 case TEX_FORMAT.R8G8_UNORM: return SurfaceFormat.R8_G8_UNORM;
                 case TEX_FORMAT.R8G8_SNORM: return SurfaceFormat.R8_G8_SNORM;
                 case TEX_FORMAT.D32_FLOAT_S8X24_UINT: return SurfaceFormat.D32_FLOAT_S8X24_UINT;
@@ -1393,6 +1395,7 @@ namespace FirstPlugin
                 case SurfaceFormat.R8_G8_B8_A8_UNORM: return TEX_FORMAT.R8G8B8A8_UNORM;
                 case SurfaceFormat.R8_G8_B8_A8_SNORM: return TEX_FORMAT.R8G8B8A8_SNORM;
                 case SurfaceFormat.R8_UNORM: return TEX_FORMAT.R8_UNORM;
+                case SurfaceFormat.R16_UINT: return TEX_FORMAT.R16_UINT;
                 case SurfaceFormat.R8_G8_UNORM: return TEX_FORMAT.R8G8_UNORM;
                 case SurfaceFormat.R8_G8_SNORM: return TEX_FORMAT.R8G8_SNORM;
                 case SurfaceFormat.ETC1_UNORM: return TEX_FORMAT.ETC1_UNORM;
@@ -1629,7 +1632,7 @@ namespace FirstPlugin
             if (viewport == null)
                 return;
 
-            foreach (var drawable in viewport.scene.staticObjects)
+            foreach (var drawable in viewport.scene.StaticObjects)
             {
                 if (drawable is BFRESRender)
                 {

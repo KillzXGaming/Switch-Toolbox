@@ -1497,7 +1497,7 @@ namespace Toolbox
                 var textures = ((IExportableModel)fileFormat).ExportableTextures.ToList();
                 var skeleton = ((IExportableModel)fileFormat).ExportableSkeleton;
                 string name = Path.GetFileNameWithoutExtension(fileFormat.FileName);
-                DAE.Export($"{outputFolder}/{name}.{extension}", daesettings, model, textures, skeleton);
+               // DAE.Export($"{outputFolder}/{name}.{extension}", daesettings, model, textures, skeleton);
             }
 
             fileFormat.Unload();
