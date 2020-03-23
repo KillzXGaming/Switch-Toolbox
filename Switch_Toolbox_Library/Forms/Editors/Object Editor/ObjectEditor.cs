@@ -118,6 +118,10 @@ namespace Toolbox.Library.Forms
             ObjectTree.UpdateTextureIcon(texturIcon,image );
         }
 
+        public void ReloadArchiveFile(IFileFormat FileFormat) {
+            ObjectTree.ReloadArchiveFile(FileFormat);
+        }
+
         public void AddIArchiveFile(IFileFormat FileFormat){
             ObjectTree.AddIArchiveFile(FileFormat);
         }

@@ -10,7 +10,7 @@ using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class PCK : TreeNodeFile, IArchiveFile, IFileFormat, ILeaveOpenOnLoad
+    public class PCK : TreeNodeFile, IArchiveFile, IFileFormat, ILeaveOpenOnLoad, ISaveOpenedFileStream
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -55,8 +55,13 @@ namespace FirstPlugin
         public List<BankEntry> Banks = new List<BankEntry>();
         public List<AudioEntry> Sounds = new List<AudioEntry>();
 
+        private System.IO.Stream _stream = null;
+
         public void Load(System.IO.Stream stream)
         {
+            Entries.Clear();
+
+            _stream = stream;
             Text = FileName;
             CanSave = true;
 
@@ -150,7 +155,10 @@ namespace FirstPlugin
 
         public void Unload()
         {
-
+            _stream?.Dispose();
+            foreach (var afi in Files)
+                afi.FileDataStream?.Dispose();
+            _stream = null;
         }
 
         public void Save(System.IO.Stream stream)

@@ -73,12 +73,19 @@ namespace Toolbox.Library.IO
                     using (var fileStream = new FileStream(tempPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
                     {
                         FileFormat.Save(fileStream);
+                        FileFormat.Unload();
 
                         //After saving is done remove the existing file
                         File.Delete(FileName);
 
                         //Now move and rename our temp file to the new file path
                         File.Move(tempPath, FileName);
+
+                        FileFormat.Load(File.OpenRead(FileName));
+
+                        var activeForm = LibraryGUI.GetActiveForm();
+                        if (activeForm != null && activeForm is ObjectEditor)
+                            ((ObjectEditor)activeForm).ReloadArchiveFile(FileFormat);
                     }
                 }
                 else

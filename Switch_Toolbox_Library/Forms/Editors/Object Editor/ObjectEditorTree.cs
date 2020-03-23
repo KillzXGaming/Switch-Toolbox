@@ -44,6 +44,12 @@ namespace Toolbox.Library.Forms
         public void BeginUpdate() { treeViewCustom1.BeginUpdate(); }
         public void EndUpdate() { treeViewCustom1.EndUpdate(); }
 
+        public void ReloadArchiveFile(IFileFormat fileFormat)
+        {
+            this.treeViewCustom1.Nodes.Clear();
+            AddIArchiveFile(fileFormat);
+        }
+
         public void AddIArchiveFile(IFileFormat FileFormat)
         {
             var FileRoot = new ArchiveRootNodeWrapper(FileFormat.FileName, (IArchiveFile)FileFormat);
@@ -370,6 +376,7 @@ namespace Toolbox.Library.Forms
                 List<ToolStripItem> archiveMenus = new List<ToolStripItem>();
                 List<ToolStripItem> menuItems = new List<ToolStripItem>();
 
+                Console.WriteLine($"tag {e.Node.Tag }");
                 if (e.Node.Tag != null && e.Node.Tag is ArchiveFileInfo)
                 {
                     //The tag gets set when an archive is replaced by a treenode
@@ -649,7 +656,7 @@ namespace Toolbox.Library.Forms
 
                 var running = ((IAnimationContainer)Node).AnimationController;
                 if (LibraryGUI.GetAnimationPanel() != null) {
-                    Console.WriteLine($"running {Node.Tag}");
+                    Console.WriteLine($"running {running.Name}");
 
                     LibraryGUI.GetAnimationPanel().CurrentSTAnimation = running;
                 }
