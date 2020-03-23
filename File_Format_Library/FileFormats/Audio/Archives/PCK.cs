@@ -10,7 +10,7 @@ using Toolbox.Library.Forms;
 
 namespace FirstPlugin
 {
-    public class PCK : TreeNodeFile, IFileFormat, ILeaveOpenOnLoad
+    public class PCK : TreeNodeFile, IArchiveFile, IFileFormat, ILeaveOpenOnLoad
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -38,7 +38,15 @@ namespace FirstPlugin
             }
         }
 
+        public bool CanAddFiles { get; set; } = true;
+        public bool CanRenameFiles { get; set; } = true;
+        public bool CanReplaceFiles { get; set; } = true;
+        public bool CanDeleteFiles { get; set; } = true;
+
+        public void ClearFiles() { Entries.Clear(); }
+
         public List<AudioEntry> Entries = new List<AudioEntry>();
+        public IEnumerable<ArchiveFileInfo> Files => Entries;
 
         public uint Version = 1;
         public uint Flags;
@@ -50,7 +58,7 @@ namespace FirstPlugin
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
-            CanSave = false;
+            CanSave = true;
 
             using (var reader = new FileReader(stream, true))
             {
@@ -103,7 +111,7 @@ namespace FirstPlugin
                 for (int i = 0; i < SoundsCount; i++)
                 {
                     var entry = new AudioEntry();
-                    Nodes.Add(entry);
+                    Entries.Add(entry);
                     Sounds.Add(entry);
 
                     entry.HashID = reader.ReadUInt32();
@@ -112,12 +120,32 @@ namespace FirstPlugin
                     uint offset = reader.ReadUInt32();
                     entry.LanguageID = reader.ReadUInt32();
 
-                    entry.Text = entry.HashID.ToString("X") + ".wem";
-                    entry.AudioData = new SubStream(reader.BaseStream, offset * entry.Alignment, size);
+                    entry.FileName = entry.HashID.ToString("X") + ".wem";
+                    entry.FileDataStream = new SubStream(reader.BaseStream, offset * entry.Alignment, size);
                 }
 
                 reader.SeekBegin(soundPos + SoundsSize);
             }
+        }
+
+        public bool AddFile(ArchiveFileInfo archiveFileInfo)
+        {
+            Entries.Add(new AudioEntry()
+            {
+                FileName = archiveFileInfo.FileName,
+                FileDataStream = archiveFileInfo.FileDataStream,
+                HashID = 0,
+                Alignment = 1,
+                LanguageID = 0,
+            });
+
+            return true;
+        }
+
+        public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
+        {
+            Entries.Remove((AudioEntry)archiveFileInfo);
+            return true;
         }
 
         public void Unload()
@@ -128,6 +156,8 @@ namespace FirstPlugin
         public void Save(System.IO.Stream stream)
         {
             using (var writer = new FileWriter(stream)) {
+                long startPos = writer.Position;
+
                 writer.WriteSignature("AKPK");
                 writer.Write(uint.MaxValue); //reserve total header size for later
                 writer.Write(Flags);
@@ -150,7 +180,7 @@ namespace FirstPlugin
                 for (int i = 0; i < Languages.Count; i++)
                 {
                     writer.WriteUint32Offset(langPos + 4 + (i * 8), langPos);
-                    writer.Write(Languages[i].Name);
+                    writer.WriteString(Languages[i].Name);
                 }
 
                 //Save language section size
@@ -175,15 +205,20 @@ namespace FirstPlugin
                 writer.Write(Sounds.Count);
                 for (int i = 0; i < Sounds.Count; i++)
                 {
+                    string hashStr = System.IO.Path.GetFileNameWithoutExtension(Sounds[i].FileName);
+                    Sounds[i].HashID = Convert.ToUInt32(hashStr, 16);
+
                     writer.Write(Sounds[i].HashID);
                     writer.Write(Sounds[i].Alignment);
-                    writer.Write((uint)Sounds[i].AudioData.Length);
+                    writer.Write((uint)Sounds[i].FileDataStream.Length);
                     writer.Write(uint.MaxValue);
                     writer.Write(Sounds[i].LanguageID);
                 }
 
                 //Save sounds section size
                 writer.WriteSectionSizeU32(sectionSizesPos + 8, soundsPos, writer.Position);
+                //Save total header size
+                writer.WriteSectionSizeU32(startPos + 4, startPos, writer.Position - 4);
 
                 //Save unknown section as empty
                 if (Version >= 2)
@@ -193,7 +228,7 @@ namespace FirstPlugin
                 for (int i = 0; i < Sounds.Count; i++)
                 {
                     writer.WriteUint32Offset((soundsPos + 4) + 12 + (i * 20));
-                    writer.Write(Sounds[i].AudioData.ToBytes());
+                    writer.Write(Sounds[i].FileDataStream.ToBytes());
                 }
             }
         }
@@ -209,7 +244,7 @@ namespace FirstPlugin
 
         }
 
-        public class AudioEntry : TreeNodeCustom, IContextMenuNode
+        public class AudioEntry : ArchiveFileInfo
         {
             public AudioEntry()
             {
@@ -220,39 +255,6 @@ namespace FirstPlugin
             public uint HashID { get; set; }
             public uint Alignment { get; set; }
             public uint LanguageID { get; set; }
-
-            public System.IO.Stream AudioData { get; set; }
-
-            public ToolStripItem[] GetContextMenuItems()
-            {
-                List<ToolStripItem> Items = new List<ToolStripItem>();
-                Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
-                return Items.ToArray();
-            }
-
-            private void ExportAction(object sender, EventArgs args)
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.FileName = Text;
-                sfd.Filter = "Raw Data (*.*)|*.*";
-
-                if (sfd.ShowDialog() == DialogResult.OK) {
-                    AudioData.ExportToFile(sfd.FileName);
-                }
-            }
-
-            public override void OnClick(TreeView treeview)
-            {
-                HexEditor editor = (HexEditor)LibraryGUI.GetActiveContent(typeof(HexEditor));
-                if (editor == null)
-                {
-                    editor = new HexEditor();
-                    LibraryGUI.LoadEditor(editor);
-                }
-                editor.Text = Text;
-                editor.Dock = DockStyle.Fill;
-                editor.LoadData(AudioData);
-            }
         }
     }
 }
