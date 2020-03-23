@@ -43,23 +43,22 @@ namespace FirstPlugin
         public bool CanReplaceFiles { get; set; } = true;
         public bool CanDeleteFiles { get; set; } = true;
 
-        public void ClearFiles() { Entries.Clear(); }
+        public void ClearFiles() { Sounds.Clear(); }
 
-        public List<AudioEntry> Entries = new List<AudioEntry>();
-        public IEnumerable<ArchiveFileInfo> Files => Entries;
+        public List<AudioEntry> Sounds = new List<AudioEntry>();
+        public IEnumerable<ArchiveFileInfo> Files => Sounds;
 
         public uint Version = 1;
         public uint Flags;
 
         public List<LanguageEntry> Languages = new List<LanguageEntry>();
         public List<BankEntry> Banks = new List<BankEntry>();
-        public List<AudioEntry> Sounds = new List<AudioEntry>();
 
         private System.IO.Stream _stream = null;
 
         public void Load(System.IO.Stream stream)
         {
-            Entries.Clear();
+            Sounds.Clear();
 
             _stream = stream;
             Text = FileName;
@@ -116,7 +115,6 @@ namespace FirstPlugin
                 for (int i = 0; i < SoundsCount; i++)
                 {
                     var entry = new AudioEntry();
-                    Entries.Add(entry);
                     Sounds.Add(entry);
 
                     entry.HashID = reader.ReadUInt32();
@@ -135,7 +133,7 @@ namespace FirstPlugin
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
         {
-            Entries.Add(new AudioEntry()
+            Sounds.Add(new AudioEntry()
             {
                 FileName = archiveFileInfo.FileName,
                 FileDataStream = archiveFileInfo.FileDataStream,
@@ -149,7 +147,7 @@ namespace FirstPlugin
 
         public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
         {
-            Entries.Remove((AudioEntry)archiveFileInfo);
+            Sounds.Remove((AudioEntry)archiveFileInfo);
             return true;
         }
 
