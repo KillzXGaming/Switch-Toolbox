@@ -27,6 +27,9 @@ namespace FirstPlugin
             Format = ConvertToGeneric(BFNTFormat);
             if (Format == TEX_FORMAT.BC4_UNORM)
             {
+                RedChannel = STChannelType.One;
+                GreenChannel = STChannelType.One; 
+                BlueChannel = STChannelType.One;
                 AlphaChannel = STChannelType.Red;
             }
 
@@ -64,7 +67,7 @@ namespace FirstPlugin
         public override void Replace(string FileName)
         {
             Bfres.Structs.FTEX ftex = new Bfres.Structs.FTEX();
-            ftex.ReplaceTexture(FileName, Format, 1, 0, SupportedFormats, true, true, false);
+            ftex.ReplaceTexture(FileName, Format, 1, SwizzlePattern, SupportedFormats, true, true, false);
             if (ftex.texture != null)
             {
                 TextureTGLP.Format = (ushort)ConvertToGx2(ftex.Format);
