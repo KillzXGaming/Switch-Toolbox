@@ -13,6 +13,8 @@ namespace FirstPlugin
 {
     public class GTXImporterSettings
     {
+        public bool FlipY = false;
+
         public string TexName;
         public uint TexWidth;
         public uint TexHeight;
@@ -136,6 +138,10 @@ namespace FirstPlugin
         public List<byte[]> GenerateMipList(int SurfaceLevel = 0)
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
+            if (FlipY)
+                Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+            Console.WriteLine($"FlipY {FlipY}");
 
             List<byte[]> mipmaps = new List<byte[]>();
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
@@ -158,6 +164,9 @@ namespace FirstPlugin
         {
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
 
+            if (FlipY)
+                Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
             List<byte[]> mipmaps = new List<byte[]>();
             for (int mipLevel = 0; mipLevel < MipCount; mipLevel++)
             {
@@ -177,6 +186,9 @@ namespace FirstPlugin
 
         public void Compress()
         {
+            if (IsFinishedCompressing)
+                return;
+
             DataBlockOutput.Clear();
             foreach (var surface in DecompressedData)
             {

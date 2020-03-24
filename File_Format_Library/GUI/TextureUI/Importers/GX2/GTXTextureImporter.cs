@@ -201,13 +201,15 @@ namespace FirstPlugin
                 setting.DataBlockOutput.Add(Utils.CombineByteArray(mips.ToArray()));
 
                 ToggleOkButton(true);
-
-                setting.Compress();
+                setting.IsFinishedCompressing = true;
 
                 bitmap = FTEX.DecodeBlockGetBitmap(mips[0], setting.
                 TexWidth, setting.TexHeight, FTEX.ConvertFromGx2Format(
                     (Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)setting.Format), new byte[0]);
 
+
+                if (setting.FlipY)
+                    bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
                 if (setting.UseBc4Alpha) {
                     bitmap = BitmapExtension.SetChannel(bitmap, 
                         STChannelType.Red, STChannelType.Red, STChannelType.Red, STChannelType.Red);

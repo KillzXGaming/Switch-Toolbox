@@ -23,6 +23,7 @@ namespace FirstPlugin
             TextureTGLP = texture;
             Height = TextureTGLP.SheetHeight;
             Width = TextureTGLP.SheetWidth;
+            MipCount = 1;
             var BFNTFormat = (Gx2ImageFormats)TextureTGLP.Format;
             Format = ConvertToGeneric(BFNTFormat);
             if (Format == TEX_FORMAT.BC4_UNORM)
@@ -67,7 +68,7 @@ namespace FirstPlugin
         public override void Replace(string FileName)
         {
             Bfres.Structs.FTEX ftex = new Bfres.Structs.FTEX();
-            ftex.ReplaceTexture(FileName, Format, 1, SwizzlePattern, SupportedFormats, true, true, false);
+            ftex.ReplaceTexture(FileName, Format, 1, SwizzlePattern, SupportedFormats, true, true, false, false, true);
             if (ftex.texture != null)
             {
                 TextureTGLP.Format = (ushort)ConvertToGx2(ftex.Format);

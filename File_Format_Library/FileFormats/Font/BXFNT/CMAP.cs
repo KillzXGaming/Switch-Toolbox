@@ -134,7 +134,7 @@ namespace FirstPlugin
                         short idx = reader.ReadInt16();
                         if (idx != -1) header.FontSection.CodeMapDictionary[i] = idx;
 
-                        Console.WriteLine($"direct {i} {idx}");
+                        Console.WriteLine($"table {i} {idx}");
 
                         table.Add(idx);
                     }
