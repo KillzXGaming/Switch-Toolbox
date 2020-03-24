@@ -56,7 +56,7 @@ namespace FirstPlugin
             mapping.Add("Sheet_Height", texInfo.SheetHeight.ToString());
             mapping.Add("Sheet_Width", texInfo.SheetWidth.ToString());
             mapping.Add("RowCount", texInfo.RowCount.ToString());
-            mapping.Add("LinesCount", texInfo.LinesCount.ToString());
+            mapping.Add("LinesCount", texInfo.ColumnCount.ToString());
             return mapping;
         }
 

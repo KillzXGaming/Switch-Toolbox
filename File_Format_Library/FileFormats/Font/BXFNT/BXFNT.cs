@@ -381,7 +381,7 @@ namespace FirstPlugin
 
             float XScale = (fontWidth / TextureGlyph.CellWidth);
             float YScale = (fontHeight / TextureGlyph.CellWidth);
-            float height = (TextureGlyph.SheetHeight - 2) / TextureGlyph.LinesCount;
+            float height = (TextureGlyph.SheetHeight - 2) / TextureGlyph.ColumnCount;
 
          /*   int pos = 0;
             for (int i = 0; i < text.Length; i++)
@@ -432,7 +432,7 @@ namespace FirstPlugin
 
             BitmapFont f = new BitmapFont();
             f.LineHeight = FontInfo.LineFeed;
-            Bitmap[] Chars = new Bitmap[TextureGlyph.LinesCount * TextureGlyph.RowCount * TextureGlyph.SheetCount];
+            Bitmap[] Chars = new Bitmap[TextureGlyph.ColumnCount * TextureGlyph.RowCount * TextureGlyph.SheetCount];
 
             float realcellwidth = TextureGlyph.CellWidth + 1;
             float realcellheight = TextureGlyph.CellHeight + 1;
@@ -450,7 +450,7 @@ namespace FirstPlugin
                 BitmapData bd = SheetBM.LockBits(new Rectangle(0, 0, SheetBM.Width, SheetBM.Height),
                     ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
-                for (int y = 0; y < TextureGlyph.LinesCount; y++)
+                for (int y = 0; y < TextureGlyph.ColumnCount; y++)
                 {
                     for (int x = 0; x < TextureGlyph.RowCount; x++)
                     {

@@ -37,7 +37,7 @@ namespace FirstPlugin
         public ushort BaseLinePos { get; set; }
         public ushort Format { get; set; }
         public ushort RowCount { get; set; }
-        public ushort LinesCount { get; set; }
+        public ushort ColumnCount { get; set; }
         public ushort SheetWidth { get; set; }
         public ushort SheetHeight { get; set; }
         public List<byte[]> SheetDataList = new List<byte[]>();
@@ -67,7 +67,7 @@ namespace FirstPlugin
 
             Format = reader.ReadUInt16();
             RowCount = reader.ReadUInt16();
-            LinesCount = reader.ReadUInt16();
+            ColumnCount = reader.ReadUInt16();
             SheetWidth = reader.ReadUInt16();
             SheetHeight = reader.ReadUInt16();
 
@@ -115,7 +115,7 @@ namespace FirstPlugin
 
             writer.Write(Format);
             writer.Write(RowCount);
-            writer.Write(LinesCount);
+            writer.Write(ColumnCount);
             writer.Write(SheetWidth);
             writer.Write(SheetHeight);
             long _ofsSheetBlocks = writer.Position;
