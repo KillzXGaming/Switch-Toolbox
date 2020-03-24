@@ -724,10 +724,7 @@ namespace Bfres.Structs
                     break;
                 case ".dds":
                 case ".dds2":
-                    ImageExportSettings dialog = new ImageExportSettings();
-                    if (dialog.ShowDialog() == DialogResult.OK) {
-                        SaveDDS(FileName, dialog, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
-                    }
+                    SaveDDS(FileName, dialog, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
                     break;
                 default:
                     SaveBitMap(FileName);
