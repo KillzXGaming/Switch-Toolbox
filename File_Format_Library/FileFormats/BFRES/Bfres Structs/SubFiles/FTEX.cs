@@ -205,7 +205,7 @@ namespace Bfres.Structs
 
         public void ReplaceTexture(string FileName, TEX_FORMAT DefaultFormat = TEX_FORMAT.UNKNOWN, uint MipMapCount = 0, 
             uint swizzlePattern = 0, TEX_FORMAT[] SupportedFormats = null, bool DisplayBc4AlphaSetting = false,
-            bool IsSwizzleReadOnly = false, bool IsTileModeReadOnly = false, bool IsFormatReadOnly = false)
+            bool IsSwizzleReadOnly = false, bool IsTileModeReadOnly = false, bool IsFormatReadOnly = false, bool flipTextureY = false)
         {
             string ext = System.IO.Path.GetExtension(FileName);
             ext = ext.ToLower();
@@ -223,6 +223,7 @@ namespace Bfres.Structs
             }
 
             GTXImporterSettings setting = SetImporterSettings(FileName, DefaultFormat);
+            setting.FlipY = flipTextureY;
             setting.MipSwizzle = Tex2Swizzle;
             setting.SwizzlePattern = swizzlePattern;
 
@@ -723,7 +724,10 @@ namespace Bfres.Structs
                     break;
                 case ".dds":
                 case ".dds2":
-                    SaveDDS(FileName);
+                    ImageExportSettings dialog = new ImageExportSettings();
+                    if (dialog.ShowDialog() == DialogResult.OK) {
+                        SaveDDS(FileName, dialog, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
+                    }
                     break;
                 default:
                     SaveBitMap(FileName);
