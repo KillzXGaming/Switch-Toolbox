@@ -27,10 +27,10 @@ namespace FirstPlugin
             Format = ConvertToGeneric(BFNTFormat);
             if (Format == TEX_FORMAT.BC4_UNORM)
             {
-                RedChannel = STChannelType.One;
+               /* RedChannel = STChannelType.One;
                 GreenChannel = STChannelType.One; 
                 BlueChannel = STChannelType.One;
-                AlphaChannel = STChannelType.Red;
+                AlphaChannel = STChannelType.Red;*/
             }
 
             ImageKey = "Texture";
@@ -78,7 +78,15 @@ namespace FirstPlugin
                 Width = ftex.texture.Width;
                 Height = ftex.texture.Height;
 
-                UpdateEditor();
+                if (Format == TEX_FORMAT.BC4_UNORM)
+                {
+                 /*   RedChannel = STChannelType.One;
+                    GreenChannel = STChannelType.One;
+                    BlueChannel = STChannelType.One;
+                    AlphaChannel = STChannelType.Red;*/
+                }
+
+                //  UpdateEditor();
             }
         }
 

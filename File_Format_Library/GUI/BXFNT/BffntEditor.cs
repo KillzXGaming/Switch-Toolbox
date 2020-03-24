@@ -289,12 +289,13 @@ namespace FirstPlugin.Forms
 
             PanelImage = BitmapExtension.Resize(PanelImage, textureGlyph.SheetWidth, textureGlyph.SheetHeight);
 
-            int y = 0;
             for (int c = 0; c < (int)textureGlyph.ColumnCount; c++)
             {
-                int x = 0;
                 for (int r = 0; r < (int)textureGlyph.RowCount; r++)
                 {
+                    int x = r * textureGlyph.CellWidth;
+                    int y = c * textureGlyph.CellHeight;
+
                     var rect = new Rectangle(x, y, textureGlyph.CellWidth, textureGlyph.CellHeight);
 
                     Cells.Add(new FontCell()
@@ -307,10 +308,7 @@ namespace FirstPlugin.Forms
                     glyphImage.Image.Save($"Glpyh{c} {r}.png");
                     images.Add(glyphImage);*/
 
-
-                    x += (int)textureGlyph.CellWidth;
                 }
-                y += (int)textureGlyph.CellHeight;
             }
 
             GlyphImages = images.ToArray();
