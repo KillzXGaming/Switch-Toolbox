@@ -724,7 +724,7 @@ namespace Bfres.Structs
                     break;
                 case ".dds":
                 case ".dds2":
-                    SaveDDS(FileName, dialog, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
+                    SaveDDS(FileName, ExportSurfaceLevel, ExportMipMapLevel, SurfaceLevel, MipLevel);
                     break;
                 default:
                     SaveBitMap(FileName);
