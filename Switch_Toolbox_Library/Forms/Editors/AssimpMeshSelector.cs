@@ -28,7 +28,10 @@ namespace Toolbox.Library
 
             foreach (Mesh msh in assimp.scene.Meshes)
             {
-                listView1.Items.Add(msh.Name);
+                if (msh.MaterialIndex != -1 && assimp.materials.Count > msh.MaterialIndex)
+                    listView1.Items.Add($"{msh.Name}_{assimp.materials[msh.MaterialIndex].Name}");
+                else
+                    listView1.Items.Add(msh.Name);
             }
         }
         public STGenericObject GetSelectedMesh()
