@@ -28,8 +28,8 @@ namespace Toolbox.Library
 
             foreach (Mesh msh in assimp.scene.Meshes)
             {
-                if (msh.MaterialIndex != -1 && assimp.materials.Count > msh.MaterialIndex)
-                    listView1.Items.Add($"{msh.Name}_{assimp.materials[msh.MaterialIndex].Name}");
+                if (msh.MaterialIndex != -1 && assimp.scene.MaterialCount > msh.MaterialIndex)
+                    listView1.Items.Add($"{msh.Name}_{assimp.scene.Materials[msh.MaterialIndex].Name}");
                 else
                     listView1.Items.Add(msh.Name);
             }
