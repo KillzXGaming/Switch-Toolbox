@@ -52,9 +52,6 @@ namespace FirstPlugin
 
             boneInfoPanel1.LoadBone(bn);
 
-            foreach (var item in Enum.GetValues(typeof(BoneFlagsRotation)))
-                rotModeCB.Items.Add(item);
-
             rigidSkinningChkBox.Bind(bn, "UseRigidMatrix");
             smoothSkinningChkBox.Bind(bn, "UseSmoothMatrix");
 
@@ -63,6 +60,9 @@ namespace FirstPlugin
                 var bone = bn.BoneU;
                 
                 userDataEditor1.LoadUserData(bone.UserData);
+
+                foreach (var item in Enum.GetValues(typeof(ResU.BoneFlagsRotation)))
+                    rotModeCB.Items.Add(item);
 
                 foreach (var item in Enum.GetValues(typeof(ResU.BoneFlagsBillboard)))
                     billboardModeCB.Items.Add(item);
@@ -97,6 +97,9 @@ namespace FirstPlugin
 
                 foreach (var item in Enum.GetValues(typeof(BoneFlagsBillboard)))
                     billboardModeCB.Items.Add(item);
+
+                foreach (var item in Enum.GetValues(typeof(BoneFlagsRotation)))
+                    rotModeCB.Items.Add(item);
 
                 rotModeCB.SelectedItem = bone.FlagsRotation;
                 billboardModeCB.SelectedItem = bone.FlagsBillboard;
