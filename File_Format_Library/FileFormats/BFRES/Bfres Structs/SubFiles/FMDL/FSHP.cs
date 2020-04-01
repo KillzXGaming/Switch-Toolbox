@@ -362,9 +362,10 @@ namespace Bfres.Structs
             //Todo add lod generating
 
             CreateNewBoundingBoxes();
-
             SaveShape(GetResFileU() != null);
             UpdateVertexData();
+            GenerateBoundingNodes();
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -383,10 +384,30 @@ namespace Bfres.Structs
             }
 
             CreateNewBoundingBoxes();
-
             SaveShape(GetResFileU() != null);
             UpdateVertexData();
+            GenerateBoundingNodes();
+
             Cursor.Current = Cursors.Default;
+        }
+
+        private void GenerateBoundingNodes()
+        {
+            if (ShapeU != null)
+            {
+                ShapeU.SubMeshBoundingIndices = new List<ushort>();
+                ShapeU.SubMeshBoundingIndices.Add(0);
+                ShapeU.SubMeshBoundingNodes = new List<ResU.BoundingNode>();
+                ShapeU.SubMeshBoundingNodes.Add(new ResU.BoundingNode()
+                {
+                    LeftChildIndex = 0,
+                    NextSibling = 0,
+                    SubMeshIndex = 0,
+                    RightChildIndex = 0,
+                    Unknown = 0,
+                    SubMeshCount = 1,
+                });
+            }
         }
 
         private void RecalculateNormals(object sender, EventArgs args)
