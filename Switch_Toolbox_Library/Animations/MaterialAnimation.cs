@@ -76,6 +76,7 @@ namespace Toolbox.Library.Animations
             public virtual string GetActiveTextureNameByFrame(float frame)
             {
                 var keyFrame = GetKeyFrame(frame);
+                if (keyFrame == null) return "";
                 return MaterialAnimation.Textures[(int)keyFrame.Value];
             }
 
