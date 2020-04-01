@@ -72,6 +72,8 @@ namespace FirstPlugin
             }
         }
 
+        public bool CreateDummyLODs => chkCreateDummyLODs.Checked;
+
         public bool UseOriginalAttributes => chkOriginalAttributesFormats.Checked;
         public bool UseOriginalAttributeFormats => chkOriginalAttributesFormats.Checked;
 

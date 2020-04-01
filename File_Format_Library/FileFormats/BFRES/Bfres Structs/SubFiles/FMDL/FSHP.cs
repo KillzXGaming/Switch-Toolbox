@@ -360,6 +360,9 @@ namespace Bfres.Structs
         {
             Cursor.Current = Cursors.WaitCursor;
             GenerateDummyLODMeshes();
+            SaveShape(GetResFileU() != null);
+            UpdateVertexData();
+            GenerateBoundingNodes();
             Cursor.Current = Cursors.Default;
         }
 
@@ -383,9 +386,6 @@ namespace Bfres.Structs
             }
 
             CreateNewBoundingBoxes();
-            SaveShape(GetResFileU() != null);
-            UpdateVertexData();
-            GenerateBoundingNodes();
         }
 
         private void GenerateLODMeshes(object sender, EventArgs args)

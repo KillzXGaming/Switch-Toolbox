@@ -764,6 +764,9 @@ namespace Bfres.Structs
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
 
+                            if (csvsettings.CreateDummyLODs)
+                                shape.GenerateDummyLODMeshes();
+
                             Console.WriteLine($"ForceSkinInfluence {ForceSkinInfluence}");
 
                             if (!ForceSkinInfluence)
@@ -1196,6 +1199,9 @@ namespace Bfres.Structs
                             shape.CreateIndexList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
                             shape.BoneIndices = shape.GetIndices(Skeleton);
+
+                            if (settings.CreateDummyLODs)
+                                shape.GenerateDummyLODMeshes();
 
                             if (ForceSkinInfluence)
                                 shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;

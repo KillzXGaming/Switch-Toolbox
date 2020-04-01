@@ -61,6 +61,8 @@
             this.chkBoxFlipUvsY = new Toolbox.Library.Forms.STCheckBox();
             this.chkBoxImportBones = new Toolbox.Library.Forms.STCheckBox();
             this.panel8 = new Toolbox.Library.Forms.STPanel();
+            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.gamePresetCB = new Toolbox.Library.Forms.STComboBox();
             this.chkResetColorParams = new Toolbox.Library.Forms.STCheckBox();
             this.chkPlaceHolderTextures = new Toolbox.Library.Forms.STCheckBox();
             this.chkBoxImportMat = new Toolbox.Library.Forms.STCheckBox();
@@ -100,8 +102,7 @@
             this.stCheckBox1 = new Toolbox.Library.Forms.STCheckBox();
             this.chkMapOriginalMaterials = new Toolbox.Library.Forms.STCheckBox();
             this.ogSkinCountChkBox = new Toolbox.Library.Forms.STCheckBox();
-            this.gamePresetCB = new Toolbox.Library.Forms.STComboBox();
-            this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.chkCreateDummyLODs = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -456,6 +457,7 @@
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.chkCreateDummyLODs);
             this.panel8.Controls.Add(this.stLabel3);
             this.panel8.Controls.Add(this.gamePresetCB);
             this.panel8.Controls.Add(this.chkResetColorParams);
@@ -484,6 +486,28 @@
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(524, 327);
             this.panel8.TabIndex = 11;
+            // 
+            // stLabel3
+            // 
+            this.stLabel3.AutoSize = true;
+            this.stLabel3.Location = new System.Drawing.Point(13, 12);
+            this.stLabel3.Name = "stLabel3";
+            this.stLabel3.Size = new System.Drawing.Size(71, 13);
+            this.stLabel3.TabIndex = 36;
+            this.stLabel3.Text = "Game Preset:";
+            // 
+            // gamePresetCB
+            // 
+            this.gamePresetCB.BorderColor = System.Drawing.Color.Empty;
+            this.gamePresetCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
+            this.gamePresetCB.ButtonColor = System.Drawing.Color.Empty;
+            this.gamePresetCB.FormattingEnabled = true;
+            this.gamePresetCB.IsReadOnly = false;
+            this.gamePresetCB.Location = new System.Drawing.Point(115, 9);
+            this.gamePresetCB.Name = "gamePresetCB";
+            this.gamePresetCB.Size = new System.Drawing.Size(244, 21);
+            this.gamePresetCB.TabIndex = 35;
+            this.gamePresetCB.SelectedIndexChanged += new System.EventHandler(this.gamePresetCB_SelectedIndexChanged);
             // 
             // chkResetColorParams
             // 
@@ -775,7 +799,7 @@
             this.tabPageAdvanced.Location = new System.Drawing.Point(4, 25);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(530, 333);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(192, 71);
             this.tabPageAdvanced.TabIndex = 0;
             this.tabPageAdvanced.Text = "Advanced Settings";
             // 
@@ -792,7 +816,7 @@
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel1.Location = new System.Drawing.Point(3, 3);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(524, 327);
+            this.stPanel1.Size = new System.Drawing.Size(186, 65);
             this.stPanel1.TabIndex = 17;
             // 
             // tabPage1
@@ -920,27 +944,15 @@
             this.ogSkinCountChkBox.Text = "Keep Original Skin Count (can help crashes)";
             this.ogSkinCountChkBox.UseVisualStyleBackColor = true;
             // 
-            // gamePresetCB
+            // chkCreateDummyLODs
             // 
-            this.gamePresetCB.BorderColor = System.Drawing.Color.Empty;
-            this.gamePresetCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.gamePresetCB.ButtonColor = System.Drawing.Color.Empty;
-            this.gamePresetCB.FormattingEnabled = true;
-            this.gamePresetCB.IsReadOnly = false;
-            this.gamePresetCB.Location = new System.Drawing.Point(115, 9);
-            this.gamePresetCB.Name = "gamePresetCB";
-            this.gamePresetCB.Size = new System.Drawing.Size(244, 21);
-            this.gamePresetCB.TabIndex = 35;
-            this.gamePresetCB.SelectedIndexChanged += new System.EventHandler(this.gamePresetCB_SelectedIndexChanged);
-            // 
-            // stLabel3
-            // 
-            this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(13, 12);
-            this.stLabel3.Name = "stLabel3";
-            this.stLabel3.Size = new System.Drawing.Size(71, 13);
-            this.stLabel3.TabIndex = 36;
-            this.stLabel3.Text = "Game Preset:";
+            this.chkCreateDummyLODs.AutoSize = true;
+            this.chkCreateDummyLODs.Location = new System.Drawing.Point(240, 263);
+            this.chkCreateDummyLODs.Name = "chkCreateDummyLODs";
+            this.chkCreateDummyLODs.Size = new System.Drawing.Size(210, 17);
+            this.chkCreateDummyLODs.TabIndex = 37;
+            this.chkCreateDummyLODs.Text = "Create Dummy LODs (always first level)";
+            this.chkCreateDummyLODs.UseVisualStyleBackColor = true;
             // 
             // BfresModelImportSettings
             // 
@@ -1054,5 +1066,6 @@
         private Toolbox.Library.Forms.ListViewCustom assimpMeshListView;
         private Toolbox.Library.Forms.STLabel stLabel3;
         private Toolbox.Library.Forms.STComboBox gamePresetCB;
+        private Toolbox.Library.Forms.STCheckBox chkCreateDummyLODs;
     }
 }
