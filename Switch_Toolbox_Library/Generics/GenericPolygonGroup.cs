@@ -18,10 +18,10 @@ namespace Toolbox.Library
 
     public class STGenericPolygonGroup
     {
-        public virtual STGenericMaterial Material { get; set; }
+        public virtual STGenericMaterial Material { get; set; } = null;
 
         public int Offset { get; set; }
-        public int MaterialIndex { get; set; }
+        public int MaterialIndex { get; set; } = -1;
         public int Index { get; set; }
 
         public List<int> faces = new List<int>();

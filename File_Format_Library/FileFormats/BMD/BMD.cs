@@ -354,6 +354,8 @@ namespace FirstPlugin
                 var textures = new List<STGenericTexture>();
                 foreach (var mesh in Renderer.Meshes)
                     materials.Add(mesh.GetMaterial());
+                foreach (var mesh in Renderer.Meshes)
+                    mesh.MaterialIndex = materials.IndexOf(mesh.GetMaterial());
                 foreach (var tex in Renderer.TextureList)
                     textures.Add(tex);
 
