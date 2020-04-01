@@ -167,16 +167,11 @@ namespace FirstPlugin
                     faceList.Add((uint)f);
                 }
                 if (faceList.Count > 65000)
-                {
-                    MessageBox.Show($"Warning! Your poly count for a single mesh {fshp.Text} is pretty high! ({faceList.Count})." +
-                        $" You may want to split this!");
                     msh.SetIndices(faceList, IndexFormat.UInt32);
-                }
                 else
                     msh.SetIndices(faceList, IndexFormat.UInt16);
 
                 Shape.Meshes.Add(msh);
-                break;
             }
             return Shape;
         }

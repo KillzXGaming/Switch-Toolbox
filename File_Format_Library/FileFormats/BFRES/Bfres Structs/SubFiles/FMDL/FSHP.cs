@@ -174,6 +174,7 @@ namespace Bfres.Structs
 
             ToolStripMenuItem lodMenu = new ToolStripMenuItem("Level Of Detail");
             lodMenu.DropDownItems.Add(new ToolStripMenuItem("Clear LOD Meshes", null, ClearLODMeshes));
+            lodMenu.DropDownItems.Add(new ToolStripMenuItem("Add dummy LOD Meshes", null, GenerateDummyLODMeshesAction));
             Items.Add(lodMenu);
 
             ToolStripMenuItem boundingsMenu = new ToolStripMenuItem("Boundings");
@@ -353,6 +354,38 @@ namespace Bfres.Structs
             SaveShape(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
+        }
+
+        private void GenerateDummyLODMeshesAction(object sender, EventArgs args)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            GenerateDummyLODMeshes();
+            Cursor.Current = Cursors.Default;
+        }
+
+        public void GenerateDummyLODMeshes()
+        {
+            var mesh = lodMeshes.FirstOrDefault();
+            while (true)
+            {
+                if (lodMeshes.Count >= 3)
+                    break;
+
+                LOD_Mesh lod = new LOD_Mesh();
+                lod.faces.AddRange(mesh.faces);
+                lod.IndexFormat = mesh.IndexFormat;
+                lodMeshes.Add(lod);
+
+                var subMesh = new LOD_Mesh.SubMesh();
+                subMesh.offset = mesh.subMeshes[0].offset;
+                subMesh.size = mesh.subMeshes[0].size;
+                lod.subMeshes.Add(subMesh);
+            }
+
+            CreateNewBoundingBoxes();
+            SaveShape(GetResFileU() != null);
+            UpdateVertexData();
+            GenerateBoundingNodes();
         }
 
         private void GenerateLODMeshes(object sender, EventArgs args)
