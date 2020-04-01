@@ -375,10 +375,11 @@ namespace Bfres.Structs
             DisplayLODIndex = 0; //Force index to prevent errors
 
             //Clear all but first base mesh
-            for (int i = 0; i < lodMeshes.Count; i++)
+            var meshes = lodMeshes.ToList();
+            for (int i = 0; i < meshes.Count; i++)
             {
                 if (i != 0)
-                    lodMeshes.Remove(lodMeshes[i]);
+                    lodMeshes.Remove(meshes[i]);
             }
 
             CreateNewBoundingBoxes();
