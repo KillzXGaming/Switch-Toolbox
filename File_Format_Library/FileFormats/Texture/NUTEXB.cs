@@ -312,18 +312,25 @@ namespace FirstPlugin
                 data.Add(array[0]);
 
             var output = Utils.CombineByteArray(data.ToArray());
-            if (output.Length < ImageData.Length) {
-                var paddingSize = ImageData.Length - output.Length;
-                output = Utils.CombineByteArray(output, new byte[paddingSize]);
-            }
-
-            ImageData = output;
+            ImageData = SetImageData(output);
 
             data.Clear();
             surfacesNew.Clear();
             surfaces.Clear();
 
             UpdateEditor();
+        }
+
+        private byte[] SetImageData(byte[] output)
+        {
+            if (output.Length < ImageData.Length && LimitFileSize)
+            {
+                var paddingSize = ImageData.Length - output.Length;
+                output = Utils.CombineByteArray(output, new byte[paddingSize]);
+            }
+
+            Console.WriteLine($"output {output.Length} ImageData {ImageData.Length}");
+            return output;
         }
 
         private void SaveAction(object sender, EventArgs args)
@@ -493,7 +500,6 @@ namespace FirstPlugin
             {
                 MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
                 ImageData = GenerateMipsAndCompress(bitmap, MipCount, Format);
-
                 return;
             }
 
@@ -531,7 +537,11 @@ namespace FirstPlugin
             var mipmaps = TextureImporterSettings.SwizzleSurfaceMipMaps(tex,
                 GenerateMipsAndCompress(bitmap, MipCount, Format), MipCount);
 
-            ImageData = Utils.CombineByteArray(mipmaps.ToArray());
+            byte[] output = Utils.CombineByteArray(mipmaps.ToArray());
+            if (useSizeRestrictions.Checked && output.Length > ImageData.Length)
+                throw new Exception("Image must be the same size or smaller!");
+
+            ImageData = SetImageData(output);
         }
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
