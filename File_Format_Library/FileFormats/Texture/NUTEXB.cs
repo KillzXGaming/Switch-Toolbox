@@ -277,14 +277,17 @@ namespace FirstPlugin
 
             if (LimitFileSize)
             {
-                if (surfaces[0].mipmaps[0].Length != surfacesNew[0].mipmaps[0].Length)
-                    throw new Exception($"Image must be the same size! {surfaces[0].mipmaps[0].Length}");
+                if (surfaces[0].mipmaps[0].Length > surfacesNew[0].mipmaps[0].Length)
+                {
+                    if (surfaces[0].mipmaps[0].Length != surfacesNew[0].mipmaps[0].Length)
+                        throw new Exception($"Image must be the same size! {surfaces[0].mipmaps[0].Length}");
 
-                if (mipSizes[0].Length != surfacesNew[0].mipmaps.Count)
-                    throw new Exception($"Mip map count must be the same! {mipSizes[0].Length}");
+                    if (mipSizes[0].Length != surfacesNew[0].mipmaps.Count)
+                        throw new Exception($"Mip map count must be the same! {mipSizes[0].Length}");
 
-                if (Width != tex.Texture.Width || Height != tex.Texture.Height)
-                    throw new Exception("Image size must be the same!");
+                    if (Width != tex.Texture.Width || Height != tex.Texture.Height)
+                        throw new Exception("Image size must be the same!");
+                }
 
                 Width = tex.Texture.Width;
                 Height = tex.Texture.Height;
@@ -308,7 +311,13 @@ namespace FirstPlugin
             foreach (var array in tex.Texture.TextureData)
                 data.Add(array[0]);
 
-            ImageData = Utils.CombineByteArray(data.ToArray());
+            var output = Utils.CombineByteArray(data.ToArray());
+            if (output.Length < ImageData.Length) {
+                var paddingSize = ImageData.Length - output.Length;
+                output = Utils.CombineByteArray(ImageData, new byte[paddingSize]);
+            }
+
+            ImageData = output;
 
             data.Clear();
             surfacesNew.Clear();
