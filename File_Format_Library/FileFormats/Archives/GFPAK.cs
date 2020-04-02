@@ -962,21 +962,15 @@ namespace FirstPlugin
 
         public bool DeleteFile(ArchiveFileInfo archiveFileInfo)
         {
-            int index = 0;
-            foreach (FileEntry file in files)
+            int removeindex = files.IndexOf((FileEntry)archiveFileInfo);
+            foreach (var folder in folders)
             {
-                //Remove folder references first
-                //Regenerate the indices after
-                foreach (var folder in folders)
-                {
-                    for (int f = 0; f < folder.FileCount; f++)
-                        if (folder.hashes[f].Index == index)
-                            folder.hashes.RemoveAt(f);
-                }
-
-
-                index++;
+                for (int f = 0; f < folder.FileCount; f++)
+                    if (folder.hashes[f].Index == removeindex)
+                        folder.hashes.RemoveAt(f);
             }
+
+            RegenerateFileIndices();
 
             files.Remove((FileEntry)archiveFileInfo);
 
