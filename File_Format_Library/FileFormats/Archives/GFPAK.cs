@@ -970,9 +970,8 @@ namespace FirstPlugin
                         folder.hashes.RemoveAt(f);
             }
 
-            RegenerateFileIndices();
-
             files.Remove((FileEntry)archiveFileInfo);
+            RegenerateFileIndices();
 
             return true;
         }
