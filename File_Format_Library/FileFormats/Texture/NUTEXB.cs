@@ -139,7 +139,6 @@ namespace FirstPlugin
             get
             {
                 List<Type> types = new List<Type>();
-                types.Add(typeof(MenuExt));
                 return types.ToArray();
             }
         }
@@ -235,72 +234,6 @@ namespace FirstPlugin
             public uint ImageSize { get; set; }
         }
 
-        class MenuExt : IFileMenuExtension
-        {
-            public STToolStripItem[] NewFileMenuExtensions => null;
-            public STToolStripItem[] NewFromFileMenuExtensions => null;
-            public STToolStripItem[] ToolsMenuExtensions => toolExt;
-            public STToolStripItem[] TitleBarExtensions => null;
-            public STToolStripItem[] CompressionMenuExtensions => null;
-            public STToolStripItem[] ExperimentalMenuExtensions => null;
-            public STToolStripItem[] EditMenuExtensions => null;
-            public ToolStripButton[] IconButtonMenuExtensions => null;
-
-            STToolStripItem[] toolExt = new STToolStripItem[1];
-            public MenuExt()
-            {
-                toolExt[0] = new STToolStripItem("Textures");
-                toolExt[0].DropDownItems.Add(new STToolStripItem("Batch Export (NUTEXB)", Export));
-            }
-            private void Export(object sender, EventArgs args)
-            {
-                string formats = FileFilters.NUTEXB;
-
-                string[] forms = formats.Split('|');
-
-                List<string> Formats = new List<string>();
-                for (int i = 0; i < forms.Length; i++)
-                {
-                    if (i > 1 || i == (forms.Length - 1)) //Skip lines with all extensions
-                    {
-                        if (!forms[i].StartsWith("*"))
-                            Formats.Add(forms[i]);
-                    }
-                }
-
-                BatchFormatExport form = new BatchFormatExport(Formats);
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    string extension = form.GetSelectedExtension();
-
-                    OpenFileDialog ofd = new OpenFileDialog();
-                    ofd.Multiselect = true;
-                    ofd.Filter = Utils.GetAllFilters(typeof(NUTEXB));
-
-                    if (ofd.ShowDialog() == DialogResult.OK)
-                    {
-                        foreach (string file in ofd.FileNames)
-                        {
-                            NUTEXB texture = new NUTEXB();
-                            texture.Read(new FileReader(file));
-
-                            try
-                            {
-                                texture.Export(System.IO.Path.GetFullPath(file) + texture.ArcOffset + texture.Text + extension);
-                            }
-                            catch
-                            {
-                                Console.WriteLine("Something went wrong??");
-                            }
-
-                            texture = null;
-                            GC.Collect();
-                        }
-                    }
-                }
-            }
-        }
-
         public uint unk;
         public int unk2;
 
@@ -312,6 +245,22 @@ namespace FirstPlugin
 
         public override string ExportFilter => FileFilters.NUTEXB;
         public override string ReplaceFilter => FileFilters.NUTEXB;
+
+        public void CreateNewNutexb()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = false;
+            ofd.Filter = FileFilters.NUTEXB;
+            if (ofd.ShowDialog() != DialogResult.OK)
+                return;
+
+            NUTEXB nutexb = new NUTEXB();
+            nutexb.CanSave = true;
+            nutexb.IFileInfo = new IFileInfo();
+            nutexb.ArrayCount = 1;
+            nutexb.Depth = 1;
+            nutexb.Replace(ofd.FileName);
+        }
 
         public override void Replace(string FileName)
         {
@@ -380,6 +329,8 @@ namespace FirstPlugin
             }
         }
 
+        public string TextureName { get; set; }
+
         public void Read(FileReader reader)
         {
             ImageKey = "Texture";
@@ -394,7 +345,8 @@ namespace FirstPlugin
             reader.Seek(pos - 112, System.IO.SeekOrigin.Begin); //Subtract size where the name occurs
             byte padding = reader.ReadByte();
             string StrMagic = reader.ReadString(3);
-            Text = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+            TextureName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
+            Text = TextureName;
 
             //We cannot check if it's swizzled properly
             //So far if this part is blank, it's for Taiko No Tatsujin "Drum 'n' Fun
@@ -505,7 +457,7 @@ namespace FirstPlugin
             long stringPos = writer.Position;
             writer.Write((byte)0x20);
             writer.WriteSignature("XNT");
-            writer.WriteString(Text);
+            writer.WriteString(TextureName);
             writer.Seek(stringPos + 0x40, System.IO.SeekOrigin.Begin);
             writer.Seek(4); //padding
             writer.Write(Width);
