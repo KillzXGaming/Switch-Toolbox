@@ -314,7 +314,7 @@ namespace FirstPlugin
             var output = Utils.CombineByteArray(data.ToArray());
             if (output.Length < ImageData.Length) {
                 var paddingSize = ImageData.Length - output.Length;
-                output = Utils.CombineByteArray(ImageData, new byte[paddingSize]);
+                output = Utils.CombineByteArray(output, new byte[paddingSize]);
             }
 
             ImageData = output;
