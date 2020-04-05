@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ScintillaNET;
 using ScintillaNET_FindReplaceDialog;
+using Toolbox.Library.IO;
 
 namespace Toolbox.Library.Forms
 {
@@ -24,6 +25,8 @@ namespace Toolbox.Library.Forms
         public void BeforeFileSaved() { }
 
         FindReplace findReplaceDialog;
+
+        public static Encoding TextEncoding = Encoding.Default;
 
         private void ResetTypes()
         {
@@ -172,6 +175,8 @@ namespace Toolbox.Library.Forms
             return Color.FromArgb(255, (byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);
         }
 
+        public List<Encoding> EncodingOptions = new List<Encoding>();
+
         public TextEditor()
         {
             InitializeComponent();
@@ -189,16 +194,34 @@ namespace Toolbox.Library.Forms
             findAllResultsPanel1.ForeColor = FormThemes.BaseTheme.TextForeColor;
             findAllResultsPanel1.Scintilla.SetWhitespaceBackColor(true, Color.FromArgb(50, 50, 50));
 
-         //   foreach (var encoding in Encoding.GetEncodings())
-              //  encodingToolStripMenuItem.DropDownItems.Add(encoding.DisplayName);
+            EncodingOptions.Add(Encoding.Default);
+            EncodingOptions.Add(Encoding.GetEncoding("shift_jis"));
+
+            foreach (var encoding in EncodingOptions) {
+                var toolstrip = new ToolStripMenuItem(encoding.EncodingName, null, encodingMenuClick);
+                encodingToolStripMenuItem.DropDownItems.Add(toolstrip);
+            }
+
+            ReloadEncodingMenuToggle();
 
             FillEditor("");
+        }
+
+        private void ReloadEncodingMenuToggle()
+        {
+            foreach (ToolStripMenuItem encoding in encodingToolStripMenuItem.DropDownItems)
+            {
+                if (encoding.Text == TextEncoding.EncodingName)
+                    encoding.Checked = true;
+                else
+                    encoding.Checked = false;
+            }
         }
 
         private Color BACK_COLOR = Color.FromArgb(30, 30, 30);
         private Color FORE_COLOR = Color.White;
 
-        public void AddContextMenu(STToolStripItem menu, EventHandler handler)
+        public void AddContextMenu(STToolStripItem menu)
         {
             foreach (ToolStripItem item in stContextMenuStrip1.Items)
                 if (item.Text == menu.Text)
@@ -232,15 +255,17 @@ namespace Toolbox.Library.Forms
             return scintilla1.Text;
         }
 
+        private byte[] Data;
         public void FillEditor(System.IO.Stream data)
         {
-            using (var stringReader = new System.IO.StreamReader(data, true))
-                FillEditor(stringReader.ReadToEnd());
+            Data = data.ToBytes();
+            ReloadText();
         }
 
-        public void FillEditor(byte[] Data)
+        public void FillEditor(byte[] data)
         {
-            FillEditor(Encoding.Default.GetString(Data));
+            Data = data;
+            ReloadText();
         }
 
         public void FillEditor(string Text)
@@ -416,6 +441,22 @@ namespace Toolbox.Library.Forms
                 scintilla1.WrapMode = WrapMode.Word;
             else
                 scintilla1.WrapMode = WrapMode.None;
+        }
+
+        private void encodingMenuClick(object sender, EventArgs e)
+        {
+            var menu = (ToolStripMenuItem)sender;
+            var index = encodingToolStripMenuItem.DropDownItems.IndexOf(menu);
+            if (index != -1)
+            {
+                TextEncoding = EncodingOptions[index];
+                ReloadEncodingMenuToggle();
+                ReloadText();
+            }
+        }
+        
+        private void ReloadText() {
+            FillEditor(TextEncoding.GetString(Data));
         }
     }
 }
