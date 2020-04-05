@@ -129,7 +129,7 @@ namespace FirstPlugin
             formatMenu.DropDownItems.Add(xmlToolstrip);
             formatMenu.DropDownItems.Add(yamlToolstrip);
 
-            textEditor.AddContextMenu(formatMenu, TextEditorFromYaml);
+            textEditor.AddContextMenu(formatMenu);
 
             stPanel4.Controls.Add(textEditor);
         }
