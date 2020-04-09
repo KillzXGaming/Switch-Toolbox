@@ -277,7 +277,7 @@ namespace FirstPlugin
 
             if (LimitFileSize)
             {
-                if (surfaces[0].mipmaps[0].Length > surfacesNew[0].mipmaps[0].Length)
+                if (surfaces[0].mipmaps[0].Length < surfacesNew[0].mipmaps[0].Length)
                 {
                     if (surfaces[0].mipmaps[0].Length != surfacesNew[0].mipmaps[0].Length)
                         throw new Exception($"Image must be the same size! {surfaces[0].mipmaps[0].Length}");
