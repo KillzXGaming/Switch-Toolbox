@@ -14,7 +14,127 @@ namespace Toolbox.Library
         private readonly static int F = 18;
         private static readonly int threshold = 2;
 
-        public static byte[] Decompress(byte[] input)
+
+        public static byte[] Decompress11(byte[] input, int decomp_size)
+        {
+            int i, j, disp = 0, len = 0, cdest;
+            byte b1, bt, b2, b3, flags;
+            int threshold = 1;
+            bool flag = false;
+
+            int inputOffset = 0;
+            int curr_size = 0;
+
+            byte[] outdata = new byte[decomp_size];
+
+            while (curr_size < decomp_size)
+            {
+                if (inputOffset > input.Length) break;
+
+                flags = input[inputOffset++];
+                for (i = 0; i < 8 && curr_size < decomp_size; i++)
+                {
+                    flag = (flags & (0x80 >> i)) > 0;
+                    if (flag)
+                    {
+                        if (inputOffset > input.Length) break;
+                        b1 = input[inputOffset++];
+
+                        switch ((int)(b1 >> 4))
+                        {
+                            //#region case 0
+                            case 0:
+                                {
+                                    // ab cd ef
+                                    // =>
+                                    // len = abc + 0x11 = bc + 0x11
+                                    // disp = def
+
+                                    len = b1 << 4;
+                                    if (inputOffset > input.Length) break;
+                                    bt = input[inputOffset++];
+                                    len |= bt >> 4;
+                                    len += 0x11;
+
+                                    disp = (bt & 0x0F) << 8;
+                                    if (inputOffset > input.Length) break;
+                                    b2 = input[inputOffset++];
+                                    disp |= b2;
+                                    break;
+                                }
+                            //#endregion
+
+                            //#region case 1
+                            case 1:
+                                {
+                                    // ab cd ef gh
+                                    // => 
+                                    // len = bcde + 0x111
+                                    // disp = fgh
+                                    // 10 04 92 3F => disp = 0x23F, len = 0x149 + 0x11 = 0x15A
+
+                                    if (inputOffset + 3 > input.Length) break;
+                                    bt = input[inputOffset++];
+                                    b2 = input[inputOffset++];
+                                    b3 = input[inputOffset++];
+
+                                    len = (b1 & 0xF) << 12; // len = b000
+                                    len |= bt << 4; // len = bcd0
+                                    len |= (b2 >> 4); // len = bcde
+                                    len += 0x111; // len = bcde + 0x111
+                                    disp = (b2 & 0x0F) << 8; // disp = f
+                                    disp |= b3; // disp = fgh
+                                    break;
+                                }
+                            //#endregion
+
+                            //#region other
+                            default:
+                                {
+                                    // ab cd
+                                    // =>
+                                    // len = a + threshold = a + 1
+                                    // disp = bcd
+
+                                    len = (b1 >> 4) + threshold;
+
+                                    disp = (b1 & 0x0F) << 8;
+                                    if (inputOffset > input.Length) break;
+
+                                    b2 = input[inputOffset++];
+                                    disp |= b2;
+                                    break;
+                                }
+                                //#endregion
+                        }
+
+                        if (disp > curr_size)
+                            return null;
+
+                        cdest = curr_size;
+
+                        for (j = 0; j < len && curr_size < decomp_size; j++)
+                            outdata[curr_size++] = outdata[cdest - disp - 1 + j];
+
+                        if (curr_size > decomp_size)
+                        {
+                            //throw new Exception(String.Format("File {0:s} is not a valid LZ77 file; actual output size > output size in header", filein));
+                            //Console.WriteLine(String.Format("File {0:s} is not a valid LZ77 file; actual output size > output size in header; {1:x} > {2:x}.", filein, curr_size, decomp_size));
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (inputOffset >= input.Length) break;
+                        outdata[curr_size++] = input[inputOffset++];
+                    }
+                }
+            }
+            return outdata;
+        }
+
+
+        public static byte[] Decompress(byte[] input, bool useMagic = true)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
             using (var reader = new FileReader(new MemoryStream(input), true))

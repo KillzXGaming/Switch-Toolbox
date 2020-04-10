@@ -107,9 +107,9 @@ namespace FirstPlugin
 
                 using (reader.TemporarySeek((int)Offset, System.IO.SeekOrigin.Begin))
                 {
-                    reader.Seek(4);
-                    FileData = reader.ReadBytes((int)CompressedSize - 4);
-                 //   FileData = LZ11.decompress(FileData, DecompressedSize);
+                    reader.Seek(8);
+                    FileData = reader.ReadBytes((int)CompressedSize - 8);
+                    FileData = LZ77_WII.Decompress11(FileData,(int)DecompressedSize);
                 }
             }
         }

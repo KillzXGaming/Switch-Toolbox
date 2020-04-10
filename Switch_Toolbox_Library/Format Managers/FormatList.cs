@@ -32,6 +32,8 @@ namespace Toolbox.Library
             Formats.Add(typeof(Zlib));
             Formats.Add(typeof(ZlibGZ));
             Formats.Add(typeof(Zstb));
+            Formats.Add(typeof(MtaCustomCmp));
+            Formats.Add(typeof(LZ77));
 
             return Formats.ToArray();
         }
