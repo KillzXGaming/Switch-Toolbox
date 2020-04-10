@@ -14,7 +14,8 @@ namespace Toolbox.Library
         private readonly static int F = 18;
         private static readonly int threshold = 2;
 
-
+        //Ported from 
+        //https://github.com/mistydemeo/quickbms/blob/5752a6a2a38e16211952553fcffa59570855ac42/included/nintendo.c#L58
         public static byte[] Decompress11(byte[] input, int decomp_size)
         {
             int i, j, disp = 0, len = 0, cdest;
