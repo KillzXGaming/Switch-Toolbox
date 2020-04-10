@@ -16,6 +16,9 @@ namespace Toolbox.Library
 
         //Ported from 
         //https://github.com/mistydemeo/quickbms/blob/5752a6a2a38e16211952553fcffa59570855ac42/included/nintendo.c#L58
+        // various code from DSDecmp: http://code.google.com/p/dsdecmp/
+        // original code of unlz77wii_raw10 from "Hector Martin <marcan@marcansoft.com>" http://wiibrew.org/wiki/Wii.py
+        // ported to C by Luigi Auriemma
         public static byte[] Decompress11(byte[] input, int decomp_size)
         {
             int i, j, disp = 0, len = 0, cdest;
@@ -30,7 +33,7 @@ namespace Toolbox.Library
 
             while (curr_size < decomp_size)
             {
-                if (inputOffset > input.Length) break;
+                if (inputOffset >= input.Length) break;
 
                 flags = input[inputOffset++];
                 for (i = 0; i < 8 && curr_size < decomp_size; i++)
@@ -52,7 +55,7 @@ namespace Toolbox.Library
                                     // disp = def
 
                                     len = b1 << 4;
-                                    if (inputOffset > input.Length) break;
+                                    if (inputOffset >= input.Length) break;
                                     bt = input[inputOffset++];
                                     len |= bt >> 4;
                                     len += 0x11;
@@ -100,7 +103,7 @@ namespace Toolbox.Library
                                     len = (b1 >> 4) + threshold;
 
                                     disp = (b1 & 0x0F) << 8;
-                                    if (inputOffset > input.Length) break;
+                                    if (inputOffset >= input.Length) break;
 
                                     b2 = input[inputOffset++];
                                     disp |= b2;
@@ -119,15 +122,18 @@ namespace Toolbox.Library
 
                         if (curr_size > decomp_size)
                         {
-                            //throw new Exception(String.Format("File {0:s} is not a valid LZ77 file; actual output size > output size in header", filein));
-                            //Console.WriteLine(String.Format("File {0:s} is not a valid LZ77 file; actual output size > output size in header; {1:x} > {2:x}.", filein, curr_size, decomp_size));
-                            break;
+                            break;  
                         }
                     }
                     else
                     {
                         if (inputOffset >= input.Length) break;
                         outdata[curr_size++] = input[inputOffset++];
+
+                        if (curr_size > decomp_size)
+                        {
+                            break;
+                        }
                     }
                 }
             }

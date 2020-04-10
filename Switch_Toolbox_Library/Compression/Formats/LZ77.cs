@@ -39,7 +39,7 @@ namespace Toolbox.Library
 
         public Stream Decompress(Stream stream)
         {
-            using (var reader = new FileReader(stream))
+            using (var reader = new FileReader(stream, true))
             {
                 if (isType11)
                 {
