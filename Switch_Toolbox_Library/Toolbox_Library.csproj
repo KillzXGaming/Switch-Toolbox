@@ -232,6 +232,7 @@
     <Compile Include="Compression\Formats\lz4.cs" />
     <Compile Include="Compression\Formats\LZ4F.cs" />
     <Compile Include="Compression\Formats\LZMA.cs" />
+	<Compile Include="Compression\Formats\LZ77.cs" />
     <Compile Include="Compression\Formats\MtaCustomCmp.cs" />
     <Compile Include="Compression\Formats\ZlibGZ.cs" />
     <Compile Include="Compression\Formats\Zstb.cs" />
