@@ -78,9 +78,9 @@
             this.chkSeperateTextureContainers.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSeperateTextureContainers.Location = new System.Drawing.Point(12, 39);
             this.chkSeperateTextureContainers.Name = "chkSeperateTextureContainers";
-            this.chkSeperateTextureContainers.Size = new System.Drawing.Size(180, 17);
+            this.chkSeperateTextureContainers.Size = new System.Drawing.Size(219, 17);
             this.chkSeperateTextureContainers.TabIndex = 3;
-            this.chkSeperateTextureContainers.Text = "Use Folders for Texture Archives";
+            this.chkSeperateTextureContainers.Text = "Use Folders for Models/Texture Archives";
             this.chkSeperateTextureContainers.UseVisualStyleBackColor = true;
             // 
             // chkSeperateArchives

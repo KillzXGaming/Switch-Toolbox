@@ -1488,6 +1488,13 @@ namespace Toolbox
             }
             else if (fileFormat is IExportableModel && exportMode == ExportMode.Models)
             {
+                string name = fileFormat.FileName.Split('.').FirstOrDefault();
+                if (settings.SeperateTextureContainers)
+                    outputFolder = Path.Combine(outputFolder, name);
+
+                if (!Directory.Exists(outputFolder))
+                    Directory.CreateDirectory(outputFolder);
+
                 DAE.ExportSettings daesettings = new DAE.ExportSettings();
                 daesettings.SuppressConfirmDialog = true;
 
@@ -1496,8 +1503,8 @@ namespace Toolbox
                 model.Objects = ((IExportableModel)fileFormat).ExportableMeshes;
                 var textures = ((IExportableModel)fileFormat).ExportableTextures.ToList();
                 var skeleton = ((IExportableModel)fileFormat).ExportableSkeleton;
-                string name = Path.GetFileNameWithoutExtension(fileFormat.FileName);
-                DAE.Export($"{outputFolder}/{name}.{extension}", daesettings, model, textures, skeleton);
+                string modelname = Path.GetFileNameWithoutExtension(fileFormat.FileName);
+                DAE.Export($"{outputFolder}/{modelname}.{extension}", daesettings, model, textures, skeleton);
             }
 
             fileFormat.Unload();
