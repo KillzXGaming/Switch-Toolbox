@@ -38,7 +38,7 @@ namespace FirstPlugin
         public static string FTXP = GetFilter(".bftxp", ".yaml", ".gif");
         public static string FMTV = GetFilter(".bfmvi");
         public static string FBNV = GetFilter(".bfbvi");
-        public static string FSCN = GetFilter(".bfscn", ".yaml", ".json");
+        public static string FSCN = GetFilter(".bfscn");
         public static string FSHA = GetFilter(".bfspa");
 
         public static string CMDL = GetFilter(".dae");

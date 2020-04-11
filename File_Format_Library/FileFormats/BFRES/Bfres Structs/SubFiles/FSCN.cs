@@ -89,15 +89,20 @@ namespace Bfres.Structs
 
             if (ext == ".bfscn")
             {
-                SceneAnim.Export(FileName, ((BFRESGroupNode)Parent).GetResFile());
+                if (SceneAnim != null)
+                    SceneAnim.Export(FileName, ((BFRESGroupNode)Parent).GetResFile());
+                else
+                    SceneAnimU.Export(FileName, ((BFRESGroupNode)Parent).GetResFileU());
             }
             else if (ext == ".yaml")
             {
-                System.IO.File.WriteAllText(FileName, YamlFscn.ToYaml(FileName, SceneAnim));
+                if (SceneAnim != null)
+                    System.IO.File.WriteAllText(FileName, YamlFscn.ToYaml(FileName, SceneAnim));
             }
             else if (ext == ".json")
             {
-                System.IO.File.WriteAllText(FileName, YamlFscn.ToJson(FileName, SceneAnim));
+                if (SceneAnim != null)
+                    System.IO.File.WriteAllText(FileName, YamlFscn.ToJson(FileName, SceneAnim));
             }
         }
 
