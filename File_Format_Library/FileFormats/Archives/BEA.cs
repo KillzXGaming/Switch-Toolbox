@@ -88,22 +88,17 @@ namespace FirstPlugin
 
                         if (Path.GetExtension(file) == ".bea")
                         {
-                            BEA bea = new BEA();
-                            bea.FileName = file;
-                            bea.Load(new FileStream(file, FileMode.Open));
-
+                            BEA bea = STFileLoader.OpenFileFormat(file) as BEA;
                             foreach (FileEntry asset in bea.Files)
                             {
                                 if (Path.GetExtension(asset.FileName) == ".lua")
                                 {
                                     try
                                     {
-                                        if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName($"{folderPath}/{asset.FileName}")))
-                                        {
+                                        if (!String.IsNullOrWhiteSpace(Path.GetDirectoryName($"{folderPath}/{asset.FileName}"))) {
                                             if (!File.Exists(asset.FileName))
                                             {
-                                                if (!Directory.Exists($"{folderPath}/{bea.FileName}"))
-                                                {
+                                                if (!Directory.Exists($"{folderPath}/{bea.FileName}")) {
                                                     Directory.CreateDirectory(Path.GetDirectoryName($"{folderPath}/{asset.FileName}"));
                                                 }
                                             }
@@ -116,6 +111,8 @@ namespace FirstPlugin
                                     }
                                 }
                             }
+                            bea.Unload();
+                            GC.Collect();
                         }
                     }
                 }
@@ -133,7 +130,7 @@ namespace FirstPlugin
         }
         public void Unload()
         {
-
+            this.files.Clear();
         }
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
