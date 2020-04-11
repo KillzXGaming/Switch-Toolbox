@@ -1378,6 +1378,7 @@ namespace Toolbox
             }
         }
 
+        private List<string> batchExportFileList = new List<string>();
         private void BatchExportModels(string[] files, string outputFolder)
         {
             List<string> Formats = new List<string>();
@@ -1401,6 +1402,7 @@ namespace Toolbox
                         failedFiles.Add($"{file} \n Error:\n {ex} \n");
                     }
                 }
+                batchExportFileList.Clear();
             }
             else
                 return;
@@ -1445,6 +1447,7 @@ namespace Toolbox
                         failedFiles.Add($"{file} \n Error:\n {ex} \n");
                     }
                 }
+                batchExportFileList.Clear();
             }
 
             if (failedFiles.Count > 0)
@@ -1483,7 +1486,9 @@ namespace Toolbox
                 }
 
                 foreach (STGenericTexture tex in ((ITextureContainer)fileFormat).TextureList) {
-                    ExportTexture(tex, $"{outputFolder}/{tex.Text}.{extension}");
+                    string path = $"{outputFolder}/{tex.Text}";
+                    path = Utils.RenameDuplicateString(batchExportFileList, path, 0, 3);
+                    ExportTexture(tex, $"{path}.{extension}");
                 }
             }
             else if (fileFormat is IExportableModel && exportMode == ExportMode.Models)
@@ -1504,7 +1509,11 @@ namespace Toolbox
                 var textures = ((IExportableModel)fileFormat).ExportableTextures.ToList();
                 var skeleton = ((IExportableModel)fileFormat).ExportableSkeleton;
                 string modelname = Path.GetFileNameWithoutExtension(fileFormat.FileName);
-                DAE.Export($"{outputFolder}/{modelname}.{extension}", daesettings, model, textures, skeleton);
+                string path = $"{outputFolder}/{modelname}";
+                path = Utils.RenameDuplicateString(batchExportFileList, path, 0, 3);
+                path = $"{path}.{extension}";
+
+                DAE.Export(path, daesettings, model, textures, skeleton);
             }
 
             fileFormat.Unload();
@@ -1518,6 +1527,8 @@ namespace Toolbox
 
         private void ExportTexture(STGenericTexture tex, string filePath) {
             tex.Export(filePath);
+
+            batchExportFileList.Add(filePath);
         }
 
         private void SearchArchive(BatchFormatExport.Settings settings, IArchiveFile archiveFile,
