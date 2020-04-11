@@ -7,6 +7,7 @@ using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using OpenTK;
 
 namespace FirstPlugin
 {
@@ -66,6 +67,18 @@ namespace FirstPlugin
             EnvironmentSettings = 0x0F,
         }
 
+        public class EnvironmentSettings
+        {
+            public Vector3 AmbientLightColor;
+            public Vector3 PrimaryLightDir;
+            public Vector3 PrimaryLightColor;
+            public Vector3 SecondaryLightDir;
+            public Vector3 SecondaryLightColor;
+            public Vector3 FogColor;
+            public float FogStar;
+            public float DrawDistance;
+        }
+
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
@@ -92,7 +105,7 @@ namespace FirstPlugin
                 foreach (var room in Rooms)
                     LoadRooms(room, this);
 
-                //   ReadSceneHeaders(reader, Version);
+                //ReadSceneHeaders(reader, Version);
             }
         }
 
@@ -180,7 +193,7 @@ namespace FirstPlugin
 
             for (int i = 0; i < numActors; i++)
             {
-                Actor actor = new Actor();
+                DoorActor actor = new DoorActor();
                 actor.RoomFront = reader.ReadByte();
                 actor.TransitionEffectFront = reader.ReadByte();
                 actor.RoomBack = reader.ReadByte();
@@ -210,20 +223,6 @@ namespace FirstPlugin
             return rooms;
         }
 
-     /*   private List<RoomSetup> ReadRooms(FileReader reader, GameVersion version, int numRooms)
-        {
-            List<RoomSetup> rooms = new List<RoomSetup>();
-            var roomSize = version == GameVersion.OOT3D ? 0x44 : 0x34;
-
-            long pos = reader.Position;
-            for (int i = 0; i < numRooms; i++)
-            {
-                reader.SeekBegin(pos + (i * roomSize));
-                rooms.AddRange(ReadRoomHeaders(reader, version));
-            }
-            return rooms;
-        }*/
-
         private List<RoomSetup> ReadRoomHeaders(FileReader reader, GameVersion version)
         {
             List<RoomSetup> roomSetups = new List<RoomSetup>();
@@ -251,7 +250,6 @@ namespace FirstPlugin
                 roomSetups.Add(setup);
 
                 Console.WriteLine((HeaderCommands)cmdType);
-                Console.WriteLine("cmd2 " + cmd2 + " start " + pos);
 
                 switch (cmdType)
                 {
@@ -263,12 +261,11 @@ namespace FirstPlugin
                             for (int i = 0; i < numSetups; i++)
                             {
                                 uint setupOffset = reader.ReadUInt32();
-
                                 if (setupOffset == 0)
                                     continue;
 
-                                using (reader.TemporarySeek(pos + setupOffset, System.IO.SeekOrigin.Begin))
-                                {
+                                using (reader.TemporarySeek(setupOffset, System.IO.SeekOrigin.Begin))
+                                {   
                                     var subsetups = ReadRoomHeaders(reader, version);
                                     setup.SubSetups.AddRange(subsetups);
                                 }
@@ -299,6 +296,34 @@ namespace FirstPlugin
         {
             List<Actor> actors = new List<Actor>();
 
+            long pos = reader.Position;
+            for (int i = 0; i < numActors; i++)
+            {
+                Actor actor = new Actor();
+                ushort actorFlags = reader.ReadUInt16();
+                actor.ActorID = (ushort)(actorFlags & 0xFF);
+                actor.PositionX = reader.ReadUInt16();
+                actor.PositionY = reader.ReadUInt16();
+                actor.PositionZ = reader.ReadUInt16();
+                actor.RotationX = reader.ReadUInt16();
+                actor.RotationY = reader.ReadUInt16();
+                actor.RotationZ = reader.ReadUInt16();
+                actor.Variable = reader.ReadUInt16();
+
+                var timeSpawnFlags = 0xFF;
+
+                if (verion == GameVersion.OOT3D) {
+                    float rotScale = 180 / 0x7FFF;
+                }
+                else
+                {
+                    float rotX = actor.RotationX >> 7;
+                    float rotY = actor.RotationY >> 7;
+                    float rotZ = actor.RotationZ >> 7;
+                }
+
+                actors.Add(actor);
+            }
             return actors;
         }
 
@@ -351,24 +376,25 @@ namespace FirstPlugin
             public List<CMB> Meshes = new List<CMB>();
         }
 
-        public class EnvironmentSettings
-        {
-
-        }
-
-        public class Actor
+        public class DoorActor : Actor
         {
             public byte RoomFront { get; set; }
             public byte TransitionEffectFront { get; set; }
             public byte RoomBack { get; set; }
             public byte TransitionEffectBack { get; set; }
+        }
+
+        public class Actor
+        {
             public ushort ActorID { get; set; }
 
             public ushort PositionX;
             public ushort PositionY;
             public ushort PositionZ;
 
+            public ushort RotationX;
             public ushort RotationY;
+            public ushort RotationZ;
 
             public ushort Variable;
         }
