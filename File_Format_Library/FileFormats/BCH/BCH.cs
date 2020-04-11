@@ -50,7 +50,6 @@ namespace FirstPlugin.CtrLibrary
             }
         }
 
-
         bool DrawablesLoaded = false;
         public override void OnClick(TreeView treeView)
         {

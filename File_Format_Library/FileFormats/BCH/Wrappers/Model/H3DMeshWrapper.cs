@@ -98,7 +98,7 @@ namespace FirstPlugin.CtrLibrary
                     {
                         int index = boneIndices[vertices[v].Indices.b0];
                         vertex.pos = Vector3.TransformPosition(vertex.pos, parentModel.Skeleton.Renderable.bones[index].Transform);
-                        vertex.nrm = Vector3.TransformNormal(vertex.nrm, parentModel.Skeleton.Renderable.bones[index].Transform);
+                       // vertex.nrm = Vector3.TransformNormal(vertex.nrm, parentModel.Skeleton.Renderable.bones[index].Transform);
                     }
 
                     /*    vertex.boneWeights.Add(vertices[v].Weights.w0);
