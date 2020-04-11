@@ -1469,7 +1469,7 @@ namespace Toolbox
 
             if (fileFormat is STGenericTexture && exportMode == ExportMode.Textures) {
                 string name = ((STGenericTexture)fileFormat).Text;
-                ExportTexture(((STGenericTexture)fileFormat), $"{outputFolder}/{name}.{extension}");
+                ExportTexture(((STGenericTexture)fileFormat), $"{outputFolder}/{name}", extension);
             }
             else if (fileFormat is IArchiveFile)
                 SearchArchive(settings, (IArchiveFile)fileFormat, extension, outputFolder, exportMode);
@@ -1486,9 +1486,7 @@ namespace Toolbox
                 }
 
                 foreach (STGenericTexture tex in ((ITextureContainer)fileFormat).TextureList) {
-                    string path = $"{outputFolder}/{tex.Text}";
-                    path = Utils.RenameDuplicateString(batchExportFileList, path, 0, 3);
-                    ExportTexture(tex, $"{path}.{extension}");
+                    ExportTexture(tex, $"{outputFolder}/{tex.Text}", extension);
                 }
             }
             else if (fileFormat is IExportableModel && exportMode == ExportMode.Models)
@@ -1511,6 +1509,8 @@ namespace Toolbox
                 string modelname = Path.GetFileNameWithoutExtension(fileFormat.FileName);
                 string path = $"{outputFolder}/{modelname}";
                 path = Utils.RenameDuplicateString(batchExportFileList, path, 0, 3);
+                batchExportFileList.Add(path);
+
                 path = $"{path}.{extension}";
 
                 DAE.Export(path, daesettings, model, textures, skeleton);
@@ -1525,10 +1525,12 @@ namespace Toolbox
             Textures,
         }
 
-        private void ExportTexture(STGenericTexture tex, string filePath) {
-            tex.Export(filePath);
-
+        private void ExportTexture(STGenericTexture tex, string filePath, string ext) {
+            filePath = Utils.RenameDuplicateString(batchExportFileList, filePath, 0, 3);
             batchExportFileList.Add(filePath);
+            filePath = $"{filePath}.{ext}";
+
+            tex.Export(filePath);
         }
 
         private void SearchArchive(BatchFormatExport.Settings settings, IArchiveFile archiveFile,
