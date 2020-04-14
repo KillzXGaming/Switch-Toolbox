@@ -121,7 +121,7 @@ namespace FirstPlugin.CtrLibrary
                     if (Material.TextureMappers.Length > i)
                     {
                         var mapper = Material.TextureMappers[i];
-                        if (mapper.SamplerType == 0)
+                        if (TextureMaps.Count == 0) //first texture added
                         {
                             matTexture.Type = STGenericMatTexture.TextureType.Diffuse;
                         }
