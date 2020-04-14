@@ -652,18 +652,28 @@ namespace FirstPlugin
                         SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "G3PR":
-                        //   SaveHeader(writer, header, ((BFRES)BinaryData).Save(), 4096);
-                        SaveHeader(writer, header, BinaryDataBytes, 4096);
+                        {
+                            var mem = new System.IO.MemoryStream();
+                            if (BinaryData != null)
+                            {
+                                ((BFRES)BinaryData).Save(mem);
+                                SaveHeader(writer, header, mem.ToArray(), 4096);
+                            }
+                            else
+                                SaveHeader(writer, header, BinaryDataBytes, 4096);
+                        }
                         break;
                     case "GRTF":
-                        var mem = new System.IO.MemoryStream();
-                        if (BinaryData != null)
                         {
-                            ((BNTX)BinaryData).Save(mem);
-                            SaveHeader(writer, header, mem.ToArray(), 4096);
+                            var mem = new System.IO.MemoryStream();
+                            if (BinaryData != null)
+                            {
+                                ((BNTX)BinaryData).Save(mem);
+                                SaveHeader(writer, header, mem.ToArray(), 4096);
+                            }
+                            else
+                                SaveHeader(writer, header, BinaryDataBytes, 4096);
                         }
-                        else
-                            SaveHeader(writer, header, BinaryDataBytes, 4096);
                         break;
                     case "PRIM":
                         SaveHeader(writer, header, BinaryDataBytes);
