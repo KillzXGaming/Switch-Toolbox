@@ -792,6 +792,29 @@ namespace FirstPlugin
                         texture.Type = MatTexture.TextureType.Shadow;
                     }
                 }
+                else if (mat.ShaderAssign.ShaderArchiveName == "ssg")
+                {
+                    bool IsAlbedo0 = texture.SamplerName == "_a0";
+                    bool IsNormal = texture.SamplerName == "_n0";
+                    bool IsEmissive = texture.SamplerName == "_e0";
+                    bool IsSpecular = texture.SamplerName == "_s0";
+
+                    if (IsAlbedo0)
+                    {
+                        m.HasDiffuseMap = true;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    if (IsNormal)
+                    {
+                        m.HasNormalMap = true;
+                        texture.Type = MatTexture.TextureType.Normal;
+                    }
+                    if (IsSpecular)
+                    {
+                        m.HasSpecularMap = true;
+                        texture.Type = MatTexture.TextureType.Specular;
+                    }
+                }
                 else if (Runtime.activeGame == Runtime.ActiveGame.Bezel)
                 {
                     bool IsAlbedo0 = useSampler == "_a0";

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
-using System.Windows.Forms; 
+using System.Windows.Forms;
 
 namespace FirstPlugin
 {
@@ -77,21 +77,43 @@ namespace FirstPlugin
                 }
             }
 
-            public FileEntry(string Name)
+            public NARC ArchiveFile;
+
+            public FileEntry(NARC narc, string Name)
             {
+                ArchiveFile = narc;
                 FileName = Name.Replace(" ", string.Empty).RemoveIllegaleFolderNameCharacters();
             }
 
             public override byte[] FileData
             {
-                get
-                {
-                    return DecompressBlock();
-                }
+                get { return DecompressBlock(); }
                 set
                 {
 
                 }
+            }
+
+            private bool IsTexturesLoaded = false;
+            public override IFileFormat OpenFile()
+            {
+                var FileFormat = base.OpenFile();
+                bool IsModel = FileFormat is BFRES;
+
+                if (IsModel && !IsTexturesLoaded)
+                {
+                    IsTexturesLoaded = true;
+                    foreach (var file in ArchiveFile.Files)
+                    {
+                        if (Utils.GetExtension(file.FileName) == ".cbntx")
+                        {
+                            Console.WriteLine($"Opening cbntx {file.FileName}");
+                            file.FileFormat = file.OpenFile();
+                        }
+                    }
+                }
+
+                return base.OpenFile();
             }
 
             private byte[] DecompressBlock()
@@ -128,7 +150,7 @@ namespace FirstPlugin
 
                     if (IsGZIP)
                         data = STLibraryCompression.GZIP.Decompress(filedata);
-                    else 
+                    else
                         data = STLibraryCompression.ZLIB.Decompress(filedata, false);
                 }
 
@@ -153,7 +175,7 @@ namespace FirstPlugin
             List<byte> Data = new List<byte>();
             for (ushort i = 0; i < header.FATB.FileCount; i++)
             {
-                FileEntries.Add(new FileEntry(names[i])
+                FileEntries.Add(new FileEntry(this, names[i])
                 {
                     entry = header.FATB.FileEntries[i],
                     fileImage = header.FIMG,
@@ -183,7 +205,6 @@ namespace FirstPlugin
 
         //EFE for REing format https://github.com/Gericom/EveryFileExplorer/blob/f9f00d193c9608d71c9a23d9f3ab7e752f4ada2a/NDS/NitroSystem/FND/NARC.cs
 
-       
         public class Header
         {
             public string Signature;
@@ -278,7 +299,7 @@ namespace FirstPlugin
                 Size = reader.ReadUInt32();
                 dataBlock = reader.ReadBytes((int)(reader.BaseStream.Length - reader.BaseStream.Position));
             }
-        }          
+        }
         public class FileNameTable
         {
             public string Signature;

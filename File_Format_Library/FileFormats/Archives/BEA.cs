@@ -135,7 +135,7 @@ namespace FirstPlugin
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
         {
-            FileEntry file = new FileEntry();
+            FileEntry file = new FileEntry(this);
             file.FileName = archiveFileInfo.FileName;
             file.CreateEntry(archiveFileInfo.FileData, true);
             files.Add(file);
@@ -203,9 +203,31 @@ namespace FirstPlugin
         }
         public class FileEntry : ArchiveFileInfo
         {
-            public FileEntry()
+            BEA ArchiveFile;
+            public FileEntry(BEA bea)
             {
+                ArchiveFile = bea;
+            }
 
+            private bool IsTexturesLoaded = false;
+            public override IFileFormat OpenFile()
+            {
+                var FileFormat = base.OpenFile();
+                bool IsModel = FileFormat is BFRES;
+
+                if (IsModel && !IsTexturesLoaded)
+                {
+                    IsTexturesLoaded = true;
+                    foreach (var file in ArchiveFile.Files)
+                    {
+                        if (Utils.GetExtension(file.FileName) == ".ftxb")
+                        {
+                            file.FileFormat = file.OpenFile();
+                        }
+                    }
+                }
+
+                return base.OpenFile();
             }
 
             public ushort unk1;
@@ -281,7 +303,7 @@ namespace FirstPlugin
 
         public FileEntry SetupFileEntry(ASST asset)
         {
-            FileEntry fileEntry = new FileEntry();
+            FileEntry fileEntry = new FileEntry(this);
             fileEntry.FileName = asset.FileName;
             fileEntry.unk1 = asset.unk;
             fileEntry.unk2 = asset.unk2;
