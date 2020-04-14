@@ -209,7 +209,7 @@ namespace HyruleWarriors.G1M
                     {
                         foreach (var mesh in Model.GenericMeshes)
                         {
-                            bool isSingleBind = false;;
+                            bool isSingleBind = false;
 
                             if (isSingleBind)
                             {
