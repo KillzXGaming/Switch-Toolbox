@@ -218,6 +218,7 @@
     <Compile Include="FileFormats\Archives\QuickAccess\QuickAccessFile.cs" />
     <Compile Include="FileFormats\Archives\QuickAccess\QuickAccessFolder.cs" />
     <Compile Include="FileFormats\Archives\WTA.cs" />
+    <Compile Include="FileFormats\Audio\BARS\BarsFile.cs" />
     <Compile Include="FileFormats\BCH\BCH.cs" />
     <Compile Include="FileFormats\BCH\MBN.cs" />
     <Compile Include="FileFormats\BCH\Wrappers\BCHGroupNode.cs" />
@@ -334,7 +335,6 @@
     <Compile Include="FileFormats\HedgehogEngine\HedgeModel.cs" />
     <Compile Include="FileFormats\HedgehogEngine\PACx.cs" />
     <Compile Include="FileFormats\CrashBandicoot\IGZ_Structure.cs" />
-    <Compile Include="FileFormats\Grezzo\CMB_Enums.cs" />
     <Compile Include="FileFormats\Grezzo\CSAB.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1MChunkCommon.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1MEnums.cs" />
@@ -363,7 +363,7 @@
     <Compile Include="FileFormats\Grezzo\CMB.cs" />
     <Compile Include="FileFormats\Grezzo\GAR.cs" />
     <Compile Include="FileFormats\Grezzo\ZSI.cs" />
-    <Compile Include="FileFormats\Audio\Archives\BARS.cs" />
+    <Compile Include="FileFormats\Audio\BARS\BARS.cs" />
     <Compile Include="FileFormats\Audio\BARSLIST.cs" />
     <Compile Include="FileFormats\Audio\BCSTM.cs" />
     <Compile Include="FileFormats\Archives\BEA.cs" />

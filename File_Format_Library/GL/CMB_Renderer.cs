@@ -9,7 +9,6 @@ using GL_EditorFramework.Interfaces;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Toolbox.Library;
-using Grezzo.CmbEnums;
 
 namespace FirstPlugin
 {
@@ -67,7 +66,7 @@ namespace FirstPlugin
 
             for (int m = 0; m < Meshes.Count; m++)
             {
-                if (((CMB.CMBMaterialWrapper)Meshes[m].GetMaterial()).CMBMaterial.IsTransparent)
+                if (((CMB.CMBMaterialWrapper)Meshes[m].GetMaterial()).CMBMaterial.AlphaTest.Enabled)
                     transparent.Add(Meshes[m]);
                 else
                     opaque.Add(Meshes[m]);
@@ -91,35 +90,81 @@ namespace FirstPlugin
             var cmbMaterial = ((CMB.CMBMaterialWrapper)mat).CMBMaterial;
             var cmbMesh = ((CMB.CmbMeshWrapper)m);
 
-            bool HasNoNormals = cmbMesh.Shape.Normal.VertexData == null || cmbMesh.Shape.Normal.VertexData.Length == 0;
+            bool HasNoNormals = cmbMesh.Mesh.HasNormal == false;
 
             shader.SetBoolToInt("HasNoNormals", HasNoNormals);
-            shader.SetBoolToInt("isTransparent", cmbMaterial.BlendEnaled);
+            shader.SetBoolToInt("isTransparent", cmbMaterial.BlendEnabled);
 
             SetGLCullMode(cmbMaterial.CullMode);
 
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(cmbMaterial.BlendingFactorSrcAlpha, cmbMaterial.BlendingFactorDestAlpha);
-            GL.BlendColor(1.0f, 1.0f, 1.0f, cmbMaterial.BlendColorA);
-            if (cmbMaterial.AlphaTestEnable)
+            if (cmbMaterial.BlendEnabled)
+            {
+                GL.Enable(EnableCap.Blend);
+                GL.BlendColor(cmbMaterial.BlendColor.R / 255, cmbMaterial.BlendColor.G / 255, cmbMaterial.BlendColor.B / 255, cmbMaterial.BlendColor.A / 255);
+                GL.BlendFunc(ConvertBlendFunc(cmbMaterial.BlendFunction.AlphaSrcFunc), ConvertBlendFunc(cmbMaterial.BlendFunction.AlphaDstFunc));
+            }
+            else
+                GL.Disable(EnableCap.Blend);
+
+            if (cmbMaterial.AlphaTest.Enabled)
+            {
                 GL.Enable(EnableCap.AlphaTest);
+                GL.AlphaFunc(ConvertTestFunction(cmbMaterial.AlphaTest.Function), cmbMaterial.AlphaTest.Reference / 255f);
+            }
             else
                 GL.Disable(EnableCap.AlphaTest);
-
-            GL.AlphaFunc(cmbMaterial.AlphaTestFunction, cmbMaterial.AlphaTestReference);
         }
 
-        private void SetGLCullMode(CullMode CullMode)
+        private AlphaFunction ConvertTestFunction(ZeldaLib.CtrModelBinary.Types.TestFunc func)
+        {
+            switch (func)
+            {
+                case ZeldaLib.CtrModelBinary.Types.TestFunc.Always: return AlphaFunction.Always;
+                case ZeldaLib.CtrModelBinary.Types.TestFunc.Equal: return AlphaFunction.Equal;
+                case ZeldaLib.CtrModelBinary.Types.TestFunc.Gequal: return AlphaFunction.Gequal;
+                case ZeldaLib.CtrModelBinary.Types.TestFunc.Greater: return AlphaFunction.Greater;
+                case ZeldaLib.CtrModelBinary.Types.TestFunc.Lequal: return AlphaFunction.Lequal;
+                case ZeldaLib.CtrModelBinary.Types.TestFunc.Less: return AlphaFunction.Less;
+                case ZeldaLib.CtrModelBinary.Types.TestFunc.Never: return AlphaFunction.Never;
+                case ZeldaLib.CtrModelBinary.Types.TestFunc.Notequal: return AlphaFunction.Notequal;
+                default: return AlphaFunction.Always;
+            }
+        }
+
+        private BlendingFactor ConvertBlendFunc(ZeldaLib.CtrModelBinary.Types.BlendFunc factor)
+        {
+            switch (factor)
+            {
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.ConstantAlpha: return BlendingFactor.ConstantAlpha;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.ConstantColor: return BlendingFactor.ConstantColor;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.DestinationAlpha: return BlendingFactor.DstAlpha;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.DestinationColor: return BlendingFactor.DstColor;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.One: return BlendingFactor.One;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.OneMinusConstantAlpha: return BlendingFactor.OneMinusConstantAlpha;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.OneMinusConstantColor: return BlendingFactor.OneMinusConstantColor;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.OneMinusDestinationAlpha: return BlendingFactor.OneMinusDstAlpha;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.OneMinusDestinationColor: return BlendingFactor.OneMinusDstColor;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.OneMinusSourceAlpha: return BlendingFactor.OneMinusSrcAlpha;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.OneMinusSourceColor: return BlendingFactor.OneMinusSrcColor;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.SourceAlpha: return BlendingFactor.SrcAlpha;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.SourceColor: return BlendingFactor.SrcColor;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.SourceAlphaSaturate: return BlendingFactor.SrcAlphaSaturate;
+                case ZeldaLib.CtrModelBinary.Types.BlendFunc.Zero: return BlendingFactor.Zero;
+                default: return BlendingFactor.Zero;
+            }
+        }
+
+        private void SetGLCullMode(ZeldaLib.CtrModelBinary.Types.CullMode CullMode)
         {
             GL.Enable(EnableCap.CullFace);
 
-            if (CullMode == CullMode.BACK)
+            if (CullMode == ZeldaLib.CtrModelBinary.Types.CullMode.Back)
                 GL.CullFace(CullFaceMode.Back);
-            if (CullMode == CullMode.FRONT)
+            if (CullMode == ZeldaLib.CtrModelBinary.Types.CullMode.Front)
                 GL.CullFace(CullFaceMode.Front);
-            if (CullMode == CullMode.FRONT_AND_BACK)
+            if (CullMode == ZeldaLib.CtrModelBinary.Types.CullMode.Both)
                 GL.CullFace(CullFaceMode.FrontAndBack);
-            if (CullMode == CullMode.NONE)
+            if (CullMode == ZeldaLib.CtrModelBinary.Types.CullMode.None)
                 GL.Disable(EnableCap.CullFace);
 
         }

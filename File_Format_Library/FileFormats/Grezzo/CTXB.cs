@@ -299,7 +299,7 @@ namespace FirstPlugin
                 writer.WriteString(Name, 16);
             }
 
-            private static Dictionary<TextureFormat, CTR_3DS.PICASurfaceFormat> FormatList =
+            public static Dictionary<TextureFormat, CTR_3DS.PICASurfaceFormat> FormatList =
                 new Dictionary<TextureFormat, CTR_3DS.PICASurfaceFormat>()
                 {
                     { TextureFormat.A8, CTR_3DS.PICASurfaceFormat.A8 },
