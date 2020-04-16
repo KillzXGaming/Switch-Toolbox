@@ -188,6 +188,7 @@ namespace BarSlider
             textBox.ReadOnly = false;
             textBox.ForeColor = this.ForeColor;
             textBox.BackColor = ActiveEditColor;
+            textBox.Focus();
 
             DisplayInterlapsedBar = false;
 
