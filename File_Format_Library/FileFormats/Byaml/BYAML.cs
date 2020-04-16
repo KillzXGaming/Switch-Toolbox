@@ -59,9 +59,9 @@ namespace FirstPlugin
         {
             get
             {
-                if (Hashes.Count == 0)
+                if (hashes.Count == 0)
                     CreateHashList();
-                return Hashes;
+                return hashes;
             }
         }
 
