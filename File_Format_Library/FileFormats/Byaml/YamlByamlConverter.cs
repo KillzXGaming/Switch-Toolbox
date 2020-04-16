@@ -113,7 +113,14 @@ namespace FirstPlugin
                     ReferenceNodes.Add(node.Tag, values);
 
                 foreach (var child in ((YamlMappingNode)node).Children)
-                    values.Add(((YamlScalarNode)child.Key).Value, ParseNode(child.Value));
+                {
+                    var key = ((YamlScalarNode)child.Key).Value;
+                    var tag = ((YamlScalarNode)child.Key).Tag;
+                    if (tag == "!h")
+                        key = Crc32.Compute(key).ToString("x");
+
+                    values.Add(key, ParseNode(child.Value));
+                }
                 return values;
             }
             else if (node is YamlSequenceNode) {
@@ -175,16 +182,7 @@ namespace FirstPlugin
                 bool isFloat = float.TryParse(value, out floatValue);
                 if (isFloat)
                     return floatValue;
-                else
-                {
-                    if (BYAML.IsHash(value))
-                    {
-                        uint hash = Convert.ToUInt32(value, 16);
-                        if (BYAML.Hashes.ContainsKey(hash))
-                            return $"!h {BYAML.Hashes[hash]}";
-                    }
-                    return value;
-                }
+                return value;
             }
         }
 
@@ -225,13 +223,17 @@ namespace FirstPlugin
                 foreach (var item in (IDictionary<string, dynamic>)node)
                 {
                     string key = item.Key;
+                    YamlNode keyNode = new YamlScalarNode(key);
                     if (BYAML.IsHash(key))
                     {
                         uint hash = Convert.ToUInt32(key, 16);
                         if (BYAML.Hashes.ContainsKey(hash))
-                            key = $"!h {BYAML.Hashes[hash]}";
+                            key = $"{BYAML.Hashes[hash]}";
+
+                        keyNode = new YamlScalarNode(key);
+                        keyNode.Tag = "!h";
                     }
-                    yamlNode.Add(key, SaveNode(item.Key, item.Value));
+                    yamlNode.Add(keyNode, SaveNode(item.Key, item.Value));
                 }
                 return yamlNode;
             }
