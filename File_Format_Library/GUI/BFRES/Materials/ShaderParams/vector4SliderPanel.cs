@@ -121,11 +121,6 @@ namespace FirstPlugin.Forms
         {
             if (IsColor)
             {
-                barSlider1.Minimum = 0;
-                barSlider2.Minimum = 0;
-                barSlider3.Minimum = 0;
-                barSlider4.Minimum = 0;
-
                 colorPB.BackColor = Color.FromArgb(
                     Utils.FloatToIntClamp(255),
                     Utils.FloatToIntClamp(values[0]),

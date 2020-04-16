@@ -80,10 +80,6 @@ namespace FirstPlugin.Forms
 
             if (IsColor)
             {
-                barSlider1.Minimum = 0;
-                barSlider2.Minimum = 0;
-                barSlider3.Minimum = 0;
-
                 var SetColor = Color.FromArgb(255,
                               Utils.FloatToIntClamp(values[0]),
                               Utils.FloatToIntClamp(values[1]),
