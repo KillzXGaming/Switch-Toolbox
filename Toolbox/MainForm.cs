@@ -1511,9 +1511,7 @@ namespace Toolbox
                 path = Utils.RenameDuplicateString(batchExportFileList, path, 0, 3);
                 batchExportFileList.Add(path);
 
-                path = $"{path}.{extension}";
-
-                DAE.Export(path, daesettings, model, textures, skeleton);
+                DAE.Export($"{path}.{extension}", daesettings, model, textures, skeleton);
             }
 
             fileFormat.Unload();
@@ -1528,9 +1526,8 @@ namespace Toolbox
         private void ExportTexture(STGenericTexture tex, string filePath, string ext) {
             filePath = Utils.RenameDuplicateString(batchExportFileList, filePath, 0, 3);
             batchExportFileList.Add(filePath);
-            filePath = $"{filePath}.{ext}";
 
-            tex.Export(filePath);
+            tex.Export($"{filePath}.{ext}");
         }
 
         private void SearchArchive(BatchFormatExport.Settings settings, IArchiveFile archiveFile,

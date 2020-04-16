@@ -13,6 +13,7 @@ using ByamlExt;
 using SharpYaml.Serialization;
 using SharpYaml;
 using Syroot.BinaryData;
+using Toolbox.Library.Security.Cryptography;
 
 namespace FirstPlugin
 {
@@ -52,7 +53,41 @@ namespace FirstPlugin
             }
         }
 
-        public static Dictionary<uint, string> Hashes = new Dictionary<uint, string>();
+        private static new Dictionary<uint, string> hashes = new Dictionary<uint, string>();
+
+        public static Dictionary<uint, string> Hashes
+        {
+            get
+            {
+                if (Hashes.Count == 0)
+                    CreateHashList();
+                return Hashes;
+            }
+        }
+
+        private static void CreateHashList()
+        {
+            string dir = Path.Combine(Runtime.ExecutableDir, "Hashes");
+            if (!Directory.Exists(dir))
+                return;
+
+            foreach (var file in Directory.GetFiles(dir))
+            {
+                if (Utils.GetExtension(file) != ".txt")
+                    continue;
+
+                foreach (string hashStr in File.ReadAllLines(file)) {
+                    CheckHash(hashStr);
+                }
+            }
+        }
+
+        private static void CheckHash(string hashStr)
+        {
+            uint hash = Crc32.Compute(hashStr);
+            if (!hashes.ContainsKey(hash))
+                hashes.Add(hash, hashStr);
+        }
 
         #region Text Converter Interface
         public TextFileType TextFileType => TextFileType.Yaml;
