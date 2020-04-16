@@ -9,6 +9,7 @@ using SharpYaml.Serialization;
 using System.Globalization;
 using Syroot.BinaryData;
 using ByamlExt.Byaml;
+using Toolbox.Library.Security.Cryptography;
 
 namespace FirstPlugin
 {
@@ -164,6 +165,8 @@ namespace FirstPlugin
                 return UInt64.Parse(value, CultureInfo.InvariantCulture);
             else if (tag == "!ll")
                 return Int64.Parse(value, CultureInfo.InvariantCulture);
+            else if (tag == "!h")
+                return Crc32.Compute(value).ToString("x");
             else if (tag == "!p")
                 return new ByamlPathIndex() { Index = Int32.Parse(value, CultureInfo.InvariantCulture) };
             else
