@@ -48,8 +48,11 @@ namespace LayoutBXLYT
                     fontFileCB.Items.Add(font);
             }
 
-            if (fontFileCB.Items.Contains(pane.FontName))
-                fontFileCB.SelectedItem = pane.FontName;
+            if (pane.FontName != null)
+            {
+                if (fontFileCB.Items.Contains(pane.FontName))
+                    fontFileCB.SelectedItem = pane.FontName;
+            }
 
 
             textBoxTB.Bind(pane, "TextBoxName");
