@@ -64,6 +64,8 @@ namespace Toolbox.Library
         {
             if (Materials == null)
                 Materials = new List<STGenericMaterial>();
+            if (skeleton != null && skeleton.BoneIndices != null)
+                NodeArray = skeleton.BoneIndices.ToList();
 
             List<string> failedTextureExport = new List<string>();
 

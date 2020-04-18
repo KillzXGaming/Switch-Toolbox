@@ -19,6 +19,11 @@ namespace Toolbox.Library
 {
     public class STSkeleton : EditableObject
     {
+        /// <summary>
+        /// A list of bone indices used to remap bones from an exported model
+        /// </summary>
+        public virtual int[] BoneIndices { get; }
+
         public virtual float PreviewScale { get; set; } = 1.0f;
 
         public virtual float BonePointScale { get; set; } = 1.0f;

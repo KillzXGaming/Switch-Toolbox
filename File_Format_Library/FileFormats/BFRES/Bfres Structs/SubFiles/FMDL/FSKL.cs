@@ -15,6 +15,8 @@ namespace Bfres.Structs
 {
     public class FSKL : STSkeleton
     {
+        public override int[] BoneIndices => Node_Array;
+
         public int[] Node_Array;
         public fsklNode node;
 
