@@ -110,7 +110,7 @@ namespace FirstPlugin
             sarc.sarcData.Files = new Dictionary<string, byte[]>();
 
             if (IsBigEndian)
-            sarc.sarcData.endianness = Syroot.BinaryData.ByteOrder.BigEndian;
+                sarc.sarcData.endianness = Syroot.BinaryData.ByteOrder.BigEndian;
             else
                 sarc.sarcData.endianness = Syroot.BinaryData.ByteOrder.LittleEndian;
         }
@@ -142,6 +142,9 @@ namespace FirstPlugin
                 var entry = SetupFileEntry(fileName, file.Value, Hash);
                 files.Add(entry);
                 FileLookup.Add(fileName, entry);
+
+                if (SzsFiles.Files.Count == 1)
+                    entry.OpenFileFormatOnLoad = true;
             }
 
             sarcData.Files.Clear();
