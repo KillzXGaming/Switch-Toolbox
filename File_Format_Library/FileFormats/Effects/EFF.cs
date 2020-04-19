@@ -46,7 +46,7 @@ namespace FirstPlugin
 
             FileReader reader = new FileReader(stream);
             int SectionSize = 0;
-            while (true)
+            while (!reader.EndOfStream)
             {
                 string magicCheck = reader.ReadString(4, Encoding.ASCII);
                 if (magicCheck == "VFXB")
@@ -57,6 +57,9 @@ namespace FirstPlugin
 
                 SectionSize += 4;
             }
+
+            if (SectionSize == reader.BaseStream.Length)
+                return;
 
             DataStart = reader.getSection(0, SectionSize);
 
