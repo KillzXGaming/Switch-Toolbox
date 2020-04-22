@@ -5,8 +5,10 @@ using Syroot.NintenTools.NSW.Bfres;
 using ResU = Syroot.NintenTools.Bfres;
 using System.Windows;
 using Syroot.Maths;
+using BrawlLib;
 using BrawlLib.SSBB.ResourceNodes;
 using BrawlLib.Wii.Animations;
+using System.IO;
 
 namespace BrawlboxHelper
 {
@@ -28,6 +30,209 @@ namespace BrawlboxHelper
         public Dictionary<int, KeyGroupData> XSCA = new Dictionary<int, KeyGroupData>();
         public Dictionary<int, KeyGroupData> YSCA = new Dictionary<int, KeyGroupData>();
         public Dictionary<int, KeyGroupData> ZSCA = new Dictionary<int, KeyGroupData>();
+    }
+
+    public class FMATConverter
+    {
+        public static void ExportMaterial(MaterialPrototype Material, String OutputPath)
+        {
+            MDL0MaterialNode NewMat = new MDL0MaterialNode();
+
+            if (Material.Bake0 != null)
+            {
+                MDL0MaterialRefNode ShadowBakeReference = MDL0MatRefFromGeneric(Material.Bake0);
+                ShadowBakeReference.Coordinates = BrawlLib.Wii.Graphics.TexSourceRow.TexCoord1;
+                ShadowBakeReference.Scale = new System.Vector2(Material.st0[0], Material.st0[1]);
+                ShadowBakeReference.Translation = new System.Vector2(-(Material.st0[2] / Material.st0[0]), (Material.st0[3] - 1) / Material.st0[1] + 1);
+                NewMat.AddChild(ShadowBakeReference);
+            }
+            if (Material.Albedo != null)
+            {
+                MDL0MaterialRefNode AlbedoReference = MDL0MatRefFromGeneric(Material.Albedo);
+                AlbedoReference.Coordinates = BrawlLib.Wii.Graphics.TexSourceRow.TexCoord0;
+                NewMat.AddChild(AlbedoReference);
+            }
+            if (Material.Emission != null)
+            {
+                MDL0MaterialRefNode EmmReference = MDL0MatRefFromGeneric(Material.Emission);
+                EmmReference.Coordinates = BrawlLib.Wii.Graphics.TexSourceRow.TexCoord0;
+                NewMat.AddChild(EmmReference);
+            }
+            if (Material.Bake1 != null)
+            {
+                MDL0MaterialRefNode LightBakeReference = MDL0MatRefFromGeneric(Material.Bake1);
+                LightBakeReference.Coordinates = BrawlLib.Wii.Graphics.TexSourceRow.TexCoord1;
+                LightBakeReference.Scale = new System.Vector2(Material.st1[0], Material.st1[1]);
+                LightBakeReference.Translation = new System.Vector2(-(Material.st1[2] / Material.st1[0]), (Material.st1[3] - 1) / Material.st1[1] + 1);
+                NewMat.AddChild(LightBakeReference);
+            }
+
+            if (Material.IsAlphaTest)
+            {
+                NewMat.Comp0 = (BrawlLib.Wii.Graphics.AlphaCompare)Material.AlphaTestFunction;
+                NewMat.Ref0 = (byte)Material.AlphaTestReference;
+            }
+            if (Material.IsXLU)
+            {
+                NewMat.EnableBlend = true;
+                NewMat.XLUMaterial = true;
+                NewMat.SrcFactor = ((int)Material.SrcFactor <= 7) ? (BrawlLib.Wii.Graphics.BlendFactor)Material.SrcFactor : BrawlLib.Wii.Graphics.BlendFactor.SourceAlpha;
+                NewMat.DstFactor = ((int)Material.DestFactor <= 7) ? (BrawlLib.Wii.Graphics.BlendFactor)Material.DestFactor : BrawlLib.Wii.Graphics.BlendFactor.InverseSourceAlpha;
+            }
+
+            NewMat.CompareBeforeTexture = !( Material.IsAlphaTest | Material.IsXLU);
+
+            NewMat._lightSetIndex = -1;
+            NewMat._fogIndex = 0;
+            NewMat.CullMode = BrawlLib.SSBBTypes.CullMode.Cull_Inside;
+            NewMat.Name = Material.Name;
+
+            MDL0Node dummyModel = new MDL0Node();
+            dummyModel.Version = 11;
+            MDL0GroupNode matGroup = new MDL0GroupNode(BrawlLib.Wii.Models.MDLResourceType.Materials);
+            dummyModel.AddChild(matGroup, true);
+            dummyModel._matGroup = matGroup;
+            dummyModel._matGroup.AddChild(NewMat);
+
+            NewMat.Rebuild();
+            Export(NewMat, OutputPath);
+        }
+
+        private static int[] WrapModeLUT = { 1, 2, 0 };
+        private static int[] FilteringLUT = { 3, 0, 1, 4, 2, 5 };
+
+        public static MDL0MaterialRefNode MDL0MatRefFromGeneric(MaterialPrototype.TextureReference Tex)
+        {
+            MDL0MaterialRefNode Mat = new MDL0MaterialRefNode();
+            Mat.Name = Tex.Name;
+            Mat.Texture = Tex.Name;
+            Mat.UWrapMode = (MatWrapMode)WrapModeLUT[(int)Tex.UWrapMode];
+            Mat.VWrapMode = (MatWrapMode)WrapModeLUT[(int)Tex.VWrapMode];
+
+            Mat.MagFilter = (MatTextureMagFilter)(Tex.MagnFilter - 1);
+            Mat.MinFilter = (MatTextureMinFilter)(FilteringLUT[(int)Tex.MinFilter]);
+
+            return Mat;
+        }
+
+        protected static internal unsafe void PostProcess(MDL0MaterialNode mat, BrawlLib.IO.FileMap map, int dataLen, VoidPtr mdlAddress, VoidPtr dataAddress, BrawlLib.StringTable stringTable)
+        {
+            BrawlLib.SSBBTypes.MDL0Material* header = (BrawlLib.SSBBTypes.MDL0Material*)dataAddress;
+            header->_mdl0Offset = 0;
+            header->_stringOffset = (int)((long)stringTable[mat.Name] + 4 - (long)dataAddress);
+            header->_index = 0;
+
+            BrawlLib.SSBBTypes.MDL0TextureRef* first = header->First;
+            foreach (MDL0MaterialRefNode n in mat.Children)
+                PostProcessRef(n, mdlAddress, first++, stringTable, dataLen);
+        }
+
+        protected static internal unsafe void PostProcessRef(MDL0MaterialRefNode r, VoidPtr mdlAddress, VoidPtr dataAddress, BrawlLib.StringTable stringTable, int stOffset)
+        {
+            BrawlLib.SSBBTypes.MDL0TextureRef* header = (BrawlLib.SSBBTypes.MDL0TextureRef*)dataAddress;
+
+            header->_texOffset = r.Name != null ? (int)((long)stringTable[r.Name] + 4 - (long)dataAddress) : 0;
+            header->_pltOffset = 0;
+            header->_texPtr = 0;
+            header->_pltPtr = 0;
+            header->_index1 = r.Index;
+            header->_index2 = r.Index;
+            header->_uWrap = (int)r.UWrapMode;
+            header->_vWrap = (int)r.VWrapMode;
+            header->_minFltr = (int)r.MinFilter;
+            header->_magFltr = (int)r.MagFilter;
+            header->_lodBias = (int)r.LODBias;
+            header->_maxAniso = (int)r.MaxAnisotropy;
+            header->_clampBias = (byte)(r.ClampBias ? 1 : 0);
+            header->_texelInterp = (byte)(r.TexelInterpolate ? 1 : 0);
+            header->_pad = (short)0;
+        }
+
+        public static unsafe void Export(MDL0MaterialNode mat, string outPath)
+        {
+            BrawlLib.StringTable table = new BrawlLib.StringTable();
+            table.Add(mat.Name);
+            foreach (MDL0MaterialRefNode r in mat._children)
+            {
+                table.Add(r.Name);
+            }
+            int dataLen = mat.CalculateSize(false);
+            int totalLen = dataLen + table.GetTotalSize();
+
+            using (FileStream stream = new FileStream(outPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 8, FileOptions.RandomAccess))
+            {
+                stream.SetLength(totalLen);
+                using (BrawlLib.IO.FileMap map = BrawlLib.IO.FileMap.FromStream(stream))
+                {
+                    mat.Rebuild(map.Address, dataLen, false);
+                    table.WriteTable(map.Address + dataLen);
+                    PostProcess(mat, map, dataLen, map.Address, map.Address, table);
+                    ((BrawlLib.SSBBTypes.MDL0Material*)map.Address)->_pad = (byte)11;
+                }
+            }
+        }
+    }
+
+    public class MaterialPrototype
+    {
+        public String Name;
+
+        public TextureReference Albedo;
+        public TextureReference Emission;
+        public TextureReference Bake0;
+        public TextureReference Bake1;
+
+        public Boolean IsAlphaTest;
+        public ResU.GX2.GX2CompareFunction AlphaTestFunction;
+        public int AlphaTestReference;
+
+        public Boolean IsXLU;
+        public ResU.GX2.GX2BlendFunction SrcFactor;
+        public ResU.GX2.GX2BlendFunction DestFactor;
+
+        public CullMode FaceCulling;
+
+        public float[] st0;
+        public float[] st1;
+
+        public enum CullMode
+        {
+            None,
+            Back,
+            Front,
+            All,
+        }
+
+        public class TextureReference
+        {
+            public String Name;
+            public WrapMode UWrapMode;
+            public WrapMode VWrapMode;
+            public FilteringMode MagnFilter;
+            public FilteringMode MinFilter;
+
+            public TextureReference(String Name)
+            {
+                this.Name = Name;
+            }
+
+            public enum WrapMode
+            {
+                Repeat,
+                Mirror,
+                Clamp
+            }
+
+            public enum FilteringMode
+            {
+                Linear_Mipmap_Nearest,
+                Nearest,
+                Linear,
+                Nearest_Mipmap_Linear,
+                Nearest_Mipmap_Nearest,
+                Linear_Mipmap_Linear
+            }
+        }
     }
 
     public class FSHUConverter

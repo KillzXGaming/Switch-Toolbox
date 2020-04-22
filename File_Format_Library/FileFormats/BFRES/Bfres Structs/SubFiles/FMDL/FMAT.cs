@@ -46,9 +46,38 @@ namespace Bfres.Structs
             {
                 string folderPath = sfd.SelectedPath;
 
-                foreach (FMAT mat in Nodes)
+                List<String> formats = new List<string>();
+                formats.Add("Binary Cafe Material (*.bfmat)");
+                if (Nodes.Count > 0 && ((FMAT)Nodes[0]).MaterialU != null)
                 {
-                   mat.Export(folderPath + '\\' + mat.Text + ".bfmat", IncludeTextureMaps);
+                    formats.Add("MDL0 Material node (*.mdl0mat)");
+                }
+
+                BatchFormatExport form = new BatchFormatExport(formats);
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    string extension = form.GetSelectedExtension();
+                    extension.Replace(" ", string.Empty);
+                    if (extension == ".mdl0mat")
+                    {
+                        FirstPlugin.GUI.BFRES.Materials.MDL0MaterialExportDialog ExportDialog = new FirstPlugin.GUI.BFRES.Materials.MDL0MaterialExportDialog();
+                        ExportDialog.ShowDialog();
+                        String ExportFlags = ExportDialog.GetExportFlags();
+                        if (ExportFlags != "UNSET")
+                        {
+                            foreach (FMAT mat in Nodes)
+                            {
+                                mat.Export(folderPath + '\\' + mat.Text + extension, IncludeTextureMaps, ExportFlags);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (FMAT mat in Nodes)
+                        {
+                            mat.Export(folderPath + '\\' + mat.Text + extension, IncludeTextureMaps);
+                        }
+                    }
                 }
             }
         }
@@ -322,12 +351,20 @@ namespace Bfres.Structs
 
             if (MaterialU != null)
                 BfresWiiU.SetMaterial(this, MaterialU, GetResFileU());
-            else 
+            else
                 BfresSwitch.SetMaterial(this, Material);
 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Supported Formats|*.bfmat;";
+            if (MaterialU != null)
+            {
+                sfd.Filter = "All files (*.*)|*.*|Supported Formats (*.bfmat, *.mdl0mat)|*.bfmat; *.mdl0mat|Binary Cafe Material (*.bfmat)|*.bfmat|MDL0 Material node (*.mdl0mat)|*.mdl0mat";
+            }
+            else
+            {
+                sfd.Filter = "All files (*.*)|*.*|Binary Cafe Material (*.bfmat)|*.bfmat";
+            }
 
+            sfd.FilterIndex = 1;
             sfd.DefaultExt = ".bfmat";
             sfd.FileName = Text;
 
@@ -336,18 +373,117 @@ namespace Bfres.Structs
                 Export(sfd.FileName, IncludeTextureMaps);
             }
         }
-        public void Export(string path, bool IncludeTextureMaps)
+        public void Export(string path, bool IncludeTextureMaps, String ExportFlags = "UNSET")
         {
-            if (GetResFileU() != null)
-                MaterialU.Export(path, GetResFileU());
-            else
-                Material.Export(path, GetResFile());
+            String ext = Path.GetExtension(path);
+            if (ext == ".bfmat" || MaterialU == null)
+            {
+                if (GetResFileU() != null)
+                    MaterialU.Export(path, GetResFileU());
+                else
+                    Material.Export(path, GetResFile());
+            }
+            else if (ext == ".mdl0mat")
+            {
+                Console.WriteLine(ExportFlags);
+                if (ExportFlags == "UNSET")
+                {
+                    FirstPlugin.GUI.BFRES.Materials.MDL0MaterialExportDialog ExportDialog = new FirstPlugin.GUI.BFRES.Materials.MDL0MaterialExportDialog();
+                    ExportDialog.ShowDialog();
+                    ExportFlags = ExportDialog.GetExportFlags();
+                }
 
+                if (ExportFlags != "UNSET")
+                {
+                    BrawlboxHelper.MaterialPrototype Mat = new BrawlboxHelper.MaterialPrototype();
+
+                    STGenericMatTexture Alb = null;
+                    STGenericMatTexture Emm = null;
+                    STGenericMatTexture Bake_ShadowAO = null;
+                    STGenericMatTexture Bake_Light = null;
+
+                    if (ExportFlags.Contains("A"))
+                    {
+                        Alb = GetTextureMap(STGenericMatTexture.TextureType.Diffuse);
+                    }
+                    if (ExportFlags.Contains("E"))
+                    {
+                        Emm = GetTextureMap(STGenericMatTexture.TextureType.Emission);
+                    }
+                    if (ExportFlags.Contains("S"))
+                    {
+                        Bake_ShadowAO = GetTextureMap(STGenericMatTexture.TextureType.Shadow);
+                    }
+                    if (ExportFlags.Contains("L"))
+                    {
+                        Bake_Light = GetTextureMap(STGenericMatTexture.TextureType.Light);
+                    }
+
+                    if (Alb != null) Mat.Albedo = GetTextureReference(Alb);
+                    if (Emm != null) Mat.Emission = GetTextureReference(Emm);
+                    if (Bake_ShadowAO != null) Mat.Bake0 = GetTextureReference(Bake_ShadowAO);
+                    if (Bake_Light != null) Mat.Bake1 = GetTextureReference(Bake_Light);
+
+                    if (matparam.ContainsKey("gsys_bake_st0"))
+                    {
+                        Mat.st0 = matparam["gsys_bake_st0"].ValueFloat;
+                    }
+                    if (matparam.ContainsKey("gsys_bake_st1"))
+                    {
+                        Mat.st1 = matparam["gsys_bake_st1"].ValueFloat;
+                    }
+
+                    Mat.IsAlphaTest = this.MaterialU.RenderState.AlphaTestEnabled;
+                    Mat.AlphaTestReference = (int)(this.MaterialU.RenderState.AlphaRefValue * 255);
+                    Mat.AlphaTestFunction = this.MaterialU.RenderState.AlphaFunc;
+
+                    Mat.IsXLU = this.MaterialU.RenderState.FlagsBlendMode != ResU.RenderStateFlagsBlendMode.None;
+                    Mat.SrcFactor = this.MaterialU.RenderState.ColorSourceBlend;
+                    Mat.DestFactor = this.MaterialU.RenderState.ColorDestinationBlend;
+
+                    Mat.FaceCulling = BrawlboxHelper.MaterialPrototype.CullMode.None;
+
+                    if (MaterialU.RenderState.CullFront) Mat.FaceCulling = BrawlboxHelper.MaterialPrototype.CullMode.Front;
+                    if (MaterialU.RenderState.CullBack) Mat.FaceCulling = BrawlboxHelper.MaterialPrototype.CullMode.Back;
+
+                    if (MaterialU.RenderState.CullBack && MaterialU.RenderState.CullFront) Mat.FaceCulling = BrawlboxHelper.MaterialPrototype.CullMode.All;
+
+                    Mat.Name = Text;
+
+                    BrawlboxHelper.FMATConverter.ExportMaterial(Mat, path);
+                }
+            }
             if (IncludeTextureMaps)
             {
 
             }
         }
+
+        private BrawlboxHelper.MaterialPrototype.TextureReference GetTextureReference(STGenericMatTexture Tex)
+        {
+            BrawlboxHelper.MaterialPrototype.TextureReference Ref = new BrawlboxHelper.MaterialPrototype.TextureReference(Tex.Name);
+
+            Ref.UWrapMode = (BrawlboxHelper.MaterialPrototype.TextureReference.WrapMode)Tex.WrapModeS;
+            Ref.VWrapMode = (BrawlboxHelper.MaterialPrototype.TextureReference.WrapMode)Tex.WrapModeT;
+            Ref.MagnFilter = (BrawlboxHelper.MaterialPrototype.TextureReference.FilteringMode)Tex.MagFilter + 1;
+            Ref.MinFilter = (BrawlboxHelper.MaterialPrototype.TextureReference.FilteringMode)Tex.MinFilter;
+
+            return Ref;
+        }
+
+        private STGenericMatTexture GetTextureMap(STGenericMatTexture.TextureType type)
+        {
+            foreach (STGenericMatTexture t in TextureMaps)
+            {
+                if (t.Type == type)
+                {
+                    return t;
+                }
+            }
+
+            return null;
+        }
+
         private void Replace()
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -358,6 +494,7 @@ namespace Bfres.Structs
                 Replace(ofd.FileName, false);
             }
         }
+
         public void Replace(string path, bool UseReplaceDialog)
         {
             if (GetResFileU() != null)

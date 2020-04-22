@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,7 +36,6 @@
   <ItemGroup>
     <Reference Include="BrawlLib">
       <HintPath>..\Toolbox\Lib\BrawlLib.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Gl_EditorFramework">
       <HintPath>..\Toolbox\Gl_EditorFramework.dll</HintPath>
