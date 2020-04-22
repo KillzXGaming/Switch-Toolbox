@@ -1007,6 +1007,7 @@ namespace Toolbox
 
             Cursor.Current = Cursors.Default;
         }
+
         #endregion
 
         #region TabMdiWindows
@@ -1221,35 +1222,35 @@ namespace Toolbox
 
         }
 
-        private void BtnMdiClose_MouseEnter(object sender, System.EventArgs e)
-        {
-            BtnMdiClose.Image = Toolbox.Library.Properties.Resources.Close_Hover;
-        }
+            private void BtnMdiClose_MouseEnter(object sender, System.EventArgs e)
+            {
+                BtnMdiClose.Image = Toolbox.Library.Properties.Resources.Close_Hover;
+            }
 
-        private void BtnMdiClose_MouseLeave(object sender, System.EventArgs e)
-        {
-            BtnMdiClose.Image = Toolbox.Library.Properties.Resources.Close;
-        }
+            private void BtnMdiClose_MouseLeave(object sender, System.EventArgs e)
+            {
+                BtnMdiClose.Image = Toolbox.Library.Properties.Resources.Close;
+            }
 
-        private void BtnMdiMinMax_MouseEnter(object sender, EventArgs e)
-        {
-            BtnMdiMinMax.Image = Toolbox.Library.Properties.Resources.maximize_sele;
-        }
+            private void BtnMdiMinMax_MouseEnter(object sender, EventArgs e)
+            {
+                BtnMdiMinMax.Image = Toolbox.Library.Properties.Resources.maximize_sele;
+            }
 
-        private void BtnMdiMinMax_MouseLeave(object sender, EventArgs e)
-        {
-            BtnMdiMinMax.Image = Toolbox.Library.Properties.Resources.maximize;
-        }
+            private void BtnMdiMinMax_MouseLeave(object sender, EventArgs e)
+            {
+                BtnMdiMinMax.Image = Toolbox.Library.Properties.Resources.maximize;
+            }
 
-        private void BtnMdiMinimize_MouseEnter(object sender, EventArgs e)
-        {
-            BtnMdiMinimize.Image = Toolbox.Library.Properties.Resources.minimize_sele;
-        }
+            private void BtnMdiMinimize_MouseEnter(object sender, EventArgs e)
+            {
+                BtnMdiMinimize.Image = Toolbox.Library.Properties.Resources.minimize_sele;
+            }
 
-        private void BtnMdiMinimize_MouseLeave(object sender, EventArgs e)
-        {
-            BtnMdiMinimize.Image = Toolbox.Library.Properties.Resources.minimize;
-        }
+            private void BtnMdiMinimize_MouseLeave(object sender, EventArgs e)
+            {
+                BtnMdiMinimize.Image = Toolbox.Library.Properties.Resources.minimize;
+            }
 
         private void BtnMdiClose_Click(object sender, EventArgs e)
         {
@@ -1378,13 +1379,14 @@ namespace Toolbox
             }
         }
 
+        private List<string> failedFiles = new List<string>();
         private List<string> batchExportFileList = new List<string>();
         private void BatchExportModels(string[] files, string outputFolder)
         {
             List<string> Formats = new List<string>();
             Formats.Add("DAE (.dae)");
 
-            List<string> failedFiles = new List<string>();
+            failedFiles = new List<string>();
 
             BatchFormatExport form = new BatchFormatExport(Formats);
             if (form.ShowDialog() == DialogResult.OK)
@@ -1392,15 +1394,17 @@ namespace Toolbox
                 string extension = form.GetSelectedExtension();
                 foreach (var file in files)
                 {
+                    IFileFormat fileFormat = null;
                     try
                     {
-                        var fileFormat = STFileLoader.OpenFileFormat(file);
-                        SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Models);
+                        fileFormat = STFileLoader.OpenFileFormat(file);
                     }
                     catch (Exception ex)
                     {
                         failedFiles.Add($"{file} \n Error:\n {ex} \n");
                     }
+
+                    SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Models);
                 }
                 batchExportFileList.Clear();
             }
@@ -1429,7 +1433,7 @@ namespace Toolbox
             Formats.Add("Tagged Image File Format (.tiff)");
             Formats.Add("ASTC (.astc)");
 
-            List<string> failedFiles = new List<string>();
+           failedFiles = new List<string>();
 
             BatchFormatExport form = new BatchFormatExport(Formats);
             if (form.ShowDialog() == DialogResult.OK)
@@ -1437,15 +1441,17 @@ namespace Toolbox
                 string extension = form.GetSelectedExtension();
                 foreach (var file in files)
                 {
+                    IFileFormat fileFormat = null;
                     try
                     {
-                        var fileFormat = STFileLoader.OpenFileFormat(file);
-                        SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Textures);
+                         fileFormat = STFileLoader.OpenFileFormat(file);
                     }
                     catch (Exception ex)
                     {
                         failedFiles.Add($"{file} \n Error:\n {ex} \n");
                     }
+
+                    SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Textures);
                 }
                 batchExportFileList.Clear();
             }
@@ -1538,7 +1544,16 @@ namespace Toolbox
                 ArchiveFilePath = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(((IFileFormat)archiveFile).FileName));
 
             foreach (var file in archiveFile.Files)
-                SearchFileFormat(settings, file.OpenFile(), extension, ArchiveFilePath, exportMode);
+            {
+                try
+                {
+                    SearchFileFormat(settings, file.OpenFile(), extension, ArchiveFilePath, exportMode);
+                }
+                catch (Exception ex)
+                {
+                    failedFiles.Add($"{file} \n Error:\n {ex} \n");
+                }
+            }
         }
     }
 }
