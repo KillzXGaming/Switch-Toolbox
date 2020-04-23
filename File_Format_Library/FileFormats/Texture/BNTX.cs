@@ -101,18 +101,15 @@ namespace FirstPlugin
 
             STToolStripItem[] toolExt = new STToolStripItem[1];
             STToolStripItem[] newFileExt = new STToolStripItem[1];
-            STToolStripItem[] newFromFileExt = new STToolStripItem[1];
+            STToolStripItem[] newFromFileExt = new STToolStripItem[2];
 
             public MenuExt()
             {
                 toolExt[0] = new STToolStripItem("Textures");
                 toolExt[0].DropDownItems.Add(new STToolStripItem("Batch All (BNTX)", Export));
 
-                newFileExt[0] = new STToolStripItem("BNTX");
-                newFileExt[0].Click += New;
-
-                newFromFileExt[0] = new STToolStripItem("BNTX From Image");
-                newFromFileExt[0].Click += NewFromFile;
+                newFileExt[0] = new STToolStripItem("BNTX", New);
+                newFromFileExt[0] = new STToolStripItem("BNTX From Image", NewFromFile);
             }
 
             private void New(object sender, EventArgs args)
@@ -143,24 +140,28 @@ namespace FirstPlugin
 
                     string folder = Path.GetDirectoryName(ofd.FileNames[0]);
 
-                    foreach (var tex in tempBntx.Textures.Values)
+                    FolderSelectDialog fod = new FolderSelectDialog();
+                    if (fod.ShowDialog() == DialogResult.OK)
                     {
-                        //Now make one for each texture and import each
-                        var bntx = new BntxFile();
-                        bntx.Target = new char[] { 'N', 'X', ' ', ' ' };
-                        bntx.Name = tex.Text;
-                        bntx.Alignment = 0xC;
-                        bntx.TargetAddressSize = 0x40;
-                        bntx.VersionMajor = 0;
-                        bntx.VersionMajor2 = 4;
-                        bntx.VersionMinor = 0;
-                        bntx.VersionMinor2 = 0;
-                        bntx.Textures = new List<Texture>();
-                        bntx.TextureDict = new ResDict();
-                        bntx.RelocationTable = new RelocationTable();
-                        bntx.Flag = 0;
-                        bntx.Textures.Add(tex.Texture);
-                        bntx.Save($"{Path.Combine(folder, tex.Text)}.bntx");
+                        foreach (var tex in tempBntx.Textures.Values)
+                        {
+                            //Now make one for each texture and import each
+                            var bntx = new BntxFile();
+                            bntx.Target = new char[] { 'N', 'X', ' ', ' ' };
+                            bntx.Name = tex.Text;
+                            bntx.Alignment = 0xC;
+                            bntx.TargetAddressSize = 0x40;
+                            bntx.VersionMajor = 0;
+                            bntx.VersionMajor2 = 4;
+                            bntx.VersionMinor = 0;
+                            bntx.VersionMinor2 = 0;
+                            bntx.Textures = new List<Texture>();
+                            bntx.TextureDict = new ResDict();
+                            bntx.RelocationTable = new RelocationTable();
+                            bntx.Flag = 0;
+                            bntx.Textures.Add(tex.Texture);
+                            bntx.Save($"{Path.Combine(fod.SelectedPath, tex.Text)}.bntx");
+                        }
                     }
 
                     tempBntx.Unload();
