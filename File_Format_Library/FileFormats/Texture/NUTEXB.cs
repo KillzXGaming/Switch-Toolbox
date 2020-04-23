@@ -309,7 +309,7 @@ namespace FirstPlugin
 
             List<byte[]> data = new List<byte[]>();
             foreach (var array in tex.Texture.TextureData)
-                data.Add(array[0]);
+                data.Add(Utils.CombineByteArray(array.ToArray()));
 
             var output = Utils.CombineByteArray(data.ToArray());
             ImageData = SetImageData(output);
