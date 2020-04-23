@@ -109,6 +109,7 @@ namespace Toolbox.Library
                             try
                             {
                                 var bitmap = Textures[i].GetBitmap();
+                                bitmap = Textures[i].GetComponentBitmap(bitmap);
                                 if (bitmap != null)
                                 {
                                     string textureName = Textures[i].Text;
