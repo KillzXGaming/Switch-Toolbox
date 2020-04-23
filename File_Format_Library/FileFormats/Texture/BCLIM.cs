@@ -66,7 +66,7 @@ namespace FirstPlugin
             }
         }
 
-        public override bool CanEdit { get; set; } = true;
+        public override bool CanEdit { get; set; } = false;
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Layout Image" };
@@ -130,7 +130,7 @@ namespace FirstPlugin
                 form.Dock = DockStyle.Fill;
                 form.ResetMenus();
                 form.AddFileContextEvent("Save", Save);
-                form.AddFileContextEvent("Replace", Replace);
+               // form.AddFileContextEvent("Replace", Replace);
                 form.LoadProperties(prop);
                 form.LoadImage(this);
 
@@ -266,6 +266,27 @@ namespace FirstPlugin
                 PlatformSwizzle = PlatformSwizzle.Platform_3DS;
             }
         }
+
+        public void Save(System.IO.Stream stream)
+        {
+            using (var writer = new FileWriter(stream, true))
+            {
+                writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+
+                writer.Write(ImageData);
+
+                long headerPos = writer.Position;
+
+                image.ImageSize = (uint)ImageData.Length;
+
+                header.Write(writer);
+                image.Write(writer);
+
+                writer.Seek(headerPos + 0x0C, SeekOrigin.Begin);
+                writer.Write((uint)writer.BaseStream.Length);
+            }
+        }
+
 
         private void LoadComponents(TEX_FORMAT Format)
         {
@@ -424,24 +445,6 @@ namespace FirstPlugin
         {
 
         }
-        public void Save(System.IO.Stream stream)
-        {
-            using (var writer = new FileWriter(stream, true))
-            {
-                writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-
-                writer.Write(ImageData);
-
-                long headerPos = writer.Position;
-
-                header.Write(writer);
-                image.Write(writer);
-                writer.Write(ImageData.Length);
-
-                writer.Seek(headerPos + 0x0C, SeekOrigin.Begin);
-                writer.Write((uint)writer.BaseStream.Length);
-            }
-        }
 
         public class Header
         {
@@ -465,8 +468,13 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer)
             {
-                writer.WriteSignature("FLIM");
-                writer.Write(ByteOrderMark);
+                writer.WriteSignature("CLIM");
+
+                if (writer.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian)
+                    writer.Write((ushort)0xFFFE);
+                else
+                    writer.Write((ushort)0xFEFF);
+
                 writer.Write(HeaderSize);
                 writer.Write(Version);
                 writer.Write(uint.MaxValue);
