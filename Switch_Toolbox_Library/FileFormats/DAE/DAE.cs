@@ -109,9 +109,9 @@ namespace Toolbox.Library
                             try
                             {
                                 var bitmap = Textures[i].GetBitmap();
-                                bitmap = Textures[i].GetComponentBitmap(bitmap);
                                 if (bitmap != null)
                                 {
+                                    bitmap = Textures[i].GetComponentBitmap(bitmap);
                                     string textureName = Textures[i].Text;
                                     if (textureName.RemoveIllegaleFileNameCharacters() != textureName)
                                     {

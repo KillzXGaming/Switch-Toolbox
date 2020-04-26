@@ -71,7 +71,7 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            CanSave = true;
+            CanSave = false;
 
             header = new Header();
             header.Read(new FileReader(stream));
