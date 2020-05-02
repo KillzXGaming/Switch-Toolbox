@@ -1401,7 +1401,7 @@ namespace Toolbox
                     }
                     catch (Exception ex)
                     {
-                        failedFiles.Add($"{file.Filename} \n Error:\n {ex} \n");
+                        failedFiles.Add($"{file} \n Error:\n {ex} \n");
                     }
 
                     SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Models);
@@ -1448,7 +1448,7 @@ namespace Toolbox
                     }
                     catch (Exception ex)
                     {
-                        failedFiles.Add($"{file.Filename} \n Error:\n {ex} \n");
+                        failedFiles.Add($"{file} \n Error:\n {ex} \n");
                     }
 
                     SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Textures);
