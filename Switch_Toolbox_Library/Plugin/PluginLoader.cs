@@ -91,8 +91,15 @@ namespace Toolbox.Library
             ICollection<IPlugin> plugins = new List<IPlugin>(pluginTypes.Count);
             foreach (Type type in pluginTypes)
             {
-                IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
-                plugins.Add(plugin);
+                try
+                {
+                    IPlugin plugin = (IPlugin)Activator.CreateInstance(type);
+                    plugins.Add(plugin);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine("Couldn't Load {0} Reason:{1}", type, ex.Message);
+                }
             }
             assemblies.Clear();
             pluginTypes.Clear();
