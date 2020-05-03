@@ -384,7 +384,6 @@
     <Compile Include="FileFormats\BFRES\BfresUtilies.cs" />
     <Compile Include="FileFormats\BFRES\gfxEnum.cs" />
     <Compile Include="FileFormats\BFRES\GLEnumConverter.cs" />
-    <Compile Include="FileFormats\Bin\KartParts.cs" />
     <Compile Include="FileFormats\BMD\BMD.cs" />
     <Compile Include="FileFormats\BMD\BMDMaterialWrapper.cs" />
     <Compile Include="FileFormats\BMD\BMDShapeWrapper.cs" />
