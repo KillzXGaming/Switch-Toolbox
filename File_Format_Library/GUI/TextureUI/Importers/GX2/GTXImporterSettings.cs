@@ -140,6 +140,9 @@ namespace FirstPlugin
             Bitmap Image = BitmapExtension.GetBitmap(DecompressedData[SurfaceLevel], (int)TexWidth, (int)TexHeight);
             if (FlipY)
                 Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            if (UseBc4Alpha && (Format == GX2.GX2SurfaceFormat.T_BC4_UNORM || Format == GX2.GX2SurfaceFormat.T_BC4_SNORM)) {
+                Image = BitmapExtension.SetChannel(Image, STChannelType.Alpha, STChannelType.Alpha, STChannelType.Alpha, STChannelType.One);
+            }
 
             Console.WriteLine($"FlipY {FlipY}");
 

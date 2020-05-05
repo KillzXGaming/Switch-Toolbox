@@ -210,9 +210,11 @@ namespace FirstPlugin
 
                 if (setting.FlipY)
                     bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                if (setting.UseBc4Alpha) {
+                if (setting.UseBc4Alpha && (setting.Format == GX2.GX2SurfaceFormat.T_BC4_UNORM || 
+                    setting.Format == GX2.GX2SurfaceFormat.T_BC4_UNORM)) 
+                {
                     bitmap = BitmapExtension.SetChannel(bitmap, 
-                        STChannelType.Red, STChannelType.Red, STChannelType.Red, STChannelType.Red);
+                        STChannelType.One, STChannelType.One, STChannelType.One, STChannelType.Red);
                 }
 
                 if (pictureBox1.InvokeRequired)
