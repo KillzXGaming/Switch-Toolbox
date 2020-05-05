@@ -25,6 +25,7 @@ namespace Toolbox.Library
             public bool UseVertexColors = true;
             public bool FlipTexCoordsVertical = true;
             public bool OnlyExportRiggedBones = false;
+            public bool UseTextureChannelComponents = true;
 
             public bool TransformColorUVs = false;
 
@@ -111,7 +112,8 @@ namespace Toolbox.Library
                                 var bitmap = Textures[i].GetBitmap();
                                 if (bitmap != null)
                                 {
-                                    bitmap = Textures[i].GetComponentBitmap(bitmap);
+                                    if (settings.UseTextureChannelComponents)
+                                        bitmap = Textures[i].GetComponentBitmap(bitmap);
                                     string textureName = Textures[i].Text;
                                     if (textureName.RemoveIllegaleFileNameCharacters() != textureName)
                                     {

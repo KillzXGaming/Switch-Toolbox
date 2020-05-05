@@ -36,11 +36,13 @@
             this.chkVertexColors = new Toolbox.Library.Forms.STCheckBox();
             this.chkExportRiggedBonesOnly = new Toolbox.Library.Forms.STCheckBox();
             this.chkApplyUVTransforms = new Toolbox.Library.Forms.STCheckBox();
+            this.chkTextureChannelComps = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // contentContainer
             // 
+            this.contentContainer.Controls.Add(this.chkTextureChannelComps);
             this.contentContainer.Controls.Add(this.chkApplyUVTransforms);
             this.contentContainer.Controls.Add(this.chkExportRiggedBonesOnly);
             this.contentContainer.Controls.Add(this.chkVertexColors);
@@ -59,6 +61,7 @@
             this.contentContainer.Controls.SetChildIndex(this.chkVertexColors, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkExportRiggedBonesOnly, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkApplyUVTransforms, 0);
+            this.contentContainer.Controls.SetChildIndex(this.chkTextureChannelComps, 0);
             // 
             // exportTexturesChkBox
             // 
@@ -153,6 +156,19 @@
             this.chkApplyUVTransforms.UseVisualStyleBackColor = true;
             this.chkApplyUVTransforms.CheckedChanged += new System.EventHandler(this.chkApplyUVTransforms_CheckedChanged);
             // 
+            // chkTextureChannelComps
+            // 
+            this.chkTextureChannelComps.AutoSize = true;
+            this.chkTextureChannelComps.Checked = true;
+            this.chkTextureChannelComps.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTextureChannelComps.Location = new System.Drawing.Point(153, 47);
+            this.chkTextureChannelComps.Name = "chkTextureChannelComps";
+            this.chkTextureChannelComps.Size = new System.Drawing.Size(161, 17);
+            this.chkTextureChannelComps.TabIndex = 19;
+            this.chkTextureChannelComps.Text = "Use Texture Channel Swaps";
+            this.chkTextureChannelComps.UseVisualStyleBackColor = true;
+            this.chkTextureChannelComps.CheckedChanged += new System.EventHandler(this.chkTextureChannelComps_CheckedChanged);
+            // 
             // ExportModelSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -176,5 +192,6 @@
         private STCheckBox chkVertexColors;
         private STCheckBox chkExportRiggedBonesOnly;
         private STCheckBox chkApplyUVTransforms;
+        private STCheckBox chkTextureChannelComps;
     }
 }

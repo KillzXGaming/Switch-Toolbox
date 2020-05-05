@@ -50,5 +50,9 @@ namespace Toolbox.Library.Forms
         private void chkApplyUVTransforms_CheckedChanged(object sender, EventArgs e) {
             Settings.TransformColorUVs = chkApplyUVTransforms.Checked;
         }
+
+        private void chkTextureChannelComps_CheckedChanged(object sender, EventArgs e) {
+            Settings.UseTextureChannelComponents = chkApplyUVTransforms.Checked;
+        }
     }
 }
