@@ -372,7 +372,7 @@
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
             this.exportToolStripMenuItem.Text = "Export";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
@@ -621,14 +621,14 @@
             // gammaFixToolStripMenuItem
             // 
             this.gammaFixToolStripMenuItem.Name = "gammaFixToolStripMenuItem";
-            this.gammaFixToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gammaFixToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.gammaFixToolStripMenuItem.Text = "Gamma Correct";
             this.gammaFixToolStripMenuItem.Click += new System.EventHandler(this.gammaFixToolStripMenuItem_Click);
             // 
             // stContextMenuStrip3
             // 
             this.stContextMenuStrip3.Name = "stContextMenuStrip3";
-            this.stContextMenuStrip3.Size = new System.Drawing.Size(61, 4);
+            this.stContextMenuStrip3.Size = new System.Drawing.Size(181, 26);
             // 
             // ImageEditorBase
             // 

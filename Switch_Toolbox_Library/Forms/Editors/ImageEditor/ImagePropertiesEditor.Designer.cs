@@ -37,6 +37,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.stChannelToolstripMenu = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.replaceChannelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportChannelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stTabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -49,6 +50,7 @@
             this.channelListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ChannelsColumn});
             this.channelListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.channelListView.HideSelection = false;
             this.channelListView.Location = new System.Drawing.Point(3, 3);
             this.channelListView.Name = "channelListView";
             this.channelListView.OwnerDraw = true;
@@ -113,16 +115,24 @@
             // stChannelToolstripMenu
             // 
             this.stChannelToolstripMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportChannelToolStripMenuItem,
             this.replaceChannelToolStripMenuItem});
             this.stChannelToolstripMenu.Name = "stChannelToolstripMenu";
-            this.stChannelToolstripMenu.Size = new System.Drawing.Size(163, 26);
+            this.stChannelToolstripMenu.Size = new System.Drawing.Size(181, 70);
             // 
             // replaceChannelToolStripMenuItem
             // 
             this.replaceChannelToolStripMenuItem.Name = "replaceChannelToolStripMenuItem";
-            this.replaceChannelToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.replaceChannelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.replaceChannelToolStripMenuItem.Text = "Replace Channel";
             this.replaceChannelToolStripMenuItem.Click += new System.EventHandler(this.replaceChannelToolStripMenuItem_Click);
+            // 
+            // exportChannelToolStripMenuItem
+            // 
+            this.exportChannelToolStripMenuItem.Name = "exportChannelToolStripMenuItem";
+            this.exportChannelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportChannelToolStripMenuItem.Text = "Export Channel";
+            this.exportChannelToolStripMenuItem.Click += new System.EventHandler(this.exportChannelToolStripMenuItem_Click);
             // 
             // ImagePropertiesEditor
             // 
@@ -149,5 +159,6 @@
         private STPropertyGrid stPropertyGrid1;
         private STContextMenuStrip stChannelToolstripMenu;
         private System.Windows.Forms.ToolStripMenuItem replaceChannelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportChannelToolStripMenuItem;
     }
 }

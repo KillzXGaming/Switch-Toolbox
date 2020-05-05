@@ -270,6 +270,24 @@ namespace Toolbox.Library.Forms
             }
         }
 
+        private void exportChannelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int ChannelIndex = channelListView.SelectedIndices[0];
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Supported Formats|*.png;*.tga;*.jpg;*.tiff|" +
+                "Portable Network Graphics |*.png|" +
+                "Joint Photographic Experts Group |*.jpg|" +
+                "Bitmap Image |*.bmp|" +
+                "Tagged Image File Format |*.tiff|" +
+                "All files(*.*)|*.*";
+            sfd.FileName = imageEditor.ActiveTexture.Text + $"_{(STChannelType)(ChannelIndex - 1)}";
+
+            if (sfd.ShowDialog() == DialogResult.OK) {
+                imageEditor.GetActiveImage().Save(sfd.FileName);
+            }
+        }
+
         private void stPropertyGrid1_Load(object sender, EventArgs e)
         {
 
