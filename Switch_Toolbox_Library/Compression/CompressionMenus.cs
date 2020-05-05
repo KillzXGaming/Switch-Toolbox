@@ -108,7 +108,7 @@ namespace Toolbox.Library.IO
 
             string ext = Compress ? ".comp" : ".dec";
             if (compressionFormat.Extension.Length > 0 && Compress)
-                ext = compressionFormat.Extension[0];
+                ext = compressionFormat.Extension[0].Replace("*", string.Empty);
 
             List<string> failedFiles = new List<string>();
             if (fileNames.Length > 1)
