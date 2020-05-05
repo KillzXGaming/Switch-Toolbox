@@ -74,13 +74,7 @@ namespace FirstPlugin
 
         public STSkeleton ExportableSkeleton
         {
-            get
-            {
-                STSkeleton skeleton = new STSkeleton();
-                foreach (var model in BFRESRender.models)
-                    skeleton.bones.AddRange(model.Skeleton.bones);
-                return skeleton;
-            }
+            get { return BFRESRender.models[0].Skeleton; }
         }
 
         public override string ExportFilter => Utils.GetAllFilters(new BFRES());
