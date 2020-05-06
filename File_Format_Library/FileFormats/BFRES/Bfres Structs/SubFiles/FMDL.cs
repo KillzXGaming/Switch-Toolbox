@@ -561,21 +561,32 @@ namespace Bfres.Structs
 
         private List<STGenericTexture> GetTextures()
         {
+            List<string> textureRefs = new List<string>();
+            foreach (var mat in materials) {
+                foreach (var texref in mat.Value.TextureMaps) {
+                    if (!textureRefs.Contains(texref.Name)) {
+                        textureRefs.Add(texref.Name);
+                        if (texref.Name.EndsWith(".0"))
+                        {
+                            for (int i = 1; i < 100; i++)
+                                textureRefs.Add(texref.Name.Replace(".0", $".{i}"));
+                        }
+                    }
+                }
+            }
+
             List<STGenericTexture> textures = new List<STGenericTexture>();
-            foreach (var mat in materials)
+            foreach (var texref in textureRefs)
             {
-                foreach (var texref in mat.Value.TextureMaps)
+                foreach (var bntx in PluginRuntime.bntxContainers)
                 {
-                    foreach (var bntx in PluginRuntime.bntxContainers)
-                    {
-                        if (bntx.Textures.ContainsKey(texref.Name))
-                            textures.Add(bntx.Textures[texref.Name]);
-                    }
-                    foreach (var ftexCont in PluginRuntime.ftexContainers)
-                    {
-                        if (ftexCont.ResourceNodes.ContainsKey(texref.Name))
-                            textures.Add((FTEX)ftexCont.ResourceNodes[texref.Name]);
-                    }
+                    if (bntx.Textures.ContainsKey(texref))
+                        textures.Add(bntx.Textures[texref]);
+                }
+                foreach (var ftexCont in PluginRuntime.ftexContainers)
+                {
+                    if (ftexCont.ResourceNodes.ContainsKey(texref))
+                        textures.Add((FTEX)ftexCont.ResourceNodes[texref]);
                 }
             }
 

@@ -1475,7 +1475,7 @@ namespace Toolbox
 
             if (fileFormat is STGenericTexture && exportMode == ExportMode.Textures) {
                 string name = ((STGenericTexture)fileFormat).Text;
-                ExportTexture(((STGenericTexture)fileFormat), $"{outputFolder}/{name}", extension);
+                ExportTexture(((STGenericTexture)fileFormat), settings, $"{outputFolder}/{name}", extension);
             }
             else if (fileFormat is IArchiveFile)
                 SearchArchive(settings, (IArchiveFile)fileFormat, extension, outputFolder, exportMode);
@@ -1492,7 +1492,7 @@ namespace Toolbox
                 }
 
                 foreach (STGenericTexture tex in ((ITextureContainer)fileFormat).TextureList) {
-                    ExportTexture(tex, $"{outputFolder}/{tex.Text}", extension);
+                    ExportTexture(tex, settings, $"{outputFolder}/{tex.Text}", extension);
                 }
             }
             else if (fileFormat is IExportableModel && exportMode == ExportMode.Models)
@@ -1529,11 +1529,16 @@ namespace Toolbox
             Textures,
         }
 
-        private void ExportTexture(STGenericTexture tex, string filePath, string ext) {
+        private void ExportTexture(STGenericTexture tex, BatchFormatExport.Settings settings, string filePath, string ext) {
             filePath = Utils.RenameDuplicateString(batchExportFileList, filePath, 0, 3);
             batchExportFileList.Add(filePath);
 
+            //Switch the runtime comp setting to the batch settings then switch back later
+            bool compSetting = Runtime.ImageEditor.UseComponetSelector;
+
+            Runtime.ImageEditor.UseComponetSelector = settings.UseTextureChannelComponents;
             tex.Export($"{filePath}.{ext}");
+            Runtime.ImageEditor.UseComponetSelector = compSetting;
         }
 
         private void SearchArchive(BatchFormatExport.Settings settings, IArchiveFile archiveFile,
