@@ -208,20 +208,15 @@ namespace FirstPlugin
 
                             Console.WriteLine("3ds X bits " + Convert.ToString(14, 2));
 
-                            float x = PackedToQuat(value1);
-                            float y = PackedToQuat(value2);
-                            float z = PackedToQuat(value3);
-                            float w = (float)Math.Sqrt(1 - x - y - z);
-
                             if (b.Text == "Waist") {
                                 var quat = EulerToQuat(1.570796f, -1.313579f, 0.03490628f);
                                 Console.WriteLine($"quat og {quat.X} {quat.Y} {quat.Z} {quat.W}");
                                 Console.WriteLine("group " + b.Text);
                                 Console.WriteLine($"packed rot {value1} {value2} {value3}");
-                                Console.WriteLine($"quat rot X {x} Y {y} Z {z} W {w}");
+                                // Console.WriteLine($"quat rot X {x} Y {y} Z {z} W {w}");
                             }
-
-                            b.rot = new Quaternion(x, y, z, w);
+                                
+                            b.rot = PackedToQuat(value1, value2, value3);
                         }
                         else
                         {
@@ -238,12 +233,54 @@ namespace FirstPlugin
 
            // private static readonly ushort _flagsMask = 0b11000011_11111111;
 
-            private static float PackedToQuat(short val)
+            private static short UnpackS15(short u15)
             {
-             //   Console.WriteLine("bin1 " + Convert.ToString(val, 2));
-              //  Console.WriteLine("bin2 " + Convert.ToString(val, 2));
+                int sign = (u15 >> 14) & 1;
+                u15 &= 0x3FFF;
+                if (sign == 0) u15 -= 0x4000;
+                return u15;
+            }
 
-                return val / 0x8000f;
+            static int[][] QUATERNION_SWIZZLES = { new int[] { 0, 3, 2, 1 }, new int[] { 3, 0, 2, 1 }, new int[] { 3, 2, 0, 1 }, new int[] { 3, 2, 1, 0 } };
+
+            private static Quaternion PackedToQuat(short z, short y, short x)
+            {
+
+                const int count = 15;
+                const int BASE = (1 << count) - 1;
+                float maxval = 1 / (0x399E * (float)Math.Sqrt(2.0)); // such obvious, so constant, wow
+
+                long cq = x & 0xFFFF;
+                cq <<= 16;
+                cq |= ((uint)y) & 0xFFFF;
+                cq <<= 16;
+                cq |= ((uint)z) & 0xFFFF;
+
+
+                short extra = (short)(cq & 0x7);
+
+                long num = cq >> 3;
+
+                x = UnpackS15((short)((num >> (count * 2)) & BASE));
+                y = UnpackS15((short)((num >> (count * 1)) & BASE));
+                z = UnpackS15((short)((num >> (count * 0)) & BASE));
+
+                float fx = x * maxval;
+                float fy = y * maxval;
+                float fz = z * maxval;
+
+                float[] quat = {
+                    (float)Math.Sqrt(1 - fx * fx - fy * fy - fz * fz),
+                    fx,
+                    fy,
+                    fz };
+
+                int[] qmap = QUATERNION_SWIZZLES[extra & 0b11];
+                Quaternion q = new Quaternion(quat[qmap[0]], quat[qmap[1]], quat[qmap[2]], quat[qmap[3]]);
+                if ((extra >> 2) != 0) q *= -1;
+
+                return q;
+
             }
 
             public enum RotationFlags : ushort
