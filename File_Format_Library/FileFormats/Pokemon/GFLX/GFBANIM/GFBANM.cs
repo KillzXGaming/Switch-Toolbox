@@ -206,16 +206,6 @@ namespace FirstPlugin
                             short value2 = (short)node.RotationY.GetFrameValue(Frame);
                             short value3 = (short)node.RotationZ.GetFrameValue(Frame);
 
-                            Console.WriteLine("3ds X bits " + Convert.ToString(14, 2));
-
-                            if (b.Text == "Waist") {
-                                var quat = EulerToQuat(1.570796f, -1.313579f, 0.03490628f);
-                                Console.WriteLine($"quat og {quat.X} {quat.Y} {quat.Z} {quat.W}");
-                                Console.WriteLine("group " + b.Text);
-                                Console.WriteLine($"packed rot {value1} {value2} {value3}");
-                                // Console.WriteLine($"quat rot X {x} Y {y} Z {z} W {w}");
-                            }
-                                
                             b.rot = PackedToQuat(value1, value2, value3);
                         }
                         else
@@ -275,16 +265,11 @@ namespace FirstPlugin
                     fy,
                     fz };
 
-                int[] qmap = QUATERNION_SWIZZLES[extra & 0b11];
+                int[] qmap = QUATERNION_SWIZZLES[(int)(extra & 0b11)];
                 Quaternion q = new Quaternion(quat[qmap[0]], quat[qmap[1]], quat[qmap[2]], quat[qmap[3]]);
                 if ((extra >> 2) != 0) q *= -1;
 
                 return q;
-
-            }
-
-            public enum RotationFlags : ushort
-            {
 
             }
 
