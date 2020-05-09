@@ -392,7 +392,7 @@ namespace FirstPlugin
             Formats.Add(typeof(IGA_PAK));
             Formats.Add(typeof(MKAGPDX_Model));
             Formats.Add(typeof(GFBMDL));
-         //  Formats.Add(typeof(GFBANM));
+            Formats.Add(typeof(GFBANM));
             Formats.Add(typeof(GFBANMCFG));
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(SDF));
