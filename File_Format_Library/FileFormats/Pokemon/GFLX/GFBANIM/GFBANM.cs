@@ -128,12 +128,13 @@ namespace FirstPlugin
                 {
                     GFBMDL model = null;
                     foreach (var container in ObjectEditor.GetDrawableContainers()) {
-                        if (container.ContainerState == ContainerState.Active) {
-                            foreach (var drawable in container.Drawables)
-                            {
-                                if (drawable is GFBMDL_Render)
-                                    model = ((GFBMDL_Render)drawable).GfbmdlFile;
-                            }
+                        foreach (var drawable in container.Drawables)
+                        {
+                            if (!drawable.Visible)
+                                continue;
+
+                            if (drawable is GFBMDL_Render)
+                                model = ((GFBMDL_Render)drawable).GfbmdlFile;
                         }
                     }
                     return model;
