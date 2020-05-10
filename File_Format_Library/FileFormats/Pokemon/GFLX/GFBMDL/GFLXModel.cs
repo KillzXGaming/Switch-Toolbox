@@ -283,6 +283,12 @@ namespace FirstPlugin
             }
         }
 
+        public bool HasVertexColors()
+        {
+            //A quick hack. Maps typically have no switches but have vertex colors as diffuse.
+            return Material.Switches.Count == 0;
+        }
+
         public GFLXMaterialData(GFLXModel parent, Material mat)
         {
             ParentModel = parent;

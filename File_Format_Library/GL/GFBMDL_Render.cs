@@ -267,6 +267,11 @@ namespace FirstPlugin
 
         private static void SetTextureUniforms(GFLXMaterialData mat, GFLXMesh m, ShaderProgram shader)
         {
+            if (!mat.HasVertexColors())
+                shader.SetBoolToInt("renderVertColor", false);
+            else
+                shader.SetBoolToInt("renderVertColor", Runtime.renderVertColor);
+
             SetDefaultTextureAttributes(mat, shader);
 
             GL.ActiveTexture(TextureUnit.Texture0 + 1);
