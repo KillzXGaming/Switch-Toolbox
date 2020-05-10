@@ -268,7 +268,7 @@ namespace FirstPlugin
                     fy,
                     fz };
 
-                int[] qmap = QUATERNION_SWIZZLES[(extra & 0b11)];
+                int[] qmap = QUATERNION_SWIZZLES[(extra & 3)];
                 Quaternion q = new Quaternion(quat[qmap[0]], quat[qmap[1]], quat[qmap[2]], quat[qmap[3]]);
                 if ((extra >> 2) != 0) q *= -1;
 
