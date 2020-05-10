@@ -255,6 +255,11 @@ namespace Toolbox.Library.Forms
 
             var node = treeViewCustom1.SelectedNode;
 
+            if (node is Animation || node is IAnimationContainer) {
+                OnAnimationSelected(node);
+                return;
+            }
+
             //Set the current index used determine what bone is selected.
             //Update viewport for selection viewing
             if (node is STBone)
@@ -472,7 +477,6 @@ namespace Toolbox.Library.Forms
             }
             else
             {
-                OnAnimationSelected(e.Node);
             }
         }
 
