@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using System.IO;
 using Toolbox.Library.IO;
-using Toolbox.Library.Forms;
+using Toolbox.Library.Animations;
 
 namespace FirstPlugin
 {
@@ -142,6 +142,8 @@ namespace FirstPlugin
                         folder = new TextureFolder(this, "Textures");
                     if (folderName == "Models")
                         folder = new ModelFolder("Models");
+                    if (folderName == "Animations")
+                        folder = new AnimationFolder("Animations");
 
                     node.Nodes.Add(folder);
                     folders.Add(folderName, folder);
@@ -252,6 +254,50 @@ namespace FirstPlugin
                 Nodes.AddRange(models.ToArray());
 
                 HasExpanded = true;
+            }
+        }
+
+        public class AnimationFolder : QuickAccessFileFolder, IContextMenuNode
+        {
+            public AnimationFolder(string text) : base(text) {
+            }
+
+            public virtual ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
+                return Items.ToArray();
+            }
+
+            private void ExportAllAction(object sender, EventArgs args)
+            {
+                OnExpand();
+
+                List<string> Formats = new List<string>();
+                Formats.Add("SMD (.smd)");
+
+                FolderSelectDialog sfd = new FolderSelectDialog();
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    string folderPath = sfd.SelectedPath;
+
+                    BatchFormatExport form = new BatchFormatExport(Formats);
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (TreeNode node in Nodes)
+                        {
+                            Console.WriteLine($"node {node}");
+                            if (!(node is IAnimationContainer))
+                                continue;
+
+                            var anim = ((IAnimationContainer)node).AnimationController;
+
+                         //   if (form.Index == 0)
+                                SMD.Save((STSkeletonAnimation)anim, $"{folderPath}/{node.Text}.smd");
+                        }
+                    }
+                }
             }
         }
 
