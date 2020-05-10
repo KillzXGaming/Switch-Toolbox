@@ -3,6 +3,8 @@ configuration: Release
 version: 1.0.{build}
 environment:
   name: Toolbox
+image:
+  - Visual Studio 2017
 build:
   project: Toolbox.sln
   verbosity: minimal
@@ -20,9 +22,7 @@ deploy:
   artifact: Toolbox-Latest.zip
   draft: false
   prerelease: true
-  force_update: true
-  
-  
+  force_update: true  
   
 after_build:
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Toolbox.exe.config"
