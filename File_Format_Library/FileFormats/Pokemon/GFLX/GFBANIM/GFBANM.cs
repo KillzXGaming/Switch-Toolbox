@@ -142,10 +142,11 @@ namespace FirstPlugin
 
             public override void NextFrame()
             {
-                if (Frame > FrameCount) return;
+                if (Frame > FrameCount || ActiveModel == null) return;
 
-                var skeleton = GetActiveSkeleton();
-                if (skeleton == null) return;
+                var skeleton = ActiveModel.Model.Skeleton;
+                if (skeleton == null)
+                    return;
 
                 if (Frame == 0)
                     skeleton.reset();
