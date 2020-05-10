@@ -231,7 +231,10 @@ namespace FirstPlugin
                 return u15;
             }
 
-            static int[][] QUATERNION_SWIZZLES = { new int[] { 0, 3, 2, 1 }, new int[] { 3, 0, 2, 1 }, new int[] { 3, 2, 0, 1 }, new int[] { 3, 2, 1, 0 } };
+            static int[][] QUATERNION_SWIZZLES =  {
+                  new int[] { 0, 3, 2, 1 }, new int[] { 3, 0, 2, 1 },
+                  new int[] { 3, 2, 0, 1 }, new int[] { 3, 2, 1, 0 }
+            };
 
             private static Quaternion PackedToQuat(short z, short y, short x)
             {
@@ -265,7 +268,7 @@ namespace FirstPlugin
                     fy,
                     fz };
 
-                int[] qmap = QUATERNION_SWIZZLES[(int)(extra & 0b11)];
+                int[] qmap = QUATERNION_SWIZZLES[(extra & 0b11)];
                 Quaternion q = new Quaternion(quat[qmap[0]], quat[qmap[1]], quat[qmap[2]], quat[qmap[3]]);
                 if ((extra >> 2) != 0) q *= -1;
 
