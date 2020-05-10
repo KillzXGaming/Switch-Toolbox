@@ -406,6 +406,12 @@ namespace Toolbox.Library.Forms
                     node = (IContextMenuNode)e.Node.Tag;
                 }
 
+                if (e.Node is IAnimationContainer) {
+                    var anim = ((IAnimationContainer)e.Node).AnimationController;
+                    if (anim is IContextMenuNode)
+                        node = (IContextMenuNode)anim;
+                }
+
                 if (node != null)
                 {
                     if (IsRoot)

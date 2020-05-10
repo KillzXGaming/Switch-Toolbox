@@ -141,6 +141,13 @@ namespace FirstPlugin
                 }
             }
 
+            public override STSkeleton GetActiveSkeleton()
+            {
+                if (ActiveModel == null) return null;
+
+                return ActiveModel.Model.Skeleton;
+            }
+
             public override void NextFrame()
             {
                 if (Frame > FrameCount || ActiveModel == null) return;

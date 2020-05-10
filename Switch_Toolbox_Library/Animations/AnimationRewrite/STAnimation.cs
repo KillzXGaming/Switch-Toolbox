@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
+using Toolbox.Library.Forms;
 
 namespace Toolbox.Library.Animations
 {
@@ -31,7 +32,7 @@ namespace Toolbox.Library.Animations
     /// <summary>
     /// Represents a class for animating
     /// </summary>
-    public class STAnimation
+    public class STAnimation 
     {
         /// <summary>
         /// The name of the animation.

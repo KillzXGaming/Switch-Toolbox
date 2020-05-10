@@ -281,6 +281,51 @@ namespace Toolbox.Library.Animations
             return a;
         }
 
+        public static void Save(STSkeletonAnimation anim, String Fname)
+        {
+            System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+
+            STSkeleton Skeleton = anim.GetActiveSkeleton();
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@Fname))
+            {
+                file.WriteLine("version 1");
+
+                file.WriteLine("nodes");
+                foreach (STBone b in Skeleton.bones)
+                {
+                    file.WriteLine(Skeleton.bones.IndexOf(b) + " \"" + b.Text + "\" " + b.parentIndex);
+                }
+                file.WriteLine("end");
+
+                file.WriteLine("skeleton");
+                anim.SetFrame(0);
+                for (int i = 0; i <= anim.FrameCount; i++)
+                {
+                    anim.SetFrame(i);
+                    anim.NextFrame();
+
+                    file.WriteLine($"time {i}");
+
+                    foreach (var sb in anim.AnimGroups)
+                    {
+                        STBone b = Skeleton.GetBone(sb.Name);
+                        if (b == null) continue;
+                        Vector3 eul = STMath.ToEulerAngles(b.rot);
+                        Vector3 scale = b.GetScale();
+                        Vector3 translate = b.GetPosition();
+
+                        file.WriteLine($"{ Skeleton.bones.IndexOf(b)} {translate.X} {translate.Y} {translate.Z} {eul.X} {eul.Y} {eul.Z}");
+                    }
+
+                }
+                file.WriteLine("end");
+
+                file.Close();
+            }
+        }
+
         public static void Save(Animation anim, STSkeleton Skeleton, String Fname)
         {
             System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();

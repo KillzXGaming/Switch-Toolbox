@@ -157,6 +157,7 @@
             // 
             // stToolStrip1
             // 
+            this.stToolStrip1.HighlightSelectedTab = false;
             this.stToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.searchFormToolStrip});
@@ -224,6 +225,7 @@
             // objectEditorMenu
             // 
             this.objectEditorMenu.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.objectEditorMenu.HighlightSelectedTab = false;
             this.objectEditorMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.viewToolStripMenuItem});
