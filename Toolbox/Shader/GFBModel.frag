@@ -127,7 +127,7 @@ void main()
     vert.tangent = tangent;
     vert.binormal = binormal;
 
-	float specIntensity = 0.5f;
+	float specIntensity = 0.1f;
 
     // Wireframe color.
     if (colorOverride == 1)
@@ -196,6 +196,8 @@ void main()
     vec3 diffuseTerm = diffuseIblColor * albedo;
     diffuseTerm *= kD;
     diffuseTerm *= ao;
+    diffuseTerm *= 1.1f;
+
 
     // Adjust for metalness.
     diffuseTerm *= clamp(1 - metallic, 0, 1);
