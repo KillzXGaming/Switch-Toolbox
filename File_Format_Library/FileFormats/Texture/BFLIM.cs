@@ -629,7 +629,6 @@ namespace FirstPlugin
             using (var writer = new FileWriter(stream, true))
             {
                 writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                writer.CheckByteOrderMark(header.ByteOrderMark);
 
                 writer.Write(ImageData);
 
@@ -677,10 +676,7 @@ namespace FirstPlugin
             public void Write(FileWriter writer)
             {
                 writer.WriteSignature("FLIM");
-                if (writer.ByteOrder != Syroot.BinaryData.ByteOrder.LittleEndian)
-                    writer.Write((ushort)0xFFFE);
-                else
-                    writer.Write((ushort)0xFEFF);
+                writer.Write((ushort)0xFEFF);
                 writer.Write(HeaderSize);
                 writer.Write(Version);
                 writer.Write(uint.MaxValue);
