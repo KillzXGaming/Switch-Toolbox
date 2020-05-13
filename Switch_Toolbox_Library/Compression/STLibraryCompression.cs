@@ -158,7 +158,10 @@ namespace Toolbox.Library.IO
                     section_sizes = new uint[sectionCount];
                     for (int i = 0; i < sectionCount; i++)
                     {
-                        byte[] chunk = ZLIB.Compress(reader.ReadBytes(0x10000));
+                        var encoding = new ZlibCodec();
+                        encoding.InitializeDeflate(CompressionLevel.BestCompression);
+                        byte[] chunk = ZlibStream.CompressBuffer(reader.ReadBytes(0x10000));
+                        encoding.EndDeflate();
 
                         section_sizes[i] = (uint)chunk.Length;
 
