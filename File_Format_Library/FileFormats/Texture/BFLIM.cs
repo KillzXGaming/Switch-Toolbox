@@ -92,6 +92,8 @@ namespace FirstPlugin
 
         private void UpdateForm(ImageEditorBase form)
         {
+            if (form == null) return;
+
             if (image != null)
             {
                 Properties prop = new Properties();
@@ -331,6 +333,9 @@ namespace FirstPlugin
                 ImageData = ftex.texture.Data;
 
                 LoadComponents(Format, ftex.UseBc4Alpha);
+
+                if (RenderableTex != null) //Reload bflim in opengl if used
+                    LoadOpenGLTexture();
 
                 UpdateForm();
             }

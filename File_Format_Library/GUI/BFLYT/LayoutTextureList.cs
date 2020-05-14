@@ -374,9 +374,15 @@ namespace LayoutBXLYT
                 if (texture == null)
                     return;
 
+                Console.WriteLine("texture edited!");
+
                 TextureList[textName] = texture;
                 //Update the icon by reloading all of them
+
+                Console.WriteLine("LoadTextures!");
                 LoadTextures(ParentEditor, ActiveLayout, TextureList);
+                Console.WriteLine("FIN!");
+
             }
         }
 
