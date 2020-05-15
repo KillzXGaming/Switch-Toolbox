@@ -50,6 +50,9 @@ namespace Bfres.Structs
 
         public override void OnDoubleMouseClick(TreeView treeview)
         {
+            if (this.AnimType != AnimationType.TexturePattern)
+                return;
+
             var ParentFolder = this.Parent;
 
             BfresTexturePatternEditor form = new BfresTexturePatternEditor(ParentFolder.Nodes);
