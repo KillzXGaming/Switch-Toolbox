@@ -257,7 +257,6 @@ namespace Toolbox.Library.Forms
 
             if (node is Animation || node is IAnimationContainer) {
                 OnAnimationSelected(node);
-                return;
             }
 
             //Set the current index used determine what bone is selected.

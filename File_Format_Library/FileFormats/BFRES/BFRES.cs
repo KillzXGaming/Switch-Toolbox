@@ -417,6 +417,8 @@ namespace FirstPlugin
         private bool DrawablesLoaded = false;
         public void LoadEditors(object SelectedSection)
         {
+            Console.WriteLine($"SelectedSection {SelectedSection}");
+
             BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
             bool HasModels = false;
             bool hasShapes = HasShapes();
@@ -619,7 +621,6 @@ namespace FirstPlugin
             }
             else
             {
-       
                 if (SelectedSection is BFRES)
                 {
                     STPropertyGrid editor = (STPropertyGrid)bfresEditor.GetActiveEditor(typeof(STPropertyGrid));
