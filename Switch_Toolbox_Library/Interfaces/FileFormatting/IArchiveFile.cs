@@ -973,18 +973,17 @@ namespace Toolbox.Library
                 {
                     var prevNode = (TreeNode)ArchiveFileInfo.FileFormat;
                     var parent = prevNode.Parent;
-                    if (parent == null) return;
-
-                    var index = parent.Nodes.IndexOf(prevNode);
-                    parent.Nodes.RemoveAt(index);
-                    parent.Nodes.Insert(index, this);
+                    if (parent != null)
+                    {
+                        var index = parent.Nodes.IndexOf(prevNode);
+                        parent.Nodes.RemoveAt(index);
+                        parent.Nodes.Insert(index, this);
+                    }
                 }
 
                 ArchiveFileInfo.FileFormat.Unload();
                 ArchiveFileInfo.FileFormat = null;
                 Nodes.Clear();
-
-                ArchiveFileInfo.FileFormat = ArchiveFileInfo.OpenFile();
                 OpenFileFormat(TreeView);
             }
 
@@ -1141,6 +1140,9 @@ namespace Toolbox.Library
 
         public void UpdateEditor()
         {
+            if (ArchiveFileInfo.FileFormat != null)
+                Console.WriteLine($"UpdateEditor {ArchiveFileInfo.FileFormat.FileName}");
+
             ArchiveFilePanel editor = (ArchiveFilePanel)LibraryGUI.GetActiveContent(typeof(ArchiveFilePanel));
             if (editor == null)
             {
