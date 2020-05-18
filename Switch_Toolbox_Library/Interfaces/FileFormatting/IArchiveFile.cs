@@ -984,7 +984,7 @@ namespace Toolbox.Library
                 ArchiveFileInfo.FileFormat = null;
                 Nodes.Clear();
 
-                ArchiveFileInfo.OpenFile();
+                ArchiveFileInfo.FileFormat = ArchiveFileInfo.OpenFile();
                 OpenFileFormat(TreeView);
             }
 
