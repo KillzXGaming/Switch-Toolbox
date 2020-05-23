@@ -105,9 +105,8 @@ namespace FirstPlugin
                     IsTexturesLoaded = true;
                     foreach (var file in ArchiveFile.Files)
                     {
-                        if (Utils.GetExtension(file.FileName) == ".cbntx")
+                        if (Utils.GetExtension(file.FileName) == ".ctex")
                         {
-                            Console.WriteLine($"Opening cbntx {file.FileName}");
                             file.FileFormat = file.OpenFile();
                         }
                     }
@@ -175,7 +174,9 @@ namespace FirstPlugin
             List<byte> Data = new List<byte>();
             for (ushort i = 0; i < header.FATB.FileCount; i++)
             {
-                FileEntries.Add(new FileEntry(this, names[i])
+                string name = names.Count > i ? names[i] : $"File{i}";
+
+                FileEntries.Add(new FileEntry(this, name)
                 {
                     entry = header.FATB.FileEntries[i],
                     fileImage = header.FIMG,
@@ -314,6 +315,11 @@ namespace FirstPlugin
 
                 reader.ReadSignature(4, "BTNF");
                 Size = reader.ReadUInt32();
+                if (Size == 16)
+                {
+                    reader.Seek(8);
+                    return;
+                }
 
                 directoryTable.Add(new DirectoryTableEntry(reader));
 
