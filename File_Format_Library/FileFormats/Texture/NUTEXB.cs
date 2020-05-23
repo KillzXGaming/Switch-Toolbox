@@ -272,52 +272,26 @@ namespace FirstPlugin
             if (tex.Texture == null)
                 return;
 
-            var surfacesNew = tex.GetSurfaces();
-            var surfaces = GetSurfaces();
-
-            if (LimitFileSize)
-            {
-                if (surfaces[0].mipmaps[0].Length < surfacesNew[0].mipmaps[0].Length)
-                {
-                    if (surfaces[0].mipmaps[0].Length != surfacesNew[0].mipmaps[0].Length)
-                        throw new Exception($"Image must be the same size! {surfaces[0].mipmaps[0].Length}");
-
-                    if (mipSizes[0].Length != surfacesNew[0].mipmaps.Count)
-                        throw new Exception($"Mip map count must be the same! {mipSizes[0].Length}");
-
-                    if (Width != tex.Texture.Width || Height != tex.Texture.Height)
-                        throw new Exception("Image size must be the same!");
-                }
-
-                Width = tex.Texture.Width;
-                Height = tex.Texture.Height;
-                MipCount = tex.Texture.MipCount;
-            }
-            else
-            {
-                Width = tex.Texture.Width;
-                Height = tex.Texture.Height;
-                MipCount = tex.Texture.MipCount;
-                ArrayCount = tex.Texture.ArrayLength;
-                Depth = tex.Texture.Depth;
-
-                Format = tex.Format;
-                NutFormat = ConvertGenericToNutFormat(tex.Format);
-
-                mipSizes = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length);
-            }
-
             List<byte[]> data = new List<byte[]>();
             foreach (var array in tex.Texture.TextureData)
                 data.Add(array[0]);
 
             var output = Utils.CombineByteArray(data.ToArray());
+
+            Width = tex.Texture.Width;
+            Height = tex.Texture.Height;
+            MipCount = tex.Texture.MipCount;
+           // ArrayCount = tex.Texture.ArrayLength;
+           // Depth = tex.Texture.Depth;
+
+            Format = tex.Format;
+            NutFormat = ConvertGenericToNutFormat(tex.Format);
+
+            mipSizes = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length);
+
             ImageData = SetImageData(output);
 
             data.Clear();
-            surfacesNew.Clear();
-            surfaces.Clear();
-
             UpdateEditor();
         }
 
