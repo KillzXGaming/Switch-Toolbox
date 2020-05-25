@@ -265,7 +265,7 @@ namespace Toolbox.Library.Forms
             FileWatcher = new FileSystemWatcher();
             FileWatcher.Path = Path.GetTempPath();
             FileWatcher.NotifyFilter = NotifyFilters.Size | NotifyFilters.LastAccess | NotifyFilters.LastWrite;
-            FileWatcher.EnableRaisingEvents = false;
+            FileWatcher.EnableRaisingEvents = true;
             FileWatcher.Changed += new FileSystemEventHandler(OnFileWatcherChanged);
             FileWatcher.Filter = "";
         }
