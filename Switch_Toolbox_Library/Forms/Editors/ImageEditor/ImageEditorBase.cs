@@ -265,7 +265,7 @@ namespace Toolbox.Library.Forms
             FileWatcher = new FileSystemWatcher();
             FileWatcher.Path = Path.GetTempPath();
             FileWatcher.NotifyFilter = NotifyFilters.Size | NotifyFilters.LastAccess | NotifyFilters.LastWrite;
-            FileWatcher.EnableRaisingEvents = true;
+            FileWatcher.EnableRaisingEvents = false;
             FileWatcher.Changed += new FileSystemEventHandler(OnFileWatcherChanged);
             FileWatcher.Filter = "";
         }
@@ -1099,11 +1099,9 @@ namespace Toolbox.Library.Forms
                     SaveAndApplyImage(new Bitmap(FileName), DecodeTextureBack);
                 }
             }
-            else
-            {
-                FileWatcher.Filter = "";
-                FileWatcher.EnableRaisingEvents = false;
-            }
+
+            FileWatcher.Filter = "";
+            FileWatcher.EnableRaisingEvents = false;
         }
 
         public void SaveAndApplyImage(Bitmap image, bool DecodeBack)
