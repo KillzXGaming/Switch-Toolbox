@@ -1921,13 +1921,21 @@ namespace FirstPlugin
                     if (bntx.Textures.Count == 0)
                         return;
 
+                    List<string> textureList = new List<string>();
                     foreach (MatTexture tex in shape.GetMaterial().TextureMaps)
                     {
-                        if (!bntx.Textures.ContainsKey(tex.Name))
+                        if (!bntx.Textures.ContainsKey(tex.Name) && !textureList.Contains(tex.Name))
+                            textureList.Add(tex.Name);
+                    }
+
+                    foreach (var tex in textureList)
+                    {
+                        if (!bntx.Textures.ContainsKey(tex))
                         {
                             if (!ImportMissingTextures)
                             {
-                                DialogResult result = MessageBox.Show("Missing textures found! Would you like to use placeholders?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                string textureDetails = string.Join("\n",textureList);
+                                DialogResult result = MessageBox.Show($"Missing textures found! Would you like to use placeholders?\nTextures:\n{textureDetails}", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                                 if (result == DialogResult.Yes)
                                 {
@@ -1938,7 +1946,10 @@ namespace FirstPlugin
                             }
 
                             if (ImportMissingTextures)
-                                bntx.ImportPlaceholderTexture(tex.Name);
+                            {
+                                foreach (var texture in textureList)
+                                    bntx.ImportPlaceholderTexture(texture);
+                            }
                         }
                     }
                 }

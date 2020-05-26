@@ -33,7 +33,7 @@ namespace Toolbox.Library
             return false;
         }
 
-        public bool CanCompress { get; } = true;
+        public bool CanCompress { get; } = false;
 
         private bool UseLZMAMagicHeader = true;
 
