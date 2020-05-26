@@ -491,7 +491,42 @@ namespace Toolbox.Library.Forms
                 if (File.Exists(path))
                     menuItems.Add(new ToolStripMenuItem("Open In Explorer", null, SelectFileInExplorer, Keys.Control | Keys.Q));
             }
+
+            Keys currentKey = Keys.A;
+            List<Keys> shortcuts = new List<Keys>();
+            foreach (ToolStripItem item in menuItems)
+            {
+                if (item is ToolStripMenuItem) {
+                    var menu = item as ToolStripMenuItem;
+                    CheckDuplicateShortcuts(menu, currentKey, shortcuts);
+                }
+            }
+
             return menuItems.ToArray();
+        }
+
+        private void CheckDuplicateShortcuts(ToolStripMenuItem menu, Keys current, List<Keys> shortcuts)
+        {
+            if (menu.ShowShortcutKeys)
+            {
+                if (!shortcuts.Contains(menu.ShortcutKeys))
+                    shortcuts.Add(menu.ShortcutKeys);
+                else
+                {
+                    //Auto set the key
+                    var controlKey = Keys.Control | current;
+                    if (!shortcuts.Contains(controlKey))
+                    {
+                        shortcuts.Add(controlKey);
+                        menu.ShortcutKeys = controlKey;
+                    }
+                    else
+                    {
+                        menu.ShortcutKeys = Keys.Control | current++;
+                        CheckDuplicateShortcuts(menu, current, shortcuts);
+                    }
+                }
+            }
         }
 
         private IFileFormat TryGetActiveFile(TreeNode node)
