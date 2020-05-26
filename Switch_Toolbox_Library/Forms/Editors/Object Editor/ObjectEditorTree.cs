@@ -377,99 +377,8 @@ namespace Toolbox.Library.Forms
             {
                 treeNodeContextMenu.Items.Clear();
 
-                List<ToolStripItem> archiveMenus = new List<ToolStripItem>();
-                List<ToolStripItem> menuItems = new List<ToolStripItem>();
-
-                Console.WriteLine($"tag {e.Node.Tag }");
-                if (e.Node.Tag != null && e.Node.Tag is ArchiveFileInfo)
-                {
-                    //The tag gets set when an archive is replaced by a treenode
-                    //Todo store this in a better place as devs could possiblly replace this
-                    //Create menus when an archive node is replaced
-                    archiveMenus.AddRange(GetArchiveMenus(e.Node, (ArchiveFileInfo)e.Node.Tag));
-                    Console.WriteLine($"archiveMenus {archiveMenus.Count}");
-                }
-
-                if (e.Node is IExportableModel) {
-                    menuItems.Add(new ToolStripMenuItem("Export Model", null, ExportModelAction, Keys.Control | Keys.E));
-                }
-
-                bool IsRoot = e.Node.Parent == null;
-                bool HasChildren = e.Node.Nodes.Count > 0;
-
-                IContextMenuNode node = null;
-                if (e.Node is IContextMenuNode) {
-                    node = (IContextMenuNode)e.Node;
-                }
-                else if (e.Node.Tag != null && e.Node.Tag is IContextMenuNode) {
-                    node = (IContextMenuNode)e.Node.Tag;
-                }
-
-                if (e.Node is IAnimationContainer) {
-                    var anim = ((IAnimationContainer)e.Node).AnimationController;
-                    if (anim is IContextMenuNode)
-                        node = (IContextMenuNode)anim;
-                }
-
-                if (node != null)
-                {
-                    if (IsRoot)
-                    {
-                        foreach (var item in node.GetContextMenuItems())
-                        {
-                            if (item.Text != "Delete" && item.Text != "Remove")
-                                menuItems.Add(item);
-                        }
-                        menuItems.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.Delete));
-                    }
-                    else
-                    {
-                        menuItems.AddRange(node.GetContextMenuItems());
-                    }
-
-                    bool HasCollpase = false;
-                    bool HasExpand = false;
-                    foreach (var item in node.GetContextMenuItems())
-                    {
-                        if (item.Text == "Collapse All")
-                            HasCollpase = true;
-                        if (item.Text == "Expand All")
-                            HasExpand = true;
-                    }
-
-                    if (!HasCollpase && HasChildren)
-                        menuItems.Add(new ToolStripMenuItem("Collapse All", null, CollapseAllAction, Keys.Control | Keys.Q));
-
-                    if (!HasExpand && HasChildren)
-                        menuItems.Add(new ToolStripMenuItem("Expand All", null, ExpandAllAction, Keys.Control | Keys.P));
-                }
-
-                if (archiveMenus.Count > 0)
-                {
-                    if (menuItems.Count > 0)
-                    {
-                        STToolStipMenuItem archiveItem = new STToolStipMenuItem("Archive");
-                        treeNodeContextMenu.Items.Add(archiveItem);
-
-                        foreach (var item in archiveMenus)
-                            archiveItem.DropDownItems.Add(item);
-                    }
-                    else
-                    {
-                        if (archiveMenus.Count > 0)
-                            treeNodeContextMenu.Items.AddRange(archiveMenus.ToArray());
-                    }
-                }
-
-                var fileFormat = TryGetActiveFile(e.Node);
-                if (fileFormat != null)
-                {
-                    string path = fileFormat.FilePath;
-                    if (File.Exists(path))
-                        menuItems.Add(new ToolStripMenuItem("Open In Explorer", null, SelectFileInExplorer, Keys.Control | Keys.Q));
-                }
-
-                treeNodeContextMenu.Items.AddRange(menuItems.ToArray());
+                var menuItems = GetMenuItems(e.Node);
+                treeNodeContextMenu.Items.AddRange(menuItems);
 
                 //Select the node without the evemt
                 //We don't want editors displaying on only right clicking
@@ -483,6 +392,106 @@ namespace Toolbox.Library.Forms
             else
             {
             }
+        }
+
+        private ToolStripItem[] GetMenuItems(TreeNode selectednode)
+        {
+            List<ToolStripItem> archiveMenus = new List<ToolStripItem>();
+            List<ToolStripItem> menuItems = new List<ToolStripItem>();
+
+            Console.WriteLine($"tag {selectednode.Tag }");
+            if (selectednode.Tag != null && selectednode.Tag is ArchiveFileInfo)
+            {
+                //The tag gets set when an archive is replaced by a treenode
+                //Todo store this in a better place as devs could possiblly replace this
+                //Create menus when an archive node is replaced
+                archiveMenus.AddRange(GetArchiveMenus(selectednode, (ArchiveFileInfo)selectednode.Tag));
+                Console.WriteLine($"archiveMenus {archiveMenus.Count}");
+            }
+
+            if (selectednode is IExportableModel)
+            {
+                menuItems.Add(new ToolStripMenuItem("Export Model", null, ExportModelAction, Keys.Control | Keys.E));
+            }
+
+            bool IsRoot = selectednode.Parent == null;
+            bool HasChildren = selectednode.Nodes.Count > 0;
+
+            IContextMenuNode node = null;
+            if (selectednode is IContextMenuNode)
+            {
+                node = (IContextMenuNode)selectednode;
+            }
+            else if (selectednode.Tag != null && selectednode.Tag is IContextMenuNode)
+            {
+                node = (IContextMenuNode)selectednode.Tag;
+            }
+
+            if (selectednode is IAnimationContainer)
+            {
+                var anim = ((IAnimationContainer)selectednode).AnimationController;
+                if (anim is IContextMenuNode)
+                    node = (IContextMenuNode)anim;
+            }
+
+            if (node != null)
+            {
+                if (IsRoot)
+                {
+                    foreach (var item in node.GetContextMenuItems())
+                    {
+                        if (item.Text != "Delete" && item.Text != "Remove")
+                            menuItems.Add(item);
+                    }
+                    menuItems.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Delete));
+                }
+                else
+                {
+                    menuItems.AddRange(node.GetContextMenuItems());
+                }
+
+                bool HasCollpase = false;
+                bool HasExpand = false;
+                foreach (var item in node.GetContextMenuItems())
+                {
+                    if (item.Text == "Collapse All")
+                        HasCollpase = true;
+                    if (item.Text == "Expand All")
+                        HasExpand = true;
+                }
+
+                if (!HasCollpase && HasChildren)
+                    menuItems.Add(new ToolStripMenuItem("Collapse All", null, CollapseAllAction, Keys.Control | Keys.Q));
+
+                if (!HasExpand && HasChildren)
+                    menuItems.Add(new ToolStripMenuItem("Expand All", null, ExpandAllAction, Keys.Control | Keys.P));
+            }
+
+            if (archiveMenus.Count > 0)
+            {
+                if (menuItems.Count > 0)
+                {
+                    STToolStipMenuItem archiveItem = new STToolStipMenuItem("Archive");
+                    treeNodeContextMenu.Items.Add(archiveItem);
+
+                    foreach (var item in archiveMenus)
+                        archiveItem.DropDownItems.Add(item);
+                }
+                else
+                {
+                    if (archiveMenus.Count > 0)
+                        treeNodeContextMenu.Items.AddRange(archiveMenus.ToArray());
+                }
+            }
+
+            var fileFormat = TryGetActiveFile(selectednode);
+            if (fileFormat != null)
+            {
+                string path = fileFormat.FilePath;
+                if (File.Exists(path))
+                    menuItems.Add(new ToolStripMenuItem("Open In Explorer", null, SelectFileInExplorer, Keys.Control | Keys.Q));
+            }
+            return menuItems.ToArray();
         }
 
         private IFileFormat TryGetActiveFile(TreeNode node)
@@ -983,23 +992,13 @@ namespace Toolbox.Library.Forms
         {
             if (treeViewCustom1.SelectedNode == null) return;
 
-            IContextMenuNode node = null;
-            if (treeViewCustom1.SelectedNode is IContextMenuNode) {
-                node = (IContextMenuNode)treeViewCustom1.SelectedNode;
-            }
-            else if (treeViewCustom1.SelectedNode.Tag != null && treeViewCustom1.SelectedNode.Tag is IContextMenuNode) {
-                node = (IContextMenuNode)treeViewCustom1.SelectedNode.Tag;
-            }
-
-            if (node != null) {
-                var Items = node.GetContextMenuItems();
-                foreach (ToolStripItem toolstrip in Items)
+            var Items = GetMenuItems(treeViewCustom1.SelectedNode);
+            foreach (ToolStripItem toolstrip in Items)
+            {
+                if (toolstrip is ToolStripMenuItem)
                 {
-                    if (toolstrip is ToolStripMenuItem)
-                    {
-                        if (((ToolStripMenuItem)toolstrip).ShortcutKeys == e.KeyData)
-                            toolstrip.PerformClick();
-                    }
+                    if (((ToolStripMenuItem)toolstrip).ShortcutKeys == e.KeyData)
+                        toolstrip.PerformClick();
                 }
             }
         }
