@@ -35,11 +35,19 @@ namespace Toolbox.Library.Animations
         private void ExportAction(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "SMD |*.smd;";
-            sfd.DefaultExt = "smd";
+            sfd.Filter = "Supported Formats|*.smd; *.seanim;|" +
+                                "SMD |*.smd|" +
+                                "SEANIM |*.seanim|" +
+                                "All files(*.*)|*.*";
+
+            sfd.DefaultExt = "seanim";
             sfd.FileName = Name;
             if (sfd.ShowDialog() == DialogResult.OK) {
-                SMD.Save(this, sfd.FileName);
+                string ext = Utils.GetExtension(sfd.FileName);
+                if (ext == ".smd")
+                    SMD.Save(this, sfd.FileName);
+                 if (ext == ".seanim")
+                    SEANIM.Save(this, sfd.FileName);
             }
         }
     }

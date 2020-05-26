@@ -275,6 +275,7 @@ namespace FirstPlugin
 
                 List<string> Formats = new List<string>();
                 Formats.Add("SMD (.smd)");
+                Formats.Add("SEANIM (.seanim)");
 
                 FolderSelectDialog sfd = new FolderSelectDialog();
 
@@ -292,9 +293,12 @@ namespace FirstPlugin
                                 continue;
 
                             var anim = ((IAnimationContainer)node).AnimationController;
+                            string name = Path.GetFileNameWithoutExtension(node.Text);
 
-                         //   if (form.Index == 0)
-                                SMD.Save((STSkeletonAnimation)anim, $"{folderPath}/{node.Text}.smd");
+                            if (form.Index == 0)
+                                SMD.Save((STSkeletonAnimation)anim, $"{folderPath}/{name}.smd");
+                            if (form.Index == 1)
+                                SEANIM.Save((STSkeletonAnimation)anim, $"{folderPath}/{name}.seanim");
                         }
                     }
                 }

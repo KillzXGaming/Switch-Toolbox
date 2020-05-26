@@ -1,5 +1,6 @@
 ﻿using SELib;
 using OpenTK;
+using System.Linq;
 
 namespace Toolbox.Library.Animations
 {
@@ -166,6 +167,41 @@ namespace Toolbox.Library.Animations
             }
         }
 
+        public static void Save(STSkeletonAnimation anim, string FileName)
+        {
+            STSkeleton skeleton = anim.GetActiveSkeleton();
+
+            SEAnim seAnim = new SEAnim();
+            seAnim.Looping = anim.Loop;
+            seAnim.AnimType = AnimationType.Absolute;
+
+            anim.SetFrame(0);
+            for (int frame = 0; frame < anim.FrameCount; frame++)
+            {
+                anim.SetFrame(frame);
+                anim.NextFrame();
+
+                foreach (STAnimGroup boneAnim in anim.AnimGroups)
+                {
+                    if (boneAnim.GetTracks().Any(x => x.HasKeys))
+                    {
+                        STBone bone = skeleton.GetBone(boneAnim.Name);
+                        if (bone == null) continue;
+
+                        Vector3 position = bone.GetPosition();
+                        Quaternion rotation = bone.GetRotation();
+                        Vector3 scale = bone.GetScale();
+
+                        seAnim.AddTranslationKey(boneAnim.Name, frame, position.X, position.Y, position.Z);
+                        seAnim.AddRotationKey(boneAnim.Name, frame, rotation.X, rotation.Y, rotation.Z, rotation.W);
+                        seAnim.AddScaleKey(boneAnim.Name, frame, scale.X, scale.Y, scale.Z);
+                    }
+                }
+            }
+
+            seAnim.Write(FileName);
+        }
+
         public static void SaveAnimation(string FileName, Animation anim, STSkeleton skeleton)
         {
             anim.SetFrame(anim.FrameCount - 1); //from last frame
@@ -178,8 +214,6 @@ namespace Toolbox.Library.Animations
                 if (anim.HasBone(b.Text))
                 {
                     Animation.KeyNode n = anim.GetBone(b.Text);
-                    
-
                     if (n.XPOS.HasAnimation())
                         WriteKey(n.XPOS);
                     if (n.YPOS.HasAnimation())
