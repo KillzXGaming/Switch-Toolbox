@@ -88,6 +88,7 @@ namespace Toolbox.Library
             }
 
             string TexturePath = System.IO.Path.GetDirectoryName(FileName);
+            Dictionary<string, STGenericMaterial> MaterialRemapper = new Dictionary<string, STGenericMaterial>();
 
             using (ColladaWriter writer = new ColladaWriter(FileName, settings))
             {
@@ -147,6 +148,18 @@ namespace Toolbox.Library
                     {
                         Material material = new Material();
                         material.Name = mat.Text;
+
+                        if (!MaterialRemapper.ContainsKey(mat.Text))
+                        {
+                            MaterialRemapper.Add(mat.Text, mat);
+                        }
+                        else
+                        {
+                            string name = Utils.RenameDuplicateString(MaterialRemapper.Keys.ToList(), mat.Text);
+                            MaterialRemapper.Add(name, mat);
+                            material.Name = name;
+                        }
+
                         materials.Add(material);
 
                         foreach (var tex in mat.TextureMaps)
@@ -408,8 +421,6 @@ namespace Toolbox.Library
                             if (b > mesh.VertexSkinCount - 1)
                                 continue;
 
-
-
                             if (vertex.boneWeights.Count > b)
                             {
                                 if (vertex.boneWeights[b] == 0)
@@ -467,11 +478,21 @@ namespace Toolbox.Library
                           
                             triangleLists.Add(triangleList);
 
+                            STGenericMaterial material = new STGenericMaterial();
+
                             if (group.MaterialIndex != -1 && Materials.Count > group.MaterialIndex)
-                                triangleList.Material = Materials[group.MaterialIndex].Text;
+                                material = Materials[group.MaterialIndex];
 
                             if (group.Material != null)
-                                triangleList.Material = group.Material.Text;
+                                material = group.Material;
+
+                            if (MaterialRemapper.Values.Any(x => x == material))
+                            {
+                                var key = MaterialRemapper.FirstOrDefault(x => x.Value == material).Key;
+                                triangleList.Material = key;
+                            }
+                            else if (material.Text != string.Empty)
+                                triangleList.Material = material.Text;
 
                             List<int> faces = new List<int>();
                             if (group.PrimativeType == STPrimitiveType.TrangleStrips)
