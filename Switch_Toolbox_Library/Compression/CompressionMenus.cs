@@ -19,32 +19,33 @@ namespace Toolbox.Library.IO
         private List<ToolStripMenuItem> MenuItems()
         {
             var items = new List<ToolStripMenuItem>();
-
-            items.Add(new ToolStripMenuItem("Yaz0"));
-            items.Add(new ToolStripMenuItem("Gzip"));
-            items.Add(new ToolStripMenuItem("LZSS"));
-            items.Add(new ToolStripMenuItem("lZMA"));
-            items.Add(new ToolStripMenuItem("lZ4"));
-            items.Add(new ToolStripMenuItem("lZ4F"));
-            items.Add(new ToolStripMenuItem("ZSTD"));
-            items.Add(new ToolStripMenuItem("ZLIB"));
-            items.Add(new ToolStripMenuItem("ZLIB_GZ (Hyrule Warriors)"));
-
-            SetFunctions(items);
+            items.Add(CreateMenu("Yaz0"));
+            items.Add(CreateMenu("Gzip"));
+            items.Add(CreateMenu("LZSS", false));
+            items.Add(CreateMenu("lZMA"));
+            items.Add(CreateMenu("lZ4"));
+            items.Add(CreateMenu("lZ4F"));
+            items.Add(CreateMenu("ZSTD"));
+            items.Add(CreateMenu("ZLIB"));
+            items.Add(CreateMenu("ZLIB_GZ (Hyrule Warriors)"));
             return items;
         }
-        private void SetFunctions(List<ToolStripMenuItem> items)
+
+        private ToolStripMenuItem CreateMenu(string text, bool canCompress = true)
         {
-            foreach (var item in items)
-                item.DropDownItems.AddRange(FunctionItems());
+            var item = new ToolStripMenuItem(text);
+            item.DropDownItems.AddRange(FunctionItems(canCompress));
+            return item;
         }
-        private ToolStripItem[] FunctionItems()
+
+        private ToolStripItem[] FunctionItems(bool canCompress)
         {
             var items = new List<ToolStripItem>();
             items.Add(new ToolStripMenuItem("Decompress", null, Decompress));
-            items.Add(new ToolStripMenuItem("Compress", null, Compress));
+            items.Add(new ToolStripMenuItem("Compress", null, Compress) { Enabled = canCompress });
             return items.ToArray();
         }
+
         private void Decompress(object sender, EventArgs e)
         {
             ToolStripMenuItem curMenu = sender as ToolStripMenuItem;
