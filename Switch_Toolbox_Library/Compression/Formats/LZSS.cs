@@ -27,7 +27,7 @@ namespace Toolbox.Library
             }
         }
 
-        public bool CanCompress { get; } = true;
+        public bool CanCompress { get; } = false;
 
         public Stream Decompress(Stream stream)
         {
