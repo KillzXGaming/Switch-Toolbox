@@ -22,7 +22,7 @@ namespace FirstPlugin
 
         public STSkeleton Skeleton = new STSkeleton();
 
-        public Model Model;
+        public Model Model { get; set; }
 
         public IList<string> Textures
         {
@@ -240,11 +240,15 @@ namespace FirstPlugin
 
         public void ConvertFromJson(string text)
         {
+            int index = ParentModel.Model.Materials.IndexOf(Material);
             Material = JsonConvert.DeserializeObject<Material>(text);
+            ParentModel.Model.Materials[index] = Material;
+
             ReloadMaterial();
 
-                 var editor = ParentModel.LoadEditor<GFLXMaterialEditor>();
-                editor.LoadMaterial(this);
+            var editor = ParentModel.LoadEditor<GFLXMaterialEditor>();
+            editor.LoadMaterial(this);
+
         }
 
         public ToolStripItem[] GetContextMenuItems()
@@ -273,8 +277,12 @@ namespace FirstPlugin
             ofd.Filter = "Supported Formats|*.json;";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                int index = ParentModel.Model.Materials.IndexOf(Material);
+
                 Material = JsonConvert.DeserializeObject<Material>(
                     System.IO.File.ReadAllText(ofd.FileName));
+
+                ParentModel.Model.Materials[index] = Material;
 
                 ReloadMaterial();
 
