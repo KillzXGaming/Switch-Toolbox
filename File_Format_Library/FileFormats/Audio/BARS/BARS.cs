@@ -243,7 +243,7 @@ namespace FirstPlugin
                 Nodes.Add("Meta Data");
 
             if (bars.HasAudioFiles)
-                Nodes.Add("Audio");
+                Nodes.Add(new AudioFolder("Audio"));
 
             for (int i = 0; i < bars.AudioEntries.Count; i++)
             {
@@ -308,6 +308,31 @@ namespace FirstPlugin
         public void Save(System.IO.Stream stream)
         {
             bars.Save(stream);
+        }
+
+        public class AudioFolder : TreeNode, IContextMenuNode
+        {
+            public AudioFolder(string text) : base(text)
+            {
+
+            }
+
+            public ToolStripItem[] GetContextMenuItems()
+            {
+                List<ToolStripItem> Items = new List<ToolStripItem>();
+                Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
+                return Items.ToArray();
+            }
+
+            private void ExportAllAction(object sender, EventArgs e)
+            {
+                FolderSelectDialog ofd = new FolderSelectDialog();
+                if (ofd.ShowDialog() == DialogResult.OK) {
+                    foreach (AudioEntry audio in Nodes) {
+                        File.WriteAllBytes($"{ofd.SelectedPath}/{audio.Text}", audio.Data);
+                    }
+                }
+            }
         }
     }
 }
