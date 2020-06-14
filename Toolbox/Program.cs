@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Globalization;
+using System.Threading;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using Microsoft.VisualBasic.ApplicationServices;
@@ -23,6 +25,7 @@ namespace Toolbox
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Toolbox.Library.Runtime.ExecutableDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
 
             string[] args = Environment.GetCommandLineArgs();
