@@ -21,6 +21,7 @@ namespace Toolbox.Library.IO
             var items = new List<ToolStripMenuItem>();
             items.Add(CreateMenu("Yaz0"));
             items.Add(CreateMenu("Gzip"));
+            items.Add(CreateMenu("LZ77 (Wii Type 11)", false));
             items.Add(CreateMenu("LZSS", false));
             items.Add(CreateMenu("lZMA"));
             items.Add(CreateMenu("lZ4"));
@@ -85,6 +86,8 @@ namespace Toolbox.Library.IO
                 OpenFileForCompression(new Zlib(), Compress);
             else if (Name.Contains("ZLIB_GZ"))
                 OpenFileForCompression(new ZlibGZ(), Compress);
+            else if (Name == "LZ77 (Wii Type 11)")
+                OpenFileForCompression(new LZ77(), Compress);
 
             else throw new Exception("Unimplimented Type! " + Name);
         }
