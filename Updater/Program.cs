@@ -7,6 +7,7 @@ using Octokit;
 using System.Net;
 using System.IO.Compression;
 using System.IO;
+using System.Globalization;
 using System.Security.AccessControl;
 
 namespace Updater
@@ -21,6 +22,8 @@ namespace Updater
 
         static void Main(string[] args)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
             execDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             folderDir = execDirectory;
 
@@ -165,8 +168,9 @@ namespace Updater
                 }
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Failed to download update! {ex.ToString()}");
                 return false;
             }
         }
