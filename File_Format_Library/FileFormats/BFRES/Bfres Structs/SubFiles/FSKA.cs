@@ -321,6 +321,7 @@ namespace Bfres.Structs
                 if (skeleton != null)
                 {
                     var ska = FromGeneric(SEANIM.Read(FileName, skeleton));
+                    ska.Loop = this.CanLoop;
                     UpdateAnimation(ska);
                 }
                 else
@@ -333,6 +334,7 @@ namespace Bfres.Structs
                 if (skeleton != null)
                 {
                     var ska = FromGeneric(SMD.Read(FileName, skeleton));
+                    ska.Loop = this.CanLoop;
                     UpdateAnimation(ska);
                 }
                 else
@@ -400,14 +402,14 @@ namespace Bfres.Structs
             ska.Baked = false;
 
             for (int b = 0; b < anim.Bones.Count; b++)
-                ska.BoneAnims.Add(GenericBoneAnimToBfresBoneAnim(anim.Bones[b]));
+                ska.BoneAnims.Add(GenericBoneAnimToBfresBoneAnim(anim.Bones[b], b));
             
             ska.BakedSize = CalculateBakeSize(ska);
             ska.BindIndices = GenerateIndices(ska.BoneAnims.Count);
             return ska;
         }
 
-        private BoneAnim GenericBoneAnimToBfresBoneAnim(Animation.KeyNode boneNode)
+        private BoneAnim GenericBoneAnimToBfresBoneAnim(Animation.KeyNode boneNode, int index)
         {
             BoneAnim boneAnim = new BoneAnim();
             boneAnim.Name = boneNode.Text;
@@ -422,10 +424,6 @@ namespace Bfres.Structs
             var rotz = boneNode.ZROT.GetValue(0);
             var rotw = boneNode.WROT.GetValue(0);
 
-            var Value3One = Syroot.Maths.Vector3F.One;
-            var Value3Zero = Syroot.Maths.Vector3F.Zero;
-            var Value4Zero = Syroot.Maths.Vector4F.Zero;
-
             BoneAnimData boneBaseData = new BoneAnimData();
             boneBaseData.Translate = new Syroot.Maths.Vector3F(posx, posy, posz);
             boneBaseData.Scale = new Syroot.Maths.Vector3F(scax, scay, scaz);
@@ -436,29 +434,18 @@ namespace Bfres.Structs
             boneAnim.BeginRotate = 3;
             boneAnim.Curves = new List<AnimCurve>();
             boneAnim.FlagsBase = BoneAnimFlagsBase.Translate | BoneAnimFlagsBase.Scale | BoneAnimFlagsBase.Rotate;
-            boneAnim.FlagsTransform = BoneAnimFlagsTransform.Identity;
 
-            if (boneNode.XPOS.HasAnimation())
-            {
-                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateX;
-                var curve = SetAnimationCurve(boneNode.XPOS, (uint)FSKA.TrackType.XPOS);
-                if (curve != null)
-                    boneAnim.Curves.Add(curve);
-            }
-            if (boneNode.YPOS.HasAnimation())
-            {
-                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateY;
-                var curve = SetAnimationCurve(boneNode.YPOS, (uint)FSKA.TrackType.YPOS);
-                if (curve != null)
-                    boneAnim.Curves.Add(curve);
-            }
-            if (boneNode.ZPOS.HasAnimation())
-            {
-                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateZ;
-                var curve = SetAnimationCurve(boneNode.ZPOS, (uint)FSKA.TrackType.ZPOS);
-                if (curve != null)
-                    boneAnim.Curves.Add(curve);
-            }
+            if (boneBaseData.Rotate == new Syroot.Maths.Vector4F(0, 0, 0, 1))
+                boneAnim.FlagsTransform |= BoneAnimFlagsTransform.RotateZero;
+            if (boneBaseData.Translate == new Syroot.Maths.Vector3F(0, 0, 0))
+                boneAnim.FlagsTransform |= BoneAnimFlagsTransform.TranslateZero;
+            if (boneBaseData.Scale == new Syroot.Maths.Vector3F(1, 1, 1))
+                boneAnim.FlagsTransform |= BoneAnimFlagsTransform.ScaleOne;
+            if (IsUniform(boneBaseData.Scale))
+                boneAnim.FlagsTransform |= BoneAnimFlagsTransform.ScaleUniform;
+            if (index != 0) //root bone
+                boneAnim.FlagsTransform |= BoneAnimFlagsTransform.SegmentScaleCompensate;
+
             if (boneNode.XSCA.HasAnimation())
             {
                 boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleX;
@@ -508,8 +495,34 @@ namespace Bfres.Structs
                 if (curve != null)
                     boneAnim.Curves.Add(curve);
             }
+            if (boneNode.XPOS.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateX;
+                var curve = SetAnimationCurve(boneNode.XPOS, (uint)FSKA.TrackType.XPOS);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.YPOS.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateY;
+                var curve = SetAnimationCurve(boneNode.YPOS, (uint)FSKA.TrackType.YPOS);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
+            if (boneNode.ZPOS.HasAnimation())
+            {
+                boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateZ;
+                var curve = SetAnimationCurve(boneNode.ZPOS, (uint)FSKA.TrackType.ZPOS);
+                if (curve != null)
+                    boneAnim.Curves.Add(curve);
+            }
 
             return boneAnim;
+        }
+
+        private static bool IsUniform(Syroot.Maths.Vector3F value)
+        {
+            return value.X == value.Y && value.X == value.Z;
         }
 
         private static bool IsInt(float value) => value == Math.Truncate(value);
