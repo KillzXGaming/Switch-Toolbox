@@ -1020,7 +1020,7 @@ namespace Bfres.Structs
         }
         public void CreateBoneList(STGenericObject ob, FMDL mdl, bool ForceSkinCount, int ForcedSkinAmount = 4)
         {
-            if (ForceSkinCount && !ob.HasIndices && VertexSkinCount != 0)
+            if (ForceSkinCount && !ob.HasIndices && VertexSkinCount != 0 && !vertexAttributes.Any(x => x.Name == "_i0"))
             {
                 var attributeIndex = new FSHP.VertexAttribute();
                 attributeIndex.Format = ResGFX.AttribFormat.Format_8_8_8_8_UInt;
