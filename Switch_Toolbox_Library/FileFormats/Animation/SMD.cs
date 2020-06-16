@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using OpenTK;
 using System.Text;
+using System.Threading;
+using System.Globalization;
 
 namespace Toolbox.Library.Animations
 {
@@ -27,6 +29,8 @@ namespace Toolbox.Library.Animations
 
         public void Read(string fname)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
             StreamReader reader = File.OpenText(fname);
             string line;
 
@@ -90,6 +94,8 @@ namespace Toolbox.Library.Animations
                 }
             }
             Bones.reset();
+
+            Thread.CurrentThread.CurrentCulture = CultureInfo.DefaultThreadCurrentCulture;
         }
 
         public void Save(string FileName)

@@ -25,7 +25,6 @@ namespace Toolbox
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Toolbox.Library.Runtime.ExecutableDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
 
             string[] args = Environment.GetCommandLineArgs();
