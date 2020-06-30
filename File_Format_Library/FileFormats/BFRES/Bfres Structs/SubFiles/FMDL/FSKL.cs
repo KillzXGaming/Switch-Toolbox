@@ -523,11 +523,13 @@ namespace Bfres.Structs
                     {
                         BfresBone bn = new BfresBone(fskl);
 
+                        List<string> boneKeys = fskl.bones.Select(i => i.Text).ToList();
                         if (SkeletonU != null)
                         {
                             ResU.Bone bone = new ResU.Bone();
                             bone.Import(FileName, GetResFileU());
                             bone.ParentIndex = -1;
+                            bone.Name = Utils.RenameDuplicateString(boneKeys, bone.Name);
 
                             BfresWiiU.ReadBone(bn, bone, false);
 
@@ -542,6 +544,7 @@ namespace Bfres.Structs
                             Bone bone = new Bone();
                             bone.Import(FileName);
                             bone.ParentIndex = -1;
+                            bone.Name = Utils.RenameDuplicateString(boneKeys, bone.Name);
 
                             BfresSwitch.ReadBone(bn, bone, false);
 
