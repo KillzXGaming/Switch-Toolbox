@@ -113,7 +113,7 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            CanSave = true;
+            CanSave = false;
 
             //Set renderer
             Renderer = new GMX_Renderer();

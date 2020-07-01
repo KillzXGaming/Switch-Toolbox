@@ -113,6 +113,8 @@ namespace Toolbox.Library.IO
             bool IsBotwFile = FilePath.IsSubPathOf(Runtime.BotwGamePath);
             bool IsTPHDFile = FilePath.IsSubPathOf(Runtime.TpGamePath);
 
+            STConsole.WriteLine($"IsTPHDFile {IsTPHDFile}");
+
             if (Runtime.ResourceTables.BotwTable && IsBotwFile)
             {
                 string newFilePath = FilePath.Replace(Runtime.BotwGamePath, string.Empty).Remove(0, 1);
