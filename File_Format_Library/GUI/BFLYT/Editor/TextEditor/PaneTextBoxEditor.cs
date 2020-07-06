@@ -60,7 +60,7 @@ namespace LayoutBXLYT
             scaleYUD.Value = pane.FontSize.Y;
 
             italicTiltUD.Value = pane.ItalicTilt;
-            italicTiltUD.Value = sliderItalicTilt.Value;
+            sliderItalicTilt.Value = (int)italicTiltUD.Value;
             italicTiltUD.Maximum = sliderItalicTilt.Maximum;
 
             vertexColorTopBottomBox1.TopColor = activePane.FontTopColor.Color;
@@ -70,8 +70,6 @@ namespace LayoutBXLYT
 
             spacingXTB.Value = pane.CharacterSpace;
             spacingYTB.Value = pane.LineSpace;
-
-          //  pane.TextBoxName
 
             alighmentHCB.Bind(typeof(OriginX), pane, "HorizontalAlignment");
             alighmentVCB.Bind(typeof(OriginY), pane, "VerticalAlignment");
@@ -132,6 +130,7 @@ namespace LayoutBXLYT
                 return;
 
             sliderItalicTilt.Value = (int)italicTiltUD.Value;
+            activePane.ItalicTilt = (float)italicTiltUD.Value;
         }
 
         private void sliderItalicTilt_ValueChanged(object sender, EventArgs e) {
@@ -139,6 +138,7 @@ namespace LayoutBXLYT
 
             changing = true;
             italicTiltUD.Value = sliderItalicTilt.Value;
+            activePane.ItalicTilt = (float)italicTiltUD.Value;
             parentEditor.PropertyChanged?.Invoke(sender, e);
             changing = false;
         }
