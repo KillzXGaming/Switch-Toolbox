@@ -233,7 +233,10 @@ namespace Bfres.Structs
             importer.ReadOnlySwizzle = IsSwizzleReadOnly;
             importer.ReadOnlyTileMode = IsSwizzleReadOnly;
             importer.ReadOnlyFormat = IsFormatReadOnly;
-            
+
+            if (DisplayBc4AlphaSetting && DefaultFormat == TEX_FORMAT.BC4_UNORM)
+                setting.UseBc4Alpha = true;
+
             if (MipMapCount != 0)
             {
                 setting.MipCount = MipMapCount;
