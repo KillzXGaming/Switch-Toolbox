@@ -77,7 +77,11 @@ namespace Toolbox.Library.Forms
             greenUD.Value = ColorRGB.G;
             blueUD.Value = ColorRGB.B;
             alphaUD.Value = Alpha;
-            hexTB.Text = Utils.ColorToHex(NewColor);
+
+            //Only adjust from other color changes
+            //This will keep the textbox in the same current state it's being edited in.
+            if (!hexTextChanged)
+                hexTB.Text = Utils.ColorToHex(NewColor);
 
             loaded = true;
 
@@ -106,6 +110,7 @@ namespace Toolbox.Library.Forms
             NewColor = Color.FromArgb((byte)alphaUD.Value, (byte)redUD.Value, (byte)greenUD.Value, (byte)blueUD.Value);
         }
 
+        bool hexTextChanged = false;
         private void stTextBox1_TextChanged(object sender, EventArgs e)
         {
             if (sender is TextBox && loaded)
@@ -115,10 +120,15 @@ namespace Toolbox.Library.Forms
                 if (((TextBox)sender).Text.Length != 8)
                     return;
 
+                hexTextChanged = true;
+
                 NewColor = Utils.HexToColor(((TextBox)sender).Text);
+
 
                 if (ColorChanged != null)
                     ColorChanged.Invoke(sender, e);
+
+                hexTextChanged = false;
             }
         }
     }
