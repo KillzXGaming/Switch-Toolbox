@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.stPanel4 = new Toolbox.Library.Forms.STPanel();
@@ -41,6 +42,7 @@
             this.stContextMenuStrip2 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             this.copyImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stPanel3 = new Toolbox.Library.Forms.STPanel();
+            this.backgroundPB = new System.Windows.Forms.PictureBox();
             this.alphaBtn = new Toolbox.Library.Forms.STButton();
             this.editBtn = new Toolbox.Library.Forms.STButton();
             this.saveBtn = new Toolbox.Library.Forms.STButton();
@@ -85,7 +87,6 @@
             this.rToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gammaFixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stContextMenuStrip3 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -95,6 +96,7 @@
             this.stPanel5.SuspendLayout();
             this.stContextMenuStrip2.SuspendLayout();
             this.stPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.backgroundPB)).BeginInit();
             this.stContextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -130,6 +132,7 @@
             // 
             // stPanel1
             // 
+            this.stPanel1.Controls.Add(this.backgroundPB);
             this.stPanel1.Controls.Add(this.stPanel4);
             this.stPanel1.Controls.Add(this.stPanel3);
             this.stPanel1.Controls.Add(this.imageBGComboBox);
@@ -221,6 +224,15 @@
             this.stPanel3.Size = new System.Drawing.Size(520, 51);
             this.stPanel3.TabIndex = 3;
             this.stPanel3.Paint += new System.Windows.Forms.PaintEventHandler(this.stPanel3_Paint);
+            // 
+            // backgroundPB
+            // 
+            this.backgroundPB.Location = new System.Drawing.Point(363, 0);
+            this.backgroundPB.Name = "backgroundPB";
+            this.backgroundPB.Size = new System.Drawing.Size(23, 24);
+            this.backgroundPB.TabIndex = 18;
+            this.backgroundPB.TabStop = false;
+            this.backgroundPB.MouseClick += new System.Windows.Forms.MouseEventHandler(this.imageBGComboBox_MouseClick);
             // 
             // alphaBtn
             // 
@@ -339,12 +351,11 @@
             this.imageBGComboBox.ButtonColor = System.Drawing.Color.Empty;
             this.imageBGComboBox.FormattingEnabled = true;
             this.imageBGComboBox.IsReadOnly = false;
-            this.imageBGComboBox.Location = new System.Drawing.Point(262, 2);
+            this.imageBGComboBox.Location = new System.Drawing.Point(262, 3);
             this.imageBGComboBox.Name = "imageBGComboBox";
             this.imageBGComboBox.Size = new System.Drawing.Size(95, 21);
             this.imageBGComboBox.TabIndex = 2;
             this.imageBGComboBox.SelectedIndexChanged += new System.EventHandler(this.imageBGComboBox_SelectedIndexChanged);
-            this.imageBGComboBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.imageBGComboBox_MouseClick);
             // 
             // stContextMenuStrip1
             // 
@@ -628,7 +639,7 @@
             // stContextMenuStrip3
             // 
             this.stContextMenuStrip3.Name = "stContextMenuStrip3";
-            this.stContextMenuStrip3.Size = new System.Drawing.Size(181, 26);
+            this.stContextMenuStrip3.Size = new System.Drawing.Size(61, 4);
             // 
             // ImageEditorBase
             // 
@@ -649,6 +660,7 @@
             this.stContextMenuStrip2.ResumeLayout(false);
             this.stPanel3.ResumeLayout(false);
             this.stPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.backgroundPB)).EndInit();
             this.stContextMenuStrip1.ResumeLayout(false);
             this.stContextMenuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -713,5 +725,6 @@
         private System.Windows.Forms.ToolStripMenuItem previewGammaFixSmashUltimateToolStripMenuItem;
         private STLabel noteifcationLbl;
         private System.Windows.Forms.ToolStripMenuItem gammaFixToolStripMenuItem;
+        private System.Windows.Forms.PictureBox backgroundPB;
     }
 }

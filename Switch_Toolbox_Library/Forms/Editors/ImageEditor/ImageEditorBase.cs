@@ -218,6 +218,9 @@ namespace Toolbox.Library.Forms
         {
             InitializeComponent();
 
+            backgroundPB.BackColor = Runtime.CustomPicureBoxBGColor;
+            backgroundPB.Visible = false;
+
             useComponentSelectorToolStripMenuItem.Checked = Runtime.ImageEditor.UseComponetSelector;
             enableZoomToolStripMenuItem.Checked = Runtime.ImageEditor.EnableImageZoom;
 
@@ -287,21 +290,17 @@ namespace Toolbox.Library.Forms
                 case Runtime.PictureBoxBG.Black:
                     pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.None;
                     pictureBoxCustom1.BackColor = Color.Black;
-                    imageBGComboBox.BackColor =FormThemes.BaseTheme.ComboBoxBackColor;
                     break;
                 case Runtime.PictureBoxBG.White:
                     pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.None;
                     pictureBoxCustom1.BackColor = Color.White;
-                    imageBGComboBox.BackColor = FormThemes.BaseTheme.ComboBoxBackColor;
                     break;
                 case Runtime.PictureBoxBG.Checkerboard:
                     pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.Client;
-                    imageBGComboBox.BackColor = FormThemes.BaseTheme.ComboBoxBackColor;
                     break;
                 case Runtime.PictureBoxBG.Custom:
                     pictureBoxCustom1.GridDisplayMode = Cyotek.Windows.Forms.ImageBoxGridDisplayMode.None;
                     pictureBoxCustom1.BackColor = Runtime.CustomPicureBoxBGColor;
-                    imageBGComboBox.BackColor = Runtime.CustomPicureBoxBGColor;
                     break;
             }
         }
@@ -625,6 +624,11 @@ namespace Toolbox.Library.Forms
         private void imageBGComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Runtime.pictureBoxStyle = (Runtime.PictureBoxBG)imageBGComboBox.SelectedItem;
+            if (Runtime.pictureBoxStyle == Runtime.PictureBoxBG.Custom)
+                backgroundPB.Visible = true;
+            else if (backgroundPB.Visible)
+                backgroundPB.Visible = false;
+
             UpdateBackgroundImage();
         }
 
@@ -1372,18 +1376,30 @@ namespace Toolbox.Library.Forms
             viewer.Show();
         }
 
+        private STColorDialog colorDlg;
+        private bool dialogActive = false;
         private void imageBGComboBox_MouseClick(object sender, MouseEventArgs e)
         {
-            if (Runtime.pictureBoxStyle == Runtime.PictureBoxBG.Custom)
+            if (dialogActive)
             {
-                ColorDialog dlg = new ColorDialog();
-                dlg.Color = Runtime.CustomPicureBoxBGColor;
-                if (dlg.ShowDialog() == DialogResult.OK)
-                {
-                    Runtime.CustomPicureBoxBGColor = dlg.Color;
-                    UpdateBackgroundImage();
-                }
+                colorDlg.Focus();
+                return;
             }
+
+            dialogActive = true;
+            colorDlg = new STColorDialog(((PictureBox)sender).BackColor);
+            colorDlg.AllowTransparency = false;
+            colorDlg.FormClosed += delegate
+            {
+                dialogActive = false;
+            };
+            colorDlg.ColorChanged += delegate
+            {
+                ((PictureBox)sender).BackColor = colorDlg.NewColor;
+                Runtime.CustomPicureBoxBGColor = colorDlg.NewColor;
+                UpdateBackgroundImage();
+            };
+            colorDlg.Show();
         }
 
         private void stPanel3_Paint(object sender, PaintEventArgs e)
