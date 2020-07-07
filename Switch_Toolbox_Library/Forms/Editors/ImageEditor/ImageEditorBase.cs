@@ -1395,8 +1395,8 @@ namespace Toolbox.Library.Forms
             };
             colorDlg.ColorChanged += delegate
             {
-                ((PictureBox)sender).BackColor = colorDlg.NewColor;
-                Runtime.CustomPicureBoxBGColor = colorDlg.NewColor;
+                ((PictureBox)sender).BackColor = colorDlg.ColorRGB;
+                Runtime.CustomPicureBoxBGColor = colorDlg.ColorRGB;
                 UpdateBackgroundImage();
             };
             colorDlg.Show();
