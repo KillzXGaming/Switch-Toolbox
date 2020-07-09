@@ -401,6 +401,49 @@ namespace Toolbox.Library
             ADDR_FMT_RESERVED_63 = 0x3F,
         };
 
+        public static GX2SurfaceFormat ConvertToGx2Format(TEX_FORMAT texFormat)
+        {
+            switch (texFormat)
+            {
+                case TEX_FORMAT.BC1_UNORM: return GX2SurfaceFormat.T_BC1_UNORM;
+                case TEX_FORMAT.BC1_UNORM_SRGB: return GX2SurfaceFormat.T_BC1_SRGB;
+                case TEX_FORMAT.BC2_UNORM: return GX2SurfaceFormat.T_BC2_UNORM;
+                case TEX_FORMAT.BC2_UNORM_SRGB: return GX2SurfaceFormat.T_BC2_SRGB;
+                case TEX_FORMAT.BC3_UNORM: return GX2SurfaceFormat.T_BC3_UNORM;
+                case TEX_FORMAT.BC3_UNORM_SRGB: return GX2SurfaceFormat.T_BC3_SRGB;
+                case TEX_FORMAT.BC4_UNORM: return GX2SurfaceFormat.T_BC4_UNORM;
+                case TEX_FORMAT.BC4_SNORM: return GX2SurfaceFormat.T_BC4_SNORM;
+                case TEX_FORMAT.BC5_UNORM: return GX2SurfaceFormat.T_BC5_UNORM;
+                case TEX_FORMAT.BC5_SNORM: return GX2SurfaceFormat.T_BC5_SNORM;
+                case TEX_FORMAT.B5G5R5A1_UNORM: return GX2SurfaceFormat.TC_R5_G5_B5_A1_UNORM;
+                case TEX_FORMAT.B4G4R4A4_UNORM: return GX2SurfaceFormat.TC_R4_G4_B4_A4_UNORM;
+                case TEX_FORMAT.B5G6R5_UNORM: return GX2SurfaceFormat.TCS_R5_G6_B5_UNORM;
+                case TEX_FORMAT.R8G8B8A8_UNORM: return GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
+                case TEX_FORMAT.R8G8B8A8_UNORM_SRGB: return GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB;
+                case TEX_FORMAT.R10G10B10A2_UNORM: return GX2SurfaceFormat.TCS_R10_G10_B10_A2_UNORM;
+                case TEX_FORMAT.R11G11B10_FLOAT: return GX2SurfaceFormat.TC_R11_G11_B10_FLOAT;
+                case TEX_FORMAT.R16_UNORM: return GX2SurfaceFormat.TCD_R16_UNORM;
+                case TEX_FORMAT.R32_FLOAT: return GX2SurfaceFormat.TCD_R32_FLOAT;
+                case TEX_FORMAT.R8G8_UNORM: return GX2SurfaceFormat.TC_R8_G8_UNORM;
+                case TEX_FORMAT.R8G8_SNORM: return GX2SurfaceFormat.TC_R8_G8_SNORM;
+                case TEX_FORMAT.R8_UNORM: return GX2SurfaceFormat.TC_R8_UNORM;
+                case TEX_FORMAT.R8_SNORM: return GX2SurfaceFormat.TC_R8_SNORM;
+                case TEX_FORMAT.A8_UNORM: return GX2SurfaceFormat.TC_R8_UNORM;
+                case TEX_FORMAT.B8G8R8A8_UNORM: return GX2SurfaceFormat.TCS_R8_G8_B8_A8_UNORM;
+                case TEX_FORMAT.B8G8R8A8_UNORM_SRGB: return GX2SurfaceFormat.TCS_R8_G8_B8_A8_SRGB;
+                case TEX_FORMAT.R32G8X24_FLOAT: return GX2SurfaceFormat.T_R32_FLOAT_X8_X24;
+                case TEX_FORMAT.R32G32B32A32_FLOAT: return GX2SurfaceFormat.TC_R32_G32_B32_A32_FLOAT;
+                case TEX_FORMAT.R32G32B32A32_UINT: return GX2SurfaceFormat.TC_R32_G32_B32_A32_UINT;
+                case TEX_FORMAT.R32G32B32A32_SINT: return GX2SurfaceFormat.TC_R32_G32_B32_A32_SINT;
+                case TEX_FORMAT.L8: return GX2SurfaceFormat.TC_R8_UNORM;
+                case TEX_FORMAT.LA8: return GX2SurfaceFormat.TC_R8_G8_UNORM;
+                case TEX_FORMAT.RGB565: return GX2SurfaceFormat.TCS_R5_G6_B5_UNORM;
+                case TEX_FORMAT.R5G5B5_UNORM: return GX2SurfaceFormat.TC_R5_G5_B5_A1_UNORM;
+                default:
+                    throw new Exception($"Cannot convert format {texFormat}");
+            }
+        }
+
         public static void Debug(surfaceOut surf)
         {
             if (surf == null)
