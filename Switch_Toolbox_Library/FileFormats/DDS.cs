@@ -536,6 +536,9 @@ namespace Toolbox.Library
             header.caps4 = reader.ReadUInt32();
             header.reserved2 = reader.ReadUInt32();
 
+            if (header.reserved1[9] == 1414813262)
+                WiiUSwizzle = true;
+
             ArrayCount = 1;
 
             int DX10HeaderSize = 0;
@@ -816,6 +819,7 @@ namespace Toolbox.Library
         }
 
         public bool SwitchSwizzle = false;
+        public bool WiiUSwizzle = false;
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             if (IsAtscFormat(Format))
@@ -823,6 +827,31 @@ namespace Toolbox.Library
 
             if (SwitchSwizzle)
                 return TegraX1Swizzle.GetImageData(this, bdata, ArrayLevel, MipLevel, DepthLevel);
+            else if (WiiUSwizzle)
+            {
+                uint bpp = GetBytesPerPixel(Format);
+
+                GX2.GX2Surface surf = new GX2.GX2Surface();
+                surf.bpp = bpp;
+                surf.height = Height;
+                surf.width = Width;
+                surf.aa = (uint)GX2.GX2AAMode.GX2_AA_MODE_1X;
+                surf.alignment = 0;
+                surf.depth = 1;
+                surf.dim = (uint)GX2.GX2SurfaceDimension.DIM_2D;
+                surf.format = (uint)GX2.ConvertToGx2Format(Format);
+                surf.use = (uint)GX2.GX2SurfaceUse.USE_COLOR_BUFFER;
+                surf.pitch = 0;
+                surf.data = bdata;
+                surf.numMips = MipCount;
+                surf.mipOffset = new uint[0];
+                surf.mipData = bdata;
+                surf.tileMode = (uint)GX2.GX2TileMode.MODE_2D_TILED_THIN1;
+                surf.swizzle = 0;
+                surf.numArray = 1;
+
+                return GX2.Decode(surf, ArrayLevel, MipLevel);
+            }
 
             return GetArrayFaces(this, ArrayCount, DepthLevel)[ArrayLevel].mipmaps[MipLevel];
         }
