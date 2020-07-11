@@ -486,6 +486,7 @@ namespace FirstPlugin
         public void Write(FileWriter writer)
         {
             TextureName = Text;
+            Console.WriteLine($"Text {Text}");
 
             //MipSizes stores mip sizes for multile arrays
             int arrayCount = mipSizes.Count;

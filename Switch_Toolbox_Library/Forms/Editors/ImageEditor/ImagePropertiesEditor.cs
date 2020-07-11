@@ -215,7 +215,7 @@ namespace Toolbox.Library.Forms
                     }
 
                     Bitmap newImage = BitmapExtension.ReplaceChannel(Image, ImportedImage, ChannelType);
-                    imageEditor.SaveAndApplyImage(newImage, true);
+                    imageEditor.SaveAndApplyImage(newImage, true, ext == ".dds");
                 }
             }
         }
