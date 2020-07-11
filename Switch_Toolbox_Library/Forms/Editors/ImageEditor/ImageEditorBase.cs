@@ -1096,11 +1096,11 @@ namespace Toolbox.Library.Forms
                     if (dds.Format != ActiveTexture.Format)
                         DecodeTextureBack = true;
 
-                    SaveAndApplyImage(dds.GetBitmap(), DecodeTextureBack);
+                    SaveAndApplyImage(dds.GetBitmap(), DecodeTextureBack, true);
                 }
                 else
                 {
-                    SaveAndApplyImage(new Bitmap(FileName), DecodeTextureBack);
+                    SaveAndApplyImage(new Bitmap(FileName), DecodeTextureBack, false);
                 }
             }
 
@@ -1108,12 +1108,12 @@ namespace Toolbox.Library.Forms
             FileWatcher.EnableRaisingEvents = false;
         }
 
-        public void SaveAndApplyImage(Bitmap image, bool DecodeBack)
+        public void SaveAndApplyImage(Bitmap image, bool DecodeBack, bool isDDS)
         {
             if (image == null)
                 return;
 
-            if (Runtime.ImageEditor.PreviewGammaFix) {
+            if (Runtime.ImageEditor.PreviewGammaFix && !isDDS) {
                 image = BitmapExtension.AdjustGamma(image, 2.2f);
                 DecodeBack = true;
             }
