@@ -1387,6 +1387,7 @@ namespace FirstPlugin
                 case SurfaceFormat.B8_G8_R8_A8_SRGB: return TEX_FORMAT.B8G8R8A8_UNORM_SRGB;
                 case SurfaceFormat.B8_G8_R8_A8_UNORM: return TEX_FORMAT.B8G8R8A8_UNORM;
                 case SurfaceFormat.R10_G10_B10_A2_UNORM: return TEX_FORMAT.R10G10B10A2_UNORM;
+                case SurfaceFormat.R11_G11_B10_UINT: return TEX_FORMAT.R11G11B10_FLOAT;
                 case SurfaceFormat.R16_UNORM: return TEX_FORMAT.R16_UNORM;
                 case SurfaceFormat.R4_G4_B4_A4_UNORM: return TEX_FORMAT.B4G4R4A4_UNORM;
                 case SurfaceFormat.R4_G4_UNORM: return TEX_FORMAT.B4G4R4A4_UNORM;
