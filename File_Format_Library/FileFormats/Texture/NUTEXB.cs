@@ -11,6 +11,7 @@ using Toolbox.Library.Forms;
 using System.ComponentModel;
 using Syroot.NintenTools.NSW.Bntx;
 using Syroot.NintenTools.NSW.Bntx.GFX;
+using System.IO;
 
 namespace FirstPlugin
 {
@@ -277,7 +278,7 @@ namespace FirstPlugin
                 foreach (var array in tex.Texture.TextureData)
                     data.Add(array[0]);
 
-                var output = Utils.CombineByteArray(data.ToArray());
+                var output = CreateBuffer(data);
 
                 Width = tex.Texture.Width;
                 Height = tex.Texture.Height;
@@ -327,6 +328,20 @@ namespace FirstPlugin
             }
 
             UpdateEditor();
+        }
+
+        private byte[] CreateBuffer(List<byte[]> imageData)
+        {
+            var mem = new MemoryStream();
+            using (var writer = new FileWriter(mem))
+            {
+                for (int i = 0; i < imageData.Count; i++)
+                {
+                    if (i > 0) writer.Align(Alignment);
+                    writer.Write(imageData[i]);
+                }
+                return mem.ToArray();
+            }
         }
 
         private void ApplySettings(GenericTextureImporterSettings settings)
@@ -565,7 +580,7 @@ namespace FirstPlugin
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             if (!IsSwizzled)
-                return DDS.GetArrayFaces(this, ImageData,1)[ArrayLevel].mipmaps[0];
+                return DDS.GetArrayFaces(this, ImageData, 1)[ArrayLevel].mipmaps[0];
 
             return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, 1);
         }
