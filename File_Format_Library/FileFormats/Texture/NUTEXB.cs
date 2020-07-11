@@ -264,7 +264,6 @@ namespace FirstPlugin
 
         public override void Replace(string FileName)
         {
-            var bntxFile = new BNTX();
             var tex = new TextureData();
             tex.Replace(FileName, MipCount, 0, Format);
 
@@ -428,6 +427,8 @@ namespace FirstPlugin
 
         public void Write(FileWriter writer)
         {
+            TextureName = Text;
+
             //MipSizes stores mip sizes for multile arrays
             int arrayCount = mipSizes.Count;
 

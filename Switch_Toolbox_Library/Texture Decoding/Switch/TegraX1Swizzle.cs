@@ -42,23 +42,7 @@ namespace Toolbox.Library
                     uint depth = (uint)Math.Max(1, Depth >> mipLevel);
 
                     uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
-
-                    if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
-                        blockHeightShift += 1;
-
-                    uint width__ = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth);
-                    uint height__ = TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight);
-
-                    //Calculate the mip size instead
-                    byte[] AlignedData = new byte[(TegraX1Swizzle.round_up(SurfaceSize, DataAlignment) - SurfaceSize)];
-                    SurfaceSize += (uint)AlignedData.Length;
-                    MipOffsets[mipLevel] = (SurfaceSize);
-
-                    //Get the first mip offset and current one and the total image size
-                    int msize = (int)((MipOffsets[0] + ImageSize - MipOffsets[mipLevel]) / ArrayCount);
-
-                    Pitch = TegraX1Swizzle.round_up(width__ * bpp, 64);
-                    SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
+                    MipOffsets[mipLevel] = size;
                 }
                 ArrayOffset += (uint)(ImageSize / ArrayCount);
 
@@ -118,7 +102,6 @@ namespace Toolbox.Library
 
                         if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
                             blockHeightShift += 1;
-
 
                         uint width__ = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth);
                         uint height__ = TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight);
