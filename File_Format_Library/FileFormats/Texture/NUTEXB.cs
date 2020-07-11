@@ -264,34 +264,82 @@ namespace FirstPlugin
 
         public override void Replace(string FileName)
         {
-            var tex = new TextureData();
-            tex.Replace(FileName, MipCount, 0, Format);
+            if (IsSwizzled)
+            {
+                var tex = new TextureData();
+                tex.Replace(FileName, MipCount, 0, Format);
 
-            //If it's null, the operation is cancelled
-            if (tex.Texture == null)
-                return;
+                //If it's null, the operation is cancelled
+                if (tex.Texture == null)
+                    return;
 
-            List<byte[]> data = new List<byte[]>();
-            foreach (var array in tex.Texture.TextureData)
-                data.Add(array[0]);
+                List<byte[]> data = new List<byte[]>();
+                foreach (var array in tex.Texture.TextureData)
+                    data.Add(array[0]);
 
-            var output = Utils.CombineByteArray(data.ToArray());
+                var output = Utils.CombineByteArray(data.ToArray());
 
-            Width = tex.Texture.Width;
-            Height = tex.Texture.Height;
-            MipCount = tex.Texture.MipCount;
-           // ArrayCount = tex.Texture.ArrayLength;
-           // Depth = tex.Texture.Depth;
+                Width = tex.Texture.Width;
+                Height = tex.Texture.Height;
+                MipCount = tex.Texture.MipCount;
+                // ArrayCount = tex.Texture.ArrayLength;
+                // Depth = tex.Texture.Depth;
 
-            Format = tex.Format;
-            NutFormat = ConvertGenericToNutFormat(tex.Format);
+                Format = tex.Format;
+                NutFormat = ConvertGenericToNutFormat(tex.Format);
 
-            mipSizes = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length);
+                mipSizes = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length);
 
-            ImageData = SetImageData(output);
+                ImageData = SetImageData(output);
 
-            data.Clear();
+                data.Clear();
+            }
+            else
+            {
+                GenericTextureImporterList importer = new GenericTextureImporterList(SupportedFormats);
+                GenericTextureImporterSettings settings = new GenericTextureImporterSettings();
+
+                if (Utils.GetExtension(FileName) == ".dds" ||
+                    Utils.GetExtension(FileName) == ".dds2")
+                {
+                    settings.LoadDDS(FileName);
+                    importer.LoadSettings(new List<GenericTextureImporterSettings>() { settings, });
+                    ApplySettings(settings);
+                    UpdateEditor();
+                }
+                else
+                {
+                    settings.LoadBitMap(FileName);
+                    importer.LoadSettings(new List<GenericTextureImporterSettings>() { settings, });
+
+                    if (importer.ShowDialog() == DialogResult.OK)
+                    {
+                        if (settings.GenerateMipmaps && !settings.IsFinishedCompressing)
+                        {
+                            settings.DataBlockOutput.Clear();
+                            settings.DataBlockOutput.Add(settings.GenerateMips(importer.CompressionMode, importer.MultiThreading));
+                        }
+
+                        ApplySettings(settings);
+                        UpdateEditor();
+                    }
+                }
+            }
+
             UpdateEditor();
+        }
+
+        private void ApplySettings(GenericTextureImporterSettings settings)
+        {
+            //Combine all arrays
+            this.ImageData = Utils.CombineByteArray(settings.DataBlockOutput.ToArray());
+            this.Width = settings.TexWidth;
+            this.Height = settings.TexHeight;
+            this.Format = settings.Format;
+            this.MipCount = settings.MipCount;
+            this.Depth = settings.Depth;
+            this.ArrayCount = (uint)settings.DataBlockOutput.Count;
+            NutFormat = ConvertGenericToNutFormat(this.Format);
         }
 
         private byte[] SetImageData(byte[] output)
