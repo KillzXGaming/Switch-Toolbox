@@ -1261,7 +1261,6 @@ namespace Toolbox.Library
                 case DXGI_FORMAT.DXGI_FORMAT_BC6H_UF16:
                 case DXGI_FORMAT.DXGI_FORMAT_BC6H_SF16:
                 case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM:
-                case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB:
                     header.ddspf.flags = (uint)DDPF.FOURCC;
                     header.ddspf.fourCC = FOURCC_DX10;
                     if (DX10header == null)
@@ -1269,6 +1268,15 @@ namespace Toolbox.Library
 
                     IsDX10 = true;
                     DX10header.DXGI_Format = Format;
+                    break;
+                case DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB:
+                    header.ddspf.flags = (uint)DDPF.FOURCC;
+                    header.ddspf.fourCC = FOURCC_DX10;
+                    if (DX10header == null)
+                        DX10header = new DX10Header();
+
+                    IsDX10 = true;
+                    DX10header.DXGI_Format = DDS.DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM;
                     break;
             }
         }
