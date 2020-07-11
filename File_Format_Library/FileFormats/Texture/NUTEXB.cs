@@ -337,11 +337,6 @@ namespace FirstPlugin
             TextureName = reader.ReadString(Syroot.BinaryData.BinaryStringFormat.ZeroTerminated);
             Text = TextureName;
 
-            //We cannot check if it's swizzled properly
-            //So far if this part is blank, it's for Taiko No Tatsujin "Drum 'n' Fun
-            if (StrMagic != "XNT")
-                IsSwizzled = false;
-
             reader.Seek(pos - 48, System.IO.SeekOrigin.Begin); //Subtract size of header
             uint padding2 = reader.ReadUInt32();
             Width = reader.ReadUInt32();
@@ -546,13 +541,19 @@ namespace FirstPlugin
             useSizeRestrictions.Click += UseSizeRestrictionsAction;
         }
 
-        public ToolStripItem[] GetContextMenuItems()
+        public override ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
             Items.Add(useSizeRestrictions);
             Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            Items.Add(new STToolStipMenuItem("Taiko no Tatsujin fix", null, SwizzleToggle, Keys.Control | Keys.S) { Checked = !IsSwizzled, CheckOnClick = true });
             Items.AddRange(base.GetContextMenuItems());
             return Items.ToArray();
+        }
+
+        private void SwizzleToggle(object sender, EventArgs args) {
+            IsSwizzled = ((STToolStipMenuItem)sender).Checked ? false : true;
+            UpdateEditor();
         }
 
         public void Unload()
