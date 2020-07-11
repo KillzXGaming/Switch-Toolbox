@@ -1113,6 +1113,11 @@ namespace Toolbox.Library.Forms
             if (image == null)
                 return;
 
+            if (Runtime.ImageEditor.PreviewGammaFix) {
+                image = BitmapExtension.AdjustGamma(image, 2.2f);
+                DecodeBack = true;
+            }
+
             if (saveBtn.InvokeRequired)
             {
                 saveBtn.Invoke(new MethodInvoker(
