@@ -100,6 +100,8 @@ namespace Toolbox.Library.Animations
 
         public void Save(string FileName)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
             StringBuilder o = new StringBuilder();
 
             o.AppendLine("version 1");
@@ -128,6 +130,8 @@ namespace Toolbox.Library.Animations
             }
 
             File.WriteAllText(FileName, o.ToString());
+
+            Thread.CurrentThread.CurrentCulture = CultureInfo.DefaultThreadCurrentCulture;
         }
 
         public static Animation Read(string fname,STSkeleton v)
