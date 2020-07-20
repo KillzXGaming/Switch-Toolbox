@@ -350,6 +350,19 @@ namespace FirstPlugin
                 Console.WriteLine("MipOffsets " + SurfaceSize);
                 Console.WriteLine("size " + size);
 
+                int powBlockShift = 0;
+                if (STGenericTexture.IsCompressed(TexFormat) && mipLevel == 0)
+                {
+                    if (width_ > 32 && height_ <= 40)
+                        powBlockShift += 1;
+                    if (width_ > 64 && height_ <= 84)
+                        powBlockShift += 1;
+                    if (width_ > 128 && height_ <= 168)
+                        powBlockShift += 1;
+                    if (width_ > 256 && height_ <= 340)
+                        powBlockShift += 1;
+                }
+
                 tex.MipOffsets[mipLevel] = SurfaceSize;
                 if (tex.TileMode == TileMode.LinearAligned)
                 {
@@ -366,10 +379,12 @@ namespace FirstPlugin
                         blockHeightShift += 1;
 
                     Pitch = TegraX1Swizzle.round_up(width__ * bpp, 64);
-                    SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
+                    SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> (blockHeightShift + powBlockShift)) * 8);
                 }
 
-                byte[] SwizzledData = TegraX1Swizzle.swizzle(width_, height_, depth_, blkWidth, blkHeight, blkDepth, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), data_);
+                int blockShift = blockHeightShift + powBlockShift;
+
+                byte[] SwizzledData = TegraX1Swizzle.swizzle(width_, height_, depth_, blkWidth, blkHeight, blkDepth, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockShift), data_);
                 mipmaps.Add(AlignedData.Concat(SwizzledData).ToArray());
             }
             tex.ImageSize = SurfaceSize;
