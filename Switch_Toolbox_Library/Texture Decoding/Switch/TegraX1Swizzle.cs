@@ -103,21 +103,6 @@ namespace Toolbox.Library
                         if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
                             blockHeightShift += 1;
 
-                        int powBlockShift = 0;
-                        if (STGenericTexture.IsCompressed(texture.Format) && mipLevel == 0)
-                        {
-                            if (width > 32 && height <= 40)
-                                powBlockShift += 1;
-                            if (width > 64 && height <= 84)
-                                powBlockShift += 1;
-                            if (width > 128 && height <= 168)
-                                powBlockShift += 1;
-                            if (width > 256 && height <= 340)
-                                powBlockShift += 1;
-                        }
-
-                        int blockShift = blockHeightShift + powBlockShift;
-
                         uint width__ = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth);
                         uint height__ = TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight);
 
@@ -134,9 +119,9 @@ namespace Toolbox.Library
                         try
                         {
                             Pitch = TegraX1Swizzle.round_up(width__ * bpp, 64);
-                            SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockShift) * 8);
+                            SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
 
-                            byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockShift), data_);
+                            byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
                             //Create a copy and use that to remove uneeded data
                             byte[] result_ = new byte[size];
                             Array.Copy(result, 0, result_, 0, size);
