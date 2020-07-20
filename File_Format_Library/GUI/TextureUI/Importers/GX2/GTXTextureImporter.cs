@@ -149,6 +149,9 @@ namespace FirstPlugin
         {
             settings.Add(setting);
 
+            if (setting.UseBc4Alpha)
+                chkBc4Alpha.Checked = true;
+
             listViewCustom1.Items.Add(setting.TexName).SubItems.Add(setting.Format.ToString());
             listViewCustom1.Items[0].Selected = true;
             listViewCustom1.Select();
