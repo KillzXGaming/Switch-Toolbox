@@ -329,7 +329,7 @@ namespace FirstPlugin.LuigisMansion3
                                         text = NLG_Common.HashNames[hashID];
 
 
-                                    currentModel.Text = $"{currentModel.Text} [{text}]";
+                                    currentModel.Text = $"Model {modelIndex - 1} [{text}]" ;
                                 }
                             }
                             break;
