@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -62,11 +63,62 @@ namespace FirstPlugin.LuigisMansion3
                 model.Objects = mdl.RenderedMeshes;
 
                 settings.SuppressConfirmDialog = true;
-
-                DAE.Export($"{folderPath}/{mdl.Text}.dae", settings, model, new List<STGenericTexture>());
+                String safefilename = SafeFileName(folderPath, mdl.Text, "dae");
+                DAE.Export(safefilename, settings, model, new List<STGenericTexture>());
             }
 
             System.Windows.Forms.MessageBox.Show($"Exported models Successfuly!");
+        }
+
+        private String SafeFileName(String folderpath, String filename, String extension)
+        {
+            //remove anything weird
+            foreach (var c in Path.GetInvalidFileNameChars())
+            {
+                filename = filename.Replace(c.ToString(), "");
+            }
+
+            foreach (var c in Path.GetInvalidPathChars())
+            {
+                filename = filename.Replace(c.ToString(), "");
+            }
+
+            if (!Directory.Exists(folderpath))
+            {
+                //split directory and search until find somethign... or create the directory...
+                // or use a temp directory
+                folderpath = Path.GetTempPath();
+            }
+
+            //string length check 
+            String returnFilepath = folderpath + Path.DirectorySeparatorChar + filename + "." + extension;
+
+            if (returnFilepath.Length >= 250)
+            {
+                if (folderpath.Length >= 250)
+                {
+                    //eeek! not much we can do
+                    return Path.GetTempFileName();
+                }
+                else
+                {
+                    int usedLength = folderpath.Length + extension.Length + 2; //2 for extension dot and path seperator
+                    int filenameSafeLength = 250 - usedLength;
+                    if (filenameSafeLength > 2)
+                    {
+                        //create a shorter filename - take the left and right characters 
+                        int leftRightSize = Convert.ToInt32(Math.Floor(filenameSafeLength * 0.5f));
+
+                        String newfilename = filename.Substring(0, leftRightSize) + filename.Substring(filename.Length - leftRightSize);
+
+                        returnFilepath = folderpath + Path.DirectorySeparatorChar + newfilename + "." + extension;
+
+                    }
+                }
+            }
+
+
+            return returnFilepath;
         }
     }
 
