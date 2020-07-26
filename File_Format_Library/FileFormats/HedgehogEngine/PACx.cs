@@ -82,7 +82,20 @@ namespace HedgehogLibrary
                 if (IsVersion4)
                 {
                     var header = reader.ReadStruct<HeaderV4>();
-                    var chunks = reader.ReadMultipleStructs<Chunk>(header.ChunkCount);
+
+                    List<Chunk> chunks = new List<Chunk>();
+                    if (header.Type != (PacType)0)
+                    {
+                        uint chunkCount = reader.ReadUInt32();
+                        chunks = reader.ReadMultipleStructs<Chunk>(chunkCount);
+                    }
+                    else
+                        chunks.Add(new Chunk()
+                        {
+                            CompressedSize = header.RootCompressedSize,
+                            UncompressedSize = header.RootUncompressedSize
+                        });
+
                     Checksum = header.PacID;
 
                     //Decompress each chunk now
@@ -226,7 +239,6 @@ namespace HedgehogLibrary
             public uint RootUncompressedSize;
             public PacType Type = PacType.HasNoSplit;
             public ushort Constant = 0x208;
-            public uint ChunkCount;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
