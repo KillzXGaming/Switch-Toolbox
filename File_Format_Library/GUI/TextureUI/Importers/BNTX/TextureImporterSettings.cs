@@ -262,7 +262,7 @@ namespace FirstPlugin
             tex.MipCount = settings.MipCount;
             tex.Depth = settings.Depth;
             tex.Dim = settings.Dim;
-            tex.Flags = settings.Flags;
+            tex.Flags = (byte)settings.Flags;
             tex.TileMode = settings.TileMode;
             tex.textureLayout = settings.TextureLayout;
             tex.textureLayout2 = settings.TextureLayout2;
