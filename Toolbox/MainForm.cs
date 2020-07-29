@@ -1495,6 +1495,28 @@ namespace Toolbox
                     ExportTexture(tex, settings, $"{outputFolder}/{tex.Text}", extension);
                 }
             }
+            else if (fileFormat is IExportableModelContainer && exportMode == ExportMode.Models)
+            {
+                string name = fileFormat.FileName.Split('.').FirstOrDefault();
+                if (settings.SeperateTextureContainers)
+                    outputFolder = Path.Combine(outputFolder, name);
+
+                if (!Directory.Exists(outputFolder))
+                    Directory.CreateDirectory(outputFolder);
+
+                DAE.ExportSettings daesettings = new DAE.ExportSettings();
+                daesettings.SuppressConfirmDialog = true;
+
+                var textures = ((IExportableModelContainer)fileFormat).ExportableTextures.ToList();
+                foreach (var model in ((IExportableModelContainer)fileFormat).ExportableModels)
+                {
+                    string path = $"{outputFolder}/{model.Text}";
+                    path = Utils.RenameDuplicateString(batchExportFileList, path, 0, 3);
+
+                    DAE.Export($"{path}.{extension}", daesettings, model, textures, model.GenericSkeleton);
+                    batchExportFileList.Add(path);
+                }
+            }
             else if (fileFormat is IExportableModel && exportMode == ExportMode.Models)
             {
                 string name = fileFormat.FileName.Split('.').FirstOrDefault();

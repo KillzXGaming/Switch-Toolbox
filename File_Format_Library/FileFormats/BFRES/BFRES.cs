@@ -20,7 +20,7 @@ using OpenTK;
 
 namespace FirstPlugin
 {
-    public class BFRES : BFRESWrapper, IFileFormat, ITextureContainer, IExportableModel
+    public class BFRES : BFRESWrapper, IFileFormat, ITextureContainer, IExportableModelContainer
     {
         public FileType FileType { get; set; } = FileType.Resource;
 
@@ -58,24 +58,12 @@ namespace FirstPlugin
             set { }
         }
 
-        public IEnumerable<STGenericObject> ExportableMeshes => BFRESRender.Meshes;
-
-        public IEnumerable<STGenericMaterial> ExportableMaterials
+        public IEnumerable<STGenericModel> ExportableModels
         {
-            get
-            {
-                List<FMAT> materials = new List<FMAT>();
-                foreach (var model in BFRESRender.models)
-                    materials.AddRange(model.materials.Values);
-                return materials;
-            }
+            get { return BFRESRender.models; }
         }
+
         public IEnumerable<STGenericTexture> ExportableTextures => TextureList;
-
-        public STSkeleton ExportableSkeleton
-        {
-            get { return BFRESRender.models[0].Skeleton; }
-        }
 
         public override string ExportFilter => Utils.GetAllFilters(new BFRES());
 

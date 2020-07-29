@@ -20,6 +20,8 @@ namespace Toolbox.Library
 
         }
 
+        public virtual STSkeleton GenericSkeleton { get; set; }
+
         private IEnumerable<STGenericMaterial> _materials;
         private IEnumerable<STGenericObject> _objects;
 

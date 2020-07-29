@@ -1356,6 +1356,8 @@ namespace Bfres.Structs
             bn.UserDataDict = new ResDict();
         }
 
+        public override STSkeleton GenericSkeleton => Skeleton;
+
         public FSKL Skeleton
         {
             get
