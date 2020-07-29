@@ -62,6 +62,15 @@ namespace FirstPlugin
         private uint HeaderSize = 32;
         private uint Unknown = 256;
 
+        public RamAllocation RamType = RamAllocation.MRAM;
+
+        public enum RamAllocation
+        {
+            None,
+            ARAM,
+            MRAM,
+        }
+
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
@@ -99,9 +108,14 @@ namespace FirstPlugin
                 HeaderSize = reader.ReadUInt32();
                 uint DataOffset = reader.ReadUInt32();
                 uint FileDataSize = reader.ReadUInt32();
-                uint EndOfFileOffset = reader.ReadUInt32();
-                byte[] Padding = reader.ReadBytes(8);
+                uint MRamSize = reader.ReadUInt32();
+                uint ARamSize = reader.ReadUInt32();
+                byte[] Padding = reader.ReadBytes(4);
 
+                if (MRamSize != 0)
+                    RamType |= RamAllocation.MRAM;
+                else if (ARamSize != 0) 
+                    RamType |= RamAllocation.ARAM;
 
                 //Info Block
                 long pos = reader.Position;
@@ -144,13 +158,13 @@ namespace FirstPlugin
                         NamePointer = StringTablOffset + entry.NameOffset;
                         entry.Name = ReadStringAtTable(reader, NamePointer);
 
-                        //These make it crash so just skip them
-                        //Unsure what purpose these have
+                        //Root and parent strings. Skip these unecessary nodes.
                         if (entry.Name == "." || entry.Name == "..")
                             continue;
 
                         if (entry.IsDirectory)
                         {
+                         //   Directories[entry.Offset].ID = entry.FileId; //0xFFFF or 0
                             Directories[dir].AddNode(Directories[entry.Offset]);
                             _savedDirectories.Add(entry);
                         }
@@ -218,8 +232,9 @@ namespace FirstPlugin
             writer.Write(HeaderSize);
             writer.Write(uint.MaxValue); //DataOffset
             writer.Write(uint.MaxValue); //File Size
-            writer.Write(uint.MaxValue); //End of file
-            writer.Seek(8); //padding
+            writer.Write(0); //MRAM (saved later if used)
+            writer.Write(0); //ARAM (saved later if used)
+            writer.Seek(4); //padding
 
             writer.SeekBegin(HeaderSize);
             long InfoPos = writer.Position;
@@ -268,7 +283,7 @@ namespace FirstPlugin
                         var dirEntry = (DirectoryEntry)_savedNodes[dir].Children[n];
                         int index = Directories.ToList().IndexOf(dirEntry);
 
-                        writer.Write((ushort)0);
+                        writer.Write(dirEntry.ID);
                         writer.Write(dirEntry.Hash);
                         writer.Write((byte)0x2);
                         writer.Write((byte)0);
@@ -347,10 +362,12 @@ namespace FirstPlugin
                 writer.Write((uint)DataSize);
             }
 
-            //Write end of file size
-            using (writer.TemporarySeek(pos + 20, System.IO.SeekOrigin.Begin))
+            //Write ram size
+            if (RamType != RamAllocation.None)
             {
-                writer.Write((uint)EndFileSize);
+                using (writer.TemporarySeek(pos + (RamType.HasFlag(RamAllocation.MRAM) ? 20 : 24), System.IO.SeekOrigin.Begin)) {
+                    writer.Write((uint)EndFileSize);
+                }
             }
 
             //Write file size
@@ -473,6 +490,8 @@ namespace FirstPlugin
             public ushort Hash { get; set; }
             public ushort NodeCount;
             public uint FirstNodeIndex { get; set; }
+
+            public ushort ID { get; set; } = 0xFFFF;
 
             public DirectoryEntry(RARC rarc) { ParentArchive = rarc; }
 
