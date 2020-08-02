@@ -102,7 +102,6 @@ namespace FirstPlugin
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
-            CanSave = true;
 
             //Set renderer
             Renderer = new BMD_Renderer();
