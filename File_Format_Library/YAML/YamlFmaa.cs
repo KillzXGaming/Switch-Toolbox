@@ -508,7 +508,10 @@ namespace FirstPlugin
         {
             var serializerSettings = new SerializerSettings()
             {
-              //  EmitTags = false
+                EmitTags = false,
+                EmitAlias = false,
+                EmitCapacityForList = false,
+                EmitShortTypeName = false
             };
 
             serializerSettings.DefaultStyle = YamlStyle.Any;
