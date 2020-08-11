@@ -1532,7 +1532,7 @@ namespace FirstPlugin
                         ((BNTX)node).Save(mem);
 
                         resFile.ExternalFiles.Add(new ExternalFile() { Data = mem.ToArray() });
-                        resFile.ExternalFileDict.Add("textures.bntx");
+                        resFile.ExternalFileDict.Add(((BNTX)node).FileName);
                     }
                 }
             }
