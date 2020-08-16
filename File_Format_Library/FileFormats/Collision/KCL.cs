@@ -381,7 +381,7 @@ namespace FirstPlugin
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Supported Formats|*.obj";
-            sfd.FileName = Text;
+            sfd.FileName = Path.GetFileNameWithoutExtension(Text) + ".obj";
             sfd.DefaultExt = ".obj";
 
             if (sfd.ShowDialog() == DialogResult.OK)
