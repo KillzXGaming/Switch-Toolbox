@@ -1,9 +1,10 @@
 {
   "GameTitle": "Splatoon 1",
+  "Platform": "WII U",
   "PrismThickness": 30.0,
   "SphereRadius": 25.0,
   "Comments": "",
   "MaterialPresets": {
-      "0": "Unknown",
+    "0": "Unknown"
   }
 }

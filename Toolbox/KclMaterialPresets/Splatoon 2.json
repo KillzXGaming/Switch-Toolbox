@@ -1,9 +1,10 @@
 {
   "GameTitle": "Splatoon 2",
+  "Platform": "SWITCH",
   "PrismThickness": 30.0,
   "SphereRadius": 25.0,
   "Comments": "",
   "MaterialPresets": {
-      "0": "Unknown",
+    "0": "Unknown"
   }
 }

@@ -1,0 +1,16 @@
+{
+  "GameTitle": "Default",
+  "Platform": "SWITCH",
+  "PrismThickness": 30.0,
+  "SphereRadius": 25.0,
+  "PaddingMin": -50.0,
+  "PaddingMax": 50.0,
+  "MaxRootSize": 2048,
+  "MinRootSize": 128,
+  "MinCubeSize": 32,
+  "MaxTrianglesInCube": 10,
+  "Comments": "",
+  "MaterialPresets": {
+    "0": "Unknown"
+  }
+}

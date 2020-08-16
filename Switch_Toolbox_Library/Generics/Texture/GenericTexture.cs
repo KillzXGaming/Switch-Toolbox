@@ -1041,6 +1041,20 @@ namespace Toolbox.Library
                 dds.header.ddspf.ABitMask = components[(int)AlphaChannel];*/
             }
 
+         /*  if (Runtime.ImageEditor.PreviewGammaFix)
+            {
+                foreach (var surface in surfaces)
+                {
+                    Bitmap bitMap = GetBitmap(surfaces.IndexOf(surface), 0);
+                    bitMap = BitmapExtension.AdjustGamma(bitMap, 1.0f / 2.2f);
+                    if (Runtime.ImageEditor.UseComponetSelector)
+                        bitMap = BitmapExtension.SetChannel(bitMap, RedChannel, GreenChannel, BlueChannel, AlphaChannel);
+
+                    var reEncoded = GenerateMipsAndCompress(bitMap, MipCount, Format);
+                    //surface.mipmaps = reEncoded;
+                }
+            }*/
+
             bool isCubeMap = ArrayCount == 6;
 
             if (surfaces.Count > 1) //Use DX10 format for array surfaces as it can do custom amounts

@@ -81,9 +81,13 @@
       <HintPath>..\Toolbox\Gl_EditorFramework.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="KCLExt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Toolbox\Lib\KCLExt.dll</HintPath>
+    <Reference Include="KclLibrary">
+      <HintPath>..\Toolbox\Lib\KclLibrary.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="KclLibraryGUI">
+      <HintPath>..\Toolbox\Lib\KclLibraryGUI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="LibHac">
       <HintPath>..\Toolbox\Lib\LibHac.dll</HintPath>
@@ -1250,12 +1254,6 @@
     <Compile Include="GUI\Editors\EffectTableEditor.Designer.cs">
       <DependentUpon>EffectTableEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\KCL\CollisionMaterialEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\KCL\CollisionMaterialEditor.Designer.cs">
-      <DependentUpon>CollisionMaterialEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\Message\MSBTEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -2137,9 +2135,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\VisibiltyAnimEditor.resx">
       <DependentUpon>VisibiltyAnimEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\KCL\CollisionMaterialEditor.resx">
-      <DependentUpon>CollisionMaterialEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\KeySelection.resx" />
     <EmbeddedResource Include="GUI\Byaml\ByamlEditor.resx">

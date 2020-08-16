@@ -1,0 +1,15 @@
+{
+  "GameTitle": "Mario Kart Wii",
+  "Platform": "WII",
+  "PrismThickness": 300.0,
+  "SphereRadius": 250.0,
+  "PaddingMin": -250.0,
+  "PaddingMax": 250.0,
+  "MaxRootSize": 2048,
+  "MinRootSize": 128,
+  "MinCubeSize": 512,
+  "MaxTrianglesInCube": 60,
+  "Comments": "",
+  "MaterialPresets": {
+  }
+}

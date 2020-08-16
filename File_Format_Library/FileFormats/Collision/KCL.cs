@@ -7,11 +7,14 @@ using GL_EditorFramework.Interfaces;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 using Toolbox.Library.Rendering;
-using System.Drawing;
+using System.Threading;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using FirstPlugin.Forms;
 using ByamlExt.Byaml;
+using KclLibrary;
+using KclLibraryGUI;
+using Syroot.NintenTools.MarioKart8.Collisions;
 
 namespace FirstPlugin
 {
@@ -28,10 +31,9 @@ namespace FirstPlugin
 
         public bool Identify(System.IO.Stream stream)
         {
-            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
-            {
+            using (var reader = new Toolbox.Library.IO.FileReader(stream, true)) {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                return reader.ReadUInt32() == 0x02020000;
+                return reader.ReadUInt32() == 0x02020000 || Utils.GetExtension(FileName) == ".kcl";
             }
         }
 
@@ -45,7 +47,7 @@ namespace FirstPlugin
             }
         }
 
-        private byte[] data;
+        public KCLFile KclFile { get; set; }
 
         public ToolStripItem[] GetContextMenuItems()
         {
@@ -55,9 +57,8 @@ namespace FirstPlugin
                 new ToolStripMenuItem("Export", null, Export, Keys.Control | Keys.E),
                 new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R),
                 new ToolStripSeparator(),
-                new ToolStripMenuItem("Open Material Editor", null, OpenMaterialEditor, Keys.Control | Keys.M),
                 new ToolStripMenuItem("Big Endian Mode", null, SwapEndianess, Keys.Control | Keys.B)
-                { Checked = (Endianness == Syroot.BinaryData.ByteOrder.BigEndian), },
+                { Checked = (KclFile.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian), },
             };
         }
 
@@ -70,9 +71,7 @@ namespace FirstPlugin
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            MarioKart.MK7.KCL.CollisionPresets.Clear();
-            MarioKart.MK7.KCL.LoadPresets(Directory.GetFiles(path));
-            MarioKart.MK7.KCL.LoadDefaultPresets();
+            CollisionPresetData.LoadPresets(Directory.GetFiles("KclMaterialPresets"));
         }
 
         public bool UseOverlay
@@ -85,17 +84,6 @@ namespace FirstPlugin
         {
             get { return Renderer.Visible; }
             set { Renderer.Visible = value; }
-        }
-
-        private void OpenMaterialEditor(object sender, EventArgs args)
-        {
-            CollisionMaterialEditor editor = new CollisionMaterialEditor();
-            editor.LoadCollisionValues(kcl, Renderer);
-
-            if (editor.ShowDialog() == DialogResult.OK)
-            {
-
-            }
         }
 
         public DrawableContainer DrawableContainer = new DrawableContainer();
@@ -114,8 +102,8 @@ namespace FirstPlugin
             };
 
             stream.Position = 0;
-            data = stream.ToArray();
-            Read(data);
+            KclFile = new KCLFile(stream);
+            ReloadData();
         }
 
         class MenuExt : IFileMenuExtension
@@ -207,38 +195,48 @@ namespace FirstPlugin
 
             public void CreateNew(object sender, EventArgs args)
             {
-                var ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
-
+                bool isBigEndian = false;
                 if (sender.ToString() == "KCL (Wii U)")
-                    ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                    isBigEndian = true;
 
-                OpenFileDialog opn = new OpenFileDialog();
-                opn.Filter = "Supported Formats|*.obj";
-                if (opn.ShowDialog() != DialogResult.OK) return;
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = "Supported Formats|*.obj";
+                if (ofd.ShowDialog() != DialogResult.OK) return;
 
-                var mod = EditorCore.Common.OBJ.Read(new MemoryStream(File.ReadAllBytes(opn.FileName)), null);
+                var form = Runtime.MainForm;
 
-                var f = MarioKart.MK7.KCL.FromOBJ(mod);
-
-                string name = System.IO.Path.GetFileNameWithoutExtension(opn.FileName);
-
-                KCL kcl = new KCL();
-                kcl.Text = name;
-                kcl.IFileInfo = new IFileInfo();
-                kcl.FileName = name;
-                kcl.Renderer = new KCLRendering();
-
-                kcl.DrawableContainer = new DrawableContainer()
+                var thread = new Thread(() =>
                 {
-                    Name = kcl.FileName,
-                    Drawables = new List<AbstractGlDrawable>() { kcl.Renderer },
-                };
+                    var result = CollisionLoader.CreateCollisionFromObject(form, ofd.FileName);
+                    CollisionLoader.CloseConsole(form);
 
-                kcl.Read(f.Write(ByteOrder));
+                    if (result.KclFie == null) return;
 
-                ObjectEditor editor = new ObjectEditor(kcl);
-                editor.Text = name;
-                LibraryGUI.CreateMdiWindow(editor);
+                    form.Invoke((MethodInvoker)delegate
+                    {
+                        string name = Path.GetFileNameWithoutExtension(ofd.FileName);
+
+                        KCL kcl = new KCL();
+                        kcl.KclFile = result.KclFie;
+                        kcl.AttributeByml = result.AttributeByml;
+                        kcl.Text = name;
+                        kcl.IFileInfo = new IFileInfo();
+                        kcl.FileName = name;
+                        kcl.Renderer = new KCLRendering();
+                        kcl.ReloadData();
+
+                        kcl.DrawableContainer = new DrawableContainer()
+                        {
+                            Name = kcl.FileName,
+                            Drawables = new List<AbstractGlDrawable>() { kcl.Renderer },
+                        };
+
+                        ObjectEditor editor = new ObjectEditor(kcl);
+                        editor.Text = name;
+                        LibraryGUI.CreateMdiWindow(editor);
+                    });
+                });
+                thread.Start();
             }
         }
 
@@ -249,11 +247,7 @@ namespace FirstPlugin
 
         public void Save(System.IO.Stream stream)
         {
-            using (var writer = new FileWriter(stream))
-            {
-                writer.Write(data);
-            }
-
+            KclFile.Save(stream);
             SaveAttributeByml();
         }
 
@@ -380,22 +374,9 @@ namespace FirstPlugin
             }
         }
 
-        private Syroot.BinaryData.ByteOrder endianness;
-        public Syroot.BinaryData.ByteOrder Endianness
-        {
-            get
-            {
-                return endianness;
-            }
-            set
-            {
-                endianness = value;
-            }
-        }
-
         private void Export(object sender, EventArgs args)
         {
-            if (kcl == null)
+            if (KclFile == null)
                 return;
 
             SaveFileDialog sfd = new SaveFileDialog();
@@ -405,7 +386,8 @@ namespace FirstPlugin
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                kcl.ToOBJ().toWritableObj().WriteObj(sfd.FileName + ".obj");
+                var obj = KclFile.CreateGenericModel();
+                obj.Save(sfd.FileName, true);
             }
         }
 
@@ -416,27 +398,34 @@ namespace FirstPlugin
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                var mod = EditorCore.Common.OBJ.Read(new MemoryStream(File.ReadAllBytes(ofd.FileName)), null);
-                if (mod.Faces.Count > 65535)
+                var form = Runtime.MainForm;
+
+                var thread = new Thread(() =>
                 {
-                    MessageBox.Show("this model has too many faces, only models with less than 65535 triangles can be converted");
-                    return;
-                }
-                kcl = MarioKart.MK7.KCL.FromOBJ(mod);
-                AttributeByml = kcl.AttributeByml;
-                data = kcl.Write(Endianness);
-                Read(data);
-                Renderer.UpdateVertexData();
-                SaveAttributeByml(true);
+                    var result = CollisionLoader.CreateCollisionFromObject(form, ofd.FileName);
+                    CollisionLoader.CloseConsole(form);
+
+                    if (result.KclFie == null) return;
+
+                    form.Invoke((MethodInvoker)delegate
+                    {
+                        KclFile = result.KclFie;
+                        AttributeByml = result.AttributeByml;
+                        ReloadData();
+                        Renderer.UpdateVertexData();
+                        SaveAttributeByml(true);
+                    });
+                });
+                thread.Start();
             }
         }
 
         private void SwapEndianess(object sender, EventArgs args)
         {
-            if (Endianness == Syroot.BinaryData.ByteOrder.BigEndian)
-                Endianness = Syroot.BinaryData.ByteOrder.LittleEndian;
+            if (KclFile.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian)
+                KclFile.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
             else
-                Endianness = Syroot.BinaryData.ByteOrder.BigEndian;
+                KclFile.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
         }
 
         private Viewport viewport
@@ -478,234 +467,59 @@ namespace FirstPlugin
             }
         }
 
-        private MarioKart.MK7.KCL kcl;
-        private void Read(byte[] file_data)
-        {
-            data = file_data;
-
-            try
-            {
-                Endianness = Syroot.BinaryData.ByteOrder.LittleEndian;
-                kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.LittleEndian);
-            }
-            catch
-            {
-                Endianness = Syroot.BinaryData.ByteOrder.BigEndian;
-                kcl = new MarioKart.MK7.KCL(file_data, Syroot.BinaryData.ByteOrder.BigEndian);
-            }
-
-
-            Read(kcl);
-        }
-
-        public float DropToGround(Vector3 position)
-        {
-            List<float> found = new List<float>();
-
-            foreach (var model in kcl.Models) {
-                for (int p = 0; p < model.Planes.Length; p++) {
-                    var triangle = model.GetTriangle(model.Planes[p]);
-                    Vector3 a = Vec3D_To_Vec3(triangle.PointA);
-                    Vector3 b = Vec3D_To_Vec3(triangle.PointB);
-                    Vector3 c = Vec3D_To_Vec3(triangle.PointC);
-                    if (PointInTriangle(position.Xz, a.Xz, b.Xz, c.Xz))
-                        found.Add(barryCentric(a, b, c, position));
-                }
-            }
-
-            if (found.Count == 0)
-                return position.Y;
-
-            int closest_index = 0;
-            float closest_abs = 9999999.0f;
-            for (int i = 0; i < found.Count; i++)
-            {
-                float abs = Math.Abs(position.Y - found[i]);
-                if (abs < closest_abs)
-                {
-                    closest_abs = abs;
-                    closest_index = i;
-                }
-            }
-
-            Console.WriteLine($"found closest Y {found[closest_index]}");
-
-            return found[closest_index];
-        }
-
-        public static float barryCentric(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 pos)
-        {
-            float det = (p2.Z - p3.Z) * (p1.X - p3.X) + (p3.X - p2.X) * (p1.Z - p3.Z);
-            float l1 = ((p2.Z - p3.Z) * (pos.X - p3.X) + (p3.X - p2.X) * (pos.Z - p3.Z)) / det;
-            float l2 = ((p3.Z - p1.Z) * (pos.X - p3.X) + (p1.X - p3.X) * (pos.Z - p3.Z)) / det;
-            float l3 = 1.0f - l1 - l2;
-            return l1 * p1.Y + l2 * p2.Y + l3 * p3.Y;
-        }
-
-        public static bool PointInTriangle(Vector2 p, Vector2 p0, Vector2 p1, Vector2 p2)
-        {
-            var s = p0.Y * p2.X - p0.X * p2.Y + (p2.Y - p0.Y) * p.X + (p0.X - p2.X) * p.Y;
-            var t = p0.X * p1.Y - p0.Y * p1.X + (p0.Y - p1.Y) * p.X + (p1.X - p0.X) * p.Y;
-
-            if ((s < 0) != (t < 0))
-                return false;
-
-            var A = -p1.Y * p2.X + p0.Y * (p2.X - p1.X) + p0.X * (p1.Y - p2.Y) + p1.X * p2.Y;
-            if (A < 0.0)
-            {
-                s = -s;
-                t = -t;
-                A = -A;
-            }
-            return s > 0 && t > 0 && (s + t) <= A;
-        }
-
-        private void LoadModelTree(TreeNode parent, MarioKart.ModelOctree[] modelOctrees)
-        {
-            if (modelOctrees == null)
-                return;
-
-            foreach (var model in modelOctrees)
-            {
-                OctreeNode modelNode = new OctreeNode(model, model.Key.ToString("X"));
-                parent.Nodes.Add(modelNode);
-                LoadModelTree(modelNode, model.Children);
-            }
-        }
-
-        public class OctreeNode : TreeNodeCustom
-        {
-            public List<OctreeNode> Children
-            {
-                get
-                {
-                    List<OctreeNode> trees = new List<OctreeNode>();
-                    foreach (var node in Nodes)
-                        trees.Add((OctreeNode)node);
-                    return trees;
-                }
-            }
-
-            MarioKart.ModelOctree Octree;
-
-            public OctreeNode(MarioKart.ModelOctree octree, string name)
-            {
-                Octree = octree;
-                Text = name;
-            }
-
-            public override void OnClick(TreeView treeview)
-            {
-
-            }
-        }
-
-        public List<KCLModel> GetKclModels()
-        {
+        public List<KCLModel> GetKclModels() {
             return Renderer.models;
         }
 
-        private void Read(MarioKart.MK7.KCL kcl)
+        private void ReloadData()
         {
-            Vector3 min = new Vector3();
-            Vector3 max = new Vector3();
+            //Split collision triangles by materials between all the models
+            Dictionary<int, List<Triangle>> triangleList = new Dictionary<int, List<Triangle>>();
 
-            Nodes.Clear();
-            Renderer.OctreeNodes.Clear();
+            foreach (var model in KclFile.Models) {
+                foreach (var prisim in model.Prisims)
+                {
+                    var triangle = model.GetTriangle(prisim);
+                    if (!triangleList.ContainsKey(prisim.CollisionFlags))
+                        triangleList.Add(prisim.CollisionFlags, new List<Triangle>());
+
+                    triangleList[prisim.CollisionFlags].Add(triangle);
+                }
+            }
+
             Renderer.models.Clear();
-            Renderer.KclFile = kcl;
+            Nodes.Clear();
 
-            TreeNode modelTree = new TreeNode("Model Octree");
-            LoadModelTree(modelTree, kcl.GlobalHeader.ModelOctrees);
-            foreach (var node in modelTree.Nodes)
-                Renderer.OctreeNodes.Add((OctreeNode)node);
-            Nodes.Add(modelTree);
-
-            int CurModelIndx = 0;
-            foreach (MarioKart.MK7.KCL.KCLModel mdl in kcl.Models)
+            //Load the vertex data for rendering
+            foreach (var triGroup in triangleList)
             {
                 KCLModel kclmodel = new KCLModel();
+                kclmodel.Text = $"COL_{triGroup.Key.ToString("X")}";
 
-                kclmodel.Text = "Model " + CurModelIndx;
+                int faceIndex = 0;
 
-                int ft = 0;
-                foreach (var plane in mdl.Planes)
+                var triangles = triGroup.Value;
+                for (int i = 0; i < triangles.Count; i++)
                 {
-                    var triangle = mdl.GetTriangle(plane);
-                    var normal = triangle.Normal;
-                    var pointA = triangle.PointA;
-                    var pointB = triangle.PointB;
-                    var pointC = triangle.PointC;
+                    for (int v = 0; v < triangles[i].Vertices.Length; v++) {
+                        var positon = triangles[i].Vertices[v];
+                        var normal = triangles[i].Normal;
+                        var attribute = triGroup.Key;
 
-                    Vertex vtx = new Vertex();
-                    Vertex vtx2 = new Vertex();
-                    Vertex vtx3 = new Vertex();
-
-                    vtx.pos = new Vector3(Vec3D_To_Vec3(pointA));
-                    vtx2.pos = new Vector3(Vec3D_To_Vec3(pointB));
-                    vtx3.pos = new Vector3(Vec3D_To_Vec3(pointC));
-                    vtx.nrm = new Vector3(Vec3D_To_Vec3(normal));
-                    vtx2.nrm = new Vector3(Vec3D_To_Vec3(normal));
-                    vtx3.nrm = new Vector3(Vec3D_To_Vec3(normal));
-
-                    KCLModel.Face face = new KCLModel.Face();
-                    face.Text = triangle.Collision.ToString();
-                    face.MaterialFlag = triangle.Collision;
-
-                    var col = MarioKart.MK7.KCLColors.GetMaterialColor(plane.CollisionType);
-                    Vector3 ColorSet = new Vector3(col.R, col.G, col.B);
-
-                    vtx.col = new Vector4(ColorSet, 1);
-                    vtx2.col = new Vector4(ColorSet, 1);
-                    vtx3.col = new Vector4(ColorSet, 1);
-
-                    kclmodel.faces.Add(ft);
-                    kclmodel.faces.Add(ft + 1);
-                    kclmodel.faces.Add(ft + 2);
-
-                    ft += 3;
-
-                    kclmodel.vertices.Add(vtx);
-                    kclmodel.vertices.Add(vtx2);
-                    kclmodel.vertices.Add(vtx3);
-
-                    #region FindMaxMin
-                    if (triangle.PointA.X < min.X) min.X = (float)triangle.PointA.X;
-                    if (triangle.PointA.Y < min.Y) min.Y = (float)triangle.PointA.Y;
-                    if (triangle.PointA.Z < min.Z) min.Z = (float)triangle.PointA.Z;
-                    if (triangle.PointA.X > max.X) max.X = (float)triangle.PointA.X;
-                    if (triangle.PointA.Y > max.Y) max.Y = (float)triangle.PointA.Y;
-                    if (triangle.PointA.Z > max.Z) max.Z = (float)triangle.PointA.Z;
-
-                    if (triangle.PointB.X < min.X) min.X = (float)triangle.PointB.X;
-                    if (triangle.PointB.Y < min.Y) min.Y = (float)triangle.PointB.Y;
-                    if (triangle.PointB.Z < min.Z) min.Z = (float)triangle.PointB.Z;
-                    if (triangle.PointB.X > max.X) max.X = (float)triangle.PointB.X;
-                    if (triangle.PointB.Y > max.Y) max.Y = (float)triangle.PointB.Y;
-                    if (triangle.PointB.Z > max.Z) max.Z = (float)triangle.PointB.Z;
-
-                    if (triangle.PointC.X < min.X) min.X = (float)triangle.PointC.X;
-                    if (triangle.PointC.Y < min.Y) min.Y = (float)triangle.PointC.Y;
-                    if (triangle.PointC.Z < min.Z) min.Z = (float)triangle.PointC.Z;
-                    if (triangle.PointC.X > max.X) max.X = (float)triangle.PointC.X;
-                    if (triangle.PointC.Y > max.Y) max.Y = (float)triangle.PointC.Y;
-                    if (triangle.PointC.Z > max.Z) max.Z = (float)triangle.PointC.Z;
-                    #endregion
+                        kclmodel.vertices.Add(new Vertex()
+                        {
+                            pos = new Vector3(positon.X, positon.Y, positon.Z),
+                            nrm = new Vector3(normal.X, normal.Y, normal.Z),
+                            col = new Vector4(1,1,1,1),
+                        });
+                        kclmodel.faces.Add(faceIndex + v);
+                    }
+                    faceIndex += 3;
                 }
 
-                Renderer.Max = max;
-                Renderer.Min = min;
                 Renderer.models.Add(kclmodel);
                 Nodes.Add(kclmodel);
-
-                CurModelIndx++;
             }
-        }
-
-        //Convert KCL lib vec3 to opentk one so i can use the cross and dot methods
-        public static Vector3 Vec3D_To_Vec3(System.Windows.Media.Media3D.Vector3D v)
-        {
-            return new Vector3((float)v.X, (float)v.Y, (float)v.Z);
         }
 
         public struct DisplayVertex
