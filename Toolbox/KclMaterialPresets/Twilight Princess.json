@@ -1,0 +1,15 @@
+{
+  "GameTitle": "LOZ Twilight Princess",
+  "Platform": "GCN",
+  "PrismThickness": 1.0,
+  "SphereRadius": 1.0,
+  "PaddingMin": -1.0,
+  "PaddingMax": 1.0,
+  "MaxRootSize": 1024,
+  "MinRootSize": 128,
+  "MinCubeSize": 128,
+  "MaxTrianglesInCube": 50,
+  "Comments": "",
+  "MaterialPresets": {
+  }
+}
