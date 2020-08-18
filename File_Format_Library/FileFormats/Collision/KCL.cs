@@ -66,12 +66,6 @@ namespace FirstPlugin
         {
             CanSave = true;
             IFileInfo = new IFileInfo();
-
-            string path = Path.Combine(Runtime.ExecutableDir, "KclMaterialPresets");
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            CollisionPresetData.LoadPresets(Directory.GetFiles("KclMaterialPresets"));
         }
 
         public bool UseOverlay
@@ -104,6 +98,12 @@ namespace FirstPlugin
             stream.Position = 0;
             KclFile = new KCLFile(stream);
             ReloadData();
+
+            string path = Path.Combine(Runtime.ExecutableDir, "KclMaterialPresets");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            CollisionPresetData.LoadPresets(Directory.GetFiles("KclMaterialPresets"));
         }
 
         class MenuExt : IFileMenuExtension
@@ -207,10 +207,17 @@ namespace FirstPlugin
 
                 var thread = new Thread(() =>
                 {
+                    //Load runtime values to gui handler
+                    MaterialWindowSettings.GamePreset = Runtime.CollisionSettings.KCLGamePreset;
+                    MaterialWindowSettings.Platform = Runtime.CollisionSettings.KCLGamePreset;
+                    MaterialWindowSettings.UsePresetEditor = Runtime.CollisionSettings.KCLUsePresetEditor;
+
                     var result = CollisionLoader.CreateCollisionFromObject(form, ofd.FileName);
                     CollisionLoader.CloseConsole(form);
 
                     if (result.KclFie == null) return;
+
+                    SaveMaterialWindowSettings();
 
                     form.Invoke((MethodInvoker)delegate
                     {
@@ -402,10 +409,17 @@ namespace FirstPlugin
 
                 var thread = new Thread(() =>
                 {
+                    //Load runtime values to gui handler
+                    MaterialWindowSettings.GamePreset = Runtime.CollisionSettings.KCLGamePreset;
+                    MaterialWindowSettings.Platform = GetPlatform();
+                    MaterialWindowSettings.UsePresetEditor = Runtime.CollisionSettings.KCLUsePresetEditor;
+
                     var result = CollisionLoader.CreateCollisionFromObject(form, ofd.FileName);
                     CollisionLoader.CloseConsole(form);
 
                     if (result.KclFie == null) return;
+
+                    SaveMaterialWindowSettings();
 
                     form.Invoke((MethodInvoker)delegate
                     {
@@ -417,6 +431,23 @@ namespace FirstPlugin
                     });
                 });
                 thread.Start();
+            }
+        }
+
+        private string GetPlatform()
+        {
+            switch (KclFile.Version)
+            {
+                case FileVersion.VersionDS: return "NDS";
+                case FileVersion.VersionGC: return "GCN";
+                case FileVersion.VersionWII: return "WII";
+                case FileVersion.Version2:
+                    if (KclFile.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian)
+                        return "WII U";
+                    else
+                        return "SWITCH";
+                default:
+                    return "SWITCH";
             }
         }
 
@@ -471,19 +502,28 @@ namespace FirstPlugin
             return Renderer.models;
         }
 
+        private static void SaveMaterialWindowSettings()
+        {
+            //Apply runtime values for later use (and to save as config)
+            Runtime.CollisionSettings.KCLGamePreset = MaterialWindowSettings.GamePreset;
+            Runtime.CollisionSettings.KCLPlatform = MaterialWindowSettings.Platform;
+            Runtime.CollisionSettings.KCLUsePresetEditor = MaterialWindowSettings.UsePresetEditor;
+            Toolbox.Library.Config.Save();
+        }
+
         private void ReloadData()
         {
             //Split collision triangles by materials between all the models
             Dictionary<int, List<Triangle>> triangleList = new Dictionary<int, List<Triangle>>();
 
             foreach (var model in KclFile.Models) {
-                foreach (var prisim in model.Prisims)
+                foreach (var prism in model.Prisms)
                 {
-                    var triangle = model.GetTriangle(prisim);
-                    if (!triangleList.ContainsKey(prisim.CollisionFlags))
-                        triangleList.Add(prisim.CollisionFlags, new List<Triangle>());
+                    var triangle = model.GetTriangle(prism);
+                    if (!triangleList.ContainsKey(prism.CollisionFlags))
+                        triangleList.Add(prism.CollisionFlags, new List<Triangle>());
 
-                    triangleList[prisim.CollisionFlags].Add(triangle);
+                    triangleList[prism.CollisionFlags].Add(triangle);
                 }
             }
 
