@@ -1,0 +1,756 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>KclLibrary</name>
+    </assembly>
+    <members>
+        <member name="T:KclLibrary.CollisionImportSettings">
+            <summary>
+            Settings used to configure collision generated from triangles.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.CollisionImportSettings.MaxRootSize">
+            <summary>
+            The max cube size of the root octrees.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.CollisionImportSettings.MinRootSize">
+            <summary>
+            The min cube size of the root octrees.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.CollisionImportSettings.MaxCubeSize">
+            <summary>
+            The max cube size of the all octrees.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.CollisionImportSettings.MinCubeSize">
+            <summary>
+            The min cube size of the all octrees.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.CollisionImportSettings.MaxOctreeDepth">
+            <summary>
+            The max depth size of the all octrees.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.CollisionImportSettings.MaxTrianglesInCube">
+            <summary>
+            The max amount of triangles in an octree.
+            When the limit is reached, octrees will divide until the min cube size is reached.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.CollisionImportSettings.PrismThickness">
+            <summary>
+            Determines the max distance of the normals for a prism.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.CollisionImportSettings.SphereRadius">
+            <summary>
+            The sphere radius used for an unknown purpose.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.CollisionImportSettings.PaddingMin">
+            <summary>
+            The min amount of padding to use for the collison boundings.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.CollisionImportSettings.PaddingMax">
+            <summary>
+            The max amount of padding to use for the collison boundings.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.FileVersion">
+            <summary>
+            Represents the version of the file binary.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.BinaryDataReaderExtensions">
+            <summary>
+            Represents extension methods for <see cref="T:Syroot.BinaryData.BinaryDataReader"/> instances.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.BinaryDataReaderExtensions.ReadPrisms(Syroot.BinaryData.BinaryDataReader,System.Int32,KclLibrary.FileVersion)">
+            <summary>
+            Reads <see cref="!:KclFace"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="!:KclFace"/> instances.</returns>
+        </member>
+        <member name="M:KclLibrary.BinaryDataReaderExtensions.ReadVector3U(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Reads a <see cref="T:System.Numerics.Vector3"/> instance from the current stream and returns it.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <returns>The <see cref="T:System.Numerics.Vector3"/> instance.</returns>
+        </member>
+        <member name="M:KclLibrary.BinaryDataReaderExtensions.ReadVector3s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="T:System.Numerics.Vector3"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="T:System.Numerics.Vector3"/> instances.</returns>
+        </member>
+        <member name="M:KclLibrary.BinaryDataReaderExtensions.ReadVector3F(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Reads a <see cref="!:Vector3F"/> instance from the current stream and returns it.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <returns>The <see cref="!:Vector3F"/> instance.</returns>
+        </member>
+        <member name="M:KclLibrary.BinaryDataReaderExtensions.ReadVector3Fs(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="!:Vector3F"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="!:Vector3F"/> instances.</returns>
+        </member>
+        <member name="M:KclLibrary.BinaryDataReaderExtensions.ReadVector3Fx16s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="!:Vector3F"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="!:Vector3F"/> instances.</returns>
+        </member>
+        <member name="M:KclLibrary.BinaryDataReaderExtensions.ReadVector3Fx32s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
+            <summary>
+            Reads <see cref="!:Vector3F"/> instances from the current stream and returns them.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
+            <param name="count">The number of instances to read.</param>
+            <returns>The <see cref="!:Vector3F"/> instances.</returns>
+        </member>
+        <member name="T:KclLibrary.BinaryDataWriterExtensions">
+            <summary>
+            Represents extension methods for <see cref="T:Syroot.BinaryData.BinaryDataWriter"/> instances.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,KclLibrary.KclPrism[],KclLibrary.FileVersion)">
+            <summary>
+            Writes <see cref="!:KclFace"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="values">The <see cref="!:KclFace"/> instances.</param>
+        </member>
+        <member name="M:KclLibrary.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,KclLibrary.Vector3U)">
+            <summary>
+            Writes a <see cref="T:System.Numerics.Vector3"/> instance into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="value">The <see cref="T:System.Numerics.Vector3"/> instance.</param>
+        </member>
+        <member name="M:KclLibrary.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,KclLibrary.Vector3U[])">
+            <summary>
+            Writes <see cref="T:System.Numerics.Vector3"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="values">The <see cref="T:System.Numerics.Vector3"/> instances.</param>
+        </member>
+        <member name="M:KclLibrary.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Numerics.Vector3)">
+            <summary>
+            Writes a <see cref="!:Vector3F"/> instance into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="value">The <see cref="!:Vector3F"/> instance.</param>
+        </member>
+        <member name="M:KclLibrary.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Numerics.Vector3[])">
+            <summary>
+            Writes <see cref="!:Vector3F"/> instances into the current stream.
+            </summary>
+            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
+            <param name="values">The <see cref="!:Vector3F"/> instances.</param>
+        </member>
+        <member name="T:KclLibrary.KclPrism">
+            <summary>
+            Represents a prism as stored in a collision file.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.KclPrism.Length">
+            <summary>
+            The length of this triangle.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.KclPrism.PositionIndex">
+            <summary>
+            The 0-based index of the positional vector in the position array of the model this triangle belongs to.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.KclPrism.DirectionIndex">
+            <summary>
+            The 0-based index of the direction normal in the normal array of the model this triangle belongs to.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.KclPrism.Normal1Index">
+            <summary>
+            The first 0-based index of the normal in the normal array of the model this triangle belongs to.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.KclPrism.Normal2Index">
+            <summary>
+            The second 0-based index of the normal in the normal array of the model this triangle belongs to.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.KclPrism.Normal3Index">
+            <summary>
+            The third 0-based index of the normal in the normal array of the model this triangle belongs to.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.KclPrism.CollisionFlags">
+            <summary>
+            The collision flags determining in-game behavior when colliding with this polygon.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.KclPrism.GlobalIndex">
+            <summary>
+            The 0-based index of the triangle in the KCL file this triangle belongs to.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.KCLFile">
+            <summary>
+            Represents the header of a V2 KCL binary collision file.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.KCLFile.#ctor(System.Collections.Generic.List{KclLibrary.Triangle},KclLibrary.FileVersion,System.Boolean,KclLibrary.CollisionImportSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="!:KclFile"/> class, created from the given
+            <paramref name="objModel"/>.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.KCLFile.#ctor(System.String)">
+            <summary>
+            Loads the data from the given file.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="M:KclLibrary.KCLFile.#ctor(System.IO.Stream)">
+            <summary>
+            Loads the data from the given stream.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="P:KclLibrary.KCLFile.Version">
+            <summary>
+            Represents the version of the KCL.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLFile.MinCoordinate">
+            <summary>
+            Gets the smallest coordinate spanned by the octree in this file.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLFile.MaxCoordinate">
+            <summary>
+            Gets the biggest coordinate spanned by the octree in this file.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLFile.CoordinateShift">
+            <summary>
+            Gets the coordinate shift required to compute indices into the octree.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLFile.PrismCount">
+            <summary>
+            Gets the total amount of prisms used in the KCL file.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLFile.ModelOctreeRoot">
+            <summary>
+            Gets the root node of the model octree.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLFile.Models">
+            <summary>
+            Gets the list of <see cref="T:KclLibrary.KCLModel"/> instances referenced by the model octree.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLFile.ByteOrder">
+            <summary>
+            Gets or sets the byte order of the KCL file.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.KCLFile.Transform">
+            <summary>
+            The world transformation of the collision.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.KCLFile.CreateGenericModel">
+            <summary>
+            Creates a generic model which can be exported into a .obj file format.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KclLibrary.KCLFile.Load(System.IO.Stream,System.Boolean)">
+            <summary>
+            Loads the data from the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after loading the instance.
+            </param>
+        </member>
+        <member name="M:KclLibrary.KCLFile.Save(System.String)">
+            <summary>
+            Saves the data in the given file.
+            </summary>
+            <param name="fileName">The name of the file to save the data in.</param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:KclLibrary.KCLFile.Save(System.IO.Stream)" -->
+        <member name="M:KclLibrary.KCLFile.Replace(System.Collections.Generic.List{KclLibrary.Triangle},KclLibrary.CollisionImportSettings)">
+            <summary>
+            Replaces the current collision model from the given
+            <paramref name="objModel"/>.
+            </summary>
+            <param name="objModel">The <see cref="T:KclLibrary.ObjModel"/> to create the collision data from.</param>
+        </member>
+        <member name="M:KclLibrary.KCLFile.ResetHits">
+            <summary>
+            Resets the list of prisim and octree data for any that has been previously hit.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.KCLFile.CheckHit(System.Numerics.Vector3)">
+            <summary>
+            Checks if a prism gets hit from a given point and returns hit information.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:KclLibrary.KCLModel.MinCoordinate">
+            <summary>
+            Gets or sets the smallest coordinate of the cube spanned by the model.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.CoordinateMask">
+            <summary>
+            Gets the coordinate mask required to compute indices into the octree.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.CoordinateShift">
+            <summary>
+            Gets the coordinate shift required to compute indices into the octree.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.Positions">
+            <summary>
+            Gets the array of vertex positions.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.Normals">
+            <summary>
+            Gets the array of vertex normals.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.Prisms">
+            <summary>
+            Gets the array of triangles.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.PrismThickness">
+            <summary>
+            Gets or sets the thickness of the Prisms.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.PolygonOctreeRoots">
+            <summary>
+            Gets the root nodes of the model triangle octree. Can be <c>null</c> if no octree was loaded or created yet.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.SphereRadius">
+            <summary>
+            Gets or sets the thickness of the prisms.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.Version">
+            <summary>
+            Gets the current file version to use in the binary file.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.HitPrisms">
+            <summary>
+            A list of prisms which are hit detectedfrom the collision handler.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.KCLModel.HitOctrees">
+            <summary>
+            A list of octrees which are hit detected from the collision handler.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.KCLModel.GetTriangle(KclLibrary.KclPrism)">
+            <summary>
+            Creates a triangle with 3 positions from the given collision prism.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KclLibrary.KCLModel.GetMaxTriangleCount">
+            <summary>
+            Gets the maximum triangle count used by an octree.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.KCLModel.GetMinCubeSize">
+            <summary>
+            Gets the smallest cube size used for the octrees.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.KCLModel.GetMaxOctreeDepth">
+            <summary>
+            Gets the max amount of octree depth used within the tree.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.KCLModel.GetOctreeBoundings">
+            <summary>
+            Gets a global list of octrees with bounding information.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KclLibrary.ModelOctreeNode.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:KclLibrary.ModelOctreeNode"/> class with an empty key.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.ModelOctreeNode.#ctor(Syroot.BinaryData.BinaryDataReader)">
+            <summary>
+            Initializes a new instance of the <see cref="!:CourseOctreeNode"/> class with the key and data read from the
+            given <paramref name="reader"/>.
+            </summary>
+            <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to read the node data with.</param>
+        </member>
+        <member name="P:KclLibrary.ModelOctreeNode.ModelIndex">
+            <summary>
+            Gets the index to the model referenced by this node in the model array of the file this node belongs to.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.OctreeNodeBase`1">
+            <summary>
+            Represents the base for an octree node.
+            </summary>
+            <typeparam name="T">The type of the octree node.</typeparam>
+        </member>
+        <member name="F:KclLibrary.OctreeNodeBase`1.ChildCount">
+            <summary>
+            The number of children of an octree node.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.OctreeNodeBase`1._flagMask">
+            <summary>
+            The bits storing the flags of this node.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.OctreeNodeBase`1.#ctor(System.UInt32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:KclLibrary.OctreeNodeBase`1"/> class with the given octree node
+            <paramref name="key"/>.
+            </summary>
+            <param name="key">The octree node key with which the node can be referenced.</param>
+        </member>
+        <member name="P:KclLibrary.OctreeNodeBase`1.Key">
+            <summary>
+            Gets the octree key used to reference this node.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.OctreeNodeBase`1.Children">
+            <summary>
+            Gets the eight children of this node.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.OctreeNodeBase`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>An enumerator that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="M:KclLibrary.OctreeNodeBase`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.</returns>
+        </member>
+        <member name="T:KclLibrary.PolygonOctree">
+            <summary>
+            Represents a node in a model triangle octree.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.PolygonOctree.#ctor(Syroot.BinaryData.BinaryDataReader,System.Int64,KclLibrary.FileVersion)">
+            <summary>
+            Initializes a new instance of the <see cref="T:KclLibrary.PolygonOctree"/> class with the key and data read from the
+            given <paramref name="reader"/>.
+            </summary>
+            <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to read the node data with.</param>
+            <param name="parentOffset">The required offset of the start of the parent node.</param>
+        </member>
+        <member name="M:KclLibrary.PolygonOctree.#ctor(System.Collections.Generic.Dictionary{System.UInt16,KclLibrary.Triangle},System.Numerics.Vector3,System.Single,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:KclLibrary.ModelOctreeNode"/> class, initializing children and
+            subdivisions from the given list of faces sorted into a cube of the given <paramref name="cubeSize"/>.
+            </summary>
+            <param name="triangles">The dictionary of <see cref="T:KclLibrary.Triangle"/> instances which have to be sorted into this
+            octree, with the key being their original index in the model.</param>
+            <param name="cubePosition">The offset of the cube.</param>
+            <param name="cubeSize">The size of the cube.</param>
+            <param name="maxTrianglesInCube">The maximum number of triangles to sort into this node.</param>
+            <param name="minCubeSize">The minimum size a cube can be subdivided to.</param>
+        </member>
+        <member name="P:KclLibrary.PolygonOctree.TriangleIndices">
+            <summary>
+            Gets the indices to triangles of the model appearing in this cube.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.TriangleBoxIntersect.TriBoxOverlap(KclLibrary.Triangle,System.Numerics.Vector3,System.Numerics.Vector3)">
+            <summary>
+            Returns a value indicating whether the given <paramref name="triangle"/> overlaps a cube positioned at the
+            <paramref name="cubeCenter"/> expanding with <paramref name="cubeHalfSize"/>.
+            </summary>
+            <param name="triangle">The <see cref="T:KclLibrary.Triangle"/> to check for overlaps.</param>
+            <param name="cubeCenter">The positional <see cref="!:Vector3F"/> at which the cube originates.</param>
+            <param name="cubeHalfSize">The half size <see cref="!:Vector3F"/> of a cube.</param>
+            <returns><c>true</c> when the triangle intersects with the cube, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:KclLibrary.TriangleHelper.TriangleCubeOverlap(KclLibrary.Triangle,System.Numerics.Vector3,System.Single)">
+            <summary>
+            Returns a value indicating whether the given <paramref name="triangle"/> overlaps a cube positioned at the
+            <paramref name="cubeCenter"/> expanding with <paramref name="cubeHalfSize"/>.
+            </summary>
+            <param name="triangle">The <see cref="T:KclLibrary.Triangle"/> to check for overlaps.</param>
+            <param name="cubeCenter">The positional <see cref="!:Vector3F"/> at which the cube originates.</param>
+            <param name="cubeHalfSize">The half length of one edge of the cube.</param>
+            <returns><c>true</c> when the triangle intersects with the cube, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="T:KclLibrary.DebugLogger">
+            <summary>
+            Keeps track of debug information being printed.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.DebugLogger.OnDebuggerUpdated">
+            <summary>
+            Runs an event when the log information is updated.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.DebugLogger.OnProgressUpdated">
+            <summary>
+            Runs an event when the progress has been updated with a precent value passed.
+            Used when a model is replaced to keep track of progress bar information.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.DebugLogger.WriteLine(System.String)">
+            <summary>
+            Writes a string of text to the logger.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.DebugLogger.UpdateProgress(System.Int32)">
+            <summary>
+            Passes a precent int value over to the progress handler.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.Maths">
+            <summary>
+            Represents a collection of mathematical functions.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.Maths.GetNext2Exponent(System.Single)">
+            <summary>
+            Gets the next power of 2 which results in a value bigger than or equal to <paramref name="value"/>.
+            </summary>
+            <param name="value">The value to which the next power of 2 will be determined.</param>
+            <returns>The next power of resulting in a value bigger than or equal to the given value.</returns>
+        </member>
+        <member name="T:KclLibrary.ObjModel">
+            <summary>
+            Represents a 3D model stored in the Wavefront OBJ format.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.ObjModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:KclLibrary.ObjModel"/> class.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.ObjModel.#ctor(System.IO.Stream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:KclLibrary.ObjModel"/> class from the given stream.
+            </summary>
+            <param name="stream">The stream from which the instance will be loaded.</param>
+        </member>
+        <member name="M:KclLibrary.ObjModel.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:KclLibrary.ObjModel"/> class from the file with the given name.
+            </summary>
+            <param name="fileName">The name of the file from which the instance will be loaded.</param>
+        </member>
+        <member name="P:KclLibrary.ObjModel.Meshes">
+            <summary>
+            Gets or sets the list of meshes of the model.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.ObjModel.Materials">
+            <summary>
+            Gets or sets the list of materials of the model.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.ObjModel.ToTriangles">
+            <summary>
+            Gets a global list of all the triangles in the object file.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KclLibrary.ObjModel.Load(System.IO.Stream)">
+            <summary>
+            Loads the object file data from the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after loading the instance.
+            </param>
+        </member>
+        <member name="M:KclLibrary.ObjModel.LoadMTL(System.IO.Stream,System.Boolean)">
+            <summary>
+            Loads the obj material data from the given <paramref name="stream"/>.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave <paramref name="stream"/> open after loading the instance.
+            </param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:KclLibrary.ObjModel.SaveMTL(System.IO.Stream)" -->
+        <!-- Badly formed XML comment ignored for member "M:KclLibrary.ObjModel.Save(System.IO.Stream)" -->
+        <member name="M:KclLibrary.ObjModel.Load(System.String)">
+            <summary>
+            Loads the data from the given file.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="M:KclLibrary.ObjModel.Save(System.String,System.Boolean)">
+            <summary>
+            Saves the data to the given file.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="M:KclLibrary.ObjModel.SaveMTL(System.String)">
+            <summary>
+            Saves the material data to the given file.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="T:KclLibrary.ObjMaterial">
+            <summary>
+            Represents a material in an <see cref="T:KclLibrary.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.ObjMaterial.Name">
+            <summary>
+            Gets or sets the name of the material.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.ObjMaterial.DiffuseTexture">
+            <summary>
+            Gets or sets the diffuse texture.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.ObjMaterial.Diffuse">
+            <summary>
+            Gets or sets the diffuse color.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.ObjMaterial.Ambient">
+            <summary>
+            Gets or sets the amient color.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.ObjMaterial.Specular">
+            <summary>
+            Gets or sets the specular color.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.ObjMesh">
+            <summary>
+            Represents a mesh in an <see cref="T:KclLibrary.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.ObjMesh.Faces">
+            <summary>
+            Gets or sets the list of faces of the mesh.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.ObjFace">
+            <summary>
+            Represents a triangle in an <see cref="T:KclLibrary.ObjMesh"/>.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.ObjFace.Material">
+            <summary>
+            The material used for this face.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.ObjFace.CollisionAttribute">
+            <summary>
+            The attribute ID used to assign material information to a collision face.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.ObjFace.Vertices">
+            <summary>
+            The three <see cref="T:KclLibrary.ObjVertex"/> vertices which define this triangle.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.ObjVertex">
+            <summary>
+            Represents the indices required to define a vertex of an <see cref="T:KclLibrary.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.ObjVertex.Position">
+            <summary>
+            The vertex position from the positions array of the owning <see cref="T:KclLibrary.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.ObjVertex.TexCoord">
+            <summary>
+            The vertex texture coordinates from the texture coordinate array of the owning <see cref="T:KclLibrary.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.ObjVertex.Normal">
+            <summary>
+            The vertex normal from the normal array of the owning <see cref="T:KclLibrary.ObjModel"/>.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.Triangle">
+            <summary>
+            Represents a polygon in 3-dimensional space, defined by 3 vertices storing their positions.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.Triangle.Vertices">
+            <summary>
+            Gets the vertices which store the corner positions of the triangle.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.Triangle.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:KclLibrary.Triangle"/> class.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.Triangle.#ctor(System.Numerics.Vector3,System.Numerics.Vector3,System.Numerics.Vector3)">
+            <summary>
+            Initializes a new instance of the <see cref="T:KclLibrary.Triangle"/> class.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.Triangle.Normal">
+            <summary>
+            Gets the face normal of this triangle.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.Vector3U">
+            <summary>
+            Represents 3 Uint32 vector values.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.Vector3U.X">
+            <summary>
+            Gets or sets the X value of the 3 vector values.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.Vector3U.Y">
+            <summary>
+            Gets or sets the Y value of the 3 vector values.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.Vector3U.Z">
+            <summary>
+            Gets or sets the Z value of the 3 vector values.
+            </summary>
+        </member>
+    </members>
+</doc>
