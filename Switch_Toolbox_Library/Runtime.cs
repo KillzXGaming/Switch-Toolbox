@@ -63,6 +63,13 @@ namespace Toolbox.Library
             }
         }
 
+        public class CollisionSettings
+        {
+            public static string KCLGamePreset = "Default";
+            public static string KCLPlatform = "SWITCH";
+            public static bool KCLUsePresetEditor = false;
+        }
+
         public class MessageEditor
         {
             public static FontFamily FontFamily = new FontFamily("Arial");
