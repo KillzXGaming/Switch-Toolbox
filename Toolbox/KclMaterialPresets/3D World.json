@@ -1,5 +1,6 @@
 {
   "GameTitle": "Mario 3D World",
+  "Platform": "WII U",
   "PrismThickness": 40.0,
   "SphereRadius": 0.0,
   "Comments": "This game uses byml to customize presets.",

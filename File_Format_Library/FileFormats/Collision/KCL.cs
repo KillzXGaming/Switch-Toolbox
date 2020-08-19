@@ -203,6 +203,12 @@ namespace FirstPlugin
                 ofd.Filter = "Supported Formats|*.obj";
                 if (ofd.ShowDialog() != DialogResult.OK) return;
 
+                string path = Path.Combine(Runtime.ExecutableDir, "KclMaterialPresets");
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                CollisionPresetData.LoadPresets(Directory.GetFiles("KclMaterialPresets"));
+
                 var form = Runtime.MainForm;
 
                 var thread = new Thread(() =>
