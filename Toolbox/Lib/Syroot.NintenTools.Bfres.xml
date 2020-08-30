@@ -1122,6 +1122,23 @@
             </summary>
             <returns>The value of the <see cref="P:Syroot.NintenTools.Bfres.ResString.String"/> property.</returns>
         </member>
+        <member name="M:Syroot.NintenTools.Bfres.SetProperty.SetBrowsableProperty``1(System.String,System.Boolean)">
+            <summary>
+            Set the Browsable property.
+            NOTE: Be sure to decorate the property with [Browsable(true)]
+            </summary>
+            <param name="PropertyName">Name of the variable</param>
+            <param name="bIsBrowsable">Browsable Value</param>
+        </member>
+        <member name="M:Syroot.NintenTools.Bfres.SetProperty.SetBrowsableProperty``1(``0,System.String,System.Boolean)">
+            <summary>
+            Set the Browsable property.
+            NOTE: Be sure to decorate the property with [Browsable(true)]
+            </summary>
+            <param name="obj">An instance of the object whose property should be modified.</param>
+            <param name="PropertyName">Name of the variable</param>
+            <param name="bIsBrowsable">Browsable Value</param>
+        </member>
         <member name="T:Syroot.NintenTools.Bfres.Srt2D">
             <summary>
             Represents a 2D transformation.
@@ -2951,6 +2968,7 @@
             <summary>
             Gets or sets the minimum LoD level.
             </summary>
+            
         </member>
         <member name="P:Syroot.NintenTools.Bfres.GX2.TexSampler.MaxLod">
             <summary>
@@ -3069,6 +3087,11 @@
         <member name="P:Syroot.NintenTools.Bfres.Material.Flags">
             <summary>
             Gets or sets flags specifying how a <see cref="T:Syroot.NintenTools.Bfres.Material"/> is rendered.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.Bfres.Material.Visible">
+            <summary>
+            Gets or sets the visible flag to display the material.
             </summary>
         </member>
         <member name="P:Syroot.NintenTools.Bfres.Material.TextureRefs">
@@ -3614,15 +3637,15 @@
             Initializes a new instance of the <see cref="T:Syroot.NintenTools.Bfres.Shape"/> class.
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.Bfres.Shape.Flags">
+            <summary>
+            Gets or sets flags determining which data is available for this instance.
+            </summary>
+        </member>
         <member name="P:Syroot.NintenTools.Bfres.Shape.Name">
             <summary>
             Gets or sets the name with which the instance can be referenced uniquely in <see cref="T:Syroot.NintenTools.Bfres.ResDict`1"/>
             instances.
-            </summary>
-        </member>
-        <member name="P:Syroot.NintenTools.Bfres.Shape.Flags">
-            <summary>
-            Gets or sets flags determining which data is available for this instance.
             </summary>
         </member>
         <member name="P:Syroot.NintenTools.Bfres.Shape.MaterialIndex">
@@ -5557,6 +5580,11 @@
             Gets or sets the pixel swizzling stride.
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.Bfres.Texture.UseSRGB">
+            <summary>
+            Gets or sets the desired texture data buffer format.
+            </summary>
+        </member>
         <member name="P:Syroot.NintenTools.Bfres.Texture.Format">
             <summary>
             Gets or sets the desired texture data buffer format.
@@ -5707,6 +5735,71 @@
             <summary>
             Material visibility is controlled.
             </summary>
+        </member>
+        <member name="P:AutoIt.Common.TextEncodingDetect.NullSuggestsBinary">
+            <summary>
+                Sets if the presence of nulls in a buffer indicate the buffer is binary data rather than text.
+            </summary>
+        </member>
+        <member name="M:AutoIt.Common.TextEncodingDetect.GetBomLengthFromEncodingMode(AutoIt.Common.TextEncodingDetect.Encoding)">
+            <summary>
+                Gets the BOM length for a given Encoding mode.
+            </summary>
+            <param name="encoding"></param>
+            <returns>The BOM length.</returns>
+        </member>
+        <member name="M:AutoIt.Common.TextEncodingDetect.CheckBom(System.Byte[],System.Int32)">
+            <summary>
+                Checks for a BOM sequence in a byte buffer.
+            </summary>
+            <param name="buffer"></param>
+            <param name="size"></param>
+            <returns>Encoding type or Encoding.None if no BOM.</returns>
+        </member>
+        <member name="M:AutoIt.Common.TextEncodingDetect.DetectEncoding(System.Byte[],System.Int32)">
+            <summary>
+                Automatically detects the Encoding type of a given byte buffer.
+            </summary>
+            <param name="buffer">The byte buffer.</param>
+            <param name="size">The size of the byte buffer.</param>
+            <returns>The Encoding type or Encoding.None if unknown.</returns>
+        </member>
+        <member name="M:AutoIt.Common.TextEncodingDetect.CheckUtf16NewlineChars(System.Byte[],System.Int32)">
+            <summary>
+                Checks if a buffer contains text that looks like utf16 by scanning for
+                newline chars that would be present even in non-english text.
+            </summary>
+            <param name="buffer">The byte buffer.</param>
+            <param name="size">The size of the byte buffer.</param>
+            <returns>Encoding.none, Encoding.Utf16LeNoBom or Encoding.Utf16BeNoBom.</returns>
+        </member>
+        <member name="M:AutoIt.Common.TextEncodingDetect.DoesContainNulls(System.Byte[],System.Int32)">
+            <summary>
+            Checks if a buffer contains any nulls. Used to check for binary vs text data.
+            </summary>
+            <param name="buffer">The byte buffer.</param>
+            <param name="size">The size of the byte buffer.</param>
+        </member>
+        <member name="M:AutoIt.Common.TextEncodingDetect.CheckUtf16Ascii(System.Byte[],System.Int32)">
+            <summary>
+                Checks if a buffer contains text that looks like utf16. This is done based
+                on the use of nulls which in ASCII/script like text can be useful to identify.
+            </summary>
+            <param name="buffer">The byte buffer.</param>
+            <param name="size">The size of the byte buffer.</param>
+            <returns>Encoding.none, Encoding.Utf16LeNoBom or Encoding.Utf16BeNoBom.</returns>
+        </member>
+        <member name="M:AutoIt.Common.TextEncodingDetect.CheckUtf8(System.Byte[],System.Int32)">
+            <summary>
+                Checks if a buffer contains valid utf8.
+            </summary>
+            <param name="buffer">The byte buffer.</param>
+            <param name="size">The size of the byte buffer.</param>
+            <returns>
+                Encoding type of Encoding.None (invalid UTF8), Encoding.Utf8NoBom (valid utf8 multibyte strings) or
+                Encoding.ASCII (data in 0.127 range).
+            </returns>
+            <returns>2</returns>
         </member>
     </members>
 </doc>
