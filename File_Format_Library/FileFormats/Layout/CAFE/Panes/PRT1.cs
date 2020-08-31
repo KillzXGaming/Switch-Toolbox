@@ -348,8 +348,7 @@ namespace LayoutBXLYT.Cafe
                 reader.SeekBegin(StartPosition + userDataOffset);
                 reader.ReadUInt32();//magic
                 reader.ReadUInt32();//section size
-
-              //  UserData = new USD1(reader, header);
+                UserData = new USD1(reader, header);
             }
             if (panelInfoOffset != 0)
             {

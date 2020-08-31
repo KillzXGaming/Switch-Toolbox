@@ -8,6 +8,8 @@ image:
 build:
   project: Toolbox.sln
   verbosity: minimal
+assembly_info:
+  patch: true
 deploy:
 - provider: GitHub
   tag: EXPERIMENTAL_LATEST

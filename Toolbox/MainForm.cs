@@ -17,7 +17,6 @@ using System.Reflection;
 using OpenTK.Graphics.OpenGL;
 using Toolbox.Library.NodeWrappers;
 using Toolbox.Library.Rendering;
-using Toolbox.Library.Forms;
 
 namespace Toolbox
 {
@@ -615,8 +614,10 @@ namespace Toolbox
         {
             string commit = $"Commit: {Runtime.CommitInfo}";
 
+            var asssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+
             if (DisplayVersion)
-                Text = $"{Application.ProductName} | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate}";
+                Text = $"{Application.ProductName} | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate} Assembly {asssemblyVersion}";
             else
                 Text = $"{Application.ProductName}";
         }
