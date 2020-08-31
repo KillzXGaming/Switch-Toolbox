@@ -282,6 +282,8 @@ namespace LayoutBXLYT.Cafe
         public byte BasicUsageFlag { get; set; }
         public byte MaterialUsageFlag { get; set; }
 
+        public uint Unknown { get; set; }
+
         public BasePane Property { get; set; }
 
         public USD1 UserData { get; set; }
@@ -295,8 +297,15 @@ namespace LayoutBXLYT.Cafe
             BasicUsageFlag = reader.ReadByte();
             MaterialUsageFlag = reader.ReadByte();
             reader.ReadByte(); //padding
+            uint userDataOffset = 0;
+
             uint propertyOffset = reader.ReadUInt32();
-            uint userDataOffset = reader.ReadUInt32();
+            if (header.VersionMajor >= 8) {
+                Unknown = reader.ReadUInt32();
+            }
+            else
+                userDataOffset = reader.ReadUInt32();
+
             uint panelInfoOffset = reader.ReadUInt32();
 
             long pos = reader.Position;
@@ -333,13 +342,14 @@ namespace LayoutBXLYT.Cafe
                         break;
                 }
             }
+            Console.WriteLine($"userDataOffset {userDataOffset}");
             if (userDataOffset != 0)
             {
                 reader.SeekBegin(StartPosition + userDataOffset);
                 reader.ReadUInt32();//magic
                 reader.ReadUInt32();//section size
 
-                UserData = new USD1(reader, header);
+              //  UserData = new USD1(reader, header);
             }
             if (panelInfoOffset != 0)
             {
@@ -361,7 +371,10 @@ namespace LayoutBXLYT.Cafe
             //Reserve offset spaces
             _ofsPos = writer.Position;
             writer.Write(0); //Property Offset
-            writer.Write(0); //External User Data
+            if (header.VersionMajor >= 8)
+                writer.Write(Unknown);
+            else
+                writer.Write(0); //External User Data
             writer.Write(0); //Panel Info Offset
         }
 
