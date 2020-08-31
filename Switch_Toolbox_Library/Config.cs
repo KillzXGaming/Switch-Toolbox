@@ -308,7 +308,15 @@ namespace Toolbox.Library
                         Enum.TryParse(node.InnerText, out cameraMovement);
                         Runtime.cameraMovement = cameraMovement;
                         break;
-
+                    case "KCLGamePreset":
+                        Runtime.CollisionSettings.KCLGamePreset = node.InnerText;
+                        break;
+                    case "KCLPlatform":
+                        Runtime.CollisionSettings.KCLPlatform = node.InnerText;
+                        break;
+                    case "KCLUsePresetEditor":
+                        bool.TryParse(node.InnerText, out Runtime.CollisionSettings.KCLUsePresetEditor);
+                        break;
                 }
             }
 
@@ -417,11 +425,22 @@ namespace Toolbox.Library
             AppendDeveloperSettings(doc, mainNode);
             AppendLayoutEditorSettings(doc, mainNode);
             AppendByamlEditorSettings(doc, mainNode);
+            AppendCollisionSettings(doc, mainNode);
 
             return doc;
         }
 
-        
+
+        private static void AppendCollisionSettings(XmlDocument doc, XmlNode parentNode)
+        {
+            XmlNode layoutSettingsNode = doc.CreateElement("KCL_EDITOR");
+            parentNode.AppendChild(layoutSettingsNode);
+
+            layoutSettingsNode.AppendChild(createNode(doc, "KCLGamePreset", Runtime.CollisionSettings.KCLGamePreset.ToString()));
+            layoutSettingsNode.AppendChild(createNode(doc, "KCLPlatform", Runtime.CollisionSettings.KCLPlatform.ToString()));
+            layoutSettingsNode.AppendChild(createNode(doc, "KCLUsePresetEditor", Runtime.CollisionSettings.KCLUsePresetEditor.ToString()));
+        }
+
         private static void AppendLayoutEditorSettings(XmlDocument doc, XmlNode parentNode)
         {
             XmlNode layoutSettingsNode = doc.CreateElement("LAYOUT_EDITOR");
