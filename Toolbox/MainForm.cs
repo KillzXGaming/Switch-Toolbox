@@ -613,11 +613,11 @@ namespace Toolbox
         private void UpdateToolbar(bool DisplayVersion)
         {
             string commit = $"Commit: {Runtime.CommitInfo}";
-
             var asssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            var version = $"{asssemblyVersion.Major}.{asssemblyVersion.MajorRevision}.{asssemblyVersion.Minor}";
 
             if (DisplayVersion)
-                Text = $"{Application.ProductName} | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate} Assembly {asssemblyVersion}";
+                Text = $"{Application.ProductName} | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate} Assembly {version}";
             else
                 Text = $"{Application.ProductName}";
         }

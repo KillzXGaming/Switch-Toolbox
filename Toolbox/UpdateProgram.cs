@@ -32,8 +32,9 @@ namespace Toolbox
                 GetCommits(client).Wait();
 
                 var asssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+                var version = $"{asssemblyVersion.Major}.{asssemblyVersion.MajorRevision}.{asssemblyVersion.Minor}";
 
-                bool IsLatest = Releases.Any(x => x.Name.Contains($"v{asssemblyVersion}"));
+                bool IsLatest = Releases.Any(x => x.Name.Contains($"v{version}"));
                 if (IsLatest)
                     return;
 
