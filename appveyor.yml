@@ -10,9 +10,13 @@ build:
   verbosity: minimal
 assembly_info:
   patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
 deploy:
 - provider: GitHub
-  tag: EXPERIMENTAL_LATEST
+  tag: `EXPERIMENTAL_LATEST-v$appveyor_build_version`
   description: 'This is the latest build of the tool automatically built from the latest commit!\n\nMessage: $(APPVEYOR_REPO_COMMIT_MESSAGE)\n\n Timestamp: $(APPVEYOR_REPO_COMMIT_TIMESTAMP)
   
    **If this program does not open, make sure to unblock the zip file then extract!**
