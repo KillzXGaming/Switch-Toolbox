@@ -57,9 +57,6 @@ namespace FirstPlugin
             }
         }
 
-        public bool LimitFileSize { get; set; } = true;
-        public bool PadFileSize { get; set; } = true;
-
         public enum NUTEXImageFormat : byte
         {
             R8G8B8A8_UNORM = 0x00,
@@ -343,7 +340,7 @@ namespace FirstPlugin
 
         private byte[] SetImageData(byte[] output)
         {
-            if (output.Length < ImageData.Length && (LimitFileSize || PadFileSize))
+            if (output.Length < ImageData.Length && (Runtime.NUTEXBSettings.LimitFileSize || Runtime.NUTEXBSettings.PadFileSize))
             {
                 var paddingSize = ImageData.Length - output.Length;
                 output = Utils.CombineByteArray(output, new byte[paddingSize]);
@@ -521,7 +518,7 @@ namespace FirstPlugin
                 return;
             }
 
-            if (!LimitFileSize)
+            if (!Runtime.NUTEXBSettings.LimitFileSize)
                 MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
 
             Texture tex = new Texture();
@@ -556,7 +553,7 @@ namespace FirstPlugin
                 GenerateMipsAndCompress(bitmap, MipCount, Format), MipCount);
 
             byte[] output = Utils.CombineByteArray(mipmaps.ToArray());
-            if (LimitFileSize && output.Length > ImageData.Length)
+            if (Runtime.NUTEXBSettings.LimitFileSize && output.Length > ImageData.Length)
                 throw new Exception("Image must be the same size or smaller!");
 
             ImageData = SetImageData(output);
@@ -587,25 +584,31 @@ namespace FirstPlugin
         public override ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
-            Items.Add(new STToolStipMenuItem("Use Size Restrictions", null, UseSizeRestrictionsAction, Keys.Control | Keys.U) { Checked = LimitFileSize, CheckOnClick = true });
+            Items.Add(new STToolStipMenuItem("Use Size Restrictions", null, UseSizeRestrictionsAction, Keys.Control | Keys.U) 
+            { Checked = Runtime.NUTEXBSettings.LimitFileSize, CheckOnClick = true });
+
             Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.T));
-            Items.Add(new STToolStipMenuItem("Taiko no Tatsujin fix", null, SwizzleToggle, Keys.Control | Keys.S) { Checked = !IsSwizzled, CheckOnClick = true });
-            Items.Add(new STToolStipMenuItem("Force padding for smaller file sizes", null, PaddingToggle, Keys.Control | Keys.P) { Checked = PadFileSize, CheckOnClick = true });
+            Items.Add(new STToolStipMenuItem("Taiko no Tatsujin fix", null, SwizzleToggle, Keys.Control | Keys.S)
+            { Checked = !IsSwizzled, CheckOnClick = true });
+
+            Items.Add(new STToolStipMenuItem("Force padding for smaller file sizes", null, PaddingToggle, Keys.Control | Keys.P) 
+            { Checked = Runtime.NUTEXBSettings.PadFileSize, CheckOnClick = true });
+
             Items.AddRange(base.GetContextMenuItems());
             return Items.ToArray();
         }
 
         private void SwizzleToggle(object sender, EventArgs args) {
-            IsSwizzled = ((STToolStipMenuItem)sender).Checked ? false : true;
+            Runtime.NUTEXBSettings.IsSwizzled = ((STToolStipMenuItem)sender).Checked ? false : true;
             UpdateEditor();
         }
 
         private void PaddingToggle(object sender, EventArgs args) {
-            PadFileSize = ((STToolStipMenuItem)sender).Checked ? true : false;
+            Runtime.NUTEXBSettings.PadFileSize = ((STToolStipMenuItem)sender).Checked ? true : false;
         }
 
         private void UseSizeRestrictionsAction(object sender, EventArgs args) {
-            LimitFileSize = ((STToolStipMenuItem)sender).Checked ? true : false;
+            Runtime.NUTEXBSettings.LimitFileSize = ((STToolStipMenuItem)sender).Checked ? true : false;
         }
 
 

@@ -70,6 +70,13 @@ namespace Toolbox.Library
             public static bool KCLUsePresetEditor = false;
         }
 
+        public class NUTEXBSettings
+        {
+            public static bool LimitFileSize = true;
+            public static bool PadFileSize = true;
+            public static bool IsSwizzled = true;
+        }
+
         public class MessageEditor
         {
             public static FontFamily FontFamily = new FontFamily("Arial");
