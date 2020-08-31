@@ -34,9 +34,14 @@ namespace Toolbox
                 var asssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
                 var version = $"{asssemblyVersion.Major}.{asssemblyVersion.MajorRevision}.{asssemblyVersion.Minor}";
 
-                bool IsLatest = Releases.Any(x => x.Name.Contains($"v{version}"));
-                if (IsLatest)
+                var lastestRelease = Releases.FirstOrDefault(x => x.Name.Contains($"v{version}"));
+                if (lastestRelease != null)
+                {
+                    Runtime.ProgramVersion = lastestRelease.TagName;
+                    Runtime.CompileDate = lastestRelease.Assets[0].UpdatedAt.ToString();
+                    Runtime.CommitInfo = lastestRelease.TargetCommitish;
                     return;
+                }
 
                 foreach (Release latest in Releases)
                 {
