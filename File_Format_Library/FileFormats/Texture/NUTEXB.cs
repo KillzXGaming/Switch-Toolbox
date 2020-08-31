@@ -174,23 +174,6 @@ namespace FirstPlugin
             editor.LoadImage(this);
         }
 
-        private void UseSizeRestrictionsAction(object sender, EventArgs args)
-        {
-            if (sender is STToolStripItem)
-            {
-                if (((STToolStripItem)sender).Checked)
-                {
-                    ((STToolStripItem)sender).Checked = false;
-                }
-                else
-                {
-                    ((STToolStripItem)sender).Checked = true;
-                }
-
-                LimitFileSize = ((STToolStripItem)sender).Checked;
-            }
-        }
-
         public class Properties
         {
             [Browsable(true)]
@@ -573,7 +556,7 @@ namespace FirstPlugin
                 GenerateMipsAndCompress(bitmap, MipCount, Format), MipCount);
 
             byte[] output = Utils.CombineByteArray(mipmaps.ToArray());
-            if (useSizeRestrictions.Checked && output.Length > ImageData.Length)
+            if (LimitFileSize && output.Length > ImageData.Length)
                 throw new Exception("Image must be the same size or smaller!");
 
             ImageData = SetImageData(output);
@@ -587,8 +570,6 @@ namespace FirstPlugin
             return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, 1);
         }
 
-        STToolStripItem useSizeRestrictions = new STToolStripItem("UseSizeRestrictions");
-
         public void Load(System.IO.Stream stream)
         {
             Text = FileName;
@@ -601,15 +582,12 @@ namespace FirstPlugin
 
             ImageKey = "Texture";
             SelectedImageKey = "Texture";
-
-            useSizeRestrictions.Checked = true;
-            useSizeRestrictions.Click += UseSizeRestrictionsAction;
         }
 
         public override ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
-            Items.Add(useSizeRestrictions);
+            Items.Add(new STToolStipMenuItem("Use Size Restrictions", null, UseSizeRestrictionsAction, Keys.Control | Keys.U) { Checked = LimitFileSize, CheckOnClick = true });
             Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.T));
             Items.Add(new STToolStipMenuItem("Taiko no Tatsujin fix", null, SwizzleToggle, Keys.Control | Keys.S) { Checked = !IsSwizzled, CheckOnClick = true });
             Items.Add(new STToolStipMenuItem("Force padding for smaller file sizes", null, PaddingToggle, Keys.Control | Keys.P) { Checked = PadFileSize, CheckOnClick = true });
@@ -625,6 +603,11 @@ namespace FirstPlugin
         private void PaddingToggle(object sender, EventArgs args) {
             PadFileSize = ((STToolStipMenuItem)sender).Checked ? true : false;
         }
+
+        private void UseSizeRestrictionsAction(object sender, EventArgs args) {
+            LimitFileSize = ((STToolStipMenuItem)sender).Checked ? true : false;
+        }
+
 
         public void Unload()
         {
