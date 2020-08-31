@@ -531,6 +531,19 @@ namespace FirstPlugin
 
                     triangleList[prism.CollisionFlags].Add(triangle);
                 }
+                //Triangle indexed 
+                //It's not pratical to split materials up with these.
+                //Materials are instead handled seperately and need to be handled in another way.
+                if (triangleList.Count == model.Prisms.Length)
+                {
+                    triangleList.Clear();
+                    triangleList.Add(0, new List<Triangle>());
+                    foreach (var prism in model.Prisms)
+                    {
+                        var triangle = model.GetTriangle(prism);
+                        triangleList[0].Add(triangle);
+                    }
+                }
             }
 
             Renderer.models.Clear();
