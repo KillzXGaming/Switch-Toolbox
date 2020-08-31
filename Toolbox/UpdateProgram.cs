@@ -8,6 +8,7 @@ using System.Net;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using Toolbox.Library;
+using System.Reflection;
 
 namespace Toolbox
 {
@@ -30,6 +31,12 @@ namespace Toolbox
                 GetReleases(client).Wait();
                 GetCommits(client).Wait();
 
+                var asssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+
+                bool IsLatest = Releases.Any(x => x.Name.Contains($"v{asssemblyVersion}"));
+                if (IsLatest)
+                    return;
+
                 foreach (Release latest in Releases)
                 {
                     if (latest.Assets?.Count == 0)
@@ -42,23 +49,10 @@ namespace Toolbox
                         latest.TargetCommitish,
                         latest.Assets[0].UpdatedAt.ToString());
 
-                    if (Runtime.CompileDate != latest.Assets[0].UpdatedAt.ToString())
-                    {
-                        LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
-                        LatestRelease = latest;
-                        CanUpdate = true;
+                    LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
+                    LatestRelease = latest;
+                    CanUpdate = true;
 
-                        /*  DownloadRelease();
-                          if (CanUpdate)
-                          {
-                              LatestReleaseTime = latest.Assets[0].UpdatedAt.DateTime;
-                              LatestRelease = latest;
-                          }
-                          else
-                          {
-
-                          }*/
-                    }
                     break;
                 }
 
