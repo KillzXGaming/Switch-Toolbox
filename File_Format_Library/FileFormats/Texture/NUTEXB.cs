@@ -58,6 +58,7 @@ namespace FirstPlugin
         }
 
         public bool LimitFileSize { get; set; } = true;
+        public bool PadFileSize { get; set; } = true;
 
         public enum NUTEXImageFormat : byte
         {
@@ -359,7 +360,7 @@ namespace FirstPlugin
 
         private byte[] SetImageData(byte[] output)
         {
-            if (output.Length < ImageData.Length && LimitFileSize)
+            if (output.Length < ImageData.Length && (LimitFileSize || PadFileSize))
             {
                 var paddingSize = ImageData.Length - output.Length;
                 output = Utils.CombineByteArray(output, new byte[paddingSize]);
@@ -609,8 +610,9 @@ namespace FirstPlugin
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
             Items.Add(useSizeRestrictions);
-            Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.T));
             Items.Add(new STToolStipMenuItem("Taiko no Tatsujin fix", null, SwizzleToggle, Keys.Control | Keys.S) { Checked = !IsSwizzled, CheckOnClick = true });
+            Items.Add(new STToolStipMenuItem("Force padding for smaller file sizes", null, PaddingToggle, Keys.Control | Keys.P) { Checked = PadFileSize, CheckOnClick = true });
             Items.AddRange(base.GetContextMenuItems());
             return Items.ToArray();
         }
@@ -618,6 +620,10 @@ namespace FirstPlugin
         private void SwizzleToggle(object sender, EventArgs args) {
             IsSwizzled = ((STToolStipMenuItem)sender).Checked ? false : true;
             UpdateEditor();
+        }
+
+        private void PaddingToggle(object sender, EventArgs args) {
+            PadFileSize = ((STToolStipMenuItem)sender).Checked ? true : false;
         }
 
         public void Unload()
