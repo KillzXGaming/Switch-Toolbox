@@ -89,10 +89,9 @@ namespace Toolbox.Library
             parentNode.Nodes.RemoveAt(index);
             parentNode.Nodes.Insert(index, newNode);
 
-
             newNode.ImageKey = replaceNode.ImageKey;
             newNode.SelectedImageKey = replaceNode.SelectedImageKey;
-            newNode.Text = replaceNode.Text;
+            replaceNode.Text = newNode.Text;
 
             if (newNode is ISingleTextureIconLoader)
             {
