@@ -200,9 +200,12 @@ namespace Toolbox.Library
                       Red[0] = data[IOffs + 0];
                       Red[1] = data[IOffs + 1];
 
-                      CalculateBC3Alpha(Red);
+                    if (IsSNORM)
+                        CalculateBC3AlphaS(Red);
+                    else
+                        CalculateBC3Alpha(Red);
 
-                      int RedLow = Get32(data, IOffs + 2);
+                    int RedLow = Get32(data, IOffs + 2);
                       int RedHigh = Get16(data, IOffs + 6);
 
                       ulong RedCh = (uint)RedLow | (ulong)RedHigh << 32;
@@ -232,6 +235,7 @@ namespace Toolbox.Library
 
               return BitmapExtension.GetBitmap(Output, W * 4, H * 4);
           }
+
         public static byte[] DecompressBC5(Byte[] data, int width, int height, bool IsSNORM, bool IsByteArray)
         {
             int W = (width + 3) / 4;
@@ -433,6 +437,7 @@ namespace Toolbox.Library
 
             return BitmapExtension.GetBitmap(Output, W * 4, H * 4);
         }
+
         public static unsafe byte[] CompressBlock(Byte[] data, int width, int height, DDS.DXGI_FORMAT format, bool multiThread, float AlphaRef = 0.5f, STCompressionMode CompressionMode = STCompressionMode.Normal)
         {
             long inputRowPitch = width * 4;
@@ -683,46 +688,32 @@ namespace Toolbox.Library
 
         private static void CalculateBC3Alpha(byte[] Alpha)
         {
-            for (int i = 2; i < 8; i++)
+            if (Alpha[0] > Alpha[1])
             {
-                if (Alpha[0] > Alpha[1])
-                {
-                    Alpha[i] = (byte)(((8 - i) * Alpha[0] + (i - 1) * Alpha[1]) / 7);
-                }
-                else if (i < 6)
-                {
-                    Alpha[i] = (byte)(((6 - i) * Alpha[0] + (i - 1) * Alpha[1]) / 7);
-                }
-                else if (i == 6)
-                {
-                    Alpha[i] = 0;
-                }
-                else /* i == 7 */
-                {
-                    Alpha[i] = 0xff;
-                }
+                for (int i = 2; i < 8; i++)
+                    Alpha[i] = (byte)(Alpha[0] + ((Alpha[1] - Alpha[0]) * (i - 1)) / 7);
+            }
+            else
+            {
+                for (int i = 2; i < 6; i++)
+                    Alpha[i] = (byte)(Alpha[0] + ((Alpha[1] - Alpha[0]) * (i - 1)) / 5);
+                Alpha[6] = 0;
+                Alpha[7] = 255;
             }
         }
         private static void CalculateBC3AlphaS(byte[] Alpha)
         {
-            for (int i = 2; i < 8; i++)
+            if ((sbyte)Alpha[0] > (sbyte)Alpha[1])
             {
-                if ((sbyte)Alpha[0] > (sbyte)Alpha[1])
-                {
-                    Alpha[i] = (byte)(((8 - i) * (sbyte)Alpha[0] + (i - 1) * (sbyte)Alpha[1]) / 7);
-                }
-                else if (i < 6)
-                {
-                    Alpha[i] = (byte)(((6 - i) * (sbyte)Alpha[0] + (i - 1) * (sbyte)Alpha[1]) / 7);
-                }
-                else if (i == 6)
-                {
-                    Alpha[i] = 0x80;
-                }
-                else /* i == 7 */
-                {
-                    Alpha[i] = 0x7f;
-                }
+                for (int i = 2; i < 8; i++)
+                    Alpha[i] = (byte)(Alpha[0] + (((sbyte)Alpha[1] - (sbyte)Alpha[0]) * (i - 1)) / 7);
+            }
+            else
+            {
+                for (int i = 2; i < 6; i++)
+                    Alpha[i] = (byte)(Alpha[0] + (((sbyte)Alpha[1] - (sbyte)Alpha[0]) * (i - 1)) / 5);
+                Alpha[6] = 0x80;
+                Alpha[7] = 0x7f;
             }
         }
     }
