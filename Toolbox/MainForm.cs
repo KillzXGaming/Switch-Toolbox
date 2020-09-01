@@ -614,10 +614,8 @@ namespace Toolbox
         {
             string commit = $"Commit: {Runtime.CommitInfo}";
             var asssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            var version = $"{asssemblyVersion.Major}.{asssemblyVersion.MajorRevision}.{asssemblyVersion.MinorRevision}";
-
             if (DisplayVersion)
-                Text = $"{Application.ProductName} | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate} Assembly {version}";
+                Text = $"{Application.ProductName} | Version: {Runtime.ProgramVersion} | {commit} | Compile Date: {Runtime.CompileDate} Assembly {asssemblyVersion}";
             else
                 Text = $"{Application.ProductName}";
         }
