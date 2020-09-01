@@ -6,7 +6,7 @@ using Octokit;
 using System.IO;
 using System.Net;
 using System.Diagnostics;
-using System.Security.Cryptography;
+using System.Linq;
 using Toolbox.Library;
 using System.Reflection;
 
@@ -32,7 +32,7 @@ namespace Toolbox
                 GetCommits(client).Wait();
 
                 var asssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
-                var version = $"{asssemblyVersion.Major}.{asssemblyVersion.MajorRevision}.{asssemblyVersion.Minor}";
+                var version = string.Concat(asssemblyVersion.ToString().Reverse().Skip(2).Reverse());
 
                 var lastestRelease = Releases.FirstOrDefault(x => x.Name.Contains($"v{version}"));
                 if (lastestRelease != null)
