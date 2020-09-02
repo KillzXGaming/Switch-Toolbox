@@ -198,10 +198,12 @@ namespace Toolbox.Library.IO
                         {
                             stream.Position = streamStartPos;
 
-                            stream = compressionFormat.Decompress(stream);
-                            CompressedSize = stream.Length;
+                            Stream decompStream = compressionFormat.Decompress(stream);
+                            stream.Close();
 
-                            return OpenFileFormat(stream, FileName, LeaveStreamOpen, InArchive,
+                            CompressedSize = decompStream.Length;
+
+                            return OpenFileFormat(decompStream, FileName, LeaveStreamOpen, InArchive,
                                 true, compressionFormat, DecompressedSize, CompressedSize);
                         }
                     }
