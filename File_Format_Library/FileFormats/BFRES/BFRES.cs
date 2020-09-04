@@ -50,6 +50,9 @@ namespace FirstPlugin
             }
         }
 
+        //Determines if the binary is in a PTCL binary file.
+        public bool IsParticlePrimitive = false;
+
         public bool DisplayIcons => false;
 
         public List<STGenericTexture> TextureList
@@ -914,7 +917,7 @@ namespace FirstPlugin
         public void Save(System.IO.Stream stream)
         {
             var Models = GetModels();
-            if (Models != null)
+            if (Models != null && !IsParticlePrimitive)
             {
                 foreach (FMDL mdl in Models)
                 {
