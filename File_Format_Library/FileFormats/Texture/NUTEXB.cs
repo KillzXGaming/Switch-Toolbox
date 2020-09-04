@@ -246,7 +246,7 @@ namespace FirstPlugin
 
         public override void Replace(string FileName)
         {
-            if (IsSwizzled)
+            if (Runtime.NUTEXBSettings.IsSwizzled)
             {
                 var tex = new TextureData();
                 tex.Replace(FileName, MipCount, 0, Format);
@@ -511,7 +511,7 @@ namespace FirstPlugin
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
         {
-            if (!IsSwizzled)
+            if (!Runtime.NUTEXBSettings.IsSwizzled)
             {
                 MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
                 ImageData = GenerateMipsAndCompress(bitmap, MipCount, Format);
@@ -561,7 +561,7 @@ namespace FirstPlugin
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
-            if (!IsSwizzled)
+            if (!Runtime.NUTEXBSettings.IsSwizzled)
                 return DDS.GetArrayFaces(this, ImageData, 1)[ArrayLevel].mipmaps[0];
 
             return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, 1);
@@ -589,7 +589,7 @@ namespace FirstPlugin
 
             Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.T));
             Items.Add(new STToolStipMenuItem("Taiko no Tatsujin fix", null, SwizzleToggle, Keys.Control | Keys.S)
-            { Checked = !IsSwizzled, CheckOnClick = true });
+            { Checked = !Runtime.NUTEXBSettings.IsSwizzled, CheckOnClick = true });
 
             Items.Add(new STToolStipMenuItem("Force padding for smaller file sizes", null, PaddingToggle, Keys.Control | Keys.P) 
             { Checked = Runtime.NUTEXBSettings.PadFileSize, CheckOnClick = true });
