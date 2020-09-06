@@ -743,11 +743,11 @@ namespace FirstPlugin
                 if (mat.ShaderAssign.ShaderArchiveName == "Wii_UBER" || mat.ShaderAssign.ShaderArchiveName == "Block_UBER")
                     Runtime.activeGame = Runtime.ActiveGame.MK8D;
 
-                if (mat.ShaderAssign.ShaderArchiveName == "base" || mat.ShaderAssign.ShaderArchiveName == "ui") {
+                if (mat.ShaderAssign.ShaderArchiveName == "base" || mat.ShaderAssign.ShaderArchiveName == "ui" || mat.ShaderAssign.ShaderArchiveName == "chara") {
                     Runtime.activeGame = Runtime.ActiveGame.MK8D;
                 }
 
-                if (Runtime.activeGame == Runtime.ActiveGame.MK8D)
+                if (Runtime.activeGame == Runtime.ActiveGame.MK8D || Runtime.activeGame == Runtime.ActiveGame.BOTW)
                 {
                     if (useSampler == "_a0" && AlbedoCount == 0)
                     {
