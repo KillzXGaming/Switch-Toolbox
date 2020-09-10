@@ -288,15 +288,26 @@ namespace Toolbox.Library
         {
             List<IFileFormat> f = new List<IFileFormat>();
             f.Add(format);
-            return GetAllFilters(f);
+            return GetAllFilters(f, format);
         }
 
-        public static string GetAllFilters(IEnumerable<IFileFormat> format)
+        public static string GetAllFilters(IEnumerable<IFileFormat> format, IFileFormat targetFormat = null)
         {
             var alltypes = format;
 
             string Filter = "All Supported Files|";
             List<string> FilterEach = new List<string>();
+
+            //Set the current extension used by the target's file information if used
+            if (targetFormat != null && targetFormat.FilePath != null) {
+                string extension = Path.GetExtension(targetFormat.FilePath);
+                if (extension != "" && !format.Any(x => x.Extension.Contains($"*{extension}")))
+                {
+                    Filter += $"*{extension};";
+                    FilterEach.Add($"({extension}) |*{extension}|");
+                }
+            }
+
             foreach (IFileFormat f in format)
             {
                 for (int i = 0; i < f.Extension.Length; i++)

@@ -416,6 +416,7 @@ namespace Toolbox
                                 formats.Add((IFileFormat)fileFormat);
                             }
                             sfd.Filter = Utils.GetAllFilters(formats);
+                            sfd.DefaultExt = Path.GetExtension(format.FilePath);
 
                             if (sfd.ShowDialog() != DialogResult.OK)
                                 return;
@@ -438,6 +439,7 @@ namespace Toolbox
                             SaveFileDialog sfd = new SaveFileDialog();
                             sfd.Filter = Utils.GetAllFilters(format);
                             sfd.FileName = format.FileName;
+                            sfd.DefaultExt = Path.GetExtension(format.FilePath);
 
                             if (sfd.ShowDialog() != DialogResult.OK)
                                 return;
