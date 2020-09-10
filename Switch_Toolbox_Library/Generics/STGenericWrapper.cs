@@ -170,6 +170,12 @@ namespace Toolbox.Library.NodeWrappers
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = ExportFilter;
             sfd.FileName = Text;
+            if (this is IFileFormat) {
+                string extension = System.IO.Path.GetExtension(((IFileFormat)this).FilePath);
+                if (extension != string.Empty) {
+                    sfd.DefaultExt = extension;
+                }
+            }
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
