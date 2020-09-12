@@ -411,16 +411,20 @@ namespace LayoutBXLYT.Cafe
                         long dataPos = reader.Position;
 
                         if (currentPane != null)
+                        {
                             ((PAN1)currentPane).UserData = new USD1(reader, this);
+
+                            reader.SeekBegin(dataPos);
+                            ((PAN1)currentPane).UserData.Data = reader.ReadBytes((int)SectionSize - 8);
+                        }
                         else
                         {
-
                             //User data before panes
                             UserData = new USD1(reader, this);
-                        }
-                        reader.SeekBegin(dataPos);
-                        UserData.Data = reader.ReadBytes((int)SectionSize - 8);
 
+                            reader.SeekBegin(dataPos);
+                            UserData.Data = reader.ReadBytes((int)SectionSize - 8);
+                        }
                         break;
                     //If the section is not supported store the raw bytes
                     default:
