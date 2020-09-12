@@ -271,18 +271,15 @@ namespace Toolbox
 
         public void OpenFile(string FileName, bool InActiveEditor = false)
         {
-            if (File.Exists(FileName))
-                SaveRecentFile(FileName);
+            if (!File.Exists(FileName))
+                return;
+
+            SaveRecentFile(FileName);
 
             object file = STFileLoader.OpenFileFormat(FileName);
-            if (file != null) //File is supported
-                LoadFile(file, InActiveEditor);
-            else
-                STErrorDialog.Show("File Format not supported!", "File Open");
-        }
+            if (file == null) //File might not be supported so return
+                return;
 
-        private void LoadFile(object file, bool InActiveEditor = false)
-        {
             Type objectType = file.GetType();
 
             bool HasEditorActive = false;
