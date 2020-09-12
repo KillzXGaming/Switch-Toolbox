@@ -58,7 +58,7 @@ namespace FirstPlugin
                 new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R),
                 new ToolStripSeparator(),
                 new ToolStripMenuItem("Big Endian Mode", null, SwapEndianess, Keys.Control | Keys.B)
-                { Checked = (KclFile.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian), },
+                { Checked = (KclFile.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian), CheckOnClick = true },
             };
         }
 
@@ -459,7 +459,7 @@ namespace FirstPlugin
 
         private void SwapEndianess(object sender, EventArgs args)
         {
-            if (KclFile.ByteOrder == Syroot.BinaryData.ByteOrder.BigEndian)
+            if (!((ToolStripMenuItem)sender).Checked)
                 KclFile.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
             else
                 KclFile.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
