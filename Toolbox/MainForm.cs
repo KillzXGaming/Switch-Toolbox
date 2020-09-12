@@ -278,7 +278,10 @@ namespace Toolbox
 
             object file = STFileLoader.OpenFileFormat(FileName);
             if (file == null) //File might not be supported so return
+            {
+                STConsole.WriteLine($"{FileName} not supported.");
                 return;
+            }
 
             Type objectType = file.GetType();
 
