@@ -116,12 +116,12 @@ namespace LayoutBXLYT
             bool IsEdited = EditData();
             if (IsEdited)
             {
+                ActiveUserData.Edited = true;
                 ActiveUserData.Entries.Add(userDataNew);
                 LoadUserData(userDataNew);
             }
         }
         private bool EditData()
-
         {
             if (SelectedEntry != null)
             {
@@ -155,9 +155,11 @@ namespace LayoutBXLYT
                     if (parser.Type == UserDataType.String)
                         SelectedEntry.SetValue(parser.GetStringASCII());
 
-                    if (ActiveUserData == null)
+                    if (ActiveUserData == null) {
                         ActiveUserData = activePane.CreateUserData();
+                    }
 
+                    ActiveUserData.Edited = true;
                     LoadUserData(activePane, ActiveUserData);
                     return true;
                 }
@@ -172,8 +174,10 @@ namespace LayoutBXLYT
                 int index = listViewCustom1.SelectedIndices[0];
                 listViewCustom1.Items.RemoveAt(index);
 
-                if (ActiveUserData != null)
+                if (ActiveUserData != null) {
                     ActiveUserData.Entries.RemoveAt(index);
+                    ActiveUserData.Edited = true;
+                }
             }
         }
 

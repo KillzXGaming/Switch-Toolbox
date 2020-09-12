@@ -866,6 +866,8 @@ namespace LayoutBXLYT
 
     public class UserData : SectionCommon
     {
+        public bool Edited = false;
+
         public List<UserDataEntry> Entries { get; set; }
 
         public UserData()
