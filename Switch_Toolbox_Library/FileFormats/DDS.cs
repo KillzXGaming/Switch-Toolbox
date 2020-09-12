@@ -1220,6 +1220,16 @@ namespace Toolbox.Library
                     pixelInternalFormat = PixelInternalFormat.SrgbAlpha;
                     pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
                     break;
+                case DXGI_FORMAT.DXGI_FORMAT_R8G8_UNORM:
+                    header.ddspf.flags = (uint)(DDPF.RGB | DDPF.ALPHAPIXELS);
+                    header.ddspf.RGBBitCount = 24;
+                    header.ddspf.RBitMask = (uint)R8G8B8_MASKS[0];
+                    header.ddspf.GBitMask = (uint)R8G8B8_MASKS[1];
+                    header.ddspf.BBitMask = (uint)R8G8B8_MASKS[2];
+                    header.ddspf.ABitMask = (uint)R8G8B8_MASKS[3];
+                    pixelInternalFormat = PixelInternalFormat.SrgbAlpha;
+                    pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+                    break;
                 case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB:
                 case DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM:
                     header.ddspf.flags = (uint)DDPF.FOURCC;
