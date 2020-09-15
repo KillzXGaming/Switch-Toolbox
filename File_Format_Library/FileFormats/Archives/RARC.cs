@@ -340,9 +340,18 @@ namespace FirstPlugin
                 //Save parent and root nodes at end
                 writer.Write((ushort)0);
                 writer.Write((ushort)46);
-                writer.Write((byte)2);
-                writer.Write((byte)0);
-                writer.Write((ushort)0);
+                if (IsLittleEndian)
+                {
+                    writer.Write((ushort)0);
+                    writer.Write((byte)0);
+                    writer.Write((byte)2);
+                }
+                else
+                {
+                    writer.Write((byte)2);
+                    writer.Write((byte)0);
+                    writer.Write((ushort)0);
+                }
                 writer.Write(dir);
                 writer.Write(16);
                 writer.Write(0);
@@ -351,9 +360,18 @@ namespace FirstPlugin
 
                 writer.Write((ushort)0);
                 writer.Write((ushort)184);
-                writer.Write((byte)2);
-                writer.Write((byte)0);
-                writer.Write((ushort)2);
+                if (IsLittleEndian)
+                {
+                    writer.Write((ushort)2);
+                    writer.Write((byte)0);
+                    writer.Write((byte)2);
+                }
+                else
+                {
+                    writer.Write((byte)2);
+                    writer.Write((byte)0);
+                    writer.Write((ushort)2);
+                }
                 writer.Write(rootIndex);
                 writer.Write(16);
                 writer.Write(0);
