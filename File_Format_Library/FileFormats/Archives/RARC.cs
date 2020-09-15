@@ -16,7 +16,7 @@ namespace FirstPlugin
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "RARC" };
-        public string[] Extension { get; set; } = new string[] { "*.rarc", "*.arc", "*.yaz0" };
+        public string[] Extension { get; set; } = new string[] { "*.rarc", "*.arc", "*.crar", "*.yaz0" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -30,7 +30,7 @@ namespace FirstPlugin
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "RARC");
+                return reader.CheckSignature(4, "RARC") || reader.CheckSignature(4, "CRAR");
             }
         }
 
@@ -90,6 +90,8 @@ namespace FirstPlugin
             }
         }
 
+        public bool IsLittleEndian { get; set; } = false;
+
         public void Load(System.IO.Stream stream)
         {
             CanSave = true;
@@ -103,7 +105,11 @@ namespace FirstPlugin
                 _savedDirectories.Clear();
 
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                reader.ReadSignature(4, "RARC");
+                string signature = reader.ReadString(4, Encoding.ASCII);
+                if (signature == "CRAR") {
+                    IsLittleEndian = true;
+                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+                }
                 uint FileSize = reader.ReadUInt32();
                 HeaderSize = reader.ReadUInt32();
                 uint DataOffset = reader.ReadUInt32();
@@ -154,7 +160,7 @@ namespace FirstPlugin
                     {
                         reader.SeekBegin(NodeOffset + ((n + Directories[dir].FirstNodeIndex) * 0x14));
                         FileEntry entry = new FileEntry();
-                        entry.Read(reader);
+                        entry.Read(reader, IsLittleEndian);
                         NamePointer = StringTablOffset + entry.NameOffset;
                         entry.Name = ReadStringAtTable(reader, NamePointer);
 
@@ -227,7 +233,11 @@ namespace FirstPlugin
             long pos = writer.Position;
 
             writer.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-            writer.WriteSignature("RARC");
+            if (IsLittleEndian)
+                writer.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+
+            writer.WriteSignature(IsLittleEndian ? "CRAR" : "RARC");
+
             writer.Write(uint.MaxValue); //FileSize
             writer.Write(HeaderSize);
             writer.Write(uint.MaxValue); //DataOffset
@@ -285,9 +295,18 @@ namespace FirstPlugin
 
                         writer.Write(dirEntry.ID);
                         writer.Write(dirEntry.Hash);
-                        writer.Write((byte)0x2);
-                        writer.Write((byte)0);
-                        writer.Write((ushort)dirEntry.NameOffset);
+                        if (IsLittleEndian)
+                        {
+                            writer.Write((ushort)dirEntry.NameOffset);
+                            writer.Write((byte)0);
+                            writer.Write((byte)0x2);
+                        }
+                        else
+                        {
+                            writer.Write((byte)0x2);
+                            writer.Write((byte)0);
+                            writer.Write((ushort)dirEntry.NameOffset);
+                        }
                         writer.Write((int)index);
                         writer.Write((int)16);
                         writer.Write((int)0);
@@ -297,9 +316,18 @@ namespace FirstPlugin
                         var fileEntry = (FileEntry)entry;
                         writer.Write(fileEntry.FileId);
                         writer.Write(fileEntry.Hash);
-                        writer.Write(fileEntry.Flags);
-                        writer.Write((byte)0); //Padding
-                        writer.Write((ushort)fileEntry.NameOffset);
+                        if (IsLittleEndian)
+                        {
+                            writer.Write((ushort)fileEntry.NameOffset);
+                            writer.Write((byte)0); //Padding
+                            writer.Write(fileEntry.Flags);
+                        }
+                        else
+                        {
+                            writer.Write(fileEntry.Flags);
+                            writer.Write((byte)0); //Padding
+                            writer.Write((ushort)fileEntry.NameOffset);
+                        }
 
                         fileEntry._dataOffsetPos = writer.Position;
                         writer.Write(0);
@@ -562,13 +590,23 @@ namespace FirstPlugin
 
             public INode Parent { get; set; }
 
-            public void Read(FileReader reader)
+            public void Read(FileReader reader, bool IsLittleEndian)
             {
                 FileId = reader.ReadUInt16();
                 Hash = reader.ReadUInt16();
-                Flags = reader.ReadByte();
-                reader.Seek(1); //Padding
-                NameOffset = reader.ReadUInt16();
+                if (IsLittleEndian)
+                {
+                    NameOffset = reader.ReadUInt16();
+                    reader.Seek(1); //Padding
+                    Flags = reader.ReadByte();
+                }
+                else
+                {
+                    Flags = reader.ReadByte();
+                    reader.Seek(1); //Padding
+                    NameOffset = reader.ReadUInt16();
+                }
+
                 Offset = reader.ReadUInt32();
                 Size = reader.ReadUInt32();
             }
