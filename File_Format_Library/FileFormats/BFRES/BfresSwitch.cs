@@ -827,7 +827,8 @@ namespace FirstPlugin
                       
                     }
                  }
-                else if (mat.ShaderAssign.ShaderArchiveName == "ssg")
+                else if (mat.ShaderAssign.ShaderArchiveName == "ssg" ||
+                         mat.ShaderAssign.ShaderArchiveName == "rf4cmv")
                 {
                     bool IsAlbedo0 = texture.SamplerName == "_a0";
                     bool IsNormal = texture.SamplerName == "_n0";
