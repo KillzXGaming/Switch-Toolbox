@@ -1829,8 +1829,19 @@ namespace LayoutBXLYT
 
     public class BxlanPAI1 : SectionCommon
     {
-        public ushort FrameSize;
-        public bool Loop;
+        [DisplayName("Frame Count"), CategoryAttribute("Frames")]
+        public ushort FrameSize { get; set; }
+
+        [DisplayName("Loop"), CategoryAttribute("Frames")]
+        public bool Loop { get; set; }
+
+        [Editor(@"System.Windows.Forms.Design.StringCollectionEditor," +
+           "System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+          typeof(System.Drawing.Design.UITypeEditor))]
+        [DisplayName("Textures"), CategoryAttribute("Textures")]
+        public List<string> Textures { get; set; } = new List<string>();
+
+        public List<BxlanPaiEntry> Entries = new List<BxlanPaiEntry>();
 
         public bool ContainsEntry(string name)
         {
@@ -1841,13 +1852,6 @@ namespace LayoutBXLYT
         {
             return new BxlanPaiEntry();
         }
-
-        [Editor(@"System.Windows.Forms.Design.StringCollectionEditor," +
-           "System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
-          typeof(System.Drawing.Design.UITypeEditor))]
-        public List<string> Textures { get; set; } = new List<string>();
-
-        public List<BxlanPaiEntry> Entries = new List<BxlanPaiEntry>();
     }
 
     public class BxlanPaiEntry
