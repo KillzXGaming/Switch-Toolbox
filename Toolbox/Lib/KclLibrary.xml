@@ -4,6 +4,134 @@
         <name>KclLibrary</name>
     </assembly>
     <members>
+        <member name="T:KclLibrary.AttributeHandlers.BCSV">
+            <summary>
+            Repesents a binary variant of csv used for the J3D engine.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.AttributeHandlers.BCSV.IsBigEndian">
+            <summary>
+            Wether or not the binary byte order is big endian or not.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.AttributeHandlers.BCSV.Fields">
+            <summary>
+            A list of fields used.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.AttributeHandlers.BCSV.Records">
+            <summary>
+            A list of records used from the fields.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.AttributeHandlers.BCSV.#ctor">
+            <summary>
+            Constructs a new empty BCSV binary.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.AttributeHandlers.BCSV.#ctor(System.IO.Stream)">
+            <summary>
+            Reads a BCSV from the given the stream.
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="M:KclLibrary.AttributeHandlers.BCSV.Save(System.String)">
+            <summary>
+            Saves a BCSV to the given file path.
+            </summary>
+            <param name="filePath"></param>
+        </member>
+        <member name="M:KclLibrary.AttributeHandlers.BCSV.Save(System.IO.Stream)">
+            <summary>
+            Saves a BCSV to the given stream.
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="T:KclLibrary.AttributeHandlers.BCSV.Field">
+            <summary>
+            A field of the BCSV.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.AttributeHandlers.BCSV.Field.Name">
+            <summary>
+            Field Name
+            </summary>
+        </member>
+        <member name="P:KclLibrary.AttributeHandlers.BCSV.Field.Hash">
+            <summary>
+            Field Hash
+            </summary>
+        </member>
+        <member name="P:KclLibrary.AttributeHandlers.BCSV.Field.Bitmask">
+            <summary>
+            Field Bitmask
+            </summary>
+        </member>
+        <member name="P:KclLibrary.AttributeHandlers.BCSV.Field.Offset">
+            <summary>
+            Field Offset
+            </summary>
+        </member>
+        <member name="P:KclLibrary.AttributeHandlers.BCSV.Field.Shift">
+            <summary>
+            Field Shift
+            </summary>
+        </member>
+        <member name="P:KclLibrary.AttributeHandlers.BCSV.Field.Type">
+            <summary>
+            Field Type
+            </summary>
+        </member>
+        <member name="M:KclLibrary.AttributeHandlers.BCSV.Field.GetDataSize">
+            <summary>
+            Gets the size of the field.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.AttributeHandlers.BCSV.Record">
+            <summary>
+            A record of the BCSV.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.AttributeHandlers.BCSV.Record.Values">
+            <summary>
+            An array of objects determined by the fields used.
+            </summary>
+        </member>
+        <member name="T:KclLibrary.AttributeHandlers.BCSV.FieldType">
+            <summary>
+            The field data type.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.AttributeHandlers.BCSV.FieldType.Int32">
+            <summary>
+            The field data is an int.
+            </summary>
+        </member>
+        <member name="F:KclLibrary.AttributeHandlers.BCSV.FieldType.String">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:KclLibrary.AttributeHandlers.BCSV.FieldType.Float">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:KclLibrary.AttributeHandlers.BCSV.FieldType.Int16">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:KclLibrary.AttributeHandlers.BCSV.FieldType.Byte">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:KclLibrary.AttributeHandlers.BCSV.FieldType.StringJIS">
+            <summary>
+            The field data is a string encoded in shift JIS.
+            </summary>
+        </member>
         <member name="T:KclLibrary.CollisionImportSettings">
             <summary>
             Settings used to configure collision generated from triangles.
@@ -730,6 +858,16 @@
         <member name="P:KclLibrary.Triangle.Normal">
             <summary>
             Gets the face normal of this triangle.
+            </summary>
+        </member>
+        <member name="P:KclLibrary.Triangle.Attribute">
+            <summary>
+            The attribute used by a KCLPrisim for handling material flags.
+            </summary>
+        </member>
+        <member name="M:KclLibrary.Triangle.GetTriangleCenter">
+            <summary>
+            Gets the center of the current triangle and returns the point.
             </summary>
         </member>
         <member name="T:KclLibrary.Vector3U">

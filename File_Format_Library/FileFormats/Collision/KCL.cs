@@ -231,7 +231,8 @@ namespace FirstPlugin
 
                         KCL kcl = new KCL();
                         kcl.KclFile = result.KclFie;
-                        kcl.AttributeByml = result.AttributeByml;
+                        if (result.AttributeFile is MaterialAttributeBymlFile)
+                            kcl.AttributeByml = ((MaterialAttributeBymlFile)result.AttributeFile).BymlFile;
                         kcl.Text = name;
                         kcl.IFileInfo = new IFileInfo();
                         kcl.FileName = name;
@@ -430,7 +431,8 @@ namespace FirstPlugin
                     form.Invoke((MethodInvoker)delegate
                     {
                         KclFile = result.KclFie;
-                        AttributeByml = result.AttributeByml;
+                        if (result.AttributeFile is MaterialAttributeBymlFile)
+                            AttributeByml = ((MaterialAttributeBymlFile)result.AttributeFile).BymlFile;
                         ReloadData();
                         Renderer.UpdateVertexData();
                         SaveAttributeByml(true);
