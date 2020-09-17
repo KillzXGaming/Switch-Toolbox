@@ -1219,7 +1219,13 @@ namespace Bfres.Structs
                             else
                                 shape.VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
-                            if (shape.VertexSkinCount == 1 && shape.BoneIndices.Count > 0)
+                            if (shape.VertexSkinCount == 0 && obj.boneList.Count > 0)
+                            {
+                                int boneIndex = Skeleton.bones.FindIndex(x => x.Text == obj.boneList[0]);
+                                if (boneIndex != -1)
+                                    shape.BoneIndex = boneIndex;
+                            }
+                            else if (shape.VertexSkinCount == 1 && shape.BoneIndices.Count > 0)
                             {
                                 int boneIndex = shape.BoneIndices[0];
                                 shape.BoneIndex = boneIndex;

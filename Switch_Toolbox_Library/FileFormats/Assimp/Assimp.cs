@@ -629,7 +629,7 @@ namespace Toolbox.Library
             obj.HasUv1 = msh.HasTextureCoords(1);
             obj.HasUv2 = msh.HasTextureCoords(2);
             obj.HasIndices = msh.HasBones;
-            if (msh.HasBones)
+            if (msh.HasBones && msh.BoneCount > 1)
                 obj.HasWeights = msh.Bones[0].HasVertexWeights;
 
             obj.HasTans = msh.HasTangentBasis;
@@ -679,8 +679,12 @@ namespace Toolbox.Library
             List<string> bones = new List<string>();
             foreach (Bone b in msh.Bones)
             {
-                if (!bones.Contains(b.Name))
-                    bones.Add(b.Name);
+                string name = b.Name;
+                if (DaeHelper.IDMapToName.ContainsKey(name))
+                    name = DaeHelper.IDMapToName[name];
+
+                if (!bones.Contains(name))
+                    bones.Add(name);
             }
             return bones;
         }
@@ -723,8 +727,6 @@ namespace Toolbox.Library
             {
                 Vertex vert = new Vertex();
 
-                Console.WriteLine($"{msh.Name} position {msh.Vertices[v]}");
-
                 if (msh.HasVertices)
                     vert.pos = Vector3.TransformPosition(AssimpHelper.FromVector(msh.Vertices[v]), transform);
                 if (msh.HasNormals)
@@ -744,8 +746,10 @@ namespace Toolbox.Library
                 if (msh.HasTangentBasis)
                     vert.bitan = new Vector4(msh.BiTangents[v].X, msh.BiTangents[v].Y, msh.BiTangents[v].Z, 1);
                 vertices.Add(vert);
+
+                Console.WriteLine($"{msh.Name} COLOR { vert.col}");
             }
-            if (msh.HasBones)
+            if (msh.HasBones && msh.BoneCount > 1)
             {
                 for (int i = 0; i < msh.BoneCount; i++)
                 {
@@ -766,7 +770,6 @@ namespace Toolbox.Library
                     }
                 }
             }
-
 
             return vertices;
         }
