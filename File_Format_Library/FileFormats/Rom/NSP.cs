@@ -58,8 +58,6 @@ namespace FirstPlugin
             if (Keys == null)
                 throw new Exception("Failed to get keys. Please select valid paths!");
 
-            Stream Input;
-
             var Pfs = new Pfs(stream.AsStorage());
             var CnmtNca = new Nca(Keys, Pfs.OpenFile(Pfs.Files.FirstOrDefault(s => s.Name.Contains(".cnmt.nca"))), false);
             var CnmtPfs = new Pfs(CnmtNca.OpenSection(0, false, IntegrityCheckLevel.None, true));
@@ -68,8 +66,9 @@ namespace FirstPlugin
             {
                 if (entry.Type == CnmtContentType.Program) {
                     var Program = entry;
+                    string ncaFileName = $"{Program.NcaId.ToHexString().ToLower()}.nca";
 
-                    Input = Pfs.OpenFile($"{Program.NcaId.ToHexString().ToLower()}.nca").AsStream();
+                    Stream Input = Pfs.OpenFile(ncaFileName).AsStream();
                     var Nca = new Nca(Keys, Input.AsStorage(), true);
 
                     Romfs romfs = new Romfs(
@@ -83,11 +82,11 @@ namespace FirstPlugin
                                 false, IntegrityCheckLevel.None, true));
 
                         foreach (var file in exefs.Files)
-                            files.Add(new ExefsEntry(exefs, file, Program.NcaId.ToHexString()));
+                            files.Add(new ExefsEntry(exefs, file, ncaFileName));
                     }
 
                     for (int i = 0; i < romfs.Files.Count; i++)
-                        files.Add(new FileEntry(romfs, romfs.Files[i], Program.NcaId.ToHexString()));
+                        files.Add(new FileEntry(romfs, romfs.Files[i], ncaFileName));
                 }
             }
             var CtrlEntry = Cnmt.ContentEntries.FirstOrDefault(c => c.Type == CnmtContentType.Control);

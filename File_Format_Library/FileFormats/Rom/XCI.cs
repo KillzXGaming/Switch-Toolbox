@@ -58,30 +58,34 @@ namespace FirstPlugin
                 xci.SecurePartition.Files.FirstOrDefault(s => s.Name.Contains(".cnmt.nca"))), false);
             var CnmtPfs = new Pfs(CnmtNca.OpenSection(0, false, IntegrityCheckLevel.None, true));
             var Cnmt = new Cnmt(CnmtPfs.OpenFile(CnmtPfs.Files[0]).AsStream());
-            var Program = Cnmt.ContentEntries.FirstOrDefault(c => c.Type == CnmtContentType.Program);
-            var CtrlEntry = Cnmt.ContentEntries.FirstOrDefault(c => c.Type == CnmtContentType.Control);
-            if (CtrlEntry != null)
-                Control = new Nca(Keys, xci.SecurePartition.OpenFile($"{CtrlEntry.NcaId.ToHexString().ToLower()}.nca"), false);
-            var Input = xci.SecurePartition.OpenFile($"{Program.NcaId.ToHexString().ToLower()}.nca").AsStream();
-
-            var Nca = new Nca(Keys, Input.AsStorage(), true);
-
-            if (Nca.CanOpenSection((int)ProgramPartitionType.Code))
+            foreach (var entry in Cnmt.ContentEntries)
             {
-                var exefs = new Pfs(Nca.OpenSection((int)ProgramPartitionType.Code,
-                        false, IntegrityCheckLevel.None, true));
+                if (entry.Type == CnmtContentType.Program)
+                {
+                    var Program = entry;
+                    string ncaFileName = $"{Program.NcaId.ToHexString().ToLower()}.nca";
 
-                foreach (var file in exefs.Files)
-                    files.Add(new NSP.ExefsEntry(exefs, file));
-            }
+                    Stream Input = CnmtPfs.OpenFile(ncaFileName).AsStream();
+                    var Nca = new Nca(Keys, Input.AsStorage(), true);
 
-            Romfs romfs = new Romfs(
-                 Nca.OpenSection(Nca.Sections.FirstOrDefault
-                        (s => s?.Type == SectionType.Romfs || s?.Type == SectionType.Bktr)
+                    Romfs romfs = new Romfs(
+                     Nca.OpenSection(Nca.Sections.FirstOrDefault
+                (s => s?.Type == SectionType.Romfs || s?.Type == SectionType.Bktr)
                         .SectionNum, false, IntegrityCheckLevel.None, true));
 
-            for (int i = 0; i < romfs.Files.Count; i++)
-                files.Add(new NSP.FileEntry(romfs, romfs.Files[i]));
+                    if (Nca.CanOpenSection((int)ProgramPartitionType.Code))
+                    {
+                        var exefs = new Pfs(Nca.OpenSection((int)ProgramPartitionType.Code,
+                                false, IntegrityCheckLevel.None, true));
+
+                        foreach (var file in exefs.Files)
+                            files.Add(new NSP.ExefsEntry(exefs, file, ncaFileName));
+                    }
+
+                    for (int i = 0; i < romfs.Files.Count; i++)
+                        files.Add(new NSP.FileEntry(romfs, romfs.Files[i], ncaFileName));
+                }
+            }
         }
         public void Unload()
         {
