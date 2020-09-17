@@ -64,30 +64,35 @@ namespace FirstPlugin
             var CnmtNca = new Nca(Keys, Pfs.OpenFile(Pfs.Files.FirstOrDefault(s => s.Name.Contains(".cnmt.nca"))), false);
             var CnmtPfs = new Pfs(CnmtNca.OpenSection(0, false, IntegrityCheckLevel.None, true));
             var Cnmt = new Cnmt(CnmtPfs.OpenFile(CnmtPfs.Files[0]).AsStream());
-            var Program = Cnmt.ContentEntries.FirstOrDefault(c => c.Type == CnmtContentType.Program);
+            foreach (var entry in Cnmt.ContentEntries)
+            {
+                if (entry.Type == CnmtContentType.Program) {
+                    var Program = entry;
+
+                    Input = Pfs.OpenFile($"{Program.NcaId.ToHexString().ToLower()}.nca").AsStream();
+                    var Nca = new Nca(Keys, Input.AsStorage(), true);
+
+                    Romfs romfs = new Romfs(
+                     Nca.OpenSection(Nca.Sections.FirstOrDefault
+                (s => s?.Type == SectionType.Romfs || s?.Type == SectionType.Bktr)
+                        .SectionNum, false, IntegrityCheckLevel.None, true));
+
+                    if (Nca.CanOpenSection((int)ProgramPartitionType.Code))
+                    {
+                        var exefs = new Pfs(Nca.OpenSection((int)ProgramPartitionType.Code,
+                                false, IntegrityCheckLevel.None, true));
+
+                        foreach (var file in exefs.Files)
+                            files.Add(new ExefsEntry(exefs, file, Program.NcaId.ToHexString()));
+                    }
+
+                    for (int i = 0; i < romfs.Files.Count; i++)
+                        files.Add(new FileEntry(romfs, romfs.Files[i], Program.NcaId.ToHexString()));
+                }
+            }
             var CtrlEntry = Cnmt.ContentEntries.FirstOrDefault(c => c.Type == CnmtContentType.Control);
             if (CtrlEntry != null)
                 Control = new Nca(Keys, Pfs.OpenFile($"{CtrlEntry.NcaId.ToHexString().ToLower()}.nca"), false);
-            Input = Pfs.OpenFile($"{Program.NcaId.ToHexString().ToLower()}.nca").AsStream();
-
-            var Nca = new Nca(Keys, Input.AsStorage(), true);
-
-            Romfs romfs = new Romfs(
-                     Nca.OpenSection(Nca.Sections.FirstOrDefault
-                            (s => s?.Type == SectionType.Romfs || s?.Type == SectionType.Bktr)
-                            .SectionNum, false, IntegrityCheckLevel.None, true));
-
-            if (Nca.CanOpenSection((int)ProgramPartitionType.Code))
-            {
-                var exefs = new Pfs(Nca.OpenSection((int)ProgramPartitionType.Code,
-                        false, IntegrityCheckLevel.None, true));
-
-                foreach (var file in exefs.Files)
-                    files.Add(new ExefsEntry(exefs,file));
-            }
-
-            for (int i = 0; i < romfs.Files.Count; i++)
-                files.Add(new FileEntry(romfs,romfs.Files[i]));
         }
  
         public void Unload()
@@ -111,7 +116,18 @@ namespace FirstPlugin
             return false;
         }
 
-        public class ExefsEntry : FileEntry
+        public class ExefsEntry : PartEntry
+        {
+            public ExefsEntry(Pfs pfs, PfsFileEntry entry, string root = "") : base(pfs, entry)
+            {
+                if (root != string.Empty)
+                    FileName = $"{root}/Exefs/{entry.Name}";
+                else
+                    FileName = $"Exefs/{entry.Name}";
+            }
+        }
+
+        public class PartEntry : FileEntry
         {
             private Pfs ParentPfs;
             private PfsFileEntry fileEntry;
@@ -139,11 +155,11 @@ namespace FirstPlugin
                 }
             }
 
-            public ExefsEntry(Pfs pfs, PfsFileEntry entry)
+            public PartEntry(Pfs pfs, PfsFileEntry entry)
             {
                 ParentPfs = pfs;
                 fileEntry = entry;
-                FileName = $"Exefs/{fileEntry.Name}";
+                FileName = fileEntry.Name;
             }
         }
 
@@ -185,11 +201,14 @@ namespace FirstPlugin
 
             }
 
-            public FileEntry(Romfs romfs, RomfsFile romfsFile)
+            public FileEntry(Romfs romfs, RomfsFile romfsFile, string root = "")
             {
                 ParentROMFS = romfs;
                 File = romfsFile;
-                FileName = $"Romfs/{File.FullPath}";
+                if (root != string.Empty)
+                    FileName = $"{root}/Romfs/{File.FullPath}";
+                else
+                    FileName = $"Romfs/{File.FullPath}";
             }
         }
     }
