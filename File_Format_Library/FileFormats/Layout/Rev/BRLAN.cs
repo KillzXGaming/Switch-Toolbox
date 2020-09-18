@@ -26,7 +26,8 @@ namespace LayoutBXLYT
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "RLAN");
+                return reader.CheckSignature(4, "RLAN") || 
+                       reader.CheckSignature(4, "NALR");
             }
         }
 
@@ -102,7 +103,7 @@ namespace LayoutBXLYT
 
         public class Header : BxlanHeader
         {
-            private const string Magic = "RLAN";
+            private string Magic = "RLAN";
             private ushort ByteOrderMark;
             private ushort HeaderSize;
 
@@ -115,7 +116,10 @@ namespace LayoutBXLYT
                 AnimationInfo = new PAI1();
 
                 reader.SetByteOrder(true);
-                reader.ReadSignature(4, Magic);
+                Magic = reader.ReadSignature(4);
+                if (Magic == "NALR")
+                    reader.ReverseMagic = true;
+
                 ByteOrderMark = reader.ReadUInt16();
                 reader.CheckByteOrderMark(ByteOrderMark);
                 Version = reader.ReadUInt16();
@@ -131,7 +135,7 @@ namespace LayoutBXLYT
                 for (int i = 0; i < sectionCount; i++)
                 {
                     long pos = reader.Position;
-                    string Signature = reader.ReadString(4, Encoding.ASCII);
+                    string Signature = reader.ReadSignature(4);
                     uint SectionSize = reader.ReadUInt32();
 
                     SectionCommon section = new SectionCommon(Signature);
@@ -382,7 +386,7 @@ namespace LayoutBXLYT
                     Unknown = reader.ReadUInt32(); //This doesn't seem to be included in the offsets to the entries (?)
 
                 long startPos = reader.Position;
-                Tag = reader.ReadString(4, Encoding.ASCII);
+                Tag = reader.ReadSignature(4);
                 var numEntries = reader.ReadByte();
                 reader.Seek(3);
                 var offsets = reader.ReadUInt32s((int)numEntries);

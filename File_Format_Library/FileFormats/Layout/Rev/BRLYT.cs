@@ -31,7 +31,8 @@ namespace LayoutBXLYT
         {
             using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
             {
-                return reader.CheckSignature(4, "RLYT");
+                return reader.CheckSignature(4, "RLYT") ||
+                       reader.CheckSignature(4, "TYLR");
             }
         }
 
@@ -100,10 +101,13 @@ namespace LayoutBXLYT
         public Dictionary<string, STGenericTexture> GetTextures()
         {
             Dictionary<string, STGenericTexture> textures = new Dictionary<string, STGenericTexture>();
+            Console.WriteLine($"GetTextures {IFileInfo.ArchiveParent != null}");
             if (IFileInfo.ArchiveParent != null)
             {
                 foreach (var file in IFileInfo.ArchiveParent.Files)
                 {
+                    Console.WriteLine($"GetTextures {file.FileName}");
+
                     try
                     {
                         if (Utils.GetExtension(file.FileName) == ".tpl")
@@ -141,7 +145,7 @@ namespace LayoutBXLYT
         //https://github.com/FuryBaguette/SwitchLayoutEditor/tree/master/SwitchThemesCommon
         public class Header : BxlytHeader, IDisposable
         {
-            private const string Magic = "RLYT";
+            private string Magic = "RLYT";
 
             private ushort ByteOrderMark;
             private ushort HeaderSize;
@@ -329,7 +333,9 @@ namespace LayoutBXLYT
                 FileInfo = brlyt;
 
                 reader.SetByteOrder(true);
-                reader.ReadSignature(4, Magic);
+                Magic = reader.ReadSignature(4);
+                if (Magic == "TYLR")
+                    reader.ReverseMagic = true;
                 ByteOrderMark = reader.ReadUInt16();
                 reader.CheckByteOrderMark(ByteOrderMark);
                 Version = reader.ReadUInt16();
@@ -355,7 +361,7 @@ namespace LayoutBXLYT
                 {
                     long pos = reader.Position;
 
-                    string Signature = reader.ReadString(4, Encoding.ASCII);
+                    string Signature = reader.ReadSignature(4);
                     uint SectionSize = reader.ReadUInt32();
 
                     SectionCommon section = new SectionCommon(Signature);
@@ -470,6 +476,8 @@ namespace LayoutBXLYT
             {
                 writer.SetByteOrder(IsBigEndian);
                 writer.WriteSignature(Magic);
+                if (Magic == "TYLR")
+                    writer.ReverseMagic = true;
                 writer.Write(ByteOrderMark);
                 writer.Write((ushort)Version);
                 writer.Write(uint.MaxValue); //Reserve space for file size later
