@@ -87,10 +87,21 @@ namespace LayoutBXLYT
             if (bxlyt.Textures.Count > 0)
             {
                 var textures = bxlyt.GetTextures;
-                foreach (var tex in textures)
-                    if (!Textures.ContainsKey(tex.Key))
-                        Textures.Add(tex.Key, tex.Value);
+                foreach (var tex in bxlyt.Textures)
+                {
+                    //Some games use different cases for archives
+                    string lowerCase = tex.ToLower();
+                    if (textures.ContainsKey(tex))
+                        AddTexture(tex, textures[tex]);
+                    else if (textures.ContainsKey(lowerCase))
+                        AddTexture(tex, textures[lowerCase]);
+                }
             }
+        }
+
+        private void AddTexture(string name, STGenericTexture tex) {
+            if (!Textures.ContainsKey(name))
+                Textures.Add(name, tex);
         }
 
         public override void OnControlClosing()
