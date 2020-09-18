@@ -28,7 +28,8 @@ namespace FirstPlugin
             using (var reader = new FileReader(stream, true))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
-                return reader.ReadUInt32() == 0x0020AF30 || Utils.GetExtension(FileName) == ".tpl";
+                uint magic = reader.ReadUInt32();
+                return magic == 0x0020AF30 || magic == 0x30AF2000 || Utils.GetExtension(FileName) == ".tpl";
             }
         }
 

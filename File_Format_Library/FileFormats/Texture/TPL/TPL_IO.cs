@@ -17,12 +17,13 @@ namespace FirstPlugin
             public List<ImageEntry> Images = new List<ImageEntry>();
 
             public bool IsV1 = false;
+            public bool IsBigEndian = true;
 
             public void Read(FileReader reader)
             {
                 reader.SetByteOrder(true);
                 uint Identifier = reader.ReadUInt32();
-                if (Identifier != 0x0020AF30) {
+                if (Identifier != 0x0020AF30 && Identifier != 0x30AF2000) {
                     IsV1 = true;
 
                     reader.Position = 0;
@@ -36,6 +37,8 @@ namespace FirstPlugin
                     }
                 }
                 else {
+                    IsBigEndian = Identifier == 0x0020AF30;
+                    reader.SetByteOrder(IsBigEndian);
                     uint ImageCount = reader.ReadUInt32();
                     uint ImageOffsetTable = reader.ReadUInt32();
                     for (int i = 0; i < ImageCount; i++) {
@@ -61,7 +64,7 @@ namespace FirstPlugin
 
             public void Write(FileWriter writer)
             {
-                writer.SetByteOrder(true);
+                writer.SetByteOrder(IsBigEndian);
                 if (IsV1) {
                     writer.Write(Images.Count);
                     for (int i = 0; i < Images.Count; i++)
