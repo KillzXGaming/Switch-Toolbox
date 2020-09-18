@@ -62,9 +62,13 @@ namespace LayoutBXLYT
                 //Adjust necessary parameters if the user changes the name
                 if (name != null && LayoutFile != null)
                 {
+                    Console.WriteLine($"LayoutFile {name} {LayoutFile.PaneLookup.ContainsKey(name)}");
+
                     //Adjust name table entry
-                    if (LayoutFile != null && LayoutFile.PaneLookup.ContainsKey(name))
+                    if (LayoutFile.PaneLookup.ContainsKey(name))
                         LayoutFile.PaneLookup.Remove(name);
+
+                    Console.WriteLine($"LayoutFileR {name} {LayoutFile.PaneLookup.ContainsKey(name)}");
 
                     //Adjust material reference
                     if (this is IPicturePane)
@@ -91,6 +95,11 @@ namespace LayoutBXLYT
 
                 if (LayoutFile != null && !LayoutFile.PaneLookup.ContainsKey(name))
                     LayoutFile.PaneLookup.Add(name, this);
+
+                Console.WriteLine($"test {name}");
+
+                if (LayoutFile != null)
+                    Console.WriteLine($"LayoutFileN {name} {LayoutFile.PaneLookup.ContainsKey(name)}");
             }
         }
 
@@ -2326,6 +2335,7 @@ namespace LayoutBXLYT
             if (!PaneLookup.ContainsKey(pane.Name))
                 PaneLookup.Add(pane.Name, pane);
 
+            pane.LayoutFile = this;
             pane.Parent = parent;
             parent.Childern.Add(pane);
             parent.NodeWrapper.Nodes.Add(pane.NodeWrapper);
