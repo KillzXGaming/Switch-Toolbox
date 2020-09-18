@@ -50,7 +50,7 @@ namespace FirstPlugin
             CharacterWidths = new List<CWDH>();
             CodeMaps = new List<CMAP>();
 
-            string Signature = reader.ReadString(4, Encoding.ASCII);
+            string Signature = reader.ReadSignature(4);
             if (Signature != "FINF")
                 throw new Exception($"Invalid signature {Signature}! Expected FINF.");
             Size = reader.ReadUInt32();
@@ -94,7 +94,6 @@ namespace FirstPlugin
             }
             else
             {
-
                 Type = reader.ReadEnum<FontType>(true);
                 Height = reader.ReadByte();
                 Width = reader.ReadByte();

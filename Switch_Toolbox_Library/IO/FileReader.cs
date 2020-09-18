@@ -13,6 +13,8 @@ namespace Toolbox.Library.IO
 {
     public class FileReader : BinaryDataReader
     {
+        public bool ReverseMagic { get; set; } = false;
+
         public FileReader(Stream stream, bool leaveOpen = false)
             : base(stream, Encoding.ASCII, leaveOpen)
         {
@@ -193,9 +195,20 @@ namespace Toolbox.Library.IO
                 ByteOrder = ByteOrder.LittleEndian;
         }
 
+        public string ReadSignature(int length)
+        {
+            string RealSignature = ReadString(length, Encoding.ASCII);
+            if (ReverseMagic)
+                return new string(RealSignature.Reverse().ToArray());
+            else
+                return RealSignature;
+        }
+
         public string ReadSignature(int length, string ExpectedSignature, bool TrimEnd = false)
         {
             string RealSignature =  ReadString(length, Encoding.ASCII);
+            if (ReverseMagic)
+                RealSignature = new string(RealSignature.Reverse().ToArray());
 
             if (TrimEnd) RealSignature = RealSignature.TrimEnd(' ');
 

@@ -44,9 +44,7 @@ namespace FirstPlugin
 
         public void Read(FileReader reader, FFNT header)
         {
-            string Signature = reader.ReadString(4, Encoding.ASCII);
-            if (Signature != "TGLP")
-                throw new Exception($"Invalid signature {Signature}! Expected TGLP.");
+            string Signature = reader.ReadSignature(4, "TGLP");
             SectionSize = reader.ReadUInt32();
             CellWidth = reader.ReadByte();
             CellHeight = reader.ReadByte();

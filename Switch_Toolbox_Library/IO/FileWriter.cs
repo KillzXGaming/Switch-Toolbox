@@ -1,11 +1,14 @@
 ﻿using Syroot.BinaryData;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace Toolbox.Library.IO
 {
     public class FileWriter : BinaryDataWriter
     {
+        public bool ReverseMagic { get; set; } = false;
+
         public void CheckByteOrderMark(uint ByteOrderMark)
         {
             if (ByteOrderMark == 0xFEFF)
@@ -85,7 +88,10 @@ namespace Toolbox.Library.IO
 
         public void WriteSignature(string value)
         {
-            Write(Encoding.ASCII.GetBytes(value));
+            if (ReverseMagic)
+                Write(Encoding.ASCII.GetBytes(new string(value.Reverse().ToArray())));
+            else
+                Write(Encoding.ASCII.GetBytes(value));
         }
 
         public void WriteString(string value, Encoding encoding = null)

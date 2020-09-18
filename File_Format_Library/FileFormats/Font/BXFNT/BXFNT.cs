@@ -32,7 +32,8 @@ namespace FirstPlugin
             {
                 return reader.CheckSignature(4, "FFNT") ||
                        reader.CheckSignature(4, "CFNT") ||
-                       reader.CheckSignature(4, "RFNT");
+                       reader.CheckSignature(4, "RFNT") ||
+                       reader.CheckSignature(4, "TNFR");
             }
         }
 
@@ -210,6 +211,8 @@ namespace FirstPlugin
 
         public PlatformType Platform { get; set; } = PlatformType.Cafe;
 
+        public bool IsWiiLE => Signature == "TNFR";
+
         public enum PlatformType
         {
             Wii,
@@ -223,15 +226,18 @@ namespace FirstPlugin
             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 
             Signature = reader.ReadString(4, Encoding.ASCII);
-            if (Signature != "FFNT" && Signature != "CFNT" && Signature != "RFNT")
+            if (Signature != "FFNT" && Signature != "CFNT" && Signature != "RFNT" && Signature != "TNFR")
                 throw new Exception($"Invalid signature {Signature}! Expected FFNT or CFNT or RFNT.");
 
             BOM = reader.ReadUInt16();
             reader.CheckByteOrderMark(BOM);
 
+            if (Signature == "TNFR")
+                reader.ReverseMagic = true;
+
             //Parse header first and check the version
             //Brfnt uses a slightly different header structure
-            if (Signature == "RFNT") {
+            if (Signature == "RFNT" || Signature == "TNFR") {
                 Version = reader.ReadUInt16();
                 uint FileSize = reader.ReadUInt32();
                 HeaderSize = reader.ReadUInt16();
@@ -259,7 +265,7 @@ namespace FirstPlugin
 
             if (Signature == "CFNT")
                 Platform = PlatformType.Ctr;
-            if (Signature == "RFNT")
+            if (Signature == "RFNT" || Signature == "TNFR")
                 Platform = PlatformType.Wii;
 
             Console.WriteLine($"Platform {Platform}");
@@ -274,7 +280,7 @@ namespace FirstPlugin
             {
                 long BlockStart = reader.Position;
 
-                string BlockSignature = reader.ReadString(4, Encoding.ASCII);
+                string BlockSignature = reader.ReadSignature(4);
                 uint BlockSize = reader.ReadUInt32();
 
                 switch (BlockSignature)
@@ -313,6 +319,9 @@ namespace FirstPlugin
             writer.WriteSignature(Signature);
             writer.Write(BOM);
             writer.CheckByteOrderMark(BOM);
+
+            if (Signature == "TNFR")
+                writer.ReverseMagic = true;
 
             long _ofsFileSize;
             long _ofsBlockNum;
