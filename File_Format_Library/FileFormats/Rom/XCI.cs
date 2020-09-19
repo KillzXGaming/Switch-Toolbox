@@ -68,6 +68,8 @@ namespace FirstPlugin
                     Stream Input = CnmtPfs.OpenFile(ncaFileName).AsStream();
                     var Nca = new Nca(Keys, Input.AsStorage(), true);
 
+                    string root = Nca.Header.TitleId.ToString("X");
+
                     Romfs romfs = new Romfs(
                      Nca.OpenSection(Nca.Sections.FirstOrDefault
                 (s => s?.Type == SectionType.Romfs || s?.Type == SectionType.Bktr)
@@ -79,11 +81,11 @@ namespace FirstPlugin
                                 false, IntegrityCheckLevel.None, true));
 
                         foreach (var file in exefs.Files)
-                            files.Add(new NSP.ExefsEntry(exefs, file, ncaFileName));
+                            files.Add(new NSP.ExefsEntry(exefs, file, root));
                     }
 
                     for (int i = 0; i < romfs.Files.Count; i++)
-                        files.Add(new NSP.FileEntry(romfs, romfs.Files[i], ncaFileName));
+                        files.Add(new NSP.FileEntry(romfs, romfs.Files[i], root));
                 }
             }
         }
