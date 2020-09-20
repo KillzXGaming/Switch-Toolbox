@@ -40,7 +40,7 @@ namespace FirstPlugin
 
             Width = TextureImage.Width;
             Height = TextureImage.Height;
-            MipCount = TextureImage.MipMapCount;
+            MipCount = TextureImage.MipMap;
 
             ImageKey = "texture";
             SelectedImageKey = ImageKey;
