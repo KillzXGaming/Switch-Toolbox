@@ -4,7 +4,7 @@ namespace LayoutBXLYT.Cafe
 {
     public class TexCoordGen : BxlytTexCoordGen
     {
-        byte[] unkData;
+        public byte[] unkData;
 
         public TexCoordGen()
         {
@@ -23,11 +23,17 @@ namespace LayoutBXLYT.Cafe
                 unkData = reader.ReadBytes(6);
         }
 
-        public void Write(FileWriter writer)
+        public void Write(FileWriter writer, BxlytHeader header)
         {
             writer.Write(Matrix, false);
             writer.Write(Source, false);
-            writer.Write(unkData);
+
+            int length = header.VersionMajor >= 8 ? 0xE : 6;
+            for (int i = 0; i < length; i++)
+                if (i < unkData.Length)
+                    writer.Write(unkData[i]);
+                else
+                    writer.Write((byte)0);
         }
     }
 }
