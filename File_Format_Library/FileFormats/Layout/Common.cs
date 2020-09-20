@@ -2285,6 +2285,24 @@ namespace LayoutBXLYT
             return new BxlytMaterial();
         }
 
+        public void RecalculateMaterialReferences()
+        {
+            List<BxlytMaterial> materials = Materials;
+            foreach (var pane in PaneLookup.Values)
+            {
+                if (pane is IPicturePane)
+                    ((IPicturePane)pane).MaterialIndex = (ushort)materials.IndexOf(((IPicturePane)pane).Material);
+                if (pane is IWindowPane)
+                {
+                    ((IWindowPane)pane).Content.MaterialIndex = (ushort)materials.IndexOf(((IWindowPane)pane).Content.Material);
+                    foreach (var window in ((IWindowPane)pane).WindowFrames)
+                        window.MaterialIndex = (ushort)materials.IndexOf(window.Material);
+                }
+                if (pane is ITextPane)
+                    ((ITextPane)pane).MaterialIndex = (ushort)materials.IndexOf(((ITextPane)pane).Material);
+            }
+        }
+
         public void RemoveTextureReferences(string texture)
         {
             foreach (var mat in Materials)

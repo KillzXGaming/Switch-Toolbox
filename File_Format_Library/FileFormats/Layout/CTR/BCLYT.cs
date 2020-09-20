@@ -479,6 +479,8 @@ namespace LayoutBXLYT
 
             public void Write(FileWriter writer)
             {
+                RecalculateMaterialReferences();
+
                 Version = VersionMajor << 24 | VersionMinor << 16 | VersionMicro << 8 | VersionMicro2;
 
                 writer.SetByteOrder(true);

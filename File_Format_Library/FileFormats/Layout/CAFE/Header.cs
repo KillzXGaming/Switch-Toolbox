@@ -450,7 +450,15 @@ namespace LayoutBXLYT.Cafe
 
         public void Write(FileWriter writer)
         {
+            RecalculateMaterialReferences();
+
             Version = VersionMajor << 24 | VersionMinor << 16 | VersionMicro << 8 | VersionMicro2;
+
+            foreach (var pane in PaneLookup.Values)
+            {
+                if (pane is PIC1)
+                    ((PIC1)pane).MaterialIndex = (ushort)MaterialList.Materials.IndexOf(((PIC1)pane).Material);
+            }
 
             writer.SetByteOrder(true);
             writer.WriteSignature(Magic);
