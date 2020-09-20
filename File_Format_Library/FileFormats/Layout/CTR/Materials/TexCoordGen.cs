@@ -6,6 +6,13 @@ namespace LayoutBXLYT.CTR
     {
         ushort Unknown { get; set; }
 
+        public TexCoordGen()
+        {
+            Matrix = TexGenMatrixType.Matrix2x4;
+            Source = TexGenType.TextureCoord0;
+            Unknown = 0;
+        }
+
         public TexCoordGen(FileReader reader, BxlytHeader header)
         {
             Matrix = (TexGenMatrixType)reader.ReadByte();

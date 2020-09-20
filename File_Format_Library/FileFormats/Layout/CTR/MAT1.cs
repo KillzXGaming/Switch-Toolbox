@@ -212,6 +212,13 @@ namespace LayoutBXLYT.CTR
             long flagPos = writer.Position;
             writer.Write(flags);
 
+            if (TextureMaps?.Length > 0 && TexCoordGens?.Length == 0)
+            {
+                TexCoordGens = new BxlytTexCoordGen[TextureMaps.Length];
+                for (int i = 0; i < TextureMaps?.Length; i++)
+                    TexCoordGens[i] = new TexCoordGen();
+            }
+
             flags = 0;
             for (int i = 0; i < TextureMaps?.Length; i++)
             {

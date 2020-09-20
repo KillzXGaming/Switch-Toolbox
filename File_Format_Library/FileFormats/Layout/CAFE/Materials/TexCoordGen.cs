@@ -6,6 +6,13 @@ namespace LayoutBXLYT.Cafe
     {
         byte[] unkData;
 
+        public TexCoordGen()
+        {
+            Matrix = TexGenMatrixType.Matrix2x4;
+            Source = TexGenType.TextureCoord0;
+            unkData = new byte[6];
+        }
+
         public TexCoordGen(FileReader reader, BxlytHeader header)
         {
             Matrix = reader.ReadEnum<TexGenMatrixType>(false);

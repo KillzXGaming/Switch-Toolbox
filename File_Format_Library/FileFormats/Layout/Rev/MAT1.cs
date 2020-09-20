@@ -247,6 +247,13 @@ namespace LayoutBXLYT.Revolution
             if (!((AlphaCompare)AlphaCompare).HasDefaults())
                 HasAlphaCompare = true;
 
+            if (TextureMaps?.Length > 0 && TexCoordGens?.Count == 0)
+            {
+                TexCoordGens = new List<TexCoordGenEntry>(TextureMaps.Length);
+                for (int i = 0; i < TextureMaps?.Length; i++)
+                    TexCoordGens[i] = new TexCoordGenEntry();
+            }
+
             flags = 0;
             if (HasMaterialColor)
                 flags |= (1 << 27);
