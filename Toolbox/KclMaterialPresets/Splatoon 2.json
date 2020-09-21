@@ -5,6 +5,10 @@
   "SphereRadius": 25.0,
   "Comments": "",
   "MaterialPresets": {
-    "0": "Unknown"
+    "9": "Inkable Ceiling",
+    "12": "Metal",
+    "40": "Inkable Floor",
+    "80": "Inkable Wall",
+    "4007": "Grate (Squid can pass through)",
   }
 }
