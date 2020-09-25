@@ -12,43 +12,43 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using SharpYaml.Serialization;
+using Newtonsoft.Json;
 
 namespace LayoutBXLYT
 {
     public class BasePane : SectionCommon,  ICloneable
     {
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         internal BxlytHeader LayoutFile;
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         internal PaneAnimController animController = new PaneAnimController();
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         internal TreeNodeCustom NodeWrapper;
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         internal bool IsRoot
         {
             get { return Parent == null; }
         }
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         internal bool ParentIsRoot
         {
             get { return Parent != null && Parent.IsRoot; }
         }
 
-        [YamlIgnore]
+        [JsonIgnore]
         internal RenderablePane renderablePane;
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         internal virtual bool DisplayInEditor { get; set; } = true;
 
         private string name;
@@ -154,14 +154,14 @@ namespace LayoutBXLYT
         public virtual bool InfluenceAlpha { get; set; }
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         public BasePane Parent { get; set; }
 
         [Browsable(false)]
         public List<BasePane> Childern { get; set; } = new List<BasePane>();
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         internal bool HasChildern
         {
             get { return Childern.Count > 0; }
@@ -348,7 +348,7 @@ namespace LayoutBXLYT
         private CustomRectangle rectangle;
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         public virtual CustomRectangle Rectangle
         {
             get
@@ -1448,7 +1448,7 @@ namespace LayoutBXLYT
 
         public List<TexCoord> TexCoords = new List<TexCoord>();
 
-        [YamlIgnore]
+        [JsonIgnore]
         private BxlytHeader LayoutFile;
 
         public object Clone()
@@ -2429,27 +2429,27 @@ namespace LayoutBXLYT
         //incase the settings get renabled, which keeps the previous data
 
         [Browsable(false)]
-        [YamlIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public bool EnableAlphaCompare { get; set; }
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         public bool EnableBlend { get; set; }
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         public bool EnableBlendLogic { get; set; }
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         public bool EnableIndParams { get; set; }
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         public bool EnableFontShadowParams { get; set; }
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         public TreeNodeCustom NodeWrapper;
 
         public bool TryRemoveTexture(string name)
@@ -2508,14 +2508,14 @@ namespace LayoutBXLYT
         public BxlytTextureTransform[] TextureTransforms { get; set; }
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         public MaterialAnimController animController = new MaterialAnimController();
 
         [DisplayName("Name"), CategoryAttribute("General")]
         public virtual string Name { get; set; }
 
         [Browsable(false)]
-        [YamlIgnore]
+        [JsonIgnore]
         public BxlytHeader ParentLayout;
 
         public void SetName(string oldName, string newName)
