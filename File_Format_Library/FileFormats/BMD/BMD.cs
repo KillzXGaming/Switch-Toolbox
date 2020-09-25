@@ -335,8 +335,8 @@ namespace FirstPlugin
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
-            Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
-            Items.Add(new STToolStripSeparator());
+            //Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            //Items.Add(new STToolStripSeparator());
             Items.Add(new STToolStipMenuItem("Export", null, ExportAction, Keys.Control | Keys.E) );
             Items.Add(new STToolStipMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R) { Enabled = false});
             return Items.ToArray();

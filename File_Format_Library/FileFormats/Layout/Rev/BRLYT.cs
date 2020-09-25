@@ -101,13 +101,10 @@ namespace LayoutBXLYT
         public Dictionary<string, STGenericTexture> GetTextures()
         {
             Dictionary<string, STGenericTexture> textures = new Dictionary<string, STGenericTexture>();
-            Console.WriteLine($"GetTextures {IFileInfo.ArchiveParent != null}");
             if (IFileInfo.ArchiveParent != null)
             {
                 foreach (var file in IFileInfo.ArchiveParent.Files)
                 {
-                    Console.WriteLine($"GetTextures {file.FileName}");
-
                     try
                     {
                         if (Utils.GetExtension(file.FileName) == ".tpl")
@@ -127,6 +124,7 @@ namespace LayoutBXLYT
                         STErrorDialog.Show($"Failed to load texture {file.FileName}. ", "Layout Editor", ex.ToString());
                     }
                 }
+                Console.WriteLine($"textures {textures.Count}");
             }
 
             return textures;
@@ -474,6 +472,8 @@ namespace LayoutBXLYT
 
             public void Write(FileWriter writer)
             {
+                RecalculateMaterialReferences();
+
                 writer.SetByteOrder(IsBigEndian);
                 writer.WriteSignature(Magic);
                 if (Magic == "TYLR")
