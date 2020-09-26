@@ -536,10 +536,10 @@
             Initializes a new instance of the <see cref="T:KclLibrary.ModelOctreeNode"/> class with an empty key.
             </summary>
         </member>
-        <member name="M:KclLibrary.ModelOctreeNode.#ctor(Syroot.BinaryData.BinaryDataReader)">
+        <member name="M:KclLibrary.ModelOctreeNode.#ctor(Syroot.BinaryData.BinaryDataReader,System.UInt32)">
             <summary>
             Initializes a new instance of the <see cref="!:CourseOctreeNode"/> class with the key and data read from the
-            given <paramref name="reader"/>.
+            given <paramref name="reader"/> and the <paramref name="parentPosition"/>.
             </summary>
             <param name="reader">The <see cref="T:Syroot.BinaryData.BinaryDataReader"/> to read the node data with.</param>
         </member>
