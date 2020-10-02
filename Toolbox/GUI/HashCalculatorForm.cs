@@ -27,6 +27,7 @@ namespace Toolbox
             hashTypeCB.Items.Add("CRC32");
             hashTypeCB.Items.Add("BCSV");
             hashTypeCB.Items.Add("SARC");
+            hashTypeCB.Items.Add("MMH3");
 
             hashTypeCB.SelectedIndex = 0;
 
@@ -71,6 +72,8 @@ namespace Toolbox
                 return stringToHash(text);
             else if (type == "SARC")
                 return NameHash(text);
+            else if (type == "MMH3")
+                return Toolbox.Library.Security.Cryptography.MurMurHash3.Hash(text);
             return 0;
         }
 
