@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolbox.Library;
 using Toolbox.Library.IO;
+using Toolbox.Library.Security.Cryptography;
 
 namespace FirstPlugin
 {
@@ -27,8 +30,8 @@ namespace FirstPlugin
         {
             get
             {
-               // if (hashes.Count == 0)
-                    //CalculateHashes();
+                if (hashes.Count == 0)
+                    CalculateHashes();
                 return hashes;
             }
         }
@@ -137,7 +140,27 @@ namespace FirstPlugin
 
         private static void CalculateHashes()
         {
+            string dir = Path.Combine(Runtime.ExecutableDir, "Hashes");
+            if (!Directory.Exists(dir))
+                return;
 
+            foreach (var file in Directory.GetFiles(dir))
+            {
+                if (Utils.GetExtension(file) != ".txt")
+                    continue;
+
+                foreach (string hashStr in File.ReadAllLines(file))
+                {
+                    CheckHash(hashStr);
+                }
+            }
+        }
+
+        private static void CheckHash(string hashStr)
+        {
+            uint hash = Crc32.Compute(hashStr);
+            if (!hashes.ContainsKey(hash))
+                hashes.Add(hash, hashStr);
         }
     }
 }

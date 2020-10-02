@@ -1,0 +1,1509 @@
+﻿BeforeDays u8
+UmbrellaID u16
+Month2042 u8
+Month2026 u8
+StructureInfoUniqueID u16
+StartDayN2 u8
+MaxValue u16
+SpNpcID u16
+MonthNorth u8
+MSLabel string32
+RainHat u16
+ReFabricPattern1Color1 u8
+BonusFive u8
+Name string64
+Name string60
+UseExteriorLight u8
+NumberingId u16
+StartDayS5 u8
+SpecialELink u8
+Day2017 u8
+CanGift u8
+WeatherPattern string32
+WdayNorth u8
+MaxValue4 u32
+CanNpcPresent u8
+InnerType030 u8
+ReFabricPattern3Color1 u8
+NameWithTitle u8
+AccentWall u16
+BaseColorR f32
+LocalizeTexture u8
+DefaultHeredity u8
+StartMoN5 u8
+Property u8
+MemoryUnitNum u16
+AnimeTypeWateringCan string64
+Rate6 u8
+IsUseXlink u8
+Reward2 u32
+RightTransOffsetX f32
+CheekOrangeColorG f32
+Month2033 u8
+ReFabricPattern5Color1 u8
+Month2057 u8
+FloorType u16
+Size s8
+CollisionHeight f32
+AnimeTypeDrink string64
+ReFabricPatternNum s8
+USes u8
+StartMoS2 u8
+Door0 u16
+ReFabricPattern7Color1 u8
+Day2002 u8
+InnerType111 u8
+StrSortIdEUpt u16
+ToiletType u8
+TopRotateOffsetX f32
+SilhouettePosX f32
+MusicNo u16
+RegionUs u8
+PosterItemID s16
+WallTableId u16
+MessageLabel u16
+MuseumNpcRace u32
+NameLong string128
+Day2059 u8
+ReBodyPattern4Color0 u8
+Reward u16
+ItemCategoryGroup u32
+Month2025 u8
+Month2041 u8
+AppearArea u8
+Amount1 u16
+Label string64
+StartDayN1 u8
+FrontSwitch u8
+RightRotateOffsetY f32
+DemoDistance f32
+InnerType033 u8
+StartDayS6 u8
+Day2014 u8
+ReBodyPattern6Color0 u8
+HalfUnitSizeX u8
+HighlightColorB f32
+Month2054 u8
+Month2030 u8
+ItemKind6 u16
+TopTransOffsetX f32
+PeakRotateOffsetY f32
+StartMoN6 u8
+SelectSecond u16
+Day2028 u8
+WatchPosY f32
+Rate5 u8
+ReBodyPattern0Color0 u8
+Material1 u16
+CanSetCloset u8
+MaxLevel u8
+DesignWinter1 u16
+InnerType112 u8
+Day2001 u8
+RainWare u16
+Studio u8
+EndMonthSouth u16
+SelectRate u8
+ItemKind15 u16
+DonateItemFifth u16
+EUen u8
+ReBodyPattern2Color0 u8
+Month2019 u8
+StartMoS1 u8
+Priority u16
+ItemID u16
+Day2011 u8
+InnerType102 u8
+StartDayS3 u8
+DaySouth u8
+Month2009 u8
+ItemKind14 u16
+Social u32
+StartDayN4 u8
+TopTransOffsetY f32
+Kind u8
+ItemKind7 u16
+Month2020 u8
+Month2044 u8
+WatchPosX f32
+Day2038 u8
+Color2 u8
+ToolAsCommand string30
+EventObjUniqueID u16
+GetScale f32
+PeakRotateOffsetX f32
+SeasonSummerLevel u8
+StartMoS4 u8
+Month u8
+InnerType023 u8
+Cap u16
+SelectRate f32
+RightRotateOffsetX f32
+RemakeKitNum u16
+StrSortIdEUit u16
+EndMinute u8
+Day2060 u8
+Day2004 u8
+AcceEye u16
+CanNpcBirthdayPresent u8
+NameboardAngleY f32
+AsCommand string65
+DesignAlways4 u16
+GrowupFg u16
+NpcFtrActionTool u16
+Day2049 u8
+StartMoN3 u8
+StrSortIdTWzh u16
+SkinBaseColorB f32
+GroundAttributeUniqueID u16
+SoundAttribute u16
+Label string8
+Month2051 u8
+Month2035 u8
+MainType u8
+TextureWindow u8
+EndDaySouth u16
+Collision u8
+SilhouettePosY f32
+HeadColor u16
+Announce u8
+InnerType101 u8
+Day2012 u8
+NpcTalkType u8
+TopRotateOffsetY f32
+MaxValue u32
+Reward3 u32
+NpcLabel string8
+Color1 u8
+Horizon u8
+DonateItemFirst u16
+CanPutWorkStuff u8
+GrowLevel u8
+LookAtType u8
+ForbidOverwrite u8
+Level u16
+FlowFileName string32
+ItemCategory u32
+PosX s16
+RightTransOffsetY f32
+Month2047 u8
+AppearStage u8
+Month2023 u8
+StartMinute u8
+CheekPinkColorB f32
+ObjCheckRate f32
+LeftTransOffsetZ f32
+AccEye u16
+Day2007 u8
+ModelName string32
+Material u16
+SerialID s16
+Socks u16
+NodeName string32
+PeakTransOffsetZ f32
+Direction s8
+InnerType020 u8
+SkinEdgeColorR f32
+BagID u16
+MaxValue5 u32
+OffsetZ s16
+NameShort string128
+ItemHHADirection u8
+PacketId s32
+PolygonLimit u16
+Month2036 u8
+Month2052 u8
+CanSell u8
+IsCreateBait u8
+Rate3 u8
+FtrPlace u8
+SilhouetteID u32
+DebugName string64
+Smartphone u16
+FlagLand s32
+Label string50
+BehaviorType u8
+PeakTransOffsetX f32
+OffsetX s16
+FlagPlayer s32
+AnimeTypeBook string64
+NpcColor u8
+BodyColor u16
+ReBodyPattern7Color1 u8
+EUfr u8
+UseToolLeft u8
+Misc u8
+DoorMaterial u16
+HasNightLight u8
+FlagType u8
+Day2027 u8
+EndDayN1 u8
+Day2043 u8
+LeftTransOffsetX f32
+HasEigyoLight u8
+LabelLong string64
+ReBodyPattern5Color1 u8
+InitLive u8
+Key string64
+Frames u16
+Value u16
+ItemFrom string32
+StaticField u8
+EndDayS6 u8
+CanBury u8
+WatchPointID u16
+AccessoryID u16
+Month2016 u8
+ReBodyPattern3Color1 u8
+ResName string64
+CanSetItem u8
+MoveAs u8
+ArchUniqueID u16
+InnerType121 u8
+ValidEffect u8
+Day2056 u8
+Day2032 u8
+RegionEu u8
+EUru u8
+StrSortIdUSfr u16
+ResourceName string64
+DefaultValue u32
+WeekNorth u8
+ReBodyPattern1Color1 u8
+SkinBaseColorR f32
+Month2003 u8
+PosZ s16
+Strength u8
+PropertyID u16
+Reward1 u32
+DonateItemSecond u16
+ReFabricPattern2Color0 u8
+BaseName string32
+FloorScale f32
+Day2040 u8
+PenColor4 u16
+EndDayN2 u8
+Day2024 u8
+CanUsePhotoStudio u8
+BottomsID u16
+InnerType003 u8
+Month2058 u8
+CalendarEventKey string32
+RightRotateOffsetZ f32
+Amount2 u16
+EndDayS5 u8
+ReFabricPattern0Color0 u8
+StrSortIdEUfr u16
+UniqueID u16
+TWzh u8
+Month2015 u8
+KRko u8
+AnimeTypeFirewood string64
+FootColor u16
+SmartphoneRemakeCommonPattern s16
+Month2029 u8
+EndMoS3 u8
+CheekPinkColorR f32
+ItemTableId u16
+WaterCheck u8
+ReFabricPattern6Color0 u8
+WaitFrame u32
+RequiredNum u32
+SkinEdgeColorB f32
+TextureResName string64
+Day2031 u8
+Day2055 u8
+InnerType122 u8
+SeriesId u8
+NpcSpLabel string32
+NpcNoEntry u8
+BridgeTypeId u16
+Material2 u16
+DesignWinter2 u16
+Day2018 u8
+WatchPosZ f32
+CanPut u8
+PeakRotateOffsetZ f32
+ReFabricPattern4Color0 u8
+EndMoN4 u8
+ItemKind5 u16
+AnimeTypeUmbrella string64
+TextLotId s16
+StartDayNorth u16
+Month2000 u8
+PriorityReward u16
+UniqueID u32
+Material3 u16
+Day2008 u8
+Nature u8
+Month2010 u8
+ReFabricPattern0VisibleOff u8
+TopTransOffsetZ f32
+ItemKind4 u16
+JPja u8
+ColorIndex s8
+ParentItemName u16
+Month2039 u8
+Day2045 u8
+InnerType132 u8
+Day2021 u8
+EndHour u8
+StrSortIdEUnl u16
+Month2005 u8
+CapResName string32
+ScaleOffset f32
+StrSortIdUSen u16
+BaseColorB f32
+BridgeTypeName string32
+BreakDamage u16
+StartMonthSouth u16
+Amount3 u16
+NpcEnd u8
+CastLabel u8
+Label string30
+EndMoN1 u8
+Name u16
+EffectAttribute u16
+BuryItem u16
+Day2034 u8
+Day2050 u8
+HeredityC u8
+FieldData string32
+FloorHeight f32
+InnerType013 u8
+EndMoS6 u8
+Month2048 u8
+Month2013 u8
+AnimeTypeFood string64
+RightTransOffsetZ f32
+EndDayS3 u8
+Price s32
+BromideItemID s16
+ResourceNameSp5 string33
+MysteryTourFieldUniqueID u16
+FlagAnim u16
+EventEnd s8
+TouchRumble u8
+TopRotateOffsetZ f32
+EndDayN4 u8
+Day2022 u8
+InnerType131 u8
+AttrCollectBit u8
+Day2046 u8
+SilhouettePosZ f32
+HighlightColorR f32
+ReleaseKey u16
+ChangeFg u16
+AsCommand string50
+StrSortIdEUen u16
+ResourceNameSp1 string33
+EndMoN2 u8
+DefaultValue u16
+AccMouth u16
+SeasonScore s32
+MysteryTourItemUniqueID u16
+UnlockTrigger u8
+Month2006 u8
+SeasonAutumnLevel u8
+JuneBrideProgress u8
+AnimeTypeFishingRod string64
+ResourceNameSp3 string33
+RoomIndex s16
+EndMoS5 u8
+EventName string32
+InnerType010 u8
+PeakTransOffsetY f32
+Day2053 u8
+StrSortIdEUru u16
+Day2037 u8
+LeftTransOffsetY f32
+ItemReleaseVersion u8
+Day2006 u8
+NpcType u8
+StartMoS6 u8
+InnerType021 u8
+RoofMaterial u16
+CanPutKitchen u8
+Month2053 u8
+EndMonthNorth u16
+Month2037 u8
+Name string128
+AnimeTypeBag string64
+PointName string65
+FrontTransOffsetX f32
+BackTransOffsetX f32
+Reward4 u32
+Rate2 u8
+RumbleForEdit u8
+Tops u16
+ItemNum s8
+StartMoN1 u8
+AppearValue u16
+Label string32
+Output u8
+IsSpecial u8
+Item u16
+MaxValue2 u32
+UseMyDesign u8
+CanPutDisplay u8
+StartHour u8
+DesignSummer2 u16
+Day2013 u8
+InnerType100 u8
+StartDayS1 u8
+DesignSpring1 u16
+EventBegin u8
+StartDayN6 u8
+Month2022 u8
+RotateOffsetY f32
+Month2046 u8
+BackRotateOffsetY f32
+SortID u32
+LandingUniqueID u16
+CapID u16
+StrSortIdJPja u16
+InnerType022 u8
+WaitType u8
+StartMoS5 u8
+CanFtr u8
+BirthMDay u8
+ItemKind13 u16
+BattlePoint u8
+UpdateParts u8
+SkinEdgeColorG f32
+ResourceNameSp2 string33
+Day2005 u8
+AcceMouth u16
+Rate1 u8
+BirthMonth u8
+Day2048 u8
+CeilingUniqueID u16
+OutsideTemplateKind u8
+RuleColor u16
+BbsDays u8
+DesignAutumn2 u16
+StartMoN2 u8
+NpcSpClothSet u16
+Comment string64
+Month2034 u8
+Month2050 u8
+Tool u16
+Name string32
+TransOffsetZ f32
+PenColor1 u16
+InnerType103 u8
+AnimeTypeBloom string64
+Day2010 u8
+AnimeTypeHandGlass string64
+StartDayS2 u8
+Month2008 u8
+ResourceNameSp6 string33
+WindowName string64
+CanEat u8
+SpotType u8
+ItemShareTextureUniqueID u16
+ItemKind9 u16
+ASCommand string66
+CarpetMaterial s32
+Construction u8
+Sand u8
+StartDayN5 u8
+Month2045 u8
+Month2021 u8
+UseCurtain u8
+ResourceNameSp4 string33
+DesignAlways3 u16
+Day2039 u8
+WallScale f32
+CanPutFish u8
+LocalizeModel u8
+BaseColorG f32
+StrSortIdKRko u16
+Month2031 u8
+IntervalTime u8
+CurtainUniqueID u16
+Month2055 u8
+Amount6 u16
+NpcLookAction u8
+CheekOrangeColorR f32
+BackColor u16
+ReBodyPattern0Color1 u8
+DesignAlways2 u16
+Day2029 u8
+Rate4 u8
+MsgFile string64
+Day2000 u8
+InnerType113 u8
+HasJmp u8
+FishPoint s8
+NameboardPosZ f32
+CanPutFood u8
+AcceptAccess u8
+ItemKind8 u16
+Month2018 u8
+FlagLand1 s32
+ReBodyPattern2Color1 u8
+ConditionType u8
+ResourceName string33
+Day2058 u8
+StampRackIdx u8
+StrSortIdCNzh u16
+Material6 u16
+EndDayNorth u16
+RainActive u8
+BgmEnd u8
+CanPutUtility u8
+Month2040 u8
+Month2024 u8
+CurtainTexUniqueID u16
+ApplyNeedActivity u8
+ReBodyPattern4Color1 u8
+DebugName string32
+ItemKind1 u16
+CanDoze u8
+NfpType u8
+EventHalf s8
+ItemKind12 u16
+ExchangeItem u16
+InnerType032 u8
+DemoNetLockState u8
+ReBodyPattern6Color1 u8
+USen u8
+Day2015 u8
+ItemLayer u8
+InnerType u8
+CountOtherVillage u8
+StampRackItemNameA u16
+ReBodyPatternNum s8
+StartMoN4 u8
+AnimeTypeSitDown string64
+GroupIndex s8
+StatusPattern u8
+CameraParamName string33
+Rate7 u8
+FishPattern s16
+BackRotateOffsetX f32
+RotateOffsetX f32
+SeasonWinterLevel u8
+Month2056 u8
+ReFabricPattern5Color0 u8
+Month2032 u8
+CanPutForBase u8
+FrontRotateOffsetZ f32
+LeftRotateOffsetZ f32
+NearCulling u8
+Seasonality u32
+MaxValue3 u32
+CanSellSimple u8
+DonateItemThird u16
+ReFabric s16
+StartMoS3 u8
+WeekSouth u8
+RideHeight f32
+ReFabricPattern7Color0 u8
+ContinuousTime u16
+InnerType110 u8
+Day2003 u8
+HouseShapeUniqueID u16
+WatchItem u16
+PicItem u16
+CastType u8
+EscapeScale f32
+Month2027 u8
+ItemName string64
+Month2043 u8
+StartDayN3 u8
+ReadyDays u8
+AppearFg u8
+BackTransOffsetY f32
+FrontTransOffsetY f32
+LabelShort string128
+Umbrella u16
+ReFabricPattern1Color0 u8
+Reward5 u32
+StartDayS4 u8
+Day2016 u8
+HalfUnitSizeZ u8
+DiyRecipeID s16
+EUes u8
+MaxValue u8
+NutItem u16
+EventLabel string64
+SpecialSLink u8
+ReFabricPattern3Color0 u8
+SlopeTableId u16
+InnerType031 u8
+EndMoN3 u8
+TexName string32
+MainDays u8
+Height f32
+VisibleOff u8
+Month2007 u8
+ItemRemakeType u8
+CheekOrangeColorB f32
+EUnl u8
+ItemNameUniqueID u16
+TargetShadow u8
+IsEDay u8
+InnerType011 u8
+EndMoS4 u8
+ReBody s16
+Day2036 u8
+Day2052 u8
+TalkFlowName string64
+LocalizeAnim u8
+HeredityA u8
+Variation u16
+StartDaySouth u16
+CharacterId u32
+FloorTableId u16
+RotateOffsetZ f32
+Storage u8
+CanSetInTrashBox u8
+Month2012 u8
+BackRotateOffsetZ f32
+LeftRotateOffsetX f32
+EndDayS2 u8
+FrontRotateOffsetX f32
+ItemData string32
+StampRackItemNameC u16
+AnimeTypeBasket string64
+RemakeID s16
+DesignSpring2 u16
+StrSortIdEUde u16
+ScoreMultiplier f32
+Day2047 u8
+Bottoms u16
+InnerType130 u8
+Day2023 u8
+EndDayN5 u8
+DesignSummer1 u16
+MaxValue1 u32
+Shoes u16
+BoardDesign u8
+TransOffsetY f32
+StageName string32
+AnimeTypeSmartPhone string64
+TargetInsect u8
+Month2060 u8
+Month2004 u8
+ItemKind3 u16
+Type u8
+WatchAngleY f32
+CNzh u8
+DesignAutumn1 u16
+LightParamName string32
+Material4 u16
+Day2051 u8
+Day2035 u8
+CanPlant u8
+AudioMusicID s16
+DefaultValue u8
+Day u8
+HeredityB u8
+BuryItem2 u16
+NpcBegin u8
+ItemKind10 u16
+NeedType u8
+Month2049 u8
+InnerType012 u8
+LabelType u8
+DefaultSwitch u8
+SelectWeight u8
+DayNorth u8
+EquipRule string32
+Day2009 u8
+RoomType u32
+EyeAcceID u16
+WaitScale f32
+Month2011 u8
+WallType u16
+ToyItemID u16
+EnglishName string32
+CanSetChest u8
+EndDayS1 u8
+Amount4 u16
+Reaction u8
+ResName string32
+Month2038 u8
+HighlightColorG f32
+EndDayN6 u8
+Day2020 u8
+PenColor2 u16
+InnerType133 u8
+NpcDefaultSwitch u8
+Day2044 u8
+NameboardPosX f32
+ResourceName string32
+DonateItemFourth u16
+TopsID u16
+SpecialSelect u8
+Month2028 u8
+EndMoS2 u8
+FlagLand2 s32
+SocksID u16
+ReFabricPattern6Color1 u8
+InsectPattern s16
+CaptureDiyIcon u8
+NameboardPosY f32
+SendPlayReport u8
+PlacementKey string32
+WindowUniqueID u16
+PenColor3 u16
+InnerType123 u8
+Day2054 u8
+Day2030 u8
+Day2019 u8
+DesignAlways1 u16
+ReFabricPattern4Color1 u8
+BcatLevel u8
+SkinBaseColorG f32
+EndMoN5 u8
+EUit u8
+Amount5 u16
+Month2001 u8
+PlayerNoEntry u8
+ReFabricPattern2Color1 u8
+BuryItem3 u16
+Rate8 u8
+Day2025 u8
+EndDayN3 u8
+Day2041 u8
+Month2059 u8
+SeasonSpringLevel u8
+InnerType002 u8
+ItemKind11 u16
+ToolID u16
+ItemKind2 u16
+ReFabricPattern0Color1 u8
+Offset f32
+EnableStageChange u8
+EndDayS4 u8
+StructureData string32
+TransOffsetX f32
+Month2014 u8
+Material5 u16
+BridgeTypeUniqueID u16
+CanPutInsect u8
+StrSortIdEUes u16
+ShoesID u16
+CheekPinkColorG f32
+ReBodyPattern3Color0 u8
+Color u32
+StrSortIdUSes u16
+HeredityD u8
+Day2033 u8
+Day2057 u8
+StartMonthNorth u16
+InnerType120 u8
+NetPlay u8
+EndMoS1 u8
+AutoDisappear u8
+AIFlowName string64
+USfr u8
+HelmetID u16
+LeftRotateOffsetY f32
+ReBodyPattern1Color0 u8
+DigItem u16
+HasDoorWindow u8
+FrontRotateOffsetY f32
+EUde u8
+SilhouettePoint u8
+Grow u8
+Month2002 u8
+MessageLabel string32
+SpNpcCloth s16
+Dummy u8
+StampRackItemNameB u16
+EndMoN6 u8
+Depth f32
+InnerType001 u8
+CliffCreate u8
+SmartphoneRemakePattern u16
+MonthSouth u8
+ReBodyPattern7Color0 u8
+ModelResName string65
+PoseTrans u8
+Day2042 u8
+Day2026 u8
+CapturePreset string32
+CancelFootprint u8
+Reward6 u32
+WdaySouth u8
+CatalogItemUniqueID u16
+FrontTransOffsetZ f32
+AnimeTypeNet string64
+BackTransOffsetZ f32
+StopAutoSave u8
+CanNotLookFace u8
+ItemUniqueID u16
+ReBodyPattern5Color0 u8
+ModelID u16
+RegionAsia u8
+RegionJp u8
+Month2017 u8
+CheckDonation u8
+Movie0 u32
+Movie1 u32
+Movie2 u32
+Music0 u32
+Music1 u32
+Music2 u32
+Book0 u32
+Book1 u32
+Book2 u32
+Dream0 u32
+Dream1 u32
+Dream2 u32
+Food0 u32
+Food1 u32
+Food2 u32
+Drink0 u32
+Drink1 u32
+Drink2 u32
+Hobby0 u32
+Hobby1 u32
+Hobby2 u32
+Sports0 u32
+Sports1 u32
+Sports2 u32
+Speciality0 u32
+Speciality1 u32
+Speciality2 u32
+Comic0 u32
+Comic1 u32
+Comic2 u32
+GenreID u16
+SortID s32
+Stage0 string32
+Stage1 string32
+Stage2 string32
+Stage3 string32
+Stage4 string32
+Stage5 string32
+Stage6 string32
+Stage7 string32
+Stage8 string32
+Stage9 string32
+Stage10 string32
+Door0Angle f32
+Bush_N u8
+Bush_S u8
+Shop_N u8
+Shop_S u8
+PurposeTag u32
+PurposeScore s32
+Snow_S u8
+Snow_N u8
+Fog_N u8
+Fog_S u8
+Season_N u8
+Season_S u8
+Cloud_N u8
+Cloud_S u8
+Sakura_S u8
+Sakura_N u8
+Weed_N u8
+Weed_S u8
+StateName string48
+CanSelectEDay u8
+AIFlowEntryName string32
+HandToolAsName string32
+LandingName string64
+Reverberation s8
+JpName string32
+NPCLabel string128
+DefaultRoofUniqueID u16
+FashionThemeRelax u8
+ResNameField string32
+TvProgram2 u32
+TorsoResName string32
+Stage12 string32
+ResNameMuseum string32
+FashionThemeSport u8
+LiveMotif u8
+EventFtrUniqueID u16
+HasDoorEigyoLight u8
+ASCommand2 string66
+ASCommand4 string66
+ASCommand6 string66
+ASCommand8 string66
+WallItemId u16
+RefItemUniqueID u16
+VillagerOpenNum u32
+CustomizeSortID u16
+LifeMotif u8
+UseChimneySmoke u8
+ArriveDist f32
+FashionThemeFomal u8
+FashionThemeFairyland u8
+StampRackNameTextLabel string32
+OpenAllYear u8
+HavokResName string64
+NpcResName string64
+FloorItemId u16
+ToolRightModelName string20
+FashionThemeDaily u8
+TvProgram1 u32
+HideHUD u8
+BridgeTypeNameJp string32
+BoardColorID u32
+MoveASType string32
+NetPlaySelect u8
+InvisibleEarL u8
+Timezone u8
+SPWeather_N u8
+RainEquipment u8
+CancelEDay u8
+ToolLeftModelName string20
+TvProgram0 u32
+BeesRunAway u8
+MsID u16
+SatisfyMinute u16
+VisitorNpcLabel string32
+FashionThemeWork u8
+FashionThemeOutdoor u8
+SyncNoCheck u8
+WaitASType string32
+Rotatable u8
+FashionThemeStage u8
+FashionThemeParty u8
+LatchBolt u8
+FashionThemeHorror u8
+MoveConditionType u8
+RugItemId u16
+TasteScore s32
+HobbyMotif u8
+NeglectSleep u8
+SelectableSeason u8
+Floorboards u16
+NpcFtrActionHoldTime s32
+ViewSortID u16
+FashionThemeVacation u8
+IsSwingFtr u8
+ASCommand7 string66
+HelperBoneResName string64
+CookingRecipeID u16
+SPWeather_S u8
+ASCommand5 string66
+DefaultDoorUniqueID u16
+DecoForbidden u8
+ASCommand3 string66
+ASCommand1 string66
+CombinationNum u16
+InvisibleEarR u8
+DefaultWallUniqueID u16
+NpcSpResName string64
+StungResName string32
+DoorBellName string32
+CaptureClosetIcon u8
+CaptureFtrIcon u8
+Weighting u8
+IsCollectAchievement u8
+Stage11 string32
+NormalScaleNB f32
+ProbMayMidnight u16
+TshirtsNNormalScaleMaskR f32
+ProbAugustMorning u16
+OuterLNormalScaleMaskG f32
+ProbMarchDaytime u16
+NormalScaleLA f32
+SaveCountMaxNum u16
+ProbAprMorningAndEvening u16
+ProbFebMorningAndEvening u16
+ProbAprilEvening2 u16
+ProbNovemberDaytime u16
+TimeZoneIndoorEarlyMorningLevel u8
+ProbAugDaytime u16
+ProbFebruayMidnight u16
+TimeZoneOutdoorNightLevel u8
+TimeZoneIndoorMorningLevel u8
+ProbAprNight u16
+OnepieceNNormalScaleMaskB f32
+NormalScaleMaskR f32
+ProbJuneMorning u16
+NormalScaleHG f32
+HobbyMusicLevel u8
+ProbNovemberMidnight u16
+ProbSepMorningAndEvening u16
+ProbJunNight u16
+OnepieceHNormalScaleMaskG f32
+ProbMayEvening1 u16
+TshirtsNNormalScaleMaskA f32
+ProbJulNight u16
+ProbSepNight u16
+ProbDecDaytime u16
+ProbJanuaryEvening2 u16
+ProbJulyEvening2 u16
+ProbJuneNight u16
+TimeZoneOutdoorMorningLevel u8
+ProbJulDaytime u16
+ProbMarMorningAndEvening u16
+NormalScaleLR f32
+OnepieceLNormalScaleMaskG f32
+ProbSeptemberNight u16
+ProbFebruayEvening1 u16
+NormalScaleMaskA f32
+ProbJanuaryNight u16
+ProbJanNight u16
+ProbNovemberEvening1 u16
+ProbJanuaryMidnight u16
+ProbFebruayDaytime u16
+NormalScaleNA f32
+MultiHoldMaxNum s16
+NormalScaleLB f32
+ProbJulyNight u16
+ProbJulyMidnight u16
+TshirtsLNormalScaleMaskG f32
+ProbJunMorningAndEvening u16
+ProbJanMorningAndEvening u16
+HobbyFitnessLevel u8
+ProbOctoberMorning u16
+ProbAprilEvening1 u16
+ProbMayMorning u16
+OnepieceNNormalScaleMaskA f32
+ProbNovDaytime u16
+ProbNovNight u16
+ProbFebDaytime u16
+TshirtsHNormalScaleMaskG f32
+ProbSepDaytime u16
+ProbJanuaryEvening1 u16
+ArtObjNum u16
+ReactionTalkKey string25
+NormalScaleNR f32
+HobbyPlayLevel u8
+TshirtsNNormalScaleMaskB f32
+ProbJanuaryDaytime u16
+ProbAprilDaytime u16
+SubordinateReward u16
+ProbMayEvening2 u16
+ProbSeptemberMorning u16
+ProbOctMorningAndEvening u16
+ProbNovemberNight u16
+NpcFtrActionAsName string64
+ProbDecemberMorning u16
+ProbJulyEvening1 u16
+FossilObjNum u16
+ProbFebruayEvening2 u16
+ProbAugMorningAndEvening u16
+BuoyLv.hshCstringRef
+ProbMarNight u16
+ProbJulyMorning u16
+ProbAprilMidnight u16
+ProbFebruayNight u16
+ProbNovemberEvening2 u16
+ProbMarchNight u16
+SilhouetteName string65
+NormalScaleMaskB f32
+ProbJulMorningAndEvening u16
+OnepieceNNormalScaleMaskR f32
+ProbJuneMidnight u16
+EventLabelShort string128
+ProbJulyDaytime u16
+MustItem1 u16
+NormalScaleLG f32
+TshirtsLNormalScaleMaskB f32
+SewingRecipeID s16
+OnepieceHNormalScaleMaskR f32
+OuterLNormalScaleMaskA f32
+TimeZoneOutdoorNoonLevel u8
+ProbAugustNight u16
+SpotTalkKey string25
+ProbMayNight u16
+DecorationObjNum u16
+ProbFebNight u16
+NormalScaleHA f32
+ProbDecNight u16
+TimeZoneIndoorNoonLevel u8
+ProbAprilMorning u16
+ProbJanuaryMorning u16
+TshirtsHNormalScaleMaskB f32
+ProbMarchEvening1 u16
+ProbDecemberEvening2 u16
+ProbDecemberDaytime u16
+ProbOctoberEvening1 u16
+OnepieceLNormalScaleMaskR f32
+ProbAprDaytime u16
+VmRhythmType u8
+ProbSeptemberDaytime u16
+HobbyFashionLevel u8
+ProbJuneEvening1 u16
+ProbSeptemberEvening2 u16
+ProbOctoberDaytime u16
+TimeZoneIndoorMidnightLevel u8
+DispInteriorMode u8
+TshirtsNNormalScaleMaskG f32
+ProbMayMorningAndEvening u16
+ProbAugNight u16
+OuterLNormalScaleMaskR f32
+ProbMayDaytime u16
+ProbAugustEvening2 u16
+OnepieceHNormalScaleMaskA f32
+SpotTalkName string65
+ProbOctDaytime u16
+ProbJanDaytime u16
+NormalScaleMaskG f32
+NormalScaleHR f32
+ProbFebruayMorning u16
+ProbMarchMidnight u16
+EventFlowEntryName string40
+ProbOctoberMidnight u16
+TimeZoneOutdoorMidnightLevel u8
+MustItem0 u16
+OnepieceLNormalScaleMaskA f32
+GroupActivityPlacementType u8
+FakeArtConvertId u16
+TshirtsLNormalScaleMaskA f32
+ProbDecMorningAndEvening u16
+ProbNovMorningAndEvening u16
+ProbJunDaytime u16
+ProbSeptemberMidnight u16
+ProbAugustMidnight u16
+NormalScaleNG f32
+HobbyEducationLevel u8
+ProbOctNight u16
+OuterLNormalScaleMaskB f32
+TimeZoneIndoorNightLevel u8
+TshirtsHNormalScaleMaskA f32
+TimeZoneIndoorEveningLevel u8
+ProbAprilNight u16
+NormalScaleHB f32
+OnepieceNNormalScaleMaskG f32
+ProbOctoberNight u16
+ProbDecemberNight u16
+ProbOctoberEvening2 u16
+ProbDecemberEvening1 u16
+ProbMarDaytime u16
+ProbMarchEvening2 u16
+JudgeVisibleOn u8
+ProbNovemberMorning u16
+TimeZoneOutdoorEveningLevel u8
+VmPauseType u8
+ProbJuneEvening2 u16
+TshirtsLNormalScaleMaskR f32
+ProbSeptemberEvening1 u16
+OnepieceHNormalScaleMaskB f32
+ProbJuneDaytime u16
+ProbAugustEvening1 u16
+BalloonTalkKey string25
+OpenDonatedNum u16
+HobbyNatureLevel u8
+VillageDevelopmentLevel u8
+ProbMarchMorning u16
+TshirtsHNormalScaleMaskR f32
+ProbAugustDaytime u16
+TimeZoneOutdoorEarlyMorningLevel u8
+OnepieceLNormalScaleMaskB f32
+ProbDecemberMidnight u16
+ModelScale f32
+AITagBitRankS u8
+AITagBitRankC u8
+DemoType u8
+AITagBitRankA u8
+AITagBitRankB u8
+ItemUnitIcon.hshCstringRef
+FishMuseumAction.hshCstringRef
+HouseDoorShape.hshCstringRef
+N0Parts.hshCstringRef
+LowerSetting.hshCstringRef
+MeshEdgeDirType.hshCstringRef
+TemplateKind.hshCstringRef
+MessageKind.hshCstringRef
+OutfitSE.hshCstringRef
+InsectParam.hshCstringRef
+EdgePatternType.hshCstringRef
+ItemHHAPart.hshCstringRef
+S2Parts.hshCstringRef
+NpcLooks.hshCstringRef
+AppearType.hshCstringRef
+ItemHHASeason.hshCstringRef
+Seasonality.hshCstringRef
+VmPauseType.hshCstringRef
+Theme.hshCstringRef
+ItemHHASet.hshCstringRef
+SEParts.hshCstringRef
+EventFtrSwitch.hshCstringRef
+Sound.hshCstringRef
+AppearanceLevel.hshCstringRef
+E1Parts.hshCstringRef
+W2Parts.hshCstringRef
+MannequinPose.hshCstringRef
+SLinkType.hshCstringRef
+SWParts.hshCstringRef
+DragSE.hshCstringRef
+TourType.hshCstringRef
+ItemMenu.hshCstringRef
+AudioPreset.hshCstringRef
+TriangleType.hshCstringRef
+E0Parts.hshCstringRef
+CraftUnlock.hshCstringRef
+BgCheckType.hshCstringRef
+ItemMessageCategory.hshCstringRef
+W3Parts.hshCstringRef
+ItemReFabricType.hshCstringRef
+Scale.hshCstringRef
+FallActionType.hshCstringRef
+PlacementKind.hshCstringRef
+N4Parts.hshCstringRef
+HouseDoorStep.hshCstringRef
+ItemUICategory.hshCstringRef
+NpcOutfit.hshCstringRef
+SuccessResult.hshCstringRef
+BridgePattern.hshCstringRef
+PhotoStudioRoomNo.hshCstringRef
+ItemPriorityPlace.hshCstringRef
+PartsKind.hshCstringRef
+AppearArea.hshCstringRef
+FactoryType.hshCstringRef
+ItemUIFurnitureCategory.hshCstringRef
+Category.hshCstringRef
+RegionEventCountry1.hshCstringRef
+RemoteChase.hshCstringRef
+InstrumentsType.hshCstringRef
+S3Parts.hshCstringRef
+NpcGender.hshCstringRef
+ItemOutfitInfo.hshCstringRef
+LifeSupportStamp.hshCstringRef
+ItemKind.hshCstringRef
+Light.hshCstringRef
+ClothGroup.hshCstringRef
+ItemHobbyType.hshCstringRef
+GenderUsEu.hshCstringRef
+S1Parts.hshCstringRef
+WindDirection.hshCstringRef
+NpcFtrActionWeather.hshCstringRef
+ItemDailyCategory.hshCstringRef
+ItemRemakeType.hshCstringRef
+RoomType.hshCstringRef
+ItemLightColor.hshCstringRef
+AO.hshCstringRef
+Effect.hshCstringRef
+LocalWindType.hshCstringRef
+W1Parts.hshCstringRef
+N1Parts.hshCstringRef
+ActionRange.hshCstringRef
+Kind.hshCstringRef
+Color1.hshCstringRef
+E2Parts.hshCstringRef
+ItemHHASituation1.hshCstringRef
+SearchRadius.hshCstringRef
+EventType.hshCstringRef
+ItemLayout.hshCstringRef
+ItemMailAttachCategory.hshCstringRef
+CaptureLevel.hshCstringRef
+ItemNpcReactionGenreType.hshCstringRef
+CraftRecipeSeason.hshCstringRef
+HouseDoorAnim.hshCstringRef
+StageName.hshCstringRef
+N3Parts.hshCstringRef
+SeaType.hshCstringRef
+StepLevel.hshCstringRef
+CornerType.hshCstringRef
+AITagCategory.hshCstringRef
+ShopType.hshCstringRef
+RoomWindowModelType.hshCstringRef
+N2Parts.hshCstringRef
+Hobby.hshCstringRef
+HouseColor.hshCstringRef
+ItemNpcRoomLayoutLimit.hshCstringRef
+RoomWindowWallType.hshCstringRef
+TVProgramName.hshCstringRef
+Dir.hshCstringRef
+Social.hshCstringRef
+ItemPlayerTopsBottomsForm.hshCstringRef
+S4Parts.hshCstringRef
+ItemNpcFtrActionType.hshCstringRef
+ItemKindUIType.hshCstringRef
+CategoryName.hshCstringRef
+ModelType.hshCstringRef
+NpcFtrActionInterest.hshCstringRef
+ShadowType.hshCstringRef
+AppearWeather.hshCstringRef
+StructureInfoHouseType.hshCstringRef
+ItemHHATheme.hshCstringRef
+ChangeDemo.hshCstringRef
+ReefType.hshCstringRef
+NPCUnlock.hshCstringRef
+LampType.hshCstringRef
+ItemSize.hshCstringRef
+MysteryTourFieldOutside.hshCstringRef
+StructureInfoType.hshCstringRef
+EventFtrDirection.hshCstringRef
+FossilSet.hshCstringRef
+WallPlaceType.hshCstringRef
+NWParts.hshCstringRef
+ItemNpcFtrWatchType.hshCstringRef
+AsName.hshCstringRef
+ObjCheckType.hshCstringRef
+ItemRegionFilter.hshCstringRef
+ItemHHASituation2.hshCstringRef
+PlaneChangeType.hshCstringRef
+ItemNpcRoomReplaceCategory.hshCstringRef
+Act.hshCstringRef
+Color2.hshCstringRef
+ItemGender.hshCstringRef
+InnerType000.hshCstringRef
+ItemShopSeasonality.hshCstringRef
+ItemCatalogType.hshCstringRef
+PacketType.hshCstringRef
+W0Parts.hshCstringRef
+ItemFrom.hshCstringRef
+NEParts.hshCstringRef
+VmRhythmType.hshCstringRef
+ActionType.hshCstringRef
+Layer.hshCstringRef
+ItemPlacementKind.hshCstringRef
+Timezone.hshCstringRef
+E3Parts.hshCstringRef
+FacilityModelVariation.hshCstringRef
+ItemNpcReactionThemeType.hshCstringRef
+GenderAsia.hshCstringRef
+S0Parts.hshCstringRef
+ItemAct.hshCstringRef
+ItemHHACategory.hshCstringRef
+ToolState.hshCstringRef
+NpcMsgBullfestCondition.hshCstringRef
+CaptureCategory.hshCstringRef
+InWaterBody u8
+NormalScaleBottomsA f32
+NormalScaleBottomsB f32
+NormalScaleBottomsG f32
+NormalScaleBottomsR f32
+EventEnd u8
+CaptureGardeningIcon u8
+PoseTransDive u8
+HangerInfo u8
+UISortID s16
+XUnitIndex s8
+ZUnitIndex s8
+SelectCalendarEventSeason string64
+IsSidewaysShow u8
+AN1Index s16
+HA1Index s16
+GE1Index s16
+FU1Index s16
+BO1Index s16
+KO1Index s16
+OT1Index s16
+ZK1Index s16
+AN2Index s16
+HA2Index s16
+GE2Index s16
+FU2Index s16
+BO2Index s16
+KO2Index s16
+OT2Index s16
+ZK2Index s16
+SwitchableOnWall u8
+NpcFtrWatchPos f32
+ItemRandomColorGroup.hshCstringRef
+StampRackNameExplainLabel string32
+ItemOrderSale.hshCstringRef
+RefSoundAttributeID u16
+RefabricPattern0LightColor u32
+RefabricPattern1LightColor u32
+RefabricPattern2LightColor u32
+RefabricPattern3LightColor u32
+RefabricPattern4LightColor u32
+RefabricPattern5LightColor u32
+RefabricPattern6LightColor u32
+RefabricPattern7LightColor u32
+RebodyPattern0LightColor.hshCstringRef
+RebodyPattern1LightColor u32
+RebodyPattern2LightColor u32
+RebodyPattern3LightColor u32
+RebodyPattern4LightColor u32
+RebodyPattern5LightColor u32
+RebodyPattern6LightColor u32
+RebodyPattern7LightColor u32
+HousePartsType.hshCstringRef
+PicIconHeight f32
+OpenAchievementCount u16
+DummyMenuDemo u8
+CapPurposeLimit u8
+EnableRodCloth u8
+ResSizeLimit f32
+CanHasSit u8
+ActionLockRange u8
+RemakeLotType.hshCstringRef
+MaskPurposeLimit u8
+ChangeFallType.hshCstringRef
+TalkValueVillager u16
+HousePartsType u16
+TalkValueVisitor u16
+ValidDiveRate u8
+RegionEventCountry2 u16
+RegionEventCountry3 u16
+RegionEventCountry4 u16
+RegionEventCountry5 u16
+ColorGroupSortId u16
+InterestEndModeType u8
+ResNameReplaceField string32
+ResNameReplaceMuseum string32
+UseColorGroupSort u8
+StampRackSetDirection s16
+FtrIconCaptureType.hshCstringRef
+CraftRecipeSelectSeasonType.hshCstringRef
+DebugFtrSeries.hshCstringRef
+StampRackPutUnitX s32
+StampRackPutUnitZ s32
+WalkWatchOffsetX f32
+WalkWatchOffsetY f32
+WalkWatchOffsetZ f32
+ClothesPurposeLimit.hshCstringRef
+ClothesFrequencyWear.hshCstringRef
+TkkSkipBirthday.hshCstringRef
+TkkSkipNormal.hshCstringRef
+PreMsgLabelValue u8
+ClothesTemporarilyCreate.hshCstringRef
+GlassesPurposeLimit u8
+CapTemporarilyCreate u8
+MaskTemporarilyCreate u8
+GlassesTemporarilyCreate u8
+CapFrequencyWear u8
+GlassesFrequencyWear u8
+MaskFrequencyWear u8
+SelectableBeginDate1 u16
+SelectableBeginDate2 u16
+SelectableEndDate1 u16
+SelectableEndDate2 u16
+BalloonTalkLabelKey string4
+ReactionTalkLabelKey string4
+FlagsFlowAccess.hshCstringRef
+FlagsNetAccess.hshCstringRef
+FlagsFlowAccess u8
+FlagsNetAccess u8
+SpotTalkLabelKey string4
+CanPutWallAndFloor u8
+HHABaseScore s16
+OpenRecordNum u16
+Scale10x6.hshCstringRef
+DisableEmoticon u8
+RemoveEventObj u8
+DemoNetLockState u16
+HandToolAsLabel string32
+FlowEntryName string32
+ToolEnterAsName string32
+ToolSetupAsName string32
+ToolSetupPutawayAsName string32
+IsSelectQuestS u8
+IsSelectQuestSS u8
+IsSelectQuestM u8
+FlagPlayerAnnounce s32
+FacePaint u16
+SkinColor u16
+SkinBushA s8
+DisableInDream u8
+UseCollision u8
+OffsetAccWeed s8
+FallToRiver u8
+CancelFootSE u8
+RadiusBOutdoor s8
+EquipOnlyOutdoor u8
+CaptureDoorOrnamentIcon u8
+IsEquipCeremony u8
+CanChaseForInsect u8
+HideFoodCounter u8
+DoorDecoZOffset f32
+UseRainGoods u8
+CanHide u8
