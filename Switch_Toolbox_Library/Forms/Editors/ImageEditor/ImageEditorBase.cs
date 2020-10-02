@@ -267,7 +267,14 @@ namespace Toolbox.Library.Forms
         {
             FileWatcher = new FileSystemWatcher();
             FileWatcher.Path = Path.GetTempPath();
-            FileWatcher.NotifyFilter = NotifyFilters.Size | NotifyFilters.LastAccess | NotifyFilters.LastWrite;
+            FileWatcher.NotifyFilter = NotifyFilters.Attributes |
+                NotifyFilters.CreationTime |
+                NotifyFilters.FileName |
+                NotifyFilters.LastAccess |
+                NotifyFilters.LastWrite |
+                NotifyFilters.Size |
+                NotifyFilters.Security;
+
             FileWatcher.EnableRaisingEvents = false;
             FileWatcher.Changed += new FileSystemEventHandler(OnFileWatcherChanged);
             FileWatcher.Filter = "";
@@ -1054,15 +1061,14 @@ namespace Toolbox.Library.Forms
                         break;
                 }
 
+                //Start watching for changes
+                FileWatcher.EnableRaisingEvents = true;
+                FileWatcher.Filter = Path.GetFileName(TemporaryName);
+
                 if (UseDefaultEditor)
                     Process.Start(TemporaryName);
                 else
                     ShowOpenWithDialog(TemporaryName);
-
-                FileWatcher.Filter = Path.GetFileName(TemporaryName);
-
-                //Start watching for changes
-                FileWatcher.EnableRaisingEvents = true;
             }
         }
 
