@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Toolbox.Library.Forms;
 using Toolbox.Library;
+using Toolbox.Library.Security.Cryptography;
 
 namespace Toolbox
 {
@@ -27,6 +28,7 @@ namespace Toolbox
             hashTypeCB.Items.Add("CRC32");
             hashTypeCB.Items.Add("BCSV");
             hashTypeCB.Items.Add("SARC");
+            hashTypeCB.Items.Add("MMH3");
 
             hashTypeCB.SelectedIndex = 0;
 
@@ -71,6 +73,8 @@ namespace Toolbox
                 return stringToHash(text);
             else if (type == "SARC")
                 return NameHash(text);
+            else if (type == "MMH3")
+                return MurMurHash3.Hash(text);
             return 0;
         }
 
