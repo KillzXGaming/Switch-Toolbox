@@ -629,7 +629,7 @@ namespace Toolbox.Library
             obj.HasUv1 = msh.HasTextureCoords(1);
             obj.HasUv2 = msh.HasTextureCoords(2);
             obj.HasIndices = msh.HasBones;
-            if (msh.HasBones && msh.BoneCount > 1)
+            if (msh.HasBones)
                 obj.HasWeights = msh.Bones[0].HasVertexWeights;
 
             obj.HasTans = msh.HasTangentBasis;
@@ -642,8 +642,6 @@ namespace Toolbox.Library
                 obj.ObjectName = parentNode.Name;
 
             obj.boneList = GetBoneList(msh);
-            obj.VertexSkinCount = (byte)GetVertexSkinCount(msh);
-
 
             STGenericObject.LOD_Mesh lod = new STGenericObject.LOD_Mesh();
             lod.faces = GetFaces(msh);
@@ -653,6 +651,7 @@ namespace Toolbox.Library
             obj.lodMeshes.Add(lod);
             obj.vertices = GetVertices(msh, transform, obj);
             obj.VertexBufferIndex = Index;
+            obj.VertexSkinCount = (byte)obj.vertices.Max(x => x.boneNames.Count);
 
             return obj;
         }
@@ -688,36 +687,7 @@ namespace Toolbox.Library
             }
             return bones;
         }
-        public int GetVertexSkinCount(Mesh msh)
-        {
 
-            List<int> indciesTotal = new List<int>();
-
-            var blendIndexes = new List<List<int>>();
-            var blendWeights = new List<List<float>>();
-
-            int i;
-            for (i = 0; i < msh.VertexCount; i++)
-            {
-                blendIndexes.Add(new List<int>());
-                blendWeights.Add(new List<float>());
-            }
-
-            foreach (var bone in msh.Bones)
-            {
-                var bi = msh.Bones.IndexOf(bone);
-                foreach (var vw in bone.VertexWeights)
-                {
-                    blendIndexes[vw.VertexID].Add(bi);
-                    blendWeights[vw.VertexID].Add(vw.Weight);
-                }
-            }
-
-            if (msh.HasBones)
-                return msh.Bones.Max(b => b.VertexWeightCount);
-
-            return 0;
-        }
         public List<Vertex> GetVertices(Mesh msh, Matrix4 transform, STGenericObject STobj)
         {
             Matrix4 NormalsTransform = Matrix4.CreateFromQuaternion(transform.ExtractRotation());
@@ -746,10 +716,8 @@ namespace Toolbox.Library
                 if (msh.HasTangentBasis)
                     vert.bitan = new Vector4(msh.BiTangents[v].X, msh.BiTangents[v].Y, msh.BiTangents[v].Z, 1);
                 vertices.Add(vert);
-
-                Console.WriteLine($"{msh.Name} COLOR { vert.col}");
             }
-            if (msh.HasBones && msh.BoneCount > 1)
+            if (msh.HasBones)
             {
                 for (int i = 0; i < msh.BoneCount; i++)
                 {
