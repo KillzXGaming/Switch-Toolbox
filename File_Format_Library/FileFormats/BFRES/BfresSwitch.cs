@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -739,64 +739,10 @@ namespace FirstPlugin
 
                 bool IsAlbedo = Misc.HackyTextureList.Any(TextureName.Contains);
 
-                //A bit hacky, just use the same samplers for mk8 for nsmbudx
-                if (mat.ShaderAssign.ShaderArchiveName == "Wii_UBER" || mat.ShaderAssign.ShaderArchiveName == "Block_UBER")
-                    Runtime.activeGame = Runtime.ActiveGame.MK8D;
+                //Kirby star allies uses _#### ubder shaders. The game's sampler system is very picky!
+                bool isKirbyStarAllies = mat.ShaderAssign.ShaderArchiveName.StartsWith("_");
 
-                if (mat.ShaderAssign.ShaderArchiveName == "base" || mat.ShaderAssign.ShaderArchiveName == "ui" || mat.ShaderAssign.ShaderArchiveName == "chara") {
-                    Runtime.activeGame = Runtime.ActiveGame.MK8D;
-                }
-
-                if (Runtime.activeGame == Runtime.ActiveGame.MK8D)
-                {
-                    if (useSampler == "_a0" && AlbedoCount == 0)
-                    {
-                        m.HasDiffuseMap = true;
-                        AlbedoCount++;
-                        texture.Type = MatTexture.TextureType.Diffuse;
-                    }
-                    else if (useSampler == "_a1")
-                    {
-                        m.HasDiffuseLayer = true;
-                        texture.Type = MatTexture.TextureType.DiffuseLayer2;
-                    }
-                    else if (useSampler == "_n0")
-                    {
-                        m.HasNormalMap = true;
-                        texture.Type = MatTexture.TextureType.Normal;
-                    }
-                    else if (useSampler == "_e0")
-                    {
-                        m.HasEmissionMap = true;
-                        texture.Type = MatTexture.TextureType.Emission;
-                    }
-                    else if (texture.SamplerName == "_s0" || useSampler == "_s0")
-                    {
-                        m.HasSpecularMap = true;
-                        texture.Type = MatTexture.TextureType.Specular;
-                    }
-                    else if (useSampler == "_x0" && TextureName.Contains("Mlt"))
-                    {
-                        m.HasSphereMap = true;
-                        texture.Type = MatTexture.TextureType.SphereMap;
-                    }
-                    else if (useSampler == "_b0")
-                    {
-                        m.HasShadowMap = true;
-                        texture.Type = MatTexture.TextureType.Shadow;
-                    }
-                    else if (useSampler == "_b1")
-                    {
-                        m.HasLightMap = true;
-                        texture.Type = MatTexture.TextureType.Light;
-                    }
-                    else if (texture.SamplerName == "bake0")
-                    {
-                        m.HasShadowMap = true;
-                        texture.Type = MatTexture.TextureType.Shadow;
-                    }
-                }
-                else if (Runtime.activeGame == Runtime.ActiveGame.BOTW) {
+                 if (Runtime.activeGame == Runtime.ActiveGame.BOTW) {
                     if (useSampler == "_a0")
                     {
                         m.HasDiffuseMap = true;
@@ -968,7 +914,7 @@ namespace FirstPlugin
                         m.HasRoughnessMap = true;
                     }
                 }
-                else
+                else if (isKirbyStarAllies)
                 {
                     //This works decently for now. I tried samplers but Kirby Star Allies doesn't map with samplers properly? 
                     if (IsAlbedo)
@@ -1047,6 +993,56 @@ namespace FirstPlugin
                         m.HasSubSurfaceScatteringMap = true;
                     }
                 }
+                else
+                {
+                    if (useSampler == "_a0" && AlbedoCount == 0)
+                    {
+                        m.HasDiffuseMap = true;
+                        AlbedoCount++;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    else if (useSampler == "_a1")
+                    {
+                        m.HasDiffuseLayer = true;
+                        texture.Type = MatTexture.TextureType.DiffuseLayer2;
+                    }
+                    else if (useSampler == "_n0")
+                    {
+                        m.HasNormalMap = true;
+                        texture.Type = MatTexture.TextureType.Normal;
+                    }
+                    else if (useSampler == "_e0")
+                    {
+                        m.HasEmissionMap = true;
+                        texture.Type = MatTexture.TextureType.Emission;
+                    }
+                    else if (texture.SamplerName == "_s0" || useSampler == "_s0")
+                    {
+                        m.HasSpecularMap = true;
+                        texture.Type = MatTexture.TextureType.Specular;
+                    }
+                    else if (useSampler == "_x0" && TextureName.Contains("Mlt"))
+                    {
+                        m.HasSphereMap = true;
+                        texture.Type = MatTexture.TextureType.SphereMap;
+                    }
+                    else if (useSampler == "_b0")
+                    {
+                        m.HasShadowMap = true;
+                        texture.Type = MatTexture.TextureType.Shadow;
+                    }
+                    else if (useSampler == "_b1")
+                    {
+                        m.HasLightMap = true;
+                        texture.Type = MatTexture.TextureType.Light;
+                    }
+                    else if (texture.SamplerName == "bake0")
+                    {
+                        m.HasShadowMap = true;
+                        texture.Type = MatTexture.TextureType.Shadow;
+                    }
+                }
+
                 texture.Name = TextureName;
 
                 texture.textureUnit = textureUnit++;
