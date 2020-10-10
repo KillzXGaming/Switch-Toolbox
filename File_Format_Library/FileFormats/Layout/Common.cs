@@ -2470,6 +2470,12 @@ namespace LayoutBXLYT
             return false;
         }
 
+        public virtual void RemoveTexture(int index)
+        {
+            if (index < TextureMaps.Length)
+                TextureMaps = TextureMaps.RemoveAt(index);
+        }
+
         public virtual BxlytMaterial Clone()
         {
             return (BxlytMaterial)this.MemberwiseClone();

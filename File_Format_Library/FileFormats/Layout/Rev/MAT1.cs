@@ -88,6 +88,24 @@ namespace LayoutBXLYT.Revolution
             return mat;
         }
 
+        public override void RemoveTexture(int index)
+        {
+            base.RemoveTexture(index);
+            if (TexCoordGens.Count > index)
+                TexCoordGens.RemoveAt(index);
+            if (IndirectTexTransforms.Count > index)
+                IndirectTexTransforms.RemoveAt(index);
+            if (TextureTransforms.Length > index)
+                TextureTransforms = TextureTransforms.RemoveAt(index);
+
+            RemoveTexCoordSources(index);
+
+            Console.WriteLine($"TexCoordGens {TexCoordGens.Count}");
+            Console.WriteLine($"TextureMaps {TextureMaps.Length}");
+            Console.WriteLine($"TextureTransforms {TextureTransforms.Length}");
+            Console.WriteLine($"IndirectTexTransforms {IndirectTexTransforms.Count}");
+        }
+
         public override bool RemoveTexCoordSources(int index)
         {
             foreach (var texGen in TexCoordGens)

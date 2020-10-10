@@ -364,14 +364,14 @@ namespace LayoutBXLYT
         {
             if (ActiveMaterial.TextureMaps.Length > SelectedIndex && SelectedIndex >= 0)
             {
-                ActiveMaterial.TextureMaps = ActiveMaterial.TextureMaps.RemoveAt(SelectedIndex);
+                ActiveMaterial.RemoveTexture(SelectedIndex);
 
                 //Apply to all selected panes
                 foreach (BasePane pane in ParentEditor.SelectedPanes)
                 {
                     var mat = pane.TryGetActiveMaterial();
                     if (mat != null && mat != ActiveMaterial && mat.TextureMaps?.Length > SelectedIndex)
-                        mat.TextureMaps = mat.TextureMaps.RemoveAt(SelectedIndex);
+                        mat.RemoveTexture(SelectedIndex);
                 }
             }
 
