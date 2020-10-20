@@ -187,6 +187,7 @@ namespace FirstPlugin
                         var node = animGroup as BoneGroup;
 
                         STBone b = null;
+
                         b = skeleton.GetBone(node.Name);
                         if (b == null) continue;
 
@@ -211,11 +212,32 @@ namespace FirstPlugin
 
                         if (node.RotationX.HasKeys || node.RotationY.HasKeys || node.RotationZ.HasKeys)
                         {
-                            short value1 = (short)node.RotationX.GetFrameValue(Frame);
-                            short value2 = (short)node.RotationY.GetFrameValue(Frame);
-                            short value3 = (short)node.RotationZ.GetFrameValue(Frame);
+                            STKeyFrame xL = GetFVGFL(node.RotationX, Frame);
+                            STKeyFrame yL = GetFVGFL(node.RotationY, Frame);
+                            STKeyFrame zL = GetFVGFL(node.RotationZ, Frame);
+                            STKeyFrame xR = GetFVGFR(node.RotationX, Frame);
+                            STKeyFrame yR = GetFVGFR(node.RotationY, Frame);
+                            STKeyFrame zR = GetFVGFR(node.RotationZ, Frame);
 
-                            b.rot = PackedToQuat(value1, value2, value3);
+                            short value1 = (short)xL.Value;
+                            short value2 = (short)yL.Value;
+                            short value3 = (short)zL.Value;
+
+                            Quaternion rotL = PackedToQuat(value1, value2, value3);
+
+                            short value1r = (short)xR.Value;
+                            short value2r = (short)yR.Value;
+                            short value3r = (short)zR.Value;
+
+                            Quaternion rotR = PackedToQuat(value1r, value2r, value3r);
+
+                            float weight = (Frame - xL.Frame) / (xR.Frame - xL.Frame);
+                            if (xR.Frame - xL.Frame == 0)   //NaN if divided by zero
+                            {
+                                weight = 0;
+                            }
+
+                            b.rot = Quaternion.Slerp(rotL, rotR, weight);
                         }
                         else
                         {
@@ -230,7 +252,41 @@ namespace FirstPlugin
                 }
             }
 
-           // private static readonly ushort _flagsMask = 0b11000011_11111111;
+            public STKeyFrame GetFVGFL(STAnimationTrack t, float frame, float startFrame = 0)
+            {
+                if (t.KeyFrames.Count == 0) return new STKeyFrame(frame, 0);
+                if (t.KeyFrames.Count == 1) return t.KeyFrames[0];
+
+                STKeyFrame LK = t.KeyFrames.First();
+
+                float Frame = frame - startFrame;
+
+                foreach (STKeyFrame keyFrame in t.KeyFrames)
+                {
+                    if (keyFrame.Frame <= Frame) LK = keyFrame;
+                }
+
+                return LK;
+            }
+
+            public STKeyFrame GetFVGFR(STAnimationTrack t, float frame, float startFrame = 0)
+            {
+                if (t.KeyFrames.Count == 0) return new STKeyFrame(frame, 0);
+                if (t.KeyFrames.Count == 1) return t.KeyFrames[0];
+
+                STKeyFrame RK = t.KeyFrames.Last();
+
+                float Frame = frame - startFrame;
+
+                foreach (STKeyFrame keyFrame in t.KeyFrames)
+                {
+                    if (keyFrame.Frame >= Frame && keyFrame.Frame < RK.Frame) RK = keyFrame;
+                }
+
+                return RK;
+            }
+
+            // private static readonly ushort _flagsMask = 0b11000011_11111111;
 
             private static short UnpackS15(short u15)
             {
