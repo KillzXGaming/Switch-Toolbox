@@ -195,6 +195,11 @@ namespace Bfres.Structs
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Invert", null, InvertNormals));
             normalsMenu.DropDownItems.Add(new ToolStripMenuItem("Recalculate", null, RecalculateNormals));
             Items.Add(normalsMenu);
+			
+            ToolStripMenuItem colorMenu = new ToolStripMenuItem("Colors");
+            colorMenu.DropDownItems.Add(new ToolStripMenuItem("Set Color", null, SetVertexColorDialog));
+            colorMenu.DropDownItems.Add(new ToolStripMenuItem("Set As White", null, SetVertexColorWhite));
+            Items.Add(colorMenu);
 
             Items.Add(new ToolStripMenuItem("Recalulate Tangents/Bitangents", null, CalcTansBitans, Keys.Control | Keys.T));
             Items.Add(new ToolStripMenuItem("Fill Tangent Space with constant", null, FillTangentsAction, Keys.Control | Keys.W));
