@@ -371,12 +371,12 @@ namespace Bfres.Structs
             Cursor.Current = Cursors.Default;
         }
 
-        public void GenerateDummyLODMeshes()
+        public void GenerateDummyLODMeshes(int count = 2)
         {
             var mesh = lodMeshes.FirstOrDefault();
             while (true)
             {
-                if (lodMeshes.Count >= 3)
+                if (lodMeshes.Count >= count + 1)
                     break;
 
                 LOD_Mesh lod = new LOD_Mesh();

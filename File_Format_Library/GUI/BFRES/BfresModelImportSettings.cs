@@ -22,6 +22,8 @@ namespace FirstPlugin
             ogSkinCountChkBox.Checked = false;
             chkMapOriginalMaterials.Checked = true;
 
+            lodCountUD.Value = 2;
+
             tabControl1.myBackColor = FormThemes.BaseTheme.FormBackColor;
 
             foreach (GamePreset val in Enum.GetValues(typeof(GamePreset))) {
@@ -73,6 +75,7 @@ namespace FirstPlugin
         }
 
         public bool CreateDummyLODs => chkCreateDummyLODs.Checked;
+        public int DummyLODCount => (int)lodCountUD.Value;
 
         public bool UseOriginalAttributes => chkOriginalAttributesFormats.Checked;
         public bool UseOriginalAttributeFormats => chkOriginalAttributesFormats.Checked;
