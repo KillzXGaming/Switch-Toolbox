@@ -100,7 +100,7 @@ namespace Toolbox.Library.Animations
 
         public void Save(string FileName)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+           var culture = new CultureInfo("en-US");
 
             StringBuilder o = new StringBuilder();
 
@@ -118,7 +118,7 @@ namespace Toolbox.Library.Animations
                 for (int i = 0; i < Bones.bones.Count; i++)
                 {
                     STBone b = Bones.bones[i];
-                    o.AppendFormat("{0} {1} {2} {3} {4} {5} {6}\n", i, 
+                    o.AppendFormat(culture, "{0} {1} {2} {3} {4} {5} {6}\n", i, 
                         b.Position.X,
                         b.Position.Y,
                         b.Position.Z,
