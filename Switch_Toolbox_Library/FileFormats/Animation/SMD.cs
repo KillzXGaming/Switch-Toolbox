@@ -130,8 +130,6 @@ namespace Toolbox.Library.Animations
             }
 
             File.WriteAllText(FileName, o.ToString());
-
-            Thread.CurrentThread.CurrentCulture = CultureInfo.DefaultThreadCurrentCulture;
         }
 
         public static Animation Read(string fname,STSkeleton v)
