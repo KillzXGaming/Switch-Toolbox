@@ -616,6 +616,7 @@ namespace FirstPlugin
                             ((BFRES)BinaryData).Load(new MemoryStream(reader.ReadBytes((int)section.SectionSize)));
                             ((BFRES)BinaryData).IFileInfo = new IFileInfo();
                             ((BFRES)BinaryData).IFileInfo.InArchive = true;
+                            ((BFRES)BinaryData).CanSave = false;
                             Nodes.Add(((BFRES)BinaryData));
                         }
                         break;
