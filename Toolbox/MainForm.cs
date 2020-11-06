@@ -876,9 +876,7 @@ namespace Toolbox
             else if (e.Control && e.KeyCode == Keys.W) // Ctrl + W Exit
             {
                 e.SuppressKeyPress = true;
-                var notify = MessageBox.Show("Are you sure you want to exit the application?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (notify == DialogResult.OK)
-                    Application.Exit();
+                Application.Exit();
             }
         }
 
@@ -1338,6 +1336,18 @@ namespace Toolbox
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+            if (tabForms.TabPages.Count > 0)
+            {
+                if (Runtime.ShowCloseDialog)
+                {
+                    var form = new ApplicationCloseDialog();
+                    form.StartPosition = FormStartPosition.CenterParent;
+                    if (form.ShowDialog() != DialogResult.OK)
+                        e.Cancel = true;
+
+                    Config.Save();
+                }
+            }
         }
 
         private void batchToolStripMenuItem_Click(object sender, EventArgs e)

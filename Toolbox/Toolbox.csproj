@@ -87,6 +87,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GUI\AF_FileAssociations.cs" />
+    <Compile Include="GUI\ApplicationCloseDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\ApplicationCloseDialog.Designer.cs">
+      <DependentUpon>ApplicationCloseDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\Credits.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +153,9 @@
     <Compile Include="UpdateProgram.cs" />
     <Compile Include="VersionCheck.cs" />
     <Compile Include="WindowsExplorer\ExplorerContextMeny.cs" />
+    <EmbeddedResource Include="GUI\ApplicationCloseDialog.resx">
+      <DependentUpon>ApplicationCloseDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Credits.resx">
       <DependentUpon>Credits.cs</DependentUpon>
     </EmbeddedResource>
