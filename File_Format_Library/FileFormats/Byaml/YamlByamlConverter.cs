@@ -158,9 +158,9 @@ namespace FirstPlugin
 
             if (value == "null")
                 return null;
-            else if (value == "true")
+            else if (value == "true" || value == "True")
                 return true;
-            else if (value == "false")
+            else if (value == "false" || value == "False")
                 return false;
             else if (tag == "!u")
                 return UInt32.Parse(value, CultureInfo.InvariantCulture);
