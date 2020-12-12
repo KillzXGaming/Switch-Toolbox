@@ -2254,7 +2254,7 @@ namespace LayoutBXLYT
         public BasePane RootPane { get; set; }
 
         [Browsable(false)]
-        public BasePane RootGroup { get; set; }
+        public GroupPane RootGroup { get; set; }
 
         [Browsable(false)]
         public virtual Dictionary<string, STGenericTexture> GetTextures { get; }
@@ -2814,27 +2814,28 @@ namespace LayoutBXLYT
         }
     }
 
-    public class GroupPane : BasePane
+    public class GroupPane : SectionCommon
     {
         public override string Signature { get; } = "grp1";
 
+        public string Name { get; set; }
+
+        [Editor(@"System.Windows.Forms.Design.StringCollectionEditor," +
+          "System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+         typeof(System.Drawing.Design.UITypeEditor))]
         public List<string> Panes { get; set; } = new List<string>();
 
-        private bool displayInEditor = true;
-        internal override bool DisplayInEditor
-        {
-            get { return displayInEditor; }
-            set
-            {
-                displayInEditor = value;
-                for (int i = 0; i < Panes.Count; i++)
-                {
-                    var pane = SearchPane(Panes[i]);
-                    if (pane != null)
-                        pane.DisplayInEditor = value;
-                }
-            }
-        }
+        [Browsable(false)]
+        public List<GroupPane> Childern = new List<GroupPane>();
+
+        [Browsable(false)]
+        public bool HasChildern => Childern.Count > 0;
+
+        [Browsable(false)]
+        public BxlytHeader LayoutFile;
+
+        [Browsable(false)]
+        public GroupPane Parent { get; set; }
 
         public GroupPane() : base()
         {

@@ -72,7 +72,7 @@ namespace LayoutBXLYT
             LoadMaterials(bxlyt.Materials);
             treeView1.Nodes.Add(new AnimatedPaneFolder(ParentEditor, "Animated Pane List") { Tag = bxlyt });
 
-            LoadPane(bxlyt.RootGroup);
+            LoadGroup(bxlyt.RootGroup); 
             LoadPane(bxlyt.RootPane);
 
             treeView1.EndUpdate();
@@ -237,7 +237,7 @@ namespace LayoutBXLYT
         private void CreateQuickAccess(BxlytHeader bxlyt)
         {
             var panes = new List<BasePane>();
-            var groupPanes = new List<BasePane>();
+            var groupPanes = new List<GroupPane>();
             GetPanes(bxlyt.RootPane,ref panes);
             GetGroupPanes(bxlyt.RootGroup,ref groupPanes);
 
@@ -288,7 +288,8 @@ namespace LayoutBXLYT
 
             for (int i = 0; i < groupPanes.Count; i++)
             {
-                var paneNode = CreatePaneWrapper(groupPanes[i]);
+                var paneNode = new TreeNode() { Text = groupPanes[i].Name };
+                paneNode.Tag = groupPanes[i];
                 groupFolder.Nodes.Add(paneNode);
             }
         }
@@ -300,11 +301,11 @@ namespace LayoutBXLYT
                   GetPanes(childPane,ref panes);
         }
 
-        private void GetGroupPanes(BasePane pane, ref List<BasePane> panes)
+        private void GetGroupPanes(GroupPane pane, ref List<GroupPane> panes)
         {
             panes.Add(pane);
-            foreach (var childPane in pane.Childern)
-                GetPanes(childPane,ref panes);
+            foreach (GroupPane childPane in pane.Childern)
+                GetGroupPanes(childPane, ref panes);
         }
 
         public static PaneTreeWrapper CreatePaneWrapper(BasePane pane)
@@ -325,6 +326,19 @@ namespace LayoutBXLYT
             paneNode.SelectedImageKey = imageKey;
 
             return paneNode;
+        }
+
+        private void LoadGroup(GroupPane pane, TreeNode parent = null)
+        {
+            var paneNode = new TreeNode() { Text = pane.Name, Tag = pane };
+
+            if (parent == null)
+                treeView1.Nodes.Add(paneNode);
+            else
+                parent.Nodes.Add(paneNode);
+
+            foreach (var childPane in pane.Childern)
+                LoadGroup(childPane, paneNode);
         }
 
         private void LoadPane(BasePane pane, TreeNode parent = null)

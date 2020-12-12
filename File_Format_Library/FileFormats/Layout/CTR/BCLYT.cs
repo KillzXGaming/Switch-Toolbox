@@ -350,8 +350,8 @@ namespace LayoutBXLYT
                 BasePane currentPane = null;
                 BasePane parentPane = null;
 
-                BasePane currentGroupPane = null;
-                BasePane parentGroupPane = null;
+                GroupPane currentGroupPane = null;
+                GroupPane parentGroupPane = null;
 
                 reader.SeekBegin(HeaderSize);
                 for (int i = 0; i < sectionCount; i++)
@@ -468,6 +468,15 @@ namespace LayoutBXLYT
                 }
             }
 
+            private void SetPane(GroupPane pane, GroupPane parentPane)
+            {
+                if (parentPane != null)
+                {
+                    parentPane.Childern.Add(pane);
+                    pane.Parent = parentPane;
+                }
+            }
+
             private void SetPane(BasePane pane, BasePane parentPane)
             {
                 if (parentPane != null)
@@ -566,7 +575,7 @@ namespace LayoutBXLYT
                 }
             }
 
-            private void WriteGroupPanes(FileWriter writer, BasePane pane, LayoutHeader header, ref int sectionCount)
+            private void WriteGroupPanes(FileWriter writer, GroupPane pane, LayoutHeader header, ref int sectionCount)
             {
                 WriteSection(writer, pane.Signature, pane, () => pane.Write(writer, header));
                 sectionCount++;
