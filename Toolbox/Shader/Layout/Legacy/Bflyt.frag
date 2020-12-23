@@ -109,9 +109,9 @@ float AlphaCombiner(int type, vec4 j1, vec4 j2, vec4 j3)
 
 void main()
 {
-	vec4 textureMap0 = vec4(1);
-	vec4 textureMap1 = vec4(1);
-	vec4 textureMap2 = vec4(1);
+	vec4 textureMap0 = vec4(1.0);
+	vec4 textureMap1 = vec4(1.0);
+	vec4 textureMap2 = vec4(1.0);
 
 	if (numTextureMaps > 0)
 	{
@@ -128,10 +128,10 @@ void main()
 		vec3 whiteColorSRGB = pow(whiteColor.rgb, vec3(1.0 / gamma));
 
 		vec3 whiteInterpolation = whiteColorSRGB.rgb * textureMap0.rgb;
-		vec3 blackInterpolation = (vec3(1) - textureMap0.rgb) * blackColor.rgb;
+		vec3 blackInterpolation = (vec3(1.0) - textureMap0.rgb) * blackColor.rgb;
   
   		//vec3 colorBlend = whiteInterpolation + blackInterpolation;
-    	vec3 colorBlend = ColorCombiner(4, vec4(whiteColorSRGB.rgb, 1), blackColor, textureMap0);
+    	vec3 colorBlend = ColorCombiner(4, vec4(whiteColorSRGB.rgb, 1.0), blackColor, textureMap0);
 
 		float alpha = textureMap0.a * whiteColor.a;
 
@@ -140,14 +140,14 @@ void main()
 		vec4 j2;
 		vec4 j3;
 		vec4 fragOutput;
-		vec4 previousStage = vec4(1);
+		vec4 previousStage = vec4(1.0);
 		if (numTextureMaps > 1 && numTevStages > 4)
 		{
 		    for (int i = 0; i < numTevStages; i++)
 			{
 				j1 = textureMap0;
 				j2 = textureMap1;
-				j3 = vec4(1);
+				j3 = vec4(1.0);
 				if (numTextureMaps > 2)
 					j3 = textureMap2;
 
@@ -175,7 +175,7 @@ void main()
 		gl_FragColor = fragOutput;
 	}
 	else if (debugShading == 5)
-		gl_FragColor = vec4(textureMap0.rgb, 1);
+		gl_FragColor = vec4(textureMap0.rgb, 1.0);
 	else if (debugShading == 1)
 		gl_FragColor = gl_Color;
 	else if (debugShading == 2)
