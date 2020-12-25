@@ -174,7 +174,7 @@ namespace Toolbox.Library
         private string _fileName = string.Empty;
 
         [Browsable(false)]
-        public string FileName
+        public virtual string FileName
         {
             get
             {
@@ -363,7 +363,10 @@ namespace Toolbox.Library
             {
                 string NewName = SetFullPath(FileNodes[i].Item2, this);
                 if (NewName != string.Empty)
+                {
+                    FileNodes[i].Item1.Name = FileNodes[i].Item2.Text;
                     FileNodes[i].Item1.FileName = NewName;
+                }
             }
         }
 
@@ -548,6 +551,7 @@ namespace Toolbox.Library
                 if (node is IDirectoryContainer)
                 {
                     var folder = new ArchiveFolderNodeWrapper(node.Name, archiveFile, this);
+                    folder.DirectoryContainer = (IDirectoryContainer)node;
                     parent.Nodes.Add(folder);
 
                     if (((IDirectoryContainer)node).Nodes != null)
@@ -641,6 +645,8 @@ namespace Toolbox.Library
         public ArchiveRootNodeWrapper RootNode;
 
         public virtual object PropertyDisplay { get; set; }
+
+        public IDirectoryContainer DirectoryContainer { get; set; }
 
         public bool CanReplace
         {
@@ -758,6 +764,8 @@ namespace Toolbox.Library
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 Text = dialog.textBox1.Text;
+                if (DirectoryContainer != null)
+                    DirectoryContainer.Name = Text;
             }
         }
 

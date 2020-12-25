@@ -22,7 +22,7 @@ namespace FirstPlugin
         public IFileInfo IFileInfo { get; set; }
 
         public bool CanAddFiles { get; set; }
-        public bool CanRenameFiles { get; set; }
+        public bool CanRenameFiles { get; set; } = true;
         public bool CanReplaceFiles { get; set; }
         public bool CanDeleteFiles { get; set; }
 
@@ -456,9 +456,15 @@ namespace FirstPlugin
             for (int i = 0; i < parentDir.Children.Count; i++)
             {
                 if (parentDir.Children[i] is FileEntry)
+                {
                     ((FileEntry)parentDir.Children[i]).NameOffset = (ushort)stringPos;
+                    ((FileEntry)parentDir.Children[i]).UpdateHash();
+                }
                 else
+                {
                     ((DirectoryEntry)parentDir.Children[i]).NameOffset = (ushort)stringPos;
+                    ((DirectoryEntry)parentDir.Children[i]).UpdateHash();
+                }
 
                 Console.WriteLine($"{parentDir.Children[i].Name} {stringPos}");
 
@@ -627,6 +633,10 @@ namespace FirstPlugin
 
                 Offset = reader.ReadUInt32();
                 Size = reader.ReadUInt32();
+            }
+
+            public void UpdateHash() {
+                Hash = CalculateHash(Name);
             }
         }
     }
