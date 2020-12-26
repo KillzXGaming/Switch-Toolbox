@@ -384,6 +384,26 @@ namespace FirstPlugin
             ska.BakedSize = skeletalAnimU.BakedSize;
             ska.Loop = skeletalAnimU.Loop;
             ska.Baked = skeletalAnimU.Baked;
+            foreach (var userDataU in skeletalAnimU.UserData)
+            {
+                var parser = new UserDataParser();
+                var userDataNX = new ResNX.UserData();
+                parser.Type = userDataU.Value.Type.ToString();
+                parser.UserDataName = userDataU.Value.Name;
+                userDataNX.Name = parser.UserDataName;
+                if (parser.Type == "Byte")
+                    userDataNX.SetValue(parser.GetBytes());
+                if (parser.Type == "Single")
+                    parser.LoadValues(userDataU.Value.GetValueSingleArray());
+                    userDataNX.SetValue(parser.GetFloats());
+                if (parser.Type == "Int32")
+                    userDataNX.SetValue(parser.GetInts());
+                if (parser.Type == "String")
+                    userDataNX.SetValue(parser.GetStringASCII());
+                if (parser.Type == "WString")
+                    userDataNX.SetValue(parser.GetStringUnicode());
+                ska.UserDatas.Add(userDataNX);
+            }
             foreach (var boneAnimU in skeletalAnimU.BoneAnims)
             {
                 var boneAnim = new ResNX.BoneAnim();
