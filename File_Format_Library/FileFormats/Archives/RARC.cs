@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox;
 using System.Windows.Forms;
+using System.IO;
+using Toolbox.Library.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 
@@ -75,7 +77,28 @@ namespace FirstPlugin
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
             Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            Items.Add(new ToolStripMenuItem("Batch Rename Galaxy (Mario Galaxy)", null, BatchRenameGalaxy, Keys.Control | Keys.S));
             return Items.ToArray();
+        }
+
+        private void BatchRenameGalaxy(object sender, EventArgs args)
+        {
+            string ActorName = Path.GetFileNameWithoutExtension(FileName);
+
+            RenameDialog dialog = new RenameDialog();
+            dialog.SetString(ActorName);
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string NewActorName = dialog.textBox1.Text;
+                FileName = NewActorName + ".arc";
+
+                foreach (var file in files)
+                {
+                    file.FileName = file.FileName.Replace(ActorName, NewActorName);
+                    file.UpdateWrapper();
+                }
+            }
         }
 
         private void SaveAction(object sender, EventArgs args)
