@@ -563,7 +563,7 @@ namespace FirstPlugin
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             if (!Runtime.NUTEXBSettings.IsSwizzled)
-                return DDS.GetArrayFaces(this, ImageData, 1)[ArrayLevel].mipmaps[0];
+                return DDS.GetArrayFaces(this, ImageData, ArrayCount)[ArrayLevel].mipmaps[MipLevel];
 
             return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, 1);
         }
