@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -570,10 +570,28 @@ namespace FirstPlugin
                 hashes.Add(hash);
             }
 
+            GenerateHashList();
+
             reader.Seek((long)FileInfoOffset, SeekOrigin.Begin);
             for (int i = 0; i < FileCount; i++)
             {
                 FileEntry fileEntry = new FileEntry(this);
+
+                fileEntry.Read(reader);
+                string Extension = FindMatch(fileEntry.FileData);
+                if (Extension.EndsWith("gfbanmcfg"))
+                {
+                    GFBANMCFG cfg = new GFBANMCFG();
+                    cfg.Load(new MemoryStream(fileEntry.FileData));
+                    GenerateAnmCfgStrings(cfg);
+                }
+
+                files.Add(fileEntry);
+            }
+
+            for (int i = 0; i < FileCount; i++)
+            {
+                FileEntry fileEntry = files[i];
 
                 for (int f = 0; f < FolderFiles.Count; f++)
                     if (FolderFiles[f].Index == i)
@@ -581,11 +599,8 @@ namespace FirstPlugin
 
                 var dir = fileEntry.FolderHash.Parent;
 
-                fileEntry.Read(reader);
                 fileEntry.FileName = GetString(hashes[i], fileEntry.FolderHash, fileEntry.FileData);
                 fileEntry.FilePathHash = hashes[i];
-
-                files.Add(fileEntry);
             }
         }
 
@@ -595,7 +610,6 @@ namespace FirstPlugin
             get
             {
                 if (hashList == null) {
-                    hashList = new Dictionary<ulong, string>();
                     GenerateHashList();
                 }
                 return hashList;
@@ -604,6 +618,8 @@ namespace FirstPlugin
 
         private void GenerateHashList()
         {
+            hashList = new Dictionary<ulong, string>();
+
             foreach (string hashStr in Properties.Resources.Pkmn.Split('\n'))
             {
                 string HashString = hashStr.TrimEnd();
@@ -626,6 +642,14 @@ namespace FirstPlugin
                     if (!hashList.ContainsKey(hash))
                         hashList.Add(hash, HashString);
                 }
+            }
+        }
+
+        private void GenerateAnmCfgStrings(GFBANMCFG cfg)
+        {
+            foreach (GFBANMCFG.Animation a in cfg.Config.Animations)
+            {
+                hashList.Add(FNV64A1.Calculate(a.FileName), a.FileName);
             }
         }
 
