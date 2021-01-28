@@ -570,8 +570,6 @@ namespace FirstPlugin
                 hashes.Add(hash);
             }
 
-            GenerateHashList();
-
             reader.Seek((long)FileInfoOffset, SeekOrigin.Begin);
             for (int i = 0; i < FileCount; i++)
             {
@@ -610,6 +608,7 @@ namespace FirstPlugin
             get
             {
                 if (hashList == null) {
+                    hashList = new Dictionary<ulong, string>();
                     GenerateHashList();
                 }
                 return hashList;
@@ -618,8 +617,6 @@ namespace FirstPlugin
 
         private void GenerateHashList()
         {
-            hashList = new Dictionary<ulong, string>();
-
             foreach (string hashStr in Properties.Resources.Pkmn.Split('\n'))
             {
                 string HashString = hashStr.TrimEnd();
@@ -649,7 +646,10 @@ namespace FirstPlugin
         {
             foreach (GFBANMCFG.Animation a in cfg.Config.Animations)
             {
-                hashList.Add(FNV64A1.Calculate(a.FileName), a.FileName);
+                ulong Hash = FNV64A1.Calculate(a.FileName);
+                if (!HashList.ContainsKey(Hash)) {
+                    HashList.Add(Hash, a.FileName);
+                }
             }
         }
 
