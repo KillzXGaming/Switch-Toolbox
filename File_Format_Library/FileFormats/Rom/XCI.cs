@@ -65,7 +65,7 @@ namespace FirstPlugin
                     var Program = entry;
                     string ncaFileName = $"{Program.NcaId.ToHexString().ToLower()}.nca";
 
-                    Stream Input = CnmtPfs.OpenFile(ncaFileName).AsStream();
+                    Stream Input = xci.SecurePartition.OpenFile(ncaFileName).AsStream();
                     var Nca = new Nca(Keys, Input.AsStorage(), true);
 
                     string root = Nca.Header.TitleId.ToString("X");

@@ -40,6 +40,8 @@ namespace Toolbox.Library
         public static string TpGamePath = "";
         public static string BotwGamePath = "";
 
+        public static bool ShowCloseDialog = true;
+
         public class UVEditor
         {
             public static Color UVColor = Color.FromArgb(255, 128, 0);

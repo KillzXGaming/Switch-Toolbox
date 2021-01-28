@@ -317,6 +317,9 @@ namespace Toolbox.Library
                     case "KCLUsePresetEditor":
                         bool.TryParse(node.InnerText, out Runtime.CollisionSettings.KCLUsePresetEditor);
                         break;
+                    case "ShowCloseDialog":
+                        bool.TryParse(node.InnerText, out Runtime.ShowCloseDialog);
+                        break;
                 }
             }
 
@@ -482,6 +485,7 @@ namespace Toolbox.Library
             mainSettingsNode.AppendChild(createNode(doc, "EnableVersionCheck", Runtime.EnableVersionCheck.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "FormTheme", Toolbox.Library.Forms.FormThemes.ActivePreset.ToString()));
             mainSettingsNode.AppendChild(createNode(doc, "MaximizeMdiWindow", Runtime.MaximizeMdiWindow.ToString()));
+            mainSettingsNode.AppendChild(createNode(doc, "ShowCloseDialog", Runtime.ShowCloseDialog.ToString()));
         }
         private static void AppendImageEditorSettings(XmlDocument doc, XmlNode parentNode)
         {

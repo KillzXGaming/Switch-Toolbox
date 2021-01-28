@@ -1,6 +1,4 @@
-﻿#version 110
-
-uniform int flipTexture;
+﻿uniform int flipTexture;
 uniform mat4 rotationMatrix;
 uniform int texCoords0GenType;
 uniform int texCoords0Source;
@@ -20,24 +18,16 @@ vec2 SetFlip(vec2 tex)
      vec2 outTexCoord = tex;
 
 	if (flipTexture == 1) //FlipH
-	      return vec2(-1, 1) * tex + vec2(1, 0);
+	      return vec2(-1.0, 1.0) * tex + vec2(1.0, 0.0);
 	else if (flipTexture == 2) //FlipV
-	      return vec2(1, -1) * tex + vec2(0, 1);
+	      return vec2(1.0, -1.0) * tex + vec2(0.0, 1.0);
 	else if (flipTexture == 3) //Rotate90
-	{
-	     float degreesR = 90.0;
-	     return rotateUV(tex, radians(degreesR));
-    }
+	     return rotateUV(tex, radians(90.0));
 	else if (flipTexture == 4) //Rotate180
-	{
-		  float degreesR = 180.0;
-	      return rotateUV(tex, radians(degreesR));
-	}
+	     return rotateUV(tex, radians(180.0));
 	else if (flipTexture == 5) //Rotate270
-	{
-		  float degreesR = 270.0;
-	      return rotateUV(tex, radians(degreesR));
-	}
+	     return rotateUV(tex, radians(270.0));
+
 	return outTexCoord;
 }
 
@@ -46,7 +36,7 @@ vec2 SetTexCoordType(int type, vec2 tex)
      vec2 outTexCoord = tex;
 	 if (type == 0) return tex; //Tex0
 	 if (type == 1) return tex; //Tex1
-	 if (type == 2) return tex; //Tex3
+	 if (type == 2) return tex; //Tex2
 	 if (type == 3) return tex; //Ortho
 	 if (type == 4) return tex; //Pane based
 	 if (type == 5) return tex; //Proj

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox;
 using System.Windows.Forms;
+using System.IO;
+using Toolbox.Library.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 
@@ -22,7 +24,7 @@ namespace FirstPlugin
         public IFileInfo IFileInfo { get; set; }
 
         public bool CanAddFiles { get; set; }
-        public bool CanRenameFiles { get; set; }
+        public bool CanRenameFiles { get; set; } = true;
         public bool CanReplaceFiles { get; set; }
         public bool CanDeleteFiles { get; set; }
 
@@ -75,7 +77,28 @@ namespace FirstPlugin
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
             Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
+            Items.Add(new ToolStripMenuItem("Batch Rename Galaxy (Mario Galaxy)", null, BatchRenameGalaxy, Keys.Control | Keys.S));
             return Items.ToArray();
+        }
+
+        private void BatchRenameGalaxy(object sender, EventArgs args)
+        {
+            string ActorName = Path.GetFileNameWithoutExtension(FileName);
+
+            RenameDialog dialog = new RenameDialog();
+            dialog.SetString(ActorName);
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string NewActorName = dialog.textBox1.Text;
+                FileName = NewActorName + ".arc";
+
+                foreach (var file in files)
+                {
+                    file.FileName = file.FileName.Replace(ActorName, NewActorName);
+                    file.UpdateWrapper();
+                }
+            }
         }
 
         private void SaveAction(object sender, EventArgs args)
@@ -456,9 +479,15 @@ namespace FirstPlugin
             for (int i = 0; i < parentDir.Children.Count; i++)
             {
                 if (parentDir.Children[i] is FileEntry)
+                {
                     ((FileEntry)parentDir.Children[i]).NameOffset = (ushort)stringPos;
+                    ((FileEntry)parentDir.Children[i]).UpdateHash();
+                }
                 else
+                {
                     ((DirectoryEntry)parentDir.Children[i]).NameOffset = (ushort)stringPos;
+                    ((DirectoryEntry)parentDir.Children[i]).UpdateHash();
+                }
 
                 Console.WriteLine($"{parentDir.Children[i].Name} {stringPos}");
 
@@ -627,6 +656,10 @@ namespace FirstPlugin
 
                 Offset = reader.ReadUInt32();
                 Size = reader.ReadUInt32();
+            }
+
+            public void UpdateHash() {
+                Hash = CalculateHash(Name);
             }
         }
     }

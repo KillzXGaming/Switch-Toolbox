@@ -802,7 +802,8 @@ namespace FirstPlugin
 
             SetUniformData(mat, shader, "texsrt0");
             SetUniformData(mat, shader, "tex_mtx0");
-
+            SetUniformData(mat, shader, "texmtx0");
+            
             //Sets shadow type
             //0 = Ambient occusion bake map
             //1 = Shadow 
@@ -823,55 +824,71 @@ namespace FirstPlugin
                 float value = float.Parse(mat.shaderassign.options[propertyName]);
                 shader.SetFloat(propertyName, value);
             }
-            if (mat.matparam.ContainsKey(propertyName))
+
+            Dictionary<string, BfresShaderParam> matParams = mat.matparam;
+            if (mat.animatedMatParams.ContainsKey(propertyName))
+                matParams = mat.animatedMatParams;
+
+            if (matParams.ContainsKey(propertyName))
             {
-                if (mat.matparam[propertyName].Type == ShaderParamType.Float)
+                if (matParams[propertyName].Type == ShaderParamType.Float)
                 {
                     if (mat.anims.ContainsKey(propertyName))
-                        mat.matparam[propertyName].ValueFloat[0] = mat.anims[propertyName][0];
-                    shader.SetFloat(propertyName, mat.matparam[propertyName].ValueFloat[0]);
+                        matParams[propertyName].ValueFloat[0] = mat.anims[propertyName][0];
+                    shader.SetFloat(propertyName, matParams[propertyName].ValueFloat[0]);
                 }
 
-                if (mat.matparam[propertyName].Type == ShaderParamType.Float2)
+                if (matParams[propertyName].Type == ShaderParamType.Float2)
                 {
                     if (mat.anims.ContainsKey(propertyName))
                     {
-                        mat.matparam[propertyName].ValueFloat = new float[2] {
+                        matParams[propertyName].ValueFloat = new float[2] {
                             mat.anims[propertyName][0], mat.anims[propertyName][1]};
                     }
 
-                    shader.SetVector2(propertyName, Utils.ToVec2(mat.matparam[propertyName].ValueFloat));
+                    shader.SetVector2(propertyName, Utils.ToVec2(matParams[propertyName].ValueFloat));
                 }
 
-                if (mat.matparam[propertyName].Type == ShaderParamType.Float3)
+                if (matParams[propertyName].Type == ShaderParamType.Float3)
                 {
                     if (mat.anims.ContainsKey(propertyName))
                     {
-                        mat.matparam[propertyName].ValueFloat = new float[3] {
+                        matParams[propertyName].ValueFloat = new float[3] {
                             mat.anims[propertyName][0],
                             mat.anims[propertyName][1],
                             mat.anims[propertyName][2]};
                     }
 
-                    shader.SetVector3(propertyName, Utils.ToVec3(mat.matparam[propertyName].ValueFloat));
+                    shader.SetVector3(propertyName, Utils.ToVec3(matParams[propertyName].ValueFloat));
                 }
-                if (mat.matparam[propertyName].Type == ShaderParamType.Float4)
+                if (matParams[propertyName].Type == ShaderParamType.Float4)
                 {
                     if (mat.anims.ContainsKey(propertyName))
                     {
-                        mat.matparam[propertyName].ValueFloat = new float[4] {
+                        matParams[propertyName].ValueFloat = new float[4] {
                                      mat.anims[propertyName][0], mat.anims[propertyName][1],
                                      mat.anims[propertyName][2], mat.anims[propertyName][3]};
                     }
 
-                    shader.SetVector4(propertyName, Utils.ToVec4(mat.matparam[propertyName].ValueFloat));
+                    shader.SetVector4(propertyName, Utils.ToVec4(matParams[propertyName].ValueFloat));
                 }
-                if (mat.matparam[propertyName].Type == ShaderParamType.TexSrt)
+                if (matParams[propertyName].Type == ShaderParamType.TexSrt)
                 {
                     // Vector 2 Scale
                     // 1 roation float
                     // Vector2 translate
-                    TexSrt texSRT = mat.matparam[propertyName].ValueTexSrt;
+                    TexSrt texSRT = matParams[propertyName].ValueTexSrt;
+
+                    shader.SetVector2("SRT_Scale", Utils.ToVec2(texSRT.Scaling));
+                    shader.SetFloat("SRT_Rotate", texSRT.Rotation);
+                    shader.SetVector2("SRT_Translate", Utils.ToVec2(texSRT.Translation));
+                }
+                if (matParams[propertyName].Type == ShaderParamType.TexSrtEx)
+                {
+                    // Vector 2 Scale
+                    // 1 roation float
+                    // Vector2 translate
+                    TexSrtEx texSRT = matParams[propertyName].ValueTexSrtEx;
 
                     shader.SetVector2("SRT_Scale", Utils.ToVec2(texSRT.Scaling));
                     shader.SetFloat("SRT_Rotate", texSRT.Rotation);
@@ -881,66 +898,7 @@ namespace FirstPlugin
                 //MTA SRT
                 if (propertyName == "texsrt0" && mat.shaderassign.ShaderArchive == "ssg")
                 {
-                    TexSrt texSRT = mat.matparam[propertyName].ValueTexSrt;
-
-                    shader.SetVector2("SRT_Scale", Utils.ToVec2(texSRT.Scaling));
-                    shader.SetFloat("SRT_Rotate", texSRT.Rotation);
-                    shader.SetVector2("SRT_Translate", Utils.ToVec2(texSRT.Translation));
-                }
-            }
-
-            if (mat.animatedMatParams.ContainsKey(propertyName))
-            {
-                if (mat.animatedMatParams[propertyName].Type == ShaderParamType.Float)
-                {
-                    if (mat.anims.ContainsKey(propertyName))
-                        mat.animatedMatParams[propertyName].ValueFloat[0] = mat.anims[propertyName][0];
-                    shader.SetFloat(propertyName, mat.animatedMatParams[propertyName].ValueFloat[0]);
-                }
-
-                if (mat.animatedMatParams[propertyName].Type == ShaderParamType.Float2)
-                {
-                    if (mat.anims.ContainsKey(propertyName))
-                    {
-                        mat.animatedMatParams[propertyName].ValueFloat = new float[2] {
-                            mat.anims[propertyName][0], mat.anims[propertyName][1]};
-                    }
-
-                    shader.SetVector2(propertyName, Utils.ToVec2(mat.animatedMatParams[propertyName].ValueFloat));
-                }
-
-                if (mat.animatedMatParams[propertyName].Type == ShaderParamType.Float3)
-                {
-                    Console.WriteLine(propertyName + " " + mat.animatedMatParams[propertyName].ValueFloat);
-
-                    if (mat.anims.ContainsKey(propertyName))
-                    {
-                        mat.animatedMatParams[propertyName].ValueFloat = new float[3] {
-                            mat.anims[propertyName][0],
-                            mat.anims[propertyName][1],
-                            mat.anims[propertyName][2]};
-                    }
-
-                    shader.SetVector3(propertyName, Utils.ToVec3(mat.animatedMatParams[propertyName].ValueFloat));
-                }
-                if (mat.animatedMatParams[propertyName].Type == ShaderParamType.Float4)
-                {
-                    if (mat.anims.ContainsKey(propertyName))
-                    {
-                        mat.animatedMatParams[propertyName].ValueFloat = new float[4] {
-                                     mat.anims[propertyName][0], mat.anims[propertyName][1],
-                                     mat.anims[propertyName][2], mat.anims[propertyName][3]};
-                    }
-
-                    shader.SetVector4(propertyName, Utils.ToVec4(mat.animatedMatParams[propertyName].ValueFloat));
-                }
-
-                if (mat.animatedMatParams[propertyName].Type == ShaderParamType.TexSrt)
-                {
-                    // Vector 2 Scale
-                    // 1 roation float
-                    // Vector2 translate
-                    TexSrt texSRT = mat.animatedMatParams[propertyName].ValueTexSrt;
+                    TexSrt texSRT = matParams[propertyName].ValueTexSrt;
 
                     shader.SetVector2("SRT_Scale", Utils.ToVec2(texSRT.Scaling));
                     shader.SetFloat("SRT_Rotate", texSRT.Rotation);

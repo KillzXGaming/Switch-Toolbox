@@ -1212,7 +1212,7 @@ namespace Bfres.Structs
                             shape.BoneIndices = shape.GetIndices(Skeleton);
 
                             if (settings.CreateDummyLODs)
-                                shape.GenerateDummyLODMeshes();
+                                shape.GenerateDummyLODMeshes(settings.DummyLODCount);
 
                             if (ForceSkinInfluence)
                                 shape.VertexSkinCount = (byte)ForceSkinInfluenceMax;

@@ -447,6 +447,7 @@ namespace FirstPlugin
                 case NUTEXImageFormat.BC1_SRGB: return TEX_FORMAT.BC1_UNORM_SRGB;
                 case NUTEXImageFormat.BC1_UNORM: return TEX_FORMAT.BC1_UNORM;
                 case NUTEXImageFormat.BC2_UNORM: return TEX_FORMAT.BC2_UNORM;
+                case NUTEXImageFormat.BC2_SRGB: return TEX_FORMAT.BC2_UNORM_SRGB;
                 case NUTEXImageFormat.BC3_UNORM: return TEX_FORMAT.BC3_UNORM;
                 case NUTEXImageFormat.BC3_SRGB: return TEX_FORMAT.BC3_UNORM_SRGB;
                 case NUTEXImageFormat.BC4_UNORM: return TEX_FORMAT.BC4_UNORM;
@@ -562,7 +563,7 @@ namespace FirstPlugin
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             if (!Runtime.NUTEXBSettings.IsSwizzled)
-                return DDS.GetArrayFaces(this, ImageData, 1)[ArrayLevel].mipmaps[0];
+                return DDS.GetArrayFaces(this, ImageData, ArrayCount)[ArrayLevel].mipmaps[MipLevel];
 
             return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, 1);
         }
