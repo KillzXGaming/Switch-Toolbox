@@ -249,6 +249,7 @@
     <Compile Include="FileFormats\Font\BXFNT\Images\RevImageBlock.cs" />
     <Compile Include="FileFormats\Font\BXFNT\TGLP.cs" />
     <Compile Include="FileFormats\Font\BXFNT\BxfntYamlConverter.cs" />
+    <Compile Include="FileFormats\Hashes\GFPAKHashCache.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\G1MCommon.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\NUNO.cs" />
     <Compile Include="FileFormats\HyruleWarriors\G1M\NUNV.cs" />
