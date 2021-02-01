@@ -103,7 +103,7 @@ namespace FirstPlugin
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            CollisionPresetData.LoadPresets(Directory.GetFiles("KclMaterialPresets"));
+            CollisionPresetData.LoadPresets(path);
         }
 
         class MenuExt : IFileMenuExtension
