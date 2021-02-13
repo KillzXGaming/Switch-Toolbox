@@ -92,6 +92,7 @@ namespace Toolbox.Library
                         break;
                     case "CameraNear":
                         float.TryParse(node.InnerText, out Runtime.CameraNear);
+						Runtime.CameraNear = (float)Math.Min(0.1, Runtime.CameraNear);
                         break;
                     case "PreviewScale":
                         float.TryParse(node.InnerText, out Runtime.previewScale);
@@ -281,7 +282,7 @@ namespace Toolbox.Library
                         bool.TryParse(node.InnerText, out Runtime.LayoutEditor.DisplayGrid);
                         break;
                     case "TitleKeys":
-                       Runtime.SwitchKeys.TitleKeys = node.InnerText;
+                        Runtime.SwitchKeys.TitleKeys = node.InnerText;
                         break;
                     case "ProdKeys":
                         Runtime.SwitchKeys.ProdKeys = node.InnerText;
