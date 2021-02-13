@@ -9,6 +9,7 @@ using Toolbox.Library;
 using System.IO;
 using Toolbox.Library.IO;
 using Toolbox.Library.Animations;
+using FirstPlugin.FileFormats.Hashes;
 
 namespace FirstPlugin
 {
@@ -540,6 +541,8 @@ namespace FirstPlugin
             if (Signature != "GFLXPACK")
                 throw new Exception($"Invalid signature {Signature}! Expected GFLXPACK.");
 
+            GFPAKHashCache.EnsureHashCache();
+
             version = reader.ReadInt32();
             uint padding = reader.ReadUInt32();
             uint FileCount = reader.ReadUInt32();
@@ -570,10 +573,28 @@ namespace FirstPlugin
                 hashes.Add(hash);
             }
 
+            GeneratePokeStrings();
+
             reader.Seek((long)FileInfoOffset, SeekOrigin.Begin);
             for (int i = 0; i < FileCount; i++)
             {
                 FileEntry fileEntry = new FileEntry(this);
+
+                fileEntry.Read(reader);
+                string Extension = FindMatch(fileEntry.FileData);
+                if (Extension.EndsWith("gfbanmcfg"))
+                {
+                    GFBANMCFG cfg = new GFBANMCFG();
+                    cfg.Load(new MemoryStream(fileEntry.FileData));
+                    GenerateAnmCfgStrings(cfg);
+                }
+
+                files.Add(fileEntry);
+            }
+
+            for (int i = 0; i < FileCount; i++)
+            {
+                FileEntry fileEntry = files[i];
 
                 for (int f = 0; f < FolderFiles.Count; f++)
                     if (FolderFiles[f].Index == i)
@@ -581,79 +602,29 @@ namespace FirstPlugin
 
                 var dir = fileEntry.FolderHash.Parent;
 
-                fileEntry.Read(reader);
                 fileEntry.FileName = GetString(hashes[i], fileEntry.FolderHash, fileEntry.FileData);
                 fileEntry.FilePathHash = hashes[i];
-
-                files.Add(fileEntry);
             }
+
+            GFPAKHashCache.WriteCache();
         }
 
-        private Dictionary<ulong, string> hashList;
-        public Dictionary<ulong, string> HashList
+        private void GenerateAnmCfgStrings(GFBANMCFG cfg)
         {
-            get
+            foreach (GFBANMCFG.Animation a in cfg.Config.Animations)
             {
-                if (hashList == null) {
-                    hashList = new Dictionary<ulong, string>();
-                    GenerateHashList();
-                }
-                return hashList;
+                GFPAKHashCache.PutHash(a.FileName);
             }
         }
 
-        private void GenerateHashList()
-        {
-            foreach (string hashStr in Properties.Resources.Pkmn.Split('\n'))
-            {
-                string HashString = hashStr.TrimEnd();
-
-                ulong hash = FNV64A1.Calculate(HashString);
-                if (!hashList.ContainsKey(hash))
-                    hashList.Add(hash, HashString);
-
-                if (HashString.Contains("pm0000") || 
-                    HashString.Contains("poke_XXXX") || 
-                    HashString.Contains("poke_ball_0000") ||
-                    HashString.Contains("poke_face_0000") ||
-                    HashString.Contains("poke_motion_0000"))
-                    GeneratePokeStrings(HashString);
-
-                string[] hashPaths = HashString.Split('/');
-                for (int i = 0; i < hashPaths?.Length; i++)
-                {
-                    hash = FNV64A1.Calculate(hashPaths[i]);
-                    if (!hashList.ContainsKey(hash))
-                        hashList.Add(hash, HashString);
-                }
-            }
-        }
-
-        private void GeneratePokeStrings(string hashStr)
+        private void GeneratePokeStrings()
         {
             //Also check file name just in case
             if (FileName.Contains("pm"))
             {
                 string baseName = FileName.Substring(0, 12);
-                string pokeStrFile = hashStr.Replace("pm0000_00", baseName);
 
-                ulong hash = FNV64A1.Calculate(pokeStrFile);
-                if (!hashList.ContainsKey(hash))
-                    hashList.Add(hash, pokeStrFile);
-            }
-
-            for (int i = 0; i < 1000; i++)
-            {
-                string pokeStr = string.Empty;
-                if (hashStr.Contains("pm0000")) pokeStr = hashStr.Replace("pm0000", $"pm{i.ToString("D4")}");
-                else if (hashStr.Contains("poke_XXXX")) pokeStr = hashStr.Replace("poke_XXXX", $"poke_{i.ToString("D4")}");
-                else if (hashStr.Contains("poke_ball_0000")) pokeStr = hashStr.Replace("poke_ball_0000", $"poke_ball_{i.ToString("D4")}");
-                else if (hashStr.Contains("poke_face_0000")) pokeStr = hashStr.Replace("poke_face_0000", $"poke_face_{i.ToString("D4")}");
-                else if (hashStr.Contains("poke_motion_0000")) pokeStr = hashStr.Replace("poke_motion_0000", $"poke_motion_{i.ToString("D4")}");
-
-                ulong hash = FNV64A1.Calculate(pokeStr);
-                if (!hashList.ContainsKey(hash))
-                    hashList.Add(hash, pokeStr);
+                GFPAKHashCache.GeneratePokeStringsFromFile(baseName);
             }
         }
 
@@ -665,9 +636,10 @@ namespace FirstPlugin
             bool hasFolderHash = false;
 
             string folder = "";
-            if (HashList.ContainsKey(folderHash)) {
+            string folderHashName = GFPAKHashCache.GetHashName(folderHash);
+            if (folderHashName != null) {
                 hasFolderHash = true;
-                folder = $"{HashList[folderHash]}/";
+                folder = $"{folderHashName}/";
             }
 
             if (!hasFolderHash)
@@ -697,12 +669,13 @@ namespace FirstPlugin
             }
             else
             {
-                if (HashList.ContainsKey(fileHash))
+                string fileHashName = GFPAKHashCache.GetHashName(fileHash);
+                if (fileHashName != null)
                 {
                     if (hasFolderHash)
-                        return $"{folder}{HashList[fileHash]}";
+                        return $"{folder}{fileHashName}";
                     else
-                        return $"{folder}{HashList[fileHash]}[FullHash={fullHash.ToString("X")}]{ext}";
+                        return $"{folder}{fileHashName}[FullHash={fullHash.ToString("X")}]{ext}";
                 }
                 else
                     return $"{folder}{fileHash.ToString("X")}[FullHash={fullHash.ToString("X")}]{ext}";
