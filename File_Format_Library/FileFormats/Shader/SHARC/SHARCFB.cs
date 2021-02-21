@@ -178,7 +178,7 @@ namespace FirstPlugin
             }
             public ShaderType Type;
 
-            public VariationMacroData variationMacroData;
+            public VariationSymbolData variationMacroData;
             public VariationSymbolData variationSymbolData;
             public ShaderSymbolData UniformVariables;
             public ShaderSymbolData UniformBlocks;
@@ -211,7 +211,7 @@ namespace FirstPlugin
 
                 Text = reader.ReadString((int)NameLength);
 
-                variationMacroData = new VariationMacroData();
+                variationMacroData = new VariationSymbolData();
                 variationSymbolData = new VariationSymbolData();
                 UniformVariables = new ShaderSymbolData();
                 UniformBlocks = new ShaderSymbolData();
@@ -392,7 +392,7 @@ namespace FirstPlugin
     public class VariationSymbol
     {
         public string Name { get; set; }
-        public string DefaultValue { get; set; }
+        public List<string> Values { get; set; }
         public string SymbolName { get; set; }
 
         public void Read(FileReader reader)
@@ -400,17 +400,13 @@ namespace FirstPlugin
             var pos = reader.Position;
             uint SectionSize = reader.ReadUInt32();
             uint macroNameLength = reader.ReadUInt32();
-            uint defaultValueLength = reader.ReadUInt32();
+            uint valueLength = reader.ReadUInt32();
             uint symbolNameLength = reader.ReadUInt32();
-            Name = reader.ReadString((int)macroNameLength);
-            DefaultValue = reader.ReadString((int)defaultValueLength);
-            SymbolName = reader.ReadString((int)symbolNameLength);
 
-            Console.WriteLine("VariationSymbol ------------------");
-            Console.WriteLine(Name);
-            Console.WriteLine(DefaultValue);
-            Console.WriteLine(SymbolName);
-            Console.WriteLine("------------------");
+            Name = reader.ReadString((int)macroNameLength, true);
+            Values = reader.ReadStrings((int)valueLength, Syroot.BinaryData.BinaryStringFormat.ZeroTerminated, Encoding.UTF8).ToList();
+            SymbolName = reader.ReadString((int)symbolNameLength, true);
+            reader.Seek(pos + SectionSize, System.IO.SeekOrigin.Begin);
 
             reader.Seek(pos + SectionSize, System.IO.SeekOrigin.Begin);
         }
@@ -418,11 +414,12 @@ namespace FirstPlugin
         public void Write(FileWriter writer)
         {
             var pos = writer.Position;
-            writer.Write(Name.Length);
-            writer.Write(DefaultValue.Length);
-            writer.Write(SymbolName.Length);
+            writer.Write(Name.Length + 1);
+            writer.Write(Values.Count + 1);
+            writer.Write(SymbolName.Length + 1);
             writer.WriteString(Name);
-            writer.WriteString(DefaultValue);
+            for (int i = 0; i < Values.Count; i++)
+                writer.WriteString(Values[i]);
             writer.WriteString(SymbolName);
             SharcCommon.WriteSectionSize(writer, pos);
         }

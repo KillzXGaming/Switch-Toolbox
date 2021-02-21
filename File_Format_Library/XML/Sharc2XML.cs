@@ -76,7 +76,7 @@ namespace FirstPlugin
             AddAttribute(doc, "Name", program.Text.Replace("\x00", ""), mainNode);
             doc.AppendChild(mainNode);
 
-            WriteMarcos(doc, program.variationMacroData, "macro_array", mainNode);
+            WriteVariationSymbols(doc, program.variationMacroData, "macro_array", mainNode);
             WriteVariationSymbols(doc, program.variationSymbolData, "option_array", mainNode);
             WriteShaderSymbolData(doc, program.UniformVariables, "Uniform_Variables", mainNode);
             WriteShaderSymbolData(doc, program.UniformBlocks, "Uniform_Blocks", mainNode);
@@ -109,7 +109,7 @@ namespace FirstPlugin
                 XmlNode childNode = doc.CreateElement("option");
                 AddAttribute(doc, "id", symbol.Name.Replace("\x00", ""), childNode);
                 AddAttribute(doc, "symbol", symbol.SymbolName.Replace("\x00", ""), childNode);
-                AddAttribute(doc, "default", symbol.DefaultValue.Replace("\x00", ""), childNode);
+                AddAttribute(doc, "values", string.Join(",", symbol.Values).Replace("\x00", ""), childNode);
                 rootNode.AppendChild(childNode);
             }
             node.AppendChild(rootNode);
