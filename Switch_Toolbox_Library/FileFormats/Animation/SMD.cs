@@ -361,7 +361,7 @@ namespace Toolbox.Library.Animations
                         Vector3 scale = b.GetScale();
                         Vector3 translate = b.GetPosition();
 
-                        file.WriteLine($"{ Skeleton.bones.IndexOf(b)} {translate.X} {translate.Y} {translate.Z} {eul.X} {eul.Y} {eul.Z}", customCulture);
+                        file.WriteLine($"{ Skeleton.bones.IndexOf(b)} {translate.X} {translate.Y} {translate.Z} {eul.X} {eul.Y} {eul.Z}");
                     }
 
                 }
