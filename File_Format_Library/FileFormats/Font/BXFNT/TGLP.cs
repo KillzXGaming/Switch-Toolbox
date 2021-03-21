@@ -85,11 +85,23 @@ namespace FirstPlugin
         {
             long pos = writer.Position;
 
+            SheetSize = (uint)SheetDataList[0].Length;
+            SheetCount = (byte)SheetDataList.Count;
             if (BinaryTextureFile != null)
             {
                 var mem = new System.IO.MemoryStream();
                 BinaryTextureFile.Save(mem);
-                SheetDataList[0] = mem.ToArray();
+                var binaryFile = mem.ToArray();
+
+                SheetDataList.Clear();
+
+                SheetSize = (uint)(binaryFile.Length / SheetCount);
+
+                uint offset = 0;
+                for (int i = 0; i < SheetCount; i++) {
+                    SheetDataList.Add(Utils.SubArray(binaryFile, offset, SheetSize));
+                    offset += SheetSize;
+                }
             }
 
             writer.WriteSignature("TGLP");
@@ -100,14 +112,14 @@ namespace FirstPlugin
             {
                 writer.Write((byte)BaseLinePos);
                 writer.Write(MaxCharWidth);
-                writer.Write(SheetDataList[0].Length);
-                writer.Write((ushort)SheetDataList.Count);
+                writer.Write(SheetSize);
+                writer.Write((ushort)SheetCount);
             }
             else
             {
-                writer.Write((byte)SheetDataList.Count);
+                writer.Write((byte)SheetCount);
                 writer.Write(MaxCharWidth);
-                writer.Write(SheetDataList[0].Length);
+                writer.Write(SheetSize);
                 writer.Write(BaseLinePos);
             }
 

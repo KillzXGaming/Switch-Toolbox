@@ -205,7 +205,7 @@ namespace FirstPlugin.Forms
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     if (IsBntx)
-                        ((TextureData)image).Replace(ofd.FileName, 0, (uint)ImageIndex, image.Format, ((TextureData)image).Texture.SurfaceDim);
+                        ((TextureData)image).Replace(ofd.FileName, 1, (uint)ImageIndex, image.Format, ((TextureData)image).Texture.SurfaceDim);
                     else
                         image.Replace(ofd.FileName);
                 }
