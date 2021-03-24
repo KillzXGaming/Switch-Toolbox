@@ -65,7 +65,10 @@ namespace Updater
                         Boot();
                         Environment.Exit(0);
                         break;
-
+                    case "-e":
+                    case "--exit":
+                        Environment.Exit(0);
+                        break;
                 }
             }
             Console.Read();
