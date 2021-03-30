@@ -35,7 +35,7 @@ namespace FirstPlugin.Forms
             var inputs = new Dictionary<string, string>();
             foreach (AtributeInput item in AtributeInputs)
             {
-                inputs.Add(item.ResourceInput, item.ShaderVariable);
+                inputs.Add(item.ShaderVariable, item.ResourceInput);
             }
             return inputs;
         }
@@ -48,8 +48,8 @@ namespace FirstPlugin.Forms
                 listViewCustom1.Items.Add($"{item.Key} : {item.Value}");
                 AtributeInputs.Add(new AtributeInput()
                 {
-                    ResourceInput = item.Key,
-                    ShaderVariable = item.Value,
+                    ShaderVariable = item.Key,
+                    ResourceInput = item.Value,
                 });
             }
         }
@@ -128,11 +128,11 @@ namespace FirstPlugin.Forms
             List<string> KeyCheck = new List<string>();
             foreach (AtributeInput item in AtributeInputs)
             {
-                if (!KeyCheck.Contains(item.ResourceInput))
-                    KeyCheck.Add(item.ResourceInput);
+                if (!KeyCheck.Contains(item.ShaderVariable))
+                    KeyCheck.Add(item.ShaderVariable);
                 else
                 {
-                    STErrorDialog.Show($"A Resource Input with the same name already exists! {item.ResourceInput}",
+                    STErrorDialog.Show($"A Shader Variable with the same name already exists! {item.ShaderVariable}",
                         this.Text, "");
                     DialogResult = DialogResult.None;
                 }
