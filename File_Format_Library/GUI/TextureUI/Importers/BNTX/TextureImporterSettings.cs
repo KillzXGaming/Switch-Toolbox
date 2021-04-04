@@ -76,6 +76,9 @@ namespace FirstPlugin
 
             var surfaces = DDS.GetArrayFaces(dds, dds.ArrayCount);
 
+            if (dds.IsCubemap)
+                SurfaceDim = SurfaceDim.DimCube;
+
             RedComp = dds.RedChannel;
             GreenComp = dds.GreenChannel;
             BlueComp = dds.BlueChannel;
