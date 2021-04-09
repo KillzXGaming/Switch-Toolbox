@@ -77,7 +77,7 @@ namespace FirstPlugin
 
             var data = new ByamlExt.Byaml.BymlFileData();
             var yaml = new YamlStream();
-            yaml.Load(new StringReader(text));
+            yaml.Load(File.OpenText(text));
             var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
 
             foreach (var child in mapping.Children)
