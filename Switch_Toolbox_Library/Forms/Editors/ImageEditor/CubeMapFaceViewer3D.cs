@@ -17,6 +17,8 @@ namespace Toolbox.Library.Forms
 {
     public partial class CubeMapFaceViewer3D : STForm
     {
+        public bool HDREncoded = false;
+
         private GL_ControlBase glControl;
         public CubeMapFaceViewer3D()
         {
@@ -41,6 +43,7 @@ namespace Toolbox.Library.Forms
             var skybox = new DrawableSkybox();
             skybox.ForceDisplay = true;
             skybox.LoadCustomTexture(ActiveTexture);
+            skybox.HDREncoded = HDREncoded;
 
             glControl.MainDrawable = skybox;
         }
