@@ -522,6 +522,49 @@ namespace Toolbox.Library
 
             return b;
         }
+
+        public static Bitmap EncodeHDRAlpha(Image image, float gamma = 2.2f)
+        {
+            var b = new Bitmap(image);
+
+            BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height),
+                 ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            int stride = bmData.Stride;
+            System.IntPtr Scan0 = bmData.Scan0;
+
+            unsafe
+            {
+                byte* p = (byte*)(void*)Scan0;
+
+                int nOffset = stride - b.Width * 4;
+
+                for (int y = 0; y < b.Height; ++y)
+                {
+                    for (int x = 0; x < b.Width; ++x)
+                    {
+                        float alpha = p[3] / 255f;
+                        for (int i = 0; i < 3; i++)
+                        {
+                            var col = (p[i] / 255f) * (float)Math.Pow(alpha, 4) * 1024;
+                            col = col / (col + 1.0f);
+                            col = (float)Math.Pow(col, 1.0f / gamma);
+
+                            p[i] = (byte)(col * 255);
+                        }
+
+                        p[3] = 255;
+
+                        p += 4;
+                    }
+                    p += nOffset;
+                }
+            }
+
+            b.UnlockBits(bmData);
+
+            return b;
+        }
+
         public static bool Invert(Bitmap b)
         {
             BitmapData bmData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height),

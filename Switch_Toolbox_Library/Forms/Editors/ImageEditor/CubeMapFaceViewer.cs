@@ -13,6 +13,8 @@ namespace Toolbox.Library.Forms
     public partial class CubeMapFaceViewer : STForm
     {
         private bool DisplayAlpha = true;
+        private bool DisplayHDREncode = false;
+        private float Gamma = 2.2f;
 
         public CubeMapFaceViewer()
         {
@@ -31,6 +33,8 @@ namespace Toolbox.Library.Forms
             pbTopFace.Paint += CreatePictureBoxText("Top");
             pbBottomFace.Paint += CreatePictureBoxText("Bottom");
             chkDisplayAlpha.Checked = DisplayAlpha;
+            displayEncodedHDRAlphaChk.Checked = DisplayHDREncode;
+            gammaUD.Value = (decimal)Gamma;
         }
 
         private PaintEventHandler CreatePictureBoxText(string Text)
@@ -80,8 +84,13 @@ namespace Toolbox.Library.Forms
             for (int i = 0; i < 6; i++)
             {
                 var CubeFaceBitmap = ActiveTexture.GetBitmap(i + (CurArrayDisplayLevel * 6));
-                if (!DisplayAlpha)
+                if (DisplayHDREncode)
+                    CubeFaceBitmap = BitmapExtension.EncodeHDRAlpha(CubeFaceBitmap, Gamma);
+                else if (!DisplayAlpha)
                     BitmapExtension.SetChannel(CubeFaceBitmap, ActiveTexture.RedChannel, ActiveTexture.GreenChannel, ActiveTexture.BlueChannel, STChannelType.One);
+
+
+                
 
                 if (i == FRONT_FACE)
                     pbFrontFace.Image = CubeFaceBitmap;
@@ -127,6 +136,17 @@ namespace Toolbox.Library.Forms
             if (CurArrayDisplayLevel != 0)
                 CurArrayDisplayLevel -= 1;
 
+            UpdateArrayLevel();
+        }
+
+        private void displayEncodedHDRAlphaChk_CheckedChanged(object sender, EventArgs e)
+        {
+            DisplayHDREncode = displayEncodedHDRAlphaChk.Checked;
+            UpdateArrayLevel();
+        }
+
+        private void gammaUD_ValueChanged(object sender, EventArgs e) {
+            Gamma = (float)gammaUD.Value;
             UpdateArrayLevel();
         }
     }
