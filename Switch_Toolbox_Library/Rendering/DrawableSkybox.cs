@@ -15,6 +15,7 @@ namespace Toolbox.Library.Rendering
     public class DrawableSkybox : AbstractGlDrawable
     {
         public bool HDREncoded = false;
+        public float Gamma = 2.2f;
 
         public bool ForceDisplay = false;
 
@@ -86,7 +87,8 @@ namespace Toolbox.Library.Rendering
             defaultShaderProgram.SetMatrix4x4("rotView", ref rot);
 
             defaultShaderProgram.SetBoolToInt("hdrEncoded", HDREncoded);
-            
+            defaultShaderProgram.SetFloat("gamma", Gamma);
+
             if (CustomCubemap != null)
             {
                 GL.ActiveTexture(TextureUnit.Texture0);

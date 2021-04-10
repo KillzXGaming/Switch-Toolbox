@@ -1383,18 +1383,10 @@ namespace Toolbox.Library.Forms
         private void previewCubemap3DToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CubeMapFaceViewer3D viewer = new CubeMapFaceViewer3D();
-            viewer.HDREncoded = false;
             viewer.LoadTexture(ActiveTexture);
             viewer.Show();
         }
 
-        private void previewCubemap3DHDRToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CubeMapFaceViewer3D viewer = new CubeMapFaceViewer3D();
-            viewer.HDREncoded = true;
-            viewer.LoadTexture(ActiveTexture);
-            viewer.Show();
-        }
 
         private STColorDialog colorDlg;
         private bool dialogActive = false;

@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEditorBase));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.stPanel1 = new Toolbox.Library.Forms.STPanel();
             this.backgroundPB = new System.Windows.Forms.PictureBox();
@@ -86,9 +87,7 @@
             this.rToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gammaFixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.stContextMenuStrip3 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
-            this.previewCubemap3DHDRAlphaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -485,7 +484,6 @@
             this.useComponentSelectorToolStripMenuItem,
             this.previewCubemapToolStripMenuItem,
             this.previewCubemap3DToolStripMenuItem,
-            this.previewCubemap3DHDRAlphaToolStripMenuItem,
             this.previewGammaFixSmashUltimateToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -643,13 +641,6 @@
             this.stContextMenuStrip3.Name = "stContextMenuStrip3";
             this.stContextMenuStrip3.Size = new System.Drawing.Size(61, 4);
             // 
-            // previewCubemap3DHDRAlphaToolStripMenuItem
-            // 
-            this.previewCubemap3DHDRAlphaToolStripMenuItem.Name = "previewCubemap3DHDRAlphaToolStripMenuItem";
-            this.previewCubemap3DHDRAlphaToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
-            this.previewCubemap3DHDRAlphaToolStripMenuItem.Text = "Preview Cubemap (3D HDR Alpha)";
-            this.previewCubemap3DHDRAlphaToolStripMenuItem.Click += new System.EventHandler(this.previewCubemap3DHDRToolStripMenuItem_Click);
-            // 
             // ImageEditorBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -735,6 +726,5 @@
         private STLabel noteifcationLbl;
         private System.Windows.Forms.ToolStripMenuItem gammaFixToolStripMenuItem;
         private System.Windows.Forms.PictureBox backgroundPB;
-        private System.Windows.Forms.ToolStripMenuItem previewCubemap3DHDRAlphaToolStripMenuItem;
     }
 }

@@ -5,6 +5,7 @@ in vec3 TexCoords;
   
 uniform samplerCube environmentMap;
 uniform int hdrEncoded;
+uniform float gamma;
 
 void main()
 {
@@ -15,7 +16,7 @@ void main()
     {
         envColor = envTexture.rgb * pow(envTexture.a, 4) * 1024;
         envColor = envColor / (envColor + vec3(1.0));
-        envColor = pow(envColor, vec3(1.0/2.2)); 
+        envColor = pow(envColor, vec3(1.0/gamma)); 
     }
 
     FragColor = vec4(envColor, 1.0);

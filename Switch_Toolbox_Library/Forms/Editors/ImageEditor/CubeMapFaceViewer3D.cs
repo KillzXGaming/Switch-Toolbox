@@ -17,12 +17,12 @@ namespace Toolbox.Library.Forms
 {
     public partial class CubeMapFaceViewer3D : STForm
     {
-        public bool HDREncoded = false;
-
         private GL_ControlBase glControl;
         public CubeMapFaceViewer3D()
         {
             InitializeComponent();
+
+            gammaUD.Value = 2.2m;
 
             if (Runtime.UseLegacyGL)
                 glControl = new GL_ControlLegacy();
@@ -36,16 +36,25 @@ namespace Toolbox.Library.Forms
         }
 
         private STGenericTexture ActiveTexture;
+        private DrawableSkybox skybox = new DrawableSkybox();
+
         public void LoadTexture(STGenericTexture texture)
         {
             ActiveTexture = texture;
 
-            var skybox = new DrawableSkybox();
             skybox.ForceDisplay = true;
             skybox.LoadCustomTexture(ActiveTexture);
-            skybox.HDREncoded = HDREncoded;
-
             glControl.MainDrawable = skybox;
+        }
+
+        private void encodeHDRAlphaChk_CheckedChanged(object sender, EventArgs e) {
+            skybox.HDREncoded = encodeHDRAlphaChk.Checked;
+            glControl?.Invalidate();
+        }
+
+        private void gammaUD_ValueChanged(object sender, EventArgs e) {
+            skybox.Gamma = (float)gammaUD.Value;
+            glControl?.Invalidate();
         }
     }
 }
