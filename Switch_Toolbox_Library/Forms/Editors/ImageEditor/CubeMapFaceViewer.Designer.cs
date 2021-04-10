@@ -41,6 +41,7 @@
             this.chkDisplayAlpha = new Toolbox.Library.Forms.STCheckBox();
             this.displayEncodedHDRAlphaChk = new Toolbox.Library.Forms.STCheckBox();
             this.gammaUD = new Toolbox.Library.Forms.NumericUpDownFloat();
+            this.stLabel1 = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTopFace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFrontFace)).BeginInit();
@@ -54,6 +55,7 @@
             // contentContainer
             // 
             this.contentContainer.BackColor = System.Drawing.Color.White;
+            this.contentContainer.Controls.Add(this.stLabel1);
             this.contentContainer.Controls.Add(this.gammaUD);
             this.contentContainer.Controls.Add(this.displayEncodedHDRAlphaChk);
             this.contentContainer.Controls.Add(this.chkDisplayAlpha);
@@ -79,6 +81,7 @@
             this.contentContainer.Controls.SetChildIndex(this.chkDisplayAlpha, 0);
             this.contentContainer.Controls.SetChildIndex(this.displayEncodedHDRAlphaChk, 0);
             this.contentContainer.Controls.SetChildIndex(this.gammaUD, 0);
+            this.contentContainer.Controls.SetChildIndex(this.stLabel1, 0);
             // 
             // pbTopFace
             // 
@@ -208,7 +211,7 @@
             0,
             0,
             196608});
-            this.gammaUD.Location = new System.Drawing.Point(421, 149);
+            this.gammaUD.Location = new System.Drawing.Point(480, 156);
             this.gammaUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -223,6 +226,15 @@
             this.gammaUD.Size = new System.Drawing.Size(120, 20);
             this.gammaUD.TabIndex = 23;
             this.gammaUD.ValueChanged += new System.EventHandler(this.gammaUD_ValueChanged);
+            // 
+            // stLabel1
+            // 
+            this.stLabel1.AutoSize = true;
+            this.stLabel1.Location = new System.Drawing.Point(418, 158);
+            this.stLabel1.Name = "stLabel1";
+            this.stLabel1.Size = new System.Drawing.Size(46, 13);
+            this.stLabel1.TabIndex = 24;
+            this.stLabel1.Text = "Gamma:";
             // 
             // CubeMapFaceViewer
             // 
@@ -259,5 +271,6 @@
         private STCheckBox chkDisplayAlpha;
         private STCheckBox displayEncodedHDRAlphaChk;
         private NumericUpDownFloat gammaUD;
+        private STLabel stLabel1;
     }
 }
