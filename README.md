@@ -9,6 +9,9 @@ Keep in mind this tool is still very experimental. If something breaks from a co
 ## Discord
 https://discord.gg/eyvGXWP
 
+## Support 
+If you'd like to support me, you can [donate!](https://www.paypal.com/donate?business=TCG7P6PH6V3PU&currency_code=USD)
+
 ## Features
 
 This tool currently features:
