@@ -11,6 +11,7 @@ using Bfres.Structs;
 using ResU = Syroot.NintenTools.Bfres;
 using Syroot.NintenTools.NSW.Bfres;
 using Toolbox.Library.Forms;
+using Toolbox.Library;
 
 namespace FirstPlugin.Forms
 {
@@ -112,12 +113,21 @@ namespace FirstPlugin.Forms
             {
                 activeSkeleton.node.SkeletonU.FlagsRotation = (ResU.SkeletonFlagsRotation)rotationModeCB.SelectedItem;
                 activeSkeleton.node.SkeletonU.FlagsScaling = (ResU.SkeletonFlagsScaling)scalingModeCB.SelectedItem;
+
+                foreach (var bone in activeSkeleton.bones)
+                    bone.UseSegmentScaleCompensate = activeSkeleton.node.SkeletonU.FlagsScaling.HasFlag(SkeletonFlagsScaling.Maya);
+                activeSkeleton.update();
             }
             else
             {
                 activeSkeleton.node.Skeleton.FlagsRotation = (SkeletonFlagsRotation)rotationModeCB.SelectedItem;
                 activeSkeleton.node.Skeleton.FlagsScaling = (SkeletonFlagsScaling)scalingModeCB.SelectedItem;
+
+                foreach (var bone in activeSkeleton.bones)
+                    bone.UseSegmentScaleCompensate = activeSkeleton.node.Skeleton.FlagsScaling.HasFlag(SkeletonFlagsScaling.Maya);
+                activeSkeleton.update();
             }
+            LibraryGUI.UpdateViewport();
         }
     }
 }

@@ -544,6 +544,9 @@ namespace FirstPlugin
                 BfresBone STBone = new BfresBone(RenderableSkeleton);
                 ReadBone(STBone, bone);
                 RenderableSkeleton.bones.Add(STBone);
+
+                if (skeleton.FlagsScaling == SkeletonFlagsScaling.Maya)
+                    STBone.UseSegmentScaleCompensate = true;
             }
 
             skl.Nodes.Clear();

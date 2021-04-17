@@ -49,7 +49,7 @@ namespace Bfres.Structs
                     {
                         if (bn.Text == Bone.Name)
                         {
-                            if (bn.UseSmoothMatrix || bn.SmoothMatrixIndex > 0)
+                            if (bn.UseSmoothMatrix || bn.SmoothMatrixIndex > -1)
                             {
                                 bn.SmoothMatrixIndex = (short)SmoothIndex++;
 
