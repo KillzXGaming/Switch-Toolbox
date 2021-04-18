@@ -1115,10 +1115,8 @@ namespace Bfres.Structs
                         //Check for rigged bones
                         for (int ob = 0; ob < ImportedObjects.Count; ob++)
                         {
-                            foreach (string NewBone in ImportedObjects[ob].boneList)
-                            {
-                                foreach (var bones in Skeleton.bones)
-                                {
+                            foreach (string NewBone in ImportedObjects[ob].boneList) {
+                                foreach (var bones in Skeleton.bones) {
                                     if (bones.Text == NewBone)
                                     {
                                         bones.SmoothMatrixIndex += 1;
@@ -1128,6 +1126,108 @@ namespace Bfres.Structs
                         }
 
                         Skeleton.CalculateIndices();
+
+                        List<int> smoothSkinningIndices = new List<int>();
+                        List<int> rigidSkinningIndices = new List<int>();
+
+                        foreach (BfresBone bone in Skeleton.bones)
+                        {
+                            bone.SmoothMatrixIndex = -1;
+                            bone.RigidMatrixIndex = -1;
+                            if (bone.BoneU != null)
+                            {
+                                bone.BoneU.SmoothMatrixIndex = -1;
+                                bone.BoneU.RigidMatrixIndex = -1;
+                            }
+                            if (bone.Bone != null)
+                            {
+                                bone.Bone.SmoothMatrixIndex = -1;
+                                bone.Bone.RigidMatrixIndex = -1;
+                            }
+                        }
+
+                        //Determine the rigid and smooth bone skinning
+                        foreach (var mesh in ImportedObjects)
+                        {
+                            int numSkinning = 0;
+                            if (settings.LimitSkinCount)
+                                numSkinning = (byte)mesh.VertexSkinCount;
+                            else
+                                numSkinning = mesh.vertices.Max(t => t.boneNames.Count);
+
+                            //First create index lists for all the rigid and smooth skinning bone indices
+                            foreach (var vertex in mesh.vertices) {
+                                foreach (var bone in vertex.boneNames) {
+                                    var bn = Skeleton.bones.Where(x => x.Text == bone).FirstOrDefault();
+                                    if (bn != null)
+                                    {
+                                        int index = Skeleton.bones.IndexOf(bn);
+
+                                        //Rigid skinning
+                                        if (numSkinning == 1)
+                                        {
+                                            if (!rigidSkinningIndices.Contains(index))
+                                                rigidSkinningIndices.Add(index);
+                                        }
+                                        else
+                                        {
+                                            if (!smoothSkinningIndices.Contains(index))
+                                                smoothSkinningIndices.Add(index);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        //Combine these lists into one global list
+                        smoothSkinningIndices.Sort();
+                        rigidSkinningIndices.Sort();
+
+                        List<int> skinningIndices = new List<int>();
+                        skinningIndices.AddRange(smoothSkinningIndices);
+                        skinningIndices.AddRange(rigidSkinningIndices);
+                        Skeleton.Node_Array = skinningIndices.ToArray();
+
+                        //Next update the bone's skinning index value
+                        foreach (var index in smoothSkinningIndices) {
+                            var bone = Skeleton.bones[index];
+                            bone.SmoothMatrixIndex = (short)smoothSkinningIndices.IndexOf(index);
+                        }
+                        //Rigid indices go after smooth indices
+                        //Here we do not index the global iist as the global list can include the same index in both smooth/rigid
+                        foreach (var index in rigidSkinningIndices) {
+                            var bone = Skeleton.bones[index];
+                            bone.RigidMatrixIndex = (short)(smoothSkinningIndices.Count + rigidSkinningIndices.IndexOf(index));
+                        }
+
+                        //Update all the bfres data directly from the bones
+                        foreach (BfresBone bn in skeleton.bones)
+                        {
+                            if (bn.BoneU != null)
+                            {
+                                bn.BoneU.SmoothMatrixIndex = bn.SmoothMatrixIndex;
+                                bn.BoneU.RigidMatrixIndex = bn.RigidMatrixIndex;
+                            }
+                            if (bn.Bone != null)
+                            {
+                                bn.Bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
+                                bn.Bone.RigidMatrixIndex = bn.RigidMatrixIndex;
+                            }
+                        }
+
+
+                        if (Skeleton.node.SkeletonU != null)
+                        {
+                            Skeleton.node.SkeletonU.MatrixToBoneList = new List<ushort>();
+                            for (int i = 0; i < skinningIndices.Count; i++)
+                                Skeleton.node.SkeletonU.MatrixToBoneList.Add((ushort)skinningIndices[i]);
+                        }
+                        else
+                        {
+                            Skeleton.node.Skeleton.MatrixToBoneList = new List<ushort>();
+                            for (int i = 0; i < skinningIndices.Count; i++)
+                                Skeleton.node.Skeleton.MatrixToBoneList.Add((ushort)skinningIndices[i]);
+                        }
 
                         if (materials.Count <= 0)
                         {
