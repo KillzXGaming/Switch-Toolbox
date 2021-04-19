@@ -418,7 +418,7 @@ namespace Toolbox.Library
 
                 for (int v = 0; v < f.Count; v += 3)
                 {
-                   if (f.Count <= i + 2)
+                   if (f.Count <= v + 2)
                        continue;
                 
                     Vertex v1 = Shapes[s].vertices[f[v]];
