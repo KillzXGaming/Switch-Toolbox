@@ -432,18 +432,28 @@ namespace Bfres.Structs
 
                 if (extension == ".bfskl")
                 {
+                    //Todo regenerate indices.
+                    //This will just fix swapping the same bonesets with slightly adjusted indices
                     if (SkeletonU != null)
                     {
+                        var indices = this.SkeletonU.MatrixToBoneList;
+
                         SkeletonU = new ResU.Skeleton();
                         SkeletonU.Import(FileName, GetResFileU());
+                        SkeletonU.MatrixToBoneList = indices;
+
                         Nodes.Clear();
                         fskl.bones.Clear();
                         BfresWiiU.ReadSkeleton(this, SkeletonU, fskl);
                     }
                     else
                     {
+                        var indices = this.SkeletonU.MatrixToBoneList;
+
                         Skeleton = new Skeleton();
                         Skeleton.Import(FileName);
+                        SkeletonU.MatrixToBoneList = indices;
+
                         Nodes.Clear();
                         fskl.bones.Clear();
                         BfresSwitch.ReadSkeleton(this, Skeleton, fskl);
