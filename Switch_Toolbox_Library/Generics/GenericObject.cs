@@ -316,6 +316,9 @@ namespace Toolbox.Library
 
             for (int i = 0; i < faces.Count; i += 3)
             {
+                if (faces.Count <= i + 2)
+                    continue;
+            
                 Vertex v1 = vertices[faces[i]];
                 Vertex v2 = vertices[faces[i + 1]];
                 Vertex v3 = vertices[faces[i + 2]];
@@ -415,6 +418,9 @@ namespace Toolbox.Library
 
                 for (int v = 0; v < f.Count; v += 3)
                 {
+                   if (f.Count <= v + 2)
+                       continue;
+                
                     Vertex v1 = Shapes[s].vertices[f[v]];
                     Vertex v2 = Shapes[s].vertices[f[v + 1]];
                     Vertex v3 = Shapes[s].vertices[f[v + 2]];
@@ -497,6 +503,9 @@ namespace Toolbox.Library
 
             for (int i = 0; i < f.Count; i += 3)
             {
+                if (f.Count <= i + 2)
+                    continue;
+            
                 Vertex v1 = vertices[f[i]];
                 Vertex v2 = vertices[f[i + 1]];
                 Vertex v3 = vertices[f[i + 2]];
@@ -559,6 +568,9 @@ namespace Toolbox.Library
             List<int> f = GetFaces();
             for (int i = 0; i < f.Count; i += 3)
             {
+                if (f.Count <= i + 2)
+                    continue;
+            
                 Vertex v1 = vertices[f[i]];
                 Vertex v2 = vertices[f[i + 1]];
                 Vertex v3 = vertices[f[i + 2]];
