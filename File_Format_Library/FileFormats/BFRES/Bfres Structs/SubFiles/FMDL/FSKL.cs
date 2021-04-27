@@ -28,20 +28,13 @@ namespace Bfres.Structs
 
                 if (Skeleton.InverseModelMatrices == null)
                     Skeleton.InverseModelMatrices = new List<Syroot.Maths.Matrix3x4>();
-                if (Skeleton.MatrixToBoneList == null)
-                    Skeleton.MatrixToBoneList = new List<ushort>();
 
-                //Generate index list
-                List<ushort> SmoothIndices = new List<ushort>();
                 List<Syroot.Maths.Matrix3x4> SmoothMatrices = new List<Syroot.Maths.Matrix3x4>();
-                List<ushort> RigidIndices = new List<ushort>();
 
                 foreach (var Bone in Skeleton.Bones.Values)
                     Bone.InverseMatrix = new Syroot.Maths.Matrix3x4(1,0,0,0,
                                                                     0,1,0,0,
                                                                     0,0,1,0);
-
-                ushort SmoothIndex = 0;
                 foreach (BfresBone bn in bones)
                 {
                     ushort BoneIndex = 0;
@@ -49,13 +42,8 @@ namespace Bfres.Structs
                     {
                         if (bn.Text == Bone.Name)
                         {
-                            if (bn.UseSmoothMatrix || bn.SmoothMatrixIndex > -1)
+                            if (bn.UseSmoothMatrix)
                             {
-                                bn.SmoothMatrixIndex = (short)SmoothIndex++;
-
-                                Bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
-                                SmoothIndices.Add(BoneIndex);
-
                                 var mat = MatrixExenstion.GetMatrixInverted(bn);
                                 Bone.InverseMatrix = mat;
                                 SmoothMatrices.Add(mat);
@@ -64,30 +52,7 @@ namespace Bfres.Structs
                         BoneIndex++;
                     }
                 }
-
-                //Rigid Indices come after smooth indices. Start from the last smooth index
-                ushort RigidIndex = (ushort)(SmoothIndices.Count);
-                foreach (BfresBone bn in bones)
-                {
-                    ushort BoneIndex = 0;
-                    foreach (var Bone in Skeleton.Bones.Values)
-                    {
-                        if (bn.Text == Bone.Name)
-                        {
-                            if (bn.UseRigidMatrix || bn.RigidMatrixIndex != -1)
-                            {
-                                bn.RigidMatrixIndex = (short)RigidIndex++;
-                                Bone.RigidMatrixIndex = bn.RigidMatrixIndex;
-                                RigidIndices.Add(BoneIndex);
-                            }
-                        }
-                        BoneIndex++;
-                    }
-                }
-
-                //Rigid indices at the end
-                var AllIndices = SmoothIndices.Concat(RigidIndices).ToList();
-                Skeleton.MatrixToBoneList = AllIndices.ToArray();
+                
                 Skeleton.InverseModelMatrices = SmoothMatrices;
             }
             else
@@ -96,16 +61,8 @@ namespace Bfres.Structs
 
                 if (Skeleton.InverseModelMatrices == null)
                     Skeleton.InverseModelMatrices = new List<Syroot.Maths.Matrix3x4>();
-                if (Skeleton.MatrixToBoneList == null)
-                    Skeleton.MatrixToBoneList = new List<ushort>();
 
-                //Generate index list
-                List<ushort> SmoothIndices = new List<ushort>();
                 List<Syroot.Maths.Matrix3x4> SmoothMatrices = new List<Syroot.Maths.Matrix3x4>();
-                List<ushort> RigidIndices = new List<ushort>();
-
-                ushort SmoothIndex = 0;
-
                 foreach (BfresBone bn in bones)
                 {
                     ushort BoneIndex = 0;
@@ -115,10 +72,6 @@ namespace Bfres.Structs
                         {
                             if (bn.UseSmoothMatrix || bn.SmoothMatrixIndex != -1)
                             {
-                                bn.SmoothMatrixIndex = (short)SmoothIndex++;
-                                Bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
-                                SmoothIndices.Add(BoneIndex);
-
                                 var mat = MatrixExenstion.GetMatrixInverted(bn);
                                 SmoothMatrices.Add(mat);
                             }
@@ -126,31 +79,6 @@ namespace Bfres.Structs
                         BoneIndex++;
                     }
                 }
-
-
-                //Rigid Indices come after smooth indices. Start from the last smooth index
-                ushort RigidIndex = (ushort)(SmoothIndices.Count);
-                foreach (BfresBone bn in bones)
-                {
-                    ushort BoneIndex = 0;
-                    foreach (var Bone in Skeleton.Bones)
-                    {
-                        if (bn.Text == Bone.Name)
-                        {
-                            if (bn.UseRigidMatrix || bn.RigidMatrixIndex != -1)
-                            {
-                                bn.RigidMatrixIndex = (short)RigidIndex++;
-                                Bone.RigidMatrixIndex = bn.RigidMatrixIndex;
-                                RigidIndices.Add(BoneIndex);
-                            }
-                        }
-                        BoneIndex++;
-                    }
-                }
-
-                //Rigid indices at the end
-                var AllIndices = SmoothIndices.Concat(RigidIndices).ToList();
-                Skeleton.MatrixToBoneList = AllIndices.ToArray();
                 Skeleton.InverseModelMatrices = SmoothMatrices;
             }
         }
@@ -615,9 +543,9 @@ namespace Bfres.Structs
     }
     public class BfresBone : STBone, IContextMenuNode
     {
-        public bool UseSmoothMatrix { get; set; }
+        public bool UseSmoothMatrix => SmoothMatrixIndex != -1;
 
-        public bool UseRigidMatrix { get; set; }
+        public bool UseRigidMatrix => RigidMatrixIndex != -1;
 
         public string BoneName
         {

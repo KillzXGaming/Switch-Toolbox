@@ -381,8 +381,6 @@ namespace FirstPlugin
             bone.RigidMatrixIndex = bn.RigidMatrixIndex;
             bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
             bone.BillboardIndex = bn.BillboardIndex;
-            bone.UseRigidMatrix = bn.RigidMatrixIndex != -1;
-            bone.UseSmoothMatrix = bn.SmoothMatrixIndex != -1;
             if (SetParent)
                 bone.parentIndex = bn.ParentIndex;
             if (bn.FlagsRotation == BoneFlagsRotation.Quaternion)
@@ -954,7 +952,6 @@ namespace FirstPlugin
                 fskl.node.SkeletonU = new Skeleton();
 
             fskl.node.SkeletonU.Bones.Clear();
-            fskl.node.SkeletonU.MatrixToBoneList = new List<ushort>();
             fskl.node.SkeletonU.InverseModelMatrices = new List<Syroot.Maths.Matrix3x4>();
 
             fskl.node.Nodes.Clear();
@@ -972,9 +969,6 @@ namespace FirstPlugin
                 if (bn.BoneU == null)
                     bn.BoneU = new Bone();
                 bn.GenericToBfresBone();
-
-                if (bn.SmoothMatrixIndex != short.MaxValue)
-                    fskl.node.SkeletonU.MatrixToBoneList.Add(SmoothIndex++);
 
                 //Check duplicated names
                 List<string> names = fskl.bones.Select(o => o.Text).ToList();
@@ -996,14 +990,6 @@ namespace FirstPlugin
 
             fskl.update();
             fskl.reset();
-
-            fskl.Node_Array = new int[fskl.node.SkeletonU.MatrixToBoneList.Count];
-            int nodes = 0;
-            foreach (ushort node in fskl.node.SkeletonU.MatrixToBoneList)
-            {
-                fskl.Node_Array[nodes] = node;
-                nodes++;
-            }
         }
         public static void SaveVertexBuffer(FSHP fshp)
         {

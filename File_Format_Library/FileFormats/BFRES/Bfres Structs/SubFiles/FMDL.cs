@@ -1110,7 +1110,6 @@ namespace Bfres.Structs
                             }
                         }
 
-
                         //Genericate indices
                         //Check for rigged bones
                         for (int ob = 0; ob < ImportedObjects.Count; ob++)
@@ -1124,8 +1123,6 @@ namespace Bfres.Structs
                                 }
                             }
                         }
-
-                        Skeleton.CalculateIndices();
 
                         List<int> smoothSkinningIndices = new List<int>();
                         List<int> rigidSkinningIndices = new List<int>();
@@ -1215,7 +1212,6 @@ namespace Bfres.Structs
                             }
                         }
 
-
                         if (Skeleton.node.SkeletonU != null)
                         {
                             Skeleton.node.SkeletonU.MatrixToBoneList = new List<ushort>();
@@ -1228,6 +1224,8 @@ namespace Bfres.Structs
                             for (int i = 0; i < skinningIndices.Count; i++)
                                 Skeleton.node.Skeleton.MatrixToBoneList.Add((ushort)skinningIndices[i]);
                         }
+
+                        Skeleton.CalculateIndices();
 
                         if (materials.Count <= 0)
                         {

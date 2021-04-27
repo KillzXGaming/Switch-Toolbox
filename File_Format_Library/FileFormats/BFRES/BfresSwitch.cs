@@ -567,8 +567,6 @@ namespace FirstPlugin
             bone.Text = bn.Name;
             bone.RigidMatrixIndex = bn.RigidMatrixIndex;
             bone.SmoothMatrixIndex = bn.SmoothMatrixIndex;
-            bone.UseRigidMatrix = bn.RigidMatrixIndex != -1;
-            bone.UseSmoothMatrix = bn.SmoothMatrixIndex != -1;
 
             bone.BillboardIndex = bn.BillboardIndex;
             if (SetParent)
@@ -597,7 +595,6 @@ namespace FirstPlugin
         public static void SaveSkeleton(FSKL fskl, List<STBone> Bones)
         {
             fskl.node.Skeleton.Bones.Clear();
-            fskl.node.Skeleton.MatrixToBoneList = new List<ushort>();
             fskl.node.Skeleton.InverseModelMatrices = new List<Syroot.Maths.Matrix3x4>();
 
             ushort SmoothIndex = 0;
@@ -609,17 +606,11 @@ namespace FirstPlugin
                 BfresBone bn = new BfresBone(fskl);
                 bn.CloneBaseInstance(genericBone);
                 bn.Text = genericBone.Text;
-                bn.UseRigidMatrix = bn.RigidMatrixIndex != -1;
-                bn.UseSmoothMatrix = bn.SmoothMatrixIndex != -1;
-
+   
                 //Set the bfres bone data
                 if (bn.Bone == null)
                     bn.Bone = new Bone();
                 bn.GenericToBfresBone();
-
-                if (bn.SmoothMatrixIndex != short.MaxValue)
-                    fskl.node.Skeleton.MatrixToBoneList.Add(SmoothIndex++);
-
                 fskl.node.Skeleton.InverseModelMatrices.Add(Syroot.Maths.Matrix3x4.Zero);
 
                 //Check duplicated names
@@ -639,14 +630,6 @@ namespace FirstPlugin
 
             fskl.update();
             fskl.reset();
-
-            fskl.Node_Array = new int[fskl.node.Skeleton.MatrixToBoneList.Count];
-            int nodes = 0;
-            foreach (ushort node in fskl.node.Skeleton.MatrixToBoneList)
-            {
-                fskl.Node_Array[nodes] = node;
-                nodes++;
-            }
         }
 
         public static void SetShape(this FSHP s, Shape shp)
