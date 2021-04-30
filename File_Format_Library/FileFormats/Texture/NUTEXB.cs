@@ -57,81 +57,28 @@ namespace FirstPlugin
             }
         }
 
-        public enum NUTEXImageFormat : byte
+        public enum NUTEXImageFormat : short
         {
-            R8G8B8A8_UNORM = 0x00,
-            R8G8B8A8_SRGB = 0x05,
-            R32G32B32A32_FLOAT = 0x34,
-            B8G8R8A8_UNORM = 0x50,
-            B8G8R8A8_SRGB = 0x55,
-            BC1_UNORM = 0x80,
-            BC1_SRGB = 0x85,
-            BC2_UNORM = 0x90,
-            BC2_SRGB = 0x95,
-            BC3_UNORM = 0xa0,
-            BC3_SRGB = 0xa5,
-            BC4_UNORM = 0xb0,
-            BC4_SNORM = 0xb5,
-            BC5_UNORM = 0xc0,
-            BC5_SNORM = 0xc5,
-            BC6_UFLOAT = 0xd7,
-            BC7_UNORM = 0xe0,
-            BC7_SRGB = 0xe5,
+            R8G8B8A8_UNORM = 0x0400,
+            R8G8B8A8_SRGB = 0x0405,
+            R32G32B32A32_FLOAT = 0x0434,
+            B8G8R8A8_UNORM = 0x0450,
+            B8G8R8A8_SRGB = 0x0455,
+            BC1_UNORM = 0x0480,
+            BC1_SRGB = 0x0485,
+            BC2_UNORM = 0x0490,
+            BC2_SRGB = 0x0495,
+            BC3_UNORM = 0x04a0,
+            BC3_SRGB = 0x04a5,
+            BC4_UNORM = 0x04b0,
+            BC4_SNORM = 0x04b5,
+            BC5_UNORM = 0x0280,
+            BC5_SNORM = 0x0285,
+            BC6_UFLOAT = 0x04d7,
+            BC7_UNORM = 0x04e0,
+            BC7_SRGB = 0x04e5,
         };
 
-        public static uint blk_dims(byte format)
-        {
-            switch (format)
-            {
-                case (byte)NUTEXImageFormat.BC1_UNORM:
-                case (byte)NUTEXImageFormat.BC1_SRGB:
-                case (byte)NUTEXImageFormat.BC2_UNORM:
-                case (byte)NUTEXImageFormat.BC2_SRGB:
-                case (byte)NUTEXImageFormat.BC3_UNORM:
-                case (byte)NUTEXImageFormat.BC3_SRGB:
-                case (byte)NUTEXImageFormat.BC4_UNORM:
-                case (byte)NUTEXImageFormat.BC4_SNORM:
-                case (byte)NUTEXImageFormat.BC5_UNORM:
-                case (byte)NUTEXImageFormat.BC5_SNORM:
-                case (byte)NUTEXImageFormat.BC6_UFLOAT:
-                case (byte)NUTEXImageFormat.BC7_UNORM:
-                case (byte)NUTEXImageFormat.BC7_SRGB:
-                    return 0x44;
-
-                default: return 0x11;
-            }
-        }
-
-        public static uint bpps(byte format)
-        {
-            switch (format)
-            {
-                case (byte)NUTEXImageFormat.B8G8R8A8_UNORM:
-                case (byte)NUTEXImageFormat.B8G8R8A8_SRGB:
-                case (byte)NUTEXImageFormat.R8G8B8A8_UNORM:
-                case (byte)NUTEXImageFormat.R8G8B8A8_SRGB:
-                    return 4;
-
-                case (byte)NUTEXImageFormat.BC1_UNORM:
-                case (byte)NUTEXImageFormat.BC1_SRGB:
-                case (byte)NUTEXImageFormat.BC4_UNORM:
-                case (byte)NUTEXImageFormat.BC4_SNORM:
-                    return 8;
-
-                case (byte)NUTEXImageFormat.R32G32B32A32_FLOAT:
-                case (byte)NUTEXImageFormat.BC2_UNORM:
-                case (byte)NUTEXImageFormat.BC2_SRGB:
-                case (byte)NUTEXImageFormat.BC3_UNORM:
-                case (byte)NUTEXImageFormat.BC3_SRGB:
-                case (byte)NUTEXImageFormat.BC5_UNORM:
-                case (byte)NUTEXImageFormat.BC5_SNORM:
-                case (byte)NUTEXImageFormat.BC6_UFLOAT:
-                case (byte)NUTEXImageFormat.BC7_UNORM:
-                case (byte)NUTEXImageFormat.BC7_SRGB:
-                    return 16;
-                default: return 0x00;
-            }
-        }
 
         public Type[] Types
         {
@@ -216,8 +163,8 @@ namespace FirstPlugin
             public uint ImageSize { get; set; }
         }
 
-        public uint unk;
         public int unk2;
+        public uint FileVersion = 131073;
 
         public NUTEXImageFormat NutFormat;
         public List<uint[]> mipSizes = new List<uint[]>();
@@ -370,6 +317,9 @@ namespace FirstPlugin
             SelectedImageKey = "Texture";
 
             long pos = reader.BaseStream.Length;
+            reader.Seek(pos - 4, SeekOrigin.Begin);
+            FileVersion = reader.ReadUInt32();
+
             string magic = reader.ReadMagic((int)pos - 7, 3);//Check magic first!
 
             if (magic != "XET")
@@ -387,7 +337,6 @@ namespace FirstPlugin
             Height = reader.ReadUInt32();
             Depth = reader.ReadUInt32(); //3d textures
             NutFormat = reader.ReadEnum<NUTEXImageFormat>(true);
-            unk = reader.ReadByte(); //Related to pixel type?? 
             ushort padding3 = reader.ReadUInt16();
             unk2 = reader.ReadInt32();
             MipCount = reader.ReadUInt32();
@@ -495,8 +444,7 @@ namespace FirstPlugin
             writer.Write(Width);
             writer.Write(Height);
             writer.Write(Depth);
-            writer.Write((byte)NutFormat);
-            writer.Write((byte)unk);
+            writer.Write((short)NutFormat);
             writer.Seek(2); //padding
             writer.Write(unk2);
             writer.Write(mipCount);
@@ -504,7 +452,7 @@ namespace FirstPlugin
             writer.Write(arrayCount);
             writer.Write(ImageData.Length);
             writer.WriteSignature(" XET");
-            writer.Write(131073);
+            writer.Write(FileVersion);
 
             writer.Close();
             writer.Dispose();
