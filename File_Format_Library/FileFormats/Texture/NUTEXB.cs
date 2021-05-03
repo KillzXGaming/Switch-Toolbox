@@ -75,6 +75,7 @@ namespace FirstPlugin
             BC5_UNORM = 0x0280,
             BC5_SNORM = 0x0285,
             BC6_UFLOAT = 0x04d7,
+            BC6_SFLOAT = 0x04d8,
             BC7_UNORM = 0x04e0,
             BC7_SRGB = 0x04e5,
         };
@@ -377,6 +378,7 @@ namespace FirstPlugin
                 case TEX_FORMAT.BC5_UNORM: return NUTEXImageFormat.BC5_UNORM;
                 case TEX_FORMAT.BC5_SNORM: return NUTEXImageFormat.BC5_SNORM;
                 case TEX_FORMAT.BC6H_UF16: return NUTEXImageFormat.BC6_UFLOAT;
+                case TEX_FORMAT.BC6H_SF16: return NUTEXImageFormat.BC6_SFLOAT;
                 case TEX_FORMAT.BC7_UNORM: return NUTEXImageFormat.BC7_UNORM;
                 case TEX_FORMAT.BC7_UNORM_SRGB: return NUTEXImageFormat.BC7_SRGB;
                 case TEX_FORMAT.R32G32B32A32_FLOAT: return NUTEXImageFormat.R32G32B32A32_FLOAT;
@@ -404,6 +406,7 @@ namespace FirstPlugin
                 case NUTEXImageFormat.BC5_UNORM: return TEX_FORMAT.BC5_UNORM;
                 case NUTEXImageFormat.BC5_SNORM: return TEX_FORMAT.BC5_SNORM;
                 case NUTEXImageFormat.BC6_UFLOAT: return TEX_FORMAT.BC6H_UF16;
+                case NUTEXImageFormat.BC6_SFLOAT: return TEX_FORMAT.BC6H_SF16;
                 case NUTEXImageFormat.BC7_UNORM: return TEX_FORMAT.BC7_UNORM;
                 case NUTEXImageFormat.BC7_SRGB: return TEX_FORMAT.BC7_UNORM_SRGB;
                 case NUTEXImageFormat.R32G32B32A32_FLOAT: return TEX_FORMAT.R32G32B32A32_FLOAT;
