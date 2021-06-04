@@ -1072,6 +1072,7 @@ namespace Bfres.Structs
                 }
             }
 
+
             List<string> BonesNotMatched = new List<string>();
             foreach (Vertex v in ob.vertices)
             {
@@ -1086,13 +1087,14 @@ namespace Bfres.Structs
                         {
                             if (v.boneIds.Count < ForcedSkinAmount)
                             {
-                                STConsole.WriteLine(bone.SmoothMatrixIndex + " mesh " + Text + " bone " + bn);
-                                v.boneIds.Add(bone.SmoothMatrixIndex);
+                                var index = Array.FindIndex(mdl.Skeleton.Node_Array, boneIndex => mdl.Skeleton.bones[boneIndex].Text == bn);
+                                v.boneIds.Add(index);
                             }
                         }
                         else if (bone.RigidMatrixIndex != -1)
                         {
-                            RigidIds.Add(bone.RigidMatrixIndex);
+                            var index = Array.FindIndex(mdl.Skeleton.Node_Array, boneIndex => mdl.Skeleton.bones[boneIndex].Text == bn);
+                            v.boneIds.Add(index);
                         }
                         else if (bone.SmoothMatrixIndex != -1)
                         {
@@ -1184,27 +1186,35 @@ namespace Bfres.Structs
             {
                 BoundingBox box = CalculateBoundingBox();
                 boundingBoxes.Add(box);
-                boundingRadius.Add((float)(box.Center.Length + box.Extend.Length));
+                boundingRadius.Add(box.Radius);
                 foreach (LOD_Mesh.SubMesh sub in mesh.subMeshes)
                     boundingBoxes.Add(box);
             }
         }
         private BoundingBox CalculateBoundingBox()
         {
-            Vector3 Max = new Vector3();
-            Vector3 Min = new Vector3();
+            Vector3 min = CalculateBBMin(vertices);
+            Vector3 max = CalculateBBMax(vertices);
+            Vector3 center = max + min;
 
-            Min = CalculateBBMin(vertices);
-            Max = CalculateBBMax(vertices);
-            Vector3 center = Max + Min;
-
-            float xxMax = GetExtent(Max.X, Min.X);
-            float yyMax = GetExtent(Max.Y, Min.Y);
-            float zzMax = GetExtent(Max.Z, Min.Z);
+            float xxMax = GetExtent(max.X, min.X);
+            float yyMax = GetExtent(max.Y, min.Y);
+            float zzMax = GetExtent(max.Z, min.Z);
+            float radius = CalculateBoundingRadius(min, max);
 
             Vector3 extend = new Vector3(xxMax, yyMax, zzMax);
 
-            return new BoundingBox() { Center = center, Extend = extend };
+            return new BoundingBox() { Radius = radius, Center = center, Extend = extend };
+        }
+
+        private float CalculateBoundingRadius(Vector3 min, Vector3 max)
+        {
+            Vector3 length = max - min;
+           return CalculateRadius(length.X / 2.0f, length.Y / 2.0f);
+        }
+
+        private static float CalculateRadius(float horizontalLeg, float verticalLeg) {
+            return (float)Math.Sqrt((horizontalLeg * horizontalLeg) + (verticalLeg * verticalLeg));
         }
 
         private float GetExtent(float max, float min)
@@ -1272,6 +1282,7 @@ namespace Bfres.Structs
         {
             public Vector3 Center;
             public Vector3 Extend;
+            public float Radius;
         }
 
         public List<VertexAttribute> vertexAttributes = new List<VertexAttribute>();
