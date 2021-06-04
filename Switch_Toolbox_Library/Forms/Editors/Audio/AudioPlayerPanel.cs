@@ -467,6 +467,8 @@ namespace Toolbox.Library.Forms
 
         private void audioDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (audioDevice.SelectedItem != null && audioDevice.SelectedItem is MMDevice)
+                activeDevice = (MMDevice)audioDevice.SelectedItem;
         }
 
         private void channelCB_SelectedIndexChanged(object sender, EventArgs e)
