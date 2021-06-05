@@ -769,7 +769,6 @@ namespace Bfres.Structs
                             shape.BoneIndex = 0;
                             shape.Text = obj.ObjectName;
                             shape.lodMeshes = obj.lodMeshes;
-                            shape.CreateNewBoundingBoxes();
                             shape.CreateBoneList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
                             shape.CreateIndexList(obj, this);
                             shape.ApplyImportSettings(csvsettings, GetMaterial(shape.MaterialIndex));
@@ -793,6 +792,7 @@ namespace Bfres.Structs
                                 shape.BoneIndex = boneIndex;
                             }
 
+                            shape.CreateNewBoundingBoxes(Skeleton);
                             shape.OptmizeAttributeFormats();
                             shape.SaveShape(IsWiiU);
                             shape.SaveVertexBuffer(IsWiiU);
@@ -1303,7 +1303,6 @@ namespace Bfres.Structs
                                 shape.MaterialIndex = 0;
 
                             shape.lodMeshes = obj.lodMeshes;
-                            shape.CreateNewBoundingBoxes();
                             shape.CreateBoneList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
                             shape.CreateIndexList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);
                             shape.ApplyImportSettings(settings, GetMaterial(shape.MaterialIndex));
@@ -1329,6 +1328,7 @@ namespace Bfres.Structs
                                 shape.BoneIndex = boneIndex;
                             }
 
+                            shape.CreateNewBoundingBoxes(Skeleton);
                             shape.OptmizeAttributeFormats();
                             shape.SaveShape(IsWiiU);
                             shape.SaveVertexBuffer(IsWiiU);

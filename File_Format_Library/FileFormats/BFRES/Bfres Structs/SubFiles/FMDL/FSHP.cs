@@ -355,7 +355,7 @@ namespace Bfres.Structs
         private void GenerateBoundingBoxes(object sender, EventArgs args)
         {
             Cursor.Current = Cursors.WaitCursor;
-            CreateNewBoundingBoxes();
+            CreateNewBoundingBoxes(GetParentModel().Skeleton);
             SaveShape(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
@@ -390,7 +390,7 @@ namespace Bfres.Structs
                 lod.subMeshes.Add(subMesh);
             }
 
-            CreateNewBoundingBoxes();
+            CreateNewBoundingBoxes(GetParentModel().Skeleton);
         }
 
         private void GenerateLODMeshes(object sender, EventArgs args)
@@ -399,7 +399,7 @@ namespace Bfres.Structs
 
             //Todo add lod generating
 
-            CreateNewBoundingBoxes();
+            CreateNewBoundingBoxes(GetParentModel().Skeleton);
             SaveShape(GetResFileU() != null);
             UpdateVertexData();
             GenerateBoundingNodes();
@@ -421,7 +421,7 @@ namespace Bfres.Structs
                     lodMeshes.Remove(meshes[i]);
             }
 
-            CreateNewBoundingBoxes();
+            CreateNewBoundingBoxes(GetParentModel().Skeleton);
             SaveShape(GetResFileU() != null);
             UpdateVertexData();
             GenerateBoundingNodes();
@@ -970,13 +970,13 @@ namespace Bfres.Structs
                                     VertexSkinCount = obj.GetMaxSkinInfluenceCount();
 
                                 lodMeshes = obj.lodMeshes;
-                                CreateNewBoundingBoxes();
                                 CreateBoneList(obj, (FMDL)Parent.Parent, settings.LimitSkinCount, ForceSkinInfluenceMax);
                                 CreateIndexList(obj, (FMDL)Parent.Parent, settings.LimitSkinCount, ForceSkinInfluenceMax);
                                 BoneIndices = GetIndices(GetParentModel().Skeleton);
 
                                 ApplyImportSettings(settings, GetFMAT());
 
+                                CreateNewBoundingBoxes(GetParentModel().Skeleton);
                                 OptmizeAttributeFormats();
                                 SaveShape(IsWiiU);
                                 SaveVertexBuffer(IsWiiU);
@@ -1178,23 +1178,53 @@ namespace Bfres.Structs
             }
         }
 
-        public void CreateNewBoundingBoxes()
+        public void CreateNewBoundingBoxes(STSkeleton skeleton)
         {
             boundingBoxes.Clear();
             boundingRadius.Clear();
             foreach (LOD_Mesh mesh in lodMeshes)
             {
-                BoundingBox box = CalculateBoundingBox();
+                BoundingBox box = CalculateBoundingBox(skeleton);
                 boundingBoxes.Add(box);
                 boundingRadius.Add(box.Radius);
                 foreach (LOD_Mesh.SubMesh sub in mesh.subMeshes)
                     boundingBoxes.Add(box);
             }
         }
-        private BoundingBox CalculateBoundingBox()
+
+        private BoundingBox CalculateBoundingBox(STSkeleton skeleton)
         {
-            Vector3 min = CalculateBBMin(vertices);
-            Vector3 max = CalculateBBMax(vertices);
+            Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+
+            if (VertexSkinCount > 0)
+            {
+                var aabb = CalculateSkinnedBoundings(skeleton, vertices);
+                //Failed to get bounding data for some reason, calculate normally
+                //This shouldn't happen but it's a fail safe option.
+                if (aabb.Count == 0)
+                {
+                    min = CalculateBBMin(vertices);
+                    max = CalculateBBMax(vertices);
+                }
+
+                //Get the largest values in local space to create the largest bounding box
+                foreach (var bounding in aabb)
+                {
+                    min.X = Math.Min(min.X, bounding.Min.X);
+                    min.Y = Math.Min(min.Y, bounding.Min.Y);
+                    min.Z = Math.Min(min.Z, bounding.Min.Z);
+                    max.X = Math.Max(max.X, bounding.Max.X);
+                    max.Y = Math.Max(max.Y, bounding.Max.Y);
+                    max.Z = Math.Max(max.Z, bounding.Max.Z);
+                }
+            }
+            else
+            {
+                min = CalculateBBMin(vertices);
+                max = CalculateBBMax(vertices);
+            }
+
             Vector3 center = max + min;
 
             float xxMax = GetExtent(max.X, min.X);
@@ -1205,6 +1235,43 @@ namespace Bfres.Structs
             Vector3 extend = new Vector3(xxMax, yyMax, zzMax);
 
             return new BoundingBox() { Radius = radius, Center = center, Extend = extend };
+        }
+
+        private List<AABB> CalculateSkinnedBoundings(STSkeleton skeleton, List<Vertex> vertices)
+        {
+            Dictionary<int, AABB> skinnedBoundings = new Dictionary<int, AABB>();
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                foreach (var boneID in vertices[i].boneIds)
+                {
+                    if (!skinnedBoundings.ContainsKey(boneID))
+                        skinnedBoundings.Add(boneID, new AABB());
+
+                    //Get the skinned bone transform
+                    var transform = skeleton.bones[boneID].Transform;
+                    var inverted = transform.Inverted();
+
+                    //Get the position in local coordinates
+                    var position = vertices[i].pos;
+                    position = OpenTK.Vector3.TransformPosition(position, inverted);
+
+                    var bounding = skinnedBoundings[boneID];
+                    //Set the min and max values
+                    bounding.Min.X = Math.Min(bounding.Min.X, position.X);
+                    bounding.Min.Y = Math.Min(bounding.Min.Y, position.Y);
+                    bounding.Min.Z = Math.Min(bounding.Min.Z, position.Z);
+                    bounding.Max.X = Math.Max(bounding.Max.X, position.X);
+                    bounding.Max.Y = Math.Max(bounding.Max.Y, position.Y);
+                    bounding.Max.Z = Math.Max(bounding.Max.Z, position.Z);
+                }
+            }
+            return skinnedBoundings.Values.ToList();
+        }
+
+        class AABB
+        {
+            public Vector3 Min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            public Vector3 Max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
         }
 
         private float CalculateBoundingRadius(Vector3 min, Vector3 max)
