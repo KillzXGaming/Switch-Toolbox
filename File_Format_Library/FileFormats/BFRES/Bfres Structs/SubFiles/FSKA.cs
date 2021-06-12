@@ -227,23 +227,20 @@ namespace Bfres.Structs
         private STSkeleton GetActiveSkeleton()
         {
             var viewport = LibraryGUI.GetActiveViewport();
-            foreach (var drawable in viewport.scene.objects)
+            if (viewport != null)
             {
-                if (drawable is STSkeleton)
+                foreach (var drawable in viewport.scene.objects)
                 {
-                    bool hasMatchingBoneset = true;
-                    foreach (var bone in Bones)
+                    if (drawable is STSkeleton)
                     {
-                        var animBone = ((STSkeleton)drawable).GetBone(bone.Text);
-                        if (animBone == null) {
-                            hasMatchingBoneset = false;
-                            continue;
+                        foreach (var bone in Bones)
+                        {
+                            var animBone = ((STSkeleton)drawable).GetBone(bone.Text);
+
+                            if (animBone != null)
+                                return (STSkeleton)drawable;
                         }
                     }
-
-                    //Animation has all bones present in skeleton
-                    if (hasMatchingBoneset)
-                        return (STSkeleton)drawable;
                 }
             }
 
