@@ -255,20 +255,6 @@ namespace Toolbox.Library.Animations
                         Quaternion rotation = bone.GetRotation();
                         Vector3 scale = bone.GetScale();
 
-                        //Exporting at specific keys doesn't work atm
-                        //Todo
-                        bool IsTranlationKeyed = (boneAnim.XPOS.GetKeyFrame(frame).IsKeyed ||
-                                                 boneAnim.YPOS.GetKeyFrame(frame).IsKeyed ||
-                                                 boneAnim.ZPOS.GetKeyFrame(frame).IsKeyed);
-
-                        bool IsRotationKeyed = (boneAnim.XROT.GetKeyFrame(frame).IsKeyed ||
-                                                  boneAnim.YROT.GetKeyFrame(frame).IsKeyed ||
-                                                  boneAnim.ZROT.GetKeyFrame(frame).IsKeyed);
-
-                        bool IsScaleKeyed = (boneAnim.XSCA.GetKeyFrame(frame).IsKeyed ||
-                                             boneAnim.YSCA.GetKeyFrame(frame).IsKeyed ||
-                                             boneAnim.ZSCA.GetKeyFrame(frame).IsKeyed);
-
                         seAnim.AddTranslationKey(boneAnim.Text, frame, position.X, position.Y, position.Z);
                         seAnim.AddRotationKey(boneAnim.Text, frame, rotation.X, rotation.Y, rotation.Z, rotation.W);
                         seAnim.AddScaleKey(boneAnim.Text, frame, scale.X, scale.Y, scale.Z);
