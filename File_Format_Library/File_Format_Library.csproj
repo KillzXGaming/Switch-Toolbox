@@ -2187,7 +2187,6 @@
     <ProjectReference Include="..\BrawlboxHelper\BrawlboxHelper.csproj">
       <Project>{fa690685-3370-44d5-b138-f538c8d4c2a3}</Project>
       <Name>BrawlboxHelper</Name>
-      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Switch_Toolbox_Library\Toolbox_Library.csproj">
       <Project>{96820047-2a39-4e5a-bfa4-e84fff5c66cf}</Project>
