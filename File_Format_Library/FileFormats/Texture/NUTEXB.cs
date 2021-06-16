@@ -194,7 +194,7 @@ namespace FirstPlugin
 
         public override void Replace(string FileName)
         {
-            if (Runtime.NUTEXBSettings.IsSwizzled)
+            if (Alignment != 0)
             {
                 var tex = new TextureData();
                 tex.Replace(FileName, MipCount, 0, Format);
@@ -463,7 +463,7 @@ namespace FirstPlugin
 
         public override void SetImageData(Bitmap bitmap, int ArrayLevel)
         {
-            if (!Runtime.NUTEXBSettings.IsSwizzled)
+            if (Alignment == 0)
             {
                 MipCount = GenerateMipCount(bitmap.Width, bitmap.Height);
                 ImageData = GenerateMipsAndCompress(bitmap, MipCount, Format);
@@ -513,7 +513,7 @@ namespace FirstPlugin
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
-            if (!Runtime.NUTEXBSettings.IsSwizzled)
+            if (Alignment == 0)
                 return DDS.GetArrayFaces(this, ImageData, ArrayCount)[ArrayLevel].mipmaps[MipLevel];
 
             return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, 1);
@@ -540,19 +540,12 @@ namespace FirstPlugin
             { Checked = Runtime.NUTEXBSettings.LimitFileSize, CheckOnClick = true });
 
             Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.T));
-            Items.Add(new STToolStipMenuItem("Taiko no Tatsujin fix", null, SwizzleToggle, Keys.Control | Keys.S)
-            { Checked = !Runtime.NUTEXBSettings.IsSwizzled, CheckOnClick = true });
 
             Items.Add(new STToolStipMenuItem("Force padding for smaller file sizes", null, PaddingToggle, Keys.Control | Keys.P) 
             { Checked = Runtime.NUTEXBSettings.PadFileSize, CheckOnClick = true });
 
             Items.AddRange(base.GetContextMenuItems());
             return Items.ToArray();
-        }
-
-        private void SwizzleToggle(object sender, EventArgs args) {
-            Runtime.NUTEXBSettings.IsSwizzled = ((STToolStipMenuItem)sender).Checked ? false : true;
-            UpdateEditor();
         }
 
         private void PaddingToggle(object sender, EventArgs args) {
