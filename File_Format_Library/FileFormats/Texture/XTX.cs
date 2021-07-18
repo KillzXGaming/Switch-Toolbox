@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Drawing;
-using System.Threading.Tasks;
+using System.Linq;
 using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
@@ -339,12 +339,14 @@ namespace FirstPlugin
             {
                 if (block.BlockType == TextureBlockType)
                 {
+                    block.Data = TextureInfos[curTexImage].ImageData;
                     block.WriteHeader(writer);
                     block.WriteBlock(writer, 512);
+                    curTexImage++;
                 }
                 else if (block.BlockType == TextureInfoType)
                 {
-                    block.Data = TextureInfos[curTexImage++].Write();
+                    block.Data = TextureInfos[curTexImage].Write();
                     block.WriteHeader(writer);
                     block.WriteBlock(writer);
                 }
@@ -485,8 +487,6 @@ namespace FirstPlugin
             public override string ExportFilter => FileFilters.XTX;
             public override string ReplaceFilter => FileFilters.XTX;
 
-            private byte[] unknownData;
-
             public TextureInfo()
             {
                 CanExport = true;
@@ -528,7 +528,10 @@ namespace FirstPlugin
                 writer.Write(MipCount);
                 writer.Write(SliceSize);
                 writer.Write(MipOffsets);
-                writer.Write(unknownData);
+                writer.Write(TextureLayout1);
+                writer.Write(TextureLayout2);
+                writer.Write(Boolean);
+
                 writer.Close();
                 writer.Dispose();
 
@@ -563,7 +566,11 @@ namespace FirstPlugin
                 Format = tex.Format;
                 XTXFormat = ConvertFromGenericFormat(tex.Format);
 
-                MipOffsets = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length)[0];
+                uint[] mips = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length)[0];
+                MipOffsets = new uint[17];
+
+                for (int i = 0; i < mips.Length; i++)
+                    MipOffsets[i] = mips[i];
 
                 surfacesNew.Clear();
                 surfaces.Clear();
