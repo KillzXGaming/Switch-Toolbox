@@ -32,7 +32,7 @@ namespace FirstPlugin
             }
         }
 
-        public bool DisplayIcons => true;
+        public bool DisplayIcons => false; //Astc decoding is slow and the UI has loading issues atm
 
         public List<STGenericTexture> TextureList
         {
@@ -65,12 +65,18 @@ namespace FirstPlugin
                 string name = Path.GetFileNameWithoutExtension(FileName);
                 TextureInfos[i].Text = TextureInfos.Count == 1 ? name : $"{name}_image{i}";
             }
-
-            ContextMenuStrip = new STContextMenuStrip();
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Save", null, SaveAction, Keys.Control | Keys.S));
         }
 
-        private void SaveAction(object sender, EventArgs args)
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            return new ToolStripItem[]
+            {
+                new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.S),
+                new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E),
+            };
+        }
+
+        private void Save(object sender, EventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.DefaultExt = "xtx";
@@ -80,6 +86,45 @@ namespace FirstPlugin
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 STFileSaver.SaveFileFormat(this, sfd.FileName);
+            }
+        }
+
+        protected void ExportAllAction(object sender, EventArgs e)
+        {
+            if (Nodes.Count <= 0)
+                return;
+
+            string formats = FileFilters.XTX;
+
+            string[] forms = formats.Split('|');
+
+            List<string> Formats = new List<string>();
+
+            for (int i = 0; i < forms.Length; i++)
+            {
+                if (i > 1 || i == (forms.Length - 1)) //Skip lines with all extensions
+                {
+                    if (!forms[i].StartsWith("*"))
+                        Formats.Add(forms[i]);
+                }
+            }
+
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string folderPath = sfd.SelectedPath;
+
+                BatchFormatExport form = new BatchFormatExport(Formats);
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    string extension = form.GetSelectedExtension();
+                    extension.Replace(" ", string.Empty);
+
+                    foreach (STGenericTexture node in Nodes)
+                    {
+                        ((STGenericTexture)node).Export($"{folderPath}\\{node.Text}{extension}");
+                    }
+                }
             }
         }
 
@@ -326,53 +371,6 @@ namespace FirstPlugin
             }
         }
 
-        public virtual ToolStripItem[] GetContextMenuItems()
-        {
-            List<ToolStripItem> Items = new List<ToolStripItem>();
-            Items.Add(new ToolStripMenuItem("Export All", null, ExportAllAction, Keys.Control | Keys.E));
-            return Items.ToArray();
-        }
-
-        private void ExportAllAction(object sender, EventArgs args)
-        {
-            ExportAll();
-        }
-
-        public virtual void ExportAll()
-        {
-            List<string> Formats = new List<string>();
-            Formats.Add("Microsoft DDS (.dds)");
-            Formats.Add("Portable Graphics Network (.png)");
-            Formats.Add("Joint Photographic Experts Group (.jpg)");
-            Formats.Add("Bitmap Image (.bmp)");
-            Formats.Add("Tagged Image File Format (.tiff)");
-
-            FolderSelectDialog sfd = new FolderSelectDialog();
-
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                string folderPath = sfd.SelectedPath;
-
-                BatchFormatExport form = new BatchFormatExport(Formats);
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    foreach (STGenericTexture tex in Nodes)
-                    {
-                        if (form.Index == 0)
-                            tex.SaveDDS(folderPath + '\\' + tex.Text + ".dds");
-                        else if (form.Index == 1)
-                            tex.SaveBitMap(folderPath + '\\' + tex.Text + ".png");
-                        else if (form.Index == 2)
-                            tex.SaveBitMap(folderPath + '\\' + tex.Text + ".jpg");
-                        else if (form.Index == 3)
-                            tex.SaveBitMap(folderPath + '\\' + tex.Text + ".bmp");
-                        else if (form.Index == 4)
-                            tex.SaveBitMap(folderPath + '\\' + tex.Text + ".tiff");
-                    }
-                }
-            }
-        }
-
         public class BlockHeader
         {
             public uint BlockSize { get; set; }
@@ -479,10 +477,21 @@ namespace FirstPlugin
             public uint[] MipOffsets { get; set; }
             public byte[] ImageData;
 
+            public uint TextureLayout1;
+            public uint TextureLayout2;
+
+            public uint Boolean;
+
             public override string ExportFilter => FileFilters.XTX;
             public override string ReplaceFilter => FileFilters.XTX;
 
             private byte[] unknownData;
+
+            public TextureInfo()
+            {
+                CanExport = true;
+                CanReplace = true;
+            }
 
             public void Read(FileReader reader)
             {
@@ -495,15 +504,13 @@ namespace FirstPlugin
                 XTXFormat = reader.ReadEnum<XTXFormats.XTXImageFormat>(true);
                 MipCount = reader.ReadUInt32();
                 SliceSize = reader.ReadUInt32();
-                MipOffsets = reader.ReadUInt32s((int)MipCount);
-                unknownData = reader.ReadBytes(0x38);
+                MipOffsets = reader.ReadUInt32s(17);
+                TextureLayout1 = reader.ReadUInt32();
+                TextureLayout2 = reader.ReadUInt32();
+                Boolean = reader.ReadUInt32();
 
                 Format = ConvertFormat(XTXFormat);
                 ArrayCount = 1;
-
-                ContextMenuStrip = new STContextMenuStrip();
-                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
-                ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R));
             }
 
             public byte[] Write()
@@ -535,7 +542,6 @@ namespace FirstPlugin
 
             public override void Replace(string FileName)
             {
-                var bntxFile = new BNTX();
                 var tex = new TextureData();
                 tex.Replace(FileName, MipCount, 0, Format);
 
@@ -551,6 +557,8 @@ namespace FirstPlugin
                 Width = tex.Texture.Width;
                 Height = tex.Texture.Height;
                 MipCount = tex.Texture.MipCount;
+                TextureLayout1 = tex.Texture.textureLayout;
+                TextureLayout2 = tex.Texture.textureLayout2;
 
                 Format = tex.Format;
                 XTXFormat = ConvertFromGenericFormat(tex.Format);
@@ -733,7 +741,9 @@ namespace FirstPlugin
 
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
             {
-                return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, (int)Target);
+                var blockHeightLog2 = TextureLayout1 & 7;
+
+                return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, blockHeightLog2, (int)Target);
             }
         }
     }
