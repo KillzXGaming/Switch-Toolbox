@@ -19,8 +19,7 @@ deploy:
    **For textures make sure you install [this](https://www.microsoft.com/en-us/download/details.aspx?id=35) if they do not show or crash!**
    **Requires a minimum of .NET Framework 4.6 which you can get [here](https://www.microsoft.com/en-us/download/details.aspx?id=53344)**'
   release: 'Experimental Release-v$(appveyor_build_version)'
-  auth_token:
-    secure: vDPwgMnjU54ZBjDmIfPNaES/JfhJBkj1yZ1kZwNf3ls8IUjPhVEWR2FDBVV0MySO
+
   artifact: Toolbox-Latest.zip
   draft: false
   prerelease: true
