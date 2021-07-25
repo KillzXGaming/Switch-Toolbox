@@ -482,6 +482,8 @@ namespace FirstPlugin
             public uint TextureLayout1;
             public uint TextureLayout2;
 
+            public uint BlockHeightLog2;
+
             public uint Boolean;
 
             public override string ExportFilter => FileFilters.XTX;
@@ -509,12 +511,15 @@ namespace FirstPlugin
                 TextureLayout2 = reader.ReadUInt32();
                 Boolean = reader.ReadUInt32();
 
+                BlockHeightLog2 = TextureLayout1 & 7;
                 Format = ConvertFormat(XTXFormat);
                 ArrayCount = 1;
             }
 
             public byte[] Write()
             {
+                TextureLayout1 = (uint)BlockHeightLog2;
+
                 MemoryStream mem = new MemoryStream();
 
                 FileWriter writer = new FileWriter(mem);
@@ -562,6 +567,7 @@ namespace FirstPlugin
                 MipCount = tex.Texture.MipCount;
                 TextureLayout1 = tex.Texture.textureLayout;
                 TextureLayout2 = tex.Texture.textureLayout2;
+                BlockHeightLog2 = tex.Texture.BlockHeightLog2;
 
                 Format = tex.Format;
                 XTXFormat = ConvertFromGenericFormat(tex.Format);
@@ -748,9 +754,7 @@ namespace FirstPlugin
 
             public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
             {
-                var blockHeightLog2 = TextureLayout1 & 7;
-
-                return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, blockHeightLog2, (int)Target);
+                return TegraX1Swizzle.GetImageData(this, ImageData, ArrayLevel, MipLevel, DepthLevel, BlockHeightLog2, (int)Target);
             }
         }
     }
