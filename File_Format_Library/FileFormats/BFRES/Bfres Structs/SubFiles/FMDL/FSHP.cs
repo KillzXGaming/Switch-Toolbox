@@ -1093,8 +1093,7 @@ namespace Bfres.Structs
                         }
                         else if (bone.RigidMatrixIndex != -1)
                         {
-                            var index = Array.FindIndex(mdl.Skeleton.Node_Array, boneIndex => mdl.Skeleton.bones[boneIndex].Text == bn);
-                            v.boneIds.Add(index);
+                            v.boneIds.Add(bone.RigidMatrixIndex);
                         }
                         else if (bone.SmoothMatrixIndex != -1)
                         {
