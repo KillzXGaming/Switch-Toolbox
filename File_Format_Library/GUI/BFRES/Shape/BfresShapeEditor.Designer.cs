@@ -40,35 +40,6 @@
             this.shapeIndexUD = new Toolbox.Library.Forms.NumericUpDownInt();
             this.stLabel7 = new Toolbox.Library.Forms.STLabel();
             this.nameTB = new Toolbox.Library.Forms.STTextBox();
-            this.stDropDownPanel2 = new Toolbox.Library.Forms.STDropDownPanel();
-            this.stPanel1 = new Toolbox.Library.Forms.STPanel();
-            this.stLabel9 = new Toolbox.Library.Forms.STLabel();
-            this.measureCB = new Toolbox.Library.Forms.STComboBox();
-            this.stLabel5 = new Toolbox.Library.Forms.STLabel();
-            this.rotModeCB = new Toolbox.Library.Forms.STComboBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.RotWUD = new Toolbox.Library.Forms.NumericUpDownFloat();
-            this.ScaZUD = new Toolbox.Library.Forms.NumericUpDownFloat();
-            this.ScaYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
-            this.ScaXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.RotZUD = new Toolbox.Library.Forms.NumericUpDownFloat();
-            this.RotYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
-            this.RotXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.posZUD = new Toolbox.Library.Forms.NumericUpDownFloat();
-            this.posYUD = new Toolbox.Library.Forms.NumericUpDownFloat();
-            this.posXUD = new Toolbox.Library.Forms.NumericUpDownFloat();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.stDropDownPanel3 = new Toolbox.Library.Forms.STDropDownPanel();
             this.stPanel2 = new Toolbox.Library.Forms.STPanel();
             this.stLabel8 = new Toolbox.Library.Forms.STLabel();
@@ -125,18 +96,6 @@
             this.stDropDownPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.shapeVertexSkinCountUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.shapeIndexUD)).BeginInit();
-            this.stDropDownPanel2.SuspendLayout();
-            this.stPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RotWUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ScaZUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ScaYUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ScaXUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RotZUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RotYUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RotXUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.posZUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.posYUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.posXUD)).BeginInit();
             this.stDropDownPanel3.SuspendLayout();
             this.stPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.materialIndexUD)).BeginInit();
@@ -184,7 +143,6 @@
             // 
             this.stFlowLayoutPanel1.AutoScroll = true;
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel1);
-            this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel2);
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel3);
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel4);
             this.stFlowLayoutPanel1.Controls.Add(this.vertexBufferDropDownPanel);
@@ -333,470 +291,13 @@
             this.nameTB.Size = new System.Drawing.Size(227, 20);
             this.nameTB.TabIndex = 10;
             // 
-            // stDropDownPanel2
-            // 
-            this.stDropDownPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.stDropDownPanel2.Controls.Add(this.stPanel1);
-            this.stDropDownPanel2.ExpandedHeight = 0;
-            this.stDropDownPanel2.IsExpanded = true;
-            this.stDropDownPanel2.Location = new System.Drawing.Point(0, 117);
-            this.stDropDownPanel2.Margin = new System.Windows.Forms.Padding(0);
-            this.stDropDownPanel2.Name = "stDropDownPanel2";
-            this.stDropDownPanel2.PanelName = "Transform";
-            this.stDropDownPanel2.PanelValueName = "";
-            this.stDropDownPanel2.SetIcon = null;
-            this.stDropDownPanel2.SetIconAlphaColor = System.Drawing.Color.Transparent;
-            this.stDropDownPanel2.SetIconColor = System.Drawing.Color.Transparent;
-            this.stDropDownPanel2.Size = new System.Drawing.Size(616, 151);
-            this.stDropDownPanel2.TabIndex = 1;
-            // 
-            // stPanel1
-            // 
-            this.stPanel1.Controls.Add(this.stLabel9);
-            this.stPanel1.Controls.Add(this.measureCB);
-            this.stPanel1.Controls.Add(this.stLabel5);
-            this.stPanel1.Controls.Add(this.rotModeCB);
-            this.stPanel1.Controls.Add(this.label13);
-            this.stPanel1.Controls.Add(this.RotWUD);
-            this.stPanel1.Controls.Add(this.ScaZUD);
-            this.stPanel1.Controls.Add(this.ScaYUD);
-            this.stPanel1.Controls.Add(this.ScaXUD);
-            this.stPanel1.Controls.Add(this.label9);
-            this.stPanel1.Controls.Add(this.label10);
-            this.stPanel1.Controls.Add(this.label11);
-            this.stPanel1.Controls.Add(this.label12);
-            this.stPanel1.Controls.Add(this.RotZUD);
-            this.stPanel1.Controls.Add(this.RotYUD);
-            this.stPanel1.Controls.Add(this.RotXUD);
-            this.stPanel1.Controls.Add(this.label1);
-            this.stPanel1.Controls.Add(this.label6);
-            this.stPanel1.Controls.Add(this.label7);
-            this.stPanel1.Controls.Add(this.label8);
-            this.stPanel1.Controls.Add(this.posZUD);
-            this.stPanel1.Controls.Add(this.posYUD);
-            this.stPanel1.Controls.Add(this.posXUD);
-            this.stPanel1.Controls.Add(this.label2);
-            this.stPanel1.Controls.Add(this.label3);
-            this.stPanel1.Controls.Add(this.label4);
-            this.stPanel1.Controls.Add(this.label5);
-            this.stPanel1.Location = new System.Drawing.Point(6, 32);
-            this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(617, 119);
-            this.stPanel1.TabIndex = 1;
-            // 
-            // stLabel9
-            // 
-            this.stLabel9.AutoSize = true;
-            this.stLabel9.Location = new System.Drawing.Point(222, 8);
-            this.stLabel9.Name = "stLabel9";
-            this.stLabel9.Size = new System.Drawing.Size(51, 13);
-            this.stLabel9.TabIndex = 36;
-            this.stLabel9.Text = "Measure:";
-            // 
-            // measureCB
-            // 
-            this.measureCB.BorderColor = System.Drawing.Color.Empty;
-            this.measureCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.measureCB.ButtonColor = System.Drawing.Color.Empty;
-            this.measureCB.FormattingEnabled = true;
-            this.measureCB.IsReadOnly = false;
-            this.measureCB.Items.AddRange(new object[] {
-            "Degrees",
-            "Radians"});
-            this.measureCB.Location = new System.Drawing.Point(305, 5);
-            this.measureCB.Name = "measureCB";
-            this.measureCB.Size = new System.Drawing.Size(121, 21);
-            this.measureCB.TabIndex = 37;
-            // 
-            // stLabel5
-            // 
-            this.stLabel5.AutoSize = true;
-            this.stLabel5.Location = new System.Drawing.Point(14, 8);
-            this.stLabel5.Name = "stLabel5";
-            this.stLabel5.Size = new System.Drawing.Size(50, 13);
-            this.stLabel5.TabIndex = 8;
-            this.stLabel5.Text = "Rotation:";
-            // 
-            // rotModeCB
-            // 
-            this.rotModeCB.BorderColor = System.Drawing.Color.Empty;
-            this.rotModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
-            this.rotModeCB.ButtonColor = System.Drawing.Color.Empty;
-            this.rotModeCB.FormattingEnabled = true;
-            this.rotModeCB.IsReadOnly = false;
-            this.rotModeCB.Items.AddRange(new object[] {
-            "Euler",
-            "Quaternion"});
-            this.rotModeCB.Location = new System.Drawing.Point(77, 5);
-            this.rotModeCB.Name = "rotModeCB";
-            this.rotModeCB.Size = new System.Drawing.Size(121, 21);
-            this.rotModeCB.TabIndex = 35;
-            this.rotModeCB.SelectedIndexChanged += new System.EventHandler(this.rotModeCB_SelectedIndexChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.label13.Location = new System.Drawing.Point(482, 65);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(18, 13);
-            this.label13.TabIndex = 33;
-            this.label13.Text = "W";
-            // 
-            // RotWUD
-            // 
-            this.RotWUD.DecimalPlaces = 5;
-            this.RotWUD.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            196608});
-            this.RotWUD.Location = new System.Drawing.Point(506, 60);
-            this.RotWUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.RotWUD.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.RotWUD.Name = "RotWUD";
-            this.RotWUD.Size = new System.Drawing.Size(101, 20);
-            this.RotWUD.TabIndex = 34;
-            // 
-            // ScaZUD
-            // 
-            this.ScaZUD.DecimalPlaces = 5;
-            this.ScaZUD.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            196608});
-            this.ScaZUD.Location = new System.Drawing.Point(356, 86);
-            this.ScaZUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.ScaZUD.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.ScaZUD.Name = "ScaZUD";
-            this.ScaZUD.Size = new System.Drawing.Size(120, 20);
-            this.ScaZUD.TabIndex = 32;
-            // 
-            // ScaYUD
-            // 
-            this.ScaYUD.DecimalPlaces = 5;
-            this.ScaYUD.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            196608});
-            this.ScaYUD.Location = new System.Drawing.Point(225, 86);
-            this.ScaYUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.ScaYUD.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.ScaYUD.Name = "ScaYUD";
-            this.ScaYUD.Size = new System.Drawing.Size(104, 20);
-            this.ScaYUD.TabIndex = 31;
-            // 
-            // ScaXUD
-            // 
-            this.ScaXUD.DecimalPlaces = 5;
-            this.ScaXUD.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            196608});
-            this.ScaXUD.Location = new System.Drawing.Point(94, 86);
-            this.ScaXUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.ScaXUD.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.ScaXUD.Name = "ScaXUD";
-            this.ScaXUD.Size = new System.Drawing.Size(105, 20);
-            this.ScaXUD.TabIndex = 30;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(13, 88);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(37, 13);
-            this.label9.TabIndex = 26;
-            this.label9.Text = "Scale:";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.BackColor = System.Drawing.Color.Red;
-            this.label10.Location = new System.Drawing.Point(74, 91);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(14, 13);
-            this.label10.TabIndex = 27;
-            this.label10.Text = "X";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.label11.Location = new System.Drawing.Point(205, 91);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(14, 13);
-            this.label11.TabIndex = 28;
-            this.label11.Text = "Y";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.BackColor = System.Drawing.Color.Blue;
-            this.label12.Location = new System.Drawing.Point(336, 91);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(14, 13);
-            this.label12.TabIndex = 29;
-            this.label12.Text = "Z";
-            // 
-            // RotZUD
-            // 
-            this.RotZUD.DecimalPlaces = 5;
-            this.RotZUD.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            196608});
-            this.RotZUD.Location = new System.Drawing.Point(356, 60);
-            this.RotZUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.RotZUD.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.RotZUD.Name = "RotZUD";
-            this.RotZUD.Size = new System.Drawing.Size(120, 20);
-            this.RotZUD.TabIndex = 25;
-            // 
-            // RotYUD
-            // 
-            this.RotYUD.DecimalPlaces = 5;
-            this.RotYUD.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            196608});
-            this.RotYUD.Location = new System.Drawing.Point(225, 60);
-            this.RotYUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.RotYUD.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.RotYUD.Name = "RotYUD";
-            this.RotYUD.Size = new System.Drawing.Size(104, 20);
-            this.RotYUD.TabIndex = 24;
-            // 
-            // RotXUD
-            // 
-            this.RotXUD.DecimalPlaces = 5;
-            this.RotXUD.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            196608});
-            this.RotXUD.Location = new System.Drawing.Point(94, 60);
-            this.RotXUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.RotXUD.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.RotXUD.Name = "RotXUD";
-            this.RotXUD.Size = new System.Drawing.Size(105, 20);
-            this.RotXUD.TabIndex = 23;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 62);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(50, 13);
-            this.label1.TabIndex = 19;
-            this.label1.Text = "Rotation:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.BackColor = System.Drawing.Color.Red;
-            this.label6.Location = new System.Drawing.Point(74, 65);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(14, 13);
-            this.label6.TabIndex = 20;
-            this.label6.Text = "X";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.label7.Location = new System.Drawing.Point(205, 65);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(14, 13);
-            this.label7.TabIndex = 21;
-            this.label7.Text = "Y";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.BackColor = System.Drawing.Color.Blue;
-            this.label8.Location = new System.Drawing.Point(336, 65);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(14, 13);
-            this.label8.TabIndex = 22;
-            this.label8.Text = "Z";
-            // 
-            // posZUD
-            // 
-            this.posZUD.DecimalPlaces = 5;
-            this.posZUD.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            196608});
-            this.posZUD.Location = new System.Drawing.Point(356, 34);
-            this.posZUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.posZUD.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.posZUD.Name = "posZUD";
-            this.posZUD.Size = new System.Drawing.Size(120, 20);
-            this.posZUD.TabIndex = 18;
-            // 
-            // posYUD
-            // 
-            this.posYUD.DecimalPlaces = 5;
-            this.posYUD.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            196608});
-            this.posYUD.Location = new System.Drawing.Point(225, 34);
-            this.posYUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.posYUD.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.posYUD.Name = "posYUD";
-            this.posYUD.Size = new System.Drawing.Size(104, 20);
-            this.posYUD.TabIndex = 17;
-            // 
-            // posXUD
-            // 
-            this.posXUD.DecimalPlaces = 5;
-            this.posXUD.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            196608});
-            this.posXUD.Location = new System.Drawing.Point(94, 34);
-            this.posXUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.posXUD.Minimum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            -2147483648});
-            this.posXUD.Name = "posXUD";
-            this.posXUD.Size = new System.Drawing.Size(105, 20);
-            this.posXUD.TabIndex = 16;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 36);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 13);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Position";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(74, 39);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(14, 13);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "X";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.label4.Location = new System.Drawing.Point(205, 39);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(14, 13);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "Y";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.BackColor = System.Drawing.Color.Blue;
-            this.label5.Location = new System.Drawing.Point(336, 39);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(14, 13);
-            this.label5.TabIndex = 15;
-            this.label5.Text = "Z";
-            // 
             // stDropDownPanel3
             // 
             this.stDropDownPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.stDropDownPanel3.Controls.Add(this.stPanel2);
             this.stDropDownPanel3.ExpandedHeight = 0;
             this.stDropDownPanel3.IsExpanded = true;
-            this.stDropDownPanel3.Location = new System.Drawing.Point(0, 268);
+            this.stDropDownPanel3.Location = new System.Drawing.Point(0, 117);
             this.stDropDownPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.stDropDownPanel3.Name = "stDropDownPanel3";
             this.stDropDownPanel3.PanelName = "Material Information";
@@ -882,7 +383,7 @@
             this.stDropDownPanel4.Controls.Add(this.stPanel3);
             this.stDropDownPanel4.ExpandedHeight = 0;
             this.stDropDownPanel4.IsExpanded = true;
-            this.stDropDownPanel4.Location = new System.Drawing.Point(0, 327);
+            this.stDropDownPanel4.Location = new System.Drawing.Point(0, 176);
             this.stDropDownPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.stDropDownPanel4.Name = "stDropDownPanel4";
             this.stDropDownPanel4.PanelName = "Bone Information";
@@ -993,7 +494,7 @@
             this.vertexBufferDropDownPanel.Controls.Add(this.stDropDownPanel8);
             this.vertexBufferDropDownPanel.ExpandedHeight = 0;
             this.vertexBufferDropDownPanel.IsExpanded = true;
-            this.vertexBufferDropDownPanel.Location = new System.Drawing.Point(0, 422);
+            this.vertexBufferDropDownPanel.Location = new System.Drawing.Point(0, 271);
             this.vertexBufferDropDownPanel.Margin = new System.Windows.Forms.Padding(0);
             this.vertexBufferDropDownPanel.Name = "vertexBufferDropDownPanel";
             this.vertexBufferDropDownPanel.PanelName = "Vertex Buffer";
@@ -1127,7 +628,7 @@
             this.levelOfDetailDropDownPanel.Controls.Add(this.stButton12);
             this.levelOfDetailDropDownPanel.ExpandedHeight = 0;
             this.levelOfDetailDropDownPanel.IsExpanded = true;
-            this.levelOfDetailDropDownPanel.Location = new System.Drawing.Point(0, 653);
+            this.levelOfDetailDropDownPanel.Location = new System.Drawing.Point(0, 502);
             this.levelOfDetailDropDownPanel.Margin = new System.Windows.Forms.Padding(0);
             this.levelOfDetailDropDownPanel.Name = "levelOfDetailDropDownPanel";
             this.levelOfDetailDropDownPanel.PanelName = "Level Of Detail";
@@ -1331,6 +832,7 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
+            this.lodListView.HideSelection = false;
             this.lodListView.Location = new System.Drawing.Point(3, 62);
             this.lodListView.Name = "lodListView";
             this.lodListView.OwnerDraw = true;
@@ -1373,7 +875,7 @@
             this.keyShapeDropDownPanel.Controls.Add(this.stPanel5);
             this.keyShapeDropDownPanel.ExpandedHeight = 0;
             this.keyShapeDropDownPanel.IsExpanded = true;
-            this.keyShapeDropDownPanel.Location = new System.Drawing.Point(0, 927);
+            this.keyShapeDropDownPanel.Location = new System.Drawing.Point(0, 776);
             this.keyShapeDropDownPanel.Margin = new System.Windows.Forms.Padding(0);
             this.keyShapeDropDownPanel.Name = "keyShapeDropDownPanel";
             this.keyShapeDropDownPanel.PanelName = "Key Shapes";
@@ -1450,20 +952,6 @@
             this.stDropDownPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.shapeVertexSkinCountUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.shapeIndexUD)).EndInit();
-            this.stDropDownPanel2.ResumeLayout(false);
-            this.stDropDownPanel2.PerformLayout();
-            this.stPanel1.ResumeLayout(false);
-            this.stPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.RotWUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ScaZUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ScaYUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ScaXUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RotZUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RotYUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RotXUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.posZUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.posYUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.posXUD)).EndInit();
             this.stDropDownPanel3.ResumeLayout(false);
             this.stDropDownPanel3.PerformLayout();
             this.stPanel2.ResumeLayout(false);
@@ -1502,39 +990,12 @@
         private System.Windows.Forms.TabPage tabPage1;
         private Toolbox.Library.Forms.STFlowLayoutPanel stFlowLayoutPanel1;
         private Toolbox.Library.Forms.STDropDownPanel stDropDownPanel1;
-        private Toolbox.Library.Forms.STDropDownPanel stDropDownPanel2;
-        private Toolbox.Library.Forms.STPanel stPanel1;
-        private Toolbox.Library.Forms.NumericUpDownFloat posZUD;
-        private Toolbox.Library.Forms.NumericUpDownFloat posYUD;
-        private Toolbox.Library.Forms.NumericUpDownFloat posXUD;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label13;
-        private Toolbox.Library.Forms.NumericUpDownFloat RotWUD;
-        private Toolbox.Library.Forms.NumericUpDownFloat ScaZUD;
-        private Toolbox.Library.Forms.NumericUpDownFloat ScaYUD;
-        private Toolbox.Library.Forms.NumericUpDownFloat ScaXUD;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label12;
-        private Toolbox.Library.Forms.NumericUpDownFloat RotZUD;
-        private Toolbox.Library.Forms.NumericUpDownFloat RotYUD;
-        private Toolbox.Library.Forms.NumericUpDownFloat RotXUD;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
         private Toolbox.Library.Forms.STDropDownPanel stDropDownPanel3;
         private Toolbox.Library.Forms.STPanel stPanel2;
         private Toolbox.Library.Forms.STLabel stLabel2;
         private Toolbox.Library.Forms.STComboBox materialComboBox1;
         private Toolbox.Library.Forms.STDropDownPanel stDropDownPanel4;
         private Toolbox.Library.Forms.STPanel stPanel3;
-        private Toolbox.Library.Forms.STLabel stLabel5;
-        private Toolbox.Library.Forms.STComboBox rotModeCB;
         private Toolbox.Library.Forms.STDropDownPanel keyShapeDropDownPanel;
         private Toolbox.Library.Forms.STPanel stPanel5;
         private Toolbox.Library.Forms.STLabel stLabel6;
@@ -1549,8 +1010,6 @@
         private Toolbox.Library.Forms.STLabel stLabel3;
         private Toolbox.Library.Forms.STButton boneListBtn;
         private Toolbox.Library.Forms.STLabel stLabel4;
-        private Toolbox.Library.Forms.STLabel stLabel9;
-        private Toolbox.Library.Forms.STComboBox measureCB;
         private Toolbox.Library.Forms.STComboBox lodDisplayCB;
         private Toolbox.Library.Forms.STLabel stLabel10;
         private Toolbox.Library.Forms.STDropDownPanel stDropDownPanel5;

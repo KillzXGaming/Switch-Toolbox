@@ -28,20 +28,6 @@ namespace FirstPlugin
 
             BackColor = FormThemes.BaseTheme.FormBackColor;
             ForeColor = FormThemes.BaseTheme.FormForeColor;
-
-            rotModeCB.SelectedIndex = 0;
-            measureCB.SelectedIndex = 0;
-
-            posXUD.ValueChanged += new EventHandler(valueUD_ValueChanged);
-            posYUD.ValueChanged += new EventHandler(valueUD_ValueChanged);
-            posZUD.ValueChanged += new EventHandler(valueUD_ValueChanged);
-            RotXUD.ValueChanged += new EventHandler(valueUD_ValueChanged);
-            RotYUD.ValueChanged += new EventHandler(valueUD_ValueChanged);
-            RotZUD.ValueChanged += new EventHandler(valueUD_ValueChanged);
-            RotWUD.ValueChanged += new EventHandler(valueUD_ValueChanged);
-            ScaXUD.ValueChanged += new EventHandler(valueUD_ValueChanged);
-            ScaYUD.ValueChanged += new EventHandler(valueUD_ValueChanged);
-            ScaZUD.ValueChanged += new EventHandler(valueUD_ValueChanged);
         }
         FSHP activeShape;
         FSHP.LOD_Mesh activeLodMesh;
@@ -78,9 +64,6 @@ namespace FirstPlugin
             //Load bone binded (all bones will load when activated)
             bonesCB.Items.Add(fmdl.Skeleton.bones[fshp.BoneIndex].Text);
             bonesCB.SelectedIndex = 0;
-
-            //Load transform
-            GetShapeTransform();
 
             if (fshp.VertexBufferU != null)
             {
@@ -120,7 +103,6 @@ namespace FirstPlugin
             lodListView.Items.Clear();
             bonesCB.Items.Clear();
             materialComboBox1.Items.Clear();
-            rotModeCB.SelectedIndex = 0;
         }
 
         private void ReloadBoneList()
@@ -137,28 +119,6 @@ namespace FirstPlugin
                 bonesCB.SelectedIndex = activeShape.BoneIndex;
                 IsBoneListLoaded = true;
             }
-        }
-
-        private void GetShapeTransform()
-        {
-            if (activeShape.boundingBoxes.Count == 0) return;
-
-            Vector3 translate = new Vector3(0);
-            Vector3 scale = new Vector3(1);
-            Vector4 rotate = new Vector4(0);
-            translate = activeShape.boundingBoxes[0].Center;
-
-            posXUD.Value = (decimal)translate.X;
-            posYUD.Value = (decimal)translate.Y;
-            posZUD.Value = (decimal)translate.Z;
-            RotXUD.Value = (decimal)rotate.X;
-            RotYUD.Value = (decimal)rotate.Y;
-            RotZUD.Value = (decimal)rotate.Z;
-            RotWUD.Value = 1;
-            ScaXUD.Value = (decimal)scale.X;
-            ScaYUD.Value = (decimal)scale.Y;
-            ScaZUD.Value = (decimal)scale.Z;
-
         }
 
         private void materialComboBox1_SelectedIndexChanged(object sender, EventArgs e)
