@@ -138,6 +138,9 @@ namespace FirstPlugin
 
                 for (int i = 0; i < SectionCount; i++)
                 {
+                    if (reader.EndOfStream)
+                        break;
+
                     long pos = reader.Position;
 
                     string Signature = reader.ReadString(4, Encoding.ASCII);
@@ -154,6 +157,7 @@ namespace FirstPlugin
                             entries.Add(NLI1);
                             break;
                         case "TXT2":
+                        case "TXTW":
                             Text2 = new TXT2();
                             Text2.Signature = Signature;
                             Text2.Read(reader, this);
