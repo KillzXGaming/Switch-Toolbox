@@ -175,7 +175,7 @@ namespace Toolbox.Library
 
         public static byte[] SubArray(byte[] data, uint offset, uint length)
         {
-            return data.Skip((int)offset).Take((int)length).ToArray();
+            return data.Slice(offset, length);
         }
 
         public static string RenameDuplicateString(List<string> strings, string oldString, int index = 0, int numDigits = 1)
