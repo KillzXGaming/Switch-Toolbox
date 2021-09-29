@@ -114,7 +114,7 @@ namespace FirstPlugin
                 Label1 = new LBL1();
                 NLI1 = new NLI1();
                 Text2 = new TXT2();
-
+                 
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
                 reader.ReadSignature(8, "MsgStdBn");
                 ByteOrderMark = reader.ReadUInt16();
