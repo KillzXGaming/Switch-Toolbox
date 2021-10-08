@@ -740,7 +740,6 @@ namespace LayoutBXLYT
             }
             GL.End();
             GL.Color3(Color.Transparent);
-            GL.PopAttrib();
         }
 
         private bool mouseCameraDown = false;
