@@ -476,7 +476,7 @@
         </member>
         <member name="P:KclLibrary.KCLModel.PrismThickness">
             <summary>
-            Gets or sets the thickness of the Prisms.
+            Gets or sets the thickness of the prisms.
             </summary>
         </member>
         <member name="P:KclLibrary.KCLModel.PolygonOctreeRoots">
