@@ -222,6 +222,7 @@
     <Compile Include="FileFormats\Archives\DAT_Bayonetta.cs" />
     <Compile Include="FileFormats\Archives\GFA.cs" />
     <Compile Include="FileFormats\Archives\LZS.cs" />
+    <Compile Include="FileFormats\Archives\PKG.cs" />
     <Compile Include="FileFormats\Archives\QuickAccess\QuickAccessFile.cs" />
     <Compile Include="FileFormats\Archives\QuickAccess\QuickAccessFolder.cs" />
     <Compile Include="FileFormats\Archives\WTA.cs" />
@@ -466,6 +467,7 @@
     <Compile Include="FileFormats\Shader\SHARC\SharcCommon.cs" />
     <Compile Include="FileFormats\Texture\CTPK.cs" />
     <Compile Include="FileFormats\Grezzo\CTXB.cs" />
+    <Compile Include="FileFormats\Texture\MTXT.cs" />
     <Compile Include="FileFormats\Texture\SIR0.cs" />
     <Compile Include="FileFormats\Texture\TPL\TPL_IO.cs" />
     <Compile Include="FileFormats\Texture\TVOL.cs" />
