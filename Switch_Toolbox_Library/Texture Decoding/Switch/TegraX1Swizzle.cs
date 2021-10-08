@@ -17,7 +17,7 @@ namespace Toolbox.Library
             uint blkHeight = STGenericTexture.GetBlockHeight(Format);
             uint blkDepth = STGenericTexture.GetBlockDepth(Format);
 
-            uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(Height, blkHeight));
+            uint blockHeight = GetBlockHeight(DIV_ROUND_UP(Height, blkHeight));
             uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
 
             uint Pitch = 0;
@@ -41,7 +41,7 @@ namespace Toolbox.Library
                     uint height = (uint)Math.Max(1, Height >> mipLevel);
                     uint depth = (uint)Math.Max(1, Depth >> mipLevel);
 
-                    uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
+                    uint size = DIV_ROUND_UP(width, blkWidth) * DIV_ROUND_UP(height, blkHeight) * bpp;
                     MipOffsets[mipLevel] = size;
                 }
                 ArrayOffset += (uint)(ImageSize / ArrayCount);
@@ -56,7 +56,7 @@ namespace Toolbox.Library
         {
             uint blkHeight = STGenericTexture.GetBlockHeight(texture.Format);
             uint blkDepth = STGenericTexture.GetBlockDepth(texture.Format);
-            uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(texture.Height, blkHeight));
+            uint blockHeight = GetBlockHeight(DIV_ROUND_UP(texture.Height, blkHeight));
             uint BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
             return GetImageData(texture, ImageData, ArrayLevel, MipLevel, DepthLevel, BlockHeightLog2, target, LinearTileMode);
         }
@@ -67,7 +67,7 @@ namespace Toolbox.Library
             uint blkWidth = STGenericTexture.GetBlockWidth(texture.Format);
             uint blkHeight = STGenericTexture.GetBlockHeight(texture.Format);
             uint blkDepth = STGenericTexture.GetBlockDepth(texture.Format);
-            uint blockHeight = TegraX1Swizzle.GetBlockHeight(TegraX1Swizzle.DIV_ROUND_UP(texture.Height, blkHeight));
+            uint blockHeight = GetBlockHeight(DIV_ROUND_UP(texture.Height, blkHeight));
 
             uint Pitch = 0;
             uint DataAlignment = 512;
@@ -96,18 +96,18 @@ namespace Toolbox.Library
                         uint height = (uint)Math.Max(1, texture.Height >> mipLevel);
                         uint depth = (uint)Math.Max(1, texture.Depth >> mipLevel);
 
-                        uint size = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth) * TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight) * bpp;
+                        uint size = DIV_ROUND_UP(width, blkWidth) * DIV_ROUND_UP(height, blkHeight) * bpp;
 
                         Console.WriteLine($"size " + size);
 
-                        if (TegraX1Swizzle.pow2_round_up(TegraX1Swizzle.DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
+                        if (pow2_round_up(DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
                             blockHeightShift += 1;
 
-                        uint width__ = TegraX1Swizzle.DIV_ROUND_UP(width, blkWidth);
-                        uint height__ = TegraX1Swizzle.DIV_ROUND_UP(height, blkHeight);
+                        uint width__ = DIV_ROUND_UP(width, blkWidth);
+                        uint height__ = DIV_ROUND_UP(height, blkHeight);
 
                         //Calculate the mip size instead
-                        byte[] AlignedData = new byte[(TegraX1Swizzle.round_up(SurfaceSize, DataAlignment) - SurfaceSize)];
+                        byte[] AlignedData = new byte[(round_up(SurfaceSize, DataAlignment) - SurfaceSize)];
                         SurfaceSize += (uint)AlignedData.Length;
                         MipOffsets.Add(SurfaceSize);
 
@@ -118,10 +118,14 @@ namespace Toolbox.Library
 
                         try
                         {
-                            Pitch = TegraX1Swizzle.round_up(width__ * bpp, 64);
-                            SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
+                            Pitch = round_up(width__ * bpp, 64);
+                            SurfaceSize += Pitch * round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
 
-                            byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
+                            byte[] result = deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
+                            // The set of swizzled addresses is at least as big as the set of linear addresses.
+                            // When defined appropriately, this means we only require a single memory allocation.
+
+                            // TODO: Fix the surface size to change based on swizzle vs deswizzle and remove this costly copy.
                             //Create a copy and use that to remove uneeded data
                             byte[] result_ = new byte[size];
                             Array.Copy(result, 0, result_, 0, size);
@@ -179,11 +183,9 @@ namespace Toolbox.Library
             return x + 1;
         }
 
-        private static byte[] _swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data, int toSwizzle)
+        private static byte[] SwizzleBlockLinear(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, int blockHeightLog2, byte[] data, int toSwizzle)
         {
             uint block_height = (uint)(1 << blockHeightLog2);
-
-            Console.WriteLine($"Swizzle {width} {height} {blkWidth} {blkHeight} {roundPitch} {bpp} {tileMode} {blockHeightLog2} {data.Length} {toSwizzle}");
 
             width = DIV_ROUND_UP(width, blkWidth);
             height = DIV_ROUND_UP(height, blkHeight);
@@ -191,20 +193,9 @@ namespace Toolbox.Library
 
             uint pitch;
             uint surfSize;
-            if (tileMode == 1)
-            {
-                pitch = width * bpp;
 
-                if (roundPitch == 1)
-                    pitch = round_up(pitch, 32);
-
-                surfSize = pitch * height;
-            }
-            else
-            {
-                pitch = round_up(width * bpp, 64);
-                surfSize = pitch * round_up(height, block_height * 8);
-            }
+            pitch = round_up(width * bpp, 64);
+            surfSize = pitch * round_up(height, block_height * 8);
 
             byte[] result = new byte[surfSize];
 
@@ -215,10 +206,51 @@ namespace Toolbox.Library
                     uint pos;
                     uint pos_;
 
-                    if (tileMode == 1)
-                        pos = y * pitch + x * bpp;
-                    else
-                        pos = getAddrBlockLinear(x, y, width, bpp, 0, block_height);
+                    pos = getAddrBlockLinear(x, y, width, bpp, 0, block_height);
+
+                    pos_ = (y * width + x) * bpp;
+
+                    if (pos + bpp <= surfSize)
+                    {
+                        // TODO: Copying bpp bytes at a time like this isn't correct.
+                        if (toSwizzle == 0)
+                            Array.Copy(data, pos, result, pos_, bpp);
+                        else
+                            Array.Copy(data, pos_, result, pos, bpp);
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static byte[] SwizzlePitchLinear(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, int blockHeightLog2, byte[] data, int toSwizzle)
+        {
+            // TODO: Investigate doing this more efficiently in Rust.
+            width = DIV_ROUND_UP(width, blkWidth);
+            height = DIV_ROUND_UP(height, blkHeight);
+            depth = DIV_ROUND_UP(depth, blkDepth);
+
+            uint pitch;
+            uint surfSize;
+
+            pitch = width * bpp;
+
+            if (roundPitch == 1)
+                pitch = round_up(pitch, 32);
+
+            surfSize = pitch * height;
+
+
+            byte[] result = new byte[surfSize];
+
+            for (uint y = 0; y < height; y++)
+            {
+                for (uint x = 0; x < width; x++)
+                {
+                    uint pos;
+                    uint pos_;
+
+                    pos = y * pitch + x * bpp;
 
                     pos_ = (y * width + x) * bpp;
 
@@ -234,14 +266,22 @@ namespace Toolbox.Library
             return result;
         }
 
-        public static byte[] deswizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int size_range, byte[] data)
+        public static byte[] deswizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
         {
-            return _swizzle(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, tileMode, size_range, data, 0);
+            // TODO: This will need to divide width, height, etc by blockWidth, blockHeight, etc.
+            if (tileMode == 1)
+                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, 0);
+            else
+                return SwizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, 0);
         }
 
-        public static byte[] swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight,uint blkDepth, int roundPitch, uint bpp, uint tileMode, int size_range, byte[] data)
+        public static byte[] swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight,uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
         {
-            return _swizzle(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, tileMode, size_range, data, 1);
+            // TODO: This will need to divide width, height, etc by blockWidth, blockHeight, etc.
+            if (tileMode == 1)
+                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, 1);
+            else
+                return SwizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, 1);
         }
 
         static uint getAddrBlockLinear(uint x, uint y, uint width, uint bytes_per_pixel, uint base_address, uint block_height)
