@@ -8,7 +8,7 @@ using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class MTXT : TreeNodeFile, IFileFormat
+    public class MTXT : TreeNodeFile, IFileFormat, ITextureContainer
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -39,6 +39,10 @@ namespace FirstPlugin
             if (Nodes.Count > 0 && this.TreeView != null)
                 this.TreeView.SelectedNode = Nodes[0];
         }
+
+        public List<STGenericTexture> TextureList { get; set; }
+
+        public bool DisplayIcons => false;
 
         public void Load(System.IO.Stream stream)
         {
@@ -82,6 +86,8 @@ namespace FirstPlugin
                 this.Tag = xtx;
                 foreach (STGenericTexture node in xtx.Nodes)
                     Nodes.Add(node);
+
+                TextureList = xtx.TextureList;
             }
         }
 
