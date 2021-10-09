@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +9,18 @@ namespace Toolbox.Library
 {
     public class TegraX1Swizzle
     {
+        // TODO: Support 32 bit.
+        [DllImport("tegra_swizzle", EntryPoint = "deswizzle_block_linear")]
+        private static unsafe extern void DeswizzleBlockLinear(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength, 
+            byte[] destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel);
+
+        [DllImport("tegra_swizzle", EntryPoint = "swizzle_block_linear")]
+        private static unsafe extern void SwizzleBlockLinear(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength,
+            byte[] destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel);
+
+        [DllImport("tegra_swizzle", EntryPoint = "swizzled_surface_size")]
+        private static extern ulong GetSurfaceSize(ulong width, ulong height, ulong depth, ulong blockHeight, ulong bytesPerPixel);
+
         public static List<uint[]> GenerateMipSizes(TEX_FORMAT Format, uint Width, uint Height, uint Depth, uint SurfaceCount, uint MipCount, uint ImageSize)
         {
             List<uint[]> MipMapSizes = new List<uint[]>();
@@ -121,18 +134,13 @@ namespace Toolbox.Library
                             Pitch = round_up(width__ * bpp, 64);
                             SurfaceSize += Pitch * round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
 
-                            byte[] result = deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
-                            // The set of swizzled addresses is at least as big as the set of linear addresses.
-                            // When defined appropriately, this means we only require a single memory allocation.
-
-                            // TODO: Fix the surface size to change based on swizzle vs deswizzle and remove this costly copy.
-                            //Create a copy and use that to remove uneeded data
-                            byte[] result_ = new byte[size];
-                            Array.Copy(result, 0, result_, 0, size);
-                            result = null;
-
                             if (ArrayLevel == arrayLevel && MipLevel == mipLevel && DepthLevel == depthLevel)
-                                return result_;
+                            {
+                                // The set of swizzled addresses is at least as big as the set of linear addresses.
+                                // When defined appropriately, this means we only require a single memory allocation.
+                                byte[] result = deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
+                                return result;
+                            }
                         }
                         catch (Exception e)
                         {
@@ -146,6 +154,45 @@ namespace Toolbox.Library
                 }
             }
             return new byte[0];
+        }
+
+        private static unsafe byte[] SwizzleDeswizzleBlockLinear(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth,
+            uint bpp, int blockHeightLog2, byte[] data, bool deswizzle)
+        {
+            // This function expects the surface dimensions in blocks rather than pixels for block compressed formats.
+            // This ensures the bytes per pixel parameter is used correctly.
+            width /= blkWidth;
+            height /= blkHeight;
+            depth /= blkDepth;
+
+            // TODO: tegra_swizzle only allows valid block heights (1,2,..,32), so this will require some validity checks.
+            var blockHeight = (ulong)(1 << blockHeightLog2);
+
+            if (deswizzle)
+            {
+                var output = new byte[width * height * bpp];
+
+
+                fixed (byte* dataPtr = data)
+                {
+
+                    DeswizzleBlockLinear(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
+                }
+
+                return output;
+            }
+            else
+            {
+                var surfaceSize = GetSurfaceSize(width, height, depth, blockHeight, bpp);
+                var output = new byte[surfaceSize];
+
+                fixed (byte* dataPtr = data)
+                {
+                    SwizzleBlockLinear(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
+                }
+
+                return output;
+            }
         }
 
 
@@ -183,47 +230,7 @@ namespace Toolbox.Library
             return x + 1;
         }
 
-        private static byte[] SwizzleBlockLinear(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, int blockHeightLog2, byte[] data, int toSwizzle)
-        {
-            uint block_height = (uint)(1 << blockHeightLog2);
-
-            width = DIV_ROUND_UP(width, blkWidth);
-            height = DIV_ROUND_UP(height, blkHeight);
-            depth = DIV_ROUND_UP(depth, blkDepth);
-
-            uint pitch;
-            uint surfSize;
-
-            pitch = round_up(width * bpp, 64);
-            surfSize = pitch * round_up(height, block_height * 8);
-
-            byte[] result = new byte[surfSize];
-
-            for (uint y = 0; y < height; y++)
-            {
-                for (uint x = 0; x < width; x++)
-                {
-                    uint pos;
-                    uint pos_;
-
-                    pos = getAddrBlockLinear(x, y, width, bpp, 0, block_height);
-
-                    pos_ = (y * width + x) * bpp;
-
-                    if (pos + bpp <= surfSize)
-                    {
-                        // TODO: Copying bpp bytes at a time like this isn't correct.
-                        if (toSwizzle == 0)
-                            Array.Copy(data, pos, result, pos_, bpp);
-                        else
-                            Array.Copy(data, pos_, result, pos, bpp);
-                    }
-                }
-            }
-            return result;
-        }
-
-        private static byte[] SwizzlePitchLinear(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, int blockHeightLog2, byte[] data, int toSwizzle)
+        private static byte[] SwizzlePitchLinear(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, int blockHeightLog2, byte[] data, bool deswizzle)
         {
             // TODO: Investigate doing this more efficiently in Rust.
             width = DIV_ROUND_UP(width, blkWidth);
@@ -256,7 +263,7 @@ namespace Toolbox.Library
 
                     if (pos + bpp <= surfSize)
                     {
-                        if (toSwizzle == 0)
+                        if (!deswizzle)
                             Array.Copy(data, pos, result, pos_, bpp);
                         else
                             Array.Copy(data, pos_, result, pos, bpp);
@@ -268,40 +275,18 @@ namespace Toolbox.Library
 
         public static byte[] deswizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
         {
-            // TODO: This will need to divide width, height, etc by blockWidth, blockHeight, etc.
             if (tileMode == 1)
-                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, 0);
+                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, true);
             else
-                return SwizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, 0);
+                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, true);
         }
 
-        public static byte[] swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight,uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
+        public static byte[] swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
         {
-            // TODO: This will need to divide width, height, etc by blockWidth, blockHeight, etc.
             if (tileMode == 1)
-                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, 1);
+                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, false);
             else
-                return SwizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, 1);
-        }
-
-        static uint getAddrBlockLinear(uint x, uint y, uint width, uint bytes_per_pixel, uint base_address, uint block_height)
-        {
-            /*
-              From Tega X1 TRM 
-                               */
-            uint image_width_in_gobs = DIV_ROUND_UP(width * bytes_per_pixel, 64);
-
-
-            uint GOB_address = (base_address
-                                + (y / (8 * block_height)) * 512 * block_height * image_width_in_gobs
-                                + (x * bytes_per_pixel / 64) * 512 * block_height
-                                + (y % (8 * block_height) / 8) * 512);
-
-            x *= bytes_per_pixel;
-
-            uint Address = (GOB_address + ((x % 64) / 32) * 256 + ((y % 8) / 2) * 64
-                            + ((x % 32) / 16) * 32 + (y % 2) * 16 + (x % 16));
-            return Address;
+                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, false);
         }
     }
 }
