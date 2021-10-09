@@ -80,10 +80,7 @@ namespace Toolbox.Library
             uint blkWidth = STGenericTexture.GetBlockWidth(texture.Format);
             uint blkHeight = STGenericTexture.GetBlockHeight(texture.Format);
             uint blkDepth = STGenericTexture.GetBlockDepth(texture.Format);
-            uint blockHeight = GetBlockHeight(DIV_ROUND_UP(texture.Height, blkHeight));
 
-            uint Pitch = 0;
-            uint DataAlignment = 512;
             uint TileMode = 0;
             if (LinearTileMode)
                 TileMode = 1;
@@ -98,16 +95,16 @@ namespace Toolbox.Library
             {
                 for (int arrayLevel = 0; arrayLevel < texture.ArrayCount; arrayLevel++)
                 {
-                    uint SurfaceSize = 0;
+                    uint surfaceSize = 0;
                     int blockHeightShift = 0;
 
-                    List<uint> MipOffsets = new List<uint>();
+                    List<uint> mipOffsets = new List<uint>();
 
                     for (int mipLevel = 0; mipLevel < texture.MipCount; mipLevel++)
                     {
-                        uint width = (uint)Math.Max(1, texture.Width >> mipLevel);
-                        uint height = (uint)Math.Max(1, texture.Height >> mipLevel);
-                        uint depth = (uint)Math.Max(1, texture.Depth >> mipLevel);
+                        uint width = Math.Max(1, texture.Width >> mipLevel);
+                        uint height = Math.Max(1, texture.Height >> mipLevel);
+                        uint depth = Math.Max(1, texture.Depth >> mipLevel);
 
                         uint size = DIV_ROUND_UP(width, blkWidth) * DIV_ROUND_UP(height, blkHeight) * bpp;
 
@@ -116,29 +113,30 @@ namespace Toolbox.Library
                         if (pow2_round_up(DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
                             blockHeightShift += 1;
 
-                        uint width__ = DIV_ROUND_UP(width, blkWidth);
-                        uint height__ = DIV_ROUND_UP(height, blkHeight);
+                        uint widthInBlocks = DIV_ROUND_UP(width, blkWidth);
+                        uint heightInBlocks = DIV_ROUND_UP(height, blkHeight);
+                        uint depthInBlocks = DIV_ROUND_UP(depth, blkDepth);
 
                         //Calculate the mip size instead
-                        byte[] AlignedData = new byte[(round_up(SurfaceSize, DataAlignment) - SurfaceSize)];
-                        SurfaceSize += (uint)AlignedData.Length;
-                        MipOffsets.Add(SurfaceSize);
+                        var mipBlockHeightLog2 = (int)Math.Max(0, BlockHeightLog2 - blockHeightShift);
+                        var mipBlockHeight = 1 << mipBlockHeightLog2;
+
+                        mipOffsets.Add(surfaceSize);
+                        surfaceSize += (uint)GetSurfaceSize(widthInBlocks, heightInBlocks, depthInBlocks, (ulong)mipBlockHeight, bpp);
 
                         //Get the first mip offset and current one and the total image size
-                        int msize = (int)((MipOffsets[0] + ImageData.Length - MipOffsets[mipLevel]) / texture.ArrayCount);
+                        int msize = (int)((mipOffsets[0] + ImageData.Length - mipOffsets[mipLevel]) / texture.ArrayCount);
 
-                        byte[] data_ = Utils.SubArray(ImageData, ArrayOffset + MipOffsets[mipLevel], (uint)msize);
+                        // TODO: Avoid this copy.
+                        byte[] mipData = Utils.SubArray(ImageData, ArrayOffset + mipOffsets[mipLevel], (uint)msize);
 
                         try
                         {
-                            Pitch = round_up(width__ * bpp, 64);
-                            SurfaceSize += Pitch * round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
-
                             if (ArrayLevel == arrayLevel && MipLevel == mipLevel && DepthLevel == depthLevel)
                             {
                                 // The set of swizzled addresses is at least as big as the set of linear addresses.
-                                // When defined appropriately, this means we only require a single memory allocation.
-                                byte[] result = deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, (int)Math.Max(0, BlockHeightLog2 - blockHeightShift), data_);
+                                // When defined appropriately, we only require a single memory allocation for the output.
+                                byte[] result = deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, mipBlockHeightLog2, mipData);
                                 return result;
                             }
                         }
@@ -172,10 +170,8 @@ namespace Toolbox.Library
             {
                 var output = new byte[width * height * bpp];
 
-
                 fixed (byte* dataPtr = data)
                 {
-
                     DeswizzleBlockLinear(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
                 }
 
@@ -202,6 +198,7 @@ namespace Toolbox.Library
          * 
          *---------------------------------------*/
 
+        // TODO: This doesn't seem to be entirely accurate for some Nutexb textures.
         public static uint GetBlockHeight(uint height)
         {
             uint blockHeight = pow2_round_up(height / 8);
