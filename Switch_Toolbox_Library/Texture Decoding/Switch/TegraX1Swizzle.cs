@@ -24,15 +24,15 @@ namespace Toolbox.Library
 
         // 32 Bit.
         [DllImport("tegra_swizzle_x86", EntryPoint = "deswizzle_block_linear")]
-        private static unsafe extern void DeswizzleBlockLinearX86(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength,
-            byte[] destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel);
+        private static unsafe extern void DeswizzleBlockLinearX86(uint width, uint height, uint depth, byte* source, uint sourceLength,
+            byte[] destination, uint destinationLength, uint blockHeight, uint bytesPerPixel);
 
         [DllImport("tegra_swizzle_x86", EntryPoint = "swizzle_block_linear")]
-        private static unsafe extern void SwizzleBlockLinearX86(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength,
-            byte[] destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel);
+        private static unsafe extern void SwizzleBlockLinearX86(uint width, uint height, uint depth, byte* source, uint sourceLength,
+            byte[] destination, uint destinationLength, uint blockHeight, uint bytesPerPixel);
 
         [DllImport("tegra_swizzle_x86", EntryPoint = "swizzled_surface_size")]
-        private static extern ulong GetSurfaceSizeX86(ulong width, ulong height, ulong depth, ulong blockHeight, ulong bytesPerPixel);
+        private static extern uint GetSurfaceSizeX86(uint width, uint height, uint depth, uint blockHeight, uint bytesPerPixel);
 
 
         public static List<uint[]> GenerateMipSizes(TEX_FORMAT Format, uint Width, uint Height, uint Depth, uint SurfaceCount, uint MipCount, uint ImageSize)
@@ -142,7 +142,7 @@ namespace Toolbox.Library
                         if (Environment.Is64BitProcess)
                             surfaceSize += (uint)GetSurfaceSizeX64(widthInBlocks, heightInBlocks, depthInBlocks, (ulong)mipBlockHeight, bpp);
                         else
-                            surfaceSize += (uint)GetSurfaceSizeX86(widthInBlocks, heightInBlocks, depthInBlocks, (ulong)mipBlockHeight, bpp);
+                            surfaceSize += (uint)GetSurfaceSizeX86(widthInBlocks, heightInBlocks, depthInBlocks, (uint)mipBlockHeight, bpp);
 
                         //Get the first mip offset and current one and the total image size
                         int msize = (int)((mipOffsets[0] + ImageData.Length - mipOffsets[mipLevel]) / texture.ArrayCount);
@@ -195,7 +195,7 @@ namespace Toolbox.Library
                     if (Environment.Is64BitProcess)
                         DeswizzleBlockLinearX64(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
                     else
-                        DeswizzleBlockLinearX86(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
+                        DeswizzleBlockLinearX86(width, height, depth, dataPtr, (uint)data.Length, output, (uint)output.Length, (uint)blockHeight, bpp);
                 }
 
                 return output;
@@ -206,7 +206,7 @@ namespace Toolbox.Library
                 if (Environment.Is64BitProcess)
                     surfaceSize = GetSurfaceSizeX64(width, height, depth, blockHeight, bpp);
                 else
-                    surfaceSize = GetSurfaceSizeX86(width, height, depth, blockHeight, bpp);
+                    surfaceSize = GetSurfaceSizeX86(width, height, depth, (uint)blockHeight, bpp);
 
                 var output = new byte[surfaceSize];
 
@@ -215,7 +215,7 @@ namespace Toolbox.Library
                     if (Environment.Is64BitProcess)
                         SwizzleBlockLinearX64(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
                     else
-                        SwizzleBlockLinearX86(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
+                        SwizzleBlockLinearX86(width, height, depth, dataPtr, (uint)data.Length, output, (uint)output.Length, (uint)blockHeight, bpp);
                 }
 
                 return output;
