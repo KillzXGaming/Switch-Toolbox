@@ -9,17 +9,31 @@ namespace Toolbox.Library
 {
     public class TegraX1Swizzle
     {
-        // TODO: Support 32 bit.
-        [DllImport("tegra_swizzle", EntryPoint = "deswizzle_block_linear")]
-        private static unsafe extern void DeswizzleBlockLinear(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength, 
+        // TODO: Find a cleaner way to support both 32 and 64 bit binaries.
+        // 64 Bit.
+        [DllImport("tegra_swizzle_x64", EntryPoint = "deswizzle_block_linear")]
+        private static unsafe extern void DeswizzleBlockLinearX64(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength, 
             byte[] destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel);
 
-        [DllImport("tegra_swizzle", EntryPoint = "swizzle_block_linear")]
-        private static unsafe extern void SwizzleBlockLinear(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength,
+        [DllImport("tegra_swizzle_x64", EntryPoint = "swizzle_block_linear")]
+        private static unsafe extern void SwizzleBlockLinearX64(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength,
             byte[] destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel);
 
-        [DllImport("tegra_swizzle", EntryPoint = "swizzled_surface_size")]
-        private static extern ulong GetSurfaceSize(ulong width, ulong height, ulong depth, ulong blockHeight, ulong bytesPerPixel);
+        [DllImport("tegra_swizzle_x64", EntryPoint = "swizzled_surface_size")]
+        private static extern ulong GetSurfaceSizeX64(ulong width, ulong height, ulong depth, ulong blockHeight, ulong bytesPerPixel);
+
+        // 32 Bit.
+        [DllImport("tegra_swizzle_x86", EntryPoint = "deswizzle_block_linear")]
+        private static unsafe extern void DeswizzleBlockLinearX86(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength,
+            byte[] destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel);
+
+        [DllImport("tegra_swizzle_x86", EntryPoint = "swizzle_block_linear")]
+        private static unsafe extern void SwizzleBlockLinearX86(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength,
+            byte[] destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel);
+
+        [DllImport("tegra_swizzle_x86", EntryPoint = "swizzled_surface_size")]
+        private static extern ulong GetSurfaceSizeX86(ulong width, ulong height, ulong depth, ulong blockHeight, ulong bytesPerPixel);
+
 
         public static List<uint[]> GenerateMipSizes(TEX_FORMAT Format, uint Width, uint Height, uint Depth, uint SurfaceCount, uint MipCount, uint ImageSize)
         {
@@ -122,7 +136,11 @@ namespace Toolbox.Library
                         var mipBlockHeight = 1 << mipBlockHeightLog2;
 
                         mipOffsets.Add(surfaceSize);
-                        surfaceSize += (uint)GetSurfaceSize(widthInBlocks, heightInBlocks, depthInBlocks, (ulong)mipBlockHeight, bpp);
+
+                        if (Environment.Is64BitProcess)
+                            surfaceSize += (uint)GetSurfaceSizeX64(widthInBlocks, heightInBlocks, depthInBlocks, (ulong)mipBlockHeight, bpp);
+                        else
+                            surfaceSize += (uint)GetSurfaceSizeX86(widthInBlocks, heightInBlocks, depthInBlocks, (ulong)mipBlockHeight, bpp);
 
                         //Get the first mip offset and current one and the total image size
                         int msize = (int)((mipOffsets[0] + ImageData.Length - mipOffsets[mipLevel]) / texture.ArrayCount);
@@ -172,19 +190,30 @@ namespace Toolbox.Library
 
                 fixed (byte* dataPtr = data)
                 {
-                    DeswizzleBlockLinear(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
+                    if (Environment.Is64BitProcess)
+                        DeswizzleBlockLinearX64(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
+                    else
+                        DeswizzleBlockLinearX86(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
                 }
 
                 return output;
             }
             else
             {
-                var surfaceSize = GetSurfaceSize(width, height, depth, blockHeight, bpp);
+                ulong surfaceSize;
+                if (Environment.Is64BitProcess)
+                    surfaceSize = GetSurfaceSizeX64(width, height, depth, blockHeight, bpp);
+                else
+                    surfaceSize = GetSurfaceSizeX86(width, height, depth, blockHeight, bpp);
+
                 var output = new byte[surfaceSize];
 
                 fixed (byte* dataPtr = data)
                 {
-                    SwizzleBlockLinear(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
+                    if (Environment.Is64BitProcess)
+                        SwizzleBlockLinearX64(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
+                    else
+                        SwizzleBlockLinearX86(width, height, depth, dataPtr, (ulong)data.Length, output, (ulong)output.Length, blockHeight, bpp);
                 }
 
                 return output;
