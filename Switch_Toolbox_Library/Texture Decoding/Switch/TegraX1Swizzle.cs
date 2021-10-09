@@ -133,7 +133,9 @@ namespace Toolbox.Library
 
                         //Calculate the mip size instead
                         var mipBlockHeightLog2 = (int)Math.Max(0, BlockHeightLog2 - blockHeightShift);
-                        var mipBlockHeight = 1 << mipBlockHeightLog2;
+
+                        // tegra_swizzle only allows block heights supported by the TRM (1,2,4,8,16,32).
+                        var mipBlockHeight = 1 << Math.Max(Math.Min(mipBlockHeightLog2, 5), 1);
 
                         mipOffsets.Add(surfaceSize);
 
@@ -181,8 +183,8 @@ namespace Toolbox.Library
             height /= blkHeight;
             depth /= blkDepth;
 
-            // TODO: tegra_swizzle only allows valid block heights (1,2,..,32), so this will require some validity checks.
-            var blockHeight = (ulong)(1 << blockHeightLog2);
+            // tegra_swizzle only allows block heights supported by the TRM (1,2,4,8,16,32).
+            var blockHeight = (ulong)(1 << Math.Max(Math.Min(blockHeightLog2, 5), 1));
 
             if (deswizzle)
             {
