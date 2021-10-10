@@ -70,6 +70,24 @@ namespace FirstPlugin
                     file.FileDataStream = new SubStream(reader.BaseStream,
                         fileStartOffset, size);
 
+                    string ext = ".bin";
+                    if (size > 4)
+                    {
+                        using (reader.TemporarySeek(fileStartOffset, SeekOrigin.Begin)) {
+                            string magic = reader.ReadString(4);
+                            if (magic == "FWAV") ext = ".bfwav";
+                            if (magic == "MTXT") ext = ".bctext";
+                            if (magic == "MCAN") ext = ".mcamera";
+                            if (magic == "MANM") ext = ".manim";
+                            if (magic == "MSAS") ext = ".msas";
+                            if (magic == "MMDL") ext = ".mmodel";
+                            if (magic == "MSUR") ext = ".mmaterial";
+                            if (magic == "MNAV") ext = ".mnavigation";
+                        }
+                    }
+
+                    file.FileName += ext;
+
                     files.Add(file);
                 }
             }
