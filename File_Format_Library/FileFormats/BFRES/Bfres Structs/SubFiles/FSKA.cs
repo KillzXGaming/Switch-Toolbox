@@ -177,50 +177,34 @@ namespace Bfres.Structs
                     SkeletalAnim.Export(FileName, GetResFile());
                 }
             }
-            else if (ext == ".chr0")
-            {
-                STSkeleton skeleton = GetActiveSkeleton();
-
-                if (SkeletalAnimU != null)
-                    BrawlboxHelper.FSKAConverter.Fska2Chr0(BfresPlatformConverter.FSKAConvertWiiUToSwitch(SkeletalAnimU), FileName);
-                else
-                    BrawlboxHelper.FSKAConverter.Fska2Chr0(SkeletalAnim, FileName);
-            }
-            else if (ext == ".smd")
-            {
-                STSkeleton skeleton = GetActiveSkeleton();
-
-                if (skeleton != null)
-                    SMD.Save(this, skeleton, FileName);
-                else
-                    throw new Exception("No skeleton found to assign!");
-            }
-            else if (ext == ".anim")
-            {
-                STSkeleton skeleton = GetActiveSkeleton();
-
-                if (skeleton != null)
-                    ANIM.CreateANIM(FileName, this, skeleton);
-                else
-                    throw new Exception("No skeleton found to assign!");
-            }
-            else if (ext == ".seanim")
-            {
-                STSkeleton skeleton = GetActiveSkeleton();
-
-                if (skeleton != null)
-                    SEANIM.SaveAnimation(FileName, this, skeleton);
-                else
-                    throw new Exception("No skeleton found to assign!");
-            }
             else if (ext == ".json")
             {
                 if (SkeletalAnimU != null)
-                   System.IO.File.WriteAllText(FileName, Newtonsoft.Json.JsonConvert.SerializeObject(SkeletalAnimU,
-                       Newtonsoft.Json.Formatting.Indented));
-                else
-                    System.IO.File.WriteAllText(FileName, Newtonsoft.Json.JsonConvert.SerializeObject(SkeletalAnim, 
+                    System.IO.File.WriteAllText(FileName, Newtonsoft.Json.JsonConvert.SerializeObject(SkeletalAnimU,
                         Newtonsoft.Json.Formatting.Indented));
+                else
+                    System.IO.File.WriteAllText(FileName, Newtonsoft.Json.JsonConvert.SerializeObject(SkeletalAnim,
+                        Newtonsoft.Json.Formatting.Indented));
+            }
+            else
+            {
+                STSkeleton skeleton = GetActiveSkeleton();
+                if (skeleton == null)
+                    throw new Exception("No skeleton found to assign! Make sure a model is open in the viewport.");
+
+                if (ext == ".chr0")
+                {
+                    if (SkeletalAnimU != null)
+                        BrawlboxHelper.FSKAConverter.Fska2Chr0(BfresPlatformConverter.FSKAConvertWiiUToSwitch(SkeletalAnimU), FileName);
+                    else
+                        BrawlboxHelper.FSKAConverter.Fska2Chr0(SkeletalAnim, FileName);
+                }
+                else if (ext == ".smd")
+                    SMD.Save(this, skeleton, FileName);
+                else if (ext == ".anim")
+                    ANIM.CreateANIM(FileName, this, skeleton);
+                else if (ext == ".seanim")
+                    SEANIM.SaveAnimation(FileName, this, skeleton);
             }
         }
 
@@ -244,10 +228,19 @@ namespace Bfres.Structs
                 }
             }
 
+            if (Parent == null)
+                return null;
+
+            //Check parent renderer and find skeleton
             var render = ((BFRES)Parent.Parent.Parent).BFRESRender;
+            if (render == null)
+                return null;
+
+            //Return individual skeleton for single model files
             if (render.models.Count == 1)
                 return render.models[0].Skeleton;
 
+            //Search multiple FMDL to find matching bones
             foreach (var model in render.models)
             {
                 foreach (var bone in Bones)
