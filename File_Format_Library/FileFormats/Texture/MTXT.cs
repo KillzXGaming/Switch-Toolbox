@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 
 namespace FirstPlugin
 {
-    public class MTXT : TreeNodeFile, IFileFormat, ITextureContainer
+    public class MTXT : TreeNodeFile, IFileFormat, ITextureContainer, IContextMenuNode
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -40,6 +40,26 @@ namespace FirstPlugin
                 this.TreeView.SelectedNode = Nodes[0];
         }
 
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            return new ToolStripItem[]
+            {
+                new ToolStripMenuItem("Save", null, Save, Keys.Control | Keys.S),
+            };
+        }
+
+        private void Save(object sender, EventArgs args)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.DefaultExt = "bctex";
+            sfd.Filter = "Supported Formats|*.bctex;";
+            sfd.FileName = FileName;
+
+            if (sfd.ShowDialog() == DialogResult.OK) {
+                STFileSaver.SaveFileFormat(this, sfd.FileName);
+            }
+        }
+
         public List<STGenericTexture> TextureList { get; set; }
 
         public bool DisplayIcons => false;
@@ -53,6 +73,7 @@ namespace FirstPlugin
         public void Load(System.IO.Stream stream)
         {
             Text = this.FileName;
+            Tag = this;
 
             using (var reader = new FileReader(stream))
             {
@@ -63,7 +84,6 @@ namespace FirstPlugin
                 ReadTextureBinary(decomp);
             }
         }
-
 
 
         private void ReadTextureBinary(byte[] data)
@@ -91,7 +111,6 @@ namespace FirstPlugin
                 TextureFile = new XTX();
                 TextureFile.FileName = textureName;
                 TextureFile.Load(stream);
-                this.Tag = TextureFile;
                 foreach (STGenericTexture node in TextureFile.Nodes)
                     Nodes.Add(node);
 
