@@ -161,6 +161,7 @@ namespace FirstPlugin
             BC4S = 0x0000004a,
             BC5U = 0x0000004b,
             BC5S = 0x0000004c,
+            BC6U = 0x00000050,
             BC7U = 0x0000004d,
             BGRA8 = 0x0000006d,
 
@@ -562,6 +563,7 @@ namespace FirstPlugin
                     case TEX_FORMAT.BC4_SNORM: return XTXImageFormat.BC4S;
                     case TEX_FORMAT.BC5_UNORM: return XTXImageFormat.BC5U;
                     case TEX_FORMAT.BC7_UNORM: return XTXImageFormat.BC7U;
+                    case TEX_FORMAT.BC6H_UF16: return XTXImageFormat.BC6U;
                     case TEX_FORMAT.R8_UNORM: return XTXImageFormat.NVN_FORMAT_R8;
                     case TEX_FORMAT.R8G8_UNORM: return XTXImageFormat.NVN_FORMAT_RG8;
                     case TEX_FORMAT.R10G10B10A2_UNORM: return XTXImageFormat.NVN_FORMAT_RGB10A2;
@@ -619,6 +621,7 @@ namespace FirstPlugin
                     case XTXImageFormat.BC5U: return TEX_FORMAT.BC5_UNORM;
                     case XTXImageFormat.BC5S: return TEX_FORMAT.BC5_SNORM;
                     case XTXImageFormat.BC7U: return TEX_FORMAT.BC7_UNORM;
+                    case XTXImageFormat.BC6U: return TEX_FORMAT.BC6H_UF16;
                     case XTXImageFormat.NVN_FORMAT_R8: return TEX_FORMAT.R8_UNORM;
                     case XTXImageFormat.NVN_FORMAT_RG8: return TEX_FORMAT.R8G8_UNORM;
                     case XTXImageFormat.NVN_FORMAT_RGB10A2: return TEX_FORMAT.R10G10B10A2_UNORM;
