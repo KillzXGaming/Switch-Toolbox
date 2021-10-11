@@ -462,7 +462,7 @@ namespace FirstPlugin
 
                 BlockHeightLog2 = TextureLayout1 & 7;
                 Format = ConvertFormat(XTXFormat);
-                ArrayCount = 1;
+                ArrayCount = (uint)(DataSize / SliceSize);
             }
 
             public byte[] Write()
