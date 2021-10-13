@@ -18,7 +18,7 @@ namespace FirstPlugin
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "Sead (hashed) Archived Resource" };
-        public string[] Extension { get; set; } = new string[] { "*.pack", "*.sarc", "*.bgenv", "*.sbfarc", "*.sblarc", "*.sbactorpack", ".arc" };
+        public string[] Extension { get; set; } = new string[] { "*.pack", "*.sbeventpack", "*.sarc", "*.bgenv", "*.sbfarc", "*.sblarc", "*.sbactorpack", ".arc" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }

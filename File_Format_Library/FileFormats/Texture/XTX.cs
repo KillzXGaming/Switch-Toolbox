@@ -144,109 +144,58 @@ namespace FirstPlugin
             SaveFile(new FileWriter(stream, true));
         }
 
-        public class XTXFormats
+        public enum XTXImageFormat : uint
         {
-            public enum XTXImageFormat : uint
-            {
-                NVN_FORMAT_RGBA8 = 0x00000025,
-                NVN_FORMAT_RGBA8_SRGB = 0x00000038,
-                NVN_FORMAT_RGB10A2 = 0x0000003d,
-                NVN_FORMAT_RGB565 = 0x0000003c,
-                NVN_FORMAT_RGB5A1 = 0x0000003b,
-                NVN_FORMAT_RGBA4 = 0x00000039,
-                NVN_FORMAT_R8 = 0x00000001,
-                NVN_FORMAT_RG8 = 0x0000000d,
-                DXT1 = 0x00000042,
-                DXT3 = 0x00000043,
-                DXT5 = 0x00000044,
-                BC4U = 0x00000049,
-                BC4S = 0x0000004a,
-                BC5U = 0x0000004b,
-                BC5S = 0x0000004c,
-                BC7U = 0x0000004d,
+            NVN_FORMAT_RGBA8 = 0x00000025,
+            NVN_FORMAT_RGBA8_SRGB = 0x00000038,
+            NVN_FORMAT_RGB10A2 = 0x0000003d,
+            NVN_FORMAT_RGB565 = 0x0000003c,
+            NVN_FORMAT_RGB5A1 = 0x0000003b,
+            NVN_FORMAT_RGBA4 = 0x00000039,
+            NVN_FORMAT_R8 = 0x00000001,
+            NVN_FORMAT_RG8 = 0x0000000d,
+            DXT1 = 0x00000042,
+            DXT3 = 0x00000043,
+            DXT5 = 0x00000044,
+            BC4U = 0x00000049,
+            BC4S = 0x0000004a,
+            BC5U = 0x0000004b,
+            BC5S = 0x0000004c,
+            BC6U = 0x00000050,
+            BC7U = 0x0000004d,
+            BGRA8 = 0x0000006d,
 
-                //Same order as this https://github.com/aboood40091/BNTX-Editor/blob/master/globals.py
-                //However SRGB goes after unorm
-                ASTC_4x4_UNORM = 0x00000079,
-                ASTC_5x4_UNORM = 0x0000007A,
-                ASTC_5x5_UNORM = 0x0000007B,
-                ASTC_6x5_UNORM = 0x0000007C,
-                ASTC_6x6_UNORM = 0x0000007D,
-                ASTC_8x5_UNORM = 0x0000007E,
-                ASTC_8x6_UNORM = 0x0000007F,
-                ASTC_8x8_UNORM = 0x00000080,
-                ASTC_10x5_UNORM = 0x00000081,
-                ASTC_10x6_UNORM = 0x00000082,
-                ASTC_10x8_UNORM = 0x00000083,
-                ASTC_10x10_UNORM = 0x00000084,
-                ASTC_12x10_UNORM = 0x00000085,
-                ASTC_12x12_UNORM = 0x00000086,
-                ASTC_4x4_SRGB = 0x00000087,
-                ASTC_5x4_SRGB = 0x00000088,
-                ASTC_5x5_SRGB = 0x00000089,
-                ASTC_6x5_SRGB = 0x0000008A,
-                ASTC_6x6_SRGB = 0x0000008B,
-                ASTC_8x5_SRGB = 0x0000008C,
-                ASTC_8x6_SRGB = 0x0000008D,
-                ASTC_8x8_SRGB = 0x0000008E,
-                ASTC_10x5_SRGB = 0x0000008F,
-                ASTC_10x6_SRGB = 0x00000090,
-                ASTC_10x8_SRGB = 0x00000091,
-                ASTC_10x10_SRGB = 0x00000092,
-                ASTC_12x10_SRGB = 0x00000093,
-                ASTC_12x12_SRGB = 0x00000094,
-            };
-
-            public static uint blk_dims(uint format)
-            {
-                switch (format)
-                {
-                    case (uint)XTXImageFormat.DXT1:
-                    case (uint)XTXImageFormat.DXT3:
-                    case (uint)XTXImageFormat.DXT5:
-                    case (uint)XTXImageFormat.BC4U:
-                    case (uint)XTXImageFormat.BC4S:
-                    case (uint)XTXImageFormat.BC5U:
-                    case (uint)XTXImageFormat.BC5S:
-                    case 0x2d:
-                        return 0x44;
-
-                    default: return 0x11;
-                }
-            }
-
-            public static uint bpps(uint format)
-            {
-                switch (format)
-                {
-                    case (uint)XTXImageFormat.NVN_FORMAT_R8:
-                        return 1;
-
-                    case (uint)XTXImageFormat.NVN_FORMAT_RGBA8:
-                    case (uint)XTXImageFormat.NVN_FORMAT_RGBA8_SRGB:
-                    case (uint)XTXImageFormat.NVN_FORMAT_RGB10A2:
-                        return 4;
-
-                    case (uint)XTXImageFormat.NVN_FORMAT_RGB565:
-                    case (uint)XTXImageFormat.NVN_FORMAT_RGB5A1:
-                    case (uint)XTXImageFormat.NVN_FORMAT_RGBA4:
-                    case (uint)XTXImageFormat.NVN_FORMAT_RG8:
-                        return 2;
-
-                    case (uint)XTXImageFormat.DXT1:
-                    case (uint)XTXImageFormat.BC4S:
-                    case (uint)XTXImageFormat.BC4U:
-                        return 8;
-
-                    case (uint)XTXImageFormat.DXT3:
-                    case (uint)XTXImageFormat.DXT5:
-                    case (uint)XTXImageFormat.BC5U:
-                    case (uint)XTXImageFormat.BC5S:
-                        return 16;
-                    default: return 0x00;
-                }
-            }
-        }
+            //Same order as this https://github.com/aboood40091/BNTX-Editor/blob/master/globals.py
+            //However SRGB goes after unorm
+            ASTC_4x4_UNORM = 0x00000079,
+            ASTC_5x4_UNORM = 0x0000007A,
+            ASTC_5x5_UNORM = 0x0000007B,
+            ASTC_6x5_UNORM = 0x0000007C,
+            ASTC_6x6_UNORM = 0x0000007D,
+            ASTC_8x5_UNORM = 0x0000007E,
+            ASTC_8x6_UNORM = 0x0000007F,
+            ASTC_8x8_UNORM = 0x00000080,
+            ASTC_10x5_UNORM = 0x00000081,
+            ASTC_10x6_UNORM = 0x00000082,
+            ASTC_10x8_UNORM = 0x00000083,
+            ASTC_10x10_UNORM = 0x00000084,
+            ASTC_12x10_UNORM = 0x00000085,
+            ASTC_12x12_UNORM = 0x00000086,
+            ASTC_4x4_SRGB = 0x00000087,
+            ASTC_5x4_SRGB = 0x00000088,
+            ASTC_5x5_SRGB = 0x00000089,
+            ASTC_6x5_SRGB = 0x0000008A,
+            ASTC_6x6_SRGB = 0x0000008B,
+            ASTC_8x5_SRGB = 0x0000008C,
+            ASTC_8x6_SRGB = 0x0000008D,
+            ASTC_8x8_SRGB = 0x0000008E,
+            ASTC_10x5_SRGB = 0x0000008F,
+            ASTC_10x6_SRGB = 0x00000090,
+            ASTC_10x8_SRGB = 0x00000091,
+            ASTC_10x10_SRGB = 0x00000092,
+            ASTC_12x10_SRGB = 0x00000093,
+            ASTC_12x12_SRGB = 0x00000094,
+        };
 
         public uint HeaderSize { get; set; }
         public uint MajorVersion { get; set; }
@@ -474,7 +423,7 @@ namespace FirstPlugin
             public UInt64 DataSize { get; set; }
             public uint Alignment { get; set; }
             public uint Target { get; set; }
-            public XTXFormats.XTXImageFormat XTXFormat { get; set; }
+            public XTXImageFormat XTXFormat { get; set; }
             public uint SliceSize { get; set; }
             public uint[] MipOffsets { get; set; }
             public byte[] ImageData;
@@ -503,7 +452,7 @@ namespace FirstPlugin
                 Height = reader.ReadUInt32();
                 Depth = reader.ReadUInt32();
                 Target = reader.ReadUInt32();
-                XTXFormat = reader.ReadEnum<XTXFormats.XTXImageFormat>(true);
+                XTXFormat = reader.ReadEnum<XTXImageFormat>(true);
                 MipCount = reader.ReadUInt32();
                 SliceSize = reader.ReadUInt32();
                 MipOffsets = reader.ReadUInt32s(17);
@@ -513,7 +462,7 @@ namespace FirstPlugin
 
                 BlockHeightLog2 = TextureLayout1 & 7;
                 Format = ConvertFormat(XTXFormat);
-                ArrayCount = 1;
+                ArrayCount = (uint)(DataSize / SliceSize);
             }
 
             public byte[] Write()
@@ -603,51 +552,52 @@ namespace FirstPlugin
                 editor.LoadProperties(GenericProperties);
             }
 
-            public static XTXFormats.XTXImageFormat ConvertFromGenericFormat(TEX_FORMAT Format)
+            public static XTXImageFormat ConvertFromGenericFormat(TEX_FORMAT Format)
             {
                 switch (Format)
                 {
-                    case TEX_FORMAT.BC1_UNORM: return XTXFormats.XTXImageFormat.DXT1;
-                    case TEX_FORMAT.BC2_UNORM: return XTXFormats.XTXImageFormat.DXT3;
-                    case TEX_FORMAT.BC3_UNORM: return XTXFormats.XTXImageFormat.DXT5;
-                    case TEX_FORMAT.BC4_UNORM: return XTXFormats.XTXImageFormat.BC4U;
-                    case TEX_FORMAT.BC4_SNORM: return XTXFormats.XTXImageFormat.BC4S;
-                    case TEX_FORMAT.BC5_UNORM: return XTXFormats.XTXImageFormat.BC5U;
-                    case TEX_FORMAT.BC7_UNORM: return XTXFormats.XTXImageFormat.BC7U;
-                    case TEX_FORMAT.R8_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_R8;
-                    case TEX_FORMAT.R8G8_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RG8;
-                    case TEX_FORMAT.R10G10B10A2_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGB10A2;
-                    case TEX_FORMAT.B5G6R5_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGB565;
-                    case TEX_FORMAT.B5G5R5A1_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGB5A1;
-                    case TEX_FORMAT.B4G4R4A4_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA4;
-                    case TEX_FORMAT.R8G8B8A8_UNORM: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8;
-                    case TEX_FORMAT.R8G8B8A8_UNORM_SRGB: return XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8_SRGB;
-                    case TEX_FORMAT.ASTC_4x4_UNORM: return XTXFormats.XTXImageFormat.ASTC_4x4_UNORM;
-                    case TEX_FORMAT.ASTC_5x4_UNORM: return XTXFormats.XTXImageFormat.ASTC_5x4_UNORM;
-                    case TEX_FORMAT.ASTC_5x5_UNORM: return XTXFormats.XTXImageFormat.ASTC_5x5_UNORM;
-                    case TEX_FORMAT.ASTC_6x5_UNORM: return XTXFormats.XTXImageFormat.ASTC_6x5_UNORM;
-                    case TEX_FORMAT.ASTC_6x6_UNORM: return XTXFormats.XTXImageFormat.ASTC_6x6_UNORM;
-                    case TEX_FORMAT.ASTC_8x5_UNORM: return XTXFormats.XTXImageFormat.ASTC_8x5_UNORM;
-                    case TEX_FORMAT.ASTC_8x6_UNORM: return XTXFormats.XTXImageFormat.ASTC_8x6_UNORM;
-                    case TEX_FORMAT.ASTC_8x8_UNORM: return XTXFormats.XTXImageFormat.ASTC_8x8_UNORM;
-                    case TEX_FORMAT.ASTC_10x5_UNORM: return XTXFormats.XTXImageFormat.ASTC_10x5_UNORM;
-                    case TEX_FORMAT.ASTC_10x6_UNORM: return XTXFormats.XTXImageFormat.ASTC_10x6_UNORM;
-                    case TEX_FORMAT.ASTC_10x10_UNORM: return XTXFormats.XTXImageFormat.ASTC_10x10_UNORM;
-                    case TEX_FORMAT.ASTC_12x10_UNORM: return XTXFormats.XTXImageFormat.ASTC_12x10_UNORM;
-                    case TEX_FORMAT.ASTC_12x12_UNORM: return XTXFormats.XTXImageFormat.ASTC_12x12_UNORM;
-                    case TEX_FORMAT.ASTC_4x4_SRGB: return XTXFormats.XTXImageFormat.ASTC_4x4_SRGB;
-                    case TEX_FORMAT.ASTC_5x4_SRGB: return XTXFormats.XTXImageFormat.ASTC_5x4_SRGB;
-                    case TEX_FORMAT.ASTC_5x5_SRGB: return XTXFormats.XTXImageFormat.ASTC_5x5_SRGB;
-                    case TEX_FORMAT.ASTC_6x5_SRGB: return XTXFormats.XTXImageFormat.ASTC_6x5_SRGB;
-                    case TEX_FORMAT.ASTC_6x6_SRGB: return XTXFormats.XTXImageFormat.ASTC_6x6_SRGB;
-                    case TEX_FORMAT.ASTC_8x5_SRGB: return XTXFormats.XTXImageFormat.ASTC_8x5_SRGB;
-                    case TEX_FORMAT.ASTC_8x6_SRGB: return XTXFormats.XTXImageFormat.ASTC_8x6_SRGB;
-                    case TEX_FORMAT.ASTC_8x8_SRGB: return XTXFormats.XTXImageFormat.ASTC_8x8_SRGB;
-                    case TEX_FORMAT.ASTC_10x5_SRGB: return XTXFormats.XTXImageFormat.ASTC_10x5_SRGB;
-                    case TEX_FORMAT.ASTC_10x6_SRGB: return XTXFormats.XTXImageFormat.ASTC_10x6_SRGB;
-                    case TEX_FORMAT.ASTC_10x10_SRGB: return XTXFormats.XTXImageFormat.ASTC_10x10_SRGB;
-                    case TEX_FORMAT.ASTC_12x10_SRGB: return XTXFormats.XTXImageFormat.ASTC_12x10_SRGB;
-                    case TEX_FORMAT.ASTC_12x12_SRGB: return XTXFormats.XTXImageFormat.ASTC_12x12_SRGB;
+                    case TEX_FORMAT.BC1_UNORM: return XTXImageFormat.DXT1;
+                    case TEX_FORMAT.BC2_UNORM: return XTXImageFormat.DXT3;
+                    case TEX_FORMAT.BC3_UNORM: return XTXImageFormat.DXT5;
+                    case TEX_FORMAT.BC4_UNORM: return XTXImageFormat.BC4U;
+                    case TEX_FORMAT.BC4_SNORM: return XTXImageFormat.BC4S;
+                    case TEX_FORMAT.BC5_UNORM: return XTXImageFormat.BC5U;
+                    case TEX_FORMAT.BC7_UNORM: return XTXImageFormat.BC7U;
+                    case TEX_FORMAT.BC6H_UF16: return XTXImageFormat.BC6U;
+                    case TEX_FORMAT.R8_UNORM: return XTXImageFormat.NVN_FORMAT_R8;
+                    case TEX_FORMAT.R8G8_UNORM: return XTXImageFormat.NVN_FORMAT_RG8;
+                    case TEX_FORMAT.R10G10B10A2_UNORM: return XTXImageFormat.NVN_FORMAT_RGB10A2;
+                    case TEX_FORMAT.B5G6R5_UNORM: return XTXImageFormat.NVN_FORMAT_RGB565;
+                    case TEX_FORMAT.B5G5R5A1_UNORM: return XTXImageFormat.NVN_FORMAT_RGB5A1;
+                    case TEX_FORMAT.B4G4R4A4_UNORM: return XTXImageFormat.NVN_FORMAT_RGBA4;
+                    case TEX_FORMAT.R8G8B8A8_UNORM: return XTXImageFormat.NVN_FORMAT_RGBA8;
+                    case TEX_FORMAT.R8G8B8A8_UNORM_SRGB: return XTXImageFormat.NVN_FORMAT_RGBA8_SRGB;
+                    case TEX_FORMAT.ASTC_4x4_UNORM: return XTXImageFormat.ASTC_4x4_UNORM;
+                    case TEX_FORMAT.ASTC_5x4_UNORM: return XTXImageFormat.ASTC_5x4_UNORM;
+                    case TEX_FORMAT.ASTC_5x5_UNORM: return XTXImageFormat.ASTC_5x5_UNORM;
+                    case TEX_FORMAT.ASTC_6x5_UNORM: return XTXImageFormat.ASTC_6x5_UNORM;
+                    case TEX_FORMAT.ASTC_6x6_UNORM: return XTXImageFormat.ASTC_6x6_UNORM;
+                    case TEX_FORMAT.ASTC_8x5_UNORM: return XTXImageFormat.ASTC_8x5_UNORM;
+                    case TEX_FORMAT.ASTC_8x6_UNORM: return XTXImageFormat.ASTC_8x6_UNORM;
+                    case TEX_FORMAT.ASTC_8x8_UNORM: return XTXImageFormat.ASTC_8x8_UNORM;
+                    case TEX_FORMAT.ASTC_10x5_UNORM: return XTXImageFormat.ASTC_10x5_UNORM;
+                    case TEX_FORMAT.ASTC_10x6_UNORM: return XTXImageFormat.ASTC_10x6_UNORM;
+                    case TEX_FORMAT.ASTC_10x10_UNORM: return XTXImageFormat.ASTC_10x10_UNORM;
+                    case TEX_FORMAT.ASTC_12x10_UNORM: return XTXImageFormat.ASTC_12x10_UNORM;
+                    case TEX_FORMAT.ASTC_12x12_UNORM: return XTXImageFormat.ASTC_12x12_UNORM;
+                    case TEX_FORMAT.ASTC_4x4_SRGB: return XTXImageFormat.ASTC_4x4_SRGB;
+                    case TEX_FORMAT.ASTC_5x4_SRGB: return XTXImageFormat.ASTC_5x4_SRGB;
+                    case TEX_FORMAT.ASTC_5x5_SRGB: return XTXImageFormat.ASTC_5x5_SRGB;
+                    case TEX_FORMAT.ASTC_6x5_SRGB: return XTXImageFormat.ASTC_6x5_SRGB;
+                    case TEX_FORMAT.ASTC_6x6_SRGB: return XTXImageFormat.ASTC_6x6_SRGB;
+                    case TEX_FORMAT.ASTC_8x5_SRGB: return XTXImageFormat.ASTC_8x5_SRGB;
+                    case TEX_FORMAT.ASTC_8x6_SRGB: return XTXImageFormat.ASTC_8x6_SRGB;
+                    case TEX_FORMAT.ASTC_8x8_SRGB: return XTXImageFormat.ASTC_8x8_SRGB;
+                    case TEX_FORMAT.ASTC_10x5_SRGB: return XTXImageFormat.ASTC_10x5_SRGB;
+                    case TEX_FORMAT.ASTC_10x6_SRGB: return XTXImageFormat.ASTC_10x6_SRGB;
+                    case TEX_FORMAT.ASTC_10x10_SRGB: return XTXImageFormat.ASTC_10x10_SRGB;
+                    case TEX_FORMAT.ASTC_12x10_SRGB: return XTXImageFormat.ASTC_12x10_SRGB;
+                    case TEX_FORMAT.ASTC_12x12_SRGB: return XTXImageFormat.ASTC_12x12_SRGB;
                     default:
                         throw new Exception($"Cannot convert format {Format}");
                 }
@@ -655,55 +605,57 @@ namespace FirstPlugin
 
             public static TEX_FORMAT ConvertFormat(uint Format)
             {
-                return ConvertFormat((XTXFormats.XTXImageFormat)Format);
+                return ConvertFormat((XTXImageFormat)Format);
             }
 
-            public static TEX_FORMAT ConvertFormat(XTXFormats.XTXImageFormat Format)
+            public static TEX_FORMAT ConvertFormat(XTXImageFormat Format)
             {
                 switch (Format)
                 {
-                    case XTXFormats.XTXImageFormat.DXT1: return TEX_FORMAT.BC1_UNORM;
-                    case XTXFormats.XTXImageFormat.DXT3: return TEX_FORMAT.BC2_UNORM;
-                    case XTXFormats.XTXImageFormat.DXT5: return TEX_FORMAT.BC3_UNORM;
-                    case XTXFormats.XTXImageFormat.BC4U: return TEX_FORMAT.BC4_UNORM;
-                    case XTXFormats.XTXImageFormat.BC4S: return TEX_FORMAT.BC4_SNORM;
-                    case XTXFormats.XTXImageFormat.BC5U: return TEX_FORMAT.BC5_UNORM;
-                    case XTXFormats.XTXImageFormat.BC5S: return TEX_FORMAT.BC5_SNORM;
-                    case XTXFormats.XTXImageFormat.BC7U: return TEX_FORMAT.BC7_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_R8: return TEX_FORMAT.R8_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RG8: return TEX_FORMAT.R8G8_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGB10A2: return TEX_FORMAT.R10G10B10A2_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGB565: return TEX_FORMAT.B5G6R5_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGB5A1: return TEX_FORMAT.B5G5R5A1_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA4: return TEX_FORMAT.B4G4R4A4_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8: return TEX_FORMAT.R8G8B8A8_UNORM;
-                    case XTXFormats.XTXImageFormat.NVN_FORMAT_RGBA8_SRGB: return TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_4x4_UNORM: return TEX_FORMAT.ASTC_4x4_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_5x4_UNORM: return TEX_FORMAT.ASTC_5x4_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_5x5_UNORM: return TEX_FORMAT.ASTC_5x5_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_6x5_UNORM: return TEX_FORMAT.ASTC_6x5_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_6x6_UNORM: return TEX_FORMAT.ASTC_6x6_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_8x5_UNORM: return TEX_FORMAT.ASTC_8x5_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_8x6_UNORM: return TEX_FORMAT.ASTC_8x6_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_8x8_UNORM: return TEX_FORMAT.ASTC_8x8_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_10x5_UNORM: return TEX_FORMAT.ASTC_10x5_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_10x6_UNORM: return TEX_FORMAT.ASTC_10x6_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_10x10_UNORM: return TEX_FORMAT.ASTC_10x10_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_12x10_UNORM: return TEX_FORMAT.ASTC_12x10_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_12x12_UNORM: return TEX_FORMAT.ASTC_12x12_UNORM;
-                    case XTXFormats.XTXImageFormat.ASTC_4x4_SRGB: return TEX_FORMAT.ASTC_4x4_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_5x4_SRGB: return TEX_FORMAT.ASTC_5x4_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_5x5_SRGB: return TEX_FORMAT.ASTC_5x5_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_6x5_SRGB: return TEX_FORMAT.ASTC_6x5_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_6x6_SRGB: return TEX_FORMAT.ASTC_6x6_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_8x5_SRGB: return TEX_FORMAT.ASTC_8x5_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_8x6_SRGB: return TEX_FORMAT.ASTC_8x6_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_8x8_SRGB: return TEX_FORMAT.ASTC_8x8_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_10x5_SRGB: return TEX_FORMAT.ASTC_10x5_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_10x6_SRGB: return TEX_FORMAT.ASTC_10x6_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_10x10_SRGB: return TEX_FORMAT.ASTC_10x10_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_12x10_SRGB: return TEX_FORMAT.ASTC_12x10_SRGB;
-                    case XTXFormats.XTXImageFormat.ASTC_12x12_SRGB: return TEX_FORMAT.ASTC_12x12_SRGB;
+                    case XTXImageFormat.BGRA8: return TEX_FORMAT.B8G8R8A8_UNORM;
+                    case XTXImageFormat.DXT1: return TEX_FORMAT.BC1_UNORM;
+                    case XTXImageFormat.DXT3: return TEX_FORMAT.BC2_UNORM;
+                    case XTXImageFormat.DXT5: return TEX_FORMAT.BC3_UNORM;
+                    case XTXImageFormat.BC4U: return TEX_FORMAT.BC4_UNORM;
+                    case XTXImageFormat.BC4S: return TEX_FORMAT.BC4_SNORM;
+                    case XTXImageFormat.BC5U: return TEX_FORMAT.BC5_UNORM;
+                    case XTXImageFormat.BC5S: return TEX_FORMAT.BC5_SNORM;
+                    case XTXImageFormat.BC7U: return TEX_FORMAT.BC7_UNORM;
+                    case XTXImageFormat.BC6U: return TEX_FORMAT.BC6H_UF16;
+                    case XTXImageFormat.NVN_FORMAT_R8: return TEX_FORMAT.R8_UNORM;
+                    case XTXImageFormat.NVN_FORMAT_RG8: return TEX_FORMAT.R8G8_UNORM;
+                    case XTXImageFormat.NVN_FORMAT_RGB10A2: return TEX_FORMAT.R10G10B10A2_UNORM;
+                    case XTXImageFormat.NVN_FORMAT_RGB565: return TEX_FORMAT.B5G6R5_UNORM;
+                    case XTXImageFormat.NVN_FORMAT_RGB5A1: return TEX_FORMAT.B5G5R5A1_UNORM;
+                    case XTXImageFormat.NVN_FORMAT_RGBA4: return TEX_FORMAT.B4G4R4A4_UNORM;
+                    case XTXImageFormat.NVN_FORMAT_RGBA8: return TEX_FORMAT.R8G8B8A8_UNORM;
+                    case XTXImageFormat.NVN_FORMAT_RGBA8_SRGB: return TEX_FORMAT.R8G8B8A8_UNORM_SRGB;
+                    case XTXImageFormat.ASTC_4x4_UNORM: return TEX_FORMAT.ASTC_4x4_UNORM;
+                    case XTXImageFormat.ASTC_5x4_UNORM: return TEX_FORMAT.ASTC_5x4_UNORM;
+                    case XTXImageFormat.ASTC_5x5_UNORM: return TEX_FORMAT.ASTC_5x5_UNORM;
+                    case XTXImageFormat.ASTC_6x5_UNORM: return TEX_FORMAT.ASTC_6x5_UNORM;
+                    case XTXImageFormat.ASTC_6x6_UNORM: return TEX_FORMAT.ASTC_6x6_UNORM;
+                    case XTXImageFormat.ASTC_8x5_UNORM: return TEX_FORMAT.ASTC_8x5_UNORM;
+                    case XTXImageFormat.ASTC_8x6_UNORM: return TEX_FORMAT.ASTC_8x6_UNORM;
+                    case XTXImageFormat.ASTC_8x8_UNORM: return TEX_FORMAT.ASTC_8x8_UNORM;
+                    case XTXImageFormat.ASTC_10x5_UNORM: return TEX_FORMAT.ASTC_10x5_UNORM;
+                    case XTXImageFormat.ASTC_10x6_UNORM: return TEX_FORMAT.ASTC_10x6_UNORM;
+                    case XTXImageFormat.ASTC_10x10_UNORM: return TEX_FORMAT.ASTC_10x10_UNORM;
+                    case XTXImageFormat.ASTC_12x10_UNORM: return TEX_FORMAT.ASTC_12x10_UNORM;
+                    case XTXImageFormat.ASTC_12x12_UNORM: return TEX_FORMAT.ASTC_12x12_UNORM;
+                    case XTXImageFormat.ASTC_4x4_SRGB: return TEX_FORMAT.ASTC_4x4_SRGB;
+                    case XTXImageFormat.ASTC_5x4_SRGB: return TEX_FORMAT.ASTC_5x4_SRGB;
+                    case XTXImageFormat.ASTC_5x5_SRGB: return TEX_FORMAT.ASTC_5x5_SRGB;
+                    case XTXImageFormat.ASTC_6x5_SRGB: return TEX_FORMAT.ASTC_6x5_SRGB;
+                    case XTXImageFormat.ASTC_6x6_SRGB: return TEX_FORMAT.ASTC_6x6_SRGB;
+                    case XTXImageFormat.ASTC_8x5_SRGB: return TEX_FORMAT.ASTC_8x5_SRGB;
+                    case XTXImageFormat.ASTC_8x6_SRGB: return TEX_FORMAT.ASTC_8x6_SRGB;
+                    case XTXImageFormat.ASTC_8x8_SRGB: return TEX_FORMAT.ASTC_8x8_SRGB;
+                    case XTXImageFormat.ASTC_10x5_SRGB: return TEX_FORMAT.ASTC_10x5_SRGB;
+                    case XTXImageFormat.ASTC_10x6_SRGB: return TEX_FORMAT.ASTC_10x6_SRGB;
+                    case XTXImageFormat.ASTC_10x10_SRGB: return TEX_FORMAT.ASTC_10x10_SRGB;
+                    case XTXImageFormat.ASTC_12x10_SRGB: return TEX_FORMAT.ASTC_12x10_SRGB;
+                    case XTXImageFormat.ASTC_12x12_SRGB: return TEX_FORMAT.ASTC_12x12_SRGB;
                     default:
                         throw new Exception($"Cannot convert format {Format}");
                 }
