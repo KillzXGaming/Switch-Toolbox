@@ -7,6 +7,7 @@ using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using Toolbox.Library.Security.Cryptography;
 
 namespace FirstPlugin
 {
@@ -46,9 +47,30 @@ namespace FirstPlugin
 
         public void ClearFiles() { files.Clear(); }
 
+        static Dictionary<ulong, string> HashList = new Dictionary<ulong, string>();
+
+        static void CalculateHashes()
+        {
+            var mem = new MemoryStream(Properties.Resources.MetroidDread);
+            using (var reader = new StreamReader(mem))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string str = reader.ReadLine();
+                    //Thanks to mr cheeze https://pastebin.com/qi7Sduua
+                    ulong hash = Crc64.Compute(System.Text.Encoding.UTF8.GetBytes(str));
+                    if (!HashList.ContainsKey(hash))
+                        HashList.Add(hash, str);
+                }
+            }
+        }
+
         private System.IO.Stream _stream;
         public void Load(System.IO.Stream stream)
         {
+            if (HashList.Count == 0)
+                CalculateHashes();
+
             _stream = stream;
             using (var reader = new FileReader(stream, true))
             {
@@ -70,58 +92,8 @@ namespace FirstPlugin
                     file.FileDataStream = new SubStream(reader.BaseStream,
                         fileStartOffset, size);
 
-                    string ext = ".bin";
-                    if (size > 4)
-                    {
-                        using (reader.TemporarySeek(fileStartOffset, SeekOrigin.Begin)) {
-                            string magic = reader.ReadString(4);
-                            if (magic == "FWAV") ext = ".bfwav";
-                            if (magic == "MTXT") ext = ".bctex";
-                            if (magic == "MCAN") ext = ".bccam";
-                            if (magic == "MANM") ext = ".bcskla";
-                            if (magic == "MSAS") ext = ".bmsas";
-                            if (magic == "MMDL") ext = ".mmdl"; //Original extension is bcmdl but use mmdl for noesis script
-                            if (magic == "MSUR") ext = ".bsmat";
-                            if (magic == "MNAV") ext = ".bmscd";
-
-                            if (magic == "MSUR")
-                            {
-                                reader.ReadUInt32();
-                                file.FileName = $"imats/" + reader.ReadZeroTerminatedString();
-                            }
-                            else if (magic == "MSAS")
-                            {
-                                reader.ReadUInt32();
-                                ushort length = reader.ReadUInt16();
-                                file.FileName = $"msas/" + reader.ReadString(length);
-                            }
-                            else if (magic == "MSCD")
-                            {
-                                reader.ReadUInt32();
-                                reader.ReadUInt32();
-                                file.FileName = $"mscd/" + reader.ReadZeroTerminatedString();
-                            }
-                            else if (magic == "MSAD")
-                            {
-                                reader.ReadUInt32();
-                                file.FileName = $"msad/" + reader.ReadZeroTerminatedString();
-                            }
-                            else if (magic == "MMDL")
-                                file.FileName = $"models/" + file.FileName;
-                            else if (magic == "MCAN")
-                                file.FileName = $"cameras/" + file.FileName;
-                            else if (magic == "MANM")
-                                file.FileName = $"anims/" + file.FileName;
-                            else if (magic == "MNAV")
-                                file.FileName = $"collision/" + file.FileName;
-                            else if (magic == "bfwav")
-                                file.FileName = $"audio/" + file.FileName;
-                            else
-                                file.FileName = $"other/" + file.FileName;
-                        }
-                    }
-
-                    file.FileName += ext;
+                    if (HashList.ContainsKey(nameHash))
+                        file.FileName = HashList[nameHash];
 
                     files.Add(file);
                 }

@@ -314,6 +314,7 @@
     <Compile Include="FileFormats\Layout\Rev\Panes\WND1.cs" />
     <Compile Include="FileFormats\Layout\Rev\Shaders\ShaderGenerator.cs" />
     <Compile Include="FileFormats\LM1\LM1_MDL.cs" />
+    <Compile Include="FileFormats\LUAC.cs" />
     <Compile Include="FileFormats\MarioParty\HSF.cs" />
     <Compile Include="FileFormats\Message\MSYT.cs" />
     <Compile Include="FileFormats\MKAGPDX\LM2_ARCADE_Model.cs" />
@@ -2305,6 +2306,7 @@
     <None Include="Resources\Hashes\LM3_Hashes.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Hashes\MetroidDread.txt" />
     <Content Include="Resources\Hashes\Pkmn.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
