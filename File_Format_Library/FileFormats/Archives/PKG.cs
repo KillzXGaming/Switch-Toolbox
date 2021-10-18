@@ -98,6 +98,10 @@ namespace FirstPlugin
                         using (reader.TemporarySeek(fileStartOffset, SeekOrigin.Begin))
                         {
                             string magic = reader.ReadString(4);
+
+                            reader.Seek(-4);
+                            uint magicHex = reader.ReadUInt32();
+
                             if (magic == "FWAV") ext = ".bfwav";
                             if (magic == "MTXT") ext = ".bctex";
                             if (magic == "MCAN") ext = ".bccam";
@@ -113,7 +117,11 @@ namespace FirstPlugin
                                 reader.ReadUInt32();
                                 file.FileName = $"imats/" + reader.ReadZeroTerminatedString();
                             }
-                            if (magic.Contains("Lua"))
+                            else if(magicHex == 0xB3667893)
+                                file.FileName = $"blend_spaces/" + file.FileName;
+                            else if (magicHex == 0x73F37F6F)
+                                file.FileName = $"audio_info/" + file.FileName;
+                            else if (magic.Contains("Lua"))
                                 file.FileName = $"scripts/" + file.FileName + ".lua";
                             else if (magic == "MSAS")
                             {
@@ -132,6 +140,8 @@ namespace FirstPlugin
                                 reader.ReadUInt32();
                                 file.FileName = $"script_components/" + reader.ReadZeroTerminatedString();
                             }
+                            else if (magic == "MPSY")
+                                file.FileName = $"particles/" + file.FileName;
                             else if (magic == "MMDL")
                                 file.FileName = $"models/" + file.FileName;
                             else if (magic == "MCAN")
