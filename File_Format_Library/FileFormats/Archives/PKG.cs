@@ -114,23 +114,23 @@ namespace FirstPlugin
                                 file.FileName = $"imats/" + reader.ReadZeroTerminatedString();
                             }
                             if (magic.Contains("Lua"))
-                                file.FileName = $"scripts/" + file.FileName;
+                                file.FileName = $"scripts/" + file.FileName + ".lua";
                             else if (magic == "MSAS")
                             {
                                 reader.ReadUInt32();
                                 ushort length = reader.ReadUInt16();
-                                file.FileName = $"script_component/" + reader.ReadString(length);
+                                file.FileName = $"script_data/" + reader.ReadString(length);
                             }
                             else if (magic == "MSCD")
                             {
                                 reader.ReadUInt32();
                                 reader.ReadUInt32();
-                                file.FileName = $"script_data/" + reader.ReadZeroTerminatedString();
+                                file.FileName = $"collision/" + reader.ReadZeroTerminatedString();
                             }
                             else if (magic == "MSAD")
                             {
                                 reader.ReadUInt32();
-                                file.FileName = $"script_database/" + reader.ReadZeroTerminatedString();
+                                file.FileName = $"script_components/" + reader.ReadZeroTerminatedString();
                             }
                             else if (magic == "MMDL")
                                 file.FileName = $"models/" + file.FileName;
@@ -139,7 +139,7 @@ namespace FirstPlugin
                             else if (magic == "MANM")
                                 file.FileName = $"anims/" + file.FileName;
                             else if (magic == "MNAV")
-                                file.FileName = $"collision/" + file.FileName;
+                                file.FileName = $"ai_naviagtion/" + file.FileName;
                             else if (magic == "FWAV")
                                 file.FileName = $"audio/" + file.FileName;
                             else
