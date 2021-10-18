@@ -92,11 +92,71 @@ namespace FirstPlugin
                     file.FileDataStream = new SubStream(reader.BaseStream,
                         fileStartOffset, size);
 
+                    string ext = ".bin";
+                    if (size > 4)
+                    {
+                        using (reader.TemporarySeek(fileStartOffset, SeekOrigin.Begin))
+                        {
+                            string magic = reader.ReadString(4);
+                            if (magic == "FWAV") ext = ".bfwav";
+                            if (magic == "MTXT") ext = ".bctex";
+                            if (magic == "MCAN") ext = ".bccam";
+                            if (magic == "MANM") ext = ".bcskla";
+                            if (magic == "MSAS") ext = ".bmsas";
+                            if (magic == "MMDL") ext = ".mmdl"; //Original extension is bcmdl but use mmdl for noesis script
+                            if (magic == "MSUR") ext = ".bsmat";
+                            if (magic == "MNAV") ext = ".bmscd";
+                            if (magic.Contains(" Lua")) ext = ".lc";
+
+                            if (magic == "MSUR")
+                            {
+                                reader.ReadUInt32();
+                                file.FileName = $"imats/" + reader.ReadZeroTerminatedString();
+                            }
+                            if (magic.Contains("Lua"))
+                                file.FileName = $"scripts/" + file.FileName;
+                            else if (magic == "MSAS")
+                            {
+                                reader.ReadUInt32();
+                                ushort length = reader.ReadUInt16();
+                                file.FileName = $"script_component/" + reader.ReadString(length);
+                            }
+                            else if (magic == "MSCD")
+                            {
+                                reader.ReadUInt32();
+                                reader.ReadUInt32();
+                                file.FileName = $"script_data/" + reader.ReadZeroTerminatedString();
+                            }
+                            else if (magic == "MSAD")
+                            {
+                                reader.ReadUInt32();
+                                file.FileName = $"script_database/" + reader.ReadZeroTerminatedString();
+                            }
+                            else if (magic == "MMDL")
+                                file.FileName = $"models/" + file.FileName;
+                            else if (magic == "MCAN")
+                                file.FileName = $"cameras/" + file.FileName;
+                            else if (magic == "MANM")
+                                file.FileName = $"anims/" + file.FileName;
+                            else if (magic == "MNAV")
+                                file.FileName = $"collision/" + file.FileName;
+                            else if (magic == "FWAV")
+                                file.FileName = $"audio/" + file.FileName;
+                            else
+                                file.FileName = $"unknown/" + file.FileName;
+                        }
+                    }
+
+                    file.FileName += ext;
+
+                    file.FileName = $"files/{file.FileName}";
+
                     if (HashList.ContainsKey(nameHash))
                         file.FileName = HashList[nameHash];
 
                     files.Add(file);
                 }
+                files = files.OrderBy(x => x.FileName).ToList();
             }
         }
 
@@ -128,7 +188,8 @@ namespace FirstPlugin
                     files[i].FileDataStream.CopyTo(writer.BaseStream);
                     writer.WriteUint32Offset(24 + (i * 16)); //end offset
                 }
-                using (writer.TemporarySeek(4, SeekOrigin.Begin)) {
+                using (writer.TemporarySeek(4, SeekOrigin.Begin))
+                {
                     writer.Write((int)writer.BaseStream.Length);
                 }
             }
