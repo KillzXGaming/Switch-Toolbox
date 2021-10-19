@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
 using Toolbox.Library.Security.Cryptography;
+using Newtonsoft.Json;
 
 namespace FirstPlugin
 {
@@ -52,16 +53,9 @@ namespace FirstPlugin
         static void CalculateHashes()
         {
             var mem = new MemoryStream(Properties.Resources.MetroidDread);
-            using (var reader = new StreamReader(mem))
-            {
-                while (!reader.EndOfStream)
-                {
-                    string str = reader.ReadLine();
-                    //Thanks to mr cheeze https://pastebin.com/qi7Sduua
-                    ulong hash = Crc64.Compute(System.Text.Encoding.UTF8.GetBytes(str));
-                    if (!HashList.ContainsKey(hash))
-                        HashList.Add(hash, str);
-                }
+            using (var reader = new StreamReader(mem)) {
+                //Thanks to UltiNaruto for the hash list
+                HashList = JsonConvert.DeserializeObject<Dictionary<ulong, string>>(reader.ReadToEnd());
             }
         }
 
@@ -88,7 +82,7 @@ namespace FirstPlugin
 
                     uint size = fileEndOffset - fileStartOffset;
 
-                    file.FileName = nameHash.ToString();
+                    file.FileName = nameHash.ToString("X");
                     file.FileDataStream = new SubStream(reader.BaseStream,
                         fileStartOffset, size);
 
@@ -120,7 +114,7 @@ namespace FirstPlugin
                             else if(magicHex == 0xB3667893)
                                 file.FileName = $"blend_spaces/" + file.FileName;
                             else if (magicHex == 0x73F37F6F)
-                                file.FileName = $"audio_info/" + file.FileName;
+                                file.FileName = $"snd/presets/" + file.FileName;
                             else if (magic.Contains("Lua"))
                                 file.FileName = $"scripts/" + file.FileName + ".lua";
                             else if (magic == "MSAS")
@@ -153,7 +147,7 @@ namespace FirstPlugin
                             else if (magic == "FWAV")
                                 file.FileName = $"audio/" + file.FileName;
                             else
-                                file.FileName = $"unknown/" + file.FileName;
+                                file.FileName = $"{magicHex.ToString("X")}/" + file.FileName;
                         }
                     }
 
