@@ -166,9 +166,9 @@ namespace Toolbox.Library
         {
             // This function expects the surface dimensions in blocks rather than pixels for block compressed formats.
             // This ensures the bytes per pixel parameter is used correctly.
-            width /= blkWidth;
-            height /= blkHeight;
-            depth /= blkDepth;
+            width = DIV_ROUND_UP(width, blkWidth);
+            height = DIV_ROUND_UP(height, blkHeight);
+            depth = DIV_ROUND_UP(depth, blkDepth);
 
             // tegra_swizzle only allows block heights supported by the TRM (1,2,4,8,16,32).
             var blockHeight = (ulong)(1 << Math.Max(Math.Min(blockHeightLog2, 5), 0));
