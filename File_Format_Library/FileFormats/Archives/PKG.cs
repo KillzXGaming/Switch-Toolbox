@@ -7,6 +7,8 @@ using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using Toolbox.Library.Security.Cryptography;
+using Newtonsoft.Json;
 
 namespace FirstPlugin
 {
@@ -46,9 +48,23 @@ namespace FirstPlugin
 
         public void ClearFiles() { files.Clear(); }
 
+        static Dictionary<ulong, string> HashList = new Dictionary<ulong, string>();
+
+        static void CalculateHashes()
+        {
+            var mem = new MemoryStream(Properties.Resources.MetroidDread);
+            using (var reader = new StreamReader(mem)) {
+                //Thanks to UltiNaruto for the hash list
+                HashList = JsonConvert.DeserializeObject<Dictionary<ulong, string>>(reader.ReadToEnd());
+            }
+        }
+
         private System.IO.Stream _stream;
         public void Load(System.IO.Stream stream)
         {
+            if (HashList.Count == 0)
+                CalculateHashes();
+
             _stream = stream;
             using (var reader = new FileReader(stream, true))
             {
@@ -66,15 +82,20 @@ namespace FirstPlugin
 
                     uint size = fileEndOffset - fileStartOffset;
 
-                    file.FileName = nameHash.ToString();
+                    file.FileName = nameHash.ToString("X");
                     file.FileDataStream = new SubStream(reader.BaseStream,
                         fileStartOffset, size);
 
                     string ext = ".bin";
                     if (size > 4)
                     {
-                        using (reader.TemporarySeek(fileStartOffset, SeekOrigin.Begin)) {
+                        using (reader.TemporarySeek(fileStartOffset, SeekOrigin.Begin))
+                        {
                             string magic = reader.ReadString(4);
+
+                            reader.Seek(-4);
+                            uint magicHex = reader.ReadUInt32();
+
                             if (magic == "FWAV") ext = ".bfwav";
                             if (magic == "MTXT") ext = ".bctex";
                             if (magic == "MCAN") ext = ".bccam";
@@ -83,29 +104,38 @@ namespace FirstPlugin
                             if (magic == "MMDL") ext = ".mmdl"; //Original extension is bcmdl but use mmdl for noesis script
                             if (magic == "MSUR") ext = ".bsmat";
                             if (magic == "MNAV") ext = ".bmscd";
+                            if (magic.Contains(" Lua")) ext = ".lc";
 
                             if (magic == "MSUR")
                             {
                                 reader.ReadUInt32();
                                 file.FileName = $"imats/" + reader.ReadZeroTerminatedString();
                             }
+                            else if(magicHex == 0xB3667893)
+                                file.FileName = $"blend_spaces/" + file.FileName;
+                            else if (magicHex == 0x73F37F6F)
+                                file.FileName = $"snd/presets/" + file.FileName;
+                            else if (magic.Contains("Lua"))
+                                file.FileName = $"scripts/" + file.FileName + ".lua";
                             else if (magic == "MSAS")
                             {
                                 reader.ReadUInt32();
                                 ushort length = reader.ReadUInt16();
-                                file.FileName = $"msas/" + reader.ReadString(length);
+                                file.FileName = $"script_data/" + reader.ReadString(length);
                             }
                             else if (magic == "MSCD")
                             {
                                 reader.ReadUInt32();
                                 reader.ReadUInt32();
-                                file.FileName = $"mscd/" + reader.ReadZeroTerminatedString();
+                                file.FileName = $"collision/" + reader.ReadZeroTerminatedString();
                             }
                             else if (magic == "MSAD")
                             {
                                 reader.ReadUInt32();
-                                file.FileName = $"msad/" + reader.ReadZeroTerminatedString();
+                                file.FileName = $"script_components/" + reader.ReadZeroTerminatedString();
                             }
+                            else if (magic == "MPSY")
+                                file.FileName = $"particles/" + file.FileName;
                             else if (magic == "MMDL")
                                 file.FileName = $"models/" + file.FileName;
                             else if (magic == "MCAN")
@@ -113,18 +143,24 @@ namespace FirstPlugin
                             else if (magic == "MANM")
                                 file.FileName = $"anims/" + file.FileName;
                             else if (magic == "MNAV")
-                                file.FileName = $"collision/" + file.FileName;
-                            else if (magic == "bfwav")
+                                file.FileName = $"ai_naviagtion/" + file.FileName;
+                            else if (magic == "FWAV")
                                 file.FileName = $"audio/" + file.FileName;
                             else
-                                file.FileName = $"other/" + file.FileName;
+                                file.FileName = $"{magicHex.ToString("X")}/" + file.FileName;
                         }
                     }
 
                     file.FileName += ext;
 
+                    file.FileName = $"files/{file.FileName}";
+
+                    if (HashList.ContainsKey(nameHash))
+                        file.FileName = HashList[nameHash];
+
                     files.Add(file);
                 }
+                files = files.OrderBy(x => x.FileName).ToList();
             }
         }
 
@@ -156,7 +192,8 @@ namespace FirstPlugin
                     files[i].FileDataStream.CopyTo(writer.BaseStream);
                     writer.WriteUint32Offset(24 + (i * 16)); //end offset
                 }
-                using (writer.TemporarySeek(4, SeekOrigin.Begin)) {
+                using (writer.TemporarySeek(4, SeekOrigin.Begin))
+                {
                     writer.Write((int)writer.BaseStream.Length);
                 }
             }

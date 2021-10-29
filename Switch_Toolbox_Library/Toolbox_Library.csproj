@@ -450,6 +450,7 @@
     <Compile Include="Rendering\GenericModelRenderer\GenericRenderedObject.cs" />
     <Compile Include="Security\Cryptography\crc32.cs" />
     <Compile Include="DrawableContainer.cs" />
+    <Compile Include="Security\Cryptography\Crc64.cs" />
     <Compile Include="Security\Cryptography\mmh3.cs" />
     <Compile Include="StaticDynamic.cs" />
     <Compile Include="Texture Decoding\3DS\ETC1.cs" />

@@ -392,6 +392,7 @@ namespace FirstPlugin
             comboBoxFormatUvs.Items.Add(AttribFormat.Format_32_32_Single);
             comboBoxFormatUvs.Items.Add(AttribFormat.Format_16_16_Single);
             comboBoxFormatUvs.Items.Add(AttribFormat.Format_16_16_SNorm);
+            comboBoxFormatUvs.Items.Add(AttribFormat.Format_16_16_UNorm);
             comboBoxFormatUvs.Items.Add(AttribFormat.Format_8_8_SNorm);
             comboBoxFormatUvs.Items.Add(AttribFormat.Format_8_8_UNorm);
             comboBoxFormatUvs.SelectedIndex = 1;
