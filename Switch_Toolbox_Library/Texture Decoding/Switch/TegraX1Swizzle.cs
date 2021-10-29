@@ -102,17 +102,14 @@ namespace Toolbox.Library
             if (texture.Depth > 1)
                 numDepth = texture.Depth;
 
-            int linesPerBlockHeight = (1 << (int)BlockHeightLog2) * 8;
 
-            uint ArrayOffset = 0;
+            uint arrayOffset = 0;
+            // TODO: Why is depth done like this?
             for (int depthLevel = 0; depthLevel < numDepth; depthLevel++)
             {
                 for (int arrayLevel = 0; arrayLevel < texture.ArrayCount; arrayLevel++)
                 {
-                    uint surfaceSize = 0;
-                    int blockHeightShift = 0;
-
-                    List<uint> mipOffsets = new List<uint>();
+                    var mipOffset = 0u;
 
                     for (int mipLevel = 0; mipLevel < texture.MipCount; mipLevel++)
                     {
@@ -120,35 +117,22 @@ namespace Toolbox.Library
                         uint height = Math.Max(1, texture.Height >> mipLevel);
                         uint depth = Math.Max(1, texture.Depth >> mipLevel);
 
-                        uint size = DIV_ROUND_UP(width, blkWidth) * DIV_ROUND_UP(height, blkHeight) * bpp;
-
-                        Console.WriteLine($"size " + size);
-
-                        if (pow2_round_up(DIV_ROUND_UP(height, blkWidth)) < linesPerBlockHeight)
-                            blockHeightShift += 1;
-
                         uint widthInBlocks = DIV_ROUND_UP(width, blkWidth);
                         uint heightInBlocks = DIV_ROUND_UP(height, blkHeight);
                         uint depthInBlocks = DIV_ROUND_UP(depth, blkDepth);
 
-                        //Calculate the mip size instead
-                        var mipBlockHeightLog2 = (int)Math.Max(0, BlockHeightLog2 - blockHeightShift);
-
                         // tegra_swizzle only allows block heights supported by the TRM (1,2,4,8,16,32).
-                        var mipBlockHeight = 1 << Math.Max(Math.Min(mipBlockHeightLog2, 5), 1);
+                        var mipBlockHeightLog2 = (int)Math.Log(GetBlockHeight(heightInBlocks), 2);
+                        var mipBlockHeight = 1 << Math.Max(Math.Min(mipBlockHeightLog2, 5), 0);
 
-                        mipOffsets.Add(surfaceSize);
-
+                        uint mipSize;
                         if (Environment.Is64BitProcess)
-                            surfaceSize += (uint)GetSurfaceSizeX64(widthInBlocks, heightInBlocks, depthInBlocks, (ulong)mipBlockHeight, bpp);
+                            mipSize = (uint)GetSurfaceSizeX64(widthInBlocks, heightInBlocks, depthInBlocks, (ulong)mipBlockHeight, bpp);
                         else
-                            surfaceSize += (uint)GetSurfaceSizeX86(widthInBlocks, heightInBlocks, depthInBlocks, (uint)mipBlockHeight, bpp);
-
-                        //Get the first mip offset and current one and the total image size
-                        int msize = (int)((mipOffsets[0] + ImageData.Length - mipOffsets[mipLevel]) / texture.ArrayCount);
+                            mipSize = (uint)GetSurfaceSizeX86(widthInBlocks, heightInBlocks, depthInBlocks, (uint)mipBlockHeight, bpp);
 
                         // TODO: Avoid this copy.
-                        byte[] mipData = Utils.SubArray(ImageData, ArrayOffset + mipOffsets[mipLevel], (uint)msize);
+                        byte[] mipData = Utils.SubArray(ImageData, arrayOffset + mipOffset, mipSize);
 
                         try
                         {
@@ -167,8 +151,11 @@ namespace Toolbox.Library
 
                             return new byte[0];
                         }
+
+                        mipOffset += mipSize;
                     }
-                    ArrayOffset += (uint)(ImageData.Length / texture.ArrayCount);
+
+                    arrayOffset += (uint)(ImageData.Length / texture.ArrayCount);
                 }
             }
             return new byte[0];
@@ -184,7 +171,7 @@ namespace Toolbox.Library
             depth /= blkDepth;
 
             // tegra_swizzle only allows block heights supported by the TRM (1,2,4,8,16,32).
-            var blockHeight = (ulong)(1 << Math.Max(Math.Min(blockHeightLog2, 5), 1));
+            var blockHeight = (ulong)(1 << Math.Max(Math.Min(blockHeightLog2, 5), 0));
 
             if (deswizzle)
             {
