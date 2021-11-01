@@ -122,7 +122,7 @@ namespace Toolbox.Library
                         uint depthInBlocks = DIV_ROUND_UP(depth, blkDepth);
 
                         // tegra_swizzle only allows block heights supported by the TRM (1,2,4,8,16,32).
-                        var mipBlockHeightLog2 = (int)Math.Log(GetBlockHeight(heightInBlocks), 2);
+                        var mipBlockHeightLog2 = (int)Math.Log(GetBlockHeight(heightInBlocks, (uint)mipLevel), 2);
                         var mipBlockHeight = 1 << Math.Max(Math.Min(mipBlockHeightLog2, 5), 0);
 
                         uint mipSize;
@@ -209,23 +209,73 @@ namespace Toolbox.Library
             }
         }
 
+        // Block height is not a function of height when considering all mipmaps.
+        // HACK: Just fit two separate step functions with cutoffs based on this data:
+        // https://github.com/ScanMountGoat/nutexb_swizzle/blob/main/nutexb_block_heights.csv
+        public static uint GetBlockHeight(uint heightInBytes, uint mipLevel = 0)
+        {
+            if (mipLevel == 0)
+                return GetBlockHeightMip0(heightInBytes);
+            else
+                return GetBlockHeightMip1(heightInBytes);
+        }
+
+        private static uint GetBlockHeightMip0(uint heightInBytes)
+        {
+            if (heightInBytes >= 90)
+                return 16;
+
+            if (heightInBytes >= 44)
+                return 8;
+
+            if (heightInBytes >= 24)
+                return 4;
+
+            if (heightInBytes >= 12)
+                return 2;
+
+            return 1;
+        }
+
+        private static uint GetBlockHeightMip1(uint heightInBytes)
+        {
+            if (heightInBytes >= 68)
+                return 16;
+
+            if (heightInBytes > 32)
+                return 8;
+
+            if (heightInBytes >= 17)
+                return 4;
+
+            if (heightInBytes >= 9)
+                return 2;
+
+            return 1;
+        }
+
+        public static byte[] deswizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
+        {
+            if (tileMode == 1)
+                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, true);
+            else
+                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, true);
+        }
+
+        public static byte[] swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
+        {
+            if (tileMode == 1)
+                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, false);
+            else
+                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, false);
+        }
+
 
         /*---------------------------------------
          * 
          * Code ported from AboodXD's BNTX Extractor https://github.com/aboood40091/BNTX-Extractor/blob/master/swizzle.py
          * 
          *---------------------------------------*/
-
-        // TODO: This doesn't seem to be entirely accurate for some Nutexb textures.
-        public static uint GetBlockHeight(uint height)
-        {
-            uint blockHeight = pow2_round_up(height / 8);
-            if (blockHeight > 16)
-                blockHeight = 16;
-
-            return blockHeight;
-        }
-
         public static uint DIV_ROUND_UP(uint n, uint d)
         {
             return (n + d - 1) / d;
@@ -286,22 +336,6 @@ namespace Toolbox.Library
                 }
             }
             return result;
-        }
-
-        public static byte[] deswizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
-        {
-            if (tileMode == 1)
-                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, true);
-            else
-                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, true);
-        }
-
-        public static byte[] swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
-        {
-            if (tileMode == 1)
-                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, false);
-            else
-                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, false);
         }
     }
 }
