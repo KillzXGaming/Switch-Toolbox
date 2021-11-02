@@ -22,6 +22,8 @@ namespace Toolbox.Library.Forms
             return new List<IFileFormat>() { FileFormat };
         }
 
+        public EventHandler TextEditorChanged;
+
         public void BeforeFileSaved() { }
 
         FindReplace findReplaceDialog;
@@ -331,6 +333,8 @@ namespace Toolbox.Library.Forms
         private int maxLineNumberCharLength;
         private void scintilla1_TextChanged(object sender, EventArgs e)
         {
+            TextEditorChanged?.Invoke(sender, e);
+
             // Did the number of characters in the line number display change?
             // i.e. nnn VS nn, or nnnn VS nn, etc...
             var maxLineNumberCharLength = scintilla1.Lines.Count.ToString().Length;
