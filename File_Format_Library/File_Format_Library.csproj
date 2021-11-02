@@ -318,6 +318,7 @@
     <Compile Include="FileFormats\MarioParty\HSF.cs" />
     <Compile Include="FileFormats\Message\MSYT.cs" />
     <Compile Include="FileFormats\MKAGPDX\LM2_ARCADE_Model.cs" />
+    <Compile Include="FileFormats\NKN.cs" />
     <Compile Include="FileFormats\NLG\LM2\LM2_Material.cs" />
     <Compile Include="FileFormats\NLG\LM3\LM3_ChunkTable.cs" />
     <Compile Include="FileFormats\NLG\LM3\LM3_DICT.cs" />

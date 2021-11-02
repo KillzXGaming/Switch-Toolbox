@@ -101,7 +101,7 @@ namespace FirstPlugin
                             if (magic == "MCAN") ext = ".bccam";
                             if (magic == "MANM") ext = ".bcskla";
                             if (magic == "MSAS") ext = ".bmsas";
-                            if (magic == "MMDL") ext = ".mmdl"; //Original extension is bcmdl but use mmdl for noesis script
+                            if (magic == "MMDL") ext = ".bcmdl";
                             if (magic == "MSUR") ext = ".bsmat";
                             if (magic == "MNAV") ext = ".bmscd";
                             if (magic.Contains(" Lua")) ext = ".lc";
