@@ -12,11 +12,11 @@ using Newtonsoft.Json;
 
 namespace FirstPlugin
 {
-    public class PKG : IArchiveFile, IFileFormat, ILeaveOpenOnLoad
+    public class PKG : IArchiveFile, IFileFormat, ILeaveOpenOnLoad, ISaveOpenedFileStream
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
-        public bool CanSave { get; set; } = false;
+        public bool CanSave { get; set; } = true;
         public string[] Description { get; set; } = new string[] { "PKG" };
         public string[] Extension { get; set; } = new string[] { "*.pkg" };
         public string FileName { get; set; }
@@ -82,78 +82,10 @@ namespace FirstPlugin
 
                     uint size = fileEndOffset - fileStartOffset;
 
+                    file.Hash = nameHash;
                     file.FileName = nameHash.ToString("X");
                     file.FileDataStream = new SubStream(reader.BaseStream,
                         fileStartOffset, size);
-
-                    string ext = ".bin";
-                    if (size > 4)
-                    {
-                        using (reader.TemporarySeek(fileStartOffset, SeekOrigin.Begin))
-                        {
-                            string magic = reader.ReadString(4);
-
-                            reader.Seek(-4);
-                            uint magicHex = reader.ReadUInt32();
-
-                            if (magic == "FWAV") ext = ".bfwav";
-                            if (magic == "MTXT") ext = ".bctex";
-                            if (magic == "MCAN") ext = ".bccam";
-                            if (magic == "MANM") ext = ".bcskla";
-                            if (magic == "MSAS") ext = ".bmsas";
-                            if (magic == "MMDL") ext = ".bcmdl";
-                            if (magic == "MSUR") ext = ".bsmat";
-                            if (magic == "MNAV") ext = ".bmscd";
-                            if (magic.Contains(" Lua")) ext = ".lc";
-
-                            if (magic == "MSUR")
-                            {
-                                reader.ReadUInt32();
-                                file.FileName = $"imats/" + reader.ReadZeroTerminatedString();
-                            }
-                            else if(magicHex == 0xB3667893)
-                                file.FileName = $"blend_spaces/" + file.FileName;
-                            else if (magicHex == 0x73F37F6F)
-                                file.FileName = $"snd/presets/" + file.FileName;
-                            else if (magic.Contains("Lua"))
-                                file.FileName = $"scripts/" + file.FileName + ".lua";
-                            else if (magic == "MSAS")
-                            {
-                                reader.ReadUInt32();
-                                ushort length = reader.ReadUInt16();
-                                file.FileName = $"script_data/" + reader.ReadString(length);
-                            }
-                            else if (magic == "MSCD")
-                            {
-                                reader.ReadUInt32();
-                                reader.ReadUInt32();
-                                file.FileName = $"collision/" + reader.ReadZeroTerminatedString();
-                            }
-                            else if (magic == "MSAD")
-                            {
-                                reader.ReadUInt32();
-                                file.FileName = $"script_components/" + reader.ReadZeroTerminatedString();
-                            }
-                            else if (magic == "MPSY")
-                                file.FileName = $"particles/" + file.FileName;
-                            else if (magic == "MMDL")
-                                file.FileName = $"models/" + file.FileName;
-                            else if (magic == "MCAN")
-                                file.FileName = $"cameras/" + file.FileName;
-                            else if (magic == "MANM")
-                                file.FileName = $"anims/" + file.FileName;
-                            else if (magic == "MNAV")
-                                file.FileName = $"ai_naviagtion/" + file.FileName;
-                            else if (magic == "FWAV")
-                                file.FileName = $"audio/" + file.FileName;
-                            else
-                                file.FileName = $"{magicHex.ToString("X")}/" + file.FileName;
-                        }
-                    }
-
-                    file.FileName += ext;
-
-                    file.FileName = $"files/{file.FileName}";
 
                     if (HashList.ContainsKey(nameHash))
                         file.FileName = HashList[nameHash];
@@ -178,8 +110,7 @@ namespace FirstPlugin
                 writer.Write(files.Count);
                 for (int i = 0; i < files.Count; i++)
                 {
-                    ulong hash = ulong.Parse(Path.GetFileNameWithoutExtension(files[i].FileName));
-                    writer.Write(hash);
+                    writer.Write(files[i].Hash);
                     writer.Write(uint.MaxValue); //start offset
                     writer.Write(uint.MaxValue); //end offset
                 }
@@ -191,9 +122,10 @@ namespace FirstPlugin
                     writer.WriteUint32Offset(20 + (i * 16)); //start offset
                     files[i].FileDataStream.CopyTo(writer.BaseStream);
                     writer.WriteUint32Offset(24 + (i * 16)); //end offset
+
+                    writer.Align(8);
                 }
-                using (writer.TemporarySeek(4, SeekOrigin.Begin))
-                {
+                using (writer.TemporarySeek(4, SeekOrigin.Begin)) {
                     writer.Write((int)writer.BaseStream.Length);
                 }
             }
@@ -201,8 +133,11 @@ namespace FirstPlugin
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo)
         {
+            var hash = Crc64.Compute(archiveFileInfo.FileName);
+
             files.Add(new FileEntry()
             {
+                Hash = hash,
                 FileDataStream = archiveFileInfo.FileDataStream,
                 FileName = archiveFileInfo.FileName,
             });
@@ -217,6 +152,22 @@ namespace FirstPlugin
 
         public class FileEntry : ArchiveFileInfo
         {
+            public ulong Hash { get; set; }
+
+            public override string FileName
+            {
+                get => base.FileName;
+                set
+                {
+                    if (base.FileName != value) {
+                        //Filename changed (not empty previously)
+                        bool isRenamed = !string.IsNullOrEmpty(base.FileName);
+                        base.FileName = value;
+                        if (isRenamed)
+                            Hash = Crc64.Compute(value);
+                    }
+                }
+            }
         }
     }
 }
