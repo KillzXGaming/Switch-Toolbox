@@ -9,6 +9,11 @@ namespace Toolbox.Library
 {
     public class TegraX1Swizzle
     {
+        // Swizzle code and surface calculations are performed using an efficient Rust implementation.
+        // C# code can call the Rust code using the library's C API.
+        // Documentation, code, and tests for the tegra_swizzle Rust library can be found here:
+        // https://github.com/ScanMountGoat/nutexb_swizzle
+
         // TODO: Find a cleaner way to support both 32 and 64 bit binaries.
         // 64 Bit.
         [DllImport("tegra_swizzle_x64", EntryPoint = "deswizzle_block_linear")]
@@ -21,6 +26,12 @@ namespace Toolbox.Library
 
         [DllImport("tegra_swizzle_x64", EntryPoint = "swizzled_surface_size")]
         private static extern ulong GetSurfaceSizeX64(ulong width, ulong height, ulong depth, ulong blockHeight, ulong bytesPerPixel);
+        
+        [DllImport("tegra_swizzle_x64", EntryPoint = "block_height_mip0")]
+        private static extern ulong BlockHeightMip0X64(ulong height);
+
+        [DllImport("tegra_swizzle_x64", EntryPoint = "mip_block_height")]
+        private static extern ulong MipBlockHeightX64(ulong mipHeight, ulong blockHeightMip0);
 
         // 32 Bit.
         [DllImport("tegra_swizzle_x86", EntryPoint = "deswizzle_block_linear")]
@@ -34,6 +45,11 @@ namespace Toolbox.Library
         [DllImport("tegra_swizzle_x86", EntryPoint = "swizzled_surface_size")]
         private static extern uint GetSurfaceSizeX86(uint width, uint height, uint depth, uint blockHeight, uint bytesPerPixel);
 
+        [DllImport("tegra_swizzle_x86", EntryPoint = "block_height_mip0")]
+        private static extern uint BlockHeightMip0X86(uint height);
+
+        [DllImport("tegra_swizzle_x86", EntryPoint = "mip_block_height")]
+        private static extern uint MipBlockHeightX86(uint mipHeight, uint blockHeightMip0);
 
         public static List<uint[]> GenerateMipSizes(TEX_FORMAT Format, uint Width, uint Height, uint Depth, uint SurfaceCount, uint MipCount, uint ImageSize)
         {
@@ -102,6 +118,7 @@ namespace Toolbox.Library
             if (texture.Depth > 1)
                 numDepth = texture.Depth;
 
+            var blockHeightMip0 = GetBlockHeight(DIV_ROUND_UP(texture.Height, blkHeight));
 
             uint arrayOffset = 0;
             // TODO: Why is depth done like this?
@@ -122,7 +139,7 @@ namespace Toolbox.Library
                         uint depthInBlocks = DIV_ROUND_UP(depth, blkDepth);
 
                         // tegra_swizzle only allows block heights supported by the TRM (1,2,4,8,16,32).
-                        var mipBlockHeightLog2 = (int)Math.Log(GetBlockHeight(heightInBlocks, (uint)mipLevel), 2);
+                        var mipBlockHeightLog2 = (int)Math.Log(GetMipBlockHeight(heightInBlocks, blockHeightMip0), 2);
                         var mipBlockHeight = 1 << Math.Max(Math.Min(mipBlockHeightLog2, 5), 0);
 
                         uint mipSize;
@@ -209,49 +226,20 @@ namespace Toolbox.Library
             }
         }
 
-        // Block height is not a function of height when considering all mipmaps.
-        // HACK: Just fit two separate step functions with cutoffs based on this data:
-        // https://github.com/ScanMountGoat/nutexb_swizzle/blob/main/nutexb_block_heights.csv
-        public static uint GetBlockHeight(uint heightInBytes, uint mipLevel = 0)
+        public static uint GetBlockHeight(uint heightInBytes)
         {
-            if (mipLevel == 0)
-                return GetBlockHeightMip0(heightInBytes);
+            if (Environment.Is64BitProcess)
+                return (uint)BlockHeightMip0X64(heightInBytes);
             else
-                return GetBlockHeightMip1(heightInBytes);
+                return BlockHeightMip0X86(heightInBytes);
         }
 
-        private static uint GetBlockHeightMip0(uint heightInBytes)
+        public static uint GetMipBlockHeight(uint mipHeightInBytes, uint blockHeightMip0)
         {
-            if (heightInBytes >= 90)
-                return 16;
-
-            if (heightInBytes >= 44)
-                return 8;
-
-            if (heightInBytes >= 24)
-                return 4;
-
-            if (heightInBytes >= 12)
-                return 2;
-
-            return 1;
-        }
-
-        private static uint GetBlockHeightMip1(uint heightInBytes)
-        {
-            if (heightInBytes >= 68)
-                return 16;
-
-            if (heightInBytes > 32)
-                return 8;
-
-            if (heightInBytes >= 17)
-                return 4;
-
-            if (heightInBytes >= 9)
-                return 2;
-
-            return 1;
+            if (Environment.Is64BitProcess)
+                return (uint)MipBlockHeightX64(mipHeightInBytes, blockHeightMip0);
+            else
+                return MipBlockHeightX86(mipHeightInBytes, blockHeightMip0);
         }
 
         public static byte[] deswizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
