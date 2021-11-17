@@ -85,12 +85,26 @@ namespace FirstPlugin
         public void Save(System.IO.Stream stream)
         {
             using (var writer = new BinaryWriter(stream)) {
-                writer.Write(AesEncryption.AesEncrypt(DecryptedContents));
+                AesEncryption.SetKey(AES_KEY);
+                AesEncryption.SetIV(AES_IV);
+                writer.Write(AesEncryption.AesEncrypt(IntoBytes(DecryptedContents)));
             }
         }
 
         public void Unload()
         {
+        }
+
+        //Align the last set of bytes so everything gets encrypted back correctly
+        static byte[] IntoBytes(string contents)
+        {
+            var mem = new MemoryStream();
+            using (var writer = new FileWriter(mem))
+            {
+                writer.Write(Encoding.UTF8.GetBytes(contents));
+                writer.AlignBytes(128);
+            }
+            return mem.ToArray();
         }
     }
 }

@@ -18,11 +18,13 @@ namespace Toolbox.Library.Security.Cryptography
             IvBytes = UTF8Encoding.UTF8.GetBytes("000000000");
         }
 
-        public static void SetKey(string key) {
+        public static void SetKey(string key)
+        {
             keyBytes = UTF8Encoding.UTF8.GetBytes(key);
         }
 
-        public static void SetIV(string key) {
+        public static void SetIV(string key)
+        {
             IvBytes = UTF8Encoding.UTF8.GetBytes(key);
         }
 
@@ -52,53 +54,31 @@ namespace Toolbox.Library.Security.Cryptography
 
         public static string AesDecrypt(Byte[] inputBytes)
         {
-            Byte[] outputBytes = inputBytes;
-
-            string plaintext = string.Empty;
-
-            using (MemoryStream memoryStream = new MemoryStream(outputBytes))
-            {
-                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, GetCryptoAlgorithm().CreateDecryptor(keyBytes, IvBytes), CryptoStreamMode.Read))
-                {
-                    using (StreamReader srDecrypt = new StreamReader(cryptoStream))
-                    {
-                        plaintext = srDecrypt.ReadToEnd();
-                    }
-                }
-            }
-
-            return plaintext;
+            var cryptoTransform = new AesManaged().CreateDecryptor(keyBytes, IvBytes);
+            return Encoding.UTF8.GetString(TransformBlocks(cryptoTransform, inputBytes));
         }
 
-        public static byte[] AesEncrypt(string inputText)
+        public static byte[] AesEncrypt(string inputText) => AesEncrypt(UTF8Encoding.UTF8.GetBytes(inputText));
+
+        public static byte[] AesEncrypt(byte[] inputBytes)
         {
-            byte[] inputBytes = UTF8Encoding.UTF8.GetBytes(inputText);//AbHLlc5uLone0D1q
+            var cryptoTransform = new AesManaged().CreateEncryptor(keyBytes, IvBytes);
+            return TransformBlocks(cryptoTransform, inputBytes);
+        }
 
-            byte[] result = null;
-            using (MemoryStream memoryStream = new MemoryStream())
+        static byte[] TransformBlocks(ICryptoTransform cryptoTransform, byte[] input)
+        {
+            byte[] result = new byte[input.Length];
+
+            int num = 0;
+            while (num < input.Length)
             {
-                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, GetCryptoAlgorithm().CreateEncryptor(keyBytes, IvBytes), CryptoStreamMode.Write))
-                {
-                    cryptoStream.Write(inputBytes, 0, inputBytes.Length);
-                    cryptoStream.FlushFinalBlock();
-
-                    result = memoryStream.ToArray();
-                }
+                cryptoTransform.TransformBlock(input, num, 16, result, num);
+                num += 16;
             }
-
+            while (result[0] == (byte)0)
+                result = ((IEnumerable<byte>)result).Skip<byte>(1).ToArray<byte>();
             return result;
-        }
-
-
-        private static RijndaelManaged GetCryptoAlgorithm()
-        {
-            RijndaelManaged algorithm = new RijndaelManaged();
-            //set the mode, padding and block size
-            algorithm.Padding = PaddingMode.PKCS7;
-            algorithm.Mode = CipherMode.CBC;
-            algorithm.KeySize = 128;
-            algorithm.BlockSize = 128;
-            return algorithm;
         }
     }
 }
