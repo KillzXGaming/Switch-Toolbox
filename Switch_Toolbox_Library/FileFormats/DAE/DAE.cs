@@ -353,40 +353,6 @@ namespace Toolbox.Library
 
                     foreach (var vertex in mesh.vertices)
                     {
-                        //Remove zero weights
-                        if (settings.OptmizeZeroWeights)
-                        {
-                            float MaxWeight = 1;
-                            for (int i = 0; i < 4; i++)
-                            {
-                                if (vertex.boneWeights.Count <= i)
-                                    continue;
-
-                                if (vertex.boneIds.Count < i + 1)
-                                {
-                                    vertex.boneWeights[i] = 0;
-                                    MaxWeight = 0;
-                                }
-                                else
-                                {
-                                    float weight = vertex.boneWeights[i];
-                                    if (vertex.boneWeights.Count == i + 1)
-                                        weight = MaxWeight;
-
-                                    if (weight >= MaxWeight)
-                                    {
-                                        weight = MaxWeight;
-                                        MaxWeight = 0;
-                                    }
-                                    else
-                                        MaxWeight -= weight;
-
-                                    vertex.boneWeights[i] = weight;
-                                }
-                            }
-                        }
-
-
                         if (vertex.nrm != Vector3.Zero) HasNormals = true;
                         if (vertex.col != Vector4.One && settings.UseVertexColors) HasColors = true;
                         if (vertex.col2 != Vector4.One && settings.UseVertexColors) HasColors2 = true;
@@ -436,11 +402,10 @@ namespace Toolbox.Library
                             if (index != -1 && index < skeleton?.bones.Count)
                                 bIndices.Add(index);
 
-                            //Some models may only use indices (single bind, rigid skin)
                             if (vertex.boneWeights.Count > b)
                                 bWeights.Add(vertex.boneWeights[b]);
                             else
-                                bWeights.Add(1);
+                                bWeights.Add(0);
                         }
                         
                         if (bIndices.Count == 0 && mesh.BoneIndex != -1) {
