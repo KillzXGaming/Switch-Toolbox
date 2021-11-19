@@ -239,6 +239,9 @@
     <Compile Include="FileFormats\BCH\Wrappers\SkeletalAnimation\H3DSkeletalAnimWrapper.cs" />
     <Compile Include="FileFormats\BCSV\BCSV.cs" />
     <Compile Include="FileFormats\BCSV\BCSVParse.cs" />
+    <Compile Include="FileFormats\BSMAT\BSMATMaterialFile.cs" />
+    <Compile Include="FileFormats\BSMAT\BSMAT.cs" />
+    <Compile Include="FileFormats\BSMAT\NoFormattingConverter.cs" />
     <Compile Include="FileFormats\Byaml\XmlByamlConverter.cs" />
     <Compile Include="FileFormats\Byaml\YamlByamlConverter.cs" />
     <Compile Include="FileFormats\Font\BXFNT\CMAP.cs" />
