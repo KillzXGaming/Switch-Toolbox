@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace FirstPlugin
 {
-    public class PKG : IArchiveFile, IFileFormat, ILeaveOpenOnLoad, ISaveOpenedFileStream
+    public class PKG : IArchiveFile, IFileFormat
     {
         public FileType FileType { get; set; } = FileType.Archive;
 
@@ -59,14 +59,12 @@ namespace FirstPlugin
             }
         }
 
-        private System.IO.Stream _stream;
         public void Load(System.IO.Stream stream)
         {
             if (HashList.Count == 0)
                 CalculateHashes();
 
-            _stream = stream;
-            using (var reader = new FileReader(stream, true))
+            using (var reader = new FileReader(stream))
             {
                 reader.SetByteOrder(false);
                 uint headerSize = reader.ReadUInt32();
@@ -84,8 +82,10 @@ namespace FirstPlugin
 
                     file.Hash = nameHash;
                     file.FileName = nameHash.ToString("X");
-                    file.FileDataStream = new SubStream(reader.BaseStream,
-                        fileStartOffset, size);
+
+                    using (reader.TemporarySeek(fileStartOffset, SeekOrigin.Begin)) {
+                        file.FileData = reader.ReadBytes((int)size);
+                    }
 
                     if (HashList.ContainsKey(nameHash))
                         file.FileName = HashList[nameHash];
@@ -98,7 +98,6 @@ namespace FirstPlugin
 
         public void Unload()
         {
-            _stream?.Dispose();
         }
 
         public void Save(System.IO.Stream stream)
@@ -120,7 +119,7 @@ namespace FirstPlugin
                 for (int i = 0; i < files.Count; i++)
                 {
                     writer.WriteUint32Offset(20 + (i * 16)); //start offset
-                    files[i].FileDataStream.CopyTo(writer.BaseStream);
+                    writer.Write(files[i].FileData);
                     writer.WriteUint32Offset(24 + (i * 16)); //end offset
 
                     writer.Align(8);
@@ -138,7 +137,7 @@ namespace FirstPlugin
             files.Add(new FileEntry()
             {
                 Hash = hash,
-                FileDataStream = archiveFileInfo.FileDataStream,
+                FileData = archiveFileInfo.FileData,
                 FileName = archiveFileInfo.FileName,
             });
             return true;
