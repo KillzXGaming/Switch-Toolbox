@@ -41,6 +41,7 @@ namespace MetroidDreadLibrary
         public TextEditor OpenForm()
         {
             var textEditor = new TextEditor();
+            FillEditor(textEditor);
             return textEditor;
         }
 
@@ -48,6 +49,8 @@ namespace MetroidDreadLibrary
         {
             ((TextEditor)control).FileFormat = this;
             ((TextEditor)control).FillEditor(JsonContents);
+            ((TextEditor)control).TextEditorChanged = null;
+
             ((TextEditor)control).TextEditorChanged += delegate
             {
                 JsonContents = ((TextEditor)control).GetText();
