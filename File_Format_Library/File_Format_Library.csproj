@@ -225,6 +225,7 @@
     <Compile Include="FileFormats\Archives\PKG.cs" />
     <Compile Include="FileFormats\Archives\QuickAccess\QuickAccessFile.cs" />
     <Compile Include="FileFormats\Archives\QuickAccess\QuickAccessFolder.cs" />
+    <Compile Include="FileFormats\Archives\RARC\RARC_Parser.cs" />
     <Compile Include="FileFormats\Archives\WTA.cs" />
     <Compile Include="FileFormats\Audio\BARS\BarsFile.cs" />
     <Compile Include="FileFormats\BCH\BCH.cs" />
@@ -367,7 +368,7 @@
     <Compile Include="FileFormats\Archives\ME01.cs" />
     <Compile Include="FileFormats\Archives\MKGPDX_PAC.cs" />
     <Compile Include="FileFormats\Archives\NXARC.cs" />
-    <Compile Include="FileFormats\Archives\RARC.cs" />
+    <Compile Include="FileFormats\Archives\RARC\RARC.cs" />
     <Compile Include="FileFormats\Archives\Sonic Racing\GameDataToc.cs" />
     <Compile Include="FileFormats\Archives\Sonic Racing\SPC.cs" />
     <Compile Include="FileFormats\Archives\Sonic Racing\SWU.cs" />
