@@ -39,6 +39,8 @@
             this.listViewModeCB = new Toolbox.Library.Forms.STComboBox();
             this.lblFoundEntries = new Toolbox.Library.Forms.STLabel();
             this.chkUpdateDoubleClick = new Toolbox.Library.Forms.STCheckBox();
+            this.chkAllowWildcards = new Toolbox.Library.Forms.STCheckBox();
+            this.chkOpenWithDoubleClick = new Toolbox.Library.Forms.STCheckBox();
             this.SuspendLayout();
             // 
             // listViewCustom1
@@ -50,6 +52,7 @@
             this.listViewCustom1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this.listViewCustom1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewCustom1.HideSelection = false;
             this.listViewCustom1.Location = new System.Drawing.Point(5, 77);
             this.listViewCustom1.Name = "listViewCustom1";
             this.listViewCustom1.OwnerDraw = true;
@@ -88,7 +91,7 @@
             // chkSearchSubNodes
             // 
             this.chkSearchSubNodes.AutoSize = true;
-            this.chkSearchSubNodes.Location = new System.Drawing.Point(195, 31);
+            this.chkSearchSubNodes.Location = new System.Drawing.Point(8, 54);
             this.chkSearchSubNodes.Name = "chkSearchSubNodes";
             this.chkSearchSubNodes.Size = new System.Drawing.Size(111, 17);
             this.chkSearchSubNodes.TabIndex = 14;
@@ -118,7 +121,7 @@
             // chkAutoSearch
             // 
             this.chkAutoSearch.AutoSize = true;
-            this.chkAutoSearch.Location = new System.Drawing.Point(100, 31);
+            this.chkAutoSearch.Location = new System.Drawing.Point(207, 31);
             this.chkAutoSearch.Name = "chkAutoSearch";
             this.chkAutoSearch.Size = new System.Drawing.Size(85, 17);
             this.chkAutoSearch.TabIndex = 17;
@@ -132,6 +135,7 @@
             this.listViewModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.listViewModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.listViewModeCB.FormattingEnabled = true;
+            this.listViewModeCB.IsReadOnly = false;
             this.listViewModeCB.Location = new System.Drawing.Point(5, 346);
             this.listViewModeCB.Name = "listViewModeCB";
             this.listViewModeCB.Size = new System.Drawing.Size(143, 21);
@@ -151,17 +155,39 @@
             // chkUpdateDoubleClick
             // 
             this.chkUpdateDoubleClick.AutoSize = true;
-            this.chkUpdateDoubleClick.Location = new System.Drawing.Point(8, 54);
+            this.chkUpdateDoubleClick.Location = new System.Drawing.Point(125, 54);
             this.chkUpdateDoubleClick.Name = "chkUpdateDoubleClick";
-            this.chkUpdateDoubleClick.Size = new System.Drawing.Size(138, 17);
+            this.chkUpdateDoubleClick.Size = new System.Drawing.Size(134, 17);
             this.chkUpdateDoubleClick.TabIndex = 20;
-            this.chkUpdateDoubleClick.Text = "Update by Double Click";
+            this.chkUpdateDoubleClick.Text = "Select on Double Click";
             this.chkUpdateDoubleClick.UseVisualStyleBackColor = true;
+            // 
+            // chkAllowWildcards
+            // 
+            this.chkAllowWildcards.AutoSize = true;
+            this.chkAllowWildcards.Location = new System.Drawing.Point(100, 31);
+            this.chkAllowWildcards.Name = "chkAllowWildcards";
+            this.chkAllowWildcards.Size = new System.Drawing.Size(101, 17);
+            this.chkAllowWildcards.TabIndex = 21;
+            this.chkAllowWildcards.Text = "Allow Wildcards";
+            this.chkAllowWildcards.UseVisualStyleBackColor = true;
+            this.chkAllowWildcards.CheckedChanged += new System.EventHandler(this.chkAllowWildcards_CheckedChanged);
+            // 
+            // chkOpenWithDoubleClick
+            // 
+            this.chkOpenWithDoubleClick.Location = new System.Drawing.Point(269, 54);
+            this.chkOpenWithDoubleClick.Name = "chkOpenWithDoubleClick";
+            this.chkOpenWithDoubleClick.Size = new System.Drawing.Size(136, 17);
+            this.chkOpenWithDoubleClick.TabIndex = 0;
+            this.chkOpenWithDoubleClick.Text = "Open by Double Click";
+            this.chkOpenWithDoubleClick.UseVisualStyleBackColor = true;
             // 
             // SearchNodePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkOpenWithDoubleClick);
+            this.Controls.Add(this.chkAllowWildcards);
             this.Controls.Add(this.chkUpdateDoubleClick);
             this.Controls.Add(this.lblFoundEntries);
             this.Controls.Add(this.listViewModeCB);
@@ -192,5 +218,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private STLabel lblFoundEntries;
         private STCheckBox chkUpdateDoubleClick;
+        private STCheckBox chkAllowWildcards;
+        private STCheckBox chkOpenWithDoubleClick;
     }
 }

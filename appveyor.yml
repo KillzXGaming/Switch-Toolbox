@@ -37,6 +37,8 @@ after_build:
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\x86"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\ZstdNet.dll"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\DirectXTexNet.dll"
+  - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\tegra_swizzle_x64.dll"
+  - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\tegra_swizzle_x86.dll"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\DirectXTexNet.xml"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\runtimes"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Version.txt"
