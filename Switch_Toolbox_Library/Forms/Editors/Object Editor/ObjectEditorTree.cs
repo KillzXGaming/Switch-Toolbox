@@ -1048,6 +1048,7 @@ namespace Toolbox.Library.Forms
             var panel = new STPanel() { Dock = DockStyle.Fill };
             panel.Controls.Add(searchForm);
             form.AddControl(panel);
+            form.Text = "Search Window";
             form.Show(this);
         }
 

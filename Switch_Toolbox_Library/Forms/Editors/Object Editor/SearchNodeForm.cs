@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,6 +19,8 @@ namespace Toolbox.Library.Forms
         private bool MatchCase => chkMatchCase.Checked;
         private bool SearchSubNodes => chkSearchSubNodes.Checked;
         private bool UpdateDoubleClick => chkUpdateDoubleClick.Checked;
+        private bool OpenDoubleClick => chkOpenWithDoubleClick.Checked;
+        private bool AllowWildcards => chkAllowWildcards.Checked;
         
         private List<TreeNode> TreenodeLookup = new List<TreeNode>();
 
@@ -67,21 +70,21 @@ namespace Toolbox.Library.Forms
             TreenodeLookup.Clear();
 
             foreach (TreeNode node in treeView.Nodes)
-                RecurvsiveTreeNodeSearch(node, text);
+                RecursiveTreeNodeSearch(node, text);
 
             listViewCustom1.EndUpdate();
 
             lblFoundEntries.Text = $"Found Entries {TreenodeLookup.Count} of {TotalNodeCount}";
         }
 
-        private void RecurvsiveTreeNodeSearch(TreeNode parentNode, string text)
+        private static String WildCardToRegular(String query)
         {
-            bool HasText = false;
+            return Regex.Escape(query).Replace("\\?", ".").Replace("\\*", ".*")+".*";
+        }
 
-            if (MatchCase)
-                HasText = parentNode.Text.IndexOf(text, StringComparison.Ordinal) >= 0;
-            else
-                HasText = parentNode.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0;
+        private void RecursiveTreeNodeSearch(TreeNode parentNode, string text)
+        {
+            bool HasText = Regex.IsMatch(parentNode.Text, AllowWildcards ? WildCardToRegular(text) : text, MatchCase ? RegexOptions.None : RegexOptions.IgnoreCase);
 
             if (HasText)
             {
@@ -108,7 +111,7 @@ namespace Toolbox.Library.Forms
             if (SearchSubNodes)
             {
                 foreach (TreeNode node in parentNode.Nodes)
-                    RecurvsiveTreeNodeSearch(node, text);
+                    RecursiveTreeNodeSearch(node, text);
             }
 
             TotalNodeCount++;
@@ -122,6 +125,14 @@ namespace Toolbox.Library.Forms
 
                 treeView.SelectedNode = TreenodeLookup[index];
                 treeView.Refresh();
+            }
+            if (listViewCustom1.SelectedItems.Count > 0 && OpenDoubleClick)
+            {
+                int index = listViewCustom1.SelectedIndices[0];
+                if (TreenodeLookup[index] is TreeNodeCustom)
+                    ((TreeNodeCustom)TreenodeLookup[index]).OnDoubleMouseClick(treeView);
+                if (TreenodeLookup[index].Tag != null && TreenodeLookup[index].Tag is TreeNodeCustom)
+                    ((TreeNodeCustom)TreenodeLookup[index].Tag).OnDoubleMouseClick(treeView);
             }
         }
 
@@ -151,6 +162,10 @@ namespace Toolbox.Library.Forms
             int index = listViewCustom1.SelectedIndices[0];
             treeView.SelectedNode = TreenodeLookup[index];
             treeView.Refresh();
+        }
+
+        private void chkAllowWildcards_CheckedChanged(object sender, EventArgs e) {
+            UpdateSearchResults(searchTB.Text);
         }
     }
 }
