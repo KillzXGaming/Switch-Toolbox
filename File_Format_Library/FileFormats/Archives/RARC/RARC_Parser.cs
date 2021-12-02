@@ -197,7 +197,7 @@ namespace FirstPlugin
                         var dirEntry = (DirectoryEntry)_savedNodes[dir].Children[n];
                         int index = Directories.ToList().IndexOf(dirEntry);
 
-                        writer.Write((ushort)0);
+                        writer.Write((short)-1);
                         writer.Write(dirEntry.Hash);
                         writer.Write((byte)0x2);
                         writer.Write((byte)0);
