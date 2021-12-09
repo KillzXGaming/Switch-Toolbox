@@ -11,7 +11,7 @@ namespace Toolbox.Library
     public class Zstb : ICompressionFormat
     {
         public string[] Description { get; set; } = new string[] { "ZSTD" };
-        public string[] Extension { get; set; } = new string[] { "*.zstd", };
+        public string[] Extension { get; set; } = new string[] { "*.zstd", "*.zst", };
 
         public override string ToString() { return "ZSTD"; }
 
