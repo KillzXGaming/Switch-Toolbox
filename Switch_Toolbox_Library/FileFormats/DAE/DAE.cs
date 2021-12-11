@@ -387,8 +387,8 @@ namespace Toolbox.Library
                             if (b > mesh.VertexSkinCount - 1)
                                 continue;
 
-                            if (vertex.boneWeights.Count > b)
-                            {
+                            //Skip 0 weights
+                            if (vertex.boneWeights.Count > b) {
                                 if (vertex.boneWeights[b] == 0)
                                     continue;
                             }
@@ -399,19 +399,25 @@ namespace Toolbox.Library
                             else
                                 index = (int)vertex.boneIds[b];
 
-                            if (index != -1 && index < skeleton?.bones.Count)
+                            //Only map for valid weights/indices
+                            bool hasValidIndex = index != -1 && index < skeleton?.bones.Count;
+                            bool hasValidWeight = vertex.boneWeights.Count > b;
+                            if (hasValidIndex)
                                 bIndices.Add(index);
 
-                            if (vertex.boneWeights.Count > b)
+                            if (hasValidWeight && hasValidIndex)
                                 bWeights.Add(vertex.boneWeights[b]);
-                            else
-                                bWeights.Add(0);
                         }
-                        
+                        //Rigid bodies with no direct bone indices
                         if (bIndices.Count == 0 && mesh.BoneIndex != -1) {
                             HasBoneIds = true;
                             bIndices.Add(mesh.BoneIndex);
                             bWeights.Add(1);
+                        }
+                        //Bone indices with no weights directly mapped
+                        if (bWeights.Count == 0 && bIndices.Count > 0)
+                        {
+                            bWeights.Add(1.0f);
                         }
 
                         BoneIndices.Add(bIndices.ToArray());
