@@ -401,7 +401,7 @@ namespace FirstPlugin
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 var obj = KclFile.CreateGenericModel();
-                obj.Save(sfd.FileName, true);
+                obj.Save(sfd.FileName);
             }
         }
 
