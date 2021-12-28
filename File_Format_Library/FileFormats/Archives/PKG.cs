@@ -118,6 +118,8 @@ namespace FirstPlugin
                 writer.WriteUint32Offset(0, 4); //Size of header - 4
                 for (int i = 0; i < files.Count; i++)
                 {
+                    files[i].SaveFileFormat();
+
                     writer.WriteUint32Offset(20 + (i * 16)); //start offset
                     writer.Write(files[i].FileData);
                     writer.WriteUint32Offset(24 + (i * 16)); //end offset
