@@ -137,7 +137,10 @@ namespace Toolbox.Library
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                FileData = File.ReadAllBytes(ofd.FileName);
+                if (FileDataStream != null)
+                    FileDataStream = new MemoryStream(File.ReadAllBytes(ofd.FileName));
+                else
+                    FileData = File.ReadAllBytes(ofd.FileName);
                 return true;
             }
             return false;
@@ -782,7 +785,18 @@ namespace Toolbox.Library
 
                 Nodes.Clear();
 
-                TreeHelper.AddFiles(this, RootNode, Directory.GetFiles(ofd.SelectedPath));
+                var proccessedFiles = TreeHelper.ReadFiles(ofd.SelectedPath);
+
+                string folderPath = TreeHelper.GetFolderAbsoultePath(this, RootNode);
+                for (int i = 0; i < proccessedFiles.Count; i++)
+                {
+                    ArchiveFile.AddFile(new ArchiveFileInfo()
+                    {
+                        FileName = $"{folderPath}/{proccessedFiles[i].Item1}",
+                        FileData = File.ReadAllBytes(proccessedFiles[i].Item2),
+                    });
+                }
+                RootNode.FillTreeNodes();
             }
         }
 

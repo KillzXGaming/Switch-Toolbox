@@ -214,6 +214,17 @@ namespace Toolbox.Library
             }
         }
 
+        public static string GetFolderAbsoultePath(TreeNode node, ArchiveRootNodeWrapper rootNode)
+        {
+            string nodePath = node.FullPath;
+            int startIndex = nodePath.IndexOf(rootNode.Text);
+            if (startIndex > 0)
+                nodePath = nodePath.Substring(startIndex);
+
+            string slash = Path.DirectorySeparatorChar.ToString();
+            string slashAlt = Path.AltDirectorySeparatorChar.ToString();
+            return nodePath.Replace(rootNode.Text + slash, string.Empty).Replace(slash ?? "", slashAlt);
+        }
 
         public static void AddFiles(TreeNode parentNode, ArchiveRootNodeWrapper rootNode, string[] Files)
         {
