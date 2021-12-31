@@ -128,8 +128,8 @@ namespace Toolbox.Library
 
         }
 
-        public void Save(System.IO.Stream stream)
-        {
+        public void Save(System.IO.Stream stream) {
+            Save(this, stream, GetSurfaces());
         }
 
 
@@ -1348,7 +1348,12 @@ namespace Toolbox.Library
 
         public void Save(DDS dds, string FileName, List<Surface> data = null)
         {
-            FileWriter writer = new FileWriter(new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write));
+            Save(dds, new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write), data);
+        }
+
+        public void Save(DDS dds, Stream stream, List<Surface> data = null)
+        {
+            FileWriter writer = new FileWriter(stream);
             var header = dds.header;
             writer.Write(Encoding.ASCII.GetBytes("DDS "));
             writer.Write(header.size);
