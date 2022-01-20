@@ -832,7 +832,7 @@ namespace FirstPlugin
             public void Read(FileReader reader)
             {
                 Level = reader.ReadUInt16(); //Usually 9?
-                Type = reader.ReadEnum<CompressionType>(true);
+                Type = reader.ReadEnum<CompressionType>(false);
                 uint DecompressedFileSize = reader.ReadUInt32();
                 CompressedFileSize = reader.ReadUInt32();
                 Padding = reader.ReadUInt32();
@@ -840,8 +840,15 @@ namespace FirstPlugin
 
                 using (reader.TemporarySeek((long)FileOffset, SeekOrigin.Begin))
                 {
-                    FileData = reader.ReadBytes((int)CompressedFileSize);
-                    FileData = STLibraryCompression.Type_LZ4.Decompress(FileData, 0, (int)CompressedFileSize, (int)DecompressedFileSize);
+                    if (Type == CompressionType.Lz4)
+                    {
+                        FileData = reader.ReadBytes((int)CompressedFileSize);
+                        FileData = STLibraryCompression.Type_LZ4.Decompress(FileData, 0, (int)CompressedFileSize, (int)DecompressedFileSize);
+                    }
+                    if (Type == CompressionType.None)
+                        FileData = reader.ReadBytes((int)DecompressedFileSize);
+                    else
+                        FileData = reader.ReadBytes((int)CompressedFileSize);
                 }
             }
 
@@ -874,8 +881,10 @@ namespace FirstPlugin
                     return data;
                 else if (Type == CompressionType.Zlib)
                     return STLibraryCompression.ZLIB.Compress(data);
-                else
-                    throw new Exception("Unkown compression type?");
+                else if (Type == CompressionType.Oodle)
+                    throw new Exception("Oodle compression type not supported yet for saving!");
+                else 
+                    return data;
             }
 
             public enum CompressionType : ushort
@@ -883,6 +892,7 @@ namespace FirstPlugin
                 None = 0,
                 Zlib = 1,
                 Lz4 = 2,
+                Oodle = 3,
             }
         }
 
