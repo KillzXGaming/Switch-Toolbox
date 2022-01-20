@@ -845,7 +845,7 @@ namespace FirstPlugin
                         FileData = reader.ReadBytes((int)CompressedFileSize);
                         FileData = STLibraryCompression.Type_LZ4.Decompress(FileData, 0, (int)CompressedFileSize, (int)DecompressedFileSize);
                     }
-                    if (Type == CompressionType.None)
+                    else if (Type == CompressionType.None)
                         FileData = reader.ReadBytes((int)DecompressedFileSize);
                     else
                         FileData = reader.ReadBytes((int)CompressedFileSize);
