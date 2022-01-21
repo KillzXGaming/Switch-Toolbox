@@ -27,7 +27,7 @@ namespace Bfres.Structs
         public ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
-            Items.Add(new ToolStripMenuItem("Import Object", null, Import, Keys.Control | Keys.I));
+            Items.Add(new ToolStripMenuItem("Import Static Object", null, Import, Keys.Control | Keys.I));
             Items.Add(new ToolStripSeparator());
             Items.Add(new ToolStripMenuItem("New Empty Object", null, CreateEmpty, Keys.Control | Keys.N));
             Items.Add(new ToolStripSeparator());
@@ -167,7 +167,7 @@ namespace Bfres.Structs
             List<ToolStripItem> Items = new List<ToolStripItem>();
 
             Items.Add(new ToolStripMenuItem("Export", null, Export, Keys.Control | Keys.E));
-            Items.Add(new ToolStripMenuItem("Replace", null, Replace, Keys.Control | Keys.R));
+            Items.Add(new ToolStripMenuItem("Replace (Static)", null, Replace, Keys.Control | Keys.R));
             Items.Add(new ToolStripSeparator());
             Items.Add(new ToolStripMenuItem("Rename", null, Rename, Keys.Control | Keys.N));
             Items.Add(new ToolStripSeparator());
@@ -355,7 +355,7 @@ namespace Bfres.Structs
         private void GenerateBoundingBoxes(object sender, EventArgs args)
         {
             Cursor.Current = Cursors.WaitCursor;
-            CreateNewBoundingBoxes(GetParentModel().Skeleton);
+            CreateNewBoundingBoxes(GetParentModel());
             SaveShape(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
@@ -390,7 +390,7 @@ namespace Bfres.Structs
                 lod.subMeshes.Add(subMesh);
             }
 
-            CreateNewBoundingBoxes(GetParentModel().Skeleton);
+            CreateNewBoundingBoxes(GetParentModel());
         }
 
         private void GenerateLODMeshes(object sender, EventArgs args)
@@ -399,7 +399,7 @@ namespace Bfres.Structs
 
             //Todo add lod generating
 
-            CreateNewBoundingBoxes(GetParentModel().Skeleton);
+            CreateNewBoundingBoxes(GetParentModel());
             SaveShape(GetResFileU() != null);
             UpdateVertexData();
             GenerateBoundingNodes();
@@ -421,7 +421,7 @@ namespace Bfres.Structs
                     lodMeshes.Remove(meshes[i]);
             }
 
-            CreateNewBoundingBoxes(GetParentModel().Skeleton);
+            CreateNewBoundingBoxes(GetParentModel());
             SaveShape(GetResFileU() != null);
             UpdateVertexData();
             GenerateBoundingNodes();
@@ -976,7 +976,7 @@ namespace Bfres.Structs
 
                                 ApplyImportSettings(settings, GetFMAT());
 
-                                CreateNewBoundingBoxes(GetParentModel().Skeleton);
+                                CreateNewBoundingBoxes(GetParentModel());
                                 OptmizeAttributeFormats();
                                 SaveShape(IsWiiU);
                                 SaveVertexBuffer(IsWiiU);
@@ -1177,13 +1177,13 @@ namespace Bfres.Structs
             }
         }
 
-        public void CreateNewBoundingBoxes(STSkeleton skeleton)
+        public void CreateNewBoundingBoxes(FMDL model)
         {
             boundingBoxes.Clear();
             boundingRadius.Clear();
             foreach (LOD_Mesh mesh in lodMeshes)
             {
-                BoundingBox box = CalculateBoundingBox(skeleton);
+                BoundingBox box = CalculateBoundingBox(model);
                 boundingBoxes.Add(box);
                 boundingRadius.Add(box.Radius);
                 foreach (LOD_Mesh.SubMesh sub in mesh.subMeshes)
@@ -1191,14 +1191,14 @@ namespace Bfres.Structs
             }
         }
 
-        private BoundingBox CalculateBoundingBox(STSkeleton skeleton)
+        private BoundingBox CalculateBoundingBox(FMDL model)
         {
             Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             Vector3 max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
             if (VertexSkinCount > 0)
             {
-                var aabb = CalculateSkinnedBoundings(skeleton, vertices);
+                var aabb = CalculateSkinnedBoundings(model, vertices);
                 //Failed to get bounding data for some reason, calculate normally
                 //This shouldn't happen but it's a fail safe option.
                 if (aabb.Count == 0)
@@ -1236,25 +1236,27 @@ namespace Bfres.Structs
             return new BoundingBox() { Radius = radius, Center = center, Extend = extend };
         }
 
-        private List<AABB> CalculateSkinnedBoundings(STSkeleton skeleton, List<Vertex> vertices)
+        private List<AABB> CalculateSkinnedBoundings(FMDL model, List<Vertex> vertices)
         {
             Dictionary<int, AABB> skinnedBoundings = new Dictionary<int, AABB>();
             for (int i = 0; i < vertices.Count; i++)
             {
                 foreach (var boneID in vertices[i].boneIds)
                 {
-                    if (!skinnedBoundings.ContainsKey(boneID))
-                        skinnedBoundings.Add(boneID, new AABB());
+                    var index = model.Skeleton.Node_Array[boneID];
+
+                    if (!skinnedBoundings.ContainsKey(index))
+                        skinnedBoundings.Add(index, new AABB());
 
                     //Get the skinned bone transform
-                    var transform = skeleton.bones[boneID].Transform;
+                    var transform = model.Skeleton.bones[index].Transform;
                     var inverted = transform.Inverted();
 
                     //Get the position in local coordinates
                     var position = vertices[i].pos;
                     position = OpenTK.Vector3.TransformPosition(position, inverted);
 
-                    var bounding = skinnedBoundings[boneID];
+                    var bounding = skinnedBoundings[index];
                     //Set the min and max values
                     bounding.Min.X = Math.Min(bounding.Min.X, position.X);
                     bounding.Min.Y = Math.Min(bounding.Min.Y, position.Y);

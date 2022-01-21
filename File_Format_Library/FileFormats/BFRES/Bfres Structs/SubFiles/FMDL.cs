@@ -792,7 +792,7 @@ namespace Bfres.Structs
                                 shape.BoneIndex = boneIndex;
                             }
 
-                            shape.CreateNewBoundingBoxes(Skeleton);
+                            shape.CreateNewBoundingBoxes(this);
                             shape.OptmizeAttributeFormats();
                             shape.SaveShape(IsWiiU);
                             shape.SaveVertexBuffer(IsWiiU);
@@ -1328,7 +1328,7 @@ namespace Bfres.Structs
                                 shape.BoneIndex = boneIndex;
                             }
 
-                            shape.CreateNewBoundingBoxes(Skeleton);
+                            shape.CreateNewBoundingBoxes(this);
                             shape.OptmizeAttributeFormats();
                             shape.SaveShape(IsWiiU);
                             shape.SaveVertexBuffer(IsWiiU);
