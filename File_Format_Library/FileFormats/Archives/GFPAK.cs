@@ -847,6 +847,8 @@ namespace FirstPlugin
                     }
                     else if (Type == CompressionType.None)
                         FileData = reader.ReadBytes((int)DecompressedFileSize);
+                    else if (Type == CompressionType.Oodle)
+                        FileData = STLibraryCompression.Type_Oodle.Decompress(FileData, (int)DecompressedFileSize);
                     else
                         FileData = reader.ReadBytes((int)CompressedFileSize);
                 }

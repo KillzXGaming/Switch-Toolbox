@@ -712,6 +712,18 @@ namespace Toolbox.Library.IO
                 return LZ4.LZ4Codec.Encode(data, inputOffset, data.Length);
             }
         }
-    }
 
+        public class Type_Oodle
+        {
+            public static byte[] Decompress(byte[] data, int decompressedSize)
+            {
+                return Toolbox.Library.Compression.Oodle.Decompress(data, decompressedSize);
+            }
+
+            public static byte[] Compress(byte[] source, Compression.Oodle.OodleLZ_Compressor compressor, Compression.Oodle.OodleLZ_CompressionLevel level)
+            {
+                return Toolbox.Library.Compression.Oodle.Compress(source, compressor, level);
+            }
+        }
+    }
 }

@@ -248,6 +248,7 @@
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoderBit.cs" />
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoderBitTree.cs" />
     <Compile Include="Compression\MarioTennisCmp32.cs" />
+    <Compile Include="Compression\Oodle.cs" />
     <Compile Include="Compression\STLibraryCompression.cs" />
     <Compile Include="Compression\Formats\Yay0.cs" />
     <Compile Include="Compression\Formats\Yaz0.cs" />
