@@ -582,7 +582,7 @@ namespace FirstPlugin
 
                 fileEntry.Read(reader);
                 string Extension = FindMatch(fileEntry.FileData);
-                if (Extension.EndsWith("gfbanmcfg"))
+                if (Extension.EndsWith("gfbanmcfg") && version != 0x1000)
                 {
                     GFBANMCFG cfg = new GFBANMCFG();
                     cfg.Load(new MemoryStream(fileEntry.FileData));
@@ -848,7 +848,10 @@ namespace FirstPlugin
                     else if (Type == CompressionType.None)
                         FileData = reader.ReadBytes((int)DecompressedFileSize);
                     else if (Type == CompressionType.Oodle)
+                    {
+                        FileData = reader.ReadBytes((int)CompressedFileSize); 
                         FileData = STLibraryCompression.Type_Oodle.Decompress(FileData, (int)DecompressedFileSize);
+                    }
                     else
                         FileData = reader.ReadBytes((int)CompressedFileSize);
                 }
