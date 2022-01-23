@@ -887,7 +887,8 @@ namespace FirstPlugin
                 else if (Type == CompressionType.Zlib)
                     return STLibraryCompression.ZLIB.Compress(data);
                 else if (Type == CompressionType.Oodle)
-                    throw new Exception("Oodle compression type not supported yet for saving!");
+                    return STLibraryCompression.Type_Oodle.Compress(data, Toolbox.Library.Compression.Oodle.OodleLZ_Compressor.OodleLZ_Compressor_Kraken,
+                        Toolbox.Library.Compression.Oodle.OodleLZ_CompressionLevel.OodleLZ_CompressionLevel_Optimal2);
                 else 
                     return data;
             }
