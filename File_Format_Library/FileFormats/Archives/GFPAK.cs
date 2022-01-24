@@ -493,6 +493,11 @@ namespace FirstPlugin
 
         public void Save(System.IO.Stream stream)
         {
+            if (version == 0x1000 && !File.Exists($"{Runtime.ExecutableDir}\\oo2core_6_win64.dll"))
+            {
+                MessageBox.Show("It is necessary to have 'oo2core_6_win64.dll' in the executable folder.");
+                return;
+            }
             Write(new FileWriter(stream));
         }
 
@@ -544,11 +549,13 @@ namespace FirstPlugin
             GFPAKHashCache.EnsureHashCache();
 
             version = reader.ReadInt32();
-            if (version == 0x1000)
+
+            if (version == 0x1000 && !File.Exists($"{Runtime.ExecutableDir}\\oo2core_6_win64.dll"))
             {
-                if (!File.Exists("oo2core_6_win64.dll"))
-                    throw new Exception("It is necessary to have 'oo2core_6_win64.dll' in the executable folder.");
+                MessageBox.Show("It is necessary to have 'oo2core_6_win64.dll' in the executable folder.");
+                return;
             }
+
             uint padding = reader.ReadUInt32();
             uint FileCount = reader.ReadUInt32();
             FolderCount = reader.ReadInt32();
