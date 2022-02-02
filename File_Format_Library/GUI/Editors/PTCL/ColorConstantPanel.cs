@@ -14,10 +14,22 @@ namespace FirstPlugin.Forms
     public partial class ColorConstantPanel : UserControl, IColorPanelCommon
     {
         public bool IsAlpha { get; set; }
+        public STColor SelectedColor
+        {
+            get
+            {
+                return ActiveColor;
+            }
+        }
 
         public ColorConstantPanel()
         {
             InitializeComponent();
+        }
+
+        public void UpdateSelectedColor()
+        {
+            color0PB.BackColor = ActiveColor.Color;
         }
 
         public Color GetColor()
@@ -29,11 +41,6 @@ namespace FirstPlugin.Forms
         {
             color0PB.BackColor = color;
             ActiveColor.Color = color;
-        }
-
-        public void SelectPanel()
-        {
-            this.BorderStyle = BorderStyle.Fixed3D;
         }
 
         public void DeselectPanel()
@@ -49,6 +56,11 @@ namespace FirstPlugin.Forms
         {
             ActiveColor = color;
             color0PB.BackColor = Color.FromArgb(ActiveColor.Color.R, ActiveColor.Color.G, ActiveColor.Color.B);
+        }
+
+        public void LoadColors(STColor[] colors, int keyCount)
+        {
+            throw new InvalidOperationException("ColorConstantPanel doesn't support multiple colors. Use LoadColor(STColor) instead.");
         }
 
         private void color0PB_Click(object sender, EventArgs e)
