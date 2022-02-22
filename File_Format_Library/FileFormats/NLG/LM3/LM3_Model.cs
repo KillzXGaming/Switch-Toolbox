@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -63,7 +64,9 @@ namespace FirstPlugin.LuigisMansion3
 
                 settings.SuppressConfirmDialog = true;
 
-                DAE.Export($"{folderPath}/{mdl.Text}.dae", settings, model, new List<STGenericTexture>());
+                if (mdl.Text.Contains("/"))
+                    Directory.CreateDirectory($"{folderPath}/{Path.GetDirectoryName(mdl.Text)}");
+                DAE.Export($"{folderPath}/{mdl.Text.Replace("/", "//")}.dae", settings, model, new List<STGenericTexture>());
             }
 
             System.Windows.Forms.MessageBox.Show($"Exported models Successfuly!");

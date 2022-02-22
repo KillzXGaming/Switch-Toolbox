@@ -83,33 +83,61 @@ namespace FirstPlugin.FileFormats.Hashes
 
                 PutHash(HashString);
 
-                if (HashString.Contains("pm0000") ||
-                    HashString.Contains("poke_XXXX") ||
-                    HashString.Contains("poke_ball_0000") ||
-                    HashString.Contains("poke_face_0000") ||
-                    HashString.Contains("poke_motion_0000"))
+                //Mon nums
+                if (HashString.Contains("XXXX"))
                 {
-                    GenerateGenericPokeStrings(HashString);
+                    GeneratePkmnString(HashString);
                     PokeHashTemplates.Add(HashString);
                 }
             }
         }
 
-        private static void GenerateGenericPokeStrings(string hashStr)
+        private static void GeneratePkmnString(string hashStr)
         {
-            for (int i = 0; i < 1000; i++)
-            {
-                string pokeStr = string.Empty;
-                if (hashStr.Contains("pm0000")) pokeStr = hashStr.Replace("pm0000", $"pm{i.ToString("D4")}");
-                else if (hashStr.Contains("poke_XXXX")) pokeStr = hashStr.Replace("poke_XXXX", $"poke_{i.ToString("D4")}");
-                else if (hashStr.Contains("poke_ball_0000")) pokeStr = hashStr.Replace("poke_ball_0000", $"poke_ball_{i.ToString("D4")}");
-                else if (hashStr.Contains("poke_face_0000")) pokeStr = hashStr.Replace("poke_face_0000", $"poke_face_{i.ToString("D4")}");
-                else if (hashStr.Contains("poke_motion_0000")) pokeStr = hashStr.Replace("poke_motion_0000", $"poke_motion_{i.ToString("D4")}");
-                ulong hash = FNV64A1.Calculate(pokeStr);
-                if (!HashCacheContent.ContainsKey(hash))
-                    HashCacheContent.Add(hash, pokeStr);
-            }
+            int[] alolanMons = {
+                37, 38
+            };
 
+            int[] husuiMons = {
+                58, 59, 100, 101, 157, 211, 215, 503, 549, 550,
+                570, 571, 628, 751, 764, 765, 843, 1003, 1005, 1006
+            };
+
+            int[] frenzyForms = { 
+                59, 101, 549, 751, 1002
+            };
+
+            string pokeStr = string.Empty;
+            List<string> monNames;
+            for (int i = 0; i < 1010; i++)
+            {
+                monNames = new List<string>();
+                //Gen species num
+                pokeStr = hashStr.Replace("XXXX", i.ToString("D4"));
+
+                //..also sub out alt forms
+                if (frenzyForms.Contains(i))
+                    monNames.Add(pokeStr.Replace("YY", "71"));
+
+                monNames.Add(pokeStr.Replace("YY", "00"));
+
+                //..also sub out region forms
+                foreach (var n in monNames) {
+                    if (alolanMons.Contains(i)) 
+                        TryAddHash(n.Replace("ZZ", "11"));
+                    else if (husuiMons.Contains(i)) 
+                        TryAddHash(n.Replace("ZZ", "41"));
+                    else 
+                        TryAddHash(n.Replace("ZZ", "00"));
+                }
+                monNames.Clear();
+            }
+        }
+
+        private static void TryAddHash(string str) {
+            ulong hash = FNV64A1.Calculate(str);
+            if (!HashCacheContent.ContainsKey(hash))
+                HashCacheContent.Add(hash, str);
         }
 
         public static void GeneratePokeStringsFromFile(string FileName)

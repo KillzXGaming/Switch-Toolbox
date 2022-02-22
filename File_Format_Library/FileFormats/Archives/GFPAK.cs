@@ -493,6 +493,11 @@ namespace FirstPlugin
 
         public void Save(System.IO.Stream stream)
         {
+            if (version == 0x1000 && !File.Exists($"{Runtime.ExecutableDir}\\oo2core_6_win64.dll"))
+            {
+                MessageBox.Show("It is necessary to have 'oo2core_6_win64.dll' in the executable folder.");
+                return;
+            }
             Write(new FileWriter(stream));
         }
 
@@ -544,6 +549,13 @@ namespace FirstPlugin
             GFPAKHashCache.EnsureHashCache();
 
             version = reader.ReadInt32();
+
+            if (version == 0x1000 && !File.Exists($"{Runtime.ExecutableDir}\\oo2core_6_win64.dll"))
+            {
+                MessageBox.Show("It is necessary to have 'oo2core_6_win64.dll' in the executable folder.");
+                return;
+            }
+
             uint padding = reader.ReadUInt32();
             uint FileCount = reader.ReadUInt32();
             FolderCount = reader.ReadInt32();
@@ -582,7 +594,7 @@ namespace FirstPlugin
 
                 fileEntry.Read(reader);
                 string Extension = FindMatch(fileEntry.FileData);
-                if (Extension.EndsWith("gfbanmcfg"))
+                if (Extension.EndsWith("gfbanmcfg") && version != 0x1000)
                 {
                     GFBANMCFG cfg = new GFBANMCFG();
                     cfg.Load(new MemoryStream(fileEntry.FileData));
@@ -847,6 +859,11 @@ namespace FirstPlugin
                     }
                     else if (Type == CompressionType.None)
                         FileData = reader.ReadBytes((int)DecompressedFileSize);
+                    else if (Type == CompressionType.Oodle)
+                    {
+                        FileData = reader.ReadBytes((int)CompressedFileSize); 
+                        FileData = STLibraryCompression.Type_Oodle.Decompress(FileData, (int)DecompressedFileSize);
+                    }
                     else
                         FileData = reader.ReadBytes((int)CompressedFileSize);
                 }
@@ -882,7 +899,8 @@ namespace FirstPlugin
                 else if (Type == CompressionType.Zlib)
                     return STLibraryCompression.ZLIB.Compress(data);
                 else if (Type == CompressionType.Oodle)
-                    throw new Exception("Oodle compression type not supported yet for saving!");
+                    return STLibraryCompression.Type_Oodle.Compress(data, Toolbox.Library.Compression.Oodle.OodleLZ_Compressor.OodleLZ_Compressor_Kraken,
+                        Toolbox.Library.Compression.Oodle.OodleLZ_CompressionLevel.OodleLZ_CompressionLevel_Optimal2);
                 else 
                     return data;
             }
