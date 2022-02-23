@@ -24,6 +24,8 @@ namespace FirstPlugin
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
 
+        static bool shownOodleError = false;
+
         public Dictionary<string, string> CategoryLookup
         {
             get {
@@ -843,6 +845,15 @@ namespace FirstPlugin
                 Padding = reader.ReadUInt32();
                 ulong FileOffset = reader.ReadUInt64();
 
+                if (Type == CompressionType.Oodle)
+                {
+                    if (!shownOodleError && !File.Exists($"{Runtime.ExecutableDir}\\oo2core_6_win64.dll"))
+                    {
+                        MessageBox.Show("'oo2core_6_win64.dll' not found in the executable folder! User must provide their own copy!");
+                        shownOodleError = true;
+                    }
+                }
+
                 using (reader.TemporarySeek((long)FileOffset, SeekOrigin.Begin))
                 {
                     if (Type == CompressionType.Lz4)
@@ -852,7 +863,7 @@ namespace FirstPlugin
                     }
                     else if (Type == CompressionType.None)
                         FileData = reader.ReadBytes((int)DecompressedFileSize);
-                    else if (Type == CompressionType.Oodle)
+                    else if (Type == CompressionType.Oodle && !shownOodleError)
                     {
                         FileData = reader.ReadBytes((int)CompressedFileSize); 
                         FileData = STLibraryCompression.Type_Oodle.Decompress(FileData, (int)DecompressedFileSize);
