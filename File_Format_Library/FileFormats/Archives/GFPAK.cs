@@ -549,13 +549,6 @@ namespace FirstPlugin
             GFPAKHashCache.EnsureHashCache();
 
             version = reader.ReadInt32();
-
-            if (version == 0x1000 && !File.Exists($"{Runtime.ExecutableDir}\\oo2core_6_win64.dll"))
-            {
-                MessageBox.Show("It is necessary to have 'oo2core_6_win64.dll' in the executable folder.");
-                return;
-            }
-
             uint padding = reader.ReadUInt32();
             uint FileCount = reader.ReadUInt32();
             FolderCount = reader.ReadInt32();

@@ -717,6 +717,11 @@ namespace Toolbox.Library.IO
         {
             public static byte[] Decompress(byte[] data, int decompressedSize)
             {
+                if (!File.Exists($"{Runtime.ExecutableDir}\\oo2core_6_win64.dll"))
+                {
+                    MessageBox.Show("'oo2core_6_win64.dll' not found in the executable folder! User must provide their own copy!");
+                    return data;
+                }
                 return Toolbox.Library.Compression.Oodle.Decompress(data, decompressedSize);
             }
 
