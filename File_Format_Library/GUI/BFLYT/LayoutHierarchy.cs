@@ -191,6 +191,11 @@ namespace LayoutBXLYT
             {
                 RenameTextureAction(matNode, i);
             }));
+            matNode.ContextMenuStrip.Items.Add(new STToolStipMenuItem("Remove", null, (o, e) =>
+            {
+                ActiveLayout.TextureFolder.Nodes.Remove(matNode);
+                ActiveLayout.Textures.Remove(matNode.Text);
+            }));
             matNode.ImageKey = "texture";
             matNode.SelectedImageKey = "texture";
             ActiveLayout.TextureFolder.Nodes.Add(matNode);
@@ -229,6 +234,11 @@ namespace LayoutBXLYT
             matNode.ContextMenuStrip.Items.Add(new STToolStipMenuItem("Rename", null, (o, e) =>
             {
                 RenameFont(matNode, i);
+            }));
+            matNode.ContextMenuStrip.Items.Add(new STToolStipMenuItem("Remove", null, (o, e) =>
+            {
+                ActiveLayout.FontFolder.Nodes.Remove(matNode);
+                ActiveLayout.Fonts.Remove(matNode.Text);
             }));
             matNode.ImageKey = "font";
             matNode.SelectedImageKey = "font";
