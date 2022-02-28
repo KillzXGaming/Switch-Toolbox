@@ -313,9 +313,10 @@ namespace LayoutBXLYT
                     writer.Write(new uint[Textures.Count]);
                     for (int i = 0; i < Textures.Count; i++)
                     {
-                        writer.WriteUint32Offset(startOfsPos + (i * 4), startPos);
+                        writer.WriteUint32Offset(startOfsPos + (i * 4), startOfsPos);
                         writer.WriteString(Textures[i]);
                     }
+                    writer.Align(4);
                 }
                 if (Entries.Count > 0)
                 {
