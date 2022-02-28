@@ -2263,7 +2263,7 @@ namespace LayoutBXLYT
         public virtual List<string> Textures { get; }
 
         [Browsable(false)]
-        public virtual List<string> Fonts { get; }
+        public virtual List<string> Fonts { get; set; } 
 
         [Browsable(false)]
         public virtual List<BxlytMaterial> Materials { get;}

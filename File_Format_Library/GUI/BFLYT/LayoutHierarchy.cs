@@ -172,31 +172,34 @@ namespace LayoutBXLYT
         {
             ActiveLayout.TextureFolder = new TreeNode("Textures");
             treeView1.Nodes.Add(ActiveLayout.TextureFolder);
-            for (int i = 0; i < textures.Count; i++)
+            ActiveLayout.TextureFolder.ContextMenuStrip = new ContextMenuStrip();
+            ActiveLayout.TextureFolder.ContextMenuStrip.Items.Add(new STToolStipMenuItem("Add", null, (o, e) =>
             {
-                TreeNode matNode = new TreeNode(textures[i]);
-                matNode.Tag = i;
-                matNode.ContextMenuStrip = new ContextMenuStrip();
-                var menu = new STToolStipMenuItem("Rename");
-                menu.Click += RenameTextureAction;
-                matNode.ContextMenuStrip.Items.Add(menu);
-                matNode.ImageKey = "texture";
-                matNode.SelectedImageKey = "texture";
-                ActiveLayout.TextureFolder.Nodes.Add(matNode);
-            }
+                ActiveLayout.Textures.Add("NewTexture");
+                AddTextureNode("NewTexture", ActiveLayout.Textures.Count - 1);
+            }));
+
+            for (int i = 0; i < textures.Count; i++)
+                AddTextureNode(textures[i], i);
         }
 
-        private void RenameTextureAction(object sender, EventArgs e)
+        private void AddTextureNode(string tex, int i)
         {
-            var selectedNode = treeView1.SelectedNode;
-            if (selectedNode == null) return;
+            TreeNode matNode = new TreeNode(tex);
+            matNode.ContextMenuStrip = new ContextMenuStrip();
+            matNode.ContextMenuStrip.Items.Add(new STToolStipMenuItem("Rename", null, (o, e) =>
+            {
+                RenameTextureAction(matNode, i);
+            }));
+            matNode.ImageKey = "texture";
+            matNode.SelectedImageKey = "texture";
+            ActiveLayout.TextureFolder.Nodes.Add(matNode);
+        }
 
-            int index = (int)selectedNode.Tag;
-            string activeTex = ActiveLayout.Textures[index];
-
+        private void RenameTextureAction(TreeNode selectedNode, int index)
+        {
             RenameDialog dlg = new RenameDialog();
-            dlg.SetString(activeTex);
-
+            dlg.SetString(selectedNode.Text);
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 ActiveLayout.Textures[index] = dlg.textBox1.Text;
@@ -207,13 +210,38 @@ namespace LayoutBXLYT
         private void LoadFonts(List<string> fonts)
         {
             ActiveLayout.FontFolder = new TreeNode("Fonts");
+            ActiveLayout.FontFolder.ContextMenuStrip = new ContextMenuStrip();
+            ActiveLayout.FontFolder.ContextMenuStrip.Items.Add(new STToolStipMenuItem("Add", null, (o, e) =>
+            {
+                ActiveLayout.Fonts.Add("NewFont");
+                AddFontNode("NewFont", ActiveLayout.Fonts.Count - 1);
+            }));
+
             treeView1.Nodes.Add(ActiveLayout.FontFolder);
             for (int i = 0; i < fonts.Count; i++)
+                AddFontNode(fonts[i], i);
+        }
+
+        private void AddFontNode(string font, int i)
+        {
+            TreeNode matNode = new TreeNode(font);
+            matNode.ContextMenuStrip = new ContextMenuStrip();
+            matNode.ContextMenuStrip.Items.Add(new STToolStipMenuItem("Rename", null, (o, e) =>
             {
-                TreeNode matNode = new TreeNode(fonts[i]);
-                matNode.ImageKey = "font";
-                matNode.SelectedImageKey = "font";
-                ActiveLayout.FontFolder.Nodes.Add(matNode);
+                RenameFont(matNode, i);
+            }));
+            matNode.ImageKey = "font";
+            matNode.SelectedImageKey = "font";
+            ActiveLayout.FontFolder.Nodes.Add(matNode);
+        }
+
+        private void RenameFont(TreeNode selectedNode, int index)
+        {
+            RenameDialog dlg = new RenameDialog();
+            dlg.SetString(selectedNode.Text);
+            if (dlg.ShowDialog() == DialogResult.OK) {
+                ActiveLayout.Fonts[index] = dlg.textBox1.Text;
+                selectedNode.Text = dlg.textBox1.Text;
             }
         }
 
