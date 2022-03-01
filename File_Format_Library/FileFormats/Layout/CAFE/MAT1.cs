@@ -104,7 +104,7 @@ namespace LayoutBXLYT.Cafe
         }
 
         private uint flags;
-        private int unknown;
+        private int unknown = 134480384;
 
         public string GetTexture(int index)
         {
@@ -268,6 +268,7 @@ namespace LayoutBXLYT.Cafe
                 writer.Write(flags);
             }
 
+            //TODO. I don't know why but many cases there needs to be 2 tex coords to match up
             if (TextureMaps?.Length > 0 && TexCoordGens?.Length == 0)
             {
                 TexCoordGens = new BxlytTexCoordGen[TextureMaps.Length];
@@ -280,6 +281,15 @@ namespace LayoutBXLYT.Cafe
             {
                 flags += Bit.BitInsert(1, 1, 2, 30);
                 ((TextureRef)TextureMaps[i]).Write(writer);
+            }
+
+            if (TextureTransforms.Length == 1)
+            {
+                TextureTransforms = new BxlytTextureTransform[2]
+                {
+                    TextureTransforms[0],
+                    new BxlytTextureTransform(),
+                };
             }
 
             for (int i = 0; i < TextureTransforms.Length; i++)
