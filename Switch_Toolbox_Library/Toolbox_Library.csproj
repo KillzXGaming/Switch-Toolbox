@@ -238,6 +238,7 @@
     <Compile Include="Compression\Formats\MtaCustomCmp.cs" />
     <Compile Include="Compression\Formats\ZlibGZ.cs" />
     <Compile Include="Compression\Formats\Zstb.cs" />
+    <Compile Include="Compression\Formats\Zstb_Kirby.cs" />
     <Compile Include="Compression\LZ77_WII.cs" />
     <Compile Include="Compression\7ZIP\LZMA\LzmaBase.cs" />
     <Compile Include="Compression\7ZIP\LZMA\LzmaDecoder.cs" />
