@@ -27,6 +27,7 @@ namespace Toolbox.Library.IO
             items.Add(CreateMenu("lZ4"));
             items.Add(CreateMenu("lZ4F"));
             items.Add(CreateMenu("ZSTD"));
+            items.Add(CreateMenu("ZSTD (Kirby)"));
             items.Add(CreateMenu("ZLIB"));
             items.Add(CreateMenu("ZLIB_GZ (Hyrule Warriors)"));
             return items;
@@ -82,6 +83,8 @@ namespace Toolbox.Library.IO
                 OpenFileForCompression(new LZ4F(), Compress);
             else if (Name == "ZSTD")
                 OpenFileForCompression(new Zstb(), Compress);
+            else if (Name == "ZSTD (Kirby)")
+                OpenFileForCompression(new Zstb_Kirby(), Compress);
             else if (Name == "ZLIB")
                 OpenFileForCompression(new Zlib(), Compress);
             else if (Name.Contains("ZLIB_GZ"))

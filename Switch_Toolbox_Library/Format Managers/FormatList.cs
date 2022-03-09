@@ -32,6 +32,7 @@ namespace Toolbox.Library
             Formats.Add(typeof(Zlib));
             Formats.Add(typeof(ZlibGZ));
             Formats.Add(typeof(Zstb));
+            Formats.Add(typeof(Zstb_Kirby));
             Formats.Add(typeof(MtaCustomCmp));
             Formats.Add(typeof(LZ77));
 

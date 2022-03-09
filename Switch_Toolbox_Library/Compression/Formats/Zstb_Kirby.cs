@@ -9,12 +9,12 @@ using K4os.Compression.LZ4.Streams;
 
 namespace Toolbox.Library
 {
-    public class LZ4F : ICompressionFormat
+    public class Zstb_Kirby : ICompressionFormat
     {
-        public string[] Description { get; set; } = new string[] { "LZ4F Compression" };
-        public string[] Extension { get; set; } = new string[] { "*.cmp", "*.cmpbin", "*.lz4f" };
+        public string[] Description { get; set; } = new string[] { "ZSTD Compression (Kirby)" };
+        public string[] Extension { get; set; } = new string[] { "*.cmp" };
 
-        public override string ToString() { return "LZ4F"; }
+        public override string ToString() { return "ZSTD (Kirby)"; }
 
         public bool Identify(Stream stream, string fileName)
         {
@@ -25,9 +25,9 @@ namespace Toolbox.Library
                 uint DecompressedSize = reader.ReadUInt32();
                 uint magicCheck = reader.ReadUInt32();
 
-                bool LZ4FDefault = magicCheck == 0x184D2204;
+                bool ZSTDDefault = magicCheck == 0xFD2FB528;
 
-                return LZ4FDefault;
+                return ZSTDDefault;
             }
         }
 
@@ -40,7 +40,7 @@ namespace Toolbox.Library
                 reader.Position = 0;
                 int OuSize = reader.ReadInt32();
                 int InSize = (int)stream.Length - 4;
-                var dec = STLibraryCompression.Type_LZ4F.Decompress(reader.getSection(4, InSize));
+                var dec = Zstb.SDecompress(reader.getSection(4, InSize));
                 return new MemoryStream(dec);
             }
         }
@@ -51,8 +51,7 @@ namespace Toolbox.Library
             using (var writer = new FileWriter(mem, true))
             {
                 writer.Write((uint)stream.Length);
-                byte[] buffer = LZ4.Frame.LZ4Frame.Compress(stream,
-                    LZ4.Frame.LZ4MaxBlockSize.MB1, true, true, false, true, false);
+                byte[] buffer = Zstb.SCompress(stream.ToArray());
 
                 writer.Write(buffer, 0, buffer.Length);
             }
