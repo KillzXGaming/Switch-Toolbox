@@ -185,33 +185,25 @@ namespace Toolbox.Library.IO
 
             if (stream.Length < 8) return null;
 
-            //Try catch incase it fails, continute to load the file anyways if the check may be false 
-            try
+            //Check all supported compression formats and decompress. Then loop back
+            if (!Compressed)
             {
-                //Check all supported compression formats and decompress. Then loop back
-                if (!Compressed)
+                foreach (ICompressionFormat compressionFormat in FileManager.GetCompressionFormats())
                 {
-                    foreach (ICompressionFormat compressionFormat in FileManager.GetCompressionFormats())
+                    stream.Position = streamStartPos;
+                    if (compressionFormat.Identify(stream, FileName))
                     {
                         stream.Position = streamStartPos;
-                        if (compressionFormat.Identify(stream, FileName))
-                        {
-                            stream.Position = streamStartPos;
 
-                            Stream decompStream = compressionFormat.Decompress(stream);
-                            stream.Close();
+                        Stream decompStream = compressionFormat.Decompress(stream);
+                        stream.Close();
 
-                            CompressedSize = decompStream.Length;
+                        CompressedSize = decompStream.Length;
 
-                            return OpenFileFormat(decompStream, FileName, LeaveStreamOpen, InArchive,
+                        return OpenFileFormat(decompStream, FileName, LeaveStreamOpen, InArchive,
                                 true, compressionFormat, DecompressedSize, CompressedSize);
-                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
             }
 
             stream.Position = streamStartPos;
