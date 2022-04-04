@@ -263,6 +263,8 @@ namespace LayoutBXLYT
                 writer.WriteUint32Offset(startPos + 16, startPos);
                 for (int i = 0; i < Groups.Count; i++)
                     writer.WriteString(Groups[i], 28);
+            
+                writer.Align(4);
             }
         }
 
@@ -330,6 +332,7 @@ namespace LayoutBXLYT
                         writer.WriteUint32Offset(startOfsPos + (i * 4), startOfsPos);
                         writer.WriteString(Textures[i]);
                     }
+                    writer.Align(4);
                 }
                 if (Entries.Count > 0)
                 {
