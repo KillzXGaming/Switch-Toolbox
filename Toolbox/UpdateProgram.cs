@@ -28,7 +28,13 @@ namespace Toolbox
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 var client = new GitHubClient(new ProductHeaderValue("ST_UpdateTool"));
+
                 GetReleases(client).Wait();
+
+                var info = client.GetLastApiInfo();
+                if (info != null && info.RateLimit.Remaining <= 0)
+                    return;
+
                 GetCommits(client).Wait();
 
                 var asssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -66,7 +72,6 @@ namespace Toolbox
             }
             catch (Exception ex)
             {
-                Toolbox.Library.Forms.STErrorDialog.Show($"Failed to get latest update", "Updater", ex.ToString());
             }
         }
 
