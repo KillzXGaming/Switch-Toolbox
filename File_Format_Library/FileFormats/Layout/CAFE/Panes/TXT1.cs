@@ -96,7 +96,7 @@ namespace LayoutBXLYT.Cafe
         [DisplayName("Horizontal Alignment"), CategoryAttribute("Font")]
         public OriginX HorizontalAlignment
         {
-            get { return (OriginY)((TextAlignment) & 0x3); }
+            get { return (OriginX)((TextAlignment) & 0x3); }
             set
             {
                 TextAlignment &= unchecked((byte)(~0x3));
@@ -107,7 +107,7 @@ namespace LayoutBXLYT.Cafe
         [DisplayName("Vertical Alignment"), CategoryAttribute("Font")]
         public OriginY VerticalAlignment
         {
-            get { return (OriginX)((TextAlignment >> 2) & 0x3); }
+            get { return (OriginY)((TextAlignment >> 2) & 0x3); }
             set
             {
                 TextAlignment &= unchecked((byte)(~0xC));
