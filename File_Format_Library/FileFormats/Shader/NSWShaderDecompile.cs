@@ -21,16 +21,6 @@ namespace FirstPlugin
 
         public static string DecompileShader(NswShaderType shaderType, byte[] Data, ulong Address = 0)
         {
-            string TypeArg = "v";
-
-            switch (shaderType)
-            {
-                case NswShaderType.Vertex: TypeArg = "v"; break;
-                case NswShaderType.Fragment: TypeArg = "f"; break;
-                case NswShaderType.Geometry: TypeArg = "g"; break;
-            }
-
-
             if (!Directory.Exists("temp"))
                 Directory.CreateDirectory("temp");
 
@@ -49,7 +39,7 @@ namespace FirstPlugin
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = "ShaderTools/Ryujinx.ShaderTools.exe";
             start.WorkingDirectory = Runtime.ExecutableDir;
-            start.Arguments = $"{TypeArg} {Utils.AddQuotesIfRequired("temp/shader1.bin")}";
+            start.Arguments = $"{Utils.AddQuotesIfRequired("temp/shader1.bin")}";
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
             start.CreateNoWindow = true;
