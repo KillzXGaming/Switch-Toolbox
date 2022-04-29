@@ -228,10 +228,11 @@ namespace FirstPlugin
                     {
                         uint hash = Convert.ToUInt32(key, 16);
                         if (BYAML.Hashes.ContainsKey(hash))
+                        {
                             key = $"{BYAML.Hashes[hash]}";
-
-                        keyNode = new YamlScalarNode(key);
-                        keyNode.Tag = "!h";
+                            keyNode = new YamlScalarNode(key);
+                            keyNode.Tag = "!h";
+                        }
                     }
                     yamlNode.Add(keyNode, SaveNode(item.Key, item.Value));
                 }
