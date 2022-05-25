@@ -103,7 +103,30 @@ namespace FirstPlugin
             return track;
         }
 
-        public static STAnimationTrack[] LoadRotationTrack(Gfbanim.FramedQuatTrack framedTrack)
+        public static STAnimationTrack[] LoadRotationTrack(Gfbanim.FramedQuatTrack8 framedTrack)
+        {
+            byte[] frames = framedTrack.GetFramesArray();
+
+            STAnimationTrack[] tracks = new STAnimationTrack[3];
+            tracks[0] = new STAnimationTrack(STInterpoaltionType.Linear);
+            tracks[1] = new STAnimationTrack(STInterpoaltionType.Linear);
+            tracks[2] = new STAnimationTrack(STInterpoaltionType.Linear);
+
+            for (int i = 0; i < framedTrack.ValuesLength; i++)
+            {
+                var quat = framedTrack.Values(i).Value;
+                int frame = i;
+
+                if (i < frames?.Length) frame = frames[i];
+
+                tracks[0].KeyFrames.Add(new STKeyFrame(frame, ConvertRotation(quat.X)));
+                tracks[1].KeyFrames.Add(new STKeyFrame(frame, ConvertRotation(quat.Y)));
+                tracks[2].KeyFrames.Add(new STKeyFrame(frame, ConvertRotation(quat.Z)));
+            }
+            return tracks;
+        }
+
+        public static STAnimationTrack[] LoadRotationTrack(Gfbanim.FramedQuatTrack16 framedTrack)
         {
             ushort[] frames = framedTrack.GetFramesArray();
 

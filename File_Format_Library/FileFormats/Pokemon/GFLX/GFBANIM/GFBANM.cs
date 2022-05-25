@@ -388,9 +388,21 @@ namespace FirstPlugin
                             }
                         }
                         break;
-                    case Gfbanim.QuatTrack.FramedQuatTrack:
+                    case Gfbanim.QuatTrack.FramedQuatTrack16:
                         {
-                            var rotate = boneAnim.Rotate<Gfbanim.FramedQuatTrack>();
+                            var rotate = boneAnim.Rotate<Gfbanim.FramedQuatTrack16>();
+                            if (rotate.HasValue)
+                            {
+                                var values = GfbanimKeyFrameLoader.LoadRotationTrack(rotate.Value);
+                                groupAnim.RotationX = values[0];
+                                groupAnim.RotationY = values[1];
+                                groupAnim.RotationZ = values[2];
+                            }
+                        }
+                        break;
+                    case Gfbanim.QuatTrack.FramedQuatTrack8:
+                        {
+                            var rotate = boneAnim.Rotate<Gfbanim.FramedQuatTrack8>();
                             if (rotate.HasValue)
                             {
                                 var values = GfbanimKeyFrameLoader.LoadRotationTrack(rotate.Value);

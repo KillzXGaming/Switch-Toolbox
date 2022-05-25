@@ -30,7 +30,8 @@ namespace Gfbanim
         NONE = 0,
         FixedQuatTrack = 1,
         DynamicQuatTrack = 2,
-        FramedQuatTrack = 3,
+        FramedQuatTrack16 = 3,
+        FramedQuatTrack8 = 4,
     };
 
     public enum BooleanTrack : byte
@@ -955,14 +956,14 @@ namespace Gfbanim
         }
     };
 
-    public struct FramedQuatTrack : IFlatbufferObject
+    public struct FramedQuatTrack16 : IFlatbufferObject
     {
         private Table __p;
         public ByteBuffer ByteBuffer { get { return __p.bb; } }
-        public static FramedQuatTrack GetRootAsFramedQuatTrack(ByteBuffer _bb) { return GetRootAsFramedQuatTrack(_bb, new FramedQuatTrack()); }
-        public static FramedQuatTrack GetRootAsFramedQuatTrack(ByteBuffer _bb, FramedQuatTrack obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+        public static FramedQuatTrack16 GetRootAsFramedQuatTrack(ByteBuffer _bb) { return GetRootAsFramedQuatTrack(_bb, new FramedQuatTrack16()); }
+        public static FramedQuatTrack16 GetRootAsFramedQuatTrack(ByteBuffer _bb, FramedQuatTrack16 obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
         public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-        public FramedQuatTrack __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+        public FramedQuatTrack16 __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
         public ushort Frames(int j) { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUshort(__p.__vector(o) + j * 2) : (ushort)0; }
         public int FramesLength { get { int o = __p.__offset(4); return o != 0 ? __p.__vector_len(o) : 0; } }
@@ -975,14 +976,14 @@ namespace Gfbanim
         public Quaternion? Values(int j) { int o = __p.__offset(6); return o != 0 ? (Quaternion?)(new Quaternion()).__assign(__p.__vector(o) + j * 6, __p.bb) : null; }
         public int ValuesLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
 
-        public static Offset<FramedQuatTrack> CreateFramedQuatTrack(FlatBufferBuilder builder,
+        public static Offset<FramedQuatTrack16> CreateFramedQuatTrack(FlatBufferBuilder builder,
             VectorOffset FramesOffset = default(VectorOffset),
             VectorOffset ValuesOffset = default(VectorOffset))
         {
             builder.StartObject(2);
-            FramedQuatTrack.AddValues(builder, ValuesOffset);
-            FramedQuatTrack.AddFrames(builder, FramesOffset);
-            return FramedQuatTrack.EndFramedQuatTrack(builder);
+            FramedQuatTrack16.AddValues(builder, ValuesOffset);
+            FramedQuatTrack16.AddFrames(builder, FramesOffset);
+            return FramedQuatTrack16.EndFramedQuatTrack(builder);
         }
 
         public static void StartFramedQuatTrack(FlatBufferBuilder builder) { builder.StartObject(2); }
@@ -992,10 +993,54 @@ namespace Gfbanim
         public static void StartFramesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(2, numElems, 2); }
         public static void AddValues(FlatBufferBuilder builder, VectorOffset ValuesOffset) { builder.AddOffset(1, ValuesOffset.Value, 0); }
         public static void StartValuesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(6, numElems, 2); }
-        public static Offset<FramedQuatTrack> EndFramedQuatTrack(FlatBufferBuilder builder)
+        public static Offset<FramedQuatTrack16> EndFramedQuatTrack(FlatBufferBuilder builder)
         {
             int o = builder.EndObject();
-            return new Offset<FramedQuatTrack>(o);
+            return new Offset<FramedQuatTrack16>(o);
+        }
+    };
+
+    public struct FramedQuatTrack8 : IFlatbufferObject
+    {
+        private Table __p;
+        public ByteBuffer ByteBuffer { get { return __p.bb; } }
+        public static FramedQuatTrack8 GetRootAsFramedQuatTrack(ByteBuffer _bb) { return GetRootAsFramedQuatTrack(_bb, new FramedQuatTrack8()); }
+        public static FramedQuatTrack8 GetRootAsFramedQuatTrack(ByteBuffer _bb, FramedQuatTrack8 obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+        public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+        public FramedQuatTrack8 __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+
+        public sbyte Frames(int j) { int o = __p.__offset(4); return o != 0 ? __p.bb.GetSbyte(__p.__vector(o) + j * 2) : (sbyte)0; }
+        public int FramesLength { get { int o = __p.__offset(4); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetFramesBytes() { return __p.__vector_as_span(4); }
+#else
+        public ArraySegment<byte>? GetFramesBytes() { return __p.__vector_as_arraysegment(4); }
+#endif
+        public byte[] GetFramesArray() { return __p.__vector_as_array<byte>(4); }
+        public Quaternion? Values(int j) { int o = __p.__offset(6); return o != 0 ? (Quaternion?)(new Quaternion()).__assign(__p.__vector(o) + j * 6, __p.bb) : null; }
+        public int ValuesLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
+
+        public static Offset<FramedQuatTrack8> CreateFramedQuatTrack(FlatBufferBuilder builder,
+            VectorOffset FramesOffset = default(VectorOffset),
+            VectorOffset ValuesOffset = default(VectorOffset))
+        {
+            builder.StartObject(2);
+            FramedQuatTrack8.AddValues(builder, ValuesOffset);
+            FramedQuatTrack8.AddFrames(builder, FramesOffset);
+            return FramedQuatTrack8.EndFramedQuatTrack(builder);
+        }
+
+        public static void StartFramedQuatTrack(FlatBufferBuilder builder) { builder.StartObject(2); }
+        public static void AddFrames(FlatBufferBuilder builder, VectorOffset FramesOffset) { builder.AddOffset(0, FramesOffset.Value, 0); }
+        public static VectorOffset CreateFramesVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+        public static VectorOffset CreateFramesVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+        public static void StartFramesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+        public static void AddValues(FlatBufferBuilder builder, VectorOffset ValuesOffset) { builder.AddOffset(1, ValuesOffset.Value, 0); }
+        public static void StartValuesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(6, numElems, 2); }
+        public static Offset<FramedQuatTrack8> EndFramedQuatTrack(FlatBufferBuilder builder)
+        {
+            int o = builder.EndObject();
+            return new Offset<FramedQuatTrack8>(o);
         }
     };
 
