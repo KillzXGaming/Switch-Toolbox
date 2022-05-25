@@ -249,7 +249,7 @@ namespace FirstPlugin
                     Translation = ConvertVec3(bone.Translation),
                     RadiusEnd = ConvertVec3(bone.RadiusEnd),
                     RadiusStart = ConvertVec3(bone.RadiusStart),
-                    Visible = bone.Visible,
+                    SegmentScale = bone.Visible,
                     Zero = bone.Zero,
                     RigidCheck = rigidData,
                 });

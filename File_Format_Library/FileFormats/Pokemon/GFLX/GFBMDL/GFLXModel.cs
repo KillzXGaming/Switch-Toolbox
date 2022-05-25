@@ -460,6 +460,7 @@ namespace FirstPlugin
 
             Text = bone.Name;
             parentIndex = bone.Parent;
+            UseSegmentScaleCompensate = bone.SegmentScale;
 
             if (bone.Translation != null)
             {

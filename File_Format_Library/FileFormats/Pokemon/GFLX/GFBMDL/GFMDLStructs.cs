@@ -201,7 +201,7 @@ namespace FirstPlugin.GFMDLStructs
         public uint BoneType { get; set; }
         public int Parent { get; set; }
         public uint Zero { get; set; }
-        public bool Visible { get; set; }
+        public bool SegmentScale { get; set; }
 
         public Vector3 Scale { get; set; }
         public Vector3 Rotation { get; set; }

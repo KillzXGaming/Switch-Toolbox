@@ -379,7 +379,7 @@ namespace FirstPlugin
                     bone.BoneType = 0;
                     bone.Parent = genericBone.parentIndex;
                     bone.Zero = 0;
-                    bone.Visible = false;
+                    bone.SegmentScale = false;
                     bone.Scale = new GFMDLStructs.Vector3(scale.X, scale.Y, scale.Z);
                     bone.Rotation = new GFMDLStructs.Vector3(rot.X, rot.Y, rot.Z);
                     bone.Translation = new GFMDLStructs.Vector3(trans.X, trans.Y, trans.Z);
@@ -569,7 +569,7 @@ namespace FirstPlugin
                 bone.BoneType = 0;
                 bone.Parent = 0;
                 bone.Zero = 0;
-                bone.Visible = false;
+                bone.SegmentScale = false;
                 bone.Scale = new GFMDLStructs.Vector3(1, 1, 1);
                 bone.Rotation = new GFMDLStructs.Vector3(0, 0, 0);
                 bone.Translation = new GFMDLStructs.Vector3(0,0,0);
