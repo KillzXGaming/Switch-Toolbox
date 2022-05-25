@@ -191,6 +191,8 @@ namespace FirstPlugin
                         b = skeleton.GetBone(node.Name);
                         if (b == null) continue;
 
+                        b.UseSegmentScaleCompensate = true;
+
                         Updated = true;
 
                         if (node.TranslateX.HasKeys)
