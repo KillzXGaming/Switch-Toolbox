@@ -48,9 +48,32 @@ namespace FirstPlugin
             return tracks;
         }
 
-        public static STAnimationTrack[] LoadVectorTrack(Gfbanim.FramedVectorTrack framedTrack)
+        public static STAnimationTrack[] LoadVectorTrack(Gfbanim.FramedVectorTrack16 framedTrack)
         {
             ushort[] frames = framedTrack.GetFramesArray();
+
+            STAnimationTrack[] tracks = new STAnimationTrack[3];
+            tracks[0] = new STAnimationTrack(STInterpoaltionType.Linear);
+            tracks[1] = new STAnimationTrack(STInterpoaltionType.Linear);
+            tracks[2] = new STAnimationTrack(STInterpoaltionType.Linear);
+
+            for (int i = 0; i < framedTrack.ValuesLength; i++)
+            {
+                var vec = framedTrack.Values(i).Value;
+                int frame = i;
+
+                if (i < frames?.Length) frame = frames[i];
+
+                tracks[0].KeyFrames.Add(new STKeyFrame(frame, vec.X));
+                tracks[1].KeyFrames.Add(new STKeyFrame(frame, vec.Y));
+                tracks[2].KeyFrames.Add(new STKeyFrame(frame, vec.Z));
+            }
+            return tracks;
+        }
+
+        public static STAnimationTrack[] LoadVectorTrack(Gfbanim.FramedVectorTrack8 framedTrack)
+        {
+            byte[] frames = framedTrack.GetFramesArray();
 
             STAnimationTrack[] tracks = new STAnimationTrack[3];
             tracks[0] = new STAnimationTrack(STInterpoaltionType.Linear);
