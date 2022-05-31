@@ -150,7 +150,7 @@ table Bone {
     BoneType:uint;
     Parent:int;
     Zero:uint = 0;
-    Visible:bool;
+    SegmentScale:bool;
     Scale:Vector3;
     Rotation:Vector3;
     Translation:Vector3;
