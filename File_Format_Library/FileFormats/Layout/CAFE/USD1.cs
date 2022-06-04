@@ -34,8 +34,10 @@ namespace LayoutBXLYT.Cafe
             long startPos = writer.Position - 8;
 
             if (!Edited) {
-                writer.Write(this.Data);
-                return;
+                if (Data != null) {
+                    writer.Write(this.Data);
+                    return;
+                }
             }
 
             writer.Write((ushort)Entries.Count);
