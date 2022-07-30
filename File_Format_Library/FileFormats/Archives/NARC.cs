@@ -1,4 +1,4 @@
-﻿using Syroot.BinaryData;
+using Syroot.BinaryData;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,17 +32,21 @@ namespace FirstPlugin {
         private BTNF btnf;
         private GMIF gmif;
 
-        private List<ArchiveFileInfo> files = new List<ArchiveFileInfo>();
+        private List<FileEntry> files = new List<FileEntry>();
 
         public bool AddFile(ArchiveFileInfo archiveFileInfo) {
-            files.Add(archiveFileInfo);
+            files.Add(new FileEntry(this)
+            {
+                FileData = archiveFileInfo.FileData,
+                FileName = archiveFileInfo.FileName,
+            });
             return true;
         }
 
         public void ClearFiles() => files.Clear();
 
         public bool DeleteFile(ArchiveFileInfo archiveFileInfo) {
-            return files.Remove(archiveFileInfo);
+            return files.Remove((FileEntry)archiveFileInfo);
         }
 
         public bool Identify(Stream stream) {
@@ -75,10 +79,107 @@ namespace FirstPlugin {
                 }
 
                 for(int i = 0; i < btnf.FileNames.Length; i++)
-                    files.Add(new ArchiveFileInfo() {
+                    files.Add(new FileEntry(this) {
                         FileName = btnf.FileNames[i],
-                        FileData = gmif.FilesData[i]
+                        BlockData = gmif.FilesData[i]
                     });
+            }
+        }
+
+        public class FileEntry : ArchiveFileInfo
+        {
+            public byte[] BlockData;
+
+            public override Dictionary<string, string> ExtensionImageKeyLookup
+            {
+                get
+                {
+                    return new Dictionary<string, string>()
+                    {
+                        {".cbfmd", "bfres" },
+                        {".cbfa",  "bfres" },
+                        {".cbfsa", "bfres" },
+                        {".cbntx", "bntx" },
+                    };
+                }
+            }
+
+            public NARC ArchiveFile;
+
+            public FileEntry(NARC narc)
+            {
+                ArchiveFile = narc;
+            }
+
+            public override byte[] FileData
+            {
+                get { return DecompressBlock(); }
+                set
+                {
+                    BlockData = value;
+                }
+            }
+
+            private bool IsTexturesLoaded = false;
+            public override IFileFormat OpenFile()
+            {
+                var FileFormat = base.OpenFile();
+                bool IsModel = FileFormat is BFRES;
+
+                if (IsModel && !IsTexturesLoaded)
+                {
+                    IsTexturesLoaded = true;
+                    foreach (var file in ArchiveFile.Files)
+                    {
+                        if (Utils.GetExtension(file.FileName) == ".ctex")
+                        {
+                            file.FileFormat = file.OpenFile();
+                        }
+                    }
+                }
+
+                return base.OpenFile();
+            }
+
+            private byte[] DecompressBlock()
+            {
+                byte[] data = BlockData;
+
+                var reader = new FileReader(data);
+                reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+
+                byte compType = reader.ReadByte();
+
+                if (compType == 0x50)
+                {
+                    reader.Seek(4, System.IO.SeekOrigin.Begin);
+                    uint decompSize = reader.ReadUInt32();
+                    uint compSize = (uint)reader.BaseStream.Length - 8;
+
+                    var comp = new STLibraryCompression.MTA_CUSTOM();
+                    return comp.Decompress(data, decompSize);
+                }
+                else if (compType == 0x30 || compType == 0x20)
+                {
+                    uint decompSize = reader.ReadUInt32();
+                    uint compSize = (uint)reader.BaseStream.Length - 16;
+
+                    reader.SeekBegin(16);
+                    ushort signature = reader.ReadUInt16();
+                    bool IsGZIP = signature == 0x1F8B;
+                    bool IsZLIB = signature == 0x789C || signature == 0x78DA;
+
+                    byte[] filedata = reader.getSection(16, (int)compSize);
+                    reader.Close();
+                    reader.Dispose();
+
+                    if (IsGZIP)
+                        data = STLibraryCompression.GZIP.Decompress(filedata);
+                    else
+                        data = STLibraryCompression.ZLIB.Decompress(filedata, false);
+                }
+
+                return data;
             }
         }
 
