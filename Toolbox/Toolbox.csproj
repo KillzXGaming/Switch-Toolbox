@@ -73,10 +73,6 @@
       <HintPath>Lib\OpenTK.GLControl.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SARCExt, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Lib\SARCExt.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -559,7 +555,9 @@
     <Content Include="Lib\RG_ETC1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\SARCExt.dll" />
+    <Content Include="Lib\SARCExt.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Lib\SarcHashes\ALBW.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
