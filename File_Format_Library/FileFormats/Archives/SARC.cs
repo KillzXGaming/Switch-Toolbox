@@ -117,6 +117,8 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
+            SARCExt.SARC.HashDirectory = Path.Combine(Runtime.ExecutableDir, "Lib", "SarcHashes");
+
             CanSave = true;
             IFileInfo.UseEditMenu = true;
 
