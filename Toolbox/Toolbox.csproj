@@ -555,9 +555,7 @@
     <Content Include="Lib\RG_ETC1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\SARCExt.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Lib\SARCExt.dll" />
     <Content Include="Lib\SarcHashes\ALBW.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
