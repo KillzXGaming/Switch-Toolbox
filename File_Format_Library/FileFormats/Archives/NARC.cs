@@ -299,17 +299,23 @@ namespace FirstPlugin {
 
         #region Sections
         internal class BTAF {
-            public (uint offset, uint size)[] FileDataArray;
+            public FD[] FileDataArray;
 
             public BTAF() { }
             public BTAF(BinaryDataReader reader) {
                 uint numberOfFiles = reader.ReadUInt32();
-                FileDataArray = new (uint, uint)[numberOfFiles];
+                FileDataArray = new FD[numberOfFiles];
 
                 for(ulong i = 0; i < numberOfFiles; i++) {
                     FileDataArray[i].offset = reader.ReadUInt32();
                     FileDataArray[i].size = reader.ReadUInt32();
                 }
+            }
+
+            public class FD
+            {
+                public uint offset;
+                public uint size;
             }
         }
 
