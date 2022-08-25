@@ -19,7 +19,7 @@ namespace FirstPlugin.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -319,21 +319,21 @@ namespace FirstPlugin.Properties {
         /// <summary>
         ///   Looks up a localized string similar to pc0002_00_fa0004_eye_close01.gfbanm
         ///pc0002_00_fi0001_wait01_loop.gfbanm
-        ///bin/pokemon/pm0000_00/
-        ///bin/pokemon/pm0000_00/tex/
-        ///bin/pokemon/pm0000_00/anm/
-        ///bin/pokemon/pm0000_00/mdl/
+        ///bin/pokemon/pmXXXX_00/
+        ///bin/pokemon/pmXXXX_00/tex/
+        ///bin/pokemon/pmXXXX_00/anm/
+        ///bin/pokemon/pmXXXX_00/mdl/
         ///bin/pokemon_data/
         ///bin/graphics/mask_texture/pattern_01/
         ///bin/app/pokecamp/cooking/common_model/anm/
         ///bin/app/pokecamp/cooking/common_model/mdl/
         ///bin/app/pokecamp/cooking/common_model/
         ///bin/chara/data/pc/p2/p1_base_app01/anm/
-        ///pm0000_00.gfbpokecfg
-        ///pm0000_00.gfbmdl
-        ///pm0000_00_rare.gfbmdl
-        ///pm0000_00_field01.gfbanmcfg
-        ///pm0000_00_f [rest of string was truncated]&quot;;.
+        ///pmXXXX_00.gfbpokecfg
+        ///pmXXXX_00.gfbmdl
+        ///pmXXXX_00_rare.gfbmdl
+        ///pmXXXX_00_field01.gfbanmcfg
+        ///pmXXXX_00_f [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Pkmn {
             get {
