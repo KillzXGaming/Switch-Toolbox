@@ -75,7 +75,7 @@ namespace Toolbox.Library
         public class NUTEXBSettings
         {
             public static bool LimitFileSize = false;
-            public static bool PadFileSize = true;
+            public static bool PadFileSize = false;
         }
 
         public class MessageEditor
