@@ -1284,6 +1284,8 @@ namespace FirstPlugin
 
                 foreach (var anim in resFile.ExternalFiles)
                 {
+                    if (anim.Data == null) anim.Data = new byte[0];
+
                     // group.AddNode(new ExternalFileData(Name, anim.Data) { FileFormat = file });
 
                     string Name = resFile.ExternalFileDict.GetKey(index++);
