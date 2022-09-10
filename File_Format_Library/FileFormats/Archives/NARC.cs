@@ -129,7 +129,6 @@ namespace FirstPlugin {
 
                     using(reader.TemporarySeek()) {
                         reader.Position = fimgIndex + currentFileOffset;
-                        int file = (int) (currentFileEnd - currentFileOffset);
                         files.Add(new FileEntry(this) {
                             FileName = currentDir + name,
                             BlockData = reader.ReadBytes((int) (currentFileEnd - currentFileOffset))
