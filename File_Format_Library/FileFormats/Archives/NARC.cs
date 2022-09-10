@@ -60,10 +60,10 @@ namespace FirstPlugin {
 
                 header = new Header(reader);
 
-                reader.Position += 4;
+                reader.ReadSignature(4, "BTAF");
 
                 // The positions where the sections' reading was left last time.
-                long bfatIndex = reader.Position + 12;
+                long bfatIndex = reader.Position + 8;
                 long bfntIndex = reader.Position + reader.ReadUInt32(); // From the BFAT length.
                 long fimgIndex;
 
@@ -74,7 +74,7 @@ namespace FirstPlugin {
 
                 reader.Position = bfntIndex;
 
-                fimgIndex = reader.Position + reader.ReadUInt32() + 8; // Sets FIMG section begining.
+                fimgIndex = reader.Position + reader.ReadUInt32() + 4; // Sets FIMG section begining.
                 bfntUnk = reader.ReadBytes(reader.ReadInt32() - 4);
 
                 for(int i = 0; i < fileCount; i++) {
@@ -129,6 +129,7 @@ namespace FirstPlugin {
 
                     using(reader.TemporarySeek()) {
                         reader.Position = fimgIndex + currentFileOffset;
+                        int file = (int) (currentFileEnd - currentFileOffset);
                         files.Add(new FileEntry(this) {
                             FileName = currentDir + name,
                             BlockData = reader.ReadBytes((int) (currentFileEnd - currentFileOffset))
