@@ -86,6 +86,7 @@ namespace FirstPlugin
                 new FlatBuffers.ByteBuffer(stream.ToBytes()));
 
             AnimationData = new Animation();
+            AnimationData.Name = FileName;
             AnimationData.FrameCount = anim.AnimConfig.Value.KeyFrames;
 
             if (anim.Bones.HasValue) {
