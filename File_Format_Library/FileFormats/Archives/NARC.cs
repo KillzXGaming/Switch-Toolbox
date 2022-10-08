@@ -2,6 +2,7 @@ using Syroot.BinaryData;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Toolbox.Library;
 using Toolbox.Library.IO;
@@ -28,9 +29,7 @@ namespace FirstPlugin {
 
         // private
         private Header header;
-        private BTAF btaf;
-        private BTNF btnf;
-        private GMIF gmif;
+        private byte[] bfntUnk = new byte[] { 0x00, 0x00, 0x01, 0x00 };
 
         private List<FileEntry> files = new List<FileEntry>();
 
@@ -56,33 +55,86 @@ namespace FirstPlugin {
 
         public void Load(Stream stream) {
             using(FileReader reader = new FileReader(stream)) {
+                //DirectoryEntry currentDirEntry = rootDir;
+                string currentDir = string.Empty;
+
                 header = new Header(reader);
 
-                for(uint i = 0; i < header.DataBlocks; i++) {
-                    long PositionBuf = reader.Position;
-                    string cSectionMagic = Encoding.ASCII.GetString(reader.ReadBytes(4)).ToUpperInvariant();
-                    uint cSectionSize = reader.ReadUInt32();
+                reader.ReadSignature(4, "BTAF");
 
-                    switch(cSectionMagic) {
-                        case "BTAF":
-                            btaf = new BTAF(reader);
-                            break;
-                        case "BTNF":
-                            btnf = new BTNF(reader, (uint) btaf.FileDataArray.Length);
-                            break;
-                        case "GMIF":
-                            gmif = new GMIF(reader, btaf);
-                            break;
+                // The positions where the sections' reading was left last time.
+                long bfatIndex = reader.Position + 8;
+                long bfntIndex = reader.Position + reader.ReadUInt32(); // From the BFAT length.
+                long fimgIndex;
+
+                uint fileCount = reader.ReadUInt32();
+
+                uint currentFileOffset;
+                uint currentFileEnd;
+
+                reader.Position = bfntIndex;
+
+                fimgIndex = reader.Position + reader.ReadUInt32() + 4; // Sets FIMG section begining.
+                bfntUnk = reader.ReadBytes(reader.ReadInt32() - 4);
+
+                for(int i = 0; i < fileCount; i++) {
+                    byte nameLength = reader.ReadByte();
+
+                    if(nameLength == 0x00) { // End of the "folder".
+                        List<int> slashIndices = new List<int>();
+                        for(int j = 0; j < currentDir.Length; j++)
+                            if(currentDir[j] == '/')
+                                slashIndices.Add(j);
+
+                        int lastSlash = slashIndices.Last();
+                        slashIndices.Remove(lastSlash);
+                        int slashBeforeLast = slashIndices.Count > 0 ? slashIndices.Last() : 0;
+
+                        currentDir = currentDir.Remove(slashBeforeLast + 1);
+
+                        if(currentDir.Length == 1)
+                            currentDir = string.Empty;
+
+                        i--;
+                        continue;
                     }
 
-                    reader.Position = PositionBuf + cSectionSize;
-                }
+                    if(nameLength >= 0x80) { // If it is a "folder".
+                        // Disable file modifications:
+                        CanSave = false;
+                        CanAddFiles = false;
+                        CanRenameFiles = false;
+                        CanReplaceFiles = false;
+                        CanDeleteFiles = false;
 
-                for(int i = 0; i < btnf.FileNames.Length; i++)
-                    files.Add(new FileEntry(this) {
-                        FileName = btnf.FileNames[i],
-                        BlockData = gmif.FilesData[i]
+                        string dirName = reader.ReadString(nameLength & 0x7F);
+                        currentDir += dirName + "/";
+
+                        reader.Position += 2;
+                        i--;
+                        continue;
+                    }
+
+                    // Read BFAT section:
+                    using(reader.TemporarySeek()) {
+                        reader.Position = bfatIndex;
+
+                        currentFileOffset = reader.ReadUInt32();
+                        currentFileEnd = reader.ReadUInt32();
+
+                        bfatIndex = reader.Position;
+                    }
+
+                    string name = reader.ReadString(nameLength);
+
+                    using(reader.TemporarySeek()) {
+                        reader.Position = fimgIndex + currentFileOffset;
+                        files.Add(new FileEntry(this) {
+                            FileName = currentDir + name,
+                            BlockData = reader.ReadBytes((int) (currentFileEnd - currentFileOffset))
                     });
+                    }
+                }
             }
         }
 
@@ -219,7 +271,7 @@ namespace FirstPlugin {
                 writer.Write(header.Version); // Version.
 
                 long headerLengthPorsition = writer.Position;
-                writer.Write(0x00000000); // Skips length writing.
+                writer.Position += 4; // Skips length writing.
 
                 writer.Write(header.HeaderSize); // Header length.
                 writer.Write(header.DataBlocks); // Section count.
@@ -230,21 +282,21 @@ namespace FirstPlugin {
                 writer.Write((uint) files.Count); // File count.
 
                 for(uint i = 0; i < files.Count; i++) // Reads unset bytes per file. (Reserved space for later)
-                    writer.Write((long) 0x0000000000000000);
+                    writer.Position += 8;
 
                 WriteSectionLength(btafPosition);
                 #endregion
 
                 #region BTNF
                 long btnfPosition = WriteSectionHeader("BTNF"); // Header.
-                writer.Write(btnf.Unknown);
+                writer.Write(bfntUnk.Length + 4);
+                writer.Write(bfntUnk);
 
                 foreach(ArchiveFileInfo file in files)
                     writer.Write(file.FileName, BinaryStringFormat.ByteLengthPrefix);
                 writer.Write((byte) 0x00);
 
-                writer.Align(32);
-                writer.Position += 8;
+                writer.Align(128);
 
                 WriteSectionLength(btnfPosition);
                 #endregion
@@ -257,7 +309,7 @@ namespace FirstPlugin {
                     WriteBTAFEntry(); // BTAF offset
                     writer.Write(file.FileData);
                     WriteBTAFEntry(); // BTAF size.
-                    writer.Align(16);
+                    writer.Align(128);
                 }
 
                 WriteSectionLength(gmifPosition);
@@ -270,7 +322,7 @@ namespace FirstPlugin {
                     long startPosition = writer.Position;
                     writer.Write(magic, BinaryStringFormat.NoPrefixOrTermination, Encoding.ASCII); // Magic.
 
-                    writer.Write(0x00000000); // Skips length position.
+                    writer.Position += 4; // Skips length position.
 
                     return startPosition;
                 }
@@ -296,60 +348,5 @@ namespace FirstPlugin {
                 }
             }            
         }
-
-        #region Sections
-        internal class BTAF {
-            public FD[] FileDataArray;
-
-            public BTAF() { }
-            public BTAF(BinaryDataReader reader) {
-                uint numberOfFiles = reader.ReadUInt32();
-                FileDataArray = new FD[numberOfFiles];
-
-                for(ulong i = 0; i < numberOfFiles; i++) {
-                    FileDataArray[i].offset = reader.ReadUInt32();
-                    FileDataArray[i].size = reader.ReadUInt32();
-                }
-            }
-
-            public class FD
-            {
-                public uint offset;
-                public uint size;
-            }
-        }
-
-        internal class BTNF {
-            public string[] FileNames;
-            public ulong Unknown;
-
-            public BTNF() { }
-            public BTNF(BinaryDataReader reader, uint numberOfFiles) {
-                Unknown = reader.ReadUInt64();
-                FileNames = new string[numberOfFiles];
-
-                for(int i = 0; i < numberOfFiles; i++) {
-                    FileNames[i] = reader.ReadString(BinaryStringFormat.ByteLengthPrefix, Encoding.ASCII);
-                }
-            }
-        }
-
-        internal class GMIF {
-            public byte[][] FilesData;
-
-            public GMIF() { }
-            public GMIF(BinaryDataReader reader, BTAF btaf) {
-                FilesData = new byte[btaf.FileDataArray.Length][];
-                long PositionBuf = reader.Position;
-
-                for(int i = 0; i < btaf.FileDataArray.Length; i++) {
-                    reader.Position = PositionBuf + btaf.FileDataArray[i].offset;
-
-                    FilesData[i] = reader.ReadBytes(
-                        (int) (btaf.FileDataArray[i].size - btaf.FileDataArray[i].offset));
-                }
-            }
-        }
-        #endregion
     }
 }
