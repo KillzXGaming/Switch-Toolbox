@@ -220,6 +220,12 @@
     <None Include="KclMaterialPresets\Twilight Princess.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Lib\MTVertexFormats\M11.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Lib\MTVertexFormats\MHGU.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Lib\SarcHashes\ALBW.saht">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
