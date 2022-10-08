@@ -1,0 +1,5652 @@
+{
+  "AttributeGroups": {
+    "2884521985": {
+      "Name": "IASystemCopy",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Texcoord",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2141671426": {
+      "Name": "IASystemClear",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Color",
+          "Format": 1,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        }
+      ]
+    },
+    "2546028547": {
+      "Name": "IAFilter",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Texcoord",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Texcoord",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "Color",
+          "Format": 14,
+          "Offset": 24,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "819179524": {
+      "Name": "IAFilter0",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Color",
+          "Format": 14,
+          "Offset": 8,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "1138413573": {
+      "Name": "IAFilter1",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Texcoord",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Color",
+          "Format": 14,
+          "Offset": 16,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "3603001350": {
+      "Name": "IAFilter2",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Texcoord",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2059378695": {
+      "Name": "IADevelopPrim2D",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Color",
+          "Format": 14,
+          "Offset": 8,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 5,
+          "Offset": 12,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3383472136": {
+      "Name": "IADevelopPrim3D",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Color",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 5,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "4236238857": {
+      "Name": "IACollisionInput",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Color",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "443158538": {
+      "Name": "IASwing",
+      "Attributes": [
+        {
+          "Name": "SWING_ORIGIN",
+          "Format": 10,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "SWING_WEIGHT",
+          "Format": 10,
+          "Offset": 3,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "1932886027": {
+      "Name": "IASwing2",
+      "Attributes": [
+        {
+          "Name": "SWING_ORIGIN",
+          "Format": 10,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 2
+        },
+        {
+          "Name": "SWING_WEIGHT",
+          "Format": 10,
+          "Offset": 3,
+          "ElementCount": 1,
+          "Set": 2
+        }
+      ]
+    },
+    "4083675148": {
+      "Name": "IASwingHighPrecision",
+      "Attributes": [
+        {
+          "Name": "SWING_ORIGIN",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "SWING_WEIGHT",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "536993805": {
+      "Name": "IASwing2HighPrecision",
+      "Attributes": [
+        {
+          "Name": "SWING_ORIGIN",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 2
+        },
+        {
+          "Name": "SWING_WEIGHT",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 2
+        }
+      ]
+    },
+    "1989713934": {
+      "Name": "IAInstancing",
+      "Attributes": [
+        {
+          "Name": "INSTANCE_MATRIX",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 12,
+          "Set": 0
+        }
+      ]
+    },
+    "2272370703": {
+      "Name": "IAInstancingColor",
+      "Attributes": [
+        {
+          "Name": "INSTANCE_MATRIX",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 12,
+          "Set": 0
+        },
+        {
+          "Name": "INSTANCE_COLOR",
+          "Format": 1,
+          "Offset": 48,
+          "ElementCount": 4,
+          "Set": 0
+        }
+      ]
+    },
+    "2126348304": {
+      "Name": "IALatticeDeform",
+      "Attributes": [
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 4
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 40,
+          "ElementCount": 2,
+          "Set": 5
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 48,
+          "ElementCount": 2,
+          "Set": 6
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 56,
+          "ElementCount": 2,
+          "Set": 7
+        }
+      ]
+    },
+    "110370833": {
+      "Name": "IATetraDeform",
+      "Attributes": [
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 1,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 3
+        }
+      ]
+    },
+    "974475282": {
+      "Name": "IATetraDeform2",
+      "Attributes": [
+        {
+          "Name": "LdVtx",
+          "Format": 2,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 2,
+          "Offset": 4,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 2,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 2,
+          "Offset": 12,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 4
+        },
+        {
+          "Name": "LdVtx",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 5
+        }
+      ]
+    },
+    "2962763795": {
+      "Name": "IASkinBridge1wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 3,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 8,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "3682443284": {
+      "Name": "IASkinBridge2wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 8,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 4,
+          "Offset": 12,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "213286933": {
+      "Name": "IASkinBridge4wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 8,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 10,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 16,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "2736832534": {
+      "Name": "IASkinBridge8wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 8,
+          "ElementCount": 8,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 10,
+          "Offset": 16,
+          "ElementCount": 8,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 24,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "1566232599": {
+      "Name": "IASkinBridge4wt4M",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 8,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 10,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 16,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 5,
+          "Offset": 20,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 5,
+          "Offset": 26,
+          "ElementCount": 3,
+          "Set": 1
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 5,
+          "Offset": 32,
+          "ElementCount": 3,
+          "Set": 2
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 5,
+          "Offset": 38,
+          "ElementCount": 3,
+          "Set": 3
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 44,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 47,
+          "ElementCount": 3,
+          "Set": 1
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 50,
+          "ElementCount": 3,
+          "Set": 2
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 53,
+          "ElementCount": 3,
+          "Set": 3
+        }
+      ]
+    },
+    "2835001368": {
+      "Name": "IASkinTB1wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 3,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1719341081": {
+      "Name": "IASkinTBN1wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 3,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3421945882": {
+      "Name": "IASkinTBC1wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 3,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 13,
+          "Offset": 20,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 23,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3631710235": {
+      "Name": "IASkinTBNLA1wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 3,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3273596956": {
+      "Name": "IASkinTB2wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "228491293": {
+      "Name": "IASkinTBN2wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2685620254": {
+      "Name": "IASkinTBC2wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 13,
+          "Offset": 24,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 27,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3012694047": {
+      "Name": "IASkinTBNLA2wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "349437984": {
+      "Name": "IASkinTB4wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3663044641": {
+      "Name": "IASkinTBN4wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2010673186": {
+      "Name": "IASkinTBC4wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 13,
+          "Offset": 28,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1683566627": {
+      "Name": "IASkinTBNLA4wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 36,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 36,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3141681188": {
+      "Name": "IASkinTB8wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 10,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 16,
+          "ElementCount": 8,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 32,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1975771173": {
+      "Name": "IASkinTBN8wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 10,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 16,
+          "ElementCount": 8,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 32,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 36,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 36,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 36,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3629002790": {
+      "Name": "IASkinTBC8wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 10,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 16,
+          "ElementCount": 8,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 32,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 13,
+          "Offset": 36,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 39,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3419369511": {
+      "Name": "IASkinTBNLA8wt",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 9,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 10,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 16,
+          "ElementCount": 8,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 32,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 36,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 40,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 44,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 40,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 36,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 44,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3626594344": {
+      "Name": "IANonSkinTB",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1236594729": {
+      "Name": "IANonSkinTBC",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 13,
+          "Offset": 24,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 27,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3094208554": {
+      "Name": "IANonSkinTBL",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 28,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3562029099": {
+      "Name": "IANonSkinTBL_LA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 28,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1585389612": {
+      "Name": "IANonSkinTBN",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2946904109": {
+      "Name": "IANonSkinTBA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2456801326": {
+      "Name": "IANonSkinTBNC",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 13,
+          "Offset": 28,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1672921135": {
+      "Name": "IANonSkinTBNL",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 32,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1409478704": {
+      "Name": "IANonSkinTBNL_LA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 32,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1954353201": {
+      "Name": "IANonSkinTBNA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "307572786": {
+      "Name": "IANonSkinTBLA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2476326963": {
+      "Name": "IANonSkinTBCA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 13,
+          "Offset": 28,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3060273204": {
+      "Name": "IANonSkinTBNCA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 13,
+          "Offset": 28,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "933552181": {
+      "Name": "IANonSkinTBNLA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2815938614": {
+      "Name": "IANonSkinB",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "545087543": {
+      "Name": "IANonSkinBC",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 13,
+          "Offset": 20,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 23,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3517214776": {
+      "Name": "IANonSkinBL",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2321645625": {
+      "Name": "IANonSkinBL_LA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3329204282": {
+      "Name": "IANonSkinBA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "545452091": {
+      "Name": "IANonSkinBLA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2706243644": {
+      "Name": "IANonSkinBCA",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 3
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 13,
+          "Offset": 24,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexAlpha",
+          "Format": 10,
+          "Offset": 27,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "794148925": {
+      "Name": "IASkinOTB_4WT_4M",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 5,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 8,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Weight",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 5,
+          "Offset": 28,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 5,
+          "Offset": 34,
+          "ElementCount": 3,
+          "Set": 1
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 5,
+          "Offset": 40,
+          "ElementCount": 3,
+          "Set": 2
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 5,
+          "Offset": 46,
+          "ElementCount": 3,
+          "Set": 3
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 52,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 55,
+          "ElementCount": 3,
+          "Set": 1
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 58,
+          "ElementCount": 3,
+          "Set": 2
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 61,
+          "ElementCount": 3,
+          "Set": 3
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1126539326": {
+      "Name": "IANonSkinTBN_4M",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 9,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Occlusion",
+          "Format": 10,
+          "Offset": 15,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 9,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 2,
+          "Offset": 28,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 2,
+          "Offset": 34,
+          "ElementCount": 3,
+          "Set": 1
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 2,
+          "Offset": 40,
+          "ElementCount": 3,
+          "Set": 2
+        },
+        {
+          "Name": "MorphPosition",
+          "Format": 2,
+          "Offset": 46,
+          "ElementCount": 3,
+          "Set": 3
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 52,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 55,
+          "ElementCount": 3,
+          "Set": 1
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 58,
+          "ElementCount": 3,
+          "Set": 2
+        },
+        {
+          "Name": "MorphNormal",
+          "Format": 9,
+          "Offset": 61,
+          "ElementCount": 3,
+          "Set": 3
+        },
+        {
+          "Name": "UV_Primary",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Secondary",
+          "Format": 2,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Unique",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "UV_Extend",
+          "Format": 2,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "4022419519": {
+      "Name": "IASkinVelocytyEdge",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Joint",
+          "Format": 3,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Normal",
+          "Format": 11,
+          "Offset": 8,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 5,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "3022164032": {
+      "Name": "IADualParaboloid",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Direction",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "2694283329": {
+      "Name": "IA_DeferredLighting_LightVolume",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "1682133058": {
+      "Name": "IAPrimitiveCloudBillboard",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "CldAspectRatio",
+          "Format": 3,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "CldAlpha",
+          "Format": 3,
+          "Offset": 14,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 3,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "CldSize",
+          "Format": 1,
+          "Offset": 20,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "CldPosition",
+          "Format": 3,
+          "Offset": 24,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "CldScale",
+          "Format": 3,
+          "Offset": 30,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "3976368195": {
+      "Name": "IAPrimitiveCloud",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "CldPosition",
+          "Format": 1,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "CldAlpha",
+          "Format": 1,
+          "Offset": 24,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 3,
+          "Offset": 28,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3435610180": {
+      "Name": "IAPrimitiveSprite",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 3,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "ZOffset",
+          "Format": 4,
+          "Offset": 20,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Intensity",
+          "Format": 4,
+          "Offset": 22,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "SprScale",
+          "Format": 4,
+          "Offset": 24,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "SprRot",
+          "Format": 4,
+          "Offset": 26,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "SprWidth",
+          "Format": 7,
+          "Offset": 28,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "SprHeight",
+          "Format": 7,
+          "Offset": 29,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "SprRatio",
+          "Format": 7,
+          "Offset": 30,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "SprVolume",
+          "Format": 7,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PrimRot",
+          "Format": 4,
+          "Offset": 26,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PrimVol",
+          "Format": 7,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PrimPrScale",
+          "Format": 7,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "672682053": {
+      "Name": "IAPrimitiveNT",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 3,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "ZOffset",
+          "Format": 4,
+          "Offset": 20,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Intensity",
+          "Format": 4,
+          "Offset": 22,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "NTRot",
+          "Format": 3,
+          "Offset": 24,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "NTSize",
+          "Format": 3,
+          "Offset": 26,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "NTVolume",
+          "Format": 3,
+          "Offset": 30,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PrimRot",
+          "Format": 3,
+          "Offset": 24,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PrimVol",
+          "Format": 3,
+          "Offset": 30,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PrimPrScale",
+          "Format": 3,
+          "Offset": 30,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "1439572038": {
+      "Name": "IAPrimitivePolyline",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 3,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "ZOffset",
+          "Format": 4,
+          "Offset": 20,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Intensity",
+          "Format": 4,
+          "Offset": 22,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PlnWidth",
+          "Format": 3,
+          "Offset": 24,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PlnReserved",
+          "Format": 3,
+          "Offset": 26,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PlnTangent",
+          "Format": 7,
+          "Offset": 28,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "PlnVolume",
+          "Format": 7,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PrimVol",
+          "Format": 7,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PrimPrScale",
+          "Format": 7,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "2169217095": {
+      "Name": "IAPrimitivePolygon",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 3,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "ZOffset",
+          "Format": 4,
+          "Offset": 20,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Intensity",
+          "Format": 4,
+          "Offset": 22,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PlyNormal",
+          "Format": 7,
+          "Offset": 24,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "PlyBinormal",
+          "Format": 7,
+          "Offset": 27,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PlyTangent",
+          "Format": 7,
+          "Offset": 28,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "PlyVolume",
+          "Format": 7,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PrimVol",
+          "Format": 7,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "PrimPrScale",
+          "Format": 7,
+          "Offset": 31,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "1344368712": {
+      "Name": "IACubeMapFilter",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "View",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "2098229321": {
+      "Name": "IAGSDOFFilter",
+      "Attributes": [
+        {
+          "Name": "SV_VertexID",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "SV_InstanceID",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "930967626": {
+      "Name": "IABokeh",
+      "Attributes": [
+        {
+          "Name": "POSITION",
+          "Format": 2,
+          "Offset": 0,
+          "ElementCount": 4,
+          "Set": 0
+        }
+      ]
+    },
+    "1079119947": {
+      "Name": "IAWater",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 2,
+          "Offset": 12,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3294871628": {
+      "Name": "IAWaterRipple",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Height",
+          "Format": 1,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "4235075661": {
+      "Name": "IAGUI",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Color",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Texcoord",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "4197666894": {
+      "Name": "IATextureBlend",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Texcoord",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Direction",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "2002133071": {
+      "Name": "IAGPUParticle",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Scale",
+          "Format": 4,
+          "Offset": 16,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Index",
+          "Format": 4,
+          "Offset": 18,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Intensity",
+          "Format": 4,
+          "Offset": 20,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Rotation",
+          "Format": 4,
+          "Offset": 22,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoordScl",
+          "Format": 5,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Reserved",
+          "Format": 1,
+          "Offset": 28,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "2201624656": {
+      "Name": "IAGPULineParticle",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Direction",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Scale",
+          "Format": 4,
+          "Offset": 28,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Intensity",
+          "Format": 4,
+          "Offset": 30,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "336146513": {
+      "Name": "IAGPUPolylineParticle",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Intensity",
+          "Format": 4,
+          "Offset": 16,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Width",
+          "Format": 4,
+          "Offset": 18,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 3,
+          "Offset": 20,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Tangent",
+          "Format": 7,
+          "Offset": 24,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Scale",
+          "Format": 1,
+          "Offset": 28,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "452350034": {
+      "Name": "IALightShaftInput",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "2833285203": {
+      "Name": "IAGrass",
+      "Attributes": [
+        {
+          "Name": "POSITION",
+          "Format": 10,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "COLOR_BLEND",
+          "Format": 10,
+          "Offset": 3,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "COS_SIN",
+          "Format": 9,
+          "Offset": 4,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "LIGHTMAP",
+          "Format": 10,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "VERTEX_NO",
+          "Format": 10,
+          "Offset": 7,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "WIDTH_HEIGHT",
+          "Format": 10,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "GRASS_POWER",
+          "Format": 10,
+          "Offset": 10,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "AMBOCC",
+          "Format": 10,
+          "Offset": 11,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "2789544020": {
+      "Name": "IAGrassHicomp",
+      "Attributes": [
+        {
+          "Name": "POSITION",
+          "Format": 10,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VERTEX_NO",
+          "Format": 10,
+          "Offset": 3,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "ANGLE",
+          "Format": 10,
+          "Offset": 4,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "LIGHTMAP",
+          "Format": 10,
+          "Offset": 5,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "COLOR_BLEND",
+          "Format": 10,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "AMBOCC",
+          "Format": 10,
+          "Offset": 7,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "3903348821": {
+      "Name": "IAGrassHicomp2",
+      "Attributes": [
+        {
+          "Name": "POSITION",
+          "Format": 10,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VNO_CB",
+          "Format": 10,
+          "Offset": 3,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "ANGLE",
+          "Format": 10,
+          "Offset": 4,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "LIGHTMAP",
+          "Format": 10,
+          "Offset": 5,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "SCALING",
+          "Format": 10,
+          "Offset": 6,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "AMBOCC",
+          "Format": 10,
+          "Offset": 7,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "1270435926": {
+      "Name": "IAGrassPoint",
+      "Attributes": [
+        {
+          "Name": "POSITION",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 4,
+          "Set": 0
+        }
+      ]
+    },
+    "3067342935": {
+      "Name": "IAGrassLowest",
+      "Attributes": [
+        {
+          "Name": "VERTEX_NO",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "3362803800": {
+      "Name": "IAGrassSPU",
+      "Attributes": [
+        {
+          "Name": "POSITION",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "GRASS_COLOR",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "UV_BASEMAP",
+          "Format": 1,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "WORLD_POSITION",
+          "Format": 1,
+          "Offset": 40,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "WORLD_NORMAL",
+          "Format": 1,
+          "Offset": 52,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "WORLD_TANGENT",
+          "Format": 1,
+          "Offset": 64,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "DIFFUSE",
+          "Format": 1,
+          "Offset": 76,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "SPECULAR",
+          "Format": 1,
+          "Offset": 88,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "AMBIENT_OCCLUSION",
+          "Format": 1,
+          "Offset": 100,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    },
+    "285429849": {
+      "Name": "IAGrassOutsourcing",
+      "Attributes": [
+        {
+          "Name": "OS_POSITION",
+          "Format": 2,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "355709018": {
+      "Name": "IAGrassOutsourcingF32",
+      "Attributes": [
+        {
+          "Name": "OS_POSITION",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "44712027": {
+      "Name": "IAMirage",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Texcoord",
+          "Format": 1,
+          "Offset": 12,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2884198492": {
+      "Name": "IASimWaterForViewInput",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Color",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Texcoord",
+          "Format": 1,
+          "Offset": 32,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3424641117": {
+      "Name": "IASoftBodyQuad",
+      "Attributes": [
+        {
+          "Name": "POSITION",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2040914014": {
+      "Name": "IASoftBodyVertex",
+      "Attributes": [
+        {
+          "Name": "SbTexCoord",
+          "Format": 2,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3488903263": {
+      "Name": "IASoftBodyDecouple",
+      "Attributes": [
+        {
+          "Name": "SbTexCoord",
+          "Format": 2,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "SbTexCoord",
+          "Format": 2,
+          "Offset": 4,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "SbTexCoord",
+          "Format": 2,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 2
+        },
+        {
+          "Name": "SbWeight",
+          "Format": 2,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "SbOffset",
+          "Format": 2,
+          "Offset": 18,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "1293443168": {
+      "Name": "IASoftBodyVertexNoVTF",
+      "Attributes": [
+        {
+          "Name": "SbPos",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "SbQuat",
+          "Format": 2,
+          "Offset": 12,
+          "ElementCount": 4,
+          "Set": 0
+        }
+      ]
+    },
+    "223228001": {
+      "Name": "IASoftBodyVertexPS3",
+      "Attributes": [
+        {
+          "Name": "SbQuat",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "SbQuat",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 4,
+          "Set": 1
+        }
+      ]
+    },
+    "2180837474": {
+      "Name": "IASoftBodyDecoupleNoVTF",
+      "Attributes": [
+        {
+          "Name": "SbPos",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "SbPos",
+          "Format": 1,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 1
+        },
+        {
+          "Name": "SbPos",
+          "Format": 1,
+          "Offset": 24,
+          "ElementCount": 3,
+          "Set": 2
+        },
+        {
+          "Name": "SbQuat",
+          "Format": 2,
+          "Offset": 36,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "SbQuat",
+          "Format": 2,
+          "Offset": 44,
+          "ElementCount": 4,
+          "Set": 1
+        },
+        {
+          "Name": "SbQuat",
+          "Format": 2,
+          "Offset": 52,
+          "ElementCount": 4,
+          "Set": 2
+        },
+        {
+          "Name": "SbWeight",
+          "Format": 2,
+          "Offset": 60,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "SbOffset",
+          "Format": 2,
+          "Offset": 66,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "2519220323": {
+      "Name": "IATattooBlend2D",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Texcoord",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Direction",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 3,
+          "Set": 0
+        }
+      ]
+    },
+    "1834831972": {
+      "Name": "IABuilder",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 14,
+          "Offset": 12,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Reserved",
+          "Format": 1,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3463049317": {
+      "Name": "IASky",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "2552344678": {
+      "Name": "IAAstralBody",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "TexCoord",
+          "Format": 1,
+          "Offset": 12,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "327438439": {
+      "Name": "IASkyStar",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Color",
+          "Format": 1,
+          "Offset": 12,
+          "ElementCount": 3,
+          "Set": 0
+        },
+        {
+          "Name": "Offset",
+          "Format": 1,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1350451304": {
+      "Name": "IAAmbientShadow",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 4,
+          "Set": 0
+        }
+      ]
+    },
+    "2016542825": {
+      "Name": "IAVertexIndexF32",
+      "Attributes": [
+        {
+          "Name": "PROJECTION_INDEX",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "3260788842": {
+      "Name": "IAVertexIndexF16",
+      "Attributes": [
+        {
+          "Name": "PROJECTION_INDEX",
+          "Format": 2,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        }
+      ]
+    },
+    "1851379819": {
+      "Name": "IATriangleF32",
+      "Attributes": [
+        {
+          "Name": "TRIANGLE_INDEX",
+          "Format": 1,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TRIANGLE_INDEX",
+          "Format": 1,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "TRIANGLE_INDEX",
+          "Format": 1,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 2
+        }
+      ]
+    },
+    "3559940204": {
+      "Name": "IATriangleF16",
+      "Attributes": [
+        {
+          "Name": "TRIANGLE_INDEX",
+          "Format": 2,
+          "Offset": 0,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "TRIANGLE_INDEX",
+          "Format": 2,
+          "Offset": 4,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "TRIANGLE_INDEX",
+          "Format": 2,
+          "Offset": 8,
+          "ElementCount": 2,
+          "Set": 2
+        }
+      ]
+    },
+    "1896841325": {
+      "Name": "IAInfParticle",
+      "Attributes": [
+        {
+          "Name": "Position",
+          "Format": 5,
+          "Offset": 0,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "VertexColor",
+          "Format": 14,
+          "Offset": 8,
+          "ElementCount": 1,
+          "Set": 0
+        },
+        {
+          "Name": "Scale",
+          "Format": 3,
+          "Offset": 12,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Life",
+          "Format": 3,
+          "Offset": 16,
+          "ElementCount": 2,
+          "Set": 0
+        },
+        {
+          "Name": "Attribute",
+          "Format": 8,
+          "Offset": 20,
+          "ElementCount": 4,
+          "Set": 0
+        },
+        {
+          "Name": "Attribute",
+          "Format": 4,
+          "Offset": 24,
+          "ElementCount": 2,
+          "Set": 1
+        },
+        {
+          "Name": "Reserved",
+          "Format": 1,
+          "Offset": 28,
+          "ElementCount": 1,
+          "Set": 0
+        }
+      ]
+    }
+  }
+}

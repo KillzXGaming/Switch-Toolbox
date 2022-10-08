@@ -322,6 +322,14 @@
     <Compile Include="FileFormats\MarioParty\HSF.cs" />
     <Compile Include="FileFormats\Message\MSYT.cs" />
     <Compile Include="FileFormats\MKAGPDX\LM2_ARCADE_Model.cs" />
+    <Compile Include="FileFormats\MT\CRC32Hash.cs" />
+    <Compile Include="FileFormats\MT\Model\MaterialList.cs" />
+    <Compile Include="FileFormats\MT\Model\Model.cs" />
+    <Compile Include="FileFormats\MT\Model\Shader.cs" />
+    <Compile Include="FileFormats\MT\MT_Globals.cs" />
+    <Compile Include="FileFormats\MT\MT_Renderer.cs" />
+    <Compile Include="FileFormats\MT\MT_Model.cs" />
+    <Compile Include="FileFormats\MT\MT_TEX.cs" />
     <Compile Include="FileFormats\NKN.cs" />
     <Compile Include="FileFormats\NLG\LM2\LM2_Material.cs" />
     <Compile Include="FileFormats\NLG\LM3\LM3_ChunkTable.cs" />

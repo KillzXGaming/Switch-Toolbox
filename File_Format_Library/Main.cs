@@ -341,6 +341,8 @@ namespace FirstPlugin
         {
             List<Type> Formats = new List<Type>();
             Formats.Add(typeof(BFRES));
+            Formats.Add(typeof(MT_TEX));
+            Formats.Add(typeof(MT_Model));
             Formats.Add(typeof(BCSV));
             Formats.Add(typeof(TVOL));
             Formats.Add(typeof(BTI));

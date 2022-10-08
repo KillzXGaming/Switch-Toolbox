@@ -17,6 +17,7 @@ namespace Toolbox.Library.Rendering
         public virtual float PreviewScale { get; set; } = 1.0f;
 
         public static List<ITextureContainer> TextureContainers = new List<ITextureContainer>();
+        public List<STGenericTexture> Textures = new List<STGenericTexture>();
 
         public List<GenericRenderedObject> Meshes = new List<GenericRenderedObject>();
         public STSkeleton Skeleton = new STSkeleton();
@@ -330,6 +331,15 @@ namespace Toolbox.Library.Rendering
                         BindGLTexture(tex, shader, container.TextureList[i]);
                         return tex.textureUnit + 1;
                     }
+                }
+            }
+
+            for (int i = 0; i < Textures?.Count; i++)
+            {
+                if (activeTex == Textures[i].Text)
+                {
+                    BindGLTexture(tex, shader, Textures[i]);
+                    return tex.textureUnit + 1;
                 }
             }
 
