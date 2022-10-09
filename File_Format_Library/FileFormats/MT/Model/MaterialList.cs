@@ -83,11 +83,11 @@ namespace CafeLibrary.M2
                         for (int j = 0; j < parameters.Length; j++)
                         {
                             if (parameters[j].ToString().StartsWith("34397848")) //tAlbedoMap
-                                material.DiffuseMap = this.Textures[(int)parameters[j - 1] - 1];
+                                material.DiffuseMap = FindTextureParam(parameters, j);
                             if (parameters[j].ToString().StartsWith("577110")) //tNormalMap
-                                material.NormalMap = this.Textures[(int)parameters[j - 1] - 1];
-                          //  if (parameters[j].ToString().StartsWith("24862")) //tSpecularMap
-                          //      material.SpecularMap = this.Textures[(int)parameters[j - 1] - 1];
+                                material.NormalMap = FindTextureParam(parameters, j);
+                            if (parameters[j].ToString().StartsWith("24862")) //tSpecularMap
+                                material.SpecularMap = FindTextureParam(parameters, j);
                         }
                     }
                     else
@@ -96,15 +96,31 @@ namespace CafeLibrary.M2
                         for (int j = 0; j < parameters.Length; j++)
                         {
                             if (parameters[j].ToString().StartsWith("34397848")) //tAlbedoMap
-                                material.DiffuseMap = this.Textures[(int)parameters[j - 1] - 1];
+                                material.DiffuseMap = FindTextureParam(parameters, j);
                             if (parameters[j].ToString().StartsWith("5771109")) //tNormalMap
-                                material.NormalMap = this.Textures[(int)parameters[j - 1] - 1];
-                           // if (parameters[j].ToString().StartsWith("2486240")) //tSpecularMap
-                            //    material.SpecularMap = this.Textures[(int)parameters[j - 1] - 1];
+                                material.NormalMap = FindTextureParam(parameters, j);
+                             if (parameters[j].ToString().StartsWith("2486240")) //tSpecularMap
+                                material.SpecularMap = FindTextureParam(parameters, j);
                         }
                     }
                 }
             }
+        }
+
+        private Texture FindTextureParam(ulong[] parameters, int id)
+        {
+            var index = (uint)parameters[id - 1] - 1;
+            if (index < Textures.Count) //Index before texture hash. Sometimes not always the case?
+                return Textures[(int)index];
+            return null;
+        }
+
+        private Texture FindTextureParam(uint[] parameters, int id)
+        {
+            var index = parameters[id - 1] - 1;
+            if (index < Textures.Count)
+                return Textures[(int)index];
+            return null;
         }
 
         private uint ReadUint(FileReader reader)
