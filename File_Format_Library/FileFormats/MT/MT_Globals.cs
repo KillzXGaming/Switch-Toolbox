@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Toolbox.Library.Security.Cryptography;
+using Toolbox.Library;
 
 namespace CafeLibrary.M2
 {
@@ -26,7 +27,7 @@ namespace CafeLibrary.M2
             attGroups = new Dictionary<uint, Shader.AttributeGroup>();
 
 
-            foreach (var file in Directory.GetFiles(Path.Combine("Lib", "MTVertexFormats")))
+            foreach (var file in Directory.GetFiles(Path.Combine(Runtime.ExecutableDir, "Lib", "MTVertexFormats")))
             {
                 LoadPresets(file);
             }
