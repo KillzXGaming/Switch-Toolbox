@@ -86,8 +86,8 @@ namespace CafeLibrary.M2
                                 material.DiffuseMap = this.Textures[(int)parameters[j - 1] - 1];
                             if (parameters[j].ToString().StartsWith("577110")) //tNormalMap
                                 material.NormalMap = this.Textures[(int)parameters[j - 1] - 1];
-                            if (parameters[j].ToString().StartsWith("24862")) //tSpecularMap
-                                material.SpecularMap = this.Textures[(int)parameters[j - 1] - 1];
+                          //  if (parameters[j].ToString().StartsWith("24862")) //tSpecularMap
+                          //      material.SpecularMap = this.Textures[(int)parameters[j - 1] - 1];
                         }
                     }
                     else
@@ -99,8 +99,8 @@ namespace CafeLibrary.M2
                                 material.DiffuseMap = this.Textures[(int)parameters[j - 1] - 1];
                             if (parameters[j].ToString().StartsWith("5771109")) //tNormalMap
                                 material.NormalMap = this.Textures[(int)parameters[j - 1] - 1];
-                            if (parameters[j].ToString().StartsWith("2486240")) //tSpecularMap
-                                material.SpecularMap = this.Textures[(int)parameters[j - 1] - 1];
+                           // if (parameters[j].ToString().StartsWith("2486240")) //tSpecularMap
+                            //    material.SpecularMap = this.Textures[(int)parameters[j - 1] - 1];
                         }
                     }
                 }
