@@ -3,8 +3,6 @@
   "Platform": "WII",
   "PrismThickness": 40.0,
   "SphereRadius": 1.0,
-  "PaddingMin": 0.0,
-  "PaddingMax": 0.0,
   "MaxTrianglesInCube": 25,
   "Comments": "This game uses bcsv to customize presets.",
   "MaterialPresets": {
