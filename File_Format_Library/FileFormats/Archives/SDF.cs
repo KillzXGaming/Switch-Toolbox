@@ -494,6 +494,10 @@ namespace FirstPlugin
             string ID = packageId.ToString("D" + 4);
 
             string BlockFilePath = Path.Combine(PathFolder, $"sdf-{layer}-{ID}.sdfdata");
+            if (!File.Exists(BlockFilePath))
+            {
+                BlockFilePath = Path.Combine(PathFolder, $"sdf_{layer}_{ID}.sdfdata");
+            }
 
             bool IsFile = !Name.Contains("dummy") && decompresedSize > 5;
 
