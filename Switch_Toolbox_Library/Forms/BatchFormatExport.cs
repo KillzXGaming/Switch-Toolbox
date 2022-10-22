@@ -22,6 +22,7 @@ namespace Toolbox.Library
             public bool SeperateTextureContainers;
             public bool SeperateArchiveFiles;
             public bool UseTextureChannelComponents;
+            public bool ExportTextures;
         }
 
         public BatchFormatExport(List<string> Formats)
@@ -63,6 +64,7 @@ namespace Toolbox.Library
             BatchSettings.SeperateTextureContainers = chkSeperateTextureContainers.Checked;
             BatchSettings.SeperateArchiveFiles = chkSeperateArchives.Checked;
             BatchSettings.UseTextureChannelComponents = chkChannelComponents.Checked;
+            BatchSettings.ExportTextures = chkExportTextures.Checked;
 
             this.Close();
         }

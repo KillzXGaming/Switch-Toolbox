@@ -34,6 +34,7 @@
             this.OkButton = new Toolbox.Library.Forms.STButton();
             this.button1 = new Toolbox.Library.Forms.STButton();
             this.comboBox1 = new Toolbox.Library.Forms.STComboBox();
+            this.chkExportTextures = new Toolbox.Library.Forms.STCheckBox();
             this.SuspendLayout();
             // 
             // chkChannelComponents
@@ -76,7 +77,7 @@
             // 
             this.OkButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OkButton.Location = new System.Drawing.Point(82, 121);
+            this.OkButton.Location = new System.Drawing.Point(83, 138);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(63, 23);
             this.OkButton.TabIndex = 2;
@@ -88,7 +89,7 @@
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(167, 121);
+            this.button1.Location = new System.Drawing.Point(168, 138);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(63, 23);
             this.button1.TabIndex = 1;
@@ -108,11 +109,24 @@
             this.comboBox1.TabIndex = 0;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
+            // chkExportTextures
+            // 
+            this.chkExportTextures.AutoSize = true;
+            this.chkExportTextures.Checked = true;
+            this.chkExportTextures.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkExportTextures.Location = new System.Drawing.Point(11, 108);
+            this.chkExportTextures.Name = "chkExportTextures";
+            this.chkExportTextures.Size = new System.Drawing.Size(100, 17);
+            this.chkExportTextures.TabIndex = 6;
+            this.chkExportTextures.Text = "Export Textures";
+            this.chkExportTextures.UseVisualStyleBackColor = true;
+            // 
             // BatchFormatExport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(246, 156);
+            this.ClientSize = new System.Drawing.Size(246, 173);
+            this.Controls.Add(this.chkExportTextures);
             this.Controls.Add(this.chkChannelComponents);
             this.Controls.Add(this.chkSeperateArchives);
             this.Controls.Add(this.chkSeperateTextureContainers);
@@ -134,5 +148,6 @@
         private Forms.STCheckBox chkSeperateTextureContainers;
         private Forms.STCheckBox chkSeperateArchives;
         private Forms.STCheckBox chkChannelComponents;
+        private Forms.STCheckBox chkExportTextures;
     }
 }

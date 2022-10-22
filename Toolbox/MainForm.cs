@@ -1521,6 +1521,7 @@ namespace Toolbox
 
                 DAE.ExportSettings daesettings = new DAE.ExportSettings();
                 daesettings.SuppressConfirmDialog = true;
+                daesettings.ExportTextures = settings.ExportTextures;
 
                 var textures = ((IExportableModelContainer)fileFormat).ExportableTextures.ToList();
                 foreach (var model in ((IExportableModelContainer)fileFormat).ExportableModels)
@@ -1543,6 +1544,7 @@ namespace Toolbox
 
                 DAE.ExportSettings daesettings = new DAE.ExportSettings();
                 daesettings.SuppressConfirmDialog = true;
+                daesettings.ExportTextures = settings.ExportTextures;
 
                 var model = new STGenericModel();
                 model.Materials = ((IExportableModel)fileFormat).ExportableMaterials;
