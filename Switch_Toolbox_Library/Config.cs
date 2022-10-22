@@ -92,7 +92,7 @@ namespace Toolbox.Library
                         break;
                     case "CameraNear":
                         float.TryParse(node.InnerText, out Runtime.CameraNear);
-						Runtime.CameraNear = (float)Math.Max(Math.Min(0.1, Runtime.CameraNear), 1.0f);
+						Runtime.CameraNear = (float)Math.Min(Math.Max(0.1, Runtime.CameraNear), 1.0f);
                         break;
                     case "PreviewScale":
                         float.TryParse(node.InnerText, out Runtime.previewScale);
