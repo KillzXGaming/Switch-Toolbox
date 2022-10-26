@@ -245,6 +245,17 @@
     <Compile Include="FileFormats\BSMAT\NoFormattingConverter.cs" />
     <Compile Include="FileFormats\Byaml\XmlByamlConverter.cs" />
     <Compile Include="FileFormats\Byaml\YamlByamlConverter.cs" />
+    <Compile Include="FileFormats\DKCTF\CCharacter.cs" />
+    <Compile Include="FileFormats\DKCTF\CModel.cs" />
+    <Compile Include="FileFormats\DKCTF\FileData\BufferHelper.cs" />
+    <Compile Include="FileFormats\DKCTF\FileData\CMDL.cs" />
+    <Compile Include="FileFormats\DKCTF\CTexture.cs" />
+    <Compile Include="FileFormats\DKCTF\FileData\PACK.cs" />
+    <Compile Include="FileFormats\DKCTF\FileData\CHAR.cs" />
+    <Compile Include="FileFormats\DKCTF\FileData\SKEL.cs" />
+    <Compile Include="FileFormats\DKCTF\FileData\TXTR.cs" />
+    <Compile Include="FileFormats\DKCTF\FileData\IOFileExtension.cs" />
+    <Compile Include="FileFormats\DKCTF\PakFileList.cs" />
     <Compile Include="FileFormats\Font\BXFNT\CMAP.cs" />
     <Compile Include="FileFormats\Font\BXFNT\FINF.cs" />
     <Compile Include="FileFormats\Font\BXFNT\FontKerningTable.cs" />
@@ -350,7 +361,7 @@
     <Compile Include="FileFormats\Archives\VIBS.cs" />
     <Compile Include="FileFormats\Audio\Archives\AudioCommon.cs" />
     <Compile Include="FileFormats\Collision\KclMonoscript.cs" />
-    <Compile Include="FileFormats\DKCTF\Common.cs" />
+    <Compile Include="FileFormats\DKCTF\FileData\Common.cs" />
     <Compile Include="FileFormats\DKCTF\MSBT.cs" />
     <Compile Include="FileFormats\DKCTF\PAK.cs" />
     <Compile Include="FileFormats\Effects\ESET.cs" />

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using System.IO;
 
 namespace DKCTF
 {
@@ -50,101 +51,98 @@ namespace DKCTF
 
         public void ClearFiles() { files.Clear(); }
 
-        private PakHeader Header;
-        private List<DirectoryAssetEntry> Directories = new List<DirectoryAssetEntry>();
-        private List<MetaOffsetEntry> MetaOffsets = new List<MetaOffsetEntry>();
-        private List<CNameTagEntry> FileNameEntries = new List<CNameTagEntry>();
+        //For file searching
+        public Dictionary<string, FileEntry> ModelFiles = new Dictionary<string, FileEntry>();
+        public Dictionary<string, FileEntry> SkeletonFiles = new Dictionary<string, FileEntry>();
+        public Dictionary<string, FileEntry> TextureFiles = new Dictionary<string, FileEntry>();
+        public Dictionary<string, CHAR> CharFiles = new Dictionary<string, CHAR>();
+        public Dictionary<string, FileEntry> AnimFiles = new Dictionary<string, FileEntry>();
 
         public void Load(System.IO.Stream stream)
         {
-            Directories.Clear();
-            MetaOffsets.Clear();
-            FileNameEntries.Clear();
+            PACK pack = new PACK(stream);
 
-            using (var reader = new FileReader(stream, true))
+            for (int i = 0; i < pack.Assets.Count; i++)
             {
-                reader.SetByteOrder(true);
-                Header = reader.ReadStruct<PakHeader>();
-                var ADIRChunk = reader.ReadStruct<CChunkDescriptor>();
-                ReadAssetDirectoryChunk(reader, ADIRChunk);
-                var METAChunk = reader.ReadStruct<CChunkDescriptor>();
-                ReadMetaChunk(reader, METAChunk);
-                var STRGChunk = reader.ReadStruct<CChunkDescriptor>();
-                ReadFileNameChunk(reader, STRGChunk);
-            }
+                string ext = pack.Assets[i].Type.ToLower();
 
-            for (int i = 0; i < Directories.Count; i++)
-            {
-                files.Add(new FileEntry()
+                FileEntry file = new FileEntry();
+                file.ParentArchive = this;
+                file.ArchiveStream = stream;
+                file.AssetEntry = pack.Assets[i];
+
+                string dir = pack.Assets[i].Type;
+                if (DirectoryLabels.ContainsKey(dir))
+                    dir = DirectoryLabels[dir];
+
+                file.FileName = $"{dir}/{pack.Assets[i].FileID}.{ext}";
+                file.SubData = new SubStream(stream, pack.Assets[i].Offset, pack.Assets[i].Size);
+
+                if (pack.MetaOffsets.ContainsKey(pack.Assets[i].FileID.ToString()))
+                    file.MetaPointer = pack.MetaDataOffset + pack.MetaOffsets[pack.Assets[i].FileID.ToString()];
+                files.Add(file);
+
+                switch (file.AssetEntry.Type)
                 {
-                    FileData = new byte[0],
-                    FileDataStream = Directories[i].Data,
-                    FileName = Directories[i].Type,
-                });
-
-                /*   var file = STFileLoader.OpenFileFormat(subStream, Directories[i].ToString());
-                   if (file != null && file is TreeNodeFile)
-                   {
-                       Nodes.Add((TreeNodeFile)file);
-                   }
-                   else
-                   {
-
-                   }*/
+                    case "SMDL": ModelFiles.Add(file.AssetEntry.FileID.ToString(), file); break;
+                    case "TXTR": TextureFiles.Add(file.AssetEntry.FileID.ToString(), file); break;
+                    case "SKEL": SkeletonFiles.Add(file.AssetEntry.FileID.ToString(), file); break;
+                    case "ANIM": AnimFiles.Add(file.AssetEntry.FileID.ToString(), file); break;
+                    case "CHAR":
+                        var c = new CHAR(new MemoryStream(file.FileData));
+                        file.FileName = $"Characters/{c.Name}/{c.Name}.char";
+                        CharFiles.Add(file.AssetEntry.FileID.ToString(), c);
+                        break;
+                }
             }
-        }
 
-        private void ReadAssetDirectoryChunk(FileReader reader, CChunkDescriptor chunk)
-        {
-            if (chunk.ChunkType != "ADIR")
-                throw new Exception("Unexpected type! Expected ADIR, got " + chunk.ChunkType);
-
-            long pos = reader.Position;
-
-            reader.SeekBegin(pos + chunk.DataOffset);
-            uint numEntries = reader.ReadUInt32();
-            for (int i = 0; i < numEntries; i++)
+            foreach (var c in CharFiles)
             {
-                DirectoryAssetEntry entry = new DirectoryAssetEntry();
-                entry.Read(reader);
-                Directories.Add(entry);
+                SkeletonFiles[c.Value.SkeletonFileID.ToString()].FileName = $"Characters/{c.Value.Name}/Models/{c.Value.SkeletonFileID}.skel";
+
+                foreach (var m in c.Value.Models)
+                {
+                    if (ModelFiles.ContainsKey(m.FileID.ToString()))
+                        ModelFiles[m.FileID.ToString()].FileName = $"Characters/{c.Value.Name}/Models/{m.Name}.smdl";
+                }
+                foreach (var m in c.Value.Animations)
+                {
+                    if (AnimFiles.ContainsKey(m.FileID.ToString()))
+                        AnimFiles[m.FileID.ToString()].FileName = $"Characters/{c.Value.Name}/Animations/{m.Name}.anim";
+                }
             }
-
-            reader.SeekBegin(pos + chunk.DataSize);
-        }
-
-        private void ReadMetaChunk(FileReader reader, CChunkDescriptor chunk)
-        {
-            if (chunk.ChunkType != "META")
-                throw new Exception("Unexpected type! Expected META, got " + chunk.ChunkType);
-            long pos = reader.Position;
-            reader.SeekBegin(pos + chunk.DataOffset);
-            uint numEntries = reader.ReadUInt32();
-            for (int i = 0; i < numEntries; i++)
+            foreach (var file in files)
             {
-                MetaOffsetEntry entry = reader.ReadStruct< MetaOffsetEntry>();
-                MetaOffsets.Add(entry);
+                if (PakFileList.GuiToFilePath.ContainsKey(file.AssetEntry.FileID.ToString()))
+                {
+                    file.FileName = "_LabeledFiles/" + PakFileList.GuiToFilePath[file.AssetEntry.FileID.ToString()];
+                    //Organize the data type folders for easier access. 
+                    if (file.AssetEntry.Type == "SMDL") file.FileName = file.FileName.Replace("exportData", "models");
+                    if (file.AssetEntry.Type == "CMDL") file.FileName = file.FileName.Replace("exportData", "models");
+                    if (file.AssetEntry.Type == "TXTR") file.FileName = file.FileName.Replace("exportData", "textures");
+                    if (file.AssetEntry.Type == "ANIM") file.FileName = file.FileName.Replace("exportData", "animations");
+                }
             }
-
-            reader.SeekBegin(pos + chunk.DataSize);
+            files = files.OrderBy(x => x.FileName).ToList();
         }
 
-        private void ReadFileNameChunk(FileReader reader, CChunkDescriptor chunk)
+        Dictionary<string, string> DirectoryLabels = new Dictionary<string, string>()
         {
-            if (chunk.ChunkType != "STRG")
-                throw new Exception("Unexpected type! Expected STRG, got " + chunk.ChunkType);
+            { "CHAR", "Characters" },
+            { "CMDL", "Static Models" },
+            { "SMDL", "Skinned Models" },
+            { "TXTR", "Textures" },
+            { "MTRL", "Shaders" },
+            { "CSMP", "AudioSample" },
+            { "CAUD", "AudioData" },
+            { "GENP", "Gpsys" },
+            { "ANIM", "Animations" },
+            { "XFRM", "Xfpsys" },
+            { "WMDL", "World Models" },
+            { "DCLN", "Collision Models" },
+            { "CLSN", "Collision Static Models" },
+        };
 
-            long pos = reader.Position;
-            reader.SeekBegin(pos + chunk.DataOffset);
-            uint numEntries = reader.ReadUInt32();
-            for (int i = 0; i < numEntries; i++)
-            {
-             //   CNameTagEntry entry = reader.ReadStruct<CNameTagEntry>();
-             //   FileNameEntries.Add(entry);
-            }
-
-            reader.SeekBegin(pos + chunk.DataSize);
-        }
 
         public void Unload()
         {
@@ -168,53 +166,80 @@ namespace DKCTF
 
     public class FileEntry : ArchiveFileInfo
     {
+        public PACK.DirectoryAssetEntry AssetEntry;
 
-    }
+        public PAK ParentArchive;
 
-    public class DirectoryAssetEntry
-    {
-        public string Type;
-        public CObjectId FileID;
+        public long MetaPointer;
 
-        public long Offset;
-        public long Size;
+        public Stream SubData;
 
-        public SubStream Data;
+        public Stream ArchiveStream;
 
-        public void Read(FileReader reader)
+        public override byte[] FileData
         {
-            Type = reader.ReadString(4, Encoding.ASCII);
-            FileID = reader.ReadStruct<CObjectId>();
-            Offset = reader.ReadInt64();
-            Size = reader.ReadInt64();
+            get
+            {
+                List<byte[]> Data = new List<byte[]>();
 
-            Data = new SubStream(reader.BaseStream, Offset,Size);
+                using (var reader = new FileReader(SubData, true))
+                {
+                    Data.Add(reader.ReadBytes((int)reader.BaseStream.Length));
+                    if (MetaPointer != null)
+                    {
+                        using (var r = new FileReader(ArchiveStream, true)) {
+                            r.SetByteOrder(true);
+
+                            Data.Add(FileForm.WriteMetaFooter(r, (uint)MetaPointer, AssetEntry.Type));
+                        }
+                    }
+                }
+
+                if (AssetEntry.Type == "TXTR")
+                {
+                    var txt = new TXTR();
+                    return txt.CreateUncompressedFile(Utils.CombineByteArray(Data.ToArray()));
+                }
+
+
+                return Utils.CombineByteArray(Data.ToArray());
+            }
         }
 
-        public override string ToString()
+        public override IFileFormat OpenFile()
         {
-            return $"{FileID.Guid.Part4.ToString()}.{Type}";
+            var pak = this.ParentArchive;
+
+            var file = base.OpenFile();
+            if (file is CModel)
+            {
+                ((CModel)file).LoadTextures(pak.TextureFiles);
+
+                FileEntry GetSkeleton()
+                {
+                    foreach (var c in pak.CharFiles)
+                    {
+                        foreach (var m in c.Value.Models)
+                        {
+                            if (AssetEntry.FileID.ToString() == m.FileID.ToString())
+                                return pak.SkeletonFiles[c.Value.SkeletonFileID.ToString()];
+                        }
+                    }
+                    return null;
+                }
+                var skelFile = GetSkeleton();
+                if (skelFile != null)
+                {
+                    var skel = new SKEL(new MemoryStream(skelFile.FileData));
+                    ((CModel)file).LoadSkeleton(skel);
+                }
+            }
+            if (file is CCharacter)
+                ((CCharacter)file).LoadModels(pak);
+
+            this.FileFormat = file;
+
+            return file;
         }
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class MetaOffsetEntry
-    {
-        public CObjectTag ObjectTag;
-        public uint FileOffset;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class PakHeader
-    {
-        CFormDescriptor PackForm;
-        CFormDescriptor TocForm;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class CNameTagEntry
-    {
-        public CObjectTag ObjectTag;
-        public string Name;
     }
 }

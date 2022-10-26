@@ -48,8 +48,15 @@ namespace Toolbox.Library
                 BatchFormatExport form = new BatchFormatExport(Formats);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    foreach (STGenericTexture tex in Nodes)
+                    foreach (TreeNode node in Nodes)
                     {
+                        STGenericTexture tex = null;
+                        if (node is STGenericTexture) tex = (STGenericTexture)node;
+                        if (node.Tag is STGenericTexture) tex = (STGenericTexture)node.Tag;
+
+                        if (tex == null)
+                            continue;
+
                         if (form.Index == 0)
                             tex.SaveDDS(folderPath + '\\' + tex.Text + ".dds");
                         else if (form.Index == 1)

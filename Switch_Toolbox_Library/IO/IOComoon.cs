@@ -13,6 +13,11 @@ namespace Toolbox.Library.IO
         int value;
         public static implicit operator string(Magic magic) => Encoding.ASCII.GetString(BitConverter.GetBytes(magic.value));
         public static implicit operator Magic(string s) => new Magic { value = BitConverter.ToInt32(Encoding.ASCII.GetBytes(s), 0) };
+
+        public override string ToString()
+        {
+            return Encoding.ASCII.GetString(BitConverter.GetBytes(value)); 
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

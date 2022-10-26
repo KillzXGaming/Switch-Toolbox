@@ -168,7 +168,7 @@ namespace FirstPlugin.LuigisMansion3
                     fileEntries.Add(file);
 
                     if (file.DecompressedSize > 0)
-                    {
+                    {   
                         file.Text = $"entry {i}";
 
                         if (i < 52)

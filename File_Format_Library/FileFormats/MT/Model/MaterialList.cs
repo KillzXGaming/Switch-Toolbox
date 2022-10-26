@@ -118,7 +118,7 @@ namespace CafeLibrary.M2
         private Texture FindTextureParam(uint[] parameters, int id)
         {
             var index = parameters[id - 1] - 1;
-            if (index < Textures.Count)
+            if (index < Textures.Count) //Index before texture hash. Sometimes not always the case?
                 return Textures[(int)index];
             return null;
         }

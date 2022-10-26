@@ -343,6 +343,8 @@ namespace FirstPlugin
             Formats.Add(typeof(BFRES));
             Formats.Add(typeof(MT_TEX));
             Formats.Add(typeof(MT_Model));
+            Formats.Add(typeof(DKCTF.CModel));
+            Formats.Add(typeof(DKCTF.CTexture));
             Formats.Add(typeof(BCSV));
             Formats.Add(typeof(TVOL));
             Formats.Add(typeof(BTI));
