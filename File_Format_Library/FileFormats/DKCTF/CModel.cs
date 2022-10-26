@@ -251,7 +251,7 @@ namespace DKCTF
                 var mat = materials[mesh.Header.MaterialIndex];
 
                 GenericRenderedObject genericMesh = new GenericRenderedObject();
-                genericMesh.Text = "Mesh_" + mat.Name;
+                genericMesh.Text = "Mesh_" + mat.Text;
                 meshes.Add(genericMesh);
 
                 foreach (var vert in mesh.Vertices)
