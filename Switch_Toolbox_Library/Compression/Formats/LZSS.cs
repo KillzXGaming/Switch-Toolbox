@@ -22,6 +22,7 @@ namespace Toolbox.Library
         {
             using (var reader = new FileReader(stream, true))
             {
+                hasMagic = true;
                 return reader.CheckSignature(4, "LzS\x01");
             }
         }
