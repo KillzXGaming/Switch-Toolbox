@@ -180,6 +180,9 @@ namespace DKCTF
         {
             get
             {
+                if (!WriteMetaData)
+                    return SubData;
+
                 List<byte[]> Data = new List<byte[]>();
 
                 using (var reader = new FileReader(SubData, true))
@@ -203,6 +206,23 @@ namespace DKCTF
 
 
                 return Utils.CombineByteArray(Data.ToArray());
+            }
+        }
+
+        public bool WriteMetaData
+        {
+            get
+            {
+                switch (AssetEntry.Type)
+                {
+                    case "CMDL":
+                    case "SMDL":
+                    case "WMDL":
+                    case "TXTR":
+                        return true;
+                    default:
+                        return false;
+                }
             }
         }
 
