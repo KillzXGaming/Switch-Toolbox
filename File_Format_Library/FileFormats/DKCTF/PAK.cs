@@ -180,15 +180,13 @@ namespace DKCTF
         {
             get
             {
-                if (!WriteMetaData)
-                    return SubData;
-
                 List<byte[]> Data = new List<byte[]>();
 
                 using (var reader = new FileReader(SubData, true))
                 {
                     Data.Add(reader.ReadBytes((int)reader.BaseStream.Length));
-                    if (MetaPointer != null)
+
+                    if (WriteMetaData)
                     {
                         using (var r = new FileReader(ArchiveStream, true)) {
                             r.SetByteOrder(true);
