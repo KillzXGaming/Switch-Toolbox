@@ -745,8 +745,6 @@ namespace FirstPlugin
                     surface.pitch = ftex.texture.Pitch;
                     surface.texRegs = GX2.CreateRegisters(surface);
 
-                    SetChannelComponents();
-
                     Format = FTEX.ConvertFromGx2Format((Syroot.NintenTools.Bfres.GX2.GX2SurfaceFormat)surface.format);
                     Width = surface.width;
                     Height = surface.height;
