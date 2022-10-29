@@ -139,7 +139,7 @@ namespace DKCTF
                 foreach (var texMap in mat.Textures)
                 {
                     string guid = texMap.Value.FileID.ToString();
-                    if (texFolder.Nodes.ContainsKey(guid))
+                    if (texFolder.Nodes.ContainsKey(guid) || !Textures.ContainsKey(guid))
                         continue;
 
                     if (Textures[guid].FileFormat == null)
