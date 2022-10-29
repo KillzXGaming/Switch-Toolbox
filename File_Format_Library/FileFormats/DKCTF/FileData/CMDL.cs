@@ -38,7 +38,8 @@ namespace DKCTF
         /// Determines which variant of the file to parse. Switch reads strings and materials differently.
         /// </summary>
         bool IsSwitch => this.FileHeader.FormType == "SMDL" && this.FileHeader.VersionA >= 0x3A ||
-                                this.FileHeader.FormType == "CMDL" && this.FileHeader.VersionA >= 0x35;
+                         this.FileHeader.FormType == "CMDL" && this.FileHeader.VersionA >= 0x35 ||
+                         this.FileHeader.FormType == "WMDL" && this.FileHeader.VersionA >= 0x36;
 
         /// <summary>
         /// The meta data header for parsing gpu buffers and decompressing.

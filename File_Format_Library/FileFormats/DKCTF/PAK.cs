@@ -98,7 +98,8 @@ namespace DKCTF
 
             foreach (var c in CharFiles)
             {
-                SkeletonFiles[c.Value.SkeletonFileID.ToString()].FileName = $"Characters/{c.Value.Name}/Models/{c.Value.SkeletonFileID}.skel";
+                if (SkeletonFiles.ContainsKey(c.Value.SkeletonFileID.ToString()))
+                    SkeletonFiles[c.Value.SkeletonFileID.ToString()].FileName = $"Characters/{c.Value.Name}/Models/{c.Value.SkeletonFileID}.skel";
 
                 foreach (var m in c.Value.Models)
                 {
