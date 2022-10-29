@@ -719,7 +719,7 @@ namespace FirstPlugin
             public override void Replace(string FileName)
             {
                 FTEX ftex = new FTEX();
-                ftex.ReplaceTexture(FileName, Format, surface.mipSize <= 1 ? 1 : 0);
+                ftex.ReplaceTexture(FileName, Format, (uint)(surface.mipSize <= 1 ? 1 : 0));
                 if (ftex.texture != null)
                 {
                     surface.swizzle = ftex.texture.Swizzle;
