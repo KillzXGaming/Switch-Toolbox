@@ -460,7 +460,8 @@ namespace FirstPlugin
             Formats.Add(typeof(MTXT));
             Formats.Add(typeof(NKN));
             Formats.Add(typeof(MetroidDreadLibrary.BSMAT));
-
+            Formats.Add(typeof(TRPAK));
+			
             //Formats.Add(typeof(XLINK_FILE));
 
             //  Formats.Add(typeof(MPBIN));
