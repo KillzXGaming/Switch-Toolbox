@@ -3,7 +3,6 @@ using FlatBuffers.TRPAK;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
@@ -143,20 +142,22 @@ namespace FirstPlugin
                         folder = new TextureFolder(this, "Textures");
                     if (folderName == "Models")
                         folder = new GFPAK.QuickAccessFileFolder("Models");
-                    if (folderName == "Animations")
-                        folder = new GFPAK.AnimationFolder("Animations");
 
                     node.Nodes.Add(folder);
                     folders.Add(folderName, folder);
                 }
 
-                string name = Path.GetFileName(file.FileName).Split('[').FirstOrDefault();
+                string name = Path.GetFileName(file.FileName);
 
                 string imageKey = "fileBlank";
                 switch (ext)
                 {
                     case ".bntx": imageKey = "bntx"; break;
-                    case ".gfbmdl": imageKey = "model"; break;
+                    case ".trmdl": imageKey = "model"; break;
+                    case ".trskl": imageKey = "bone"; break;
+                    case ".trmbf": imageKey = "mesh"; break;
+                    case ".trmsh": imageKey = "mesh"; break;
+                    case ".trmtr": imageKey = "material"; break;
                 }
 
                 TreeNode fodlerNode = folders[folderName];
