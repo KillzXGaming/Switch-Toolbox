@@ -581,6 +581,18 @@ namespace Toolbox.Library
             }
 
             reader.TemporarySeek((int)(4 + header.size + DX10HeaderSize), SeekOrigin.Begin);
+            var UbiExtraData = reader.ReadUInt16();
+            if (UbiExtraData == 12816 || UbiExtraData == 1331 && IsDX10) //me when ubisoft | for some reason theres some extra data on some mario rabbids textures god knows what it is
+            {
+                if (header.width == 1024 && header.height == 1024)
+                {
+                    reader.TemporarySeek((int)(4 + 30 + header.size + DX10HeaderSize), SeekOrigin.Begin);
+                }
+                if (header.width == 512 && header.height == 512)
+                {
+                    reader.TemporarySeek((int)(4 + 26 + header.size + DX10HeaderSize), SeekOrigin.Begin);
+                }
+            }
             bdata = reader.ReadBytes((int)(reader.BaseStream.Length - reader.BaseStream.Position));
 
             Format = GetFormat();
