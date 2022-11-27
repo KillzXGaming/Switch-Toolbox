@@ -14,16 +14,26 @@ namespace FirstPlugin
 {
     public class FirstPlugin : IPlugin
     {
-        public static string executableDir;
         private static FirstPlugin _instance;
-        public static FirstPlugin Instance
-        { get { return _instance == null ? _instance = new FirstPlugin() : _instance; } }
+        public static FirstPlugin Instance { get { return _instance == null ? _instance = new FirstPlugin() : _instance; } }
+        public static string executableDir;
 
-        #region IPlugin Members
+        #region IPlugin Members 
+
+        private string name;
+        public string Name
+        {
+            get
+            {
+                return "First Plugin";
+            }
+            set
+            {
+                this.Name = value;
+            }
+        }
 
         private string author;
-        private string name;
-
         public string Author
         {
             get
@@ -44,18 +54,13 @@ namespace FirstPlugin
             }
         }
 
-        public string Name
+        public string Version
         {
             get
             {
-                return "First Plugin";
-            }
-            set
-            {
-                this.Name = value;
+                return "1.0";
             }
         }
-
         public Type[] Types
         {
             get
@@ -71,23 +76,259 @@ namespace FirstPlugin
                 return types.ToArray();
             }
         }
-
-        public string Version
-        {
-            get
-            {
-                return "1.0";
-            }
-        }
-
         public void Load()
         {
             Config.StartupFromFile(Runtime.ExecutableDir + "/Lib/Plugins/config.xml");
         }
-
         public void Unload()
         {
             PluginRuntime.bntxContainers.Clear();
+        }
+
+        class MenuExt : IMenuExtension
+        {
+            public STToolStripItem[] FileMenuExtensions => null;
+            public STToolStripItem[] ToolsMenuExtensions => toolsExt;
+            public STToolStripItem[] TitleBarExtensions => null;
+
+            readonly STToolStripItem[] toolsExt = new STToolStripItem[3];
+
+            public MenuExt()
+            {
+                toolsExt[0] = new STToolStripItem("Super Mario Odyssey");
+                toolsExt[0].DropDownItems.Add(new STToolStripItem(" Kingdom Selector", OpenKingdomSelector));
+                toolsExt[0].DropDownItems.Add(new STToolStripItem(" Costume Selector", OpenSelector));
+
+                toolsExt[1] = new STToolStripItem("Mario Kart 8");
+                toolsExt[1].DropDownItems.Add(new STToolStripItem("Probe Light Converter", GenerateProbeLightBounds));
+
+                toolsExt[2] = new STToolStripItem("Breath Of The Wild");
+                toolsExt[2].DropDownItems.Add(new STToolStripItem("Actor Editor", ActorEditor));
+
+                toolsExt[1] = new STToolStripItem("Pokemon Sword/Shield");
+                toolsExt[1].DropDownItems.Add(new STToolStripItem("Pokemon Loader", PokemonLoaderSwSh));
+            }
+
+            private void PokemonLoaderSwSh(object sender, EventArgs args)
+            {
+                if (!System.IO.Directory.Exists(Runtime.PkSwShGamePath))
+                {
+                    var result = MessageBox.Show("Please set your Pokemon Sword/Shield game path!");
+                    if (result == DialogResult.OK)
+                    {
+                        FolderSelectDialog ofd = new FolderSelectDialog();
+                        if (ofd.ShowDialog() == DialogResult.OK)
+                        {
+                            Runtime.PkSwShGamePath = ofd.SelectedPath;
+                            Config.Save();
+                        }
+                    }
+                }
+
+                PokemonLoaderSwShForm form = new PokemonLoaderSwShForm();
+                if (form.ShowDialog() == DialogResult.OK) {
+                    if (form.SelectedPokemon != string.Empty)
+                    {
+                        string path = $"{Runtime.PkSwShGamePath}/bin/archive/pokemon/{form.SelectedPokemon}";
+                        if (System.IO.File.Exists(path)) {
+                            var file = STFileLoader.OpenFileFormat(path);
+
+                            var currentForm = Runtime.MainForm.ActiveMdiChild;
+                            if (currentForm != null && currentForm is ObjectEditor &&
+                                Runtime.AddFilesToActiveObjectEditor)
+                            {
+                                ObjectEditor editor = currentForm as ObjectEditor;
+                                editor.AddIArchiveFile(file);
+                            }
+                            else
+                            {
+                                ObjectEditor editor = new ObjectEditor();
+                                editor.AddIArchiveFile(file);
+                                LibraryGUI.CreateMdiWindow(editor);
+                            }
+                        }
+                    }
+                }
+            }
+
+            private void ActorEditor(object sender, EventArgs args)
+            {
+                UKing.Actors.BotwActorLoader actorEditor = new UKing.Actors.BotwActorLoader();
+            }
+
+            private void OpenKingdomSelector(object sender, EventArgs args)
+            {
+                SceneSelector sceneSelect = new SceneSelector();
+                sceneSelect.LoadDictionary(SMO_Scene.OdysseyStages);
+                if (sceneSelect.ShowDialog() == DialogResult.OK)
+                    SMO_Scene.LoadStage(sceneSelect.SelectedFile);
+            }
+
+            private void GenerateProbeLightBounds(object sender, EventArgs args) {
+                AAMP.GenerateProbeBoundings();
+            }
+
+            private void OpenSelector(object sender, EventArgs args)
+            {
+                if (System.IO.Directory.Exists(Runtime.SmoGamePath))
+                {
+                    OpenCostumeDialog(Runtime.SmoGamePath);
+                }
+                else
+                {
+                    var result = MessageBox.Show("Please set your Mario Odyssey game path!");
+                    if (result == DialogResult.OK)
+                    {
+                        FolderSelectDialog ofd = new FolderSelectDialog();
+                        if (ofd.ShowDialog() == DialogResult.OK)
+                        {
+                            Runtime.SmoGamePath = ofd.SelectedPath;
+                            Config.Save();
+                            OpenCostumeDialog(Runtime.SmoGamePath);
+                        }
+                    }
+                }
+            }
+
+            private void OpenCostumeDialog(string GamePath)
+            {
+                var costumSelector = new OdysseyCostumeSelector(GamePath);
+                if (costumSelector.ShowDialog() == DialogResult.OK)
+                {
+                    LoadCostumes(costumSelector.SelectedCostumeName);
+
+                    FrameBfres();
+                }
+            }
+
+            public void LoadCostumes(string fileName)
+            {
+                editor = null;
+
+                fileName = System.IO.Path.ChangeExtension(fileName, null);
+
+                List<string> CostumeNames = new List<string>();
+                CostumeNames.Add($"{fileName}.szs");
+                CostumeNames.Add($"{fileName}Face.szs");
+                CostumeNames.Add($"{fileName}Eye.szs");
+                CostumeNames.Add($"{fileName}Head.szs");
+                CostumeNames.Add($"{fileName}HeadTexture.szs");
+                CostumeNames.Add($"{fileName}Under.szs");
+                CostumeNames.Add($"{fileName}HandL.szs");
+                CostumeNames.Add($"{fileName}HandR.szs");
+                CostumeNames.Add($"{fileName}HandTexture.szs");
+                CostumeNames.Add($"{fileName}BodyTexture.szs");
+                CostumeNames.Add($"{fileName}Shell.szs");
+                CostumeNames.Add($"{fileName}Tail.szs");
+                CostumeNames.Add($"{fileName}Hair.szs");
+                //     CostumeNames.Add($"{fileName}Hakama.szs");
+                CostumeNames.Add($"{fileName}Skirt.szs");
+                //     CostumeNames.Add($"{fileName}Poncho.szs");
+                CostumeNames.Add($"{fileName}Guitar.szs");
+
+                foreach (string path in CostumeNames)
+                {
+                    Console.WriteLine("Path = " + path);
+
+                    if (System.IO.File.Exists(path))
+                    {
+                        LoadCostume(path);
+                    }
+                    else
+                    {
+                        //Load default meshes unless it's these file names
+                        List<string> ExcludeFileList = new List<string>(new string[] {
+                    "MarioHack","MarioDot",
+                     });
+
+                        bool Exluded = ExcludeFileList.Any(path.Contains);
+
+                        if (Exluded == false)
+                        {
+                            string parent = System.IO.Directory.GetParent(path).FullName;
+
+                            if (path.Contains($"{fileName}Face"))
+                                LoadCostume($"{parent}\\MarioFace.szs");
+                            else if (path.Contains($"{fileName}Eye"))
+                                LoadCostume($"{parent}\\MarioEye.szs");
+                            else if (path.Contains($"{fileName}HeadTexture"))
+                                LoadCostume($"{parent}\\MarioHeadTexture.szs");
+                            else if (path.Contains($"{fileName}Head"))
+                                LoadCostume($"{parent}\\MarioHead.szs");
+                            else if (path.Contains($"{fileName}HandL"))
+                                LoadCostume($"{parent}\\MarioHandL.szs");
+                            else if (path.Contains($"{fileName}HandR"))
+                                LoadCostume($"{parent}\\MarioHandR.szs");
+                            else if (path.Contains($"{fileName}HandTexture"))
+                                LoadCostume($"{parent}\\MarioHandTexture.szs");
+
+                        }
+                    }
+                }
+
+                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
+                bfresEditor.DisplayAll = true;
+            }
+
+            private ObjectEditor editor;
+            private BFRES MainCostume = null;
+            public void LoadCostume(string fileName)
+            {
+                List<BFRES> bfresFiles = new List<BFRES>();
+
+                var FileFormat = STFileLoader.OpenFileFormat(fileName);
+                if (FileFormat is SARC)
+                {
+                    foreach (var file in ((SARC)FileFormat).Files)
+                    {
+                        string ext = System.IO.Path.GetExtension(file.FileName);
+                        if (ext == ".bfres")
+                        {
+                            bfresFiles.Add((BFRES)STFileLoader.OpenFileFormat(new System.IO.MemoryStream(file.FileData), file.FileName));
+                        }
+                    }
+                }
+                if (FileFormat is BFRES)
+                    bfresFiles.Add((BFRES)FileFormat);
+
+                if (editor == null)
+                {
+                    editor = new ObjectEditor();
+                    LibraryGUI.CreateMdiWindow(editor);
+                }
+
+                if (MainCostume == null && bfresFiles.Count > 0)
+                    MainCostume = bfresFiles[0];
+            
+                foreach (var bfres in bfresFiles)
+                {
+                    editor.AddNode(bfres);
+                    bfres.LoadEditors(null);
+                    DiableLoadCheck();
+                }
+            }
+
+            private void FrameBfres()
+            {
+                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
+                bfresEditor.FrameCamera(MainCostume.BFRESRender);
+
+                MainCostume = null;
+            }
+
+            private void DiableLoadCheck()
+            {
+                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
+                bfresEditor.IsLoaded = false;
+                bfresEditor.DisplayAllDDrawables();
+            }
+        }
+
+        private Type[] LoadMenus()
+        {
+            List<Type> MenuItems = new List<Type>();
+            MenuItems.Add(typeof(MenuExt));
+            return MenuItems.ToArray();
         }
 
         private Type[] LoadCompressionFormats()
@@ -109,7 +350,6 @@ namespace FirstPlugin
             Formats.Add(typeof(BTI));
             Formats.Add(typeof(TXE));
             Formats.Add(typeof(SARC));
-            Formats.Add(typeof(TRPAK));
             Formats.Add(typeof(BNTX));
             Formats.Add(typeof(BEA));
             Formats.Add(typeof(BYAML));
@@ -220,7 +460,8 @@ namespace FirstPlugin
             Formats.Add(typeof(MTXT));
             Formats.Add(typeof(NKN));
             Formats.Add(typeof(MetroidDreadLibrary.BSMAT));
-
+            Formats.Add(typeof(TRPAK));
+			
             //Formats.Add(typeof(XLINK_FILE));
 
             //  Formats.Add(typeof(MPBIN));
@@ -239,257 +480,9 @@ namespace FirstPlugin
                 Formats.Add(typeof(GFA));
             }
 
+
             return Formats.ToArray();
         }
-
-        private Type[] LoadMenus()
-        {
-            List<Type> MenuItems = new List<Type>();
-            MenuItems.Add(typeof(MenuExt));
-            return MenuItems.ToArray();
-        }
-
-        private class MenuExt : IMenuExtension
-        {
-            private readonly STToolStripItem[] toolsExt = new STToolStripItem[3];
-            private ObjectEditor editor;
-            private BFRES MainCostume = null;
-
-            public MenuExt()
-            {
-                toolsExt[0] = new STToolStripItem("Super Mario Odyssey");
-                toolsExt[0].DropDownItems.Add(new STToolStripItem(" Kingdom Selector", OpenKingdomSelector));
-                toolsExt[0].DropDownItems.Add(new STToolStripItem(" Costume Selector", OpenSelector));
-
-                toolsExt[1] = new STToolStripItem("Mario Kart 8");
-                toolsExt[1].DropDownItems.Add(new STToolStripItem("Probe Light Converter", GenerateProbeLightBounds));
-
-                toolsExt[2] = new STToolStripItem("Breath Of The Wild");
-                toolsExt[2].DropDownItems.Add(new STToolStripItem("Actor Editor", ActorEditor));
-
-                toolsExt[1] = new STToolStripItem("Pokemon Sword/Shield");
-                toolsExt[1].DropDownItems.Add(new STToolStripItem("Pokemon Loader", PokemonLoaderSwSh));
-            }
-
-            public STToolStripItem[] FileMenuExtensions => null;
-            public STToolStripItem[] TitleBarExtensions => null;
-            public STToolStripItem[] ToolsMenuExtensions => toolsExt;
-
-            public void LoadCostume(string fileName)
-            {
-                List<BFRES> bfresFiles = new List<BFRES>();
-
-                var FileFormat = STFileLoader.OpenFileFormat(fileName);
-                if (FileFormat is SARC)
-                {
-                    foreach (var file in ((SARC)FileFormat).Files)
-                    {
-                        string ext = System.IO.Path.GetExtension(file.FileName);
-                        if (ext == ".bfres")
-                        {
-                            bfresFiles.Add((BFRES)STFileLoader.OpenFileFormat(new System.IO.MemoryStream(file.FileData), file.FileName));
-                        }
-                    }
-                }
-                if (FileFormat is BFRES)
-                    bfresFiles.Add((BFRES)FileFormat);
-
-                if (editor == null)
-                {
-                    editor = new ObjectEditor();
-                    LibraryGUI.CreateMdiWindow(editor);
-                }
-
-                if (MainCostume == null && bfresFiles.Count > 0)
-                    MainCostume = bfresFiles[0];
-
-                foreach (var bfres in bfresFiles)
-                {
-                    editor.AddNode(bfres);
-                    bfres.LoadEditors(null);
-                    DiableLoadCheck();
-                }
-            }
-
-            public void LoadCostumes(string fileName)
-            {
-                editor = null;
-
-                fileName = System.IO.Path.ChangeExtension(fileName, null);
-
-                List<string> CostumeNames = new List<string>();
-                CostumeNames.Add($"{fileName}.szs");
-                CostumeNames.Add($"{fileName}Face.szs");
-                CostumeNames.Add($"{fileName}Eye.szs");
-                CostumeNames.Add($"{fileName}Head.szs");
-                CostumeNames.Add($"{fileName}HeadTexture.szs");
-                CostumeNames.Add($"{fileName}Under.szs");
-                CostumeNames.Add($"{fileName}HandL.szs");
-                CostumeNames.Add($"{fileName}HandR.szs");
-                CostumeNames.Add($"{fileName}HandTexture.szs");
-                CostumeNames.Add($"{fileName}BodyTexture.szs");
-                CostumeNames.Add($"{fileName}Shell.szs");
-                CostumeNames.Add($"{fileName}Tail.szs");
-                CostumeNames.Add($"{fileName}Hair.szs");
-                //     CostumeNames.Add($"{fileName}Hakama.szs");
-                CostumeNames.Add($"{fileName}Skirt.szs");
-                //     CostumeNames.Add($"{fileName}Poncho.szs");
-                CostumeNames.Add($"{fileName}Guitar.szs");
-
-                foreach (string path in CostumeNames)
-                {
-                    Console.WriteLine("Path = " + path);
-
-                    if (System.IO.File.Exists(path))
-                    {
-                        LoadCostume(path);
-                    }
-                    else
-                    {
-                        //Load default meshes unless it's these file names
-                        List<string> ExcludeFileList = new List<string>(new string[] {
-                    "MarioHack","MarioDot",
-                     });
-
-                        bool Exluded = ExcludeFileList.Any(path.Contains);
-
-                        if (Exluded == false)
-                        {
-                            string parent = System.IO.Directory.GetParent(path).FullName;
-
-                            if (path.Contains($"{fileName}Face"))
-                                LoadCostume($"{parent}\\MarioFace.szs");
-                            else if (path.Contains($"{fileName}Eye"))
-                                LoadCostume($"{parent}\\MarioEye.szs");
-                            else if (path.Contains($"{fileName}HeadTexture"))
-                                LoadCostume($"{parent}\\MarioHeadTexture.szs");
-                            else if (path.Contains($"{fileName}Head"))
-                                LoadCostume($"{parent}\\MarioHead.szs");
-                            else if (path.Contains($"{fileName}HandL"))
-                                LoadCostume($"{parent}\\MarioHandL.szs");
-                            else if (path.Contains($"{fileName}HandR"))
-                                LoadCostume($"{parent}\\MarioHandR.szs");
-                            else if (path.Contains($"{fileName}HandTexture"))
-                                LoadCostume($"{parent}\\MarioHandTexture.szs");
-                        }
-                    }
-                }
-
-                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
-                bfresEditor.DisplayAll = true;
-            }
-
-            private void ActorEditor(object sender, EventArgs args)
-            {
-                UKing.Actors.BotwActorLoader actorEditor = new UKing.Actors.BotwActorLoader();
-            }
-
-            private void DiableLoadCheck()
-            {
-                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
-                bfresEditor.IsLoaded = false;
-                bfresEditor.DisplayAllDDrawables();
-            }
-
-            private void FrameBfres()
-            {
-                BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
-                bfresEditor.FrameCamera(MainCostume.BFRESRender);
-
-                MainCostume = null;
-            }
-
-            private void GenerateProbeLightBounds(object sender, EventArgs args)
-            {
-                AAMP.GenerateProbeBoundings();
-            }
-
-            private void OpenCostumeDialog(string GamePath)
-            {
-                var costumSelector = new OdysseyCostumeSelector(GamePath);
-                if (costumSelector.ShowDialog() == DialogResult.OK)
-                {
-                    LoadCostumes(costumSelector.SelectedCostumeName);
-
-                    FrameBfres();
-                }
-            }
-
-            private void OpenKingdomSelector(object sender, EventArgs args)
-            {
-                SceneSelector sceneSelect = new SceneSelector();
-                sceneSelect.LoadDictionary(SMO_Scene.OdysseyStages);
-                if (sceneSelect.ShowDialog() == DialogResult.OK)
-                    SMO_Scene.LoadStage(sceneSelect.SelectedFile);
-            }
-
-            private void OpenSelector(object sender, EventArgs args)
-            {
-                if (System.IO.Directory.Exists(Runtime.SmoGamePath))
-                {
-                    OpenCostumeDialog(Runtime.SmoGamePath);
-                }
-                else
-                {
-                    var result = MessageBox.Show("Please set your Mario Odyssey game path!");
-                    if (result == DialogResult.OK)
-                    {
-                        FolderSelectDialog ofd = new FolderSelectDialog();
-                        if (ofd.ShowDialog() == DialogResult.OK)
-                        {
-                            Runtime.SmoGamePath = ofd.SelectedPath;
-                            Config.Save();
-                            OpenCostumeDialog(Runtime.SmoGamePath);
-                        }
-                    }
-                }
-            }
-
-            private void PokemonLoaderSwSh(object sender, EventArgs args)
-            {
-                if (!System.IO.Directory.Exists(Runtime.PkSwShGamePath))
-                {
-                    var result = MessageBox.Show("Please set your Pokemon Sword/Shield game path!");
-                    if (result == DialogResult.OK)
-                    {
-                        FolderSelectDialog ofd = new FolderSelectDialog();
-                        if (ofd.ShowDialog() == DialogResult.OK)
-                        {
-                            Runtime.PkSwShGamePath = ofd.SelectedPath;
-                            Config.Save();
-                        }
-                    }
-                }
-
-                PokemonLoaderSwShForm form = new PokemonLoaderSwShForm();
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    if (form.SelectedPokemon != string.Empty)
-                    {
-                        string path = $"{Runtime.PkSwShGamePath}/bin/archive/pokemon/{form.SelectedPokemon}";
-                        if (System.IO.File.Exists(path))
-                        {
-                            var file = STFileLoader.OpenFileFormat(path);
-
-                            var currentForm = Runtime.MainForm.ActiveMdiChild;
-                            if (currentForm != null && currentForm is ObjectEditor &&
-                                Runtime.AddFilesToActiveObjectEditor)
-                            {
-                                ObjectEditor editor = currentForm as ObjectEditor;
-                                editor.AddIArchiveFile(file);
-                            }
-                            else
-                            {
-                                ObjectEditor editor = new ObjectEditor();
-                                editor.AddIArchiveFile(file);
-                                LibraryGUI.CreateMdiWindow(editor);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        #endregion IPlugin Members
+        #endregion
     }
 }
