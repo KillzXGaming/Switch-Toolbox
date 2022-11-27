@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Media;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using static OpenTK.Graphics.OpenGL.GL;
 
 namespace FirstPlugin
 {
@@ -22,7 +24,8 @@ namespace FirstPlugin
         public string[] Extension { get; set; } = new string[] { "*.trpak" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
-        public IEnumerable<ArchiveFileInfo> Files { get; set; }
+        public List<ArchiveFileInfo> files { get; set; }
+        public IEnumerable<ArchiveFileInfo> Files => files;
         public FileType FileType { get; set; } = FileType.Archive;
         public IFileInfo IFileInfo { get; set; }
 
@@ -58,12 +61,13 @@ namespace FirstPlugin
         public void Load(Stream stream)
         {
             GFPAKHashCache.EnsureHashCache();
-            Files = new List<ArchiveFileInfo>();
+            files = new List<ArchiveFileInfo>();
             FlatBuffers.TRPAK.TRPAK trpak = FlatBuffers.TRPAK.TRPAK.GetRootAsTRPAK(new FlatBuffers.ByteBuffer(stream.ToBytes()));
             if (trpak.FilesLength != trpak.HashesLength)
             {
                 throw new Exception("not the same amount of Hashes and File Entries in Trpak Container");
             }
+            List<string> paths = new List<string>();
             for (int i = 0; i < trpak.FilesLength; i++)
             {
                 FlatBuffers.TRPAK.File? file = trpak.Files(i);
@@ -84,8 +88,25 @@ namespace FirstPlugin
                     }
                     AFI.FileData = FileData;
                     AFI.Name = GetName(hash, FileData);
+                    if (AFI.Name.Contains("/"))
+                    {
+                        string tmppath = System.IO.Path.GetDirectoryName(AFI.Name);
+                        if (!paths.Contains(tmppath)) paths.Add(tmppath);
+                    }
                     AFI.FileName = AFI.Name;
-                    ((List<ArchiveFileInfo>)Files).Add(AFI);
+                    files.Add(AFI);
+                }
+            }
+            if (paths.Count == 1)
+            {
+                string path = paths[0].Replace("\\", "/");
+                foreach (var f in files)
+                {
+                    if (!f.Name.Contains("/"))
+                    {
+                        f.Name = Path.Combine(path, f.Name).Replace("\\", "/");
+                        f.FileName = f.Name;
+                    }
                 }
             }
             GFPAKHashCache.WriteCache();
@@ -98,7 +119,7 @@ namespace FirstPlugin
 
         public void Unload()
         {
-            foreach (var file in Files)
+            foreach (var file in files)
             {
                 if (file.FileFormat != null)
                     file.FileFormat.Unload();
@@ -106,7 +127,7 @@ namespace FirstPlugin
                 file.FileData = null;
             }
 
-           ((List<ArchiveFileInfo>)Files).Clear();
+            files.Clear();
 
             GC.SuppressFinalize(this);
         }
