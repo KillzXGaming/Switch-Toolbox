@@ -223,7 +223,7 @@ namespace FirstPlugin
         {
             string fileHashName = GFPAKHashCache.GetHashName(fileHash) ?? "";
             string ext = FindMatch(Data, fileHashName);
-            if (ext == ".bntx" || ext == ".bfres" || ext == ".bnsh" || ext == ".bfsha")
+            if ((ext == ".bntx" && fileHashName == "") || ext == ".bfres" || ext == ".bnsh" || ext == ".bfsha")
             {
                 string fileName = GetBinaryHeaderName(Data);
                 //Check for matches for shaders
