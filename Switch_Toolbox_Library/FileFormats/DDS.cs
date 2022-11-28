@@ -582,6 +582,7 @@ namespace Toolbox.Library
 
             reader.TemporarySeek((int)(4 + header.size + DX10HeaderSize), SeekOrigin.Begin);
             var UbiExtraData = reader.ReadUInt16();
+            reader.TemporarySeek(-2, SeekOrigin.Current);
             if (UbiExtraData == 12816 || UbiExtraData == 1331 && IsDX10) //me when ubisoft | for some reason theres some extra data on some mario rabbids textures god knows what it is
             {
                 if (header.width == 1024 && header.height == 1024)
