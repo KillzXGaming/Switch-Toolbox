@@ -31,6 +31,7 @@ namespace FirstPlugin
                     { ".trmsh", "Models" },
                     { ".trmtr", "Models" },
                     { ".trskl", "Models" },
+                    { ".tranm", "Animations" },
                 };
             }
         }
@@ -142,6 +143,8 @@ namespace FirstPlugin
                         folder = new TextureFolder(this, "Textures");
                     if (folderName == "Models")
                         folder = new GFPAK.QuickAccessFileFolder("Models");
+                    if (folderName == "Animations")
+                        folder = new GFPAK.QuickAccessFileFolder("Animations");
 
                     node.Nodes.Add(folder);
                     folders.Add(folderName, folder);
@@ -198,7 +201,7 @@ namespace FirstPlugin
             {
                 fileFormat.FileName = FileName;
 
-                if (fileFormat.Identify(new MemoryStream(f)))
+                if (fileFormat.Identify(new MemoryStream(f)) && fileFormat.GetType() != typeof(GFBMDL))
                 {
                     return fileFormat.Extension[0].Replace("*", "");
                 }
@@ -243,7 +246,7 @@ namespace FirstPlugin
             {
                 if (fileHashName != "")
                 {
-                    return $"{fileHashName}{ext}";
+                    return $"{fileHashName}";
                 }
                 else
                     return $"{fileHash.ToString("X")}{ext}";
