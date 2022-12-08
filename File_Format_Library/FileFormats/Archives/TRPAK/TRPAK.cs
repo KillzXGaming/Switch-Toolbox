@@ -144,7 +144,7 @@ namespace FirstPlugin
                     if (folderName == "Models")
                         folder = new GFPAK.QuickAccessFileFolder("Models");
                     if (folderName == "Animations")
-                        folder = new GFPAK.QuickAccessFileFolder("Animations");
+                        folder = new GFPAK.AnimationFolder("Animations");
 
                     node.Nodes.Add(folder);
                     folders.Add(folderName, folder);
