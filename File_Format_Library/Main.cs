@@ -350,6 +350,7 @@ namespace FirstPlugin
             Formats.Add(typeof(BTI));
             Formats.Add(typeof(TXE));
             Formats.Add(typeof(SARC));
+            Formats.Add(typeof(TRPAK));
             Formats.Add(typeof(BNTX));
             Formats.Add(typeof(BEA));
             Formats.Add(typeof(BYAML));
@@ -460,7 +461,8 @@ namespace FirstPlugin
             Formats.Add(typeof(MTXT));
             Formats.Add(typeof(NKN));
             Formats.Add(typeof(MetroidDreadLibrary.BSMAT));
-
+            Formats.Add(typeof(TRANM));
+			
             //Formats.Add(typeof(XLINK_FILE));
 
             //  Formats.Add(typeof(MPBIN));
