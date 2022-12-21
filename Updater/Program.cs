@@ -90,8 +90,12 @@ namespace Updater
 
                 string dirName = new DirectoryInfo(dir).Name;
 
-                if (Directory.Exists(Path.Combine(folderDir, dirName + @"\")))
+                if (!dirName.Equals("Hashes", StringComparison.CurrentCultureIgnoreCase) // Let's keep the users custom hashes in tact
+                    && Directory.Exists(Path.Combine(folderDir, dirName + @"\")))
+                {
                     Directory.Delete(Path.Combine(folderDir, dirName + @"\"), true);
+                }
+
                 Directory.Move(dir, Path.Combine(folderDir, dirName + @"\"));
             }
             foreach (string file in Directory.GetFiles("master/"))
