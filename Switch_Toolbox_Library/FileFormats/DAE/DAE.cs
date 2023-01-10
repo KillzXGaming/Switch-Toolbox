@@ -508,7 +508,7 @@ namespace Toolbox.Library
             progressBar?.Close();
 
             if (!settings.SuppressConfirmDialog)
-                System.Windows.Forms.MessageBox.Show($"Exported {FileName} Successfuly!");
+                System.Windows.Forms.MessageBox.Show($"Exported {FileName} successfully!");
         }
 
 
