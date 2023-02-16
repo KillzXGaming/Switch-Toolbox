@@ -58,9 +58,14 @@ namespace DKCTF
         public Dictionary<string, CHAR> CharFiles = new Dictionary<string, CHAR>();
         public Dictionary<string, FileEntry> AnimFiles = new Dictionary<string, FileEntry>();
 
+        public PACK PakData;
+
+        internal bool IsMPR;
+
         public void Load(System.IO.Stream stream)
         {
             PACK pack = new PACK(stream);
+            PakData = pack;
 
             for (int i = 0; i < pack.Assets.Count; i++)
             {
@@ -124,12 +129,13 @@ namespace DKCTF
                     if (file.AssetEntry.Type == "ANIM") file.FileName = file.FileName.Replace("exportData", "animations");
                 }
             }
-            files = files.OrderBy(x => x.FileName).ToList();
+          //  files = files.OrderBy(x => x.FileName).ToList();
         }
 
         Dictionary<string, string> DirectoryLabels = new Dictionary<string, string>()
         {
             { "CHAR", "Characters" },
+            { "CHPR", "Character Project" },
             { "CMDL", "Static Models" },
             { "SMDL", "Skinned Models" },
             { "TXTR", "Textures" },
@@ -185,14 +191,20 @@ namespace DKCTF
 
                 using (var reader = new FileReader(SubData, true))
                 {
-                    Data.Add(reader.ReadBytes((int)reader.BaseStream.Length));
+                    var data = reader.ReadBytes((int)reader.BaseStream.Length);
+
+                    reader.Position = 0;
+                    if (AssetEntry.DecompressedSize != AssetEntry.Size)
+                        data = IOFileExtension.DecompressedBuffer(reader, (uint)AssetEntry.Size, (uint)AssetEntry.DecompressedSize, true);
+
+                    Data.Add(data);
 
                     if (WriteMetaData)
                     {
                         using (var r = new FileReader(ArchiveStream, true)) {
-                            r.SetByteOrder(true);
+                            r.SetByteOrder(!ParentArchive.PakData.IsLittleEndian);
 
-                            Data.Add(FileForm.WriteMetaFooter(r, (uint)MetaPointer, AssetEntry.Type));
+                            Data.Add(FileForm.WriteMetaFooter(r, (uint)MetaPointer, AssetEntry.Type, ParentArchive.PakData));
                         }
                     }
                 }
@@ -200,7 +212,7 @@ namespace DKCTF
                 if (AssetEntry.Type == "TXTR")
                 {
                     var txt = new TXTR();
-                    return txt.CreateUncompressedFile(Utils.CombineByteArray(Data.ToArray()));
+                     return txt.CreateUncompressedFile(Utils.CombineByteArray(Data.ToArray()), ParentArchive.PakData.FileHeader, ParentArchive.PakData.IsMPR);
                 }
 
 
@@ -255,7 +267,7 @@ namespace DKCTF
             }
             if (file is CCharacter)
                 ((CCharacter)file).LoadModels(pak);
-
+            
             this.FileFormat = file;
 
             return file;

@@ -140,8 +140,10 @@ namespace DKCTF
                 {
                     string guid = texMap.Value.FileID.ToString();
                     if (texFolder.Nodes.ContainsKey(guid) || !Textures.ContainsKey(guid))
+                    {
+                        Console.WriteLine($"Texture not present in pak file! {mat.Name} {texMap.Key} {guid}");
                         continue;
-
+                    }
                     if (Textures[guid].FileFormat == null)
                         Textures[guid].OpenFile();
 
@@ -153,7 +155,7 @@ namespace DKCTF
                     t.Tag = tex;
                     texFolder.Nodes.Add(t);
 
-                    if (texMap.Key == "DIFT")
+                    if (texMap.Key == "DIFT" || texMap.Key == "BCLR")
                     {
                         tex.Text = guid;
 
@@ -167,6 +169,7 @@ namespace DKCTF
 
         TreeNode texFolder = new STTextureFolder("Textures");
         TreeNode skeletonFolder = new STTextureFolder("Skeleton");
+        TreeNode shaderFolder = new STTextureFolder("Materials");
 
         public void Load(System.IO.Stream stream)
         {
@@ -179,10 +182,13 @@ namespace DKCTF
             Nodes.Add(meshFolder);
 
             Nodes.Add(texFolder);
-
             Nodes.Add(skeletonFolder);
+            Nodes.Add(shaderFolder);
 
             Model = ToGeneric();
+
+            foreach (var mat in ModelData.Materials)
+                shaderFolder.Nodes.Add(new TreeNode(mat.Name + "_" + mat.ID.ToString()));
 
             foreach (GenericRenderedObject mesh in Model.Objects)
             {
@@ -235,6 +241,7 @@ namespace DKCTF
                     if (tex.Key == "DIFT") type = STGenericMatTexture.TextureType.Diffuse;
                     if (tex.Key == "NMAP") type = STGenericMatTexture.TextureType.Normal;
                     if (tex.Key == "SPCT") type = STGenericMatTexture.TextureType.Specular;
+                    if (tex.Key == "BCLR") type = STGenericMatTexture.TextureType.Diffuse;
 
                     genericMaterial.TextureMaps.Add(new STGenericMatTexture()
                     {

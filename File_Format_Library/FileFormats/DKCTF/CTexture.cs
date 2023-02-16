@@ -134,13 +134,16 @@ namespace DKCTF
 
             Header = new TXTR(stream);
 
-            if (Header.IsSwitch)
+            if (!Header.IsSwitch)
                 PlatformSwizzle = PlatformSwizzle.Platform_WiiU;
 
             Width = Header.TextureHeader.Width;
             Height = Header.TextureHeader.Height;
             MipCount = (uint)Header.MipSizes.Length;
             Format = FormatList[Header.TextureHeader.Format];
+
+            if (Header.TextureHeader.Type == 3)
+                this.ArrayCount = 6;
         }
 
         public void Save(System.IO.Stream stream)
@@ -225,18 +228,6 @@ namespace DKCTF
             }
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public class STextureHeader
-        {
-            public uint Type;
-            public uint Format;
-            public uint Width;
-            public uint Height;
-            public uint Depth;
-            public uint TileMode;
-            public uint Swizzle;
-        }
-
         Dictionary<uint, TEX_FORMAT> FormatList = new Dictionary<uint, TEX_FORMAT>()
         {
             {  12, TEX_FORMAT.R8G8B8A8_UNORM },
@@ -257,11 +248,40 @@ namespace DKCTF
             {  32, TEX_FORMAT.R16G16_FLOAT },
             {  33, TEX_FORMAT.R8G8_UNORM },
 
+            {  53, TEX_FORMAT.ASTC_4x4_UNORM },
             {  54, TEX_FORMAT.ASTC_5x4_UNORM },
             {  55, TEX_FORMAT.ASTC_5x5_UNORM },
             {  56, TEX_FORMAT.ASTC_6x5_UNORM },
             {  57, TEX_FORMAT.ASTC_6x6_UNORM },
             {  58, TEX_FORMAT.ASTC_8x5_UNORM },
+            {  59, TEX_FORMAT.ASTC_8x6_UNORM },
+            {  60, TEX_FORMAT.ASTC_8x8_UNORM },
+            {  61, TEX_FORMAT.ASTC_10x5_UNORM },
+            {  62, TEX_FORMAT.ASTC_10x6_UNORM},
+            {  63, TEX_FORMAT.ASTC_10x8_UNORM},
+            {  64, TEX_FORMAT.ASTC_10x10_UNORM},
+            {  65, TEX_FORMAT.ASTC_12x10_UNORM},
+            {  66, TEX_FORMAT.ASTC_12x12_UNORM},
+
+            {  67, TEX_FORMAT.ASTC_4x4_SRGB},
+            {  68, TEX_FORMAT.ASTC_5x4_SRGB },
+            {  69, TEX_FORMAT.ASTC_5x5_SRGB },
+            {  70, TEX_FORMAT.ASTC_6x5_SRGB },
+            {  71, TEX_FORMAT.ASTC_6x6_SRGB },
+            {  72, TEX_FORMAT.ASTC_8x5_SRGB },
+            {  73, TEX_FORMAT.ASTC_8x6_SRGB },
+            {  74, TEX_FORMAT.ASTC_8x8_SRGB},
+            {  75, TEX_FORMAT.ASTC_10x5_SRGB },
+            {  76, TEX_FORMAT.ASTC_10x6_SRGB},
+            {  77, TEX_FORMAT.ASTC_10x8_SRGB},
+            {  78, TEX_FORMAT.ASTC_10x10_SRGB},
+            {  79, TEX_FORMAT.ASTC_12x10_SRGB},
+            {  80, TEX_FORMAT.ASTC_12x12_SRGB},
+
+            {  81, TEX_FORMAT.BC6H_UF16 },
+            {  82, TEX_FORMAT.BC6H_SF16 },
+            {  83, TEX_FORMAT.BC7_UNORM },
+            {  84, TEX_FORMAT.BC7_UNORM_SRGB },
         };
     }
 }
