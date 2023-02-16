@@ -42,7 +42,7 @@ namespace DKCTF
         /// <summary>
         /// Gets a vertex list from the provided buffer and descriptor info.
         /// </summary>
-        public static CMDL.CVertex[] LoadVertexBuffer(List<byte[]> buffers, int startIndex, CMDL.VertexBuffer vertexInfo, bool isLittleEndian)
+        public static CMDL.CVertex[] LoadVertexBuffer(List<byte[]> buffers, int startIndex, CMDL.VertexBuffer vertexInfo, bool isLittleEndian, bool swapTexCoord)
         {
             var vertices = new CMDL.CVertex[vertexInfo.VertexCount];
 
@@ -72,7 +72,10 @@ namespace DKCTF
                                 vertex.TexCoord0 = ReadData(reader, comp.Format).Xy;
                                 break;
                             case CMDL.EVertexComponent.in_texCoord1:
-                                vertex.TexCoord0 = ReadData(reader, comp.Format).Xy;
+                                if (swapTexCoord)
+                                    vertex.TexCoord0 = ReadData(reader, comp.Format).Xy;
+                                else
+                                    vertex.TexCoord1 = ReadData(reader, comp.Format).Xy;
                                 break;
                             case CMDL.EVertexComponent.in_texCoord2:
                                 vertex.TexCoord2 = ReadData(reader, comp.Format).Xy;

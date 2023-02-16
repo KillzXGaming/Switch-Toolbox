@@ -158,7 +158,7 @@ namespace DKCTF
                         if (!this.IsMPR)
                             bufferID = j;
 
-                        var vertices = BufferHelper.LoadVertexBuffer(vertexData, bufferID, vertexInfo, IsSwitch);
+                        var vertices = BufferHelper.LoadVertexBuffer(vertexData, bufferID, vertexInfo, IsSwitch, this.IsMPR);
 
                         //Read
                         foreach (var mesh in Meshes)
