@@ -253,8 +253,8 @@ namespace DKCTF
         {
             return Guid.Part1 == 0 && 
                    Guid.Part2 == 0 && 
-                   Guid.Part3 == 0 && 
-                   Guid.Part4 == 0;
+                   Guid.Part3 == 0 &&
+                   Guid.Part4[0] == 0;
         }
     }
 
@@ -300,12 +300,13 @@ namespace DKCTF
         public uint Part1;
         public ushort Part2;
         public ushort Part3;
-        public ulong Part4;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+        public byte[] Part4;
 
         public Guid ToGUID()
         {
-            var bytes = BitConverter.GetBytes(Part4).Reverse().ToArray();
-            return new Guid(Part1, Part2, Part3, bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]);
+            return new Guid(Part1, Part2, Part3, Part4[0], Part4[1], Part4[2], Part4[3], Part4[4], Part4[5], Part4[6], Part4[7]);
         }
 
         public override string ToString() //Represented based on output guids in demo files

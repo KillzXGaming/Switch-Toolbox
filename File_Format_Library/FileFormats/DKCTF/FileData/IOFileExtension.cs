@@ -45,7 +45,7 @@ namespace DKCTF
                     Part1 = reader.ReadUInt32(),
                     Part2 = reader.ReadUInt16(),
                     Part3 = reader.ReadUInt16(),
-                    Part4 = reader.ReadUInt64(),
+                    Part4 = reader.ReadBytes(8),
                 },
             };
         }
