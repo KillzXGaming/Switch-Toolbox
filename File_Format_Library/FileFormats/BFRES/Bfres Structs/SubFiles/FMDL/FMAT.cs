@@ -295,7 +295,7 @@ namespace Bfres.Structs
                 Runtime.activeGame = Runtime.ActiveGame.MK8D;
             else if (ShaderName.Contains("uking_mat"))
                 Runtime.activeGame = Runtime.ActiveGame.BOTW;
-            else if (ShaderName.Contains("Blitz_UBER"))
+            else if (ShaderName.Contains("Blitz_UBER") || ShaderName.Contains("Hoian_UBER"))
                 Runtime.activeGame = Runtime.ActiveGame.Splatoon2;
             else
                 Runtime.activeGame = Runtime.ActiveGame.KSA;
