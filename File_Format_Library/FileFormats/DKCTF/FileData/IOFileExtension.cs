@@ -45,7 +45,7 @@ namespace DKCTF
                     Part1 = reader.ReadUInt32(),
                     Part2 = reader.ReadUInt16(),
                     Part3 = reader.ReadUInt16(),
-                    Part4 = reader.ReadUInt64(),
+                    Part4 = reader.ReadBytes(8),
                 },
             };
         }
@@ -58,14 +58,12 @@ namespace DKCTF
             reader.SetByteOrder(true);
 
             Console.WriteLine($"type {type}");
-            // File.WriteAllBytes($"Buffer{type}.bin", reader.ReadBytes((int)(compSize - 4)));
-
             var data = reader.ReadBytes((int)compSize - 4);
 
             switch (type)
             {
                 case CompressionType.None:
-                    return reader.ReadBytes((int)decompSize);
+                    return data;
                 //LZSS with byte, short, and uint types
                 case CompressionType.LZSS_8:  return DecompressLZSS(data, 1, decompSize);
                 case CompressionType.LZSS_16: return DecompressLZSS(data, 2, decompSize);

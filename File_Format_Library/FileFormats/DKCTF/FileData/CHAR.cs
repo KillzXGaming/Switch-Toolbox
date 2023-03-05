@@ -31,7 +31,7 @@ namespace DKCTF
 
         public override void Read(FileReader reader)
         {
-            reader.ReadStruct<CAssetHeader>();
+            var assetHeader = reader.ReadStruct<CAssetHeader>();
             reader.ReadStruct<SInfo>();
             //Dumb hack atm
             bool IsSwitch = false;

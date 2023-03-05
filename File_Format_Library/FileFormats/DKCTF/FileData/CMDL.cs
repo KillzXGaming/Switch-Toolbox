@@ -52,7 +52,7 @@ namespace DKCTF
         {
         }
 
-        public override void ReadMetaData(FileReader reader)
+        public override void ReadMetaData(FileReader reader, CFormDescriptor pakVersion)
         {
             Meta = new SMetaData();
             Meta.Unknown = reader.ReadUInt32();
@@ -60,13 +60,12 @@ namespace DKCTF
             Meta.ReadBufferInfo = IOFileExtension.ReadList<SReadBufferInfo>(reader);
             Meta.VertexBuffers = IOFileExtension.ReadList<SBufferInfo>(reader);
             Meta.IndexBuffers = IOFileExtension.ReadList<SBufferInfo>(reader);
-            Console.WriteLine();
         }
 
-        public override void WriteMetaData(FileWriter writer)
+        public override void WriteMetaData(FileWriter writer, CFormDescriptor pakVersion)
         {
-            writer.Write(Meta.GPUOffset);
             writer.Write(Meta.Unknown);
+            writer.Write(Meta.GPUOffset);
             IOFileExtension.WriteList(writer, Meta.ReadBufferInfo);
             IOFileExtension.WriteList(writer, Meta.VertexBuffers);
             IOFileExtension.WriteList(writer, Meta.IndexBuffers);
@@ -130,47 +129,41 @@ namespace DKCTF
                             }
                         }
                     }
+
+                    //Prepare buffer list
+                    List<byte[]> vertexData = new List<byte[]>();
                     for (int i = 0; i < Meta.VertexBuffers.Count; i++)
                     {
-                        var vertexInfo = VertexBuffers[i];
-
                         var buffer = Meta.VertexBuffers[i];
                         //First buffer or specific buffer
                         var info = Meta.ReadBufferInfo[(int)buffer.ReadBufferIndex];
                         //Seek into the buffer region
                         reader.SeekBegin(info.Offset + buffer.Offset);
 
-                        using (reader.TemporarySeek(reader.Position, System.IO.SeekOrigin.Begin))
-                        {
-                            reader.SetByteOrder(false);
-                            var type = reader.ReadUInt32();
-                            reader.SetByteOrder(true);
-
-                            if (type != 13)
-                            {
-                                byte[] b = reader.ReadBytes((int)buffer.CompressedSize - 4);
-                                System.IO.File.WriteAllBytes($"{Toolbox.Library.Runtime.ExecutableDir}\\VBuffer_{type}_{i}_{buffer.DecompressedSize}.bin", b);
-                            }
-                        }
-
                         //Decompress
                         var data = IOFileExtension.DecompressedBuffer(reader, buffer.CompressedSize, buffer.DecompressedSize, IsSwitch);
                         if (buffer.DecompressedSize != data.Length)
                             throw new Exception();
 
-                        var vertices = BufferHelper.LoadVertexBuffer(data, vertexInfo,IsSwitch);
+                        vertexData.Add(data);
+
+                        startPos += buffer.CompressedSize;
+                    }
+
+
+                    for (int j = 0; j < VertexBuffers.Count; j++)
+                    {
+                        var vertexInfo = VertexBuffers[j];
+                        var bufferID = j * 2;
+                        if (!this.IsMPR)
+                            bufferID = j;
+
+                        var vertices = BufferHelper.LoadVertexBuffer(vertexData, bufferID, vertexInfo, IsSwitch, this.IsMPR);
 
                         //Read
                         foreach (var mesh in Meshes)
-                        {
-                            if (mesh.Header.VertexBufferIndex == i)
-                            {
-                                //Only use the vertices referenced in the indices
-                                //Some meshes use the same big buffer and can add too many unecessary vertices
-                                mesh.SetupVertices(vertices);
-                            }
-                        }
-                        startPos += buffer.CompressedSize;
+                            if (mesh.Header.VertexBufferIndex == j)
+                                mesh.SetupVertices(vertices.ToList());
                     }
                     break;
             }
@@ -241,6 +234,8 @@ namespace DKCTF
 
         private void ReadMaterials(FileReader reader)
         {
+            if (this.IsMPR)
+                reader.ReadUInt32();
             uint numMaterials = reader.ReadUInt32();
             for (int i = 0; i < numMaterials; i++)
             {
@@ -250,8 +245,26 @@ namespace DKCTF
                 uint size = reader.ReadUInt32();
                 material.Name = reader.ReadString((int)size, true);
                 material.ID = reader.ReadStruct<CObjectId>();
-                material.Type = reader.ReadStruct<Magic>();
-                material.Flags = reader.ReadUInt32();
+                if (this.IsMPR)
+                {
+                    reader.ReadBytes(24); //Shader guid and extras?
+                    uint numTypes = reader.ReadByte();
+                    reader.ReadBytes(3);
+                    reader.ReadUInt32s((int)numTypes); //type list, fourcc
+
+                    uint numDataInts = reader.ReadUInt32();
+
+                    //A list of data types with extra flags
+                    for (int j = 0; j < numDataInts; j++)
+                    {
+                        var dtype = reader.ReadStruct<Magic>();
+                        var dformat = reader.ReadStruct<Magic>();
+                        reader.ReadUInt16();
+                    }
+                }
+                else
+                    reader.ReadBytes(8); //Type, Flags
+
                 uint numData = reader.ReadUInt32();
 
                 //A list of data types
@@ -304,6 +317,9 @@ namespace DKCTF
                                     reader.ReadStruct<STextureUsageInfo>();
                             }
                             break;
+                        case "MA4": //Matrix4x4
+                            material.Matrices.Add(dtype, reader.ReadSingles(16));
+                            break;
                         default:
                             throw new Exception($"Unsupported material type {dformat}!");
                     }
@@ -315,10 +331,31 @@ namespace DKCTF
         {
             uint numMeshes = reader.ReadUInt32();
             for (int i = 0; i < numMeshes; i++)
+            {
+                var mesh = new CRenderMesh();
+
+                if (this.IsMPR)
+                    mesh = reader.ReadStruct<CRenderMesh>();
+                else
+                {
+                    uint type = reader.ReadUInt32(); //prim type
+                    mesh.MaterialIndex = reader.ReadUInt16();
+                    mesh.VertexBufferIndex = reader.ReadByte();
+                    mesh.IndexBufferIndex = reader.ReadByte();
+                    mesh.IndexStart = reader.ReadUInt32();
+                    mesh.IndexCount = reader.ReadUInt32();
+                    reader.ReadUInt16(); //0x10
+                    reader.ReadByte(); //0x12
+                    reader.ReadByte(); //0x13
+                    reader.ReadByte(); //flags
+                }
+
                 Meshes.Add(new CMesh()
                 {
-                    Header = reader.ReadStruct<CRenderMesh>(),
+                    Header = mesh,
                 });
+            }
+            Console.WriteLine();
         }
 
         private void ReadVertexBuffer(FileReader reader)
@@ -334,6 +371,8 @@ namespace DKCTF
                 for (int j = 0; j < numAttributes; j++)
                     vertexBuffer.Components.Add(reader.ReadStruct<SVertexDataComponent>());
                 VertexBuffers.Add(vertexBuffer);
+                if (this.IsMPR)
+                    reader.ReadByte();
             }
         }
 
@@ -381,6 +420,7 @@ namespace DKCTF
             public Dictionary<string, float> Scalars = new Dictionary<string, float>();
             public Dictionary<string, int> Int = new Dictionary<string, int>();
             public Dictionary<string, int[]> Int4 = new Dictionary<string, int[]>();
+            public Dictionary<string, float[]> Matrices = new Dictionary<string, float[]>();
 
             public Dictionary<string, Color4f> Colors = new Dictionary<string, Color4f>();
         }
@@ -416,16 +456,13 @@ namespace DKCTF
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public class CRenderMesh
         {
-            public PrimtiiveType PrimtiiveMode;
             public ushort MaterialIndex;
             public byte VertexBufferIndex;
             public byte IndexBufferIndex;
             public uint IndexStart;
             public uint IndexCount;
-            public ushort field_10;
-            public byte field_12;
-            public byte field_13;
-            public byte field_14;
+            public ushort field_C; 
+            public ushort field_E; //0x4000
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -465,7 +502,7 @@ namespace DKCTF
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public class SVertexDataComponent
         {
-            public uint field_0;
+            public uint BufferID;
             public uint Offset;
             public uint Stride;
             public VertexFormat Format;

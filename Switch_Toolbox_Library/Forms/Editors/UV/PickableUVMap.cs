@@ -48,6 +48,7 @@ namespace Toolbox.Library.Forms
         {
             if (genericObjects.Count == 0) return;
 
+            
             foreach (var genericObject in genericObjects)
             {
                 int divisions = 4;
@@ -82,8 +83,6 @@ namespace Toolbox.Library.Forms
                         }
                     }
                 }
-
-                Console.WriteLine($"displayFaceSize {f.Count} {displayFaceSize} {genericObject.vertices.Count }");
 
                 for (int v = 0; v < displayFaceSize; v += 3)
                 {

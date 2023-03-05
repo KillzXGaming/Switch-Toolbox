@@ -42,19 +42,23 @@ namespace DKCTF
         /// <summary>
         /// Gets a vertex list from the provided buffer and descriptor info.
         /// </summary>
-        public static List<CMDL.CVertex> LoadVertexBuffer(byte[] buffer, CMDL.VertexBuffer vertexBuffer, bool isLittleEndian)
+        public static CMDL.CVertex[] LoadVertexBuffer(List<byte[]> buffers, int startIndex, CMDL.VertexBuffer vertexInfo, bool isLittleEndian, bool swapTexCoord)
         {
-            List<CMDL.CVertex> vertices = new List<CMDL.CVertex>();
+            var vertices = new CMDL.CVertex[vertexInfo.VertexCount];
 
-            using (var reader = new FileReader(buffer))
+            foreach (var comp in vertexInfo.Components)
             {
-                reader.SetByteOrder(!isLittleEndian); //switch is little endianness
+                var buffer = buffers[startIndex + (int)comp.BufferID];
+                using (var reader = new FileReader(buffer))
+                {
+                    reader.SetByteOrder(!isLittleEndian); //switch is little endianness
 
-                for (int i = 0; i < vertexBuffer.VertexCount; i++) {
-                    CMDL.CVertex vertex = new CMDL.CVertex();
-                    vertices.Add(vertex);
+                    for (int i = 0; i < vertexInfo.VertexCount; i++)
+                    {
+                        if (vertices[i] == null) vertices[i] = new CMDL.CVertex();
 
-                    foreach (var comp in vertexBuffer.Components) {
+                        CMDL.CVertex vertex = vertices[i];
+
                         reader.SeekBegin(comp.Offset + i * comp.Stride);
                         switch (comp.Type)
                         {
@@ -68,7 +72,10 @@ namespace DKCTF
                                 vertex.TexCoord0 = ReadData(reader, comp.Format).Xy;
                                 break;
                             case CMDL.EVertexComponent.in_texCoord1:
-                                vertex.TexCoord1 = ReadData(reader, comp.Format).Xy;
+                                if (swapTexCoord)
+                                    vertex.TexCoord0 = ReadData(reader, comp.Format).Xy;
+                                else
+                                    vertex.TexCoord1 = ReadData(reader, comp.Format).Xy;
                                 break;
                             case CMDL.EVertexComponent.in_texCoord2:
                                 vertex.TexCoord2 = ReadData(reader, comp.Format).Xy;
@@ -89,7 +96,6 @@ namespace DKCTF
                     }
                 }
             }
-
             return vertices;
         }
 

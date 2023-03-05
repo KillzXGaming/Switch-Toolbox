@@ -202,12 +202,21 @@ namespace Toolbox.Library.Forms
         {
             if (meshesCB.SelectedIndex >= 0)
             {
-                uvViewport1.ActiveObjects.Clear();
-
-                if (Objects.Count > meshesCB.SelectedIndex)
-                    uvViewport1.ActiveObjects.Add(Objects[meshesCB.SelectedIndex]);
 
                 ActiveMaterial = Materials[meshesCB.SelectedIndex];
+
+                uvViewport1.ActiveObjects.Clear();
+                foreach (var obj in Objects)
+                {
+                    if (obj.GetMaterial() == ActiveMaterial)
+                        uvViewport1.ActiveObjects.Add(obj);
+
+                    foreach (var p in obj.PolygonGroups)
+                    {
+                        if (p.Material == ActiveMaterial && !uvViewport1.ActiveObjects.Contains(obj))
+                            uvViewport1.ActiveObjects.Add(obj);
+                    }
+                }
 
                 ChannelTextures.Clear();
                 Textures.Clear();
@@ -235,6 +244,8 @@ namespace Toolbox.Library.Forms
 
                 if (textureCB.Items.Count > 0)
                     textureCB.SelectedIndex = 0;
+
+                uvViewport1.UpdateViewport();
             }
         }
 

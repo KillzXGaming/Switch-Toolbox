@@ -20,11 +20,22 @@ namespace DKCTF
 
         public FileForm() { }
 
+        public bool IsLittleEndian = false;
+        public bool IsMPR = false;
+
         public FileForm(Stream stream, bool leaveOpen = false)
         {
             using (var reader = new FileReader(stream, leaveOpen))
             {
-                reader.SetByteOrder(true);
+                //Small "hack" to detect endianness.
+                using (reader.TemporarySeek(4, SeekOrigin.Begin)) {
+                    //Size is a uint64. If the first 4 bytes are present, file is little endian
+                    IsLittleEndian = reader.ReadUInt32() != 0;
+                    //MPR is only game currently that is little endian
+                    IsMPR = IsLittleEndian;
+                }
+
+                reader.SetByteOrder(!IsLittleEndian);
                 FileHeader = reader.ReadStruct<CFormDescriptor>();
                 Read(reader);
                 AfterLoad();
@@ -61,7 +72,7 @@ namespace DKCTF
         /// <summary>
         /// Reads meta data information within the pak archive.
         /// </summary>
-        public virtual void ReadMetaData(FileReader reader)
+        public virtual void ReadMetaData(FileReader reader, CFormDescriptor pakVersion)
         {
 
         }
@@ -69,7 +80,7 @@ namespace DKCTF
         /// <summary>
         /// Writes meta data information within the pak archive.
         /// </summary>
-        public virtual void WriteMetaData(FileWriter writer)
+        public virtual void WriteMetaData(FileWriter writer, CFormDescriptor pakVersion)
         {
 
         }
@@ -87,22 +98,28 @@ namespace DKCTF
         /// </summary>
         public long ReadMetaFooter(FileReader reader)
         {
-            using (reader.TemporarySeek(reader.BaseStream.Length - 12, SeekOrigin.Begin))
+            using (reader.TemporarySeek(reader.BaseStream.Length - 20, SeekOrigin.Begin))
             {
                 if (reader.ReadString(4, Encoding.ASCII) != "META")
                     return reader.BaseStream.Length;
 
             }
 
-            using (reader.TemporarySeek(reader.BaseStream.Length - 12, SeekOrigin.Begin))
+            using (reader.TemporarySeek(reader.BaseStream.Length - 20, SeekOrigin.Begin))
             {
                 reader.ReadSignature(4, "META");
                 reader.ReadString(4); //type of file
+                uint versionA = reader.ReadUInt32(); //pak version A
+                uint versionB = reader.ReadUInt32(); //pak version B
                 uint size = reader.ReadUInt32(); //size of meta data
                 //Seek back to meta data
                 reader.SeekBegin(reader.Position - size);
                 //Read meta data
-                ReadMetaData(reader);
+                CFormDescriptor pakHeader = new CFormDescriptor();
+                pakHeader.VersionA = versionA;
+                pakHeader.VersionB = versionB;
+
+                ReadMetaData(reader, pakHeader);
 
                 return reader.BaseStream.Length - size;
             }
@@ -111,22 +128,24 @@ namespace DKCTF
         /// <summary>
         /// Writes a footer to a file for accessing meta data information outside a .pak archive.
         /// </summary>
-        public static byte[] WriteMetaFooter(FileReader reader, uint metaOffset, string type)
+        public static byte[] WriteMetaFooter(FileReader reader, uint metaOffset, string type, PACK pack)
         {
             //Magic + meta offset first
             var mem = new MemoryStream();
             using (var writer = new FileWriter(mem))
             {
-                writer.SetByteOrder(true);
+                writer.SetByteOrder(!pack.IsLittleEndian);
 
                 reader.SeekBegin(metaOffset);
                 var file = GetFileForm(type);
-                file.ReadMetaData(reader);
-                file.WriteMetaData(writer);
+                file.ReadMetaData(reader, pack.FileHeader);
+                file.WriteMetaData(writer, pack.FileHeader);
 
                 //Write footer header last
                 writer.WriteSignature("META");
                 writer.WriteSignature(type);
+                writer.Write(pack.FileHeader.VersionA);
+                writer.Write(pack.FileHeader.VersionB);
                 writer.Write((uint)(writer.BaseStream.Length + 4)); //size
             }
             return mem.ToArray();
@@ -234,8 +253,8 @@ namespace DKCTF
         {
             return Guid.Part1 == 0 && 
                    Guid.Part2 == 0 && 
-                   Guid.Part3 == 0 && 
-                   Guid.Part4 == 0;
+                   Guid.Part3 == 0 &&
+                   Guid.Part4[0] == 0;
         }
     }
 
@@ -281,12 +300,13 @@ namespace DKCTF
         public uint Part1;
         public ushort Part2;
         public ushort Part3;
-        public ulong Part4;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+        public byte[] Part4;
 
         public Guid ToGUID()
         {
-            var bytes = BitConverter.GetBytes(Part4).Reverse().ToArray();
-            return new Guid(Part1, Part2, Part3, bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]);
+            return new Guid(Part1, Part2, Part3, Part4[0], Part4[1], Part4[2], Part4[3], Part4[4], Part4[5], Part4[6], Part4[7]);
         }
 
         public override string ToString() //Represented based on output guids in demo files

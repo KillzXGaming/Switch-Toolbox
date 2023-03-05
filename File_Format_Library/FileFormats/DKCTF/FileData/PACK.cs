@@ -70,7 +70,7 @@ namespace DKCTF
             for (int i = 0; i < numEntries; i++)
             {
                 DirectoryAssetEntry entry = new DirectoryAssetEntry();
-                entry.Read(reader);
+                entry.Read(reader, this.FileHeader);
                 Assets.Add(entry);
             }
         }
@@ -85,7 +85,8 @@ namespace DKCTF
                 var id = IOFileExtension.ReadID(reader);
 
                 uint offset = reader.ReadUInt32();
-                MetaOffsets.Add(id.ToString(), offset);
+                if (!MetaOffsets.ContainsKey(id.ToString()))
+                    MetaOffsets.Add(id.ToString(), offset);
             }
         }
 
@@ -118,14 +119,27 @@ namespace DKCTF
             public CObjectId FileID;
 
             public long Offset;
+            public long DecompressedSize;
             public long Size;
 
-            public void Read(FileReader reader)
+            public void Read(FileReader reader, CFormDescriptor header)
             {
                 Type = reader.ReadString(4, Encoding.ASCII);
                 FileID = IOFileExtension.ReadID(reader);
-                Offset = reader.ReadInt64();
-                Size = reader.ReadInt64();
+                if (header.VersionA >= 1 && header.VersionB >= 1)
+                {
+                    long flag1 = reader.ReadUInt32();
+                    long flag2 = reader.ReadUInt32();
+                    Offset = reader.ReadInt64();
+                    DecompressedSize = reader.ReadInt64();
+                    Size = reader.ReadInt64();
+                }
+                else
+                {
+                    Offset = reader.ReadInt64();
+                    Size = reader.ReadInt64();
+                    DecompressedSize = Size;
+                }
             }
         }
 
