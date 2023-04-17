@@ -12,13 +12,13 @@ assembly_info:
   patch: true
 deploy:
 - provider: GitHub
-  tag: EXPERIMENTAL_LATEST
+  tag: Latest
   description: 'This is the latest build of the tool automatically built from the latest commit!\n\nMessage: $(APPVEYOR_REPO_COMMIT_MESSAGE)\n\n Timestamp: $(APPVEYOR_REPO_COMMIT_TIMESTAMP)
   
    **If this program does not open, make sure to unblock the zip file then extract!**
    **For textures make sure you install [this](https://www.microsoft.com/en-us/download/details.aspx?id=35) if they do not show or crash!**
    **Requires a minimum of .NET Framework 4.6 which you can get [here](https://www.microsoft.com/en-us/download/details.aspx?id=53344)**'
-  release: 'Experimental Release-v$(appveyor_build_version)'
+  release: 'Latest Release-v$(appveyor_build_version)'
   auth_token:
     secure: EBcVPGXeujsiyDrDN+RPDnpHgX45vEGZhQdKqHccIb74oyBhUz5+eU39yN+zDr8Z
   artifact: Toolbox-Latest.zip
