@@ -2,7 +2,7 @@
 A tool to edit many formats of Nintendo Switch, 3DS and Wii U. 
 
 # Download
-https://github.com/KillzXGaming/Switch-Toolbox/releases/tag/EXPERIMENTAL_LATEST
+https://github.com/KillzXGaming/Switch-Toolbox/releases
 
 Keep in mind this tool is still very experimental. If something breaks from a commit, you can download manually from [here](https://ci.appveyor.com/project/KillzXGaming/switch-toolbox/history). Just select a commit, go to artifacts tab and download the zip. Also be sure to report anything that breaks to [issues here](https://github.com/KillzXGaming/Switch-Toolbox/issues) on github. 
 
