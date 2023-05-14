@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using Toolbox.Library.IO;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace Toolbox.Library
 {
@@ -15,8 +16,12 @@ namespace Toolbox.Library
 
         public override string ToString() { return "ZSTD"; }
 
+        static string fileNameTemp = "";
+
         public bool Identify(Stream stream, string fileName)
         {
+            //Small hack to check current file name
+            fileNameTemp = fileName;
             using (var reader = new FileReader(stream, true))
             {
                 uint magic = reader.ReadUInt32();
@@ -39,14 +44,26 @@ namespace Toolbox.Library
 
         public static byte[] SDecompress(byte[] b)
         {
-            using (var decompressor = new ZstdNet.Decompressor())
+            var options = new ZstdNet.DecompressionOptions(GetExternalDictionaries());
+            using (var decompressor = new ZstdNet.Decompressor(options))
             {
                 return decompressor.Unwrap(b);
             }
         }
+
+        public static byte[] SDecompress(byte[] b, byte[] dict)
+        {
+            var options = new ZstdNet.DecompressionOptions(dict);
+            using (var decompressor = new ZstdNet.Decompressor(options))
+            {
+                return decompressor.Unwrap(b);
+            }
+        }
+
         public static byte[] SDecompress(byte[] b, int MaxDecompressedSize)
         {
-            using (var decompressor = new ZstdNet.Decompressor())
+            var options = new ZstdNet.DecompressionOptions(GetExternalDictionaries());
+            using (var decompressor = new ZstdNet.Decompressor(options))
             {
                 return decompressor.Unwrap(b, MaxDecompressedSize);
             }
@@ -57,6 +74,32 @@ namespace Toolbox.Library
             {
                 return compressor.Wrap(b);
             }
+        }
+
+        static byte[] GetExternalDictionaries()
+        {
+            byte[] dictionary = new byte[0];
+
+            string folder = Path.Combine(Runtime.ExecutableDir, "Lib", "ZstdDictionaries");
+            if (Directory.Exists(folder))
+            {
+                void CheckZDic(string fileName, string expectedExtension)
+                {
+                    //Dictionary already set
+                    if (dictionary.Length != 0) return;
+
+                    string zDictPath = Path.Combine(folder, fileName);
+                    //Then check if the input file uses the expected extension
+                    if (File.Exists(zDictPath) && fileNameTemp.EndsWith(expectedExtension))
+                        dictionary = File.ReadAllBytes(zDictPath);
+                }
+
+                //Order matters, zs must go last
+                CheckZDic("bcett.byml.zsdic",  "bcett.byml.zs" );
+                CheckZDic("pack.zsdic", "pack.zs" );
+                CheckZDic("zs.zsdic", ".zs" );
+            }
+            return dictionary;
         }
     }
 }
