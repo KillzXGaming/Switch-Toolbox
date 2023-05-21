@@ -113,7 +113,7 @@ namespace Toolbox.Library.IO
             if (fileNames.Length == 0)
                 return;
 
-            string ext = Compress ? ".comp" : ".dec";
+            string ext = Compress ? ".comp" : "";
             if (compressionFormat.Extension.Length > 0 && Compress)
                 ext = compressionFormat.Extension[0].Replace("*", string.Empty);
 
@@ -167,6 +167,7 @@ namespace Toolbox.Library.IO
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 string name = Path.GetFileName(fileNames[0]);
+                name = name.Count(c => c == '.') > 1 && !Compress ? name.Remove(name.LastIndexOf('.')) : name;
                 sfd.FileName = name + ext;
                 sfd.Filter = "All files(*.*)|*.*";
 
