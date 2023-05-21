@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,7 +22,7 @@ namespace Toolbox.Library.IO
             var items = new List<ToolStripMenuItem>();
             items.Add(CreateMenu("Yaz0"));
             items.Add(CreateMenu("Gzip"));
-            items.Add(CreateMenu("LZ77 (Wii Type 11)", false));
+            items.Add(CreateMenu("LZ77 (Wii Type 11)"));
             items.Add(CreateMenu("LZSS", false));
             items.Add(CreateMenu("lZMA"));
             items.Add(CreateMenu("lZ4"));
@@ -113,7 +114,7 @@ namespace Toolbox.Library.IO
             if (fileNames.Length == 0)
                 return;
 
-            string ext = Compress ? ".comp" : ".dec";
+            string ext = Compress ? ".comp" : "";
             if (compressionFormat.Extension.Length > 0 && Compress)
                 ext = compressionFormat.Extension[0].Replace("*", string.Empty);
 
@@ -126,6 +127,7 @@ namespace Toolbox.Library.IO
                     foreach (var file in fileNames)
                     {
                         string name = Path.GetFileName(file);
+                        name = name.Count(c => c == '.') > 1 && !Compress ? name.Remove(name.LastIndexOf('.')) : name;
                         using (var data = new FileStream(file, FileMode.Open, FileAccess.Read))
                         {
                             try

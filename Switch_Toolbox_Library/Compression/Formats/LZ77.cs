@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Toolbox.Library.IO;
 using Toolbox.Library.Forms;
 using System.Runtime.InteropServices;
+using Toolbox.Library.Compression.LZ77_wii_11_compresss.Formats.Nitro;
 
 namespace Toolbox.Library
 {
@@ -54,12 +55,18 @@ namespace Toolbox.Library
                 }
             }
         }
-
+        // A modified version of dsdecmp for compressing files into the Wii LZ77 type 11 .lz  -Adapted by:DanielSvoboda
         public Stream Compress(Stream stream)
         {
-            MemoryStream mem = new MemoryStream();
-
-            return mem;
+            using (var reader = new FileReader(stream, true))
+            {
+                using (MemoryStream outstream = new MemoryStream())
+                {
+                    LZ11 lz11 = new LZ11();
+                    int compressedSize = lz11.Compress(stream, stream.Length, outstream);
+                    return new MemoryStream(outstream.ToArray());
+                }
+            }
         }
     }
 }
