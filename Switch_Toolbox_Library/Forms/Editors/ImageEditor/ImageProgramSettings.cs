@@ -40,6 +40,8 @@ namespace Toolbox.Library.Forms
             }
 
             textureImageFormatCB.SelectedItem = texture.Format;
+            if (textureImageFormatCB.SelectedItem == null)
+                textureImageFormatCB.SelectedItem = TEX_FORMAT.BC1_UNORM_SRGB;
         }
 
         public TEX_FORMAT GetSelectedImageFormat()

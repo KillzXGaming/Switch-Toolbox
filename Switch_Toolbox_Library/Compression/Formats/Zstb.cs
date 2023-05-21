@@ -18,6 +18,8 @@ namespace Toolbox.Library
 
         static string fileNameTemp = "";
 
+        public void Init(string fileName) { fileNameTemp = fileName; }
+
         public bool Identify(Stream stream, string fileName)
         {
             //Small hack to check current file name

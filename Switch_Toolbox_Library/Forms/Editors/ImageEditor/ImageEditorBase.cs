@@ -15,6 +15,9 @@ namespace Toolbox.Library.Forms
 {
     public partial class ImageEditorBase : UserControl
     {
+        public int GetArrayDisplayLevel() => CurArrayDisplayLevel;
+        public int GetMipmapDisplayLevel() => CurArrayDisplayLevel;
+
         public class ImageReplaceEventArgs : EventArgs
         {
             public Bitmap ReplacedTexture { get; private set; }

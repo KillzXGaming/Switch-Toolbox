@@ -722,7 +722,7 @@ namespace Ryujinx.Graphics.Gal.Texture
                 {
                     uint[] Val = ReadUintColorValues(2, ColorValues, ref ColorValuesPosition);
                     int L0     = (int)((Val[0] >> 2) | (Val[1] & 0xC0));
-                    int L1     = (int)Math.Max(L0 + (Val[1] & 0x3F), 0xFFU);
+                    int L1     = (int)Math.Min(L0 + (Val[1] & 0x3F), 0xFFU);
 
                     EndPoints[0] = new ASTCPixel(0xFF, (short)L0, (short)L0, (short)L0);
                     EndPoints[1] = new ASTCPixel(0xFF, (short)L1, (short)L1, (short)L1);

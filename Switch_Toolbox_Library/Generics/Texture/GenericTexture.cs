@@ -10,6 +10,7 @@ using OpenTK.Graphics.OpenGL;
 using Toolbox.Library.Rendering;
 using Ryujinx.Graphics.Gal.Texture; //For ASTC
 using Toolbox.Library.NodeWrappers;
+using Toolbox.Library.Forms;
 
 namespace Toolbox.Library
 {
@@ -867,7 +868,7 @@ namespace Toolbox.Library
 
         public override void Export(string FileName)
         {
-            Export(FileName);
+            Export(FileName, false, false, GetViewedArrayLevel(), GetViewedMipLevel());
         }
 
         public void ExportArrayImage(int ArrayIndex = 0)
@@ -883,6 +884,22 @@ namespace Toolbox.Library
             }
         }
 
+        private int GetViewedArrayLevel()
+        {
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+            if (editor != null)
+               return editor.GetArrayDisplayLevel();
+            return 0;
+        }
+
+        private int GetViewedMipLevel()
+        {
+            ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
+            if (editor != null)
+                return editor.GetMipmapDisplayLevel();
+            return 0;
+        }
+
         public void ExportImage()
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -892,7 +909,7 @@ namespace Toolbox.Library
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Export(sfd.FileName, false, false, 0, 0);
+                Export(sfd.FileName, false, false, GetViewedArrayLevel(), GetViewedMipLevel());
             }
         }
 
@@ -915,16 +932,11 @@ namespace Toolbox.Library
                     break;
             }
         }
-        public void SaveASTC(string FileName, bool ExportSurfaceLevel = false,
+        public void SaveASTC(string FileName, bool ExportSurfaceLevel = true,
             bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
         {
-            List<Surface> surfaces = null;
-            if (ExportSurfaceLevel)
-                surfaces = GetSurfaces(SurfaceLevel, false);
-            else if (Depth > 1)
-                surfaces = Get3DSurfaces();
-            else
-                surfaces = GetSurfaces();
+            List<Surface> surfaces = GetSurfaces(SurfaceLevel, false);
+
 
             ASTC atsc = new ASTC();
             atsc.Width = Width;
@@ -937,7 +949,10 @@ namespace Toolbox.Library
 
             Console.WriteLine("DataBlock " + atsc.DataBlock.Length);
 
-            atsc.Save(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite));
+            using (var fs = new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite))
+            {
+                atsc.Save(fs);
+            }
         }
         public void SaveTGA(string FileName, bool ExportSurfaceLevel = false,
             bool ExportMipMapLevel = false, int SurfaceLevel = 0, int MipLevel = 0)
@@ -954,7 +969,7 @@ namespace Toolbox.Library
             progressBar.Show();
             progressBar.Refresh();
 
-            if (ArrayCount > 1 && !ExportSurfaceLevel)
+            if (ArrayCount > 1 && !ExportSurfaceLevel && false)
             {
                 progressBar.Task = "Select dialog option... ";
 
