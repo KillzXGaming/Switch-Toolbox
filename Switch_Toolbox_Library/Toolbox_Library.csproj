@@ -240,6 +240,16 @@
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoder.cs" />
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoderBit.cs" />
     <Compile Include="Compression\7ZIP\RangeCoder\RangeCoderBitTree.cs" />
+    <Compile Include="Compression\LZ77_wii_11_compresss\Exceptions\InputTooLargeException.cs" />
+    <Compile Include="Compression\LZ77_wii_11_compresss\Exceptions\NotEnoughDataException.cs" />
+    <Compile Include="Compression\LZ77_wii_11_compresss\Exceptions\StreamTooShortException.cs" />
+    <Compile Include="Compression\LZ77_wii_11_compresss\Exceptions\TooMuchInputException.cs" />
+    <Compile Include="Compression\LZ77_wii_11_compresss\Formats\CompositeFormat.cs" />
+    <Compile Include="Compression\LZ77_wii_11_compresss\Formats\CompressionFormat.cs" />
+    <Compile Include="Compression\LZ77_wii_11_compresss\Formats\Nitro\LZ11.cs" />
+    <Compile Include="Compression\LZ77_wii_11_compresss\Formats\Nitro\NitroCFormat.cs" />
+    <Compile Include="Compression\LZ77_wii_11_compresss\Utils\IOUtils.cs" />
+    <Compile Include="Compression\LZ77_wii_11_compresss\Utils\LZUtil.cs" />
     <Compile Include="Compression\MarioTennisCmp32.cs" />
     <Compile Include="Compression\Oodle.cs" />
     <Compile Include="Compression\STLibraryCompression.cs" />
