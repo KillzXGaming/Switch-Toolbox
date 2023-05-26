@@ -188,8 +188,17 @@ namespace Toolbox
                 UpdateProgram.CommitList.Count > 0)
             {
                 updateToolstrip.Enabled = true;
+                UsePrompt = false;
+
+                // Shows an on-screen message that updates are available
+                DialogResult result = MessageBox.Show("Updates are available. Do you want to update now?", "Update Available", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    UpdateNotifcationClick();
+                }
             }
         }
+
 
         private void UpdateNotifcationClick()
         {

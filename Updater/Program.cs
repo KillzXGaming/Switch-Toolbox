@@ -89,14 +89,18 @@ namespace Updater
                 SetAccessRule(dir);
 
                 string dirName = new DirectoryInfo(dir).Name;
+                string destDir = Path.Combine(folderDir, dirName + @"\");
 
                 if (!dirName.Equals("Hashes", StringComparison.CurrentCultureIgnoreCase) // Let's keep the users custom hashes in tact
-                    && Directory.Exists(Path.Combine(folderDir, dirName + @"\")))
+                    && Directory.Exists(destDir))
                 {
-                    Directory.Delete(Path.Combine(folderDir, dirName + @"\"), true);
+                    Directory.Delete(destDir, true);
                 }
 
-                Directory.Move(dir, Path.Combine(folderDir, dirName + @"\"));
+                if (Directory.Exists(destDir))
+                    Directory.Delete(destDir, true);
+
+                Directory.Move(dir, destDir);
             }
             foreach (string file in Directory.GetFiles("master/"))
             {
@@ -107,20 +111,29 @@ namespace Updater
                 SetAccessRule(file);
                 SetAccessRule(folderDir);
 
-                if (File.Exists(Path.Combine(folderDir, Path.GetFileName(file))))
-                {
-                    File.Delete(Path.Combine(folderDir, Path.GetFileName(file)));
-                }
-                File.Move(file, Path.Combine(folderDir, Path.GetFileName(file)));
+                string destFile = Path.Combine(folderDir, Path.GetFileName(file));
+                if (File.Exists(destFile))
+                    File.Delete(destFile);
+
+                File.Move(file, destFile);
             }
         }
 
         static void SetAccessRule(string directory)
         {
-            System.Security.AccessControl.DirectorySecurity sec = System.IO.Directory.GetAccessControl(directory);
-            FileSystemAccessRule accRule = new FileSystemAccessRule(Environment.UserDomainName + "\\" + Environment.UserName, FileSystemRights.FullControl, AccessControlType.Allow);
-            sec.AddAccessRule(accRule);
+            try
+            {
+                System.Security.AccessControl.DirectorySecurity sec = System.IO.Directory.GetAccessControl(directory);
+                FileSystemAccessRule accRule = new FileSystemAccessRule(Environment.UserDomainName + "\\" + Environment.UserName, FileSystemRights.FullControl, AccessControlType.Allow);
+                sec.AddAccessRule(accRule);
+                Directory.SetAccessControl(directory, sec);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to set access rule for directory '{directory}': {ex.Message}");
+            }
         }
+
 
         static void Download(string CompileDate)
         {
