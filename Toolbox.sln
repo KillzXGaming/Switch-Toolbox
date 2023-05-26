@@ -1,17 +1,21 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "File_Format_Library", "File_Format_Library\File_Format_Library.csproj", "{A11705CF-A6A3-41C3-875A-E1CFD8080F09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolbox_Library", "Switch_Toolbox_Library\Toolbox_Library.csproj", "{96820047-2A39-4E5A-BFA4-E84FFF5C66CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{D82A2C08-2A65-43AF-BDA6-A36CC27AA003}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{D82A2C08-2A65-43AF-BDA6-A36CC27AA003}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolbox", "Toolbox\Toolbox.csproj", "{5E55CA2B-F181-4681-AAFA-A20FEBCF7387}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrawlboxHelper", "BrawlboxHelper\BrawlboxHelper.csproj", "{FA690685-3370-44D5-B138-F538C8D4C2A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6423B3C7-ABD1-4824-B975-8A1F478899FE}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

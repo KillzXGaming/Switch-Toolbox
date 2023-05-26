@@ -1,192 +1,107 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Octokit;
-using System.Net;
+﻿using System.Diagnostics;
 using System.IO.Compression;
-using System.IO;
-using System.Globalization;
-using System.Security.AccessControl;
 
-namespace Updater
+// Set the URL, name, and filename of the file to download
+string downloadURL = @"https://github.com/KillzXGaming/Switch-Toolbox/releases/download/Latest/Toolbox-Latest.zip";
+string downloadFilename = $"Toolbox-Latest.zip";
+
+// Get the current directory and check if the "-h" or "--hashes" option was passed as an argument
+string currentDir = Environment.CurrentDirectory;
+bool keepHashes = args.Contains("-h") || args.Contains("--hashes");
+
+// Create a new HttpClient and download the file from the specified URL
+Console.WriteLine($"Downloading {downloadURL}...");
+using HttpClient httpClient = new();
+HttpResponseMessage response = httpClient.GetAsync(downloadURL).Result;
+
+try
+{ 
+    response.EnsureSuccessStatusCode(); 
+}
+catch (Exception ex)
 {
-    class Program
+    Console.WriteLine($"Failed to download update!\n{ex}");
+}
+
+// Save the downloaded file to disk
+Console.WriteLine($"Downloaded {downloadFilename}, saving to disk...");
+byte[] content = response.Content.ReadAsByteArrayAsync().Result;
+File.WriteAllBytes(downloadFilename, content);
+
+// Extract the contents of the downloaded zip file if it's newer
+using (ZipArchive archive = ZipFile.OpenRead(downloadFilename))
+{
+    if (updateNeeded(archive))
     {
-        static Release[] releases;
-
-        static string execDirectory = "";
-        static string folderDir = "";
-        static bool foundRelease = false;
-
-        static void Main(string[] args)
+        Console.WriteLine($"Extracting contents of {downloadFilename}...");
+        // Loop through all the entries in the zip archive
+        foreach (ZipArchiveEntry entry in archive.Entries)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-
-            execDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            folderDir = execDirectory;
-
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            var client = new GitHubClient(new ProductHeaderValue("ST_UpdateTool"));
-            GetReleases(client).Wait();
-
-            string versionTxt = Path.Combine(execDirectory, "Version.txt");
-            if (!File.Exists(versionTxt))
-                File.Create(versionTxt);
-
-            string[] versionInfo = File.ReadLines(versionTxt).ToArray();
-
-            string ProgramVersion = "";
-            string CompileDate = "";
-
-            string CommitInfo = "";
-            if (versionInfo.Length >= 3)
+            // Filter out any folders
+            if (!entry.FullName.EndsWith("/") &&
+                // Ignore updater
+                !(entry.Name.Equals("updater.exe", StringComparison.OrdinalIgnoreCase) ||
+              entry.Name.Equals("updater.dll", StringComparison.OrdinalIgnoreCase) ||
+              entry.Name.Equals("updater.pdb", StringComparison.OrdinalIgnoreCase)) &&
+              // Skip the "Hashes" folder if the "-h" or "--hashes" option was passed
+              !(keepHashes && entry.FullName.StartsWith("Hashes/", StringComparison.OrdinalIgnoreCase)))
             {
-                ProgramVersion = versionInfo[0];
-                CompileDate = versionInfo[1];
-                CommitInfo = versionInfo[2];
+                // Construct the target path for the extracted file and extract it
+                string targetPath = Path.Combine(currentDir, entry.FullName);
+                Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
+                entry.ExtractToFile(targetPath, overwrite: true);
             }
-
-            foreach (string arg in args)
-            {
-                switch (arg)
-                {
-                    case "-d":
-                    case "--download":
-                        Download(CompileDate);
-                        break;
-                    case "-i":
-                    case "--install":
-                        Install();
-                        break;
-                    case "-b":
-                    case "--boot":
-                        Boot();
-                        Environment.Exit(0);
-                        break;
-                    case "-e":
-                    case "--exit":
-                        Environment.Exit(0);
-                        break;
-                }
-            }
-            Console.Read();
-        }
-        static void Boot()
-        {
-            Console.WriteLine("Booting...");
-
-            Thread.Sleep(3000);
-            System.Diagnostics.Process.Start(Path.Combine(folderDir, "Toolbox.exe"));
-        }
-        static void Install()
-        {
-            Console.WriteLine("Installing...");
-            foreach (string dir in Directory.GetDirectories("master/"))
-            {
-                SetAccessRule(folderDir);
-                SetAccessRule(dir);
-
-                string dirName = new DirectoryInfo(dir).Name;
-
-                if (!dirName.Equals("Hashes", StringComparison.CurrentCultureIgnoreCase) // Let's keep the users custom hashes in tact
-                    && Directory.Exists(Path.Combine(folderDir, dirName + @"\")))
-                {
-                    Directory.Delete(Path.Combine(folderDir, dirName + @"\"), true);
-                }
-
-                Directory.Move(dir, Path.Combine(folderDir, dirName + @"\"));
-            }
-            foreach (string file in Directory.GetFiles("master/"))
-            {
-                if (file.Contains("Updater.exe") || file.Contains("Updater.exe.config")
-                    || file.Contains("Updater.pdb") || file.Contains("Octokit.dll"))
-                    continue;
-
-                SetAccessRule(file);
-                SetAccessRule(folderDir);
-
-                if (File.Exists(Path.Combine(folderDir, Path.GetFileName(file))))
-                {
-                    File.Delete(Path.Combine(folderDir, Path.GetFileName(file)));
-                }
-                File.Move(file, Path.Combine(folderDir, Path.GetFileName(file)));
-            }
-        }
-
-        static void SetAccessRule(string directory)
-        {
-            System.Security.AccessControl.DirectorySecurity sec = System.IO.Directory.GetAccessControl(directory);
-            FileSystemAccessRule accRule = new FileSystemAccessRule(Environment.UserDomainName + "\\" + Environment.UserName, FileSystemRights.FullControl, AccessControlType.Allow);
-            sec.AddAccessRule(accRule);
-        }
-
-        static void Download(string CompileDate)
-        {
-            foreach (Release latest in releases)
-            {
-                Console.WriteLine("Checking Update");
-                if (!foundRelease)
-                {
-                    if (!latest.Assets[0].UpdatedAt.ToString().Equals(CompileDate))
-                    {
-                        Console.WriteLine("Downloading release...");
-                        bool IsDownloaded = DownloadedProgram(latest);
-
-                        if (IsDownloaded)
-                            Console.WriteLine("Downloaded update successfully!");
-                        else
-                            Console.WriteLine("Failed to download update!");
-                    }
-                }
-                foundRelease = true;
-            }
-        }
-        static bool DownloadedProgram(Release release)
-        {
-            return DownloadRelease("master",
-                release.Assets[0].BrowserDownloadUrl,
-                release.TagName,
-                release.Assets[0].UpdatedAt.ToString(),
-                release.TargetCommitish);
-        }
-        static bool DownloadRelease(string downloadName, string url, string ProgramVersion, string CompileDate, string CommitInfo)
-        {
-            try
-            {
-                using (var webClient = new WebClient())
-                {
-                    webClient.DownloadFile(url, downloadName + ".zip");
-                }
-                if (Directory.Exists(downloadName + "/"))
-                    Directory.Delete(downloadName + "/", true);
-                ZipFile.ExtractToDirectory(downloadName + ".zip", downloadName + "/");
-
-                //Zip not needed anymore
-                File.Delete(downloadName + ".zip");
-                string versionTxt = Path.Combine(Path.GetFullPath(downloadName + "/"), "Version.txt");
-
-                using (StreamWriter writer = new StreamWriter(versionTxt))
-                {
-                    writer.WriteLine($"{ProgramVersion}");
-                    writer.WriteLine($"{CompileDate}");
-                    writer.WriteLine($"{CommitInfo}");
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to download update! {ex.ToString()}");
-                return false;
-            }
-        }
-        static async Task GetReleases(GitHubClient client)
-        {
-            List<Release> Releases = new List<Release>();
-            foreach (Release r in await client.Repository.Release.GetAll("KillzXGaming", "Switch-Toolbox"))
-                Releases.Add(r);
-            releases = Releases.ToArray();
         }
     }
+}
+
+// Zip not needed anymore
+File.Delete(downloadFilename + ".zip");
+
+// If the "-b" or "--boot" option was passed, launch the extracted application
+if (args.Contains("-b") || args.Contains("--boot"))
+{
+    Console.WriteLine("Booting...");
+    Process.Start(Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), "Toolbox.exe"));
+}
+
+if (args.Contains("-e") || args.Contains("--exit"))
+{
+    Console.WriteLine("\nPress any key to continue...");
+    Console.Read();
+}    
+
+bool updateNeeded(ZipArchive archive)
+{
+    // Get the ZipArchiveEntry for the Toolbox.exe file
+    ZipArchiveEntry entry = archive.GetEntry("Toolbox.exe");
+
+    if (entry != null)
+    {
+        // Construct the target path for the extracted file
+        string targetPath = Path.Combine(currentDir, entry.FullName);
+
+        // Check if the file already exists
+        if (File.Exists(targetPath))
+        {
+            // Get the last modified time of the file in the zip archive and on disk
+            DateTime lastWriteTimeZip = entry.LastWriteTime.DateTime;
+            DateTime lastWriteTimeFile = File.GetLastWriteTime(targetPath);
+
+            // If the modified time of the file in the zip archive is greater than the modified time on disk,
+            // an update is needed
+            if (lastWriteTimeZip > lastWriteTimeFile)
+            {
+                return true;
+            }
+            // The file is already up-to-date
+            Console.WriteLine($"{entry.Name} is up-to-date, skipping extraction.");
+            return false;
+        }
+        // The file doesn't exist on disk, so an update is needed
+        return true;
+    }
+
+    // If the Toolbox.exe file isn't found in the archive, assume an update is needed
+    return true;
 }
