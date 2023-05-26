@@ -320,15 +320,15 @@ namespace Toolbox.Library.Compression.LZ77_wii_11_compresss.Formats.Nitro
 
 
             // write the compression header first
+            byte magicByte = this.magicByte;
+            byte thirteen = 0x13;
+            byte lowByte = (byte)(inLength & 0xFF);
+            byte highByte = (byte)((inLength >> 8) & 0xFF);
+            byte middleByte = (byte)((inLength >> 16) & 0xFF);
+            byte zero = (byte)((inLength >> 32) & 0xFF);    // always zero??
 
-            //this has been included to work with (Paper Mario: Color Splash for the Wii U), if the test fails in other games it should be removed  :)
-            byte[] byteArray = new byte[] { 0xF0, 0x0E, 0x00, 0x00, 0xF0, 0x0E, 0x00, 0x00, 0x13, 0xF0, 0x0E, 0x00 };
-            outstream.Write(byteArray, 0, byteArray.Length);
-
-            outstream.WriteByte(this.magicByte);
-            outstream.WriteByte((byte)(inLength & 0xFF));
-            outstream.WriteByte((byte)((inLength >> 8) & 0xFF));
-            outstream.WriteByte((byte)((inLength >> 16) & 0xFF));
+            byte[] compressionHeader = new byte[] { lowByte, highByte, middleByte, zero, lowByte, highByte, middleByte, zero, thirteen, lowByte, highByte, middleByte, magicByte, lowByte, highByte, middleByte };
+            outstream.Write(compressionHeader, 0, compressionHeader.Length);
 
             int compressedLength = 4;
 
