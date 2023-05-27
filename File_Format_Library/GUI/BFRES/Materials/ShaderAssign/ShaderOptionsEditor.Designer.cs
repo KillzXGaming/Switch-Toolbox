@@ -28,16 +28,65 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.chkFilterDefaults = new Toolbox.Library.Forms.STCheckBox();
+            this.shaderOptionsListView = new Toolbox.Library.Forms.STListView();
+            this.ovlColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.ovlColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.btnScrolDown = new Toolbox.Library.Forms.STButton();
             this.btnScrollUp = new Toolbox.Library.Forms.STButton();
             this.btnEdit = new Toolbox.Library.Forms.STButton();
             this.btnRemove = new Toolbox.Library.Forms.STButton();
             this.btnAdd = new Toolbox.Library.Forms.STButton();
-            this.shaderOptionsListView = new Toolbox.Library.Forms.STListView();
-            this.ovlColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.ovlColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.shaderOptionsListView)).BeginInit();
             this.SuspendLayout();
+            // 
+            // chkFilterDefaults
+            // 
+            this.chkFilterDefaults.AutoSize = true;
+            this.chkFilterDefaults.Checked = true;
+            this.chkFilterDefaults.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkFilterDefaults.Location = new System.Drawing.Point(165, 7);
+            this.chkFilterDefaults.Name = "chkFilterDefaults";
+            this.chkFilterDefaults.Size = new System.Drawing.Size(120, 17);
+            this.chkFilterDefaults.TabIndex = 31;
+            this.chkFilterDefaults.Text = "Filter Default Values";
+            this.chkFilterDefaults.UseVisualStyleBackColor = true;
+            this.chkFilterDefaults.CheckedChanged += new System.EventHandler(this.chkFilterDefaults_CheckedChanged);
+            // 
+            // shaderOptionsListView
+            // 
+            this.shaderOptionsListView.AllColumns.Add(this.ovlColumn1);
+            this.shaderOptionsListView.AllColumns.Add(this.ovlColumn2);
+            this.shaderOptionsListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.shaderOptionsListView.CellEditUseWholeCell = false;
+            this.shaderOptionsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ovlColumn1,
+            this.ovlColumn2});
+            this.shaderOptionsListView.Cursor = System.Windows.Forms.Cursors.Default;
+            this.shaderOptionsListView.HideSelection = false;
+            this.shaderOptionsListView.Location = new System.Drawing.Point(3, 32);
+            this.shaderOptionsListView.Name = "shaderOptionsListView";
+            this.shaderOptionsListView.ShowGroups = false;
+            this.shaderOptionsListView.Size = new System.Drawing.Size(449, 400);
+            this.shaderOptionsListView.TabIndex = 30;
+            this.shaderOptionsListView.UseCompatibleStateImageBehavior = false;
+            this.shaderOptionsListView.View = System.Windows.Forms.View.Details;
+            this.shaderOptionsListView.SelectedIndexChanged += new System.EventHandler(this.shaderOptionsListView_SelectedIndexChanged);
+            this.shaderOptionsListView.DoubleClick += new System.EventHandler(this.shaderOptionsListView_DoubleClick);
+            // 
+            // ovlColumn1
+            // 
+            this.ovlColumn1.AspectName = "Name";
+            this.ovlColumn1.Text = "Name";
+            this.ovlColumn1.Width = 170;
+            // 
+            // ovlColumn2
+            // 
+            this.ovlColumn2.AspectName = "Value";
+            this.ovlColumn2.Text = "Value";
+            this.ovlColumn2.Width = 385;
             // 
             // btnScrolDown
             // 
@@ -97,45 +146,11 @@
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
-            // shaderOptionsListView
-            // 
-            this.shaderOptionsListView.AllColumns.Add(this.ovlColumn1);
-            this.shaderOptionsListView.AllColumns.Add(this.ovlColumn2);
-            this.shaderOptionsListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.shaderOptionsListView.CellEditUseWholeCell = false;
-            this.shaderOptionsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ovlColumn1,
-            this.ovlColumn2});
-            this.shaderOptionsListView.Cursor = System.Windows.Forms.Cursors.Default;
-            this.shaderOptionsListView.Location = new System.Drawing.Point(3, 32);
-            this.shaderOptionsListView.Name = "shaderOptionsListView";
-            this.shaderOptionsListView.ShowGroups = false;
-            this.shaderOptionsListView.Size = new System.Drawing.Size(449, 400);
-            this.shaderOptionsListView.TabIndex = 30;
-            this.shaderOptionsListView.UseCompatibleStateImageBehavior = false;
-            this.shaderOptionsListView.View = System.Windows.Forms.View.Details;
-            this.shaderOptionsListView.SelectedIndexChanged += new System.EventHandler(this.shaderOptionsListView_SelectedIndexChanged);
-            this.shaderOptionsListView.DoubleClick += new System.EventHandler(this.shaderOptionsListView_DoubleClick);
-            // 
-            // ovlColumn1
-            // 
-            this.ovlColumn1.AspectName = "Name";
-            this.ovlColumn1.HeaderForeColor = System.Drawing.Color.Empty;
-            this.ovlColumn1.Text = "Name";
-            this.ovlColumn1.Width = 170;
-            // 
-            // ovlColumn2
-            // 
-            this.ovlColumn2.AspectName = "Value";
-            this.ovlColumn2.Text = "Value";
-            this.ovlColumn2.Width = 385;
-            // 
             // ShaderOptionsEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkFilterDefaults);
             this.Controls.Add(this.shaderOptionsListView);
             this.Controls.Add(this.btnScrolDown);
             this.Controls.Add(this.btnScrollUp);
@@ -146,6 +161,7 @@
             this.Size = new System.Drawing.Size(496, 435);
             ((System.ComponentModel.ISupportInitialize)(this.shaderOptionsListView)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -159,5 +175,6 @@
         private Toolbox.Library.Forms.STListView shaderOptionsListView;
         private BrightIdeasSoftware.OLVColumn ovlColumn1;
         private BrightIdeasSoftware.OLVColumn ovlColumn2;
+        private Toolbox.Library.Forms.STCheckBox chkFilterDefaults;
     }
 }

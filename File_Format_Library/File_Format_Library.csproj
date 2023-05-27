@@ -1557,6 +1557,7 @@
     <Compile Include="FileFormats\Texture\NUTEXB.cs" />
     <Compile Include="FileFormats\Texture\TexConv.cs" />
     <Compile Include="FileFormats\Texture\XTX.cs" />
+    <Compile Include="FileFormats\Texture\TXTG.cs" />
     <Compile Include="FileFormats\Rom\XCI.cs" />
     <Compile Include="GetSwitchKeys.cs" />
     <Compile Include="GL\BFRES\BFRES_Render.cs" />

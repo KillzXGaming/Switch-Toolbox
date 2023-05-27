@@ -2013,7 +2013,7 @@
         </member>
         <member name="M:Syroot.NintenTools.NSW.Bfres.Core.ResFileLoader.ReadOffsets(System.Int32)">
             <summary>
-            Reads BFRES offsets which is the absolute addresses.
+            Reads BFRES offsets which is the absolute addresses.+
             </summary>
             <param name="count">The number of offsets to read.</param>
             <returns>The absolute addresses of the offsets.</returns>
@@ -2275,7 +2275,7 @@
             <param name="str">The name to save.</param>
             <param name="encoding">The <see cref="T:System.Text.Encoding"/> in which the name will be stored.</param>
         </member>
-        <member name="M:Syroot.NintenTools.NSW.Bfres.Core.ResFileSaver.SaveStrings(System.Collections.Generic.IEnumerable{System.String},System.Text.Encoding)">
+        <member name="M:Syroot.NintenTools.NSW.Bfres.Core.ResFileSaver.SaveStrings(System.Collections.Generic.IEnumerable{System.String},System.Boolean,System.Text.Encoding)">
             <summary>
             Reserves space for offsets to the <paramref name="strings"/> written later in the string pool with the
             specified <paramref name="encoding"/>
@@ -3160,6 +3160,11 @@
             Gets or sets the <see cref="T:Syroot.NintenTools.NSW.Bfres.Material"/> instance applied on the <see cref="P:Syroot.NintenTools.NSW.Bfres.Model.Shapes"/> to color their surface.
             </summary>
         </member>
+        <member name="F:Syroot.NintenTools.NSW.Bfres.Model.ShaderAssigns">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="P:Syroot.NintenTools.NSW.Bfres.Model.UserDataDict">
             <summary>
             Gets or sets customly attached <see cref="P:Syroot.NintenTools.NSW.Bfres.Model.UserData"/> names.
@@ -3713,7 +3718,7 @@
             rigidbodies (no skinning), 1 equal rigid skinning and 2 or more smooth skinning.
             </summary>
         </member>
-        <member name="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.VertexCount">
+        <member name="F:Syroot.NintenTools.NSW.Bfres.VertexBuffer.VertexCount">
             <summary>
             Gets the number of vertices stored by the <see cref="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.Buffers"/>. It is calculated from the size of the first
             <see cref="!:Buffer"/> in bytes divided by the <see cref="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.StrideArray"/>.
@@ -4850,6 +4855,16 @@
             Gets or sets <see cref="T:Syroot.NintenTools.NSW.Bfres.AnimCurve"/> instances animating properties of objects stored in this section.
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.BoneAnim.UserDataDict">
+            <summary>
+            Gets or sets customly attached <see cref="P:Syroot.NintenTools.NSW.Bfres.BoneAnim.UserData"/> names.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.BoneAnim.UserData">
+            <summary>
+            Gets or sets customly attached <see cref="P:Syroot.NintenTools.NSW.Bfres.BoneAnim.UserData"/> instances.
+            </summary>
+        </member>
         <member name="P:Syroot.NintenTools.NSW.Bfres.BoneAnim.BaseData">
             <summary>
             Gets or sets initial transformation values. Only stores specific transformations according to
@@ -5171,6 +5186,12 @@
         <member name="F:Syroot.NintenTools.NSW.Bfres.SkeletalAnimFlagsRotate.EulerXYZ">
             <summary>
             Euler XYZ, 3 components.
+            </summary>
+        </member>
+        <member name="T:Syroot.NintenTools.NSW.Bfres.StringCache">
+            <summary>
+            A cache of strings that are saved through raw IDs in place of the pointer field of a name offset.
+            This is used and required for TOTK models.
             </summary>
         </member>
         <member name="T:Syroot.NintenTools.NSW.Bfres.VisibilityAnim">

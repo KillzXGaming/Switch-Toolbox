@@ -1534,7 +1534,9 @@ namespace FirstPlugin
 
         //Max mip level will be set automatically unless overwritten
         //The tex format can be adjusted in the function if necessary. Will normally be set to format in settings
-        public void Replace(string FileName, uint MaxMipLevel = 0, uint ArrayIndex = 0, TEX_FORMAT DefaultFormat = TEX_FORMAT.BC1_UNORM_SRGB, SurfaceDim surfaceDim = SurfaceDim.Dim2D) 
+        public void Replace(string FileName, uint MaxMipLevel = 0, uint ArrayIndex = 0,
+            TEX_FORMAT DefaultFormat = TEX_FORMAT.BC1_UNORM_SRGB, SurfaceDim surfaceDim = SurfaceDim.Dim2D,
+            int alignment = 512) 
         {
             Console.WriteLine("surfaceDim" + surfaceDim);
 
@@ -1545,6 +1547,9 @@ namespace FirstPlugin
             BinaryTextureImporterList importer = new BinaryTextureImporterList();
 
             setting.SurfaceDim = surfaceDim;
+            setting.Alignment = alignment;
+            //Check if alignment is required for combining individual levels or not
+            setting.CombineMipLevel = alignment != 0 ? true : false;
 
             var ImageDataCached = new List<List<byte[]>>();
             if (Texture != null && Texture.TextureData != null)

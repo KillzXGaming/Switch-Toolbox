@@ -61,6 +61,8 @@
             this.chkBoxFlipUvsY = new Toolbox.Library.Forms.STCheckBox();
             this.chkBoxImportBones = new Toolbox.Library.Forms.STCheckBox();
             this.panel8 = new Toolbox.Library.Forms.STPanel();
+            this.stLabel4 = new Toolbox.Library.Forms.STLabel();
+            this.lodCountUD = new Toolbox.Library.Forms.NumericUpDownUint();
             this.chkCreateDummyLODs = new Toolbox.Library.Forms.STCheckBox();
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.gamePresetCB = new Toolbox.Library.Forms.STComboBox();
@@ -103,8 +105,6 @@
             this.stCheckBox1 = new Toolbox.Library.Forms.STCheckBox();
             this.chkMapOriginalMaterials = new Toolbox.Library.Forms.STCheckBox();
             this.ogSkinCountChkBox = new Toolbox.Library.Forms.STCheckBox();
-            this.lodCountUD = new Toolbox.Library.Forms.NumericUpDownUint();
-            this.stLabel4 = new Toolbox.Library.Forms.STLabel();
             this.contentContainer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -114,6 +114,7 @@
             this.panel6.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lodCountUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel9.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -121,7 +122,6 @@
             this.tabPageAdvanced.SuspendLayout();
             this.stPanel1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lodCountUD)).BeginInit();
             this.SuspendLayout();
             // 
             // contentContainer
@@ -492,6 +492,27 @@
             this.panel8.Size = new System.Drawing.Size(524, 341);
             this.panel8.TabIndex = 11;
             // 
+            // stLabel4
+            // 
+            this.stLabel4.AutoSize = true;
+            this.stLabel4.Location = new System.Drawing.Point(237, 291);
+            this.stLabel4.Name = "stLabel4";
+            this.stLabel4.Size = new System.Drawing.Size(63, 13);
+            this.stLabel4.TabIndex = 39;
+            this.stLabel4.Text = "LOD Count:";
+            // 
+            // lodCountUD
+            // 
+            this.lodCountUD.Location = new System.Drawing.Point(319, 289);
+            this.lodCountUD.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.lodCountUD.Name = "lodCountUD";
+            this.lodCountUD.Size = new System.Drawing.Size(120, 20);
+            this.lodCountUD.TabIndex = 38;
+            // 
             // chkCreateDummyLODs
             // 
             this.chkCreateDummyLODs.AutoSize = true;
@@ -582,6 +603,7 @@
             this.chkBoxRotNegative90Y.Text = "Rotate -90 degrees";
             this.chkBoxRotNegative90Y.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.chkBoxRotNegative90Y.UseVisualStyleBackColor = true;
+            this.chkBoxRotNegative90Y.CheckedChanged += new System.EventHandler(this.chkBoxSettings_CheckedChanged);
             // 
             // textBoxMaterialPath
             // 
@@ -814,7 +836,7 @@
             this.tabPageAdvanced.Location = new System.Drawing.Point(4, 25);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(530, 333);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(530, 347);
             this.tabPageAdvanced.TabIndex = 0;
             this.tabPageAdvanced.Text = "Advanced Settings";
             // 
@@ -831,7 +853,7 @@
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel1.Location = new System.Drawing.Point(3, 3);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(524, 327);
+            this.stPanel1.Size = new System.Drawing.Size(524, 341);
             this.stPanel1.TabIndex = 17;
             // 
             // tabPage1
@@ -848,7 +870,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(530, 333);
+            this.tabPage1.Size = new System.Drawing.Size(530, 347);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Inject Mode";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -959,27 +981,6 @@
             this.ogSkinCountChkBox.Text = "Keep Original Skin Count (can help crashes)";
             this.ogSkinCountChkBox.UseVisualStyleBackColor = true;
             // 
-            // lodCountUD
-            // 
-            this.lodCountUD.Location = new System.Drawing.Point(319, 289);
-            this.lodCountUD.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.lodCountUD.Name = "lodCountUD";
-            this.lodCountUD.Size = new System.Drawing.Size(120, 20);
-            this.lodCountUD.TabIndex = 38;
-            // 
-            // stLabel4
-            // 
-            this.stLabel4.AutoSize = true;
-            this.stLabel4.Location = new System.Drawing.Point(237, 291);
-            this.stLabel4.Name = "stLabel4";
-            this.stLabel4.Size = new System.Drawing.Size(63, 13);
-            this.stLabel4.TabIndex = 39;
-            this.stLabel4.Text = "LOD Count:";
-            // 
             // BfresModelImportSettings
             // 
             this.ClientSize = new System.Drawing.Size(547, 412);
@@ -1003,6 +1004,7 @@
             this.panel7.PerformLayout();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lodCountUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
@@ -1012,7 +1014,6 @@
             this.stPanel1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lodCountUD)).EndInit();
             this.ResumeLayout(false);
 
         }

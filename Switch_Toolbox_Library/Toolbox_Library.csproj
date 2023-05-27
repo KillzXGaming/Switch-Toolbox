@@ -439,6 +439,7 @@
     <Compile Include="IO\Colors\STColor.cs" />
     <Compile Include="IO\Colors\STColor8.cs" />
     <Compile Include="IO\SubStream.cs" />
+    <Compile Include="Maths\STMath.cs" />
     <Compile Include="OpenGL\GLShaderGeneric.cs" />
     <Compile Include="OpenGL\IPickableObject.cs" />
     <Compile Include="OpenGL\OpenGL2DEnums.cs" />
@@ -872,7 +873,6 @@
     <Compile Include="IO\Extensions\StreamReaderExtensions.cs" />
     <Compile Include="IO\Extensions\StringExtension.cs" />
     <Compile Include="IO\STStream.cs" />
-    <Compile Include="Maths\Math.cs" />
     <Compile Include="Plugin\GenericPluginLoader.cs" />
     <Compile Include="Forms\Animation\AnimationPanel.cs">
       <SubType>UserControl</SubType>
@@ -965,6 +965,7 @@
     <Compile Include="Util\ImageUtilty.cs" />
     <Compile Include="Util\OpenGLUtils.cs" />
     <Compile Include="Util\Util.cs" />
+    <Compile Include="Util\WebUtil.cs" />
     <Compile Include="XML\XmlDoc.cs" />
   </ItemGroup>
   <ItemGroup>

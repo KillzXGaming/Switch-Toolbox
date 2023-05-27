@@ -11,6 +11,7 @@ using Toolbox.Library.Animations;
 using Toolbox.Library.Forms;
 using SELib;
 using FirstPlugin.Forms;
+using static Toolbox.Library.Animations.Animation;
 
 namespace Bfres.Structs
 {
@@ -748,16 +749,16 @@ namespace Bfres.Structs
                     keyGroup.AnimDataOffset = bn.Curves[curve].AnimDataOffset;
                     switch (keyGroup.AnimDataOffset)
                     {
-                        case (int)TrackType.XPOS: bone.XPOS.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.YPOS: bone.YPOS.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.ZPOS: bone.ZPOS.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.XROT: bone.XROT.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.YROT: bone.YROT.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.ZROT: bone.ZROT.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.WROT: bone.WROT.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.XSCA: bone.XSCA.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.YSCA: bone.YSCA.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.ZSCA: bone.ZSCA.Keys.AddRange(keyGroup.Keys); break;
+                        case (int)TrackType.XPOS: bone.XPOS = keyGroup; break;
+                        case (int)TrackType.YPOS: bone.YPOS = keyGroup; break;
+                        case (int)TrackType.ZPOS: bone.ZPOS = keyGroup; break;
+                        case (int)TrackType.XROT: bone.XROT = keyGroup; break;
+                        case (int)TrackType.YROT: bone.YROT = keyGroup; break;
+                        case (int)TrackType.ZROT: bone.ZROT = keyGroup; break;
+                        case (int)TrackType.WROT: bone.WROT = keyGroup; break;
+                        case (int)TrackType.XSCA: bone.XSCA = keyGroup; break;
+                        case (int)TrackType.YSCA: bone.YSCA = keyGroup; break;
+                        case (int)TrackType.ZSCA: bone.ZSCA = keyGroup; break;
                         default: throw new Exception("Unknown Anim Offset " + keyGroup.AnimDataOffset);
                     }
                 }
@@ -811,16 +812,16 @@ namespace Bfres.Structs
                     keyGroup.AnimDataOffset = bn.Curves[curve].AnimDataOffset;
                     switch (keyGroup.AnimDataOffset)
                     {
-                        case (int)TrackType.XPOS: bone.XPOS.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.YPOS: bone.YPOS.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.ZPOS: bone.ZPOS.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.XROT: bone.XROT.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.YROT: bone.YROT.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.ZROT: bone.ZROT.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.WROT: bone.WROT.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.XSCA: bone.XSCA.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.YSCA: bone.YSCA.Keys.AddRange(keyGroup.Keys); break;
-                        case (int)TrackType.ZSCA: bone.ZSCA.Keys.AddRange(keyGroup.Keys); break;
+                        case (int)TrackType.XPOS: bone.XPOS = keyGroup; break;
+                        case (int)TrackType.YPOS: bone.YPOS = keyGroup; break;
+                        case (int)TrackType.ZPOS: bone.ZPOS = keyGroup; break;
+                        case (int)TrackType.XROT: bone.XROT = keyGroup; break;
+                        case (int)TrackType.YROT: bone.YROT = keyGroup; break;
+                        case (int)TrackType.ZROT: bone.ZROT = keyGroup; break;
+                        case (int)TrackType.WROT: bone.WROT = keyGroup; break;
+                        case (int)TrackType.XSCA: bone.XSCA = keyGroup; break;
+                        case (int)TrackType.YSCA: bone.YSCA = keyGroup; break;
+                        case (int)TrackType.ZSCA: bone.ZSCA = keyGroup; break;
                         default: throw new Exception("Unknown Anim Offset " + keyGroup.AnimDataOffset);
                     }
                 }

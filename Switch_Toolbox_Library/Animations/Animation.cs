@@ -299,46 +299,56 @@ namespace Toolbox.Library.Animations
                 return false;
             }
 
-
-            int LastFound = 0;
-            float LastFrame;
-            public float GetValue(float frame)
+            private float GetWrapFrame(float frame)
             {
-                if (Keys.Count == 0)
-                    return 0;
+                var lastFrame = Keys.Last().Frame;
+                if (frame < 0 || lastFrame < 0)
+                    return frame;
 
-                float startFrame = Keys.First().Frame;
+                return frame;
+            }
 
+            public virtual float GetValue(float frame, float startFrame = 0)
+            {
+                if (Keys.Count == 0) return 0;
+                if (Keys.Count == 1) return Keys[0].Value;
                 KeyFrame LK = Keys.First();
                 KeyFrame RK = Keys.Last();
 
+                float Frame = GetWrapFrame(frame - startFrame);
                 foreach (KeyFrame keyFrame in Keys)
                 {
-                    if (keyFrame.Frame <= frame) LK = keyFrame;
-                    if (keyFrame.Frame >= frame && keyFrame.Frame < RK.Frame) RK = keyFrame;
+                    if (keyFrame.Frame <= Frame) LK = keyFrame;
+                    if (keyFrame.Frame >= Frame && keyFrame.Frame < RK.Frame) RK = keyFrame;
                 }
+                if (LK == RK)
+                    return LK.Value;
 
-                if (LK.Frame != RK.Frame)
+                return GetInterpolatedValue(Frame, LK, RK);
+            }
+
+            private float GetInterpolatedValue(float Frame, KeyFrame LK, KeyFrame RK)
+            {
+                float FrameDiff = Frame - LK.Frame;
+                float Weight = FrameDiff / (RK.Frame - LK.Frame);
+
+                switch (InterpolationType)
                 {
-                    //  float FrameDiff = frame - LK.Frame;
-                    //  float Weight = 1.0f / (RK.Frame - LK.Frame);
-                    //  float Weight = FrameDiff / (RK.Frame - LK.Frame);
+                    case InterpolationType.CONSTANT: return LK.Value;
+                    case InterpolationType.STEP: return LK.Value;
+                    case InterpolationType.LINEAR: return InterpolationHelper.Lerp(LK.Value, RK.Value, Weight);
+                    case InterpolationType.HERMITE:
+                        float length = RK.Frame - LK.Frame;
 
-                    float FrameDiff = frame - LK.Frame;
-                    float Weight = FrameDiff / (RK.Frame - LK.Frame);
-
-                    Console.WriteLine($"frame diff {FrameDiff} frame {frame} LK {LK.Frame} RK {RK} ratio {Weight}");
-
-                    switch (InterpolationType)
-                    {
-                        case InterpolationType.CONSTANT: return LK.Value;
-                        case InterpolationType.STEP: return LK.Value;
-                        case InterpolationType.LINEAR: return InterpolationHelper.Lerp(LK.Value, RK.Value, Weight);
-                        case InterpolationType.HERMITE:
-                            float val = Hermite(frame, LK.Frame, RK.Frame, LK.In, LK.Out != -1 ? LK.Out : RK.In, LK.Value, RK.Value);
-                            return val;
-                    }
+                        return InterpolationHelper.HermiteInterpolate(Frame,
+                         LK.Frame,
+                         RK.Frame,
+                         LK.Value,
+                         RK.Value,
+                         LK.Out * length,
+                         RK.In * length);
                 }
+
                 return LK.Value;
             }
 
@@ -508,7 +518,7 @@ namespace Toolbox.Library.Animations
                         float x = node.XROT.HasAnimation() ? node.XROT.GetValue(Frame) : b.EulerRotation.X;
                         float y = node.YROT.HasAnimation() ? node.YROT.GetValue(Frame) : b.EulerRotation.Y;
                         float z = node.ZROT.HasAnimation() ? node.ZROT.GetValue(Frame) : b.EulerRotation.Z;
-                        b.rot = EulerToQuat(z, y, x);
+                        b.rot = STMath.FromEulerAngles(new Vector3(x, y, z));
                     }
                 }
             }
@@ -558,16 +568,37 @@ namespace Toolbox.Library.Animations
            // return (((cf0 * t + cf1) * t + cf2) * t + cf3);
         }
 
-        public static float Hermite(float frame, float frame1, float frame2, float outSlope, float inSlope, float val1, float val2)
+        public static float HermiteInterpolate(float frame, float frame1, float frame2,
+        float inSlope, float outSlope, float p0, float p1)
         {
-            if (frame == frame1) return val1;
-            if (frame == frame2) return val2;
+            if (frame == frame1) return p0;
+            if (frame == frame2) return p1;
 
-            float distance = frame - frame1;
-            float invDuration = 1f / (frame2 - frame1);
-            float t = distance * invDuration;
-            float t1 = t - 1f;
-            return (val1 + ((((val1 - val2) * ((2f * t) - 3f)) * t) * t)) + ((distance * t1) * ((t1 * outSlope) + (t * inSlope)));
+            float t = (frame - frame1) / (frame2 - frame1);
+            return GetPointHermite(p0, p1, outSlope, inSlope, t);
+        }
+
+        private static float GetPointHermite(float p0, float p1, float s0, float s1, float t)
+        {
+            float cf0 = (p0 * 2) + (p1 * -2) + (s0 * 1) + (s1 * 1);
+            float cf1 = (p0 * -3) + (p1 * 3) + (s0 * -2) + (s1 * -1);
+            float cf2 = (p0 * 0) + (p1 * 0) + (s0 * 1) + (s1 * 0);
+            float cf3 = (p0 * 1) + (p1 * 0) + (s0 * 0) + (s1 * 0);
+            return GetPointCubic(cf0, cf1, cf2, cf3, t);
+        }
+
+        private static float GetPointBezier(float p0, float p1, float p2, float p3, float t)
+        {
+            float cf0 = (p0 * -1) + (p1 * 3) + (p2 * -3) + (p3 * 1);
+            float cf1 = (p0 * 3) + (p1 * -6) + (p2 * 3) + (p3 * 0);
+            float cf2 = (p0 * -3) + (p1 * 3) + (p2 * 0) + (p3 * 0);
+            float cf3 = (p0 * 1) + (p1 * 0) + (p2 * 0) + (p3 * 0);
+            return GetPointCubic(cf0, cf1, cf2, cf3, t);
+        }
+
+        private static float GetPointCubic(float cf0, float cf1, float cf2, float cf3, float t)
+        {
+            return (((cf0 * t + cf1) * t + cf2) * t + cf3);
         }
 
         public static float Lerp(float av, float bv, float v0, float v1, float t)

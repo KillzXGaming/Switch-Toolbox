@@ -14,6 +14,8 @@ namespace FirstPlugin.Forms
 {
     public partial class ShaderOptionsEditor : UserControl
     {
+        private bool FilterDefaults => chkFilterDefaults.Checked;
+
         public ShaderOptionsEditor()
         {
             InitializeComponent();
@@ -47,7 +49,12 @@ namespace FirstPlugin.Forms
             shaderOptionsListView.ForeColor = FormThemes.BaseTheme.FormForeColor;
 
             foreach (var option in material.shaderassign.options)
+            {
+                if (FilterDefaults && option.Value == "<Default Value>")
+                    continue;
+
                 options.Add(new Options() { Name = option.Key, Value = option.Value });
+            }
 
             shaderOptionsListView.SetObjects(options);
             options.Clear();
@@ -139,6 +146,11 @@ namespace FirstPlugin.Forms
                     shaderOptionsListView.RemoveObject(option);
                 }
             }
+        }
+
+        private void chkFilterDefaults_CheckedChanged(object sender, EventArgs e)
+        {
+            InitializeShaderOptionList(material);
         }
     }
 }

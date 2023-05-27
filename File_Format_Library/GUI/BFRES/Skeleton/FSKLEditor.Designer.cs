@@ -41,6 +41,7 @@
             this.stLabel5 = new Toolbox.Library.Forms.STLabel();
             this.stLabel4 = new Toolbox.Library.Forms.STLabel();
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.stFlowLayoutPanel1.SuspendLayout();
             this.stDropDownPanel1.SuspendLayout();
             this.stDropDownPanel2.SuspendLayout();
@@ -51,7 +52,10 @@
             this.stFlowLayoutPanel1.AutoScroll = true;
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel1);
             this.stFlowLayoutPanel1.Controls.Add(this.stDropDownPanel2);
+            this.stFlowLayoutPanel1.Controls.Add(this.textBox1);
             this.stFlowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stFlowLayoutPanel1.FixedHeight = false;
+            this.stFlowLayoutPanel1.FixedWidth = true;
             this.stFlowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.stFlowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.stFlowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -75,8 +79,8 @@
             this.stDropDownPanel1.PanelName = "Skeleton Info";
             this.stDropDownPanel1.PanelValueName = "";
             this.stDropDownPanel1.SetIcon = null;
-            this.stDropDownPanel1.SetIconAlphaColor = System.Drawing.Color.Empty;
-            this.stDropDownPanel1.SetIconColor = System.Drawing.Color.Empty;
+            this.stDropDownPanel1.SetIconAlphaColor = System.Drawing.Color.White;
+            this.stDropDownPanel1.SetIconColor = System.Drawing.Color.White;
             this.stDropDownPanel1.Size = new System.Drawing.Size(434, 108);
             this.stDropDownPanel1.TabIndex = 0;
             // 
@@ -86,6 +90,7 @@
             this.scalingModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.scalingModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.scalingModeCB.FormattingEnabled = true;
+            this.scalingModeCB.IsReadOnly = false;
             this.scalingModeCB.Location = new System.Drawing.Point(114, 64);
             this.scalingModeCB.Name = "scalingModeCB";
             this.scalingModeCB.Size = new System.Drawing.Size(172, 21);
@@ -107,6 +112,7 @@
             this.rotationModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.rotationModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.rotationModeCB.FormattingEnabled = true;
+            this.rotationModeCB.IsReadOnly = false;
             this.rotationModeCB.Location = new System.Drawing.Point(114, 37);
             this.rotationModeCB.Name = "rotationModeCB";
             this.rotationModeCB.Size = new System.Drawing.Size(172, 21);
@@ -139,8 +145,8 @@
             this.stDropDownPanel2.PanelName = "Matricies";
             this.stDropDownPanel2.PanelValueName = "";
             this.stDropDownPanel2.SetIcon = null;
-            this.stDropDownPanel2.SetIconAlphaColor = System.Drawing.Color.Empty;
-            this.stDropDownPanel2.SetIconColor = System.Drawing.Color.Empty;
+            this.stDropDownPanel2.SetIconAlphaColor = System.Drawing.Color.White;
+            this.stDropDownPanel2.SetIconColor = System.Drawing.Color.White;
             this.stDropDownPanel2.Size = new System.Drawing.Size(434, 182);
             this.stDropDownPanel2.TabIndex = 5;
             // 
@@ -200,6 +206,19 @@
             this.stLabel3.TabIndex = 5;
             this.stLabel3.Text = "Smooth Matrix Indices";
             // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(3, 293);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(428, 332);
+            this.textBox1.TabIndex = 13;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // FSKLEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -209,6 +228,7 @@
             this.Name = "FSKLEditor";
             this.Size = new System.Drawing.Size(434, 628);
             this.stFlowLayoutPanel1.ResumeLayout(false);
+            this.stFlowLayoutPanel1.PerformLayout();
             this.stDropDownPanel1.ResumeLayout(false);
             this.stDropDownPanel1.PerformLayout();
             this.stDropDownPanel2.ResumeLayout(false);
@@ -232,5 +252,6 @@
         private Toolbox.Library.Forms.STLabel stLabel5;
         private Toolbox.Library.Forms.STLabel stLabel4;
         private Toolbox.Library.Forms.STLabel stLabel3;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

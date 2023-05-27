@@ -22,6 +22,8 @@ namespace FirstPlugin
         {
         }
 
+        public bool CombineMipLevel = true;
+        public int Alignment = 512;
         public bool GammaFix = false;
         public string TexName;
         public AccessFlags AccessFlags = AccessFlags.Texture;
@@ -279,17 +281,20 @@ namespace FirstPlugin
 
             for (int i = 0; i < arrayFaces.Count; i++)
             {
-                List<byte[]> mipmaps = SwizzleSurfaceMipMaps(tex, arrayFaces[i], tex.MipCount);
+                List<byte[]> mipmaps = SwizzleSurfaceMipMaps(tex, arrayFaces[i], tex.MipCount, settings.Alignment);
                 tex.TextureData.Add(mipmaps);
 
                 //Combine mip map data
-                byte[] combinedMips = Utils.CombineByteArray(mipmaps.ToArray());
-                tex.TextureData[i][0] = combinedMips;
+                if (settings.Alignment != 1)
+                {
+                    byte[] combinedMips = Utils.CombineByteArray(mipmaps.ToArray());
+                    tex.TextureData[i][0] = combinedMips;
+                }
             }
 
             return tex;
         }
-        public static List<byte[]> SwizzleSurfaceMipMaps(Texture tex, byte[] data, uint MipCount)
+        public static List<byte[]> SwizzleSurfaceMipMaps(Texture tex, byte[] data, uint MipCount, int alignment = 512)
         {
             var TexFormat = TextureData.ConvertFormat(tex.Format);
 
@@ -319,7 +324,7 @@ namespace FirstPlugin
             {
                 blockHeight = TegraX1Swizzle.GetBlockHeight(DIV_ROUND_UP(tex.Height, blkHeight));
                 tex.BlockHeightLog2 = (uint)Convert.ToString(blockHeight, 2).Length - 1;
-                tex.Alignment = 512;
+                tex.Alignment = alignment;
                 tex.ReadTextureLayout = 1;
 
                 linesPerBlockHeight = blockHeight * 8;
@@ -346,6 +351,9 @@ namespace FirstPlugin
 
 
                 byte[] AlignedData = new byte[(TegraX1Swizzle.round_up(SurfaceSize, (uint)tex.Alignment) - SurfaceSize)];
+                if (tex.Alignment == 1)
+                    AlignedData = new byte[0];
+
                 SurfaceSize += (uint)AlignedData.Length;
 
               //  Console.WriteLine("SurfaceSize Aligned " + AlignedData);
@@ -372,8 +380,10 @@ namespace FirstPlugin
                     SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
                 }
 
-                byte[] SwizzledData = TegraX1Swizzle.swizzle(width_, height_, depth_, blkWidth, blkHeight, blkDepth, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), data_);
+                byte[] SwizzledData = TegraX1Swizzle.swizzle(width_, height_, depth_, blkWidth, blkHeight, blkDepth, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), data_, size);
                 mipmaps.Add(AlignedData.Concat(SwizzledData).ToArray());
+
+                Console.WriteLine("SwizzledData " + SwizzledData.Length);
             }
             tex.ImageSize = SurfaceSize;
 

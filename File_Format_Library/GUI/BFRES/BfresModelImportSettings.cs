@@ -492,10 +492,12 @@ namespace FirstPlugin
 
             int assimpIndex = assimpMeshListView.SelectedIndices[0];
 
-            if (objectNameTB.Text == originalMeshListView.Items[assimpIndex].Text)
-                objectNameTB.BackColor = System.Drawing.Color.Green;
-            else
-                objectNameTB.BackColor = System.Drawing.Color.DarkRed;
+            objectNameTB.BackColor = System.Drawing.Color.DarkRed;
+            foreach (ListViewItem item in originalMeshListView.Items)
+            {
+                if (objectNameTB.Text == item.Text)
+                    objectNameTB.BackColor = System.Drawing.Color.Green;
+            }
 
             NewMeshlist[assimpIndex].ObjectName = objectNameTB.Text;
         }

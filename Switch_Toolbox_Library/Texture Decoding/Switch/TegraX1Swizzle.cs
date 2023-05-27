@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Toolbox.Library
 {
@@ -104,6 +105,37 @@ namespace Toolbox.Library
             return GetImageData(texture, ImageData, ArrayLevel, MipLevel, DepthLevel, BlockHeightLog2, target, LinearTileMode);
         }
 
+        public static byte[] GetDirectImageData(STGenericTexture texture, byte[] ImageData, int mipLevel, int target = 1, bool LinearTileMode = false)
+        {
+            uint blkWidth = STGenericTexture.GetBlockWidth(texture.Format);
+            uint blkHeight = STGenericTexture.GetBlockHeight(texture.Format);
+            uint blkDepth = STGenericTexture.GetBlockDepth(texture.Format);
+            var blockHeightMip0 = GetBlockHeight(DIV_ROUND_UP(texture.Height, blkHeight));
+            uint bpp = STGenericTexture.GetBytesPerPixel(texture.Format);
+            uint TileMode = LinearTileMode ? 1u : 0u;
+
+            uint width = Math.Max(1, texture.Width >> mipLevel);
+            uint height = Math.Max(1, texture.Height >> mipLevel);
+            uint depth = Math.Max(1, texture.Depth >> mipLevel);
+            uint heightInBlocks = DIV_ROUND_UP(height, blkHeight);
+            // tegra_swizzle only allows block heights supported by the TRM (1,2,4,8,16,32).
+            var mipBlockHeightLog2 = (int)Math.Log(GetMipBlockHeight(heightInBlocks, blockHeightMip0), 2);
+
+            try
+            {
+                byte[] result = deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, mipBlockHeightLog2, ImageData);
+                return result;
+            }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show($"Failed to swizzle texture {texture.Text}!");
+                Console.WriteLine(e);
+
+                return new byte[0];
+            }
+        }
+
+
         public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, int DepthLevel, uint BlockHeightLog2, int target = 1, bool LinearTileMode = false)
         {
             uint bpp = STGenericTexture.GetBytesPerPixel(texture.Format);
@@ -179,7 +211,7 @@ namespace Toolbox.Library
         }
 
         private static unsafe byte[] SwizzleDeswizzleBlockLinear(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth,
-            uint bpp, int blockHeightLog2, byte[] data, bool deswizzle)
+            uint bpp, int blockHeightLog2, byte[] data, bool deswizzle, uint size, uint alignment = 512)
         {
             // This function expects the surface dimensions in blocks rather than pixels for block compressed formats.
             // This ensures the bytes per pixel parameter is used correctly.
@@ -245,17 +277,17 @@ namespace Toolbox.Library
         public static byte[] deswizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
         {
             if (tileMode == 1)
-                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, true);
+                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, true, 0);
             else
-                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, true);
+                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, true, 0);
         }
 
-        public static byte[] swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
+        public static byte[] swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data, uint size)
         {
             if (tileMode == 1)
-                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, false);
+                return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, false, size);
             else
-                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, false);
+                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, false, size);
         }
 
 
@@ -283,7 +315,7 @@ namespace Toolbox.Library
             return x + 1;
         }
 
-        private static byte[] SwizzlePitchLinear(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, int blockHeightLog2, byte[] data, bool deswizzle)
+        private static byte[] SwizzlePitchLinear(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, int blockHeightLog2, byte[] data, bool deswizzle, uint size)
         {
             // TODO: Investigate doing this more efficiently in Rust.
             width = DIV_ROUND_UP(width, blkWidth);

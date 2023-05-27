@@ -244,7 +244,7 @@ namespace FirstPlugin
                         writer.Write((byte)mip);
                         writer.Write((byte)1);
 
-                        var surface = Zstb.SCompress(ImageList[array][mip]);
+                        var surface = Zstb.SCompress(ImageList[array][mip], 20);
                         surfaceSizes.Add((uint)surface.Length);
 
                         surfaceData.Add(surface);
@@ -293,7 +293,7 @@ namespace FirstPlugin
         {
             //Replace the data using an instance of a switch texture
             var tex = new TextureData();
-            tex.Replace(FileName, MipCount, 0, Format);
+            tex.Replace(FileName, MipCount, 0, Format, Syroot.NintenTools.NSW.Bntx.GFX.SurfaceDim.Dim2D, 1);
 
             //Get swappable array level
             ImageEditorBase editor = (ImageEditorBase)LibraryGUI.GetActiveContent(typeof(ImageEditorBase));
@@ -310,6 +310,9 @@ namespace FirstPlugin
             if (tex.Texture == null)
                 return;
 
+            for (int i = 0; i < ImageList[0].Count; i++)
+                Console.WriteLine($"SIZE 1 mip{i} {ImageList[0][i].Length}");
+
             //Ensure the format matches if image requires multiple surface levels
             if (ImageList.Count > 1 && this.Format != tex.Format)
                 throw new Exception($"Imported texture must use the original format for surface injecting! Expected {this.Format} but got {tex.Format}! If you need ASTC, use an astc encoder with .astc file format.");
@@ -325,6 +328,10 @@ namespace FirstPlugin
                 foreach (var surface in tex.Texture.TextureData)
                     ImageList.Add(surface);
             }
+
+            for (int i = 0; i < ImageList[0].Count; i++)
+                Console.WriteLine($"SIZE 2 mip{i} {ImageList[0][i].Length}");
+
 
             Width = tex.Texture.Width;
             Height = tex.Texture.Height;
@@ -363,6 +370,7 @@ namespace FirstPlugin
             { 0x203, TEX_FORMAT.BC1_UNORM_SRGB },
             { 0x302, TEX_FORMAT.BC1_UNORM },
             { 0x606, TEX_FORMAT.BC4_UNORM },
+            { 0x607, TEX_FORMAT.BC4_UNORM },
             { 0x702, TEX_FORMAT.BC5_UNORM },
             { 0x703, TEX_FORMAT.BC5_UNORM },
             { 0x707, TEX_FORMAT.BC5_UNORM },

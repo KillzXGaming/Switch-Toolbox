@@ -23,6 +23,9 @@ namespace FirstPlugin.Forms
 
             BackColor = FormThemes.BaseTheme.FormBackColor;
             ForeColor = FormThemes.BaseTheme.FormForeColor;
+
+            textBox1.BackColor = FormThemes.BaseTheme.ListViewBackColor;
+            textBox1.ForeColor = FormThemes.BaseTheme.FormForeColor;
         }
 
         public FSKL activeSkeleton;
@@ -59,6 +62,12 @@ namespace FirstPlugin.Forms
 
                 rotationModeCB.SelectedItem = fskl.node.Skeleton.FlagsRotation;
                 scalingModeCB.SelectedItem = fskl.node.Skeleton.FlagsScaling;
+            }
+
+            if (fskl.node.Skeleton != null && fskl.node.Skeleton.userIndices != null)
+            {
+                var indices = string.Join(",", fskl.node.Skeleton.userIndices);
+                this.textBox1.Text = indices;
             }
 
             IsLoaded = true;
@@ -128,6 +137,24 @@ namespace FirstPlugin.Forms
                 activeSkeleton.update();
             }
             LibraryGUI.UpdateViewport();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (activeSkeleton.node.Skeleton != null)
+            {
+                List<ushort> indices = new List<ushort>();
+
+                foreach (var line in textBox1.Text.Split(','))
+                {
+                    if (string.IsNullOrEmpty(line))
+                        continue;
+
+                    if (ushort.TryParse(line, out ushort id))
+                        indices.Add(id);
+                }
+                activeSkeleton.node.Skeleton.userIndices = indices.ToArray();
+            }
         }
     }
 }

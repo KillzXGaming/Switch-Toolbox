@@ -821,8 +821,8 @@ namespace FirstPlugin
         {
             if (mat.shaderassign.options.ContainsKey(propertyName))
             {
-                float value = float.Parse(mat.shaderassign.options[propertyName]);
-                shader.SetFloat(propertyName, value);
+                //float value = float.Parse(mat.shaderassign.options[propertyName]);
+                //shader.SetFloat(propertyName, value);
             }
 
             Dictionary<string, BfresShaderParam> matParams = mat.matparam;

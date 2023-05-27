@@ -69,7 +69,7 @@ namespace Toolbox.Library.Animations
 					}
 				}
 
-				return Animation.Hermite (frame+1, f1.input, f2.input, weighted ? f1.t1 : 0, weighted ? f2.t1 : 0, f1.output, f2.output);
+				return Animation.HermiteInterpolate (frame+1, f1.input, f2.input, weighted ? f1.t1 : 0, weighted ? f2.t1 : 0, f1.output, f2.output);
 			}
 		}
 

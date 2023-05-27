@@ -431,7 +431,7 @@ namespace Bfres.Structs
                     {
                         int index = (int)SamplerInfo.CurveIndex;
 
-                        Animation.KeyGroup keyGroup = CurveHelper.CreateTrack(matanim.Curves[index]);
+                        Animation.KeyGroup keyGroup = CurveHelper.CreateTrack(matanim.Curves[index], true);
 
                         sampler.AnimDataOffset = matanim.Curves[index].AnimDataOffset;
                         sampler.Keys = keyGroup.Keys;
