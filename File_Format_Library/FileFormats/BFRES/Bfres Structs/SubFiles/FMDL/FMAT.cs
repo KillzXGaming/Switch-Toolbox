@@ -89,24 +89,27 @@ namespace Bfres.Structs
 
         }
     }
-    public class FMAT : STGenericMaterial
+    public class FMAT : STGenericMaterial, IContextMenuNode
     {
         public FMAT()
         {
             Checked = true;
             ImageKey = "material";
             SelectedImageKey = "material";
+        }
 
-            ContextMenuStrip = new STContextMenuStrip();
+        public ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> Items = new List<ToolStripItem>();
+            Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
+            Items.Add(new ToolStripMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R));
+            Items.Add(new ToolStripSeparator());
+            Items.Add(new ToolStripMenuItem("Copy", null, CopyAction, Keys.Control | Keys.C));
+            Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.N));
+            Items.Add(new ToolStripSeparator());
+            Items.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.Delete));
 
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Export", null, ExportAction, Keys.Control | Keys.E));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Replace", null, ReplaceAction, Keys.Control | Keys.R));
-
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Copy", null, CopyAction, Keys.Control | Keys.C));
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Rename", null, RenameAction, Keys.Control | Keys.N));
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            ContextMenuStrip.Items.Add(new ToolStripMenuItem("Delete", null, DeleteAction, Keys.Control | Keys.N));
+            return Items.ToArray();
         }
 
         protected void ExportAction(object sender, EventArgs args) { Export(); }
