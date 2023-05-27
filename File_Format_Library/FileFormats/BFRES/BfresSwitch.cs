@@ -326,17 +326,25 @@ namespace FirstPlugin
 
                 if (vec4w0.Length > 0)
                 {
-                    v.boneWeights.Add(vec4w0[i].X);
-                    v.boneWeights.Add(vec4w0[i].Y);
-                    v.boneWeights.Add(vec4w0[i].Z);
-                    v.boneWeights.Add(vec4w0[i].W);
+                    if (fshp.VertexSkinCount > 0)
+                        v.boneWeights.Add(vec4w0[i].X);
+                    if (fshp.VertexSkinCount > 1)
+                        v.boneWeights.Add(vec4w0[i].Y);
+                    if (fshp.VertexSkinCount > 2)
+                        v.boneWeights.Add(vec4w0[i].Z);
+                    if (fshp.VertexSkinCount > 3)
+                        v.boneWeights.Add(vec4w0[i].W);
                 }
                 if (vec4i0.Length > 0)
                 {
-                    v.boneIds.Add((int)vec4i0[i].X);
-                    v.boneIds.Add((int)vec4i0[i].Y);
-                    v.boneIds.Add((int)vec4i0[i].Z);
-                    v.boneIds.Add((int)vec4i0[i].W);
+                    if (fshp.VertexSkinCount > 0)
+                        v.boneIds.Add((int)vec4i0[i].X);
+                    if (fshp.VertexSkinCount > 1)
+                        v.boneIds.Add((int)vec4i0[i].Y);
+                    if (fshp.VertexSkinCount > 2)
+                        v.boneIds.Add((int)vec4i0[i].Z);
+                    if (fshp.VertexSkinCount > 3)
+                        v.boneIds.Add((int)vec4i0[i].W);
                 }
 
                 if (vec4t0.Length > 0)
