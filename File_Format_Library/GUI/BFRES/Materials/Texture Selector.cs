@@ -45,6 +45,8 @@ namespace FirstPlugin
                     foreach (TextureData tex in bntx.Textures.Values)
                         listView1.Items.Add(tex.Text, tex.Text, 0);
                 }
+                foreach (var tex in PluginRuntime.TextureCache.Values)
+                    listView1.Items.Add(tex.Text, tex.Text, 0);
             }
 
 
@@ -90,7 +92,10 @@ namespace FirstPlugin
                         if (bntx.Textures.ContainsKey(TexName))
                             DisplayTexture(bntx.Textures[TexName]);
                     }
-                }  
+
+                    if (PluginRuntime.TextureCache.ContainsKey(TexName))
+                        DisplayTexture(PluginRuntime.TextureCache[TexName]);
+                }
             }
         }
         private void DisplayTexture(STGenericTexture texData)

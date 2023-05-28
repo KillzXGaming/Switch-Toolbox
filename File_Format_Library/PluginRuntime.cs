@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bfres.Structs;
+using Toolbox.Library;
 
 namespace FirstPlugin
 {
@@ -23,6 +24,9 @@ namespace FirstPlugin
         }
 
         public static bool UseSimpleBfresEditor = false;
+
+        //I really don't recall why I never just used a global texture cache 
+        public static Dictionary<string, STGenericTexture> TextureCache = new Dictionary<string, STGenericTexture>();
 
         public static Dictionary<string, BFLIM> bflimTextures = new Dictionary<string, BFLIM>();
         public static List<BNTX> bntxContainers = new List<BNTX>();

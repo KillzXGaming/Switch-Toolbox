@@ -436,6 +436,22 @@ namespace FirstPlugin
                         return BindBNTX(bntx, tex, shader, activeTex);
                     }
                 }
+
+                foreach (var bntx in PluginRuntime.bntxContainers)
+                {
+                    if (bntx.Textures.ContainsKey(activeTex))
+                    {
+                        return BindBNTX(bntx, tex, shader, activeTex);
+                    }
+                }
+                if (PluginRuntime.TextureCache.ContainsKey(activeTex))
+                {
+                    var t = PluginRuntime.TextureCache[activeTex];
+                    if (t.RenderableTex == null || !t.RenderableTex.GLInitialized)
+                        t.LoadOpenGLTexture();
+
+                    BindGLTexture(tex, shader, t);
+                }
             }
 
             return true;

@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AampLibraryCSharp.IO;
 using Syroot.NintenTools.NSW.Bfres;
 using Toolbox.Library;
+using Toolbox.Library.IO;
 using ZstdSharp.Unsafe;
 
 namespace FirstPlugin
@@ -16,6 +16,8 @@ namespace FirstPlugin
     internal class MeshCodec
     {
         static ResFile ExternalStringBinary;
+
+        List<TXTG> TextureList = new List<TXTG>();
 
         public static bool IsMeshCodec(Stream stream)
         {
@@ -53,6 +55,38 @@ namespace FirstPlugin
             }
 
             LoadExternalStrings();
+        }
+
+        public void Dispose()
+        {
+            foreach (var tex in this.TextureList)
+            {
+                tex.Dispose();
+            }
+            TextureList.Clear();
+        }
+
+        public void PrepareTexToGo(ResFile resFile)
+        {
+            var materials = resFile.Models.SelectMany(x => x.Materials);
+
+            List<string> textureList = materials.SelectMany(x => x.TextureRefs).Distinct().ToList();
+            foreach (var tex in textureList)
+            {
+                string path = Path.Combine(Runtime.TotkGamePath, "TexToGo", $"{tex}.txtg");
+                if (File.Exists(path))
+                {
+                    try
+                    {
+                        //File will be loaded and cached from TXTG load method
+                        TextureList.Add((TXTG)STFileLoader.OpenFileFormat(path));
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
         }
 
         static void LoadExternalStrings()

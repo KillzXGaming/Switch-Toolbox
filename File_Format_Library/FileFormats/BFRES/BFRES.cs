@@ -20,7 +20,7 @@ using OpenTK;
 
 namespace FirstPlugin
 {
-    public class BFRES : BFRESWrapper, IFileFormat, ITextureContainer, IExportableModelContainer
+    public class BFRES : BFRESWrapper, IFileFormat, ITextureContainer, IExportableModelContainer, IDisposable
     {
         public FileType FileType { get; set; } = FileType.Resource;
 
@@ -786,6 +786,11 @@ namespace FirstPlugin
         }
 
         public BFRESRenderBase BFRESRender;
+
+        private MeshCodec MeshCodec;
+
+        public void Dispose() { MeshCodec.Dispose(); }
+
         public void Load(System.IO.Stream stream)
         {
             CanSave = true;
@@ -802,7 +807,10 @@ namespace FirstPlugin
             BFRESRender.ModelTransform = MarioCostumeEditor.SetTransform(FileName);
             BFRESRender.ResFileNode = this;
 
-            if (MeshCodec.IsMeshCodec(stream))
+            MeshCodec = new MeshCodec();
+
+            bool isMeshCodec = MeshCodec.IsMeshCodec(stream);
+            if (isMeshCodec)
                 MeshCodec.Prepare();
 
             if (IsWiiU)
@@ -825,6 +833,9 @@ namespace FirstPlugin
                     BFRESRender.ResFileNode = this;*/
                 }
             }
+
+            if (isMeshCodec)
+                MeshCodec.PrepareTexToGo(resFile);
 
             DrawableContainer.Drawables.Add(BFRESRender);
 

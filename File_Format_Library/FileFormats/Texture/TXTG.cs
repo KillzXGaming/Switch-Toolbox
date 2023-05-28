@@ -18,7 +18,7 @@ using VGAudio.Utilities;
 
 namespace FirstPlugin
 {
-    public class TXTG : STGenericTexture, IFileFormat, ILeaveOpenOnLoad
+    public class TXTG : STGenericTexture, IFileFormat, ILeaveOpenOnLoad, IDisposable
     {
         public FileType FileType { get; set; } = FileType.Image;
 
@@ -144,13 +144,21 @@ namespace FirstPlugin
 
         public void Load(Stream stream)
         {
-            Text = FileName;
             Tag = this;
 
             CanReplace = true;
 
             ImageKey = "Texture";
             SelectedImageKey = "Texture";
+
+            string name = Path.GetFileNameWithoutExtension(FileName);
+            Text = name;
+
+            //cache for loading file 
+            if (PluginRuntime.TextureCache.ContainsKey(name))
+                PluginRuntime.TextureCache.Remove(name);
+
+            PluginRuntime.TextureCache.Add(name, this);
 
             using (var reader = new FileReader(stream, true))
             {
@@ -266,6 +274,12 @@ namespace FirstPlugin
             }
         }
 
+        public void Dispose()
+        {
+            if (PluginRuntime.TextureCache.ContainsKey(FileName))
+                PluginRuntime.TextureCache.Remove(FileName);
+        }
+
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
             var data = ImageList[ArrayLevel][MipLevel];
@@ -373,6 +387,7 @@ namespace FirstPlugin
 
             
             { 0x505, TEX_FORMAT.BC3_UNORM_SRGB },
+            { 0x602, TEX_FORMAT.BC4_UNORM },
             { 0x606, TEX_FORMAT.BC4_UNORM },
             { 0x607, TEX_FORMAT.BC4_UNORM },
             { 0x702, TEX_FORMAT.BC5_UNORM },
