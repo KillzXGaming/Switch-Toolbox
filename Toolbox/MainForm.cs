@@ -1608,5 +1608,19 @@ namespace Toolbox
                 }
             }
         }
+
+        private void donateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WebUtil.OpenDonation();
+        }
+
+        private void openUserFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var userDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SwitchToolbox");
+            if (!Directory.Exists(userDir))
+                Directory.CreateDirectory(userDir);
+
+            Process.Start("explorer.exe", userDir);
+        }
     }
 }
