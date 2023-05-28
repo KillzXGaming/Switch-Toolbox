@@ -86,21 +86,26 @@ namespace Toolbox.Library
             if (!Directory.Exists(userDir))
                 Directory.CreateDirectory(userDir);
 
+            //Create folder for TOTK contents if it does not exist
+            if (!Directory.Exists(Path.Combine(userDir, "TOTK")))
+                Directory.CreateDirectory(Path.Combine(userDir, "TOTK"));
+
             string folder = Path.Combine(userDir, "TOTK", "ZstdDictionaries");
 
-            //Check if old directory exists and move it
-            string folderOld = Path.Combine(Runtime.ExecutableDir, "Lib", "ZstdDictionaries");
-            if (Directory.Exists(folderOld))
+
+            void TransferZDic(string path)
             {
-                //Create folder for TOTK contents if it does not exist
-                if (!Directory.Exists(Path.Combine(userDir, "TOTK")))
-                    Directory.CreateDirectory(Path.Combine(userDir, "TOTK"));
-                //Remove previous folder with any old files incase it gets updated with additional content
-                if (Directory.Exists(folder))
-                    Directory.Delete(folder, true);
-                //Move old to new directory
-                Directory.Move(folderOld, folder);
+                //Check if old directory contains the file and move it
+                string fileOld = Path.Combine(Runtime.ExecutableDir, "Lib", "ZstdDictionaries", path);
+                string fileNew = Path.Combine(folder, path);
+                if (!File.Exists(fileNew) && File.Exists(fileOld))
+                {
+                    File.Move(fileOld, fileNew); 
+                }
             }
+            TransferZDic("bcett.byml.zsdic");
+            TransferZDic("pack.zsdic");
+            TransferZDic("zs.zsdic");
 
             if (Directory.Exists(folder))
             {
