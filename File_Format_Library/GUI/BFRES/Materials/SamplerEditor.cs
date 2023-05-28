@@ -289,6 +289,17 @@ namespace FirstPlugin.Forms
                         Thread.Start();
                     }
                 }
+
+                if (PluginRuntime.TextureCache.ContainsKey(name))
+                {
+                    Thread = new Thread((ThreadStart)(() =>
+                    {
+                        textureBP.Image = Toolbox.Library.Imaging.GetLoadingImage();
+                        textureBP.Image = PluginRuntime.TextureCache[name].GetBitmap();
+                    }));
+                    Thread.Start();
+                }
+
                 foreach (BFRESGroupNode ftexCont in PluginRuntime.ftexContainers)
                 {
                     if (ftexCont.ResourceNodes.ContainsKey(name))
