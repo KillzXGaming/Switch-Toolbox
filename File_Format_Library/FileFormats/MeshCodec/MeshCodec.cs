@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AampLibraryCSharp.IO;
 using Syroot.NintenTools.NSW.Bfres;
 using Toolbox.Library;
 using ZstdSharp.Unsafe;
@@ -15,6 +16,18 @@ namespace FirstPlugin
     internal class MeshCodec
     {
         static ResFile ExternalStringBinary;
+
+        public static bool IsMeshCodec(Stream stream)
+        {
+            using (var reader = new FileReader(stream, true))
+            {
+                reader.Seek(238, SeekOrigin.Begin);
+                byte flag = reader.ReadByte();
+                reader.Position = 0;
+                //Check if flag is external buffer .mc binary
+                return flag == 11;
+            }
+        }
 
         public static void Prepare()
         {

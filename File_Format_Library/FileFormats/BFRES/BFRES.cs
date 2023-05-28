@@ -802,7 +802,7 @@ namespace FirstPlugin
             BFRESRender.ModelTransform = MarioCostumeEditor.SetTransform(FileName);
             BFRESRender.ResFileNode = this;
 
-            if (this.FileName.Contains("bfres.mc"))
+            if (MeshCodec.IsMeshCodec(stream))
                 MeshCodec.Prepare();
 
             if (IsWiiU)
