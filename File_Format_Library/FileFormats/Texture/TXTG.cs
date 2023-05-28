@@ -366,7 +366,7 @@ namespace FirstPlugin
             { 0x101, TEX_FORMAT.ASTC_4x4_UNORM },
             { 0x102, TEX_FORMAT.ASTC_8x8_UNORM },
             { 0x105, TEX_FORMAT.ASTC_8x8_SRGB },
-            { 0x109, TEX_FORMAT.ASTC_8x8_SRGB },
+            { 0x109, TEX_FORMAT.ASTC_4x4_SRGB },
             { 0x202, TEX_FORMAT.BC1_UNORM },
             { 0x203, TEX_FORMAT.BC1_UNORM_SRGB },
             { 0x302, TEX_FORMAT.BC1_UNORM },
