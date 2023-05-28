@@ -82,7 +82,26 @@ namespace Toolbox.Library
         {
             byte[] dictionary = new byte[0];
 
-            string folder = Path.Combine(Runtime.ExecutableDir, "Lib", "ZstdDictionaries");
+            var userDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SwitchToolbox");
+            if (!Directory.Exists(userDir))
+                Directory.CreateDirectory(userDir);
+
+            string folder = Path.Combine(userDir, "TOTK", "ZstdDictionaries");
+
+            //Check if old directory exists and move it
+            string folderOld = Path.Combine(Runtime.ExecutableDir, "Lib", "ZstdDictionaries");
+            if (Directory.Exists(folderOld))
+            {
+                //Create folder for TOTK contents if it does not exist
+                if (!Directory.Exists(Path.Combine(userDir, "TOTK")))
+                    Directory.CreateDirectory(Path.Combine(userDir, "TOTK"));
+                //Remove previous folder with any old files incase it gets updated with additional content
+                if (Directory.Exists(folder))
+                    Directory.Delete(folder, true);
+                //Move old to new directory
+                Directory.Move(folderOld, folder);
+            }
+
             if (Directory.Exists(folder))
             {
                 void CheckZDic(string fileName, string expectedExtension)

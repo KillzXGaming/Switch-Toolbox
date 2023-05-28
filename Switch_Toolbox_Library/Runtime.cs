@@ -39,6 +39,7 @@ namespace Toolbox.Library
         public static string SmoGamePath = "";
         public static string TpGamePath = "";
         public static string BotwGamePath = "";
+        public static string TotkGamePath = "";
 
         public static bool ShowCloseDialog = true;
 

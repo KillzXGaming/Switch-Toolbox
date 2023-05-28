@@ -181,6 +181,9 @@ namespace Toolbox.Library
                     case "BotwGamePath":
                         Runtime.BotwGamePath = node.InnerText;
                         break;
+                    case "TotkGamePath":
+                        Runtime.TotkGamePath = node.InnerText;
+                        break;
                     case "SpecularCubeMapPath":
                         Runtime.PBR.SpecularCubeMapPath = node.InnerText;
                         break;
@@ -511,6 +514,7 @@ namespace Toolbox.Library
             PathsNode.AppendChild(createNode(doc, "Mk8dGamePath", Runtime.Mk8dGamePath.ToString()));
             PathsNode.AppendChild(createNode(doc, "TpGamePath", Runtime.TpGamePath.ToString()));
             PathsNode.AppendChild(createNode(doc, "BotwGamePath", Runtime.BotwGamePath.ToString()));
+            PathsNode.AppendChild(createNode(doc, "TotkGamePath", Runtime.TotkGamePath.ToString()));
             PathsNode.AppendChild(createNode(doc, "SpecularCubeMapPath", Runtime.PBR.SpecularCubeMapPath.ToString()));
             PathsNode.AppendChild(createNode(doc, "DiffuseCubeMapPath", Runtime.PBR.DiffuseCubeMapPath.ToString()));
             PathsNode.AppendChild(createNode(doc, "PkSwShGamePath", Runtime.PkSwShGamePath.ToString()));

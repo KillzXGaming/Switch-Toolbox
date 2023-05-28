@@ -802,6 +802,9 @@ namespace FirstPlugin
             BFRESRender.ModelTransform = MarioCostumeEditor.SetTransform(FileName);
             BFRESRender.ResFileNode = this;
 
+            if (this.FileName.Contains("bfres.mc"))
+                MeshCodec.Prepare();
+
             if (IsWiiU)
             {
                 LoadFile(new Syroot.NintenTools.Bfres.ResFile(stream));
@@ -835,6 +838,7 @@ namespace FirstPlugin
                 }
             }
         }
+
         public void Unload()
         {
             BFRESRender.Destroy();

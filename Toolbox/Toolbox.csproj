@@ -692,9 +692,6 @@
     <Content Include="System.Numerics.Vectors.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="System.Runtime.CompilerServices.Unsafe.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Tool.ico" />
     <None Include="Resources\Logo.png" />
     <Content Include="Version.txt">
