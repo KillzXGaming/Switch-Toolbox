@@ -92,6 +92,8 @@ namespace Toolbox.Library
 
             string folder = Path.Combine(userDir, "TOTK", "ZstdDictionaries");
 
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
 
             void TransferZDic(string path)
             {
