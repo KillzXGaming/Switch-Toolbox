@@ -78,7 +78,7 @@ namespace FirstPlugin
             fixed (byte* srcPtr = src)
             fixed (byte* uncompressedPtr = uncompressed)
             {
-                var decompressedLength = Methods.ZSTD_decompressDCtx(dctx, uncompressedPtr, (uint)uncompressed.Length, srcPtr, (uint)src.Length);
+                var decompressedLength = Methods.ZSTD_decompressDCtx(dctx, uncompressedPtr, (UIntPtr)uncompressed.Length, srcPtr, (UIntPtr)src.Length);
 
                 byte[] arr = new byte[(uint)decompressed_size];
                 Marshal.Copy((IntPtr)uncompressedPtr, arr, 0, arr.Length);
