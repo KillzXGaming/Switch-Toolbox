@@ -212,13 +212,13 @@ namespace FirstPlugin
                 Width = tex.Texture.Width;
                 Height = tex.Texture.Height;
                 MipCount = tex.Texture.MipCount;
-                // ArrayCount = tex.Texture.ArrayLength;
-                // Depth = tex.Texture.Depth;
+                ArrayCount = tex.Texture.ArrayLength;
+                Depth = tex.Texture.Depth;
 
                 Format = tex.Format;
                 NutFormat = ConvertGenericToNutFormat(tex.Format);
 
-                mipSizes = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length);
+                mipSizes = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount);
 
                 ImageData = SetImageData(output);
 
@@ -422,19 +422,19 @@ namespace FirstPlugin
             TextureName = Text;
             Console.WriteLine($"Text {Text}");
 
-            //MipSizes stores mip sizes for multile arrays
+            // MipSizes stores mip sizes for multiple arrays
             int arrayCount = mipSizes.Count;
 
-            //Mip sizes for the first array
+            // Mip sizes for the first array
             int mipCount = mipSizes[0].Length;
 
-            writer.Write(ImageData); //Write textue block first
+            writer.Write(ImageData); //Write texture block first
 
             long headerStart = writer.Position;
             foreach (var mips in mipSizes)
             {
                 long MipStart = writer.Position;
-                writer.Write(mips); //Write textue block first
+                writer.Write(mips); //Write texture block first
 
                 writer.Seek(MipStart + 0x40, System.IO.SeekOrigin.Begin);
             }
@@ -482,7 +482,7 @@ namespace FirstPlugin
             tex.TextureData = new List<List<byte[]>>();
 
             STChannelType[] channels = SetChannelsByFormat(Format);
-            tex.sparseBinding  = 0; //false
+            tex.sparseBinding = 0; //false
             tex.sparseResidency = 0; //false
             tex.Flags = 0;
             tex.Swizzle = 0;
@@ -513,6 +513,7 @@ namespace FirstPlugin
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
+            // TODO: Rename this to Swizzled?
             if (Alignment == 0)
                 return DDS.GetArrayFaces(this, ImageData, ArrayCount)[ArrayLevel].mipmaps[MipLevel];
 
@@ -536,23 +537,25 @@ namespace FirstPlugin
         public override ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
-            Items.Add(new STToolStipMenuItem("Use Size Restrictions", null, UseSizeRestrictionsAction, Keys.Control | Keys.U) 
+            Items.Add(new STToolStipMenuItem("Use Size Restrictions", null, UseSizeRestrictionsAction, Keys.Control | Keys.U)
             { Checked = Runtime.NUTEXBSettings.LimitFileSize, CheckOnClick = true });
 
             Items.Add(new STToolStipMenuItem("Save", null, SaveAction, Keys.Control | Keys.T));
 
-            Items.Add(new STToolStipMenuItem("Force padding for smaller file sizes", null, PaddingToggle, Keys.Control | Keys.P) 
+            Items.Add(new STToolStipMenuItem("Force padding for smaller file sizes", null, PaddingToggle, Keys.Control | Keys.P)
             { Checked = Runtime.NUTEXBSettings.PadFileSize, CheckOnClick = true });
 
             Items.AddRange(base.GetContextMenuItems());
             return Items.ToArray();
         }
 
-        private void PaddingToggle(object sender, EventArgs args) {
+        private void PaddingToggle(object sender, EventArgs args)
+        {
             Runtime.NUTEXBSettings.PadFileSize = ((STToolStipMenuItem)sender).Checked ? true : false;
         }
 
-        private void UseSizeRestrictionsAction(object sender, EventArgs args) {
+        private void UseSizeRestrictionsAction(object sender, EventArgs args)
+        {
             Runtime.NUTEXBSettings.LimitFileSize = ((STToolStipMenuItem)sender).Checked ? true : false;
         }
 
