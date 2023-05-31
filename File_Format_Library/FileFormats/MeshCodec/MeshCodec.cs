@@ -27,7 +27,10 @@ namespace FirstPlugin
                 reader.Seek(10, SeekOrigin.Begin);
                 byte version = reader.ReadByte();
                 if (version < 10)
+                {
+                    reader.Position = 0;
                     return false;
+                }
 
                 reader.Seek(238, SeekOrigin.Begin);
                 byte flag = reader.ReadByte();
