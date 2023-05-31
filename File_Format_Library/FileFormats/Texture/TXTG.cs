@@ -142,6 +142,17 @@ namespace FirstPlugin
         //Image data is properly loaded afterwards
         private List<List<byte[]>> ImageList = new List<List<byte[]>>();
 
+        public override ToolStripItem[] GetContextMenuItems()
+        {
+            List<ToolStripItem> items = new List<ToolStripItem>();
+            items.Add(new ToolStripMenuItem("Save File", null, (o, e) =>
+            {
+                STFileSaver.SaveFileFormat(this, FilePath);
+            }));
+            items.AddRange(base.GetContextMenuItems());
+            return items.ToArray();
+        }
+
         public void Load(Stream stream)
         {
             Tag = this;
