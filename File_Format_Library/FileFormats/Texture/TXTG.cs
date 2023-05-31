@@ -213,11 +213,14 @@ namespace FirstPlugin
 
                 //Dumb hack. Terrain is oddly 8x8 astc, but the format seems to be 0x101
                 //Use some of the different texture settings, as they likely configure the astc blocks in some way
+                if (this.HeaderInfo.TextureSetting2 == 32628)
+                {
+                    this.Format = TEX_FORMAT.ASTC_8x5_UNORM;
+                }
                 if (this.HeaderInfo.TextureSetting2 == 32631)
                 {
                     this.Format = TEX_FORMAT.ASTC_8x8_UNORM;
                 }
-
                 //Image data is properly loaded afterwards
                 List<List<byte[]>> data = new List<List<byte[]>>();
 
