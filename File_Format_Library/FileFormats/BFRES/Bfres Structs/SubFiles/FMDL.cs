@@ -588,6 +588,8 @@ namespace Bfres.Structs
                     if (ftexCont.ResourceNodes.ContainsKey(texref))
                         textures.Add((FTEX)ftexCont.ResourceNodes[texref]);
                 }
+                if (PluginRuntime.TextureCache.ContainsKey(texref))
+                    textures.Add(PluginRuntime.TextureCache[texref]);
             }
 
             return textures;

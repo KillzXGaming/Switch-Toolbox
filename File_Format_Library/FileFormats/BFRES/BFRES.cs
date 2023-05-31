@@ -835,7 +835,15 @@ namespace FirstPlugin
             }
 
             if (isMeshCodec)
+            {
                 MeshCodec.PrepareTexToGo(resFile);
+                STTextureFolder texfolder = new STTextureFolder("TexToGo");
+                this.Nodes.Add(texfolder);
+                foreach (var tex in MeshCodec.TextureList)
+                {
+                    texfolder.Nodes.Add(tex);
+                }
+            }
 
             DrawableContainer.Drawables.Add(BFRESRender);
 
