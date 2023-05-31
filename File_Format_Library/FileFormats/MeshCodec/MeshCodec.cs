@@ -17,7 +17,7 @@ namespace FirstPlugin
     {
         static ResFile ExternalStringBinary;
 
-        List<TXTG> TextureList = new List<TXTG>();
+        public List<TXTG> TextureList = new List<TXTG>();
 
         public static bool IsMeshCodec(Stream stream)
         {
