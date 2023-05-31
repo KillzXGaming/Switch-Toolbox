@@ -809,7 +809,7 @@ namespace FirstPlugin
 
             MeshCodec = new MeshCodec();
 
-            bool isMeshCodec = MeshCodec.IsMeshCodec(stream);
+            bool isMeshCodec = MeshCodec.IsMeshCodecBfres(stream);
             if (isMeshCodec)
                 MeshCodec.Prepare();
 
