@@ -815,11 +815,14 @@ namespace FirstPlugin
             {
                 //Ensure it uses mc compressor for save
                 this.IFileInfo.FileIsCompressed = true;
-               // this.IFileInfo.FileCompression = new MeshCodecFormat();
-                if (!this.FileName.EndsWith(".mc"))
-                    this.FileName += ".mc";
-                if (!this.FilePath.EndsWith(".mc"))
-                    this.FilePath += ".mc";
+                if (this.IFileInfo.FileCompression == null)
+                {
+                   // this.IFileInfo.FileCompression = new MeshCodecFormat();
+                    if (!this.FileName.EndsWith(".mc"))
+                        this.FileName += ".mc";
+                    if (!this.FilePath.EndsWith(".mc"))
+                        this.FilePath += ".mc";
+                }
             }
             if (externalFlags.HasFlag(MeshCodec.ExternalFlags.HasExternalString))
                 MeshCodec.Prepare();
