@@ -809,8 +809,19 @@ namespace FirstPlugin
 
             MeshCodec = new MeshCodec();
 
-            bool isMeshCodec = MeshCodec.IsMeshCodecBfres(stream);
-            if (isMeshCodec)
+            var externalFlags = MeshCodec.GetExternalFlags(stream);
+            //External flags used
+            if (externalFlags != (MeshCodec.ExternalFlags)0)
+            {
+                //Ensure it uses mc compressor for save
+                this.IFileInfo.FileIsCompressed = true;
+               // this.IFileInfo.FileCompression = new MeshCodecFormat();
+                if (!this.FileName.EndsWith(".mc"))
+                    this.FileName += ".mc";
+                if (!this.FilePath.EndsWith(".mc"))
+                    this.FilePath += ".mc";
+            }
+            if (externalFlags.HasFlag(MeshCodec.ExternalFlags.HasExternalString))
                 MeshCodec.Prepare();
 
             if (IsWiiU)
@@ -834,7 +845,8 @@ namespace FirstPlugin
                 }
             }
 
-            if (isMeshCodec)
+            //Mesh codec type of bfres, load textures externallly
+            if (externalFlags != (MeshCodec.ExternalFlags)0)
             {
                 MeshCodec.PrepareTexToGo(resFile);
                 STTextureFolder texfolder = new STTextureFolder("TexToGo");

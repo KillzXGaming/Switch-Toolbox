@@ -20,26 +20,37 @@ namespace FirstPlugin
 
         public List<TXTG> TextureList = new List<TXTG>();
 
-        public static bool IsMeshCodecBfres(Stream stream)
+        public static ExternalFlags GetExternalFlags(Stream stream)
         {
             using (var reader = new FileReader(stream, true))
             {
-                reader.Seek(10, SeekOrigin.Begin);
-                byte version = reader.ReadByte();
-                if (version < 10)
+                using (reader.TemporarySeek(10, SeekOrigin.Begin))
                 {
-                    reader.Position = 0;
-                    return false;
+                    byte version = reader.ReadByte();
+                    //Check if bfres supports external strings or not
+                    if (version < 10)
+                        return (ExternalFlags)0;
+
+                    //Check external flags
+                    reader.SeekBegin(0xee);
+                    ExternalFlags flag = (ExternalFlags)reader.ReadByte();
+                    byte flag2 = reader.ReadByte(); 
+                    if (flag2 == 1) //flag custom set by bfres resave to detect an mc resave
+                        return ExternalFlags.MeshCodecResave;
+                    return flag;
                 }
-
-                reader.Seek(238, SeekOrigin.Begin);
-                byte flag = reader.ReadByte();
-                byte flag2 = reader.ReadByte(); //flag custom set by bfres resave
-
-                reader.Position = 0;
-                //Check if flag is external buffer .mc binary
-                return flag == 11 || flag2 == 1;
             }
+        }
+
+        //Flags thanks to watertoon
+        public enum ExternalFlags : byte
+        {
+            IsExternalModelUninitalized = 1 << 0,
+            HasExternalString = 1 << 1,
+            HoldsExternalStrings = 1 << 2,
+            HasExternalGPU = 1 << 3,
+
+            MeshCodecResave = 1 << 7,
         }
 
         public static void Prepare()
@@ -68,7 +79,7 @@ namespace FirstPlugin
             LoadExternalStrings();
         }
 
-        static void LoadExternalStrings()
+        public static void LoadExternalStrings()
         {
             if (ExternalStringBinary != null)
                 return;
