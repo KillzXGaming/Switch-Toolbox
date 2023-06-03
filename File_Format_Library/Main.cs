@@ -334,6 +334,7 @@ namespace FirstPlugin
         private Type[] LoadCompressionFormats()
         {
             List<Type> Formats = new List<Type>();
+            Formats.Add(typeof(MeshCodecFormat));
             return Formats.ToArray();
         }
 

@@ -367,7 +367,11 @@ namespace FirstPlugin
             ArrayCount = (uint)ImageList.Count;
             Format = tex.Format;
 
+            IsEdited = true;
+
             UpdateEditor();
+
+            this.LoadOpenGLTexture();
         }
 
         class SurfaceInfo

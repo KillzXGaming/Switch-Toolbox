@@ -346,6 +346,8 @@
     <Compile Include="FileFormats\LUAC.cs" />
     <Compile Include="FileFormats\MarioParty\HSF.cs" />
     <Compile Include="FileFormats\MeshCodec\MeshCodec.cs" />
+    <Compile Include="FileFormats\MeshCodec\MeshCodecFormat.cs" />
+    <Compile Include="FileFormats\MeshCodec\TexToGoFolder.cs" />
     <Compile Include="FileFormats\Message\MSYT.cs" />
     <Compile Include="FileFormats\MKAGPDX\LM2_ARCADE_Model.cs" />
     <Compile Include="FileFormats\MT\CRC32Hash.cs" />

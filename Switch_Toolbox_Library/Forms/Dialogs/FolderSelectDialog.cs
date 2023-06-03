@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using System.Reflection;
 
 namespace System.Windows.Forms
@@ -18,15 +19,16 @@ namespace System.Windows.Forms
         /// <summary>
         /// Default constructor
         /// </summary>
-        public FolderSelectDialog()
+        public FolderSelectDialog(string folder = "")
         {
             ofd = new System.Windows.Forms.OpenFileDialog();
-
             ofd.Filter = "Folders|\n";
             ofd.AddExtension = false;
             ofd.CheckFileExists = false;
             ofd.DereferenceLinks = true;
             ofd.Multiselect = false;
+            if (Directory.Exists(folder))
+                ofd.InitialDirectory = folder;
         }
 
         #region Properties

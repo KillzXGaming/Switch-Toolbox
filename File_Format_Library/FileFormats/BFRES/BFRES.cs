@@ -811,13 +811,13 @@ namespace FirstPlugin
 
             var externalFlags = MeshCodec.GetExternalFlags(stream);
             //External flags used
-            if (externalFlags != (MeshCodec.ExternalFlags)0)
+            if (externalFlags != 0 || this.FileName.EndsWith(".mc"))
             {
                 //Ensure it uses mc compressor for save
                 this.IFileInfo.FileIsCompressed = true;
                 if (this.IFileInfo.FileCompression == null)
                 {
-                   // this.IFileInfo.FileCompression = new MeshCodecFormat();
+                    this.IFileInfo.FileCompression = new MeshCodecFormat();
                     if (!this.FileName.EndsWith(".mc"))
                         this.FileName += ".mc";
                     if (!this.FilePath.EndsWith(".mc"))
@@ -852,12 +852,8 @@ namespace FirstPlugin
             if (externalFlags != (MeshCodec.ExternalFlags)0)
             {
                 MeshCodec.PrepareTexToGo(resFile);
-                STTextureFolder texfolder = new STTextureFolder("TexToGo");
-                this.Nodes.Add(texfolder);
-                foreach (var tex in MeshCodec.TextureList)
-                {
-                    texfolder.Nodes.Add(tex);
-                }
+                MeshCodec.TextureFolder = new TexToGoFolder(MeshCodec);
+                this.Nodes.Add(MeshCodec.TextureFolder);
             }
 
             DrawableContainer.Drawables.Add(BFRESRender);
@@ -971,6 +967,9 @@ namespace FirstPlugin
                 SaveWiiU(stream);
             else
                 SaveSwitch(stream);
+
+            if (MeshCodec.TextureList.Count > 0)
+                MeshCodec.SaveTexToGo();
         }
 
         public TreeNodeCollection GetModels()

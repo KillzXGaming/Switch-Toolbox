@@ -18,7 +18,11 @@ namespace FirstPlugin
     {
         static ResFile ExternalStringBinary;
 
+        public TexToGoFolder TextureFolder;
+
         public List<TXTG> TextureList = new List<TXTG>();
+
+        public bool IsAnyTextureEdited => TextureList.Any(x => x.IsEdited);
 
         public static ExternalFlags GetExternalFlags(Stream stream)
         {
@@ -177,6 +181,15 @@ namespace FirstPlugin
                 tex.Dispose();
             }
             TextureList.Clear();
+        }
+
+        public void SaveTexToGo()
+        {
+            if (!IsAnyTextureEdited)
+                return;
+
+            var msg = MessageBox.Show("Textures have been edited. Select the save location");
+            TextureFolder.SaveEdited();
         }
 
         public void PrepareTexToGo(ResFile resFile)
