@@ -56,35 +56,13 @@ namespace FirstPlugin
             {
                 bfshaFile = new BfshaFile(stream);
 
-                foreach (var model in bfshaFile.ShaderModels)
+                foreach (var model in bfshaFile.ShaderModels.Values)
                 {
                     var wrapper = new ShaderModelWrapper();
                     wrapper.Read(model);
                     Nodes.Add(wrapper);
                 }
             }
-        }
-
-        public int GetStaticKey(ResNX.ShaderAssign ShaderAssign)
-        {
-            if (bfshaFile.ShaderModelDict.ContainsKey(ShaderAssign.ShadingModelName))
-            {
-                int ModelIndex = bfshaFile.ShaderModelDict.IndexOf(ShaderAssign.ShadingModelName);
-
-                for (int option = 0; option < ShaderAssign.ShaderOptions.Count; option++)
-                {
-                    int OptionIndex = bfshaFile.ShaderModels[ModelIndex].StaticOptionDict.IndexOf(ShaderAssign.ShaderOptions[option]);
-                    var OptionStatic = bfshaFile.ShaderModels[ModelIndex].StaticOptions[OptionIndex];
-
-                    int ChoiceIndex = OptionStatic.ChoiceDict.IndexOf(ShaderAssign.ShaderOptions[option]);
-
-                    return bfshaFile.ShaderModels[ModelIndex].GetStaticKey(OptionIndex, ChoiceIndex);
-                }
-            }
-            else
-                throw new Exception("Model not found in bfsha!");
-
-            return -1;
         }
 
         public void Unload()
@@ -141,7 +119,7 @@ namespace FirstPlugin
 
                 ShaderFile = new BNSH();
                 ShaderFile.FileName = "dummy.bnsh";
-                ShaderFile.Load(new System.IO.MemoryStream(shaderModel.BinaryShaderData));
+                ShaderFile.Load(shaderModel.BnshFileStream);
                 Nodes.Add(ShaderFile);
             }
         }

@@ -28,35 +28,37 @@ namespace FirstPlugin
 
             WriteShaderOptions(doc, shaderModel.StaticOptions, "static_option_array", mainNode);
             WriteShaderOptions(doc, shaderModel.DynamiOptions, "dynamic_option_array", mainNode);
-            WriteSamplers(doc, shaderModel.Samplers, shaderModel.SamplersDict, "sampler_array", mainNode);
-            WriteAttributes(doc, shaderModel.Attributes, shaderModel.AttributeDict, "attribute_array", mainNode);
-            WriteUniformBlocks(doc, shaderModel.UniformBlocks, shaderModel.UniformBlockDict, "uniform_block_array", mainNode);
+            WriteSamplers(doc, shaderModel.Samplers, shaderModel.Samplers, "sampler_array", mainNode);
+            WriteAttributes(doc, shaderModel.Attributes, shaderModel.Attributes, "attribute_array", mainNode);
+            WriteUniformBlocks(doc, shaderModel.UniformBlocks, shaderModel.UniformBlocks, "uniform_block_array", mainNode);
 
             return DocumentToString(doc);
         }
 
-        private static void WriteUniformBlocks(XmlDocument doc, List<UniformBlock> uniformBlocks, ResDict uniformBlockeDictionary, string Name, XmlNode node)
+        private static void WriteUniformBlocks(XmlDocument doc, ResDict<UniformBlock> uniformBlocks, ResDict uniformBlockeDictionary, string Name, XmlNode node)
         {
             XmlNode rootNode = doc.CreateElement(Name);
-            foreach (var block in uniformBlocks)
+            foreach (var block in uniformBlocks.Values)
             {
                 XmlNode childNode = doc.CreateElement("uniform_block");
                 AddAttribute(doc, "name", uniformBlockeDictionary.GetKey(block.Index), childNode);
                 AddAttribute(doc, "size", block.Size.ToString(), childNode);
                 AddAttribute(doc, "type", block.Type.ToString(), childNode);
+                AddAttribute(doc, "Index", block.Index.ToString(), childNode);
+
                 rootNode.AppendChild(childNode);
 
                 int ind = 0;
-                foreach (var uniform in block.Uniforms)
+                foreach (var uniform in block.Uniforms.Values)
                 {
                     XmlNode uniformsNode = doc.CreateElement("uniform");
-                    if (ind < block.UniformDict.Count && ind >= 0)
-                        AddAttribute(doc, "name", block.UniformDict.GetKey(ind), uniformsNode);
+                    if (ind < block.Uniforms.Count && ind >= 0)
+                        AddAttribute(doc, "name", block.Uniforms.GetKey(ind), uniformsNode);
                     AddAttribute(doc, "index", uniform.Index.ToString(), uniformsNode);
                     AddAttribute(doc, "block_index", uniform.BlockIndex.ToString(), uniformsNode);
                     AddAttribute(doc, "offset", uniform.Offset.ToString(), uniformsNode);
 
-                    if (ind < (block.UniformDict.Count - 1) && ind >= 0)
+                    if (ind < (block.Uniforms.Count - 1) && ind >= 0)
                     {
                         uint nextOffset = block.Uniforms[ind + 1].Offset;
                         uint currentOffset = block.Uniforms[ind].Offset;
@@ -65,7 +67,7 @@ namespace FirstPlugin
 
                         AddAttribute(doc, "size", Size.ToString(), uniformsNode);
                     }
-                    if (ind == (block.UniformDict.Count - 1))
+                    if (ind == (block.Uniforms.Count - 1))
                     {
                         AddAttribute(doc, "size", (block.Size -  uniform.Offset).ToString(), uniformsNode);
                     }
@@ -78,10 +80,10 @@ namespace FirstPlugin
             node.AppendChild(rootNode);
         }
 
-        private static void WriteAttributes(XmlDocument doc, List<BfshaLibrary.Attribute> attributes, ResDict attributeDictionary, string Name, XmlNode node)
+        private static void WriteAttributes(XmlDocument doc, ResDict<BfshaLibrary.Attribute> attributes, ResDict attributeDictionary, string Name, XmlNode node)
         {
             XmlNode rootNode = doc.CreateElement(Name);
-            foreach (var attribute in attributes)
+            foreach (var attribute in attributes.Values)
             {
                 XmlNode childNode = doc.CreateElement("attribute");
                 AddAttribute(doc, "name", attributeDictionary.GetKey(attribute.Index), childNode);
@@ -92,10 +94,10 @@ namespace FirstPlugin
             node.AppendChild(rootNode);
         }
 
-        private static void WriteSamplers(XmlDocument doc, List<Sampler> samplers, ResDict samplerDictionary, string Name, XmlNode node)
+        private static void WriteSamplers(XmlDocument doc, ResDict<Sampler> samplers, ResDict samplerDictionary, string Name, XmlNode node)
         {
             XmlNode rootNode = doc.CreateElement(Name);
-            foreach (var sampler in samplers)
+            foreach (var sampler in samplers.Values)
             {
                 XmlNode childNode = doc.CreateElement("sampler");
                 AddAttribute(doc, "name", samplerDictionary.GetKey(sampler.Index), childNode);
@@ -106,10 +108,10 @@ namespace FirstPlugin
             node.AppendChild(rootNode);
         }
 
-        private static void WriteShaderOptions(XmlDocument doc, List<ShaderOption> shaderOptions, string Name, XmlNode node)
+        private static void WriteShaderOptions(XmlDocument doc, ResDict<ShaderOption> shaderOptions, string Name, XmlNode node)
         {
             XmlNode rootNode = doc.CreateElement(Name);
-            foreach (var option in shaderOptions)
+            foreach (var option in shaderOptions.Values)
             {
                 XmlNode childNode = doc.CreateElement("option");
                 AddAttribute(doc, "name", option.Name, childNode);

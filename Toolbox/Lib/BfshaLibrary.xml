@@ -4,930 +4,6 @@
         <name>BfshaLibrary</name>
     </assembly>
     <members>
-        <member name="T:BfshaLibrary.BfshaFile">
-            <summary>
-            Represents a NintendoWare for Cafe (NW4F) graphics data archive file.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.BfshaFile.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.BfshaFile.#ctor(System.IO.Stream,System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class from the given <paramref name="stream"/> which
-            is optionally left open.
-            </summary>
-            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
-            <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
-        </member>
-        <member name="M:BfshaLibrary.BfshaFile.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class from the file with the given
-            <paramref name="fileName"/>.
-            </summary>
-            <param name="fileName">The name of the file to load the data from.</param>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.VersionMajor">
-            <summary>
-            Gets or sets the revision of the BFRES structure formats.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.ByteOrder">
-            <summary>
-            Gets the byte order in which data is stored. Must be the endianness of the target platform.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.Alignment">
-            <summary>
-            Gets or sets the alignment to use for raw data blocks in the file.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.DataAlignment">
-            <summary>
-            Gets or sets the data alignment to use for raw data blocks in the file.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.TargetAddressSize">
-            <summary>
-            Gets or sets the target adress size to use for raw data blocks in the file.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.Flag">
-            <summary>
-            Gets or sets the flag. Unknown purpose.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.BlockOffset">
-            <summary>
-            Gets or sets the BlockOffset. 
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.Name">
-            <summary>
-            Gets or sets a name describing the contents.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.Path">
-            <summary>
-            Gets or sets the path of the file which originally supplied the data of this instance.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.RelocationTable">
-            <summary>
-            Gets or sets the stored <see cref="P:BfshaLibrary.BfshaFile.RelocationTable"/> (_RLT) instance.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.ShaderModels">
-            <summary>
-            Gets or sets the stored <see cref="!:Model"/> (FMDL) instances.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BfshaFile.ShaderModelDict">
-            <summary>
-            Gets or sets attached <see cref="T:BfshaLibrary.ShaderModel"/> names
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.BfshaFile.Save(System.IO.Stream,System.Boolean)">
-            <summary>
-            Saves the contents in the given <paramref name="stream"/> and optionally leaves it open
-            </summary>
-            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the contents into.</param>
-            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
-        </member>
-        <member name="M:BfshaLibrary.BfshaFile.Save(System.String)">
-            <summary>
-            Saves the contents in the file with the given <paramref name="fileName"/>.
-            </summary>
-            <param name="fileName">The name of the file to save the contents into.</param>
-        </member>
-        <member name="T:BfshaLibrary.BnshFile">
-            <summary>
-            Represents a NintendoWare for Cafe (NW4F) shader file.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.BnshFile.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.BnshFile.#ctor(System.IO.Stream,System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class from the given <paramref name="stream"/> which
-            is optionally left open.
-            </summary>
-            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
-            <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
-        </member>
-        <member name="M:BfshaLibrary.BnshFile.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class from the file with the given
-            <paramref name="fileName"/>.
-            </summary>
-            <param name="fileName">The name of the file to load the data from.</param>
-        </member>
-        <member name="P:BfshaLibrary.BnshFile.VersionMajor">
-            <summary>
-            Gets or sets the revision of the BFRES structure formats.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BnshFile.ByteOrder">
-            <summary>
-            Gets the byte order in which data is stored. Must be the endianness of the target platform.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BnshFile.Alignment">
-            <summary>
-            Gets or sets the alignment to use for raw data blocks in the file.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BnshFile.DataAlignment">
-            <summary>
-            Gets or sets the data alignment to use for raw data blocks in the file.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BnshFile.TargetAddressSize">
-            <summary>
-            Gets or sets the target adress size to use for raw data blocks in the file.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BnshFile.Flag">
-            <summary>
-            Gets or sets the flag. Unknown purpose.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BnshFile.BlockOffset">
-            <summary>
-            Gets or sets the BlockOffset. 
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BnshFile.Name">
-            <summary>
-            Gets or sets a name describing the contents.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BnshFile.Path">
-            <summary>
-            Gets or sets the path of the file which originally supplied the data of this instance.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.BnshFile.RelocationTable">
-            <summary>
-            Gets or sets the stored <see cref="P:BfshaLibrary.BnshFile.RelocationTable"/> (_RLT) instance.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.BnshFile.Save(System.IO.Stream,System.Boolean)">
-            <summary>
-            Saves the contents in the given <paramref name="stream"/> and optionally leaves it open
-            </summary>
-            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the contents into.</param>
-            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
-        </member>
-        <member name="M:BfshaLibrary.BnshFile.Save(System.String)">
-            <summary>
-            Saves the contents in the file with the given <paramref name="fileName"/>.
-            </summary>
-            <param name="fileName">The name of the file to save the contents into.</param>
-        </member>
-        <member name="T:BfshaLibrary.AnimCurve">
-            <summary>
-            Represents an animation curve used by several sections to control different parameters over time.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.FrameType">
-            <summary>
-            Gets or sets the data type in which <see cref="P:BfshaLibrary.AnimCurve.Frames"/> are loaded and saved. For simplicity, the class
-            always stores frames as converted <see cref="T:System.Single"/> instances.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.KeyType">
-            <summary>
-            Gets or sets the data type in which <see cref="P:BfshaLibrary.AnimCurve.Keys"/> are loaded and saved. For simplicity, the class
-            always stores frames as converted <see cref="T:System.Single"/> instances.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.CurveType">
-            <summary>
-            Gets or sets the curve type, determining the number of elements stored with each key.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.AnimDataOffset">
-            <summary>
-            Gets or sets the memory offset relative to the start of the corresponding animation data structure to
-            animate the field stored at that address. Note that enums exist in the specific animation which map offsets
-            to names.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.StartFrame">
-            <summary>
-            Gets or sets the first frame at which a key is placed.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.EndFrame">
-            <summary>
-            Gets or sets the last frame at which a key is placed.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.Scale">
-            <summary>
-            Gets or sets the scale to multiply values of the curve by.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.Offset">
-            <summary>
-            Gets or sets the offset to add to the values of the curve (after multiplicating them).
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.Delta">
-            <summary>
-            Gets or sets the difference between the lowest and highest key value.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.Frames">
-            <summary>
-            Gets the frame numbers at which keys of the same index in the <see cref="P:BfshaLibrary.AnimCurve.Keys"/> array are placed.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.AnimCurve.Keys">
-            <summary>
-            Gets an array of elements forming the elements of keys placed at the frames of the same index in the
-            <see cref="P:BfshaLibrary.AnimCurve.Frames"/> array.
-            </summary>
-        </member>
-        <member name="T:BfshaLibrary.AnimCurveFrameType">
-            <summary>
-            Represents the possible data types in which <see cref="P:BfshaLibrary.AnimCurve.Frames"/> are stored. For simple library use,
-            they are always converted them to and from <see cref="F:BfshaLibrary.AnimCurveFrameType.Single"/> instances.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveFrameType.Single">
-            <summary>
-            The frames are stored as <see cref="T:System.Single"/> instances.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveFrameType.Decimal10x5">
-            <summary>
-            The frames are stored as <see cref="!:Bfsha.Decimal10x5"/> instances.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveFrameType.Byte">
-            <summary>
-            The frames are stored as <see cref="T:System.Byte"/> instances.
-            </summary>
-        </member>
-        <member name="T:BfshaLibrary.AnimCurveKeyType">
-            <summary>
-            Represents the possible data types in which <see cref="P:BfshaLibrary.AnimCurve.Keys"/> are stored. For simple library use,
-            they are always converted them to and from <see cref="F:BfshaLibrary.AnimCurveKeyType.Single"/> instances.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveKeyType.Single">
-            <summary>
-            The keys are stored as <see cref="T:System.Single"/> instances.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveKeyType.Int16">
-            <summary>
-            The keys are stored as <see cref="!:Bfsha.Decimal10x5"/> instances.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveKeyType.SByte">
-            <summary>
-            The keys are stored as <see cref="T:System.SByte"/> instances.
-            </summary>
-        </member>
-        <member name="T:BfshaLibrary.AnimCurveType">
-            <summary>
-            Represents the type of key values stored by this curve. This also determines the number of required elements to
-            define a key in the <see cref="P:BfshaLibrary.AnimCurve.Keys"/> array. Use the <see cref="P:BfshaLibrary.AnimCurve.ElementsPerKey"/>
-            method to retrieve the number of elements required for the <see cref="P:BfshaLibrary.AnimCurve.CurveType"/> of that curve.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveType.Cubic">
-            <summary>
-            The curve uses cubic interpolation. 4 elements of the <see cref="P:BfshaLibrary.AnimCurve.Keys"/> array form a key.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveType.Linear">
-            <summary>
-            The curve uses linear interpolation. 2 elements of the <see cref="P:BfshaLibrary.AnimCurve.Keys"/> array form a key.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveType.BakedFloat">
-            <summary>
-            1 element of the <see cref="P:BfshaLibrary.AnimCurve.Keys"/> array forms a key.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveType.StepInt">
-            <summary>
-            1 element of the <see cref="P:BfshaLibrary.AnimCurve.Keys"/> array forms a key.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveType.BakedInt">
-            <summary>
-            1 element of the <see cref="P:BfshaLibrary.AnimCurve.Keys"/> array forms a key.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveType.StepBool">
-            <summary>
-            1 element of the <see cref="P:BfshaLibrary.AnimCurve.Keys"/> array forms a key.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimCurveType.BakedBool">
-            <summary>
-            1 element of the <see cref="P:BfshaLibrary.AnimCurve.Keys"/> array forms a key.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.AnimConstant.AnimDataOffset">
-            <summary>
-            Gets or sets the memory offset relative to the start of the corresponding animation data structure to
-            animate the field stored at that address. Note that enums exist in the specific animation which map offsets
-            to names.
-            </summary>
-        </member>
-        <member name="T:BfshaLibrary.Decimal10x5">
-            <summary>
-            Represents a 16-bit fixed-point decimal consisting of 1 sign bit, 10 integer bits and 5 fractional bits (denoted
-            as Q10.5). Note that the implementation is not reporting over- and underflowing errors.
-            </summary>
-            <remarks>
-            Examples:
-              SIIIIIII_IIIFFFFF
-            0b00000000_00010000 = 0.5
-            0b00000000_00100000 = 1
-            0b00000001_00000000 = 8
-            0b01000000_00000000 = 512
-            0b10000000_00000000 = -1024
-            </remarks>
-        </member>
-        <member name="F:BfshaLibrary.Decimal10x5.MaxValue">
-            <summary>
-            Represents the largest possible value of <see cref="T:BfshaLibrary.Decimal10x5"/>.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.Decimal10x5.MinValue">
-            <summary>
-            Represents the smallest possible value of <see cref="T:BfshaLibrary.Decimal10x5"/>.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.#ctor(System.Int32)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.Decimal10x5"/> struct from the given <paramref name="raw"/>
-            representation.
-            </summary>
-            <param name="raw">The raw representation of the internally stored bits.</param>
-        </member>
-        <member name="P:BfshaLibrary.Decimal10x5.Raw">
-            <summary>
-            Gets the internally stored value to represent the instance.
-            </summary>
-            <remarks>Signed to get arithmetic rather than logical shifts.</remarks>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_UnaryPlus(BfshaLibrary.Decimal10x5)">
-            <summary>
-            Returns the given <see cref="T:BfshaLibrary.Decimal10x5"/>.
-            </summary>
-            <param name="a">The <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <returns>The result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Addition(BfshaLibrary.Decimal10x5,BfshaLibrary.Decimal10x5)">
-            <summary>
-            Adds the first <see cref="T:BfshaLibrary.Decimal10x5"/> to the second one.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <returns>The addition result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_UnaryNegation(BfshaLibrary.Decimal10x5)">
-            <summary>
-            Negates the given <see cref="T:BfshaLibrary.Decimal10x5"/>.
-            </summary>
-            <param name="a">The <see cref="T:BfshaLibrary.Decimal10x5"/> to negate.</param>
-            <returns>The negated result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Subtraction(BfshaLibrary.Decimal10x5,BfshaLibrary.Decimal10x5)">
-            <summary>
-            Subtracts the first <see cref="T:BfshaLibrary.Decimal10x5"/> from the second one.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <returns>The subtraction result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Multiply(BfshaLibrary.Decimal10x5,System.Int32)">
-            <summary>
-            Multiplicates the given <see cref="T:BfshaLibrary.Decimal10x5"/> by the scalar.
-            </summary>
-            <param name="a">The <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <param name="s">The scalar.</param>
-            <returns>The multiplication result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Multiply(BfshaLibrary.Decimal10x5,BfshaLibrary.Decimal10x5)">
-            <summary>
-            Multiplicates the first <see cref="T:BfshaLibrary.Decimal10x5"/> by the second one.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <returns>The multiplication result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Division(BfshaLibrary.Decimal10x5,System.Int32)">
-            <summary>
-            Divides the given <see cref="T:BfshaLibrary.Decimal10x5"/> through the scalar.
-            </summary>
-            <param name="a">The <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <param name="s">The scalar.</param>
-            <returns>The division result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Division(BfshaLibrary.Decimal10x5,BfshaLibrary.Decimal10x5)">
-            <summary>
-            Divides the first <see cref="T:BfshaLibrary.Decimal10x5"/> through the second one.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <returns>The division result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Equality(BfshaLibrary.Decimal10x5,BfshaLibrary.Decimal10x5)">
-            <summary>
-            Gets a value indicating whether the first specified <see cref="T:BfshaLibrary.Decimal10x5"/> is the same as the second
-            specified <see cref="T:BfshaLibrary.Decimal10x5"/>.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Decimal10x5"/> to compare.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Decimal10x5"/> to compare.</param>
-            <returns>true, if both <see cref="T:BfshaLibrary.Decimal10x5"/> are the same.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Inequality(BfshaLibrary.Decimal10x5,BfshaLibrary.Decimal10x5)">
-            <summary>
-            Gets a value indicating whether the first specified <see cref="T:BfshaLibrary.Decimal10x5"/> is not the same as the second
-            specified <see cref="T:BfshaLibrary.Decimal10x5"/>.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Decimal10x5"/> to compare.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Decimal10x5"/> to compare.</param>
-            <returns>true, if both <see cref="T:BfshaLibrary.Decimal10x5"/> are not the same.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Explicit(System.Int32)~BfshaLibrary.Decimal10x5">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:BfshaLibrary.Decimal10x5"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:System.Int32"/> value to represent in the new <see cref="T:BfshaLibrary.Decimal10x5"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Explicit(System.Double)~BfshaLibrary.Decimal10x5">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:BfshaLibrary.Decimal10x5"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:System.Double"/> value to represent in the new <see cref="T:BfshaLibrary.Decimal10x5"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Explicit(System.Single)~BfshaLibrary.Decimal10x5">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:BfshaLibrary.Decimal10x5"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:System.Single"/> value to represent in the new <see cref="T:BfshaLibrary.Decimal10x5"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Explicit(BfshaLibrary.Decimal10x5)~System.Double">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:System.Double"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:BfshaLibrary.Decimal10x5"/> value to represent in the new <see cref="T:System.Double"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Explicit(BfshaLibrary.Decimal10x5)~System.Int32">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:System.Int32"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:BfshaLibrary.Decimal10x5"/> value to represent in the new <see cref="T:System.Int32"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.op_Explicit(BfshaLibrary.Decimal10x5)~System.Single">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:System.Single"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:BfshaLibrary.Decimal10x5"/> value to represent in the new <see cref="T:System.Single"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.Equals(System.Object)">
-            <summary>
-            Gets a value indicating whether this <see cref="T:BfshaLibrary.Decimal10x5"/> is the same as the second specified
-            <see cref="T:BfshaLibrary.Decimal10x5"/>.
-            </summary>
-            <param name="obj">The object to compare, if it is a <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <returns>true, if both <see cref="T:BfshaLibrary.Decimal10x5"/> are the same.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.GetHashCode">
-            <summary>
-            Gets a hash code as an indication for object equality.
-            </summary>
-            <returns>The hash code.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.ToString">
-            <summary>
-            Gets a string describing this <see cref="T:BfshaLibrary.Decimal10x5"/>.
-            </summary>
-            <returns>A string describing this <see cref="T:BfshaLibrary.Decimal10x5"/>.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Decimal10x5.Equals(BfshaLibrary.Decimal10x5)">
-            <summary>
-            Indicates whether the current <see cref="T:BfshaLibrary.Decimal10x5"/> is equal to another <see cref="T:BfshaLibrary.Decimal10x5"/>.
-            </summary>
-            <param name="other">A <see cref="T:BfshaLibrary.Decimal10x5"/> to compare with this <see cref="T:BfshaLibrary.Decimal10x5"/>.</param>
-            <returns>true if the current <see cref="T:BfshaLibrary.Decimal10x5"/> is equal to the other parameter; otherwise, false.
-            </returns>
-        </member>
-        <member name="T:BfshaLibrary.DWord">
-            <summary>
-            Represents a 4-byte value which can hold differently typed data.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.DWord.Int32">
-            <summary>
-            The data as an <see cref="F:BfshaLibrary.DWord.Int32"/>.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.DWord.Single">
-            <summary>
-            The data as a <see cref="F:BfshaLibrary.DWord.Single"/>.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.DWord.UInt32">
-            <summary>
-            The data as an <see cref="F:BfshaLibrary.DWord.UInt32"/>.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.op_Implicit(System.Int32)~BfshaLibrary.DWord">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:BfshaLibrary.DWord"/> instance.
-            </summary>
-            <param name="value">The <see cref="F:BfshaLibrary.DWord.Int32"/> value to represent in the new <see cref="T:BfshaLibrary.DWord"/> instance.
-            </param>
-        </member>
-        <member name="M:BfshaLibrary.DWord.op_Implicit(System.Single)~BfshaLibrary.DWord">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:BfshaLibrary.DWord"/> instance.
-            </summary>
-            <param name="value">The <see cref="F:BfshaLibrary.DWord.Single"/> value to represent in the new <see cref="T:BfshaLibrary.DWord"/> instance.
-            </param>
-        </member>
-        <member name="M:BfshaLibrary.DWord.op_Implicit(System.UInt32)~BfshaLibrary.DWord">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:BfshaLibrary.DWord"/> instance.
-            </summary>
-            <param name="value">The <see cref="F:BfshaLibrary.DWord.UInt32"/> value to represent in the new <see cref="T:BfshaLibrary.DWord"/> instance.
-            </param>
-        </member>
-        <member name="M:BfshaLibrary.DWord.op_Implicit(BfshaLibrary.DWord)~System.Int32">
-            <summary>
-            Converts the given <paramref name="value"/> value to an <see cref="F:BfshaLibrary.DWord.Int32"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:BfshaLibrary.DWord"/> value to represent in the new <see cref="F:BfshaLibrary.DWord.Int32"/> instance.
-            </param>
-        </member>
-        <member name="M:BfshaLibrary.DWord.op_Implicit(BfshaLibrary.DWord)~System.Single">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="F:BfshaLibrary.DWord.Single"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:BfshaLibrary.DWord"/> value to represent in the new <see cref="F:BfshaLibrary.DWord.Single"/> instance.
-            </param>
-        </member>
-        <member name="M:BfshaLibrary.DWord.op_Implicit(BfshaLibrary.DWord)~System.UInt32">
-            <summary>
-            Converts the given <paramref name="value"/> value to an <see cref="F:BfshaLibrary.DWord.UInt32"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:BfshaLibrary.DWord"/> value to represent in the new <see cref="F:BfshaLibrary.DWord.UInt32"/> instance.
-            </param>
-        </member>
-        <member name="M:BfshaLibrary.DWord.GetTypeCode">
-            <summary>
-            Returns the <see cref="T:System.TypeCode"/> for this instance.
-            </summary>
-            <returns>The enumerated constant that is the <see cref="T:System.TypeCode"/> of the class or value type that
-            implements this interface.</returns>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToBoolean(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToByte(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToChar(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToDateTime(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToDecimal(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToDouble(System.IFormatProvider)">
-            <summary>
-            Converts the value of this instance to an equivalent double-precision floating-point number using the
-            specified culture-specific formatting information.
-            </summary>
-            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
-            culture-specific formatting information.</param>
-            <returns>A double-precision floating-point number equivalent to the value of this instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToInt16(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToInt32(System.IFormatProvider)">
-            <summary>
-            Converts the value of this instance to an equivalent 32-bit signed integer using the specified
-            culture-specific formatting information.
-            </summary>
-            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
-            culture-specific formatting information.</param>
-            <returns>An 32-bit signed integer equivalent to the value of this instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToInt64(System.IFormatProvider)">
-            <summary>
-            Converts the value of this instance to an equivalent 64-bit signed integer using the specified
-            culture-specific formatting information.
-            </summary>
-            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
-            culture-specific formatting information.</param>
-            <returns>An 64-bit signed integer equivalent to the value of this instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToSByte(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToSingle(System.IFormatProvider)">
-            <summary>
-            Converts the value of this instance to an equivalent single-precision floating-point number using the
-            specified culture-specific formatting information.
-            </summary>
-            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
-            culture-specific formatting information.</param>
-            <returns>A single-precision floating-point number equivalent to the value of this instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToString(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToType(System.Type,System.IFormatProvider)">
-            <summary>
-            Converts the value of this instance to an <see cref="T:System.Object"/> of the specified <see cref="T:System.Type"/> that has
-            an equivalent value, using the specified culture-specific formatting information.
-            </summary>
-            <param name="conversionType">The <see cref="T:System.Type"/> to which the value of this instance is converted.
-            </param>
-            <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies
-            culture-specific formatting information.</param>
-            <returns>An <see cref="T:System.Object"/> instance of type conversionType whose value is equivalent to the value of
-            this instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToUInt16(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToUInt32(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.DWord.ToUInt64(System.IFormatProvider)">
-            <summary>
-            This operation is not supported.
-            </summary>
-        </member>
-        <member name="T:BfshaLibrary.Half">
-            <summary>
-            Represents a 16-bit half-precision floating point value according to the IEEE 754 standard.
-            </summary>
-            <remarks>
-            Examples:
-              SEEEEEFF_FFFFFFFF
-            0b00000000_00000000 = 0
-            1b00000000_00000000 = -0
-            0b00111100_00000000 = 1
-            0b11000000_00000000 = -2
-            0b11111011_11111111 = 65504 (MaxValue)
-            0b01111100_00000000 = PositiveInfinity
-            0b11111100_00000000 = NegativeInfinity
-            </remarks>
-        </member>
-        <member name="F:BfshaLibrary.Half.Epsilon">
-            <summary>
-            Represents the smallest positive <see cref="T:BfshaLibrary.Half"/> value greater than zero.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.Half.MaxValue">
-            <summary>
-            Represents the largest possible value of <see cref="T:BfshaLibrary.Half"/>.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.Half.MinValue">
-            <summary>
-            Represents the smallest possible value of <see cref="T:BfshaLibrary.Half"/>.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.Half.NaN">
-            <summary>
-            Represents not a number (NaN).
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.Half.NegativeInfinity">
-            <summary>
-            Represents negative infinity.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.Half.PositiveInfinity">
-            <summary>
-            Represents positive infinity.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.Half.#ctor(System.UInt16)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.Half"/> struct from the given <paramref name="raw"/>
-            representation.
-            </summary>
-            <param name="raw">The raw representation of the internally stored bits.</param>
-        </member>
-        <member name="P:BfshaLibrary.Half.Raw">
-            <summary>
-            Gets the internally stored value to represent the instance.
-            </summary>
-            <remarks>Signed to get arithmetic rather than logical shifts.</remarks>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_UnaryPlus(BfshaLibrary.Half)">
-            <summary>
-            Returns the given <see cref="T:BfshaLibrary.Half"/>.
-            </summary>
-            <param name="a">The <see cref="T:BfshaLibrary.Half"/>.</param>
-            <returns>The result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Addition(BfshaLibrary.Half,BfshaLibrary.Half)">
-            <summary>
-            Adds the first <see cref="T:BfshaLibrary.Half"/> to the second one.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Half"/>.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Half"/>.</param>
-            <returns>The addition result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_UnaryNegation(BfshaLibrary.Half)">
-            <summary>
-            Negates the given <see cref="T:BfshaLibrary.Half"/>.
-            </summary>
-            <param name="a">The <see cref="T:BfshaLibrary.Half"/> to negate.</param>
-            <returns>The negated result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Subtraction(BfshaLibrary.Half,BfshaLibrary.Half)">
-            <summary>
-            Subtracts the first <see cref="T:BfshaLibrary.Half"/> from the second one.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Half"/>.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Half"/>.</param>
-            <returns>The subtraction result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Multiply(BfshaLibrary.Half,BfshaLibrary.Half)">
-            <summary>
-            Multiplicates the first <see cref="T:BfshaLibrary.Half"/> by the second one.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Half"/>.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Half"/>.</param>
-            <returns>The multiplication result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Division(BfshaLibrary.Half,BfshaLibrary.Half)">
-            <summary>
-            Divides the first <see cref="T:BfshaLibrary.Half"/> through the second one.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Half"/>.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Half"/>.</param>
-            <returns>The division result.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Equality(BfshaLibrary.Half,BfshaLibrary.Half)">
-            <summary>
-            Gets a value indicating whether the first specified <see cref="T:BfshaLibrary.Half"/> is the same as the second
-            specified <see cref="T:BfshaLibrary.Half"/>.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Half"/> to compare.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Half"/> to compare.</param>
-            <returns>true, if both <see cref="T:BfshaLibrary.Half"/> are the same.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Inequality(BfshaLibrary.Half,BfshaLibrary.Half)">
-            <summary>
-            Gets a value indicating whether the first specified <see cref="T:BfshaLibrary.Half"/> is not the same as the second
-            specified <see cref="T:BfshaLibrary.Half"/>.
-            </summary>
-            <param name="a">The first <see cref="T:BfshaLibrary.Half"/> to compare.</param>
-            <param name="b">The second <see cref="T:BfshaLibrary.Half"/> to compare.</param>
-            <returns>true, if both <see cref="T:BfshaLibrary.Half"/> are not the same.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Explicit(System.Int32)~BfshaLibrary.Half">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:BfshaLibrary.Half"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:System.Int32"/> value to represent in the new <see cref="T:BfshaLibrary.Half"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Explicit(System.Double)~BfshaLibrary.Half">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:BfshaLibrary.Half"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:System.Double"/> value to represent in the new <see cref="T:BfshaLibrary.Half"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Explicit(System.Single)~BfshaLibrary.Half">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:BfshaLibrary.Half"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:System.Single"/> value to represent in the new <see cref="T:BfshaLibrary.Half"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Implicit(BfshaLibrary.Half)~System.Double">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:System.Double"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:BfshaLibrary.Half"/> value to represent in the new <see cref="T:System.Double"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Explicit(BfshaLibrary.Half)~System.Int32">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:System.Int32"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:BfshaLibrary.Half"/> value to represent in the new <see cref="T:System.Int32"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Half.op_Implicit(BfshaLibrary.Half)~System.Single">
-            <summary>
-            Converts the given <paramref name="value"/> value to a <see cref="T:System.Single"/> instance.
-            </summary>
-            <param name="value">The <see cref="T:BfshaLibrary.Half"/> value to represent in the new <see cref="T:System.Single"/>
-            instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Half.Equals(System.Object)">
-            <summary>
-            Gets a value indicating whether this <see cref="T:BfshaLibrary.Half"/> is the same as the second specified
-            <see cref="T:BfshaLibrary.Half"/>.
-            </summary>
-            <param name="obj">The object to compare, if it is a <see cref="T:BfshaLibrary.Half"/>.</param>
-            <returns>true, if both <see cref="T:BfshaLibrary.Half"/> are the same.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.GetHashCode">
-            <summary>
-            Gets a hash code as an indication for object equality.
-            </summary>
-            <returns>The hash code.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.ToString">
-            <summary>
-            Gets a string describing this <see cref="T:BfshaLibrary.Half"/>.
-            </summary>
-            <returns>A string describing this <see cref="T:BfshaLibrary.Half"/>.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.Equals(BfshaLibrary.Half)">
-            <summary>
-            Indicates whether the current <see cref="T:BfshaLibrary.Half"/> is equal to another <see cref="T:BfshaLibrary.Half"/>.
-            </summary>
-            <param name="other">A <see cref="T:BfshaLibrary.Half"/> to compare with this <see cref="T:BfshaLibrary.Half"/>.</param>
-            <returns>true if the current <see cref="T:BfshaLibrary.Half"/> is equal to the other parameter; otherwise, false.
-            </returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.IsNaN(BfshaLibrary.Half)">
-            <summary>
-            Returns a value indicating whether the specified number evaluates to not a number (<see cref="F:BfshaLibrary.Half.NaN"/>).
-            </summary>
-            <param name="half">A half-precision floating-point number.</param>
-            <returns><c>true</c> if value evaluates to not a number (<see cref="F:BfshaLibrary.Half.NaN"/>); otherwise <c>false</c>.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.IsInfinity(BfshaLibrary.Half)">
-            <summary>
-            Returns a value indicating whether the specified number evaluates to negative or positive infinity.
-            </summary>
-            <param name="half">A half-precision floating-point number.</param>
-            <returns><c>true</c> if half evaluates to <see cref="F:BfshaLibrary.Half.PositiveInfinity"/> or <see cref="F:BfshaLibrary.Half.NegativeInfinity"/>;
-            otherwise <c>false</c>.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.IsNegativeInfinity(BfshaLibrary.Half)">
-            <summary>
-            Returns a value indicating whether the specified number evaluates to negative infinity.
-            </summary>
-            <param name="half">A half-precision floating-point number.</param>
-            <returns><c>true</c> if half evaluates to <see cref="F:BfshaLibrary.Half.NegativeInfinity"/>; otherwise <c>false</c>.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Half.IsPositiveInfinity(BfshaLibrary.Half)">
-            <summary>
-            Returns a value indicating whether the specified number evaluates to positive infinity.
-            </summary>
-            <param name="half">A half-precision floating-point number.</param>
-            <returns><c>true</c> if half evaluates to <see cref="F:BfshaLibrary.Half.PositiveInfinity"/>; otherwise <c>false</c>.</returns>
-        </member>
         <member name="T:BfshaLibrary.Buffer">
             <summary>
             Represents a buffer of data uploaded to the  GPU which can hold arbitrary data.
@@ -990,33 +66,143 @@
             Gets the number of instances stored.
             </summary>
         </member>
-        <member name="M:BfshaLibrary.ResDict.Add(System.String)">
+        <member name="P:BfshaLibrary.ResDict.Keys">
             <summary>
-            Adds the given <paramref name="key"/> to insert in the dictionary.
+            Gets all keys under which instances are stored.
             </summary>
-            <exception cref="T:System.ArgumentException">Duplicated <paramref name="key"/> instances
-            already exists.</exception>
         </member>
-        <member name="M:BfshaLibrary.ResDict.Remove(System.String)">
+        <member name="P:BfshaLibrary.ResDict.Values">
             <summary>
-            Removes the given <paramref name="key"/> from the dictionary.
+            Gets all stored instances.
             </summary>
-            <exception cref="T:System.ArgumentException">Duplicated <paramref name="key"/> instances
-            already exists.</exception>
         </member>
-        <member name="M:BfshaLibrary.ResDict.ContainsKey(System.String)">
+        <member name="P:BfshaLibrary.ResDict.Nodes">
             <summary>
-            Determines whether the given <paramref name="key"/> is in the dictionary.
+            Returns only the publically visible nodes, excluding the root node.
             </summary>
-            <returns><c>true</c> if <paramref name="key"/> was found in the dictionary; otherwise <c>false</c>.
-            </returns>
+        </member>
+        <member name="P:BfshaLibrary.ResDict.Item(System.Int32)">
+            <summary>
+            Gets or sets the <see cref="T:BfshaLibrary.Core.IResData"/> instance stored at the specified <paramref name="index"/>.
+            </summary>
+            <param name="index">The 0-based index of the <see cref="T:BfshaLibrary.Core.IResData"/> instance to get or set.</param>
+            <returns>The <see cref="T:BfshaLibrary.Core.IResData"/> at the specified <paramref name="index"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">The index is smaller than 0 or bigger or equal to
+            <see cref="P:BfshaLibrary.ResDict.Count"/>.</exception>
+        </member>
+        <member name="P:BfshaLibrary.ResDict.Item(System.String)">
+            <summary>
+            Gets or sets the <see cref="T:BfshaLibrary.Core.IResData"/> instance stored under the specified <paramref name="key"/>.
+            </summary>
+            <param name="key">The textual key of the <see cref="T:BfshaLibrary.Core.IResData"/> instance to get or set.</param>
+            <returns>The <see cref="T:BfshaLibrary.Core.IResData"/> with the specified <paramref name="key"/>.</returns>
+            <exception cref="T:System.ArgumentException">An <see cref="T:BfshaLibrary.Core.IResData"/> instance with the same <paramref name="key"/>
+            already exists.</exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">An <see cref="T:BfshaLibrary.Core.IResData"/> instance with the given
+            <paramref name="key"/> does not exist.</exception>
+        </member>
+        <member name="P:BfshaLibrary.ResDict.Item(BfshaLibrary.Core.IResData)">
+            <summary>
+            Gets or sets the key under which the specified <paramref name="instance"/> is stored.
+            </summary>
+            <param name="instance">The <see cref="T:BfshaLibrary.Core.IResData"/> instance of the key to get or set.</param>
+            <returns>The key of the specified <paramref name="instance"/>.</returns>
+            <exception cref="T:System.ArgumentException">An <see cref="T:BfshaLibrary.Core.IResData"/> instance with the same key already exists.
+            </exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">A key for the given <paramref name="instance"/> does not exist.
+            </exception>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.Clear">
+            <summary>
+            Removes all elements from the dictionary.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.GetKeys">
+            <summary>
+            Gets a list of all the containing keys.
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:BfshaLibrary.ResDict.GetKey(System.Int32)">
             <summary>
             Returns the key given <paramref name="index"/> is within range of the dictionary.
             </summary>
         </member>
+        <member name="M:BfshaLibrary.ResDict.ContainsKey(System.String)">
+            <summary>
+            Determines whether an instance is saved under the given <paramref name="key"/> in the dictionary.
+            </summary>
+            <param name="key">The textual key to locate in the dictionary. The value can be <c>null</c>.</param>
+            <returns><c>true</c> if <paramref name="key"/> was found in the dictionary; otherwise <c>false</c>.</returns>
+        </member>
         <member name="M:BfshaLibrary.ResDict.IndexOf(System.String)">
+            <summary>
+            Searches for the specified <paramref name="key"/> and returns the zero-based index of the first occurrence
+            within the entire dictionary.
+            </summary>
+            <param name="key">The textual key to locate in the dictionary. The value can be <c>null</c>.</param>
+            <returns>The zero-based index of the first occurence of <paramref name="key"/> within the entire dictionary
+            if found; otherwise <c>-1</c>.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.Rename(System.String,System.String)">
+            <summary>
+            Changes the key of the instance currently saved under the given <paramref name="key"/> to the
+            <paramref name="newKey"/>.
+            </summary>
+            <param name="key">The current textual key to rename.</param>
+            <param name="newKey">The new textual key to use.</param>
+            <exception cref="T:System.ArgumentException">An <see cref="T:BfshaLibrary.Core.IResData"/> instance with the same
+            <paramref name="newKey"/> already exists.
+            </exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">The given <paramref name="key"/> does not exist.
+            </exception>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.RemoveKey(System.String)">
+            <summary>
+            Removes the first occurrence of the instance with the specific <paramref name="key"/> from the dictionary.
+            </summary>
+            <param name="key">The textual key of the <see cref="T:BfshaLibrary.Core.IResData"/> instance which will be removed.</param>
+            <returns><c>true</c> if the instance under <paramref name="key"/> was successfully removed; otherwise
+            <c>false</c>. This method also returns <c>false</c> if <paramref name="key"/> was not found in the
+            dictionary.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.RemoveAt(System.Int32)">
+            <summary>
+            Removes the instance at the specified <paramref name="index"/> of the dictionary.
+            </summary>
+            <param name="index">The zero-based index of the instance to remove.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is less than 0 or equal to or greater
+            than <see cref="P:BfshaLibrary.ResDict.Count"/>.</exception>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.TryGetValue(System.String,BfshaLibrary.Core.IResData@)">
+            <summary>
+            Returns <c>true</c> if an <see cref="T:BfshaLibrary.Core.IResData"/> instance was stored under the given <paramref name="key"/>
+            and has been assigned to <paramref name="value"/>, or <c>false</c> if no instance is stored under the
+            given <paramref name="key"/> and <c>null</c> was assigned to <paramref name="value"/>.
+            </summary>
+            <param name="key">The textual key of the <see cref="T:BfshaLibrary.Core.IResData"/> instance to get or set.</param>
+            <param name="value">The variable receiving the found <see cref="T:BfshaLibrary.Core.IResData"/> or <c>null</c>.</param>
+            <returns><c>true</c> if an instance was found and assigned; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.Add(System.String,BfshaLibrary.Core.IResData)">
+            <summary>
+            Adds the given <paramref name="value"/> under the specified <paramref name="key"/>.
+            </summary>
+            <param name="key">The textual key under which the <see cref="T:BfshaLibrary.Core.IResData"/> instance will be stored.</param>
+            <param name="value">The <see cref="T:BfshaLibrary.Core.IResData"/> to add.</param>
+            <exception cref="T:System.ArgumentException">An <see cref="T:BfshaLibrary.Core.IResData"/> instance with the same <paramref name="key"/>
+            already exists.</exception>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.ContainsValue(BfshaLibrary.Core.IResData)">
+            <summary>
+            Determines whether the given <paramref name="value"/> is in the dictionary.
+            </summary>
+            <param name="value">The <see cref="T:BfshaLibrary.Core.IResData"/> instance to locate in the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns><c>true</c> if <paramref name="value"/> was found in the dictionary; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.IndexOf(BfshaLibrary.Core.IResData)">
             <summary>
             Searches for the specified <paramref name="value"/> and returns the zero-based index of the first occurrence
             within the entire dictionary.
@@ -1026,20 +212,179 @@
             <returns>The zero-based index of the first occurence of <paramref name="value"/> within the entire
             dictionary if found; otherwise <c>-1</c>.</returns>
         </member>
-        <member name="M:BfshaLibrary.ResDict.Clear">
+        <member name="M:BfshaLibrary.ResDict.Remove(BfshaLibrary.Core.IResData)">
             <summary>
-            Removes all elements from the dictionary.
+            Removes the first occurrence of a specific <paramref name="value"/> from the dictionary.
             </summary>
+            <param name="value">The <see cref="T:BfshaLibrary.Core.IResData"/> instance to remove from the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns><c>true</c> if <paramref name="value"/> was successfully removed; otherwise <c>false</c>. This
+            method also returns <c>false</c> if <paramref name="value"/> was not found in the dictionary.</returns>
         </member>
-        <member name="P:BfshaLibrary.ResDict.Nodes">
+        <member name="M:BfshaLibrary.ResDict.ToArray">
             <summary>
-            Returns only the publically visible nodes, excluding the root node.
+            Copies the elements of the dictionary as <see cref="T:System.Collections.Generic.KeyValuePair`2"/> instances to a new
+            array and returns it.
             </summary>
+            <returns>An array containing copies of the elements.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.TryGetKey(BfshaLibrary.Core.IResData,System.String@)">
+            <summary>
+            Returns <c>true</c> if a key was found for the given <paramref name="value"/> and has been assigned to
+            <paramref name="key"/>, or <c>false</c> if no key was found for the value and <c>null</c> was assigned to
+            <paramref name="key"/>.
+            </summary>
+            <param name="value">The <see cref="T:BfshaLibrary.Core.IResData"/> to look up a key for.</param>
+            <param name="key">The variable receiving the found key or <c>null</c>.</param>
+            <returns><c>true</c> if a key was found and assigned; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{System#String,BfshaLibrary#Core#IResData}}#GetEnumerator">
+            <summary>
+            Returns a generic <see cref="T:System.Collections.IEnumerator"/> which can be used to iterate over the items in the dictionary.
+            </summary>
+            <returns>An enumerator to iterate over the items in the dictionary.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an <see cref="T:System.Collections.IEnumerator"/> which can be used to iterate over the items in the dictionary.
+            </summary>
+            <returns>An enumerator to iterate over the items in the dictionary.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.Traverse(System.String)">
+            <summary>
+            Returns the <see cref="T:BfshaLibrary.Core.IResData"/> instance of the node with the given <paramref name="name"/> using the
+            Patricia trie logic.
+            </summary>
+            <remarks>Nodes are looked up linearly by iterating over the node list internally, this method has been
+            implemented for test and validation purposes only.</remarks>
+            <param name="name">The name of the node to look up.</param>
+            <returns>The <see cref="T:BfshaLibrary.Core.IResData"/> instance referenced by the found node.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict.LoadNodeValue(BfshaLibrary.Core.BfshaFileLoader)">
+            <summary>
+            Loads an <see cref="T:BfshaLibrary.Core.IResData"/> instance from the given <paramref name="loader"/>.
+            </summary>
+            <param name="loader">The <see cref="!:ResFileLoader"/> to load the instance with.</param>
+            <returns>The loaded <see cref="T:BfshaLibrary.Core.IResData"/> instance.</returns>
         </member>
         <member name="T:BfshaLibrary.ResDict.Node">
             <summary>
             Represents a node forming the Patricia trie of the dictionary.
             </summary>
+        </member>
+        <member name="T:BfshaLibrary.ResDict`1">
+            <summary>
+            Represents a dictionary which can quickly look up <see cref="T:BfshaLibrary.Core.IResData"/> instances of type
+            <typeparamref name="T"/> via key or index.
+            </summary>
+            <typeparam name="T">The specialized type of the <see cref="T:BfshaLibrary.Core.IResData"/> instances.</typeparam>
+        </member>
+        <member name="M:BfshaLibrary.ResDict`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.ResDict`1"/> class.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.ResDict`1.Values">
+            <summary>
+            Gets all stored instances.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.ResDict`1.Item(System.Int32)">
+            <summary>
+            Gets or sets the value stored at the specified <paramref name="index"/>.
+            </summary>
+            <param name="index">The 0-based index of the instance to get or set.</param>
+            <returns>The instance at the specified <paramref name="index"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">The index is smaller than 0 or bigger or equal to
+            <see cref="P:BfshaLibrary.ResDict.Count"/>.</exception>
+        </member>
+        <member name="P:BfshaLibrary.ResDict`1.Item(System.String)">
+            <summary>
+            Gets or sets the value stored under the specified <paramref name="key"/>.
+            </summary>
+            <param name="key">The textual key of the instance to get or set.</param>
+            <returns>The instance with the specified <paramref name="key"/>.</returns>
+            <exception cref="T:System.ArgumentException">An instance with the same <paramref name="key"/> already exists.
+            </exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">An instance with the given <paramref name="key"/> does not exist.
+            </exception>
+        </member>
+        <member name="M:BfshaLibrary.ResDict`1.Add(System.String,`0)">
+            <summary>
+            Adds the given <paramref name="value"/> under the specified <paramref name="key"/>.
+            </summary>
+            <param name="key">The textual key under which the <see cref="T:BfshaLibrary.Core.IResData"/> instance will be stored.</param>
+            <param name="value">The <see cref="T:BfshaLibrary.Core.IResData"/> to add.</param>
+            <exception cref="T:System.ArgumentException">An <see cref="T:BfshaLibrary.Core.IResData"/> instance with the same <paramref name="key"/>
+            already exists.</exception>
+        </member>
+        <member name="M:BfshaLibrary.ResDict`1.ContainsValue(`0)">
+            <summary>
+            Determines whether the given <paramref name="value"/> is in the dictionary.
+            </summary>
+            <param name="value">The <see cref="T:BfshaLibrary.Core.IResData"/> instance to locate in the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns><c>true</c> if <paramref name="value"/> was found in the dictionary; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict`1.GetEnumerator">
+            <summary>
+            Returns a generic <see cref="T:System.Collections.IEnumerator"/> which can be used to iterate over the items in the dictionary.
+            </summary>
+            <returns>An enumerator to iterate over the items in the dictionary.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict`1.IndexOf(`0)">
+            <summary>
+            Searches for the specified <paramref name="value"/> and returns the zero-based index of the first occurrence
+            within the entire dictionary.
+            </summary>
+            <param name="value">The <see cref="T:BfshaLibrary.Core.IResData"/> instance to locate in the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns>The zero-based index of the first occurence of <paramref name="value"/> within the entire
+            dictionary if found; otherwise <c>-1</c>.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict`1.Remove(`0)">
+            <summary>
+            Removes the first occurrence of a specific <paramref name="value"/> from the dictionary.
+            </summary>
+            <param name="value">The <see cref="T:BfshaLibrary.Core.IResData"/> instance to remove from the dictionary. The value can be
+            <c>null</c>.</param>
+            <returns><c>true</c> if <paramref name="value"/> was successfully removed; otherwise <c>false</c>. This
+            method also returns <c>false</c> if <paramref name="value"/> was not found in the dictionary.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict`1.ToArray">
+            <summary>
+            Copies the elements of the dictionary as <see cref="T:System.Collections.Generic.KeyValuePair`2"/> instances to a new
+            array and returns it.
+            </summary>
+            <returns>An array containing copies of the elements.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict`1.TryGetKey(`0,System.String@)">
+            <summary>
+            Returns <c>true</c> if a key was found for the given <paramref name="value"/> and has been assigned to
+            <paramref name="key"/>, or <c>false</c> if no key was found for the value and <c>null</c> was assigned to
+            <paramref name="key"/>.
+            </summary>
+            <param name="value">The <see cref="T:BfshaLibrary.Core.IResData"/> to look up a key for.</param>
+            <param name="key">The variable receiving the found key or <c>null</c>.</param>
+            <returns><c>true</c> if a key was found and assigned; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict`1.TryGetValue(System.String,`0@)">
+            <summary>
+            Returns <c>true</c> if an instance was stored under the given <paramref name="key"/> and has been assigned
+            to <paramref name="value"/>, or <c>false</c> if no instance is stored under the given <paramref name="key"/>
+            and <c>null</c> was assigned to <paramref name="value"/>.
+            </summary>
+            <param name="key">The textual key of the instance to get or set.</param>
+            <param name="value">The variable receiving the found instance or <c>null</c>.</param>
+            <returns><c>true</c> if an instance was found and assigned; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:BfshaLibrary.ResDict`1.LoadNodeValue(BfshaLibrary.Core.BfshaFileLoader)">
+            <summary>
+            Loads an <see cref="T:BfshaLibrary.Core.IResData"/> instance from the given <paramref name="loader"/>.
+            </summary>
+            <param name="loader">The <see cref="!:ResFileLoader"/> to load the instance with.</param>
+            <returns>The loaded <see cref="T:BfshaLibrary.Core.IResData"/> instance.</returns>
         </member>
         <member name="T:BfshaLibrary.ResString">
             <summary>
@@ -1076,136 +421,45 @@
             </summary>
             <returns>The value of the <see cref="P:BfshaLibrary.ResString.String"/> property.</returns>
         </member>
-        <member name="T:BfshaLibrary.Srt2D">
+        <member name="T:BfshaLibrary.ResUint32">
             <summary>
-            Represents a 2D transformation.
+            Represents a <see cref="!:String"/> which is stored in a <see cref="T:BfshaLibrary.BfshaFile"/>.
             </summary>
         </member>
-        <member name="F:BfshaLibrary.Srt2D.SizeInBytes">
+        <member name="P:BfshaLibrary.ResUint32.Value">
             <summary>
-            The size of this structure.
+            The textual <see cref="T:System.UInt32"/> represented by this instance.
             </summary>
         </member>
-        <member name="F:BfshaLibrary.Srt2D.Scaling">
+        <member name="P:BfshaLibrary.ResUint32.Encoding">
             <summary>
-            The scaling amount of the transformation.
+            The <see cref="P:BfshaLibrary.ResUint32.Encoding"/> with which this string was read or will be written.
             </summary>
         </member>
-        <member name="F:BfshaLibrary.Srt2D.Rotation">
+        <member name="M:BfshaLibrary.ResUint32.op_Implicit(System.UInt32)~BfshaLibrary.ResUint32">
             <summary>
-            The rotation angle of the transformation.
+            Converts the given <paramref name="value"/> value to a <see cref="T:BfshaLibrary.ResString"/> instance.
             </summary>
+            <param name="value">The <see cref="!:String"/> value to represent in the new <see cref="T:BfshaLibrary.ResString"/> instance.
+            </param>
         </member>
-        <member name="F:BfshaLibrary.Srt2D.Translation">
+        <member name="M:BfshaLibrary.ResUint32.op_Implicit(BfshaLibrary.ResUint32)~System.UInt32">
             <summary>
-            The translation amount of the transformation.
+            Converts the given <paramref name="value"/> value to an <see cref="T:System.UInt32"/> instance.
             </summary>
+            <param name="value">The <see cref="T:BfshaLibrary.ResUint32"/> value to represent in the new <see cref="T:System.UInt32"/> instance.
+            </param>
         </member>
-        <member name="T:BfshaLibrary.Srt3D">
+        <member name="M:BfshaLibrary.ResUint32.ToString">
             <summary>
-            Represents a 3D transformation.
+            Returns the value of the <see cref="!:String"/> property.
             </summary>
+            <returns>The value of the <see cref="!:String"/> property.</returns>
         </member>
-        <member name="F:BfshaLibrary.Srt3D.SizeInBytes">
+        <member name="T:BfshaLibrary.SubStream">
             <summary>
-            The size of this structure.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.Srt3D.Scaling">
-            <summary>
-            The scaling amount of the transformation.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.Srt3D.Rotation">
-            <summary>
-            The rotation amount of the transformation.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.Srt3D.Translation">
-            <summary>
-            The translation amount of the transformation.
-            </summary>
-        </member>
-        <member name="T:BfshaLibrary.TexSrt">
-            <summary>
-            Represents a 2D texture transformation.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrt.SizeInBytes">
-            <summary>
-            The size of this structure.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrt.Mode">
-            <summary>
-            The <see cref="T:BfshaLibrary.TexSrtMode"/> with which the transformation is applied.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrt.Scaling">
-            <summary>
-            The scaling amount of the transformation.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrt.Rotation">
-            <summary>
-            The rotation angle of the transformation.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrt.Translation">
-            <summary>
-            The translation amount of the transformation.
-            </summary>
-        </member>
-        <member name="T:BfshaLibrary.TexSrtEx">
-            <summary>
-            Represents a 2D texture transformation which is multiplied by a 3x4 matrix referenced at runtime by the
-            <see cref="F:BfshaLibrary.TexSrtEx.MatrixPointer"/>.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrtEx.SizeInBytes">
-            <summary>
-            The size of this structure.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrtEx.Mode">
-            <summary>
-            The <see cref="T:BfshaLibrary.TexSrtMode"/> with which the transformation is applied.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrtEx.Scaling">
-            <summary>
-            The scaling amount of the transformation.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrtEx.Rotation">
-            <summary>
-            The rotation angle of the transformation.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrtEx.Translation">
-            <summary>
-            The translation amount of the transformation.
-            </summary>
-        </member>
-        <member name="F:BfshaLibrary.TexSrtEx.MatrixPointer">
-            <summary>
-            A pointer to a 3x4 matrix to multiply the transformation with. Set at runtime.
-            </summary>
-        </member>
-        <member name="T:BfshaLibrary.TexSrtMode">
-            <summary>
-            Represents the texture transformation mode used in <see cref="T:BfshaLibrary.TexSrt"/> and <see cref="T:BfshaLibrary.TexSrtEx"/>.
-            </summary>
-        </member>
-        <member name="T:BfshaLibrary.TextureRef">
-            <summary>
-            Represents a reference to a <see cref="!:Texture"/> instance by name.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.TextureRef.Name">
-            <summary>
-            Gets or sets the name with which the instance can be referenced uniquely in
-            <see cref="!:ResDict&lt;TextureRef&gt;"/> instances. Typically the same as the <see cref="!:Texture.Name"/>.
+            Represenents a stream taked from another given an offset and length
+            Used for archives with streams left open
             </summary>
         </member>
         <member name="T:BfshaLibrary.UserData">
@@ -1215,7 +469,7 @@
         </member>
         <member name="P:BfshaLibrary.UserData.Name">
             <summary>
-            Gets or sets the name with which the instance can be referenced uniquely in <see cref="!:ResDict&lt;UserData&gt;"/>
+            Gets or sets the name with which the instance can be referenced uniquely in <see cref="T:BfshaLibrary.ResDict`1"/>
             instances.
             </summary>
         </member>
@@ -1254,708 +508,53 @@
             The values is a <see cref="F:BfshaLibrary.UserDataType.Byte"/> array.
             </summary>
         </member>
-        <member name="T:BfshaLibrary.Core.BinaryDataReaderExtensions">
-            <summary>
-            Represents extension methods for the <see cref="T:Syroot.BinaryData.BinaryDataReader"/> class.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadAnimConstant(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:BfshaLibrary.AnimConstant"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:BfshaLibrary.AnimConstant"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadAnimConstants(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads a <see cref="T:BfshaLibrary.AnimConstant"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:BfshaLibrary.AnimConstant"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadDecimal10x5(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:BfshaLibrary.Decimal10x5"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:BfshaLibrary.Decimal10x5"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadDecimal10x5s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:BfshaLibrary.Decimal10x5"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:BfshaLibrary.Decimal10x5"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadHalf(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:BfshaLibrary.Half"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:BfshaLibrary.Half"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadHalfs(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:BfshaLibrary.Half"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:BfshaLibrary.Half"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadMatrix3x4(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Matrix3x4"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:Syroot.Maths.Matrix3x4"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadMatrix3x4s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Matrix3x4"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:Syroot.Maths.Matrix3x4"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector2(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector2"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector2"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector2s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector2"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector2"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector2Bool(Syroot.BinaryData.BinaryDataReader,Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector2Bool"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector2Bool"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector2Bools(Syroot.BinaryData.BinaryDataReader,System.Int32,Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector2Bool"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector2Bool"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector2F(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector2F"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector2F"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector2Fs(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector2F"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector2F"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector2U(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector2U"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector2U"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector2Us(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector2U"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector2U"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector3(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector3"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector3"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector3s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector3"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector3"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector3Bool(Syroot.BinaryData.BinaryDataReader,Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector3Bool"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector3Bool"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector3Bools(Syroot.BinaryData.BinaryDataReader,System.Int32,Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector3Bool"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector3Bool"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector3F(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector3F"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector3F"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector3Fs(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector3F"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector3F"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector3U(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector3U"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector3U"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector3Us(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector3U"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector3U"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector4(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector4"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector4"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector4s(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector4"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector4"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector4Bool(Syroot.BinaryData.BinaryDataReader,Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector4Bool"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector4Bool"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector4Bools(Syroot.BinaryData.BinaryDataReader,System.Int32,Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector4Bool"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector4Bool"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector4F(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector4F"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector4F"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector4Fs(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector4F"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector4F"/> instances.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector4U(Syroot.BinaryData.BinaryDataReader)">
-            <summary>
-            Reads a <see cref="T:Syroot.Maths.Vector4U"/> instance from the current stream and returns it.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector4U"/> instance.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataReaderExtensions.ReadVector4Us(Syroot.BinaryData.BinaryDataReader,System.Int32)">
-            <summary>
-            Reads <see cref="T:Syroot.Maths.Vector4U"/> instances from the current stream and returns them.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataReader"/>.</param>
-            <param name="count">The number of instances to read.</param>
-            <returns>The <see cref="T:Syroot.Maths.Vector4U"/> instances.</returns>
-        </member>
-        <member name="T:BfshaLibrary.Core.BinaryDataWriterExtensions">
-            <summary>
-            Represents extension methods for the <see cref="T:Syroot.BinaryData.BinaryDataWriter"/> class.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,BfshaLibrary.AnimConstant)">
-            <summary>
-            Writes a <see cref="T:BfshaLibrary.AnimConstant"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:BfshaLibrary.AnimConstant"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{BfshaLibrary.AnimConstant})">
-            <summary>
-            Writes <see cref="T:BfshaLibrary.AnimConstant"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:BfshaLibrary.AnimConstant"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,BfshaLibrary.Decimal10x5)">
-            <summary>
-            Writes a <see cref="T:BfshaLibrary.Decimal10x5"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:BfshaLibrary.Decimal10x5"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{BfshaLibrary.Decimal10x5})">
-            <summary>
-            Writes <see cref="T:BfshaLibrary.Decimal10x5"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:BfshaLibrary.Decimal10x5"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,BfshaLibrary.Half)">
-            <summary>
-            Writes a <see cref="T:BfshaLibrary.Half"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:BfshaLibrary.Half"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{BfshaLibrary.Half})">
-            <summary>
-            Writes <see cref="T:BfshaLibrary.Half"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:BfshaLibrary.Half"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Matrix3x4)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Matrix3x4"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Matrix3x4"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Matrix3x4})">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Matrix3x4"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Matrix3x4"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector2Bool,Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector2Bool"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector2Bool"/> instance.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector2Bool},Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector2Bool"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector2Bool"/> instances.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector2F)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector2F"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector2F"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector2F})">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector2F"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector2F"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector2U)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector2U"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector2U"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector2U})">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector2U"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector2U"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector3)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector3"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector3"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector3})">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector3"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector3"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector3Bool,Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector3Bool"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector3Bool"/> instance.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector3Bool},Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector3Bool"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector3Bool"/> instances.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector3F)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector3F"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector3F"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector3F})">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector3F"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector3F"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector3U)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector3U"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector3U"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector3U})">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector3U"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector3U"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector4)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector4"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector4"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector4})">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector4"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector4"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector4Bool,Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector4Bool"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector4Bool"/> instance.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector4Bool},Syroot.BinaryData.BinaryBooleanFormat)">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector4Bool"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector4Bool"/> instances.</param>
-            <param name="format">The <see cref="T:Syroot.BinaryData.BinaryBooleanFormat"/> in which values are stored.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector4F)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector4F"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector4F"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector4F})">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector4F"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector4F"/> instances.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,Syroot.Maths.Vector4U)">
-            <summary>
-            Writes a <see cref="T:Syroot.Maths.Vector4U"/> instance into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="value">The <see cref="T:Syroot.Maths.Vector4U"/> instance.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BinaryDataWriterExtensions.Write(Syroot.BinaryData.BinaryDataWriter,System.Collections.Generic.IEnumerable{Syroot.Maths.Vector4U})">
-            <summary>
-            Writes <see cref="T:Syroot.Maths.Vector4U"/> instances into the current stream.
-            </summary>
-            <param name="self">The extended <see cref="T:Syroot.BinaryData.BinaryDataWriter"/>.</param>
-            <param name="values">The <see cref="T:Syroot.Maths.Vector4U"/> instances.</param>
-        </member>
-        <member name="T:BfshaLibrary.Core.ByteExtensions">
-            <summary>
-            Represents extension methods for <see cref="T:System.Byte"/> instances.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.Core.ByteExtensions.Decode(System.Byte,System.Int32,System.Int32)">
-            <summary>
-            Returns an <see cref="T:System.Byte"/> instance represented by the given number of <paramref name="bits"/>, starting
-            at the <paramref name="firstBit"/>.
-            </summary>
-            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
-            <param name="firstBit">The first bit of the encoded value.</param>
-            <param name="bits">The number of least significant bits which are used to store the <see cref="T:System.Byte"/>
-            value.</param>
-            <returns>The decoded <see cref="T:System.Byte"/>.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.ByteExtensions.EnableBit(System.Byte,System.Int32)">
-            <summary>
-            Returns the current <see cref="T:System.Byte"/> with the bit at the <paramref name="index"/> set (being 1).
-            </summary>
-            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
-            <param name="index">The 0-based index of the bit to enable.</param>
-            <returns>The current <see cref="T:System.Byte"/> with the bit enabled.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.ByteExtensions.Encode(System.Byte,System.Byte,System.Int32,System.Int32)">
-            <summary>
-            Returns the current <see cref="T:System.Byte"/> with the given <paramref name="value"/> set into the given number
-            of <paramref name="bits"/> starting at <paramref name="firstBit"/>.
-            </summary>
-            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
-            <param name="value">The value to encode.</param>
-            <param name="firstBit">The first bit used for the encoded value.</param>
-            <param name="bits">The number of bits which are used to store the <see cref="T:System.Byte"/> value.</param>
-            <returns>The current <see cref="T:System.Byte"/> with the value encoded into it.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.ByteExtensions.DisableBit(System.Byte,System.Int32)">
-            <summary>
-            Returns the current <see cref="T:System.Byte"/> with the bit at the <paramref name="index"/> cleared (being 0).
-            </summary>
-            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
-            <param name="index">The 0-based index of the bit to disable.</param>
-            <returns>The current <see cref="T:System.Byte"/> with the bit disabled.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.ByteExtensions.GetBit(System.Byte,System.Int32)">
-            <summary>
-            Returns a value indicating whether the bit at the <paramref name="index"/> in the current
-            <see cref="T:System.Byte"/> is enabled or disabled.
-            </summary>
-            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
-            <param name="index">The 0-based index of the bit to check.</param>
-            <returns><c>true</c> when the bit is set; otherwise <c>false</c>.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.ByteExtensions.RotateBits(System.Byte,System.Int32)">
-            <summary>
-            Returns the current <see cref="T:System.Byte"/> with all bits rotated in the given <paramref name="direction"/>,
-            where positive directions rotate left and negative directions rotate right.
-            </summary>
-            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
-            <param name="direction">The direction in which to rotate, where positive directions rotate left.</param>
-            <returns>The current <see cref="T:System.Byte"/> with the bits rotated.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.ByteExtensions.SetBit(System.Byte,System.Int32,System.Boolean)">
-            <summary>
-            Returns the current <see cref="T:System.Byte"/> with the bit at the <paramref name="index"/> enabled or disabled,
-            according to <paramref name="enable"/>.
-            </summary>
-            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
-            <param name="index">The 0-based index of the bit to enable or disable.</param>
-            <param name="enable"><c>true</c> to enable the bit; otherwise <c>false</c>.</param>
-            <returns>The current <see cref="T:System.Byte"/> with the bit enabled or disabled.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.ByteExtensions.ToggleBit(System.Byte,System.Int32)">
-            <summary>
-            Returns the current <see cref="T:System.Byte"/> with the bit at the <paramref name="index"/> enabled when it is
-            disabled or disabled when it is enabled.
-            </summary>
-            <param name="self">The extended <see cref="T:System.Byte"/> instance.</param>
-            <param name="index">The 0-based index of the bit to toggle.</param>
-            <returns>The current <see cref="T:System.Byte"/> with the bit toggled.</returns>
-        </member>
-        <member name="T:BfshaLibrary.Core.UInt32Extensions">
-            <summary>
-            Represents extension methods for <see cref="T:System.UInt32"/> instances.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.Core.UInt32Extensions.Decode(System.UInt32,System.Int32,System.Int32)">
-            <summary>
-            Returns an <see cref="T:System.UInt32"/> instance represented by the given number of <paramref name="bits"/>, starting
-            at the <paramref name="firstBit"/>.
-            </summary>
-            <param name="self">The extended <see cref="T:System.UInt32"/> instance.</param>
-            <param name="firstBit">The first bit of the encoded value.</param>
-            <param name="bits">The number of least significant bits which are used to store the <see cref="T:System.UInt32"/>
-            value.</param>
-            <returns>The decoded <see cref="T:System.UInt32"/>.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.UInt32Extensions.EnableBit(System.UInt32,System.Int32)">
-            <summary>
-            Returns the current <see cref="T:System.UInt32"/> with the bit at the <paramref name="index"/> set (being 1).
-            </summary>
-            <param name="self">The extended <see cref="T:System.UInt32"/> instance.</param>
-            <param name="index">The 0-based index of the bit to enable.</param>
-            <returns>The current <see cref="T:System.UInt32"/> with the bit enabled.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.UInt32Extensions.Encode(System.UInt32,System.UInt32,System.Int32,System.Int32)">
-            <summary>
-            Returns the current <see cref="T:System.UInt32"/> with the given <paramref name="value"/> set into the given number
-            of <paramref name="bits"/> starting at <paramref name="firstBit"/>.
-            </summary>
-            <param name="self">The extended <see cref="T:System.UInt32"/> instance.</param>
-            <param name="value">The value to encode.</param>
-            <param name="firstBit">The first bit used for the encoded value.</param>
-            <param name="bits">The number of bits which are used to store the <see cref="T:System.UInt32"/> value.</param>
-            <returns>The current <see cref="T:System.UInt32"/> with the value encoded into it.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.UInt32Extensions.DisableBit(System.UInt32,System.Int32)">
-            <summary>
-            Returns the current <see cref="T:System.UInt32"/> with the bit at the <paramref name="index"/> cleared (being 0).
-            </summary>
-            <param name="self">The extended <see cref="T:System.UInt32"/> instance.</param>
-            <param name="index">The 0-based index of the bit to disable.</param>
-            <returns>The current <see cref="T:System.UInt32"/> with the bit disabled.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.UInt32Extensions.GetBit(System.UInt32,System.Int32)">
-            <summary>
-            Returns a value indicating whether the bit at the <paramref name="index"/> in the current
-            <see cref="T:System.UInt32"/> is enabled or disabled.
-            </summary>
-            <param name="self">The extended <see cref="T:System.UInt32"/> instance.</param>
-            <param name="index">The 0-based index of the bit to check.</param>
-            <returns><c>true</c> when the bit is set; otherwise <c>false</c>.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.UInt32Extensions.RotateBits(System.UInt32,System.Int32)">
-            <summary>
-            Returns the current <see cref="T:System.UInt32"/> with all bits rotated in the given <paramref name="direction"/>,
-            where positive directions rotate left and negative directions rotate right.
-            </summary>
-            <param name="self">The extended <see cref="T:System.UInt32"/> instance.</param>
-            <param name="direction">The direction in which to rotate, where positive directions rotate left.</param>
-            <returns>The current <see cref="T:System.UInt32"/> with the bits rotated.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.UInt32Extensions.SetBit(System.UInt32,System.Int32,System.Boolean)">
-            <summary>
-            Returns the current <see cref="T:System.UInt32"/> with the bit at the <paramref name="index"/> enabled or disabled,
-            according to <paramref name="enable"/>.
-            </summary>
-            <param name="self">The extended <see cref="T:System.UInt32"/> instance.</param>
-            <param name="index">The 0-based index of the bit to enable or disable.</param>
-            <param name="enable"><c>true</c> to enable the bit; otherwise <c>false</c>.</param>
-            <returns>The current <see cref="T:System.UInt32"/> with the bit enabled or disabled.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.UInt32Extensions.ToggleBit(System.UInt32,System.Int32)">
-            <summary>
-            Returns the current <see cref="T:System.UInt32"/> with the bit at the <paramref name="index"/> enabled when it is
-            disabled or disabled when it is enabled.
-            </summary>
-            <param name="self">The extended <see cref="T:System.UInt32"/> instance.</param>
-            <param name="index">The 0-based index of the bit to toggle.</param>
-            <returns>The current <see cref="T:System.UInt32"/> with the bit toggled.</returns>
-        </member>
-        <member name="T:BfshaLibrary.Core.IResData">
-            <summary>
-            Represents the common interface for <see cref="T:BfshaLibrary.BfshaFile"/> data instances.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.Core.IResData.Load(BfshaLibrary.Core.BfshaFileLoader)">
-            <summary>
-            Loads raw data from the <paramref name="loader"/> data stream into instances.
-            </summary>
-            <param name="loader">The <see cref="T:BfshaLibrary.Core.BfshaFileLoader"/> to load data with.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.IResData.Save(BfshaLibrary.Core.BfshaFileSaver)">
-            <summary>
-            Saves header data of the instance and queues referenced data in the given <paramref name="saver"/>.
-            </summary>
-            <param name="saver">The <see cref="T:BfshaLibrary.Core.BfshaFileSaver"/> to save headers and queue data with.</param>
-        </member>
         <member name="T:BfshaLibrary.Core.BfshaFileLoader">
             <summary>
-            Loads the hierachy and data of a <see cref="!:Bfsha.BfshaFile"/>.
+            Loads the hierachy and data of a <see cref="!:Bfres.ResFile"/>.
             </summary>
         </member>
         <member name="M:BfshaLibrary.Core.BfshaFileLoader.#ctor(BfshaLibrary.BfshaFile,System.IO.Stream,System.Boolean)">
             <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileLoader"/> class loading data into the given
-            <paramref name="bfshaFile"/> from the specified <paramref name="stream"/> which is optionally left open.
+            Initializes a new instance of the <see cref="!:ResFileLoader"/> class loading data into the given
+            <paramref name="resFile"/> from the specified <paramref name="stream"/> which is optionally left open.
             </summary>
-            <param name="bfshaFile">The <see cref="!:Bfsha.bfshaFile"/> instance to load data into.</param>
-            <param name="stream">The <see cref="T:System.IO.Stream"/> to read data from.</param>
-            <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileLoader.#ctor(BfshaLibrary.BnshFile,System.IO.Stream,System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileLoader"/> class loading data into the given
-            <paramref name="bfshaFile"/> from the specified <paramref name="stream"/> which is optionally left open.
-            </summary>
-            <param name="bfshaFile">The <see cref="!:Bfsha.bfshaFile"/> instance to load data into.</param>
+            <param name="resFile">The <see cref="!:Bfres.ResFile"/> instance to load data into.</param>
             <param name="stream">The <see cref="T:System.IO.Stream"/> to read data from.</param>
             <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
         </member>
         <member name="M:BfshaLibrary.Core.BfshaFileLoader.#ctor(BfshaLibrary.BfshaFile,System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileLoader"/> class from the file with the given
+            Initializes a new instance of the <see cref="!:ResFileLoader"/> class from the file with the given
             <paramref name="fileName"/>.
             </summary>
-            <param name="BfshaFile">The <see cref="!:Bfsha.BfshaFile"/> instance to load data into.</param>
-            <param name="fileName">The name of the file to load the data from.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileLoader.#ctor(BfshaLibrary.BnshFile,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileLoader"/> class from the file with the given
-            <paramref name="fileName"/>.
-            </summary>
-            <param name="BfshaFile">The <see cref="!:Bfsha.BfshaFile"/> instance to load data into.</param>
+            <param name="resFile">The <see cref="!:Bfres.ResFile"/> instance to load data into.</param>
             <param name="fileName">The name of the file to load the data from.</param>
         </member>
         <member name="P:BfshaLibrary.Core.BfshaFileLoader.BfshaFile">
             <summary>
-            Gets the loaded <see cref="!:Bfsha.BfshaFile"/> instance.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.Core.BfshaFileLoader.BnshFile">
-            <summary>
-            Gets the loaded <see cref="!:Bfsha.BnshFile"/> instance.
+            Gets the loaded <see cref="!:Bfres.ResFile"/> instance.
             </summary>
         </member>
         <member name="M:BfshaLibrary.Core.BfshaFileLoader.Execute">
             <summary>
-            Starts deserializing the data from the <see cref="P:BfshaLibrary.Core.BfshaFileLoader.BfshaFile"/> root.
+            Starts deserializing the data from the <see cref="!:ResFile"/> root.
             </summary>
+        </member>
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.Load``1">
+            <summary>
+            Reads and returns an <see cref="T:BfshaLibrary.Core.IResData"/> instance of type <typeparamref name="T"/> from the following
+            offset or returns <c>null</c> if the read offset is 0.
+            </summary>
+            <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> to read.</typeparam>
+            <returns>The <see cref="T:BfshaLibrary.Core.IResData"/> instance or <c>null</c>.</returns>
+        </member>
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.LoadSection``1">
+            <summary>
+            Reads and returns an <see cref="T:BfshaLibrary.Core.IResData"/> instance of type <typeparamref name="T"/> from the following
+            offset or returns <c>null</c> if the read offset is 0.
+            </summary>
+            <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> to read.</typeparam>
+            <returns>The <see cref="T:BfshaLibrary.Core.IResData"/> instance or <c>null</c>.</returns>
         </member>
         <member name="M:BfshaLibrary.Core.BfshaFileLoader.Load``1(System.Int64)">
             <summary>
@@ -1965,15 +564,7 @@
             <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> to read.</typeparam>
             <returns>The <see cref="T:BfshaLibrary.Core.IResData"/> instance or <c>null</c>.</returns>
         </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileLoader.Load``1(System.Boolean)">
-            <summary>
-            Reads and returns an <see cref="T:BfshaLibrary.Core.IResData"/> instance of type <typeparamref name="T"/> from the following
-            offset or returns <c>null</c> if the read offset is 0.
-            </summary>
-            <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> to read.</typeparam>
-            <returns>The <see cref="T:BfshaLibrary.Core.IResData"/> instance or <c>null</c>.</returns>
-        </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileLoader.LoadCustom``1(System.Func{``0},System.Nullable{System.Int64})">
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.LoadCustom``1(System.Func{``0},System.Nullable{System.UInt32})">
             <summary>
             Reads and returns an instance of arbitrary type <typeparamref name="T"/> from the following offset with the
             given <paramref name="callback"/> or returns <c>null</c> if the read offset is 0.
@@ -1984,15 +575,15 @@
             <returns>The data instance or <c>null</c>.</returns>
             <remarks>Offset required for ExtFile header (offset specified before size).</remarks>
         </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileLoader.LoadDict">
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.LoadDict``1">
             <summary>
-            Reads and returns an <see cref="!:ResDict&lt;T&gt;"/> instance with elements of type <typeparamref name="T"/> from
+            Reads and returns an <see cref="T:BfshaLibrary.ResDict`1"/> instance with elements of type <typeparamref name="T"/> from
             the following offset or returns an empty instance if the read offset is 0.
             </summary>
             <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> elements.</typeparam>
-            <returns>The <see cref="!:ResDict&lt;T&gt;"/> instance.</returns>
+            <returns>The <see cref="T:BfshaLibrary.ResDict`1"/> instance.</returns>
         </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileLoader.LoadList``1(System.Int32,System.Nullable{System.Int64})">
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.LoadList``1(System.Int32,System.Nullable{System.UInt32})">
             <summary>
             Reads and returns an <see cref="T:System.Collections.Generic.IList`1"/> instance with <paramref name="count"/> elements of type
             <typeparamref name="T"/> from the following offset or returns <c>null</c> if the read offset is 0.
@@ -2019,29 +610,45 @@
             <param name="encoding">The optional encoding of the texts.</param>
             <returns>The read texts.</returns>
         </member>
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.LoadDictValues``1">
+            <summary>
+            Reads and returns an <see cref="T:BfshaLibrary.ResDict`1"/> instance with elements of type <typeparamref name="T"/> from
+            the following offset or returns an empty instance if the read offset is 0.
+            </summary>
+            <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> elements.</typeparam>
+            <returns>The <see cref="T:BfshaLibrary.ResDict`1"/> instance.</returns>
+        </member>
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.LoadDictValues``1(System.Int64,System.Int64)">
+            <summary>
+            Reads and returns an <see cref="T:BfshaLibrary.ResDict`1"/> instance with elements of type <typeparamref name="T"/> from
+            the following offset or returns an empty instance if the read offset is 0.
+            </summary>
+            <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> elements.</typeparam>
+            <returns>The <see cref="T:BfshaLibrary.ResDict`1"/> instance.</returns>
+        </member>
         <member name="M:BfshaLibrary.Core.BfshaFileLoader.CheckSignature(System.String)">
             <summary>
-            Reads a Bfsha signature consisting of 4 ASCII characters encoded as an <see cref="T:System.UInt32"/> and checks for
+            Reads a BFRES signature consisting of 4 ASCII characters encoded as an <see cref="T:System.UInt32"/> and checks for
             validity.
             </summary>
             <param name="validSignature">A valid signature.</param>
         </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileLoader.ReadOffset(System.Boolean)">
+        <member name="M:BfshaLibrary.Core.BfshaFileLoader.ReadOffset">
             <summary>
-            Reads a Bfsha offset which is the absolute address.
+            Reads a BFRES offset which is relative to itself, and returns the absolute address.
             </summary>
             <returns>The absolute address of the offset.</returns>
         </member>
         <member name="M:BfshaLibrary.Core.BfshaFileLoader.ReadOffsets(System.Int32)">
             <summary>
-            Reads Bfsha offsets which is the absolute addresses.
+            Reads BFRES offsets which are relative to themselves, and returns the absolute addresses.
             </summary>
             <param name="count">The number of offsets to read.</param>
             <returns>The absolute addresses of the offsets.</returns>
         </member>
         <member name="T:BfshaLibrary.Core.BfshaFileSaver">
             <summary>
-            Saves the hierachy and data of a <see cref="!:Bfsha.BfshaFile"/>.
+            Saves the hierachy and data of a <see cref="!:Bfres.ResFile"/>.
             </summary>
         </member>
         <member name="F:BfshaLibrary.Core.BfshaFileSaver.AlignmentSmall">
@@ -2049,48 +656,14 @@
             Gets or sets a data block alignment typically seen with <see cref="P:BfshaLibrary.Buffer.Data"/>.
             </summary>
         </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileSaver.#ctor(BfshaLibrary.BfshaFile,System.IO.Stream,System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileSaver"/> class saving data from the given
-            <paramref name="BfshaFile"/> into the specified <paramref name="stream"/> which is optionally left open.
-            </summary>
-            <param name="BfshaFile">The <see cref="!:Bfsha.BfshaFile"/> instance to save data from.</param>
-            <param name="stream">The <see cref="T:System.IO.Stream"/> to save data into.</param>
-            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileSaver.#ctor(BfshaLibrary.BnshFile,System.IO.Stream,System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileSaver"/> class saving data from the given
-            <paramref name="BfshaFile"/> into the specified <paramref name="stream"/> which is optionally left open.
-            </summary>
-            <param name="BfshaFile">The <see cref="!:Bfsha.BfshaFile"/> instance to save data from.</param>
-            <param name="stream">The <see cref="T:System.IO.Stream"/> to save data into.</param>
-            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileSaver.#ctor(BfshaLibrary.BfshaFile,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileSaver"/> class for the file with the given
-            <paramref name="fileName"/>.
-            </summary>
-            <param name="BfshaFile">The <see cref="!:Bfsha.BfshaFile"/> instance to save.</param>
-            <param name="fileName">The name of the file to save the data into.</param>
-        </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileSaver.#ctor(BfshaLibrary.BnshFile,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:BfshaLibrary.Core.BfshaFileSaver"/> class for the file with the given
-            <paramref name="fileName"/>.
-            </summary>
-            <param name="BfshaFile">The <see cref="!:Bfsha.BnshFile"/> instance to save.</param>
-            <param name="fileName">The name of the file to save the data into.</param>
-        </member>
         <member name="P:BfshaLibrary.Core.BfshaFileSaver.BfshaFile">
             <summary>
-            Gets the saved <see cref="!:Bfsha.BfshaFile"/> instance.
+            Gets the saved <see cref="!:Bfres.ResFile"/> instance.
             </summary>
         </member>
-        <member name="P:BfshaLibrary.Core.BfshaFileSaver.BnshFile">
+        <member name="P:BfshaLibrary.Core.BfshaFileSaver.ExportableData">
             <summary>
-            Gets the saved <see cref="!:Bfsha.BnshFile"/> instance.
+            Gets the saved <see cref="!:Bfres.IResData"/> instance used for exporting data.
             </summary>
         </member>
         <member name="P:BfshaLibrary.Core.BfshaFileSaver.CurrentIndex">
@@ -2100,7 +673,7 @@
         </member>
         <member name="M:BfshaLibrary.Core.BfshaFileSaver.Execute">
             <summary>
-            Starts serializing the data from the <see cref="P:BfshaLibrary.Core.BfshaFileSaver.BfshaFile"/> root.
+            Starts serializing the data from the <see cref="!:ResFile"/> root.
             </summary>
         </member>
         <member name="M:BfshaLibrary.Core.BfshaFileSaver.Save(BfshaLibrary.Core.IResData,System.Int32)">
@@ -2111,30 +684,19 @@
             <param name="index">The index of the element, used for instances referenced by a <see cref="T:BfshaLibrary.ResDict"/>.
             </param>
         </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileSaver.SaveFieldFileSize">
-            <summary>
-            Reserves space for the <see cref="!:Bfsha.BfshaFile"/> file size field which is automatically filled later.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileSaver.SaveFieldStringPool">
-            <summary>
-            Reserves space for the <see cref="!:Bfsha.BfshaFile"/> string pool size and offset fields which are automatically
-            filled later.
-            </summary>
-        </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileSaver.SaveList``1(System.Collections.Generic.IEnumerable{``0},System.Boolean)">
+        <member name="M:BfshaLibrary.Core.BfshaFileSaver.SaveList``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Reserves space for an offset to the <paramref name="list"/> written later.
             </summary>
             <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> elements.</typeparam>
             <param name="list">The <see cref="T:System.Collections.Generic.IList`1"/> to save.</param>
         </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileSaver.SaveDict(BfshaLibrary.ResDict,System.Int64)">
+        <member name="M:BfshaLibrary.Core.BfshaFileSaver.SaveDict``1(BfshaLibrary.ResDict{``0})">
             <summary>
             Reserves space for an offset to the <paramref name="dict"/> written later.
             </summary>
             <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> element values.</typeparam>
-            <param name="dict">The <see cref="!:ResDict&lt;T&gt;"/> to save.</param>
+            <param name="dict">The <see cref="T:BfshaLibrary.ResDict`1"/> to save.</param>
         </member>
         <member name="M:BfshaLibrary.Core.BfshaFileSaver.SaveCustom(System.Object,System.Action)">
             <summary>
@@ -2168,16 +730,28 @@
             <param name="alignment">The alignment to seek to before invoking the callback.</param>
             <param name="callback">The <see cref="T:System.Action"/> to invoke to write the data.</param>
         </member>
-        <member name="M:BfshaLibrary.Core.BfshaFileSaver.SaveRelocateEntryToSection(System.Int64,System.UInt32,System.UInt32,System.UInt32,System.Int32,System.String)">
-            <summary>
-            Save pointer array to be relocated in section 1
-            </summary>
-        </member>
         <member name="M:BfshaLibrary.Core.BfshaFileSaver.WriteSignature(System.String)">
             <summary>
-            Writes a Bfsha signature consisting of 4 ASCII characters encoded as an <see cref="T:System.UInt32"/>.
+            Writes a BFRES signature consisting of 4 ASCII characters encoded as an <see cref="T:System.UInt32"/>.
             </summary>
             <param name="value">A valid signature.</param>
+        </member>
+        <member name="T:BfshaLibrary.Core.IResData">
+            <summary>
+            Represents the common interface for <see cref="T:BfshaLibrary.BfshaFile"/> data instances.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.Core.IResData.Load(BfshaLibrary.Core.BfshaFileLoader)">
+            <summary>
+            Loads raw data from the <paramref name="loader"/> data stream into instances.
+            </summary>
+            <param name="loader">The <see cref="T:BfshaLibrary.Core.BfshaFileLoader"/> to load data with.</param>
+        </member>
+        <member name="M:BfshaLibrary.Core.IResData.Save(BfshaLibrary.Core.BfshaFileSaver)">
+            <summary>
+            Saves header data of the instance and queues referenced data in the given <paramref name="saver"/>.
+            </summary>
+            <param name="saver">The <see cref="T:BfshaLibrary.Core.BfshaFileSaver"/> to save headers and queue data with.</param>
         </member>
         <member name="T:BfshaLibrary.Core.ResStringComparer">
             <summary>
@@ -2209,6 +783,16 @@
             Represents an FMDL subfile in a <see cref="T:BfshaLibrary.ShaderModel"/>, storing model vertex data, skeletons and used materials.
             </summary>
         </member>
+        <member name="P:BfshaLibrary.ResShaderProgram.SamplerLocations">
+            <summary>
+            Gets or sets the location list of samplers for this program.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.ResShaderProgram.UniformBlockLocations">
+            <summary>
+            Gets or sets the location list of uniforms for this program.
+            </summary>
+        </member>
         <member name="T:BfshaLibrary.Sampler">
             <summary>
             Represents an FMDL subfile in a <see cref="T:BfshaLibrary.ShaderModel"/>, storing model vertex data, skeletons and used materials.
@@ -2221,7 +805,7 @@
         </member>
         <member name="P:BfshaLibrary.ShaderModel.Name">
             <summary>
-            Gets or sets the name with which the instance can be referenced uniquely in <see cref="!:ResDict&lt;Model&gt;"/>
+            Gets or sets the name with which the instance can be referenced uniquely in <see cref="T:BfshaLibrary.ResDict`1"/>
             instances.
             </summary>
         </member>
@@ -2230,9 +814,14 @@
             Gets or sets the path of the file which originally supplied the data of this instance.
             </summary>
         </member>
-        <member name="P:BfshaLibrary.ShaderModel.BinaryShaderData">
+        <member name="P:BfshaLibrary.ShaderModel.ParentFile">
             <summary>
-            Gets or sets byte array of the BNSH file instance used to store programs, variations and binary data.
+            The parent bfsha binary of the file.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.ShaderModel.BnshFileStream">
+            <summary>
+            The binary shader file used to store programs, variations and binary data
             </summary>
         </member>
         <member name="P:BfshaLibrary.ShaderModel.StaticOptions">
@@ -2240,19 +829,9 @@
             Gets or sets the stored <see cref="T:BfshaLibrary.ShaderOption"/> (FMDL) instances.
             </summary>
         </member>
-        <member name="P:BfshaLibrary.ShaderModel.StaticOptionDict">
-            <summary>
-            Gets or sets attached <see cref="T:BfshaLibrary.ShaderOption"/> names
-            </summary>
-        </member>
         <member name="P:BfshaLibrary.ShaderModel.DynamiOptions">
             <summary>
             Gets or sets the stored <see cref="!:DynamiOption"/> (FMDL) instances.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.ShaderModel.DynamiOptionDict">
-            <summary>
-            Gets or sets attached <see cref="!:DynamiOption"/> names
             </summary>
         </member>
         <member name="P:BfshaLibrary.ShaderModel.Attributes">
@@ -2260,19 +839,9 @@
             Gets or sets the stored <see cref="T:BfshaLibrary.Attribute"/> (FMDL) instances.
             </summary>
         </member>
-        <member name="P:BfshaLibrary.ShaderModel.AttributeDict">
-            <summary>
-            Gets or sets attached <see cref="T:BfshaLibrary.Attribute"/> names
-            </summary>
-        </member>
         <member name="P:BfshaLibrary.ShaderModel.Samplers">
             <summary>
             Gets or sets the stored <see cref="T:BfshaLibrary.Sampler"/> (FMDL) instances.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.ShaderModel.SamplersDict">
-            <summary>
-            Gets or sets attached <see cref="T:BfshaLibrary.Sampler"/> names
             </summary>
         </member>
         <member name="P:BfshaLibrary.ShaderModel.UniformBlocks">
@@ -2285,10 +854,62 @@
             Gets or sets the stored <see cref="T:BfshaLibrary.UniformVar"/> (FMDL) instances.
             </summary>
         </member>
-        <member name="P:BfshaLibrary.ShaderModel.UniformBlockDict">
+        <member name="P:BfshaLibrary.ShaderModel.Programs">
             <summary>
-            Gets or sets attached <see cref="T:BfshaLibrary.UniformBlock"/> names
+            Gets or sets the program list of the shader model.
             </summary>
+        </member>
+        <member name="P:BfshaLibrary.ShaderModel.ProgramCount">
+            <summary>
+            Gets the program count of the shader model.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.ShaderModel.KeyTable">
+            <summary>
+            Gets or sets the key table used to lookup shader option choices used per program.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.ShaderModel.StaticKeyLength">
+            <summary>
+            Gets the number of static keys used per program.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.ShaderModel.DynamicKeyLength">
+            <summary>
+            Gets the number of dynamic keys used per program.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.ShaderModel.MaxRingItemSize">
+            <summary>
+            The max ring item size;
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.ShaderModel.GetProgramIndex(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Gets the program index from a set of given option choices.
+            </summary>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BfshaLibrary.ShaderModel.PrintProgramKeys">
+            <summary>
+            Prints all the program keys.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.ShaderModel.PrintProgramKeys(System.Int32)">
+            <summary>
+            Prints specificed program keys from the given index.
+            </summary>
+            <param name="programIndex"></param>
+        </member>
+        <member name="M:BfshaLibrary.ShaderModel.IsValidProgram(System.Int32,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Determines if the specified program is valid with the given option choice combinations.
+            This method checks the key table and determines if the choices match,
+            </summary>
+            <param name="programIndex"></param>
+            <param name="options"></param>
+            <returns></returns>
         </member>
         <member name="T:BfshaLibrary.ShaderOption">
             <summary>
@@ -2297,18 +918,18 @@
         </member>
         <member name="P:BfshaLibrary.ShaderOption.Name">
             <summary>
-            Gets or sets the name with which the instance can be referenced uniquely in <see cref="!:ResDict&lt;StaticOption&gt;"/>
+            Gets or sets the name with which the instance can be referenced uniquely in <see cref="T:BfshaLibrary.ResDict`1"/>
             instances.
-            </summary>
-        </member>
-        <member name="P:BfshaLibrary.ShaderOption.Choices">
-            <summary>
-            Gets or sets the stored <see cref="T:BfshaLibrary.UniformBlock"/> (FMDL) instances.
             </summary>
         </member>
         <member name="P:BfshaLibrary.ShaderOption.ChoiceDict">
             <summary>
             Gets or sets attached <see cref="T:BfshaLibrary.UniformBlock"/> names
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.ShaderOption.ChoiceValues">
+            <summary>
+            A list of choice value indices.
             </summary>
         </member>
         <member name="P:BfshaLibrary.ShaderOption.choices">
@@ -2331,13 +952,377 @@
             Gets or sets the stored <see cref="T:BfshaLibrary.UniformBlock"/> (FMDL) instances.
             </summary>
         </member>
-        <member name="P:BfshaLibrary.UniformBlock.UniformDict">
-            <summary>
-            Gets or sets attached <see cref="T:BfshaLibrary.UniformBlock"/> names
-            </summary>
-        </member>
         <member name="T:BfshaLibrary.UniformVar">
             <summary>
+            </summary>
+        </member>
+        <member name="T:BfshaLibrary.BfshaFile">
+            <summary>
+            Represents a NintendoWare for Cafe (NW4F) graphics shader archive file.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.BfshaFile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.BfshaFile.#ctor(System.IO.Stream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class from the given <paramref name="stream"/> which
+            is optionally left open.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BfshaLibrary.BfshaFile.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class from the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.Alignment">
+            <summary>
+            Gets or sets the alignment to use for raw data blocks in the file.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.TargetAddressSize">
+            <summary>
+            Gets or sets the target adress size to use for raw data blocks in the file.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.Name">
+            <summary>
+            Gets or sets a name describing the contents.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.Path">
+            <summary>
+            Gets or sets the path of the file which originally supplied the data of this instance.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.Version">
+            <summary>
+            Gets or sets the revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.Flag">
+            <summary>
+            Gets or sets the flag. Unknown purpose.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.BlockOffset">
+            <summary>
+            Gets or sets the BlockOffset. 
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.VersioFull">
+            <summary>
+            Gets or sets the major revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.VersionMajor">
+            <summary>
+            Gets or sets the major revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.VersionMajor2">
+            <summary>
+            Gets or sets the second major revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.VersionMinor">
+            <summary>
+            Gets or sets the minor revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.VersionMinor2">
+            <summary>
+            Gets or sets the second minor revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.ByteOrder">
+            <summary>
+            Gets the byte order in which data is stored. Must be the endianness of the target platform.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.RelocationTable">
+            <summary>
+            Gets or sets the stored <see cref="P:BfshaLibrary.BfshaFile.RelocationTable"/> (_RLT) instance.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BfshaFile.ShaderModels">
+            <summary>
+            Gets or sets the stored <see cref="T:BfshaLibrary.ShaderModel"/> instances.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.BfshaFile.Save(System.IO.Stream,System.Boolean)">
+            <summary>
+            Saves the contents in the given <paramref name="stream"/> and optionally leaves it open
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the contents into.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BfshaLibrary.BfshaFile.Save(System.String)">
+            <summary>
+            Saves the contents in the file with the given <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to save the contents into.</param>
+        </member>
+        <member name="T:BfshaLibrary.BnshFile">
+            <summary>
+            Represents a NintendoWare for Cafe (NW4F) shader file.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.BnshFile.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.BnshFile.#ctor(System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class from the given <paramref name="stream"/> which
+            is optionally left open.
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to load the data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BfshaLibrary.BnshFile.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BfshaLibrary.BfshaFile"/> class from the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.VersionFull">
+            <summary>
+            Gets or sets the major revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.VersionMajor">
+            <summary>
+            Gets or sets the major revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.VersionMajor2">
+            <summary>
+            Gets or sets the second major revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.VersionMinor">
+            <summary>
+            Gets or sets the minor revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.VersionMinor2">
+            <summary>
+            Gets or sets the second minor revision of the BFRES structure formats.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.ByteOrder">
+            <summary>
+            Gets the byte order in which data is stored. Must be the endianness of the target platform.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.Alignment">
+            <summary>
+            Gets or sets the alignment to use for raw data blocks in the file.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.DataAlignment">
+            <summary>
+            Gets or sets the data alignment to use for raw data blocks in the file.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.TargetAddressSize">
+            <summary>
+            Gets or sets the target adress size to use for raw data blocks in the file.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.Flag">
+            <summary>
+            Gets or sets the flag. Unknown purpose.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.BlockOffset">
+            <summary>
+            Gets or sets the BlockOffset. 
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.Name">
+            <summary>
+            Gets or sets a name describing the contents.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.Path">
+            <summary>
+            Gets or sets the path of the file which originally supplied the data of this instance.
+            </summary>
+        </member>
+        <member name="P:BfshaLibrary.BnshFile.RelocationTable">
+            <summary>
+            Gets or sets the stored <see cref="P:BfshaLibrary.BnshFile.RelocationTable"/> (_RLT) instance.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.BnshFile.Save(System.IO.Stream,System.Boolean)">
+            <summary>
+            Saves the contents in the given <paramref name="stream"/> and optionally leaves it open
+            </summary>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save the contents into.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BfshaLibrary.BnshFile.Save(System.String)">
+            <summary>
+            Saves the contents in the file with the given <paramref name="fileName"/>.
+            </summary>
+            <param name="fileName">The name of the file to save the contents into.</param>
+        </member>
+        <member name="P:BfshaLibrary.ShaderVariation.BinaryProgram">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:BfshaLibrary.Switch.ResDictUpdate.Node">
+            <summary>
+            Represents a node forming the Patricia trie of the dictionary.
+            </summary>
+        </member>
+        <member name="T:BfshaLibrary.Switch.Core.BfshaFileSwitchLoader">
+            <summary>
+            Loads the hierachy and data of a <see cref="!:Bfsha.BfshaFile"/>.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.Switch.Core.BfshaFileSwitchLoader.#ctor(BfshaLibrary.BfshaFile,System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="!:ResFileLoader"/> class loading data into the given
+            <paramref name="resFile"/> from the specified <paramref name="stream"/> which is optionally left open.
+            </summary>
+            <param name="resFile">The <see cref="!:Bfres.ResFile"/> instance to load data into.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to read data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BfshaLibrary.Switch.Core.BfshaFileSwitchLoader.#ctor(BfshaLibrary.BfshaFile,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="!:ResFileLoader"/> class from the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="resFile">The <see cref="!:Bfres.ResFile"/> instance to load data into.</param>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="M:BfshaLibrary.Switch.Core.BfshaFileSwitchLoader.Execute">
+            <summary>
+            Starts deserializing the data from the <see cref="!:ResFile"/> root.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.Switch.Core.BfshaFileSwitchLoader.LoadCustom``1(System.Func{``0},System.Nullable{System.UInt32})">
+            <summary>
+            Reads and returns an instance of arbitrary type <typeparamref name="T"/> from the following offset with the
+            given <paramref name="callback"/> or returns <c>null</c> if the read offset is 0.
+            </summary>
+            <typeparam name="T">The type of the data to read.</typeparam>
+            <param name="callback">The callback to read the instance data with.</param>
+            <param name="offset">The optional offset to use instead of reading a following one.</param>
+            <returns>The data instance or <c>null</c>.</returns>
+            <remarks>Offset required for ExtFile header (offset specified before size).</remarks>
+        </member>
+        <member name="M:BfshaLibrary.Switch.Core.BfshaFileSwitchLoader.ReadOffset">
+            <summary>
+            Reads a BFRES offset which is relative to itself, and returns the absolute address.
+            </summary>
+            <returns>The absolute address of the offset.</returns>
+        </member>
+        <member name="T:BfshaLibrary.Switch.Core.BfshaFileSwitchSaver">
+            <summary>
+            Saves the hierachy and data of a <see cref="!:Bfres.ResFile"/>.
+            </summary>
+        </member>
+        <member name="F:BfshaLibrary.Switch.Core.BfshaFileSwitchSaver.AlignmentSmall">
+            <summary>
+            Gets or sets a data block alignment typically seen with <see cref="P:BfshaLibrary.Buffer.Data"/>.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.Switch.Core.BfshaFileSwitchSaver.#ctor(BfshaLibrary.BfshaFile,System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="!:ResFileSaver"/> class saving data from the given
+            <paramref name="resFile"/> into the specified <paramref name="stream"/> which is optionally left open.
+            </summary>
+            <param name="resFile">The <see cref="!:Bfres.ResFile"/> instance to save data from.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save data into.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BfshaLibrary.Switch.Core.BfshaFileSwitchSaver.#ctor(BfshaLibrary.BfshaFile,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="!:ResFileSaver"/> class for the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="resFile">The <see cref="!:Bfres.ResFile"/> instance to save.</param>
+            <param name="fileName">The name of the file to save the data into.</param>
+        </member>
+        <member name="M:BfshaLibrary.Switch.Core.BfshaFileSwitchSaver.Execute">
+            <summary>
+            Starts serializing the data from the <see cref="!:ResFile"/> root.
+            </summary>
+        </member>
+        <member name="T:BfshaLibrary.WiiU.Core.BfshaFileWiiULoader">
+            <summary>
+            Loads the hierachy and data of a <see cref="!:Bfres.ResFile"/>.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.WiiU.Core.BfshaFileWiiULoader.#ctor(BfshaLibrary.BfshaFile,System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="!:ResFileLoader"/> class loading data into the given
+            <paramref name="resFile"/> from the specified <paramref name="stream"/> which is optionally left open.
+            </summary>
+            <param name="resFile">The <see cref="!:Bfres.ResFile"/> instance to load data into.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to read data from.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after reading, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BfshaLibrary.WiiU.Core.BfshaFileWiiULoader.#ctor(BfshaLibrary.BfshaFile,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="!:ResFileLoader"/> class from the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="resFile">The <see cref="!:Bfres.ResFile"/> instance to load data into.</param>
+            <param name="fileName">The name of the file to load the data from.</param>
+        </member>
+        <member name="M:BfshaLibrary.WiiU.Core.BfshaFileWiiULoader.LoadDictValues``1(System.Int64,System.Int64)">
+            <summary>
+            Reads and returns an <see cref="T:BfshaLibrary.ResDict`1"/> instance with elements of type <typeparamref name="T"/> from
+            the following offset or returns an empty instance if the read offset is 0.
+            </summary>
+            <typeparam name="T">The type of the <see cref="T:BfshaLibrary.Core.IResData"/> elements.</typeparam>
+            <returns>The <see cref="T:BfshaLibrary.ResDict`1"/> instance.</returns>
+        </member>
+        <member name="T:BfshaLibrary.WiiU.Core.BfshaFileWiiUSaver">
+            <summary>
+            Saves the hierachy and data of a <see cref="!:Bfres.ResFile"/>.
+            </summary>
+        </member>
+        <member name="F:BfshaLibrary.WiiU.Core.BfshaFileWiiUSaver.AlignmentSmall">
+            <summary>
+            Gets or sets a data block alignment typically seen with <see cref="P:BfshaLibrary.Buffer.Data"/>.
+            </summary>
+        </member>
+        <member name="M:BfshaLibrary.WiiU.Core.BfshaFileWiiUSaver.#ctor(BfshaLibrary.BfshaFile,System.IO.Stream,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="!:ResFileSaver"/> class saving data from the given
+            <paramref name="resFile"/> into the specified <paramref name="stream"/> which is optionally left open.
+            </summary>
+            <param name="resFile">The <see cref="!:Bfres.ResFile"/> instance to save data from.</param>
+            <param name="stream">The <see cref="T:System.IO.Stream"/> to save data into.</param>
+            <param name="leaveOpen"><c>true</c> to leave the stream open after writing, otherwise <c>false</c>.</param>
+        </member>
+        <member name="M:BfshaLibrary.WiiU.Core.BfshaFileWiiUSaver.#ctor(BfshaLibrary.BfshaFile,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="!:ResFileSaver"/> class for the file with the given
+            <paramref name="fileName"/>.
+            </summary>
+            <param name="resFile">The <see cref="!:Bfres.ResFile"/> instance to save.</param>
+            <param name="fileName">The name of the file to save the data into.</param>
+        </member>
+        <member name="M:BfshaLibrary.WiiU.Core.BfshaFileWiiUSaver.Execute">
+            <summary>
+            Starts serializing the data from the <see cref="!:ResFile"/> root.
             </summary>
         </member>
     </members>
