@@ -78,6 +78,13 @@ namespace FirstPlugin
 
             if (header.sharcNX != null)
             {
+                foreach (var item in header.sharcNX.header.Variations)
+                {
+                    if (item.Type == SHARCFBNX.ShaderVariation.ShaderType.Vertex)
+                        Nodes[0].Nodes[0].Nodes.Add(item);
+                    else
+                        Nodes[0].Nodes[1].Nodes.Add(item);
+                }
                 foreach (var item in header.sharcNX.header.ShaderPrograms)
                 {
                     Nodes[1].Nodes.Add(item);
@@ -128,7 +135,7 @@ namespace FirstPlugin
                 uint unk = reader.ReadUInt32();
                 uint NameLength = reader.ReadUInt32();
 
-                if (NameLength == 4096)
+                if (NameLength == 4096 || NameLength == 8192)
                 {
                     IsNX = true;
                     sharcNX = new SHARCFBNX();

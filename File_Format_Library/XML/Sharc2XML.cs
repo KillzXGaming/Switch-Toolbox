@@ -34,6 +34,21 @@ namespace FirstPlugin
             doc.AppendChild(mainNode);
         }
 
+        public static string WriteProgram(SHARCFBNX.ShaderVariation program)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlNode mainNode = doc.CreateElement("ShaderVariation");
+            AddAttribute(doc, "Name", program.Text.Replace("\x00", ""), mainNode);
+            doc.AppendChild(mainNode);
+
+            WriteVariationSymbols(doc, program.Uniforms, "Uniform_Variables", mainNode);
+            WriteVariationSymbols(doc, program.UniformBlocks, "Uniform_Blocks", mainNode);
+            WriteVariationSymbols(doc, program.Samplers, "Sampler_Variables", mainNode);
+            WriteVariationSymbols(doc, program.Attributes, "Attribute_Variables", mainNode);
+
+            return DocumentToString(doc);
+        }
+
         public static string WriteProgram(SHARC.ShaderProgram program)
         {
             XmlDocument doc = new XmlDocument();
@@ -65,6 +80,25 @@ namespace FirstPlugin
             WriteMarcos(doc, program.variationMacroData, "macro_array", mainNode);
             WriteVariationSymbols(doc, program.variationSymbolData, "option_array", mainNode);
             WriteShaderSymbolData(doc, program.UniformVariables, "Uniform_Variables", mainNode);
+
+            XmlNode vertexNode = doc.CreateElement("VertexVariation");
+            XmlNode pixelNode = doc.CreateElement("PixelVariation");
+            mainNode.AppendChild(vertexNode);
+            mainNode.AppendChild(pixelNode);
+
+            var var = program.GetDefaultVertexVariation();
+
+            WriteVariationSymbols(doc, var.Uniforms, "Uniform_Variables", vertexNode);
+            WriteVariationSymbols(doc, var.UniformBlocks, "Uniform_Blocks", vertexNode);
+            WriteVariationSymbols(doc, var.Samplers, "Sampler_Variables", vertexNode);
+            WriteVariationSymbols(doc, var.Attributes, "Attribute_Variables", vertexNode);
+
+            var = program.GetDefaultPixelVariation();
+
+            WriteVariationSymbols(doc, var.Uniforms, "Uniform_Variables", pixelNode);
+            WriteVariationSymbols(doc, var.UniformBlocks, "Uniform_Blocks", pixelNode);
+            WriteVariationSymbols(doc, var.Samplers, "Sampler_Variables", pixelNode);
+            WriteVariationSymbols(doc, var.Attributes, "Attribute_Variables", pixelNode);
 
             return DocumentToString(doc);
         }
@@ -110,6 +144,47 @@ namespace FirstPlugin
                 AddAttribute(doc, "id", symbol.Name.Replace("\x00", ""), childNode);
                 AddAttribute(doc, "symbol", symbol.SymbolName.Replace("\x00", ""), childNode);
                 AddAttribute(doc, "values", string.Join(",", symbol.Values).Replace("\x00", ""), childNode);
+                rootNode.AppendChild(childNode);
+            }
+            node.AppendChild(rootNode);
+        }
+
+        private static void WriteVariationSymbols(XmlDocument doc, List<SHARCFBNX.SymbolUniformBlock> symbols, string Name, XmlNode node)
+        {
+            XmlNode rootNode = doc.CreateElement(Name);
+            foreach (var symbol in symbols)
+            {
+                XmlNode childNode = doc.CreateElement("option");
+                AddAttribute(doc, "name", symbol.Name.Replace("\x00", ""), childNode);
+                AddAttribute(doc, "location", symbol.Location.ToString(), childNode);
+                AddAttribute(doc, "size", symbol.Size.ToString(), childNode);
+
+                rootNode.AppendChild(childNode);
+            }
+            node.AppendChild(rootNode);
+        }
+
+        private static void WriteVariationSymbols(XmlDocument doc, List<SHARCFBNX.SymbolUniform> symbols, string Name, XmlNode node)
+        {
+            XmlNode rootNode = doc.CreateElement(Name);
+            foreach (var symbol in symbols)
+            {
+                XmlNode childNode = doc.CreateElement("option");
+                AddAttribute(doc, "name", symbol.Name.Replace("\x00", ""), childNode);
+                AddAttribute(doc, "offset", symbol.Offset.ToString(), childNode);
+                rootNode.AppendChild(childNode);
+            }
+            node.AppendChild(rootNode);
+        }
+
+        private static void WriteVariationSymbols(XmlDocument doc, List<SHARCFBNX.Symbol> symbols, string Name, XmlNode node)
+        {
+            XmlNode rootNode = doc.CreateElement(Name);
+            foreach (var symbol in symbols)
+            {
+                XmlNode childNode = doc.CreateElement("option");
+                AddAttribute(doc, "name", symbol.Name.Replace("\x00", ""), childNode);
+                AddAttribute(doc, "location", symbol.Location.ToString(), childNode);
                 rootNode.AppendChild(childNode);
             }
             node.AppendChild(rootNode);

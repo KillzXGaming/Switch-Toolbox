@@ -30,6 +30,13 @@ namespace FirstPlugin.Forms
             LoadProgram(program);
         }
 
+        public void FillEditor(SHARCFBNX.ShaderVariation var)
+        {
+            string programXML = Sharc2XML.WriteProgram(var);
+            textEditor1.FillEditor(programXML);
+            textEditor1.IsXML = true;
+        }
+
         public void FillEditor(SHARCFB.ShaderProgram program, SHARCFB.Header header)
         {
             LoadProgram(program);
