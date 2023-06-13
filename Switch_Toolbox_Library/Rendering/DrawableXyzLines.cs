@@ -86,7 +86,7 @@ namespace Toolbox.Library.Rendering
 
         public override void Draw(GL_ControlModern control, Pass pass)
         {
-            if (!Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
+            if (!Runtime.displayAxisLines || !Runtime.OpenTKInitialized || pass == Pass.TRANSPARENT)
                 return;
 
             bool buffersWereInitialized = vbo_position != 0;

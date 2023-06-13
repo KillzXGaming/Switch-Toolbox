@@ -324,6 +324,12 @@ namespace Toolbox.Library
                     case "ShowCloseDialog":
                         bool.TryParse(node.InnerText, out Runtime.ShowCloseDialog);
                         break;
+                    case "displayGrid":
+                        bool.TryParse(node.InnerText, out Runtime.displayGrid);
+                        break;
+                    case "displayAxisLines":
+                        bool.TryParse(node.InnerText, out Runtime.displayAxisLines);
+                        break;
                 }
             }
 
@@ -587,8 +593,11 @@ namespace Toolbox.Library
             renderSettingsNode.AppendChild(createNode(doc, "MaxCameraSpeed", Runtime.MaxCameraSpeed.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "FrameCamera", Runtime.FrameCamera.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "cameraMovement", Runtime.cameraMovement.ToString()));
+            renderSettingsNode.AppendChild(createNode(doc, "displayAxisLines", Runtime.displayAxisLines.ToString()));
+            renderSettingsNode.AppendChild(createNode(doc, "displayGrid", Runtime.displayGrid.ToString()));
+
         }
-        
+
         private static void AppendResourceTableSettings(XmlDocument doc, XmlNode parentNode)
         {
             XmlNode resourceTableNode = doc.CreateElement("ResourceTables");

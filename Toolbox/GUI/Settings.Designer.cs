@@ -122,6 +122,8 @@
             this.stLabel17 = new Toolbox.Library.Forms.STLabel();
             this.chkBotwFileTable = new Toolbox.Library.Forms.STCheckBox();
             this.btnReset = new Toolbox.Library.Forms.STButton();
+            this.chkViewportGrid = new Toolbox.Library.Forms.STCheckBox();
+            this.chkViewportAxisLines = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -169,7 +171,7 @@
             // chkBoxSpecular
             // 
             this.chkBoxSpecular.AutoSize = true;
-            this.chkBoxSpecular.Location = new System.Drawing.Point(6, 114);
+            this.chkBoxSpecular.Location = new System.Drawing.Point(10, 160);
             this.chkBoxSpecular.Name = "chkBoxSpecular";
             this.chkBoxSpecular.Size = new System.Drawing.Size(104, 17);
             this.chkBoxSpecular.TabIndex = 3;
@@ -179,7 +181,7 @@
             // chkBoxNormalMap
             // 
             this.chkBoxNormalMap.AutoSize = true;
-            this.chkBoxNormalMap.Location = new System.Drawing.Point(6, 91);
+            this.chkBoxNormalMap.Location = new System.Drawing.Point(10, 137);
             this.chkBoxNormalMap.Name = "chkBoxNormalMap";
             this.chkBoxNormalMap.Size = new System.Drawing.Size(124, 17);
             this.chkBoxNormalMap.TabIndex = 2;
@@ -199,6 +201,8 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.chkViewportAxisLines);
+            this.panel2.Controls.Add(this.chkViewportGrid);
             this.panel2.Controls.Add(this.uvChannelRB3);
             this.panel2.Controls.Add(this.uvChannelRB2);
             this.panel2.Controls.Add(this.uvChannelRB);
@@ -483,7 +487,7 @@
             // chkBoxEnablePBR
             // 
             this.chkBoxEnablePBR.AutoSize = true;
-            this.chkBoxEnablePBR.Location = new System.Drawing.Point(6, 137);
+            this.chkBoxEnablePBR.Location = new System.Drawing.Point(10, 183);
             this.chkBoxEnablePBR.Name = "chkBoxEnablePBR";
             this.chkBoxEnablePBR.Size = new System.Drawing.Size(84, 17);
             this.chkBoxEnablePBR.TabIndex = 17;
@@ -665,7 +669,7 @@
             // chkBoxStereoscopy
             // 
             this.chkBoxStereoscopy.AutoSize = true;
-            this.chkBoxStereoscopy.Location = new System.Drawing.Point(6, 68);
+            this.chkBoxStereoscopy.Location = new System.Drawing.Point(10, 114);
             this.chkBoxStereoscopy.Name = "chkBoxStereoscopy";
             this.chkBoxStereoscopy.Size = new System.Drawing.Size(121, 17);
             this.chkBoxStereoscopy.TabIndex = 4;
@@ -1318,6 +1322,28 @@
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
+            // chkViewportGrid
+            // 
+            this.chkViewportGrid.AutoSize = true;
+            this.chkViewportGrid.Location = new System.Drawing.Point(10, 68);
+            this.chkViewportGrid.Name = "chkViewportGrid";
+            this.chkViewportGrid.Size = new System.Drawing.Size(125, 17);
+            this.chkViewportGrid.TabIndex = 35;
+            this.chkViewportGrid.Text = "Enable Viewport Grid";
+            this.chkViewportGrid.UseVisualStyleBackColor = true;
+            this.chkViewportGrid.CheckedChanged += new System.EventHandler(this.chkViewportGrid_CheckedChanged);
+            // 
+            // chkViewportAxisLines
+            // 
+            this.chkViewportAxisLines.AutoSize = true;
+            this.chkViewportAxisLines.Location = new System.Drawing.Point(10, 91);
+            this.chkViewportAxisLines.Name = "chkViewportAxisLines";
+            this.chkViewportAxisLines.Size = new System.Drawing.Size(153, 17);
+            this.chkViewportAxisLines.TabIndex = 36;
+            this.chkViewportAxisLines.Text = "Enable Viewport Axis Lines";
+            this.chkViewportAxisLines.UseVisualStyleBackColor = true;
+            this.chkViewportAxisLines.CheckedChanged += new System.EventHandler(this.chkViewportAxisLines_CheckedChanged);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1457,5 +1483,7 @@
         private Library.Forms.STLabel stLabel18;
         private Library.Forms.STTextBox pathPokemonSwShTB;
         private Library.Forms.STButton btnReset;
+        private Library.Forms.STCheckBox chkViewportAxisLines;
+        private Library.Forms.STCheckBox chkViewportGrid;
     }
 }

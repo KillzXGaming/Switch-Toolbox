@@ -89,6 +89,8 @@ namespace Toolbox
             chkTpFileTable.Checked = Runtime.ResourceTables.TpTable;
             chkFrameCamera.Checked = Runtime.FrameCamera;
             chkAlwaysCompressOnSave.Checked = Runtime.AlwaysCompressOnSave;
+            chkViewportGrid.Checked = Runtime.displayGrid;
+            chkViewportAxisLines.Checked = Runtime.displayAxisLines;
 
             displayBoundingBoxeChk.Checked = Runtime.renderBoundingBoxes;
 
@@ -704,6 +706,18 @@ namespace Toolbox
                 Application.Restart();
                 Environment.Exit(0);
             }
+        }
+
+        private void chkViewportGrid_CheckedChanged(object sender, EventArgs e)
+        {
+            Runtime.displayGrid = chkViewportGrid.Checked;
+            UpdateViewportSettings();
+        }
+
+        private void chkViewportAxisLines_CheckedChanged(object sender, EventArgs e)
+        {
+            Runtime.displayAxisLines = chkViewportAxisLines.Checked;
+            UpdateViewportSettings();
         }
     }
 }
