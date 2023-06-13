@@ -91,8 +91,11 @@ namespace Updater
                 string dirName = new DirectoryInfo(dir).Name;
                 string destDir = Path.Combine(folderDir, dirName + @"\");
 
-                if (!dirName.Equals("Hashes", StringComparison.CurrentCultureIgnoreCase) // Let's keep the users custom hashes in tact
-                    && Directory.Exists(destDir))
+                //Skip hash directory
+                if (dirName.Equals("Hashes", StringComparison.CurrentCultureIgnoreCase))
+                    continue;
+
+                if (Directory.Exists(destDir))
                 {
                     Directory.Delete(destDir, true);
                 }
