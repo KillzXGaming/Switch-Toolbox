@@ -950,6 +950,10 @@ namespace FirstPlugin
 
         public void Save(Stream stream)
         {
+            //Force mesh codec compression on save 
+            if (this.FileName.EndsWith(".mc"))
+                this.IFileInfo.FileCompression = new MeshCodecFormat();
+
             var Models = GetModels();
             if (Models != null && !IsParticlePrimitive)
             {
