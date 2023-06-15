@@ -29,7 +29,8 @@ namespace Toolbox.Library.IO
 
             string compressionLog = "";
             if (FileFormat.IFileInfo.FileIsCompressed || FileFormat.IFileInfo.InArchive
-                || Path.GetExtension(FileName) == ".szs" || Path.GetExtension(FileName) == ".sbfres")
+                || Path.GetExtension(FileName) == ".szs" || Path.GetExtension(FileName) == ".sbfres"
+                || Path.GetExtension(FileName) == ".mc")
             {
                 //Todo find more optmial way to handle memory with files in archives
                 //Also make compression require streams
