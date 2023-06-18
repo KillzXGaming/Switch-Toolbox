@@ -521,7 +521,7 @@ namespace FirstPlugin
                 Format = tex.Format;
                 XTXFormat = ConvertFromGenericFormat(tex.Format);
 
-                uint[] mips = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount, (uint)ImageData.Length)[0];
+                uint[] mips = TegraX1Swizzle.GenerateMipSizes(tex.Format, tex.Width, tex.Height, tex.Depth, tex.ArrayCount, tex.MipCount)[0];
                 MipOffsets = new uint[17];
 
                 for (int i = 0; i < mips.Length; i++)
