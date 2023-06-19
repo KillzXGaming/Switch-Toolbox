@@ -1,6 +1,7 @@
 ﻿using SELib;
 using OpenTK;
 using System.Linq;
+using System;
 
 namespace Toolbox.Library.Animations
 {
@@ -176,7 +177,7 @@ namespace Toolbox.Library.Animations
             seAnim.AnimType = AnimationType.Absolute;
 
             anim.SetFrame(0);
-            for (int frame = 0; frame < anim.FrameCount; frame++)
+            for (int frame = 0; frame < Math.Max(1, anim.FrameCount); frame++)
             {
                 anim.SetFrame(frame);
                 anim.NextFrame();

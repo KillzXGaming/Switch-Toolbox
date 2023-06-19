@@ -213,6 +213,8 @@ namespace Toolbox.Library.Animations
 
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@fname))
             {
+                float frameCount = Math.Max(1, a.FrameCount);
+
                 AnimHeader header = new AnimHeader();
                 file.WriteLine("animVersion " + header.animVersion + ";");
                 file.WriteLine("mayaVersion " + header.mayaVersion + ";");
@@ -220,10 +222,10 @@ namespace Toolbox.Library.Animations
                 file.WriteLine("linearUnit " + header.linearUnit + ";");
                 file.WriteLine("angularUnit " + header.angularUnit + ";");
                 file.WriteLine("startTime " + 1 + ";");
-                file.WriteLine("endTime " + a.FrameCount + ";");
+                file.WriteLine("endTime " + frameCount + ";");
 
-                a.SetFrame(a.FrameCount - 1); //from last frame
-                for (int li = 0; li < a.FrameCount; ++li) //go through each frame with nextFrame
+                a.SetFrame(frameCount - 1); //from last frame
+                for (int li = 0; li < frameCount; ++li) //go through each frame with nextFrame
                     a.NextFrame(vbn, false, true);
                 a.NextFrame(vbn, false, true);  //go on first frame
 
