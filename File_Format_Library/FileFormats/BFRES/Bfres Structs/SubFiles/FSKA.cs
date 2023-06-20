@@ -218,13 +218,17 @@ namespace Bfres.Structs
                 {
                     if (drawable is STSkeleton)
                     {
+                        bool areAllBonesPresent = ((STSkeleton)drawable).bones.Count > 0;
+
                         foreach (var bone in Bones)
                         {
                             var animBone = ((STSkeleton)drawable).GetBone(bone.Text);
 
-                            if (animBone != null)
-                                return (STSkeleton)drawable;
+                            if (animBone == null)
+                                areAllBonesPresent = false;
                         }
+                        if (areAllBonesPresent)
+                            return ((STSkeleton)drawable);
                     }
                 }
             }
