@@ -254,7 +254,8 @@ namespace FirstPlugin
                 string tag = null;
                 if (node is int) tag = "!l";
                 else if (node is uint) tag = "!u";
-                else if (node is Int64) tag = "!ul";
+                else if (node is Int64) tag = "!ll";
+                else if (node is UInt64) tag = "!ul";
                 else if (node is double) tag = "!d";
                 else if (node is ByamlPathIndex) tag = "!p";
 
