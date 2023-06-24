@@ -69,7 +69,7 @@ namespace Toolbox.Library
 
         public byte GetMaxSkinInfluenceCount()
         {
-            return (byte)vertices.Max(t => t.boneIds.Count);
+            return (byte)vertices.Max(t => t.boneWeights.Count);
         }
 
         public Vector3 GetOrigin()
