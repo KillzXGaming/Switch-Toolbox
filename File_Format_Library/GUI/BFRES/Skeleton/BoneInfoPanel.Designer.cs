@@ -95,7 +95,7 @@
             this.stLabel3.Name = "stLabel3";
             this.stLabel3.Size = new System.Drawing.Size(40, 13);
             this.stLabel3.TabIndex = 5;
-            this.stLabel3.Text = "Vsibile:";
+            this.stLabel3.Text = "Visible:";
             // 
             // parentIndexUD
             // 

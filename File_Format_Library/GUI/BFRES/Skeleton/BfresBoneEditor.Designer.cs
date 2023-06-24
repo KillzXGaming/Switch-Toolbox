@@ -256,6 +256,7 @@
             this.rotModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.rotModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.rotModeCB.FormattingEnabled = true;
+            this.rotModeCB.IsReadOnly = false;
             this.rotModeCB.Location = new System.Drawing.Point(94, 5);
             this.rotModeCB.Name = "rotModeCB";
             this.rotModeCB.Size = new System.Drawing.Size(121, 21);
@@ -689,6 +690,7 @@
             this.billboardModeCB.BorderStyle = System.Windows.Forms.ButtonBorderStyle.Solid;
             this.billboardModeCB.ButtonColor = System.Drawing.Color.Empty;
             this.billboardModeCB.FormattingEnabled = true;
+            this.billboardModeCB.IsReadOnly = false;
             this.billboardModeCB.Location = new System.Drawing.Point(93, 7);
             this.billboardModeCB.Name = "billboardModeCB";
             this.billboardModeCB.Size = new System.Drawing.Size(144, 21);
@@ -776,7 +778,7 @@
             this.stLabel4.Name = "stLabel4";
             this.stLabel4.Size = new System.Drawing.Size(131, 13);
             this.stLabel4.TabIndex = 6;
-            this.stLabel4.Text = "Rigid Skiining Matrix Index";
+            this.stLabel4.Text = "Rigid Skinning Matrix Index";
             // 
             // smoothIndexUD
             // 
@@ -806,9 +808,9 @@
             this.stLabel3.AutoSize = true;
             this.stLabel3.Location = new System.Drawing.Point(158, 16);
             this.stLabel3.Name = "stLabel3";
-            this.stLabel3.Size = new System.Drawing.Size(143, 13);
+            this.stLabel3.Size = new System.Drawing.Size(141, 13);
             this.stLabel3.TabIndex = 4;
-            this.stLabel3.Text = "Smooth Skiining Matrix Index";
+            this.stLabel3.Text = "Smooth Skinning Matrix Index";
             // 
             // stDropDownPanel5
             // 
