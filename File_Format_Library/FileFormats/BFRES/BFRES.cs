@@ -811,7 +811,7 @@ namespace FirstPlugin
 
             var externalFlags = MeshCodec.GetExternalFlags(stream);
             //External flags used
-            if (externalFlags != 0 || this.FileName.EndsWith(".mc"))
+            if (externalFlags.HasFlag(MeshCodec.ExternalFlags.HasExternalGPU) || this.FileName.EndsWith(".mc"))
             {
                 //Ensure it uses mc compressor for save
                 this.IFileInfo.FileIsCompressed = true;
