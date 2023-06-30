@@ -211,49 +211,46 @@ namespace Bfres.Structs
 
         private STSkeleton GetActiveSkeleton()
         {
+            if (Parent == null)
+                return null;
+
+            //Check parent renderer and find skeleton
+            var render = ((BFRES)Parent.Parent.Parent).BFRESRender;
+            if (render != null)
+            {
+                //Return individual skeleton for single model files
+                if (render.models.Count == 1)
+                    return render.models[0].Skeleton;
+
+                //Search multiple FMDL to find matching bones
+                foreach (var model in render.models)
+                {
+                    //Check if all the bones in the animation are present in the skeleton
+                    bool areAllBonesPresent = model.Skeleton.bones.Count > 0;
+                    foreach (var bone in Bones)
+                    {
+                        var animBone = model.Skeleton.GetBone(bone.Text);
+
+                        if (animBone == null)
+                            areAllBonesPresent = false;
+                    }
+                    if (areAllBonesPresent)
+                        return model.Skeleton;
+                }
+
+                //If not all bones were present but models are present, use first model
+                if (render.models.Count > 0)
+                    return render.models[0].Skeleton;
+            }
+
+            //Search by viewport active model in the event the animation is externally loaded
             var viewport = LibraryGUI.GetActiveViewport();
             if (viewport != null)
             {
                 foreach (var drawable in viewport.scene.objects)
                 {
                     if (drawable is STSkeleton)
-                    {
-                        bool areAllBonesPresent = ((STSkeleton)drawable).bones.Count > 0;
-
-                        foreach (var bone in Bones)
-                        {
-                            var animBone = ((STSkeleton)drawable).GetBone(bone.Text);
-
-                            if (animBone == null)
-                                areAllBonesPresent = false;
-                        }
-                        if (areAllBonesPresent)
-                            return ((STSkeleton)drawable);
-                    }
-                }
-            }
-
-            if (Parent == null)
-                return null;
-
-            //Check parent renderer and find skeleton
-            var render = ((BFRES)Parent.Parent.Parent).BFRESRender;
-            if (render == null)
-                return null;
-
-            //Return individual skeleton for single model files
-            if (render.models.Count == 1)
-                return render.models[0].Skeleton;
-
-            //Search multiple FMDL to find matching bones
-            foreach (var model in render.models)
-            {
-                foreach (var bone in Bones)
-                {
-                    var animBone = model.Skeleton.GetBone(bone.Text);
-
-                    if (animBone != null)
-                        return model.Skeleton;
+                        return ((STSkeleton)drawable);
                 }
             }
 
