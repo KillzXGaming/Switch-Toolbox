@@ -276,7 +276,7 @@ namespace Toolbox.Library
             }
         }
 
-        public void CalculateTangentBitangent(bool UseUVLayer2)
+        public void CalculateTangentBitangent(int UseUVIndex)
         {
             if (vertices.Count < 3)
                 return;
@@ -286,7 +286,7 @@ namespace Toolbox.Library
             Vector3[] tanArray = new Vector3[vertices.Count];
             Vector3[] bitanArray = new Vector3[vertices.Count];
 
-            CalculateTanBitanArrays(f, tanArray, bitanArray, UseUVLayer2);
+            CalculateTanBitanArrays(f, tanArray, bitanArray, UseUVIndex);
             ApplyTanBitanArray(tanArray, bitanArray);
         }
 
@@ -309,7 +309,7 @@ namespace Toolbox.Library
             }
         }
 
-        private void CalculateTanBitanArrays(List<int> faces, Vector3[] tanArray, Vector3[] bitanArray, bool UseUVLayer2)
+        private void CalculateTanBitanArrays(List<int> faces, Vector3[] tanArray, Vector3[] bitanArray, int UseUVIndex)
         {
             if (vertices.Count < 3 || faces.Count <= 0)
                 return;
@@ -331,22 +331,33 @@ namespace Toolbox.Library
                 float z2 = v3.pos.Z - v1.pos.Z;
 
                 float s1, s2, t1, t2;
-                if (UseUVLayer2)
-                {
-                    s1 = v2.uv1.X - v1.uv1.X;
-                    s2 = v3.uv1.X - v1.uv1.X;
-                    t1 = v2.uv1.Y - v1.uv1.Y;
-                    t2 = v3.uv1.Y - v1.uv1.Y;
-                }
-                else
-                {
 
-                    s1 = v2.uv0.X - v1.uv0.X;
-                    s2 = v3.uv0.X - v1.uv0.X;
-                    t1 = v2.uv0.Y - v1.uv0.Y;
-                    t2 = v3.uv0.Y - v1.uv0.Y;
-                }
+                List<Vector2> v1Uvs = new List<Vector2> {
+                    v1.uv0,
+                    v1.uv1,
+                    v1.uv2,
+                    v1.uv3
+                };
 
+                List<Vector2> v2Uvs = new List<Vector2> {
+                    v2.uv0, 
+                    v2.uv1, 
+                    v2.uv2, 
+                    v2.uv3
+                };
+
+                List<Vector2> v3Uvs = new List<Vector2>
+                {
+                    v3.uv0, 
+                    v3.uv1, 
+                    v3.uv2, 
+                    v3.uv3
+                };
+
+                s1 = v2Uvs[UseUVIndex].X - v1Uvs[UseUVIndex].X;
+                s2 = v3Uvs[UseUVIndex].X - v1Uvs[UseUVIndex].X;
+                t1 = v2Uvs[UseUVIndex].Y - v1Uvs[UseUVIndex].Y;
+                t2 = v3Uvs[UseUVIndex].Y - v1Uvs[UseUVIndex].Y;
 
                 float div = (s1 * t2 - s2 * t1);
                 float r = 1.0f / div;
@@ -368,16 +379,9 @@ namespace Toolbox.Library
                 // Prevents black tangents or bitangents due to having vertices with the same UV coordinates. 
                 float delta = 0.00075f;
                 bool sameU, sameV;
-                if (UseUVLayer2)
-                {
-                    sameU = (Math.Abs(v1.uv1.X - v2.uv1.X) < delta) && (Math.Abs(v2.uv1.X - v3.uv1.X) < delta);
-                    sameV = (Math.Abs(v1.uv1.Y - v2.uv1.Y) < delta) && (Math.Abs(v2.uv1.Y - v3.uv1.Y) < delta);
-                }
-                else
-                {
-                    sameU = (Math.Abs(v1.uv0.X - v2.uv0.X) < delta) && (Math.Abs(v2.uv0.X - v3.uv0.X) < delta);
-                    sameV = (Math.Abs(v1.uv0.Y - v2.uv0.Y) < delta) && (Math.Abs(v2.uv0.Y - v3.uv0.Y) < delta);
-                }
+
+                sameU = (Math.Abs(v1Uvs[UseUVIndex].X - v2Uvs[UseUVIndex].X) < delta) && (Math.Abs(v2Uvs[UseUVIndex].X - v3Uvs[UseUVIndex].X) < delta);
+                sameV = (Math.Abs(v1Uvs[UseUVIndex].Y - v2Uvs[UseUVIndex].Y) < delta) && (Math.Abs(v2Uvs[UseUVIndex].Y - v3Uvs[UseUVIndex].Y) < delta);
 
                 if (sameU || sameV)
                 {

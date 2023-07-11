@@ -674,14 +674,14 @@ namespace Bfres.Structs
             {
                 try
                 {
-                    bool UseUVLayer2 = false;
+                    int UseUVIndex = 0;
 
                     //check second UV layer
                     if (Parent != null) {
-                        UseUVLayer2 = GetFMAT().IsNormalMapTexCoord2();
+                        UseUVIndex = GetFMAT().GetNormalMapUVIndex();
                     }
 
-                    CalculateTangentBitangent(UseUVLayer2);
+                    CalculateTangentBitangent(UseUVIndex);
                 }
                 catch (Exception ex)
                 {
@@ -784,7 +784,7 @@ namespace Bfres.Structs
                 }
             }
 
-            bool UseUVLayer2 = false;
+            int UseUVIndex = 0;
 
             //for BOTW if it uses UV layer 2 for normal maps use second UV map
             if (GetFMAT().shaderassign.options.ContainsKey("uking_texture2_texcoord"))
@@ -792,10 +792,16 @@ namespace Bfres.Structs
                 float value = float.Parse(GetFMAT().shaderassign.options["uking_texture2_texcoord"]);
 
                 if (value == 1)
-                    UseUVLayer2 = true;
+                    UseUVIndex = 1;
             }
 
-            CalculateTangentBitangent(UseUVLayer2);
+            //for TOTK use o_texcoord2_mapping to find required uv layer for tangents
+            if (GetFMAT().shaderassign.options.ContainsKey("o_texcoord2_mapping"))
+            {
+                UseUVIndex = int.TryParse(GetFMAT().shaderassign.options["o_texcoord2_mapping"], out UseUVIndex) ? UseUVIndex : 0;
+            }
+
+            CalculateTangentBitangent(UseUVIndex);
             SaveVertexBuffer(GetResFileU() != null);
             UpdateVertexData();
             Cursor.Current = Cursors.Default;
