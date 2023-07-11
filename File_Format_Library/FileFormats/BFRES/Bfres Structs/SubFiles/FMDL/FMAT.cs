@@ -270,10 +270,10 @@ namespace Bfres.Structs
                 return (int)value;
             }
 
-            //for TOTK use o_texcoord2_mapping to find required uv layer for tangents
-            if (shaderassign.options.ContainsKey("o_texcoord2_mapping"))
+            //for TOTK use o_texture2_texcoord to find required uv layer for tangents
+            if (shaderassign.options.ContainsKey("o_texture2_texcoord"))
             {
-                return int.TryParse(shaderassign.options["o_texcoord2_mapping"], out int UseUVIndex) ? UseUVIndex : 0;
+                return int.TryParse(shaderassign.options["o_texture2_texcoord"], out int UseUVIndex) ? UseUVIndex : 0;
             }
 
             //For 3D world

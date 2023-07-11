@@ -795,10 +795,10 @@ namespace Bfres.Structs
                     UseUVIndex = 1;
             }
 
-            //for TOTK use o_texcoord2_mapping to find required uv layer for tangents
-            if (GetFMAT().shaderassign.options.ContainsKey("o_texcoord2_mapping"))
+            //for TOTK use o_texture2_texcoord to find required uv layer for tangents
+            if (GetFMAT().shaderassign.options.ContainsKey("o_texture2_texcoord"))
             {
-                UseUVIndex = int.TryParse(GetFMAT().shaderassign.options["o_texcoord2_mapping"], out UseUVIndex) ? UseUVIndex : 0;
+                UseUVIndex = int.TryParse(GetFMAT().shaderassign.options["o_texture2_texcoord"], out UseUVIndex) ? UseUVIndex : 0;
             }
 
             CalculateTangentBitangent(UseUVIndex);
