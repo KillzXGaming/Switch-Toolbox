@@ -595,7 +595,7 @@ namespace FirstPlugin
                 if (setting.HasTangents || setting.HasBitangents)
                 {
                     try {
-                        mesh.CalculateTangentBitangent(false);
+                        mesh.CalculateTangentBitangent(0);
                     }
                     catch { }
                 }
