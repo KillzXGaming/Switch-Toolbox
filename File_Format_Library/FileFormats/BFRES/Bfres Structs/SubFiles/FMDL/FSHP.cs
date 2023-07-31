@@ -1569,28 +1569,6 @@ namespace Bfres.Structs
                     vert.Format = att.Format;
                     atrib.Add(vert);
                 }
-                if (att.Name == "_w0")
-                {
-                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
-                    vert.Name = att.Name;
-                    vert.Data = weights.ToArray();
-                    vert.Format = att.Format;
-                    atrib.Add(vert);
-
-                    for (int i = 0; i < weights.Count; i++)
-                    {
-                        Console.WriteLine($"w {i} {weights[i]}");
-                    }
-
-                }
-                if (att.Name == "_i0")
-                {
-                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
-                    vert.Name = att.Name;
-                    vert.Data = boneInd.ToArray();
-                    vert.Format = att.Format;
-                    atrib.Add(vert);
-                }
                 if (att.Name == "_b0")
                 {
                     VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
@@ -1615,6 +1593,33 @@ namespace Bfres.Structs
                     vert.Format = att.Format;
                     atrib.Add(vert);
                 }
+
+                // Set _w and _i 
+                for (int i = 0; i < weights.Count; i++)
+                {
+                    if (att.Name == "_w" + i.ToString())
+                    {
+                        VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                        vert.Name = att.Name;
+                        vert.Data = weights[i].ToArray();
+                        vert.Format = att.Format;
+                        atrib.Add(vert);
+
+                        for (int j = 0; j < weights.Count; j++)
+                        {
+                            Console.WriteLine($"w {j} {weights[j]}");
+                        }
+
+                    }
+                    if (att.Name == "_i" + i.ToString())
+                    {
+                        VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                        vert.Name = att.Name;
+                        vert.Data = boneInd[i].ToArray();
+                        vert.Format = att.Format;
+                        atrib.Add(vert);
+                    }
+                }
             }
             if (atrib.Count == 0)
             {
@@ -1635,8 +1640,8 @@ namespace Bfres.Structs
         internal List<Syroot.Maths.Vector4F> uv2 = new List<Syroot.Maths.Vector4F>();
         internal List<Syroot.Maths.Vector4F> tans = new List<Syroot.Maths.Vector4F>();
         internal List<Syroot.Maths.Vector4F> bitans = new List<Syroot.Maths.Vector4F>();
-        internal List<Syroot.Maths.Vector4F> weights = new List<Syroot.Maths.Vector4F>();
-        internal List<Syroot.Maths.Vector4F> boneInd = new List<Syroot.Maths.Vector4F>();
+        internal List<List<Syroot.Maths.Vector4F>> weights = new List<List<Syroot.Maths.Vector4F>>();
+        internal List<List<Syroot.Maths.Vector4F>> boneInd = new List<List<Syroot.Maths.Vector4F>>();
         internal List<Syroot.Maths.Vector4F> colors = new List<Syroot.Maths.Vector4F>();
 
         public string GetBoneNameFromIndex(FMDL mdl, int index)
@@ -1793,6 +1798,14 @@ namespace Bfres.Structs
             weights.Clear();
             boneInd.Clear();
 
+            // Create arrays to be able to fit the needed skin count
+            int listCount = (int)Math.Ceiling(VertexSkinCount / 4.0);
+            for (int i = 0; i < listCount; i++)
+            {
+                weights.Add(new List<Syroot.Maths.Vector4F>());
+                boneInd.Add(new List<Syroot.Maths.Vector4F>());
+            }
+
             foreach (Vertex vtx in vertices)
             {
                 if (VertexSkinCount == 0 || VertexSkinCount == 1)
@@ -1814,25 +1827,25 @@ namespace Bfres.Structs
                 bitans.Add(new Syroot.Maths.Vector4F(vtx.bitan.X, vtx.bitan.Y, vtx.bitan.Z, vtx.bitan.W));
                 colors.Add(new Syroot.Maths.Vector4F(vtx.col.X, vtx.col.Y, vtx.col.Z, vtx.col.W));
 
-                float[] weightsA = new float[4];
-                int[] indicesA = new int[4];
+                // Init arrays based on skincount
+                float[] weightsA = new float[Math.Max(4, (int)VertexSkinCount)];
+                int[] indicesA = new int[Math.Max(4, (int)VertexSkinCount)];
 
-
-                if (vtx.boneWeights.Count >= 1)
-                    weightsA[0] = vtx.boneWeights[0];
-                if (vtx.boneWeights.Count >= 2)
-                    weightsA[1] = vtx.boneWeights[1];
-                if (vtx.boneWeights.Count >= 3)
-                    weightsA[2] = vtx.boneWeights[2];
-                if (vtx.boneWeights.Count >= 4)
-                    weightsA[3] = vtx.boneWeights[3];
+                // Cache bone weights
+                for (int i = 0; i < VertexSkinCount; i++)
+                {
+                    if (vtx.boneWeights.Count > i)
+                    {
+                        weightsA[i] = vtx.boneWeights[i];
+                    }
+                }
 
                 var WeightAttribute = GetWeightAttribute(0);
 
                 //Produce identical results for the weight output as BFRES_Vertex.py
                 //This should prevent encoding back and exploding
                 int MaxWeight = 255;
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < Math.Max(4, (int)VertexSkinCount); i++)
                 {
                     if (VertexSkinCount < i + 1 || vtx.boneWeights.Count < i + 1)
                     {
@@ -1857,13 +1870,33 @@ namespace Bfres.Structs
                     }
                 }
 
-                for (int i = 0; i < VertexSkinCount; i++) {
+                for (int i = 0; i < VertexSkinCount; i++)
+                {
                     if (vtx.boneIds.Count > i)
                         indicesA[i] = vtx.boneIds[i];
                 }
 
-                weights.Add(new Syroot.Maths.Vector4F(weightsA[0], weightsA[1], weightsA[2], weightsA[3]));
-                boneInd.Add(new Syroot.Maths.Vector4F(indicesA[0], indicesA[1], indicesA[2], indicesA[3]));
+                int v4ListIndex = 0;
+                int v4Index = 0;
+
+                Syroot.Maths.Vector4F vWeight4 = new Syroot.Maths.Vector4F();
+                Syroot.Maths.Vector4F vBoneInd4 = new Syroot.Maths.Vector4F();
+                for (int i = 0; i < Math.Max(4, (int)VertexSkinCount); i++)
+                {
+                    vWeight4[v4Index] = weightsA[i];
+                    vBoneInd4[v4Index] = indicesA[i];
+
+                    // Save a v4 set each time v4Index hits 3 (.w)
+                    if (v4Index == 3)
+                    {
+                        weights[v4ListIndex].Add(vWeight4);
+                        boneInd[v4ListIndex].Add(vBoneInd4);
+                        v4ListIndex++;
+                        v4Index = 0;
+                        continue;
+                    }
+                    v4Index++;
+                }
             }
         }
 

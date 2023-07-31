@@ -1050,24 +1050,6 @@ namespace FirstPlugin
                     vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
                 }
-                if (att.Name == "_w0")
-                {
-                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
-                    vert.Name = att.Name;
-                    vert.Data = fshp.weights.ToArray();
-                    vert.Format = att.SetTypeWiiU(att.Format);
-                    vert.BufferIndex = att.BufferIndex;
-                    atrib.Add(vert);
-                }
-                if (att.Name == "_i0")
-                {
-                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
-                    vert.Name = att.Name;
-                    vert.Data = fshp.boneInd.ToArray();
-                    vert.Format = att.SetTypeWiiU(att.Format);
-                    vert.BufferIndex = att.BufferIndex;
-                    atrib.Add(vert);
-                }
                 if (att.Name == "_b0")
                 {
                     VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
@@ -1094,6 +1076,33 @@ namespace FirstPlugin
                     vert.Format = att.SetTypeWiiU(att.Format);
                     vert.BufferIndex = att.BufferIndex;
                     atrib.Add(vert);
+                }
+
+                // Set _w and _i 
+                for (int i = 0; i < fshp.weights.Count; i++)
+                {
+                    if (att.Name == "_w" + i.ToString())
+                    {
+                        VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                        vert.Name = att.Name;
+                        vert.Data = fshp.weights[i].ToArray();
+                        vert.Format = att.SetTypeWiiU(att.Format);
+                        atrib.Add(vert);
+
+                        for (int j = 0; j < fshp.weights.Count; j++)
+                        {
+                            Console.WriteLine($"w {j} {fshp.weights[j]}");
+                        }
+
+                    }
+                    if (att.Name == "_i" + i.ToString())
+                    {
+                        VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                        vert.Name = att.Name;
+                        vert.Data = fshp.boneInd[i].ToArray();
+                        vert.Format = att.SetTypeWiiU(att.Format);
+                        atrib.Add(vert);
+                    }
                 }
             }
             if (atrib.Count == 0)
