@@ -19,6 +19,7 @@ namespace FirstPlugin.Forms
         public FMAT material;
 
         public string SelectedMatParam = "";
+        bool init = false;
 
         public FMATEditor()
         {
@@ -41,6 +42,24 @@ namespace FirstPlugin.Forms
 
         public void LoadMaterial(FMAT mat)
         {
+            init = false;
+
+            chkBindAnim.Checked = false;
+
+            if (mat.Material != null)
+            {
+                var shaderAssignV10 = mat.Material.ShaderAssign as MaterialParserV10.ShaderAssignV10;
+                if (shaderAssignV10 != null)
+                {
+                    chkBindAnim.Visible = true;
+                    chkBindAnim.Checked = shaderAssignV10.IsAnimationBinded;
+                }
+                else
+                    chkBindAnim.Visible = false;
+            }
+            else
+                chkBindAnim.Visible = false;
+
             if (mat.MaterialU != null)
             {
                 TabPage tabPage = null;
@@ -75,7 +94,10 @@ namespace FirstPlugin.Forms
             chkboxVisible.Bind(material, "Enabled");
 
             FillForm();
+
+            init = true;
         }
+
         private UVEditor.ActiveTexture LoadTextureUvMap(STGenericMatTexture texmap, STGenericTexture genericTexture)
         {
             Vector2 scale = new Vector2(1);
@@ -295,6 +317,16 @@ namespace FirstPlugin.Forms
             {
 
             }
+        }
+
+        private void chkBindAnim_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!init || material.Material == null)
+                return;
+
+            var shaderAssignV10 = material.Material.ShaderAssign as MaterialParserV10.ShaderAssignV10;
+            if (shaderAssignV10 != null)
+                shaderAssignV10.IsAnimationBinded = chkBindAnim.Checked;
         }
     }
 }

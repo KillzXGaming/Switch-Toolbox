@@ -57,6 +57,7 @@
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.stButton1 = new Toolbox.Library.Forms.STButton();
             this.stLabel4 = new Toolbox.Library.Forms.STLabel();
+            this.chkBindAnim = new Toolbox.Library.Forms.STCheckBox();
             this.stTabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -262,7 +263,7 @@
             // stLabel1
             // 
             this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(366, 35);
+            this.stLabel1.Location = new System.Drawing.Point(366, 56);
             this.stLabel1.Name = "stLabel1";
             this.stLabel1.Size = new System.Drawing.Size(67, 13);
             this.stLabel1.TabIndex = 44;
@@ -271,7 +272,7 @@
             // btnViotileFlags
             // 
             this.btnViotileFlags.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnViotileFlags.Location = new System.Drawing.Point(439, 32);
+            this.btnViotileFlags.Location = new System.Drawing.Point(439, 53);
             this.btnViotileFlags.Name = "btnViotileFlags";
             this.btnViotileFlags.Size = new System.Drawing.Size(75, 23);
             this.btnViotileFlags.TabIndex = 45;
@@ -319,7 +320,7 @@
             // stButton1
             // 
             this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stButton1.Location = new System.Drawing.Point(439, 74);
+            this.stButton1.Location = new System.Drawing.Point(439, 82);
             this.stButton1.Name = "stButton1";
             this.stButton1.Size = new System.Drawing.Size(75, 23);
             this.stButton1.TabIndex = 51;
@@ -329,16 +330,30 @@
             // stLabel4
             // 
             this.stLabel4.AutoSize = true;
-            this.stLabel4.Location = new System.Drawing.Point(366, 77);
+            this.stLabel4.Location = new System.Drawing.Point(366, 85);
             this.stLabel4.Name = "stLabel4";
             this.stLabel4.Size = new System.Drawing.Size(42, 13);
             this.stLabel4.TabIndex = 50;
             this.stLabel4.Text = "Presets";
             // 
+            // chkBindAnim
+            // 
+            this.chkBindAnim.AutoSize = true;
+            this.chkBindAnim.Checked = true;
+            this.chkBindAnim.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkBindAnim.Location = new System.Drawing.Point(361, 28);
+            this.chkBindAnim.Name = "chkBindAnim";
+            this.chkBindAnim.Size = new System.Drawing.Size(134, 17);
+            this.chkBindAnim.TabIndex = 52;
+            this.chkBindAnim.Text = "Bind Param Animations";
+            this.chkBindAnim.UseVisualStyleBackColor = true;
+            this.chkBindAnim.CheckedChanged += new System.EventHandler(this.chkBindAnim_CheckedChanged);
+            // 
             // FMATEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkBindAnim);
             this.Controls.Add(this.stButton1);
             this.Controls.Add(this.stLabel4);
             this.Controls.Add(this.btnAttributeInputEditor);
@@ -398,5 +413,6 @@
         private Toolbox.Library.Forms.STLabel stLabel3;
         private Toolbox.Library.Forms.STButton stButton1;
         private Toolbox.Library.Forms.STLabel stLabel4;
+        private Toolbox.Library.Forms.STCheckBox chkBindAnim;
     }
 }
