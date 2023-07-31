@@ -488,7 +488,15 @@ namespace Toolbox.Library
             if (node.HasChildren)
             {
                 foreach (Node child in node.Children)
-                    return GetSklRoot(child, boneNames);
+                {
+                    Node ChildNode = GetSklRoot(child, boneNames);
+                    if (ChildNode == null)
+                    {
+                        continue;
+                    }
+                    return ChildNode;
+                }
+                    
             }
             return null;
         }
