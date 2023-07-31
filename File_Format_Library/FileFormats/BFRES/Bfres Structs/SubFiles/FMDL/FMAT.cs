@@ -261,23 +261,32 @@ namespace Bfres.Structs
             }
         }
 
-        public bool IsNormalMapTexCoord2()
+        public int GetNormalMapUVIndex()
         {
             //for BOTW if it uses UV layer 2 for normal maps use second UV map
             if (shaderassign.options.ContainsKey("uking_texture2_texcoord"))
             {
                 float value = float.Parse(shaderassign.options["uking_texture2_texcoord"]);
-                return (value == 1);
+                return (int)value;
+            }
+
+            //for TOTK use o_texture2_texcoord to find required uv layer for tangents
+            if (shaderassign.options.ContainsKey("o_texture2_texcoord"))
+            {
+                return int.TryParse(shaderassign.options["o_texture2_texcoord"], out int UseUVIndex) ? UseUVIndex : 0;
             }
 
             //For 3D world
             if (shaderassign.options.ContainsKey("cIsEnableNormalMap"))
             {
                 float value = float.Parse(shaderassign.options["cIsEnableNormalMap"]);
-                return (value == 1);
+                if (value == 1)
+                {
+                    return 1;
+                }
             }
 
-            return false;
+            return 0;
         }
 
         public void SetActiveGame()

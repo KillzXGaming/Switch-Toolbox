@@ -124,7 +124,7 @@ namespace FirstPlugin
 
         private void CalculateTangentBitangenAction(object sender, EventArgs args)
         {
-            this.CalculateTangentBitangent(false);
+            this.CalculateTangentBitangent(0);
             UpdateMesh();
         }
 
