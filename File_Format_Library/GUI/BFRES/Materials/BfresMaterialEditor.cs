@@ -48,14 +48,14 @@ namespace FirstPlugin.Forms
 
             if (mat.Material != null)
             {
-                var shaderAssignV10 = mat.Material.ShaderAssign as MaterialParserV10.ShaderAssignV10;
+             /*   var shaderAssignV10 = mat.Material.ShaderAssign as MaterialParserV10.ShaderAssignV10;
                 if (shaderAssignV10 != null)
                 {
                     chkBindAnim.Visible = true;
                     chkBindAnim.Checked = shaderAssignV10.IsAnimationBinded;
                 }
                 else
-                    chkBindAnim.Visible = false;
+                    chkBindAnim.Visible = false;*/
             }
             else
                 chkBindAnim.Visible = false;
@@ -324,9 +324,9 @@ namespace FirstPlugin.Forms
             if (!init || material.Material == null)
                 return;
 
-            var shaderAssignV10 = material.Material.ShaderAssign as MaterialParserV10.ShaderAssignV10;
+          /*  var shaderAssignV10 = material.Material.ShaderAssign as MaterialParserV10.ShaderAssignV10;
             if (shaderAssignV10 != null)
-                shaderAssignV10.IsAnimationBinded = chkBindAnim.Checked;
+                shaderAssignV10.IsAnimationBinded = chkBindAnim.Checked;*/
         }
     }
 }
