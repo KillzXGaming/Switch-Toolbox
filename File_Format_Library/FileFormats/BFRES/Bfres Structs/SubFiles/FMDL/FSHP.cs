@@ -1889,8 +1889,11 @@ namespace Bfres.Structs
                     // Save a v4 set each time v4Index hits 3 (.w)
                     if (v4Index == 3)
                     {
-                        weights[v4ListIndex].Add(vWeight4);
-                        boneInd[v4ListIndex].Add(vBoneInd4);
+                        if (weights.Count > v4ListIndex)
+                            weights[v4ListIndex].Add(vWeight4);
+                        if (weights.Count > v4ListIndex)
+                            boneInd[v4ListIndex].Add(vBoneInd4);
+
                         v4ListIndex++;
                         v4Index = 0;
                         continue;
