@@ -1891,7 +1891,7 @@ namespace Bfres.Structs
                     {
                         if (weights.Count > v4ListIndex)
                             weights[v4ListIndex].Add(vWeight4);
-                        if (weights.Count > v4ListIndex)
+                        if (boneInd.Count > v4ListIndex)
                             boneInd[v4ListIndex].Add(vBoneInd4);
 
                         v4ListIndex++;
