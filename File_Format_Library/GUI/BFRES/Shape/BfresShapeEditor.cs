@@ -42,7 +42,22 @@ namespace FirstPlugin
 
             activeShape = fshp;
 
-            shapeVertexSkinCountUD.Value = (decimal)fshp.VertexSkinCount;
+            // Disable skin count adjustment if no skinning
+            shapeVertexSkinCountUD.ReadOnly = fshp.VertexSkinCount == 0;
+
+            // Setup skin count adjustment
+            int lowestVertexSkinCount = fshp.GetLowestPossibleVertexSkinCount();
+            if (shapeVertexSkinCountUD.Minimum > lowestVertexSkinCount &&
+                shapeVertexSkinCountUD.Value > lowestVertexSkinCount)
+            {
+                shapeVertexSkinCountUD.Minimum = lowestVertexSkinCount;
+                shapeVertexSkinCountUD.Value = fshp.VertexSkinCount;
+            }
+            else
+            {
+                shapeVertexSkinCountUD.Value = fshp.VertexSkinCount;
+                shapeVertexSkinCountUD.Minimum = lowestVertexSkinCount;
+            }
 
             FMDL fmdl = fshp.GetParentModel();
 
@@ -67,14 +82,12 @@ namespace FirstPlugin
 
             if (fshp.VertexBufferU != null)
             {
-                vertexBufferSkinCountUD.Maximum = (decimal)fshp.VertexBufferU.VertexSkinCount;
-                vertexBufferSkinCountUD.Value = (decimal)fshp.VertexBufferU.VertexSkinCount;
+                vertexBufferSkinCountUD.Value = fshp.VertexBufferU.VertexSkinCount;
                 vertexBufferList1.LoadVertexBuffers(fshp, fshp.VertexBufferU);
             }
             else
             {
-                vertexBufferSkinCountUD.Maximum = (decimal)fshp.VertexBuffer.VertexSkinCount;
-                vertexBufferSkinCountUD.Value = (decimal)fshp.VertexBuffer.VertexSkinCount;
+                vertexBufferSkinCountUD.Value = fshp.VertexBuffer.VertexSkinCount;
                 vertexBufferList1.LoadVertexBuffers(fshp, fshp.VertexBuffer);
             }
 
@@ -291,6 +304,22 @@ namespace FirstPlugin
 
                 }
             }
+        }
+
+        private void SkinCountUD_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (!(sender is NumericUpDownInt valueSelector))
+            { 
+                return; 
+            }
+
+            // Skip if already the same or 0
+            if (activeShape.VertexSkinCount == valueSelector.Value || valueSelector.Value == 0)
+            {
+                return;
+            }
+
+            activeShape.UpdateVertexSkinCount((int)valueSelector.Value);
         }
     }
 }

@@ -186,24 +186,14 @@
             // shapeVertexSkinCountUD
             // 
             this.shapeVertexSkinCountUD.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.shapeVertexSkinCountUD.Increment = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
+            this.shapeVertexSkinCountUD.Increment = 1;
+            this.shapeVertexSkinCountUD.Value = 0;
             this.shapeVertexSkinCountUD.Location = new System.Drawing.Point(83, 59);
-            this.shapeVertexSkinCountUD.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.shapeVertexSkinCountUD.Minimum = new decimal(new int[] {
-            -2147483648,
-            0,
-            0,
-            -2147483648});
+            this.shapeVertexSkinCountUD.Maximum = 16;
+            this.shapeVertexSkinCountUD.Minimum = -2147483648;
+            this.shapeVertexSkinCountUD.ValueChanged += SkinCountUD_ValueChanged;
             this.shapeVertexSkinCountUD.Name = "shapeVertexSkinCountUD";
-            this.shapeVertexSkinCountUD.ReadOnly = true;
+            this.shapeVertexSkinCountUD.ReadOnly = false;
             this.shapeVertexSkinCountUD.Size = new System.Drawing.Size(121, 20);
             this.shapeVertexSkinCountUD.TabIndex = 39;
             // 
