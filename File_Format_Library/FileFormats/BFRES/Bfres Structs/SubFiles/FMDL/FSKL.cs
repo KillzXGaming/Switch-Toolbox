@@ -327,6 +327,8 @@ namespace Bfres.Structs
                             {
                                 ResU.Bone BoneTemp = new ResU.Bone();
                                 BoneTemp.Import(file, GetResFileU());
+                                BoneTemp.SmoothMatrixIndex = -1;
+                                BoneTemp.RigidMatrixIndex = -1;
 
                                 foreach (BfresBone bone in fskl.bones)
                                 {
@@ -340,6 +342,8 @@ namespace Bfres.Structs
                             {
                                 Bone BoneTemp = new Bone();
                                 BoneTemp.Import(file);
+                                BoneTemp.SmoothMatrixIndex = -1;
+                                BoneTemp.RigidMatrixIndex = -1;
 
                                 foreach (BfresBone bone in fskl.bones)
                                 {
@@ -467,6 +471,8 @@ namespace Bfres.Structs
                             ResU.Bone bone = new ResU.Bone();
                             bone.Import(FileName, GetResFileU());
                             bone.ParentIndex = -1;
+                            bone.SmoothMatrixIndex = -1;
+                            bone.RigidMatrixIndex = -1;
                             bone.Name = Utils.RenameDuplicateString(boneKeys, bone.Name);
 
                             BfresWiiU.ReadBone(bn, bone, false);
@@ -482,6 +488,8 @@ namespace Bfres.Structs
                             Bone bone = new Bone();
                             bone.Import(FileName);
                             bone.ParentIndex = -1;
+                            bone.SmoothMatrixIndex = -1;
+                            bone.RigidMatrixIndex = -1;
                             bone.Name = Utils.RenameDuplicateString(boneKeys, bone.Name);
 
                             BfresSwitch.ReadBone(bn, bone, false);
@@ -864,6 +872,8 @@ namespace Bfres.Structs
                     BoneU = new ResU.Bone();
                     BoneU.Import(ofd.FileName, GetResFileU());
                     BoneU.Name = CheckDuplicateBoneNames(BoneU.Name);
+                    BoneU.SmoothMatrixIndex = -1;
+                    BoneU.RigidMatrixIndex = -1;
                     BfresWiiU.ReadBone(bn, BoneU, false);
 
                     Nodes.Add(bn);
@@ -877,6 +887,8 @@ namespace Bfres.Structs
                     Bone = new Bone();
                     Bone.Import(ofd.FileName);
                     Bone.Name = CheckDuplicateBoneNames(Bone.Name);
+                    Bone.SmoothMatrixIndex = -1;
+                    Bone.RigidMatrixIndex = -1;
                     BfresSwitch.ReadBone(bn, Bone, false);
 
                     Nodes.Add(bn);
