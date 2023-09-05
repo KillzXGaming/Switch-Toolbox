@@ -347,7 +347,7 @@ namespace Toolbox.Library.Animations
 
                 file.WriteLine("skeleton");
                 anim.SetFrame(0);
-                for (int i = 0; i <= anim.FrameCount; i++)
+                for (int i = 0; i < anim.FrameCount; i++)
                 {
                     anim.NextFrame(Skeleton, false, true);
 
