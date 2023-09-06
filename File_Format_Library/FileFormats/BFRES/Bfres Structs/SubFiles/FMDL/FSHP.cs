@@ -993,7 +993,33 @@ namespace Bfres.Structs
                         break;
                 }
                 UpdateVertexData();
+                UpdateEditor();
             }
+        }
+        public void UpdateVertexSkinCount(int NewSkinCount)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+
+            // Convert to and from rigid skinning
+            if ((VertexSkinCount == 1 && GetAreVerticiesRigidSkinned()) ||
+                (NewSkinCount == 1 && !GetAreVerticiesRigidSkinned()))
+            {
+                ConvertSkinningMethod();
+            }
+
+            VertexSkinCount = (byte)NewSkinCount;
+            ChangeBoneListCount(NewSkinCount);
+            UpdateVertexAttributeBySkinCount(NewSkinCount);
+            BoneIndices = GetIndices(GetParentModel().Skeleton);
+
+            OptmizeAttributeFormats();
+            SaveShape(IsWiiU);
+            SaveVertexBuffer(IsWiiU);
+
+            Cursor.Current = Cursors.Default;
+
+            UpdateVertexData();
+            UpdateEditor();
         }
         public void CreateIndexList(STGenericObject ob, FMDL mdl = null, bool ForceSkinLimt = false, int LimitAmount = 4)
         {
@@ -1182,7 +1208,164 @@ namespace Bfres.Structs
                 }
             }
         }
+        public void ChangeBoneListCount(int NewSkinCount)
+        {
+            foreach (Vertex v in vertices)
+            {
+                for (int i = 0; i < NewSkinCount; i++)
+                {
+                    if (v.boneIds.Count < VertexSkinCount)
+                    {
+                        v.boneIds.Add(0);
 
+                        if (v.boneWeights.Count > 0)
+                        {
+                            v.boneWeights.Add(0);
+                        }
+                    }
+                    else if (v.boneIds.Count > VertexSkinCount)
+                    {
+                        v.boneIds.RemoveAt(v.boneIds.Count - 1);
+
+                        if (v.boneWeights.Count > 0)
+                        {
+                            v.boneWeights.RemoveAt(v.boneIds.Count - 1);
+                        }
+                    }
+                }
+            }
+        }
+        public void UpdateVertexAttributeBySkinCount(int NewSkinCount)
+        {
+            int attCount = (int)Math.Ceiling(NewSkinCount / 4.0);
+            int existingAttCount = vertexAttributes.FindAll(att => att.Name.Contains("_w")).Count;
+
+            // Get first existing _w and _i
+            VertexAttribute wFirstAtt = vertexAttributes.Find(att => att.Name == "_w0");
+            VertexAttribute iFirstAtt = vertexAttributes.Find(att => att.Name == "_i0");
+
+            // No existing weight attribute groups
+            if (wFirstAtt == null || iFirstAtt == null)
+            {
+                return;
+            }
+
+            // Add missing attributes
+            for (int i = 0; i < attCount; i++)
+            {
+                VertexAttribute wAtt = vertexAttributes.Find(att => att.Name == "_w" + i.ToString());
+                VertexAttribute iAtt = vertexAttributes.Find(att => att.Name == "_i" + i.ToString());
+
+                if (wAtt == null)
+                {
+                    VertexAttribute newAtt = new FSHP.VertexAttribute();
+                    newAtt.Name = "_w" + i.ToString();
+                    newAtt.Format = wFirstAtt.Format;
+                    vertexAttributes.Add(newAtt);
+                }
+
+                if (iAtt == null)
+                {
+                    VertexAttribute newAtt = new FSHP.VertexAttribute();
+                    newAtt.Name = "_i" + i.ToString();
+                    newAtt.Format = iFirstAtt.Format;
+                    vertexAttributes.Add(newAtt);
+                }
+            }
+
+            // Remove extra attributes
+            for (int i = existingAttCount - 1; i >= 0; i--)
+            {
+                if (i < attCount)
+                {
+                    continue;
+                }
+                vertexAttributes.RemoveAll(att => att.Name == "_w" + i.ToString());
+                vertexAttributes.RemoveAll(att => att.Name == "_i" + i.ToString());
+            }
+        }
+        public void ConvertSkinningMethod()
+        {
+            bool isConvertToSmooth = GetAreVerticiesRigidSkinned();
+
+            // Get Model
+            FMDL mdl = (FMDL)Parent.Parent;
+            if (mdl == null)
+            {
+                return;
+            }
+
+            foreach (Vertex v in vertices)
+            {
+                for (int i = 0; i < v.boneIds.Count; i++)
+                {
+                    // Convert to smooth skinning
+                    if (isConvertToSmooth)
+                    {
+                        STBone rigidBone = mdl.Skeleton.bones.Find(bone => bone.RigidMatrixIndex == v.boneIds[i]);
+                        if (rigidBone == null || rigidBone.SmoothMatrixIndex == -1)
+                        {
+                            continue;
+                        }
+
+                        var smoothBoneIndex = Array.FindIndex(mdl.Skeleton.Node_Array, boneIndex =>
+                            mdl.Skeleton.bones[boneIndex].Text == rigidBone.Text);
+                        if (smoothBoneIndex == -1)
+                        {
+                            throw new Exception("Convert To Smooth: Smooth Bone index not found for vertex" + i.ToString());
+                        }
+
+                        v.boneIds[i] = smoothBoneIndex;
+                    }
+                    else // Convert to rigid skinning
+                    {
+                        STBone smoothBone = mdl.Skeleton.bones[mdl.Skeleton.Node_Array[v.boneIds[i]]];
+                        if (smoothBone == null || smoothBone.RigidMatrixIndex == -1)
+                        {
+                            continue;
+                        }
+                        v.boneIds[i] = smoothBone.RigidMatrixIndex;
+                    }
+                }
+            }
+        }
+        public bool GetAreVerticiesRigidSkinned()
+        {
+            FMDL mdl = (FMDL)Parent.Parent;
+            if (mdl == null)
+            {
+                return false;
+            }
+
+            foreach (Vertex v in vertices)
+            {
+                for (int i = 0; i < v.boneIds.Count; i++)
+                {
+                    STBone foundBone = mdl.Skeleton.bones.Find(x => x.RigidMatrixIndex == v.boneIds[i]);
+                    if (foundBone != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public int GetLowestPossibleVertexSkinCount()
+        {
+            int lowestSkinCount = 0;
+
+            // Find any weights and get the lowest possibe weight value
+            foreach (var v in vertices)
+            {
+                int maxWeightCount = v.boneWeights.FindLastIndex(w => w > 0) + 1;
+                if (lowestSkinCount < maxWeightCount)
+                {
+                    lowestSkinCount = maxWeightCount;
+                }
+            }
+
+            return lowestSkinCount;
+        }
         public void CreateNewBoundingBoxes(FMDL model)
         {
             boundingBoxes.Clear();
@@ -1729,41 +1912,53 @@ namespace Bfres.Structs
                 {
                     case ResGFX.AttribFormat.Format_32_32_32_32_Single:
                     case ResGFX.AttribFormat.Format_32_32_32_Single:
+                    case ResGFX.AttribFormat.Format_32_Single:
                         attribute.Format = ResGFX.AttribFormat.Format_32_32_Single;
                         break;
                     case ResGFX.AttribFormat.Format_32_32_32_32_SInt:
                     case ResGFX.AttribFormat.Format_32_32_32_SInt:
+                    case ResGFX.AttribFormat.Format_32_SInt:
                         attribute.Format = ResGFX.AttribFormat.Format_32_32_SInt;
                         break;
                     case ResGFX.AttribFormat.Format_32_32_32_32_UInt:
                     case ResGFX.AttribFormat.Format_32_32_32_UInt:
+                    case ResGFX.AttribFormat.Format_32_UInt:
                         attribute.Format = ResGFX.AttribFormat.Format_32_32_UInt;
                         break;
                     case ResGFX.AttribFormat.Format_16_16_16_16_Single:
+                    case ResGFX.AttribFormat.Format_16_Single:
                         attribute.Format = ResGFX.AttribFormat.Format_16_16_Single;
                         break;
                     case ResGFX.AttribFormat.Format_16_16_16_16_SInt:
+                    case ResGFX.AttribFormat.Format_16_SInt:
                         attribute.Format = ResGFX.AttribFormat.Format_16_16_SInt;
                         break;
                     case ResGFX.AttribFormat.Format_16_16_16_16_UInt:
+                    case ResGFX.AttribFormat.Format_16_UInt:
                         attribute.Format = ResGFX.AttribFormat.Format_16_16_UInt;
                         break;
                     case ResGFX.AttribFormat.Format_8_8_8_8_UInt:
+                    case ResGFX.AttribFormat.Format_8_UInt:
                         attribute.Format = ResGFX.AttribFormat.Format_8_8_UInt;
                         break;
                     case ResGFX.AttribFormat.Format_8_8_8_8_SInt:
+                    case ResGFX.AttribFormat.Format_8_SInt:
                         attribute.Format = ResGFX.AttribFormat.Format_8_8_SInt;
                         break;
                     case ResGFX.AttribFormat.Format_8_8_8_8_SNorm:
+                    case ResGFX.AttribFormat.Format_8_SNorm:
                         attribute.Format = ResGFX.AttribFormat.Format_8_8_SNorm;
                         break;
                     case ResGFX.AttribFormat.Format_8_8_8_8_UNorm:
+                    case ResGFX.AttribFormat.Format_8_UNorm:
                         attribute.Format = ResGFX.AttribFormat.Format_8_8_UNorm;
                         break;
                     case ResGFX.AttribFormat.Format_8_8_8_8_SIntToSingle:
+                    case ResGFX.AttribFormat.Format_8_SIntToSingle:
                         attribute.Format = ResGFX.AttribFormat.Format_8_8_SIntToSingle;
                         break;
                     case ResGFX.AttribFormat.Format_8_8_8_8_UIntToSingle:
+                    case ResGFX.AttribFormat.Format_8_UIntToSingle:
                         attribute.Format = ResGFX.AttribFormat.Format_8_8_UIntToSingle;
                         break;
                 }
@@ -1773,13 +1968,76 @@ namespace Bfres.Structs
                 switch (attribute.Format)
                 {
                     case ResGFX.AttribFormat.Format_32_32_32_32_Single:
+                    case ResGFX.AttribFormat.Format_32_32_Single:
+                    case ResGFX.AttribFormat.Format_32_Single:
                         attribute.Format = ResGFX.AttribFormat.Format_32_32_32_Single;
                         break;
                     case ResGFX.AttribFormat.Format_32_32_32_32_SInt:
+                    case ResGFX.AttribFormat.Format_32_32_SInt:
+                    case ResGFX.AttribFormat.Format_32_SInt:
                         attribute.Format = ResGFX.AttribFormat.Format_32_32_32_SInt;
                         break;
                     case ResGFX.AttribFormat.Format_32_32_32_32_UInt:
+                    case ResGFX.AttribFormat.Format_32_32_UInt:
+                    case ResGFX.AttribFormat.Format_32_UInt:
                         attribute.Format = ResGFX.AttribFormat.Format_32_32_32_UInt;
+                        break;
+                }
+            }
+            if (VertexSkinCount >= 4)
+            {
+                switch (attribute.Format)
+                {
+                    case ResGFX.AttribFormat.Format_32_32_32_32_Single:
+                    case ResGFX.AttribFormat.Format_32_32_Single:
+                    case ResGFX.AttribFormat.Format_32_Single:
+                        attribute.Format = ResGFX.AttribFormat.Format_32_32_32_32_Single;
+                        break;
+                    case ResGFX.AttribFormat.Format_32_32_32_SInt:
+                    case ResGFX.AttribFormat.Format_32_32_SInt:
+                    case ResGFX.AttribFormat.Format_32_SInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_32_32_32_32_SInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_32_32_32_UInt:
+                    case ResGFX.AttribFormat.Format_32_32_UInt:
+                    case ResGFX.AttribFormat.Format_32_UInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_32_32_32_32_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_Single:
+                    case ResGFX.AttribFormat.Format_16_Single:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_16_16_16_Single;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_SInt:
+                    case ResGFX.AttribFormat.Format_16_SInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_16_16_16_SInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_16_16_UInt:
+                    case ResGFX.AttribFormat.Format_16_UInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_16_16_16_16_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_UInt:
+                    case ResGFX.AttribFormat.Format_8_UInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_8_8_UInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_SInt:
+                    case ResGFX.AttribFormat.Format_8_SInt:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_8_8_SInt;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_SNorm:
+                    case ResGFX.AttribFormat.Format_8_SNorm:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_8_8_SNorm;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_UNorm:
+                    case ResGFX.AttribFormat.Format_8_UNorm:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_8_8_UNorm;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_SIntToSingle:
+                    case ResGFX.AttribFormat.Format_8_SIntToSingle:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_8_8_SIntToSingle;
+                        break;
+                    case ResGFX.AttribFormat.Format_8_8_UIntToSingle:
+                    case ResGFX.AttribFormat.Format_8_UIntToSingle:
+                        attribute.Format = ResGFX.AttribFormat.Format_8_8_8_8_UIntToSingle;
                         break;
                 }
             }
@@ -1806,6 +2064,8 @@ namespace Bfres.Structs
                 boneInd.Add(new List<Syroot.Maths.Vector4F>());
             }
 
+            int TargetVertexSkinCount = Math.Max(4, (int)VertexSkinCount);
+
             foreach (Vertex vtx in vertices)
             {
                 if (VertexSkinCount == 0 || VertexSkinCount == 1)
@@ -1828,8 +2088,8 @@ namespace Bfres.Structs
                 colors.Add(new Syroot.Maths.Vector4F(vtx.col.X, vtx.col.Y, vtx.col.Z, vtx.col.W));
 
                 // Init arrays based on skincount
-                float[] weightsA = new float[Math.Max(4, (int)VertexSkinCount)];
-                int[] indicesA = new int[Math.Max(4, (int)VertexSkinCount)];
+                float[] weightsA = new float[TargetVertexSkinCount];
+                int[] indicesA = new int[TargetVertexSkinCount];
 
                 // Cache bone weights
                 for (int i = 0; i < VertexSkinCount; i++)
@@ -1845,8 +2105,9 @@ namespace Bfres.Structs
                 //Produce identical results for the weight output as BFRES_Vertex.py
                 //This should prevent encoding back and exploding
                 int MaxWeight = 255;
-                for (int i = 0; i < Math.Max(4, (int)VertexSkinCount); i++)
+                for (int i = 0; i < TargetVertexSkinCount; i++)
                 {
+                    // If vertex has no weight for current skin count set an empty value
                     if (VertexSkinCount < i + 1 || vtx.boneWeights.Count < i + 1)
                     {
                         weightsA[i] = 0;
@@ -1881,19 +2142,21 @@ namespace Bfres.Structs
 
                 Syroot.Maths.Vector4F vWeight4 = new Syroot.Maths.Vector4F();
                 Syroot.Maths.Vector4F vBoneInd4 = new Syroot.Maths.Vector4F();
-                for (int i = 0; i < Math.Max(4, (int)VertexSkinCount); i++)
+                for (int i = 0; i < TargetVertexSkinCount; i++)
                 {
                     vWeight4[v4Index] = weightsA[i];
                     vBoneInd4[v4Index] = indicesA[i];
 
-                    // Save a v4 set each time v4Index hits 3 (.w)
-                    if (v4Index == 3)
+                    // Save a v4 set each time v4Index hits 3 (.w) or its the last index
+                    if (v4Index == 3 || i == TargetVertexSkinCount - 1)
                     {
                         if (weights.Count > v4ListIndex)
                             weights[v4ListIndex].Add(vWeight4);
                         if (boneInd.Count > v4ListIndex)
                             boneInd[v4ListIndex].Add(vBoneInd4);
 
+                        vWeight4 = new Syroot.Maths.Vector4F();
+                        vBoneInd4 = new Syroot.Maths.Vector4F();
                         v4ListIndex++;
                         v4Index = 0;
                         continue;
