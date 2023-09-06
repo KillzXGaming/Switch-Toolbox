@@ -57,7 +57,6 @@
             this.stLabel3 = new Toolbox.Library.Forms.STLabel();
             this.stButton1 = new Toolbox.Library.Forms.STButton();
             this.stLabel4 = new Toolbox.Library.Forms.STLabel();
-            this.chkBindAnim = new Toolbox.Library.Forms.STCheckBox();
             this.stTabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -336,24 +335,10 @@
             this.stLabel4.TabIndex = 50;
             this.stLabel4.Text = "Presets";
             // 
-            // chkBindAnim
-            // 
-            this.chkBindAnim.AutoSize = true;
-            this.chkBindAnim.Checked = true;
-            this.chkBindAnim.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBindAnim.Location = new System.Drawing.Point(361, 28);
-            this.chkBindAnim.Name = "chkBindAnim";
-            this.chkBindAnim.Size = new System.Drawing.Size(134, 17);
-            this.chkBindAnim.TabIndex = 52;
-            this.chkBindAnim.Text = "Bind Param Animations";
-            this.chkBindAnim.UseVisualStyleBackColor = true;
-            this.chkBindAnim.CheckedChanged += new System.EventHandler(this.chkBindAnim_CheckedChanged);
-            // 
             // FMATEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.chkBindAnim);
             this.Controls.Add(this.stButton1);
             this.Controls.Add(this.stLabel4);
             this.Controls.Add(this.btnAttributeInputEditor);
@@ -413,6 +398,5 @@
         private Toolbox.Library.Forms.STLabel stLabel3;
         private Toolbox.Library.Forms.STButton stButton1;
         private Toolbox.Library.Forms.STLabel stLabel4;
-        private Toolbox.Library.Forms.STCheckBox chkBindAnim;
     }
 }
