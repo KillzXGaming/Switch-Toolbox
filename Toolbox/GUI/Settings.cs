@@ -88,6 +88,7 @@ namespace Toolbox
             chkBotwFileTable.Checked = Runtime.ResourceTables.BotwTable;
             chkTpFileTable.Checked = Runtime.ResourceTables.TpTable;
             chkFrameCamera.Checked = Runtime.FrameCamera;
+            chkAlwaysSaveAll.Checked = Runtime.AlwaysSaveAll;
             chkAlwaysCompressOnSave.Checked = Runtime.AlwaysCompressOnSave;
             chkViewportGrid.Checked = Runtime.displayGrid;
             chkViewportAxisLines.Checked = Runtime.displayAxisLines;
@@ -662,6 +663,11 @@ namespace Toolbox
 
         private void chkFrameCamera_CheckedChanged(object sender, EventArgs e) {
             Runtime.FrameCamera = chkFrameCamera.Checked;
+        }
+
+        private void chkAlwaysSaveAll_CheckedChanged(object sender, EventArgs e)
+        {
+            Runtime.AlwaysSaveAll = chkAlwaysSaveAll.Checked;
         }
 
         private void chkAlwaysCompressOnSave_CheckedChanged(object sender, EventArgs e) {

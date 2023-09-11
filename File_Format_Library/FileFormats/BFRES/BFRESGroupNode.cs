@@ -160,17 +160,17 @@ namespace Bfres.Structs
             }
         }
 
-        public override void ReplaceAll()
+        public override void ReplaceAll(string ReplacePath = "")
         {
             FolderSelectDialog sfd = new FolderSelectDialog();
-            if (sfd.ShowDialog() == DialogResult.OK)
+            if (ReplacePath != "" || sfd.ShowDialog() == DialogResult.OK)
             {
                 if (Type == BRESGroupType.Textures)
                 {
                     GTXTextureImporter importer = new GTXTextureImporter();
                     List<GTXImporterSettings> settings = new List<GTXImporterSettings>();
 
-                    foreach (string file in System.IO.Directory.GetFiles(sfd.SelectedPath))
+                    foreach (string file in System.IO.Directory.GetFiles(ReplacePath != "" ? ReplacePath : sfd.SelectedPath))
                     {
                         string FileName = System.IO.Path.GetFileNameWithoutExtension(file);
 
@@ -260,7 +260,7 @@ namespace Bfres.Structs
                 }
                 else
                 {
-                    foreach (string file in System.IO.Directory.GetFiles(sfd.SelectedPath))
+                    foreach (string file in System.IO.Directory.GetFiles(ReplacePath != "" ? ReplacePath : sfd.SelectedPath))
                     {
                         string FileName = System.IO.Path.GetFileNameWithoutExtension(file);
 
