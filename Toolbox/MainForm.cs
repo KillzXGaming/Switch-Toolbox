@@ -1448,7 +1448,7 @@ namespace Toolbox
 
                     foreach (string file in System.IO.Directory.GetFiles(sfd.SelectedPath))
                     {
-                        if (!file.Contains(foundNode.Text))
+                        if (!file.Contains(foundNode.Text + "."))
                         {
                             continue;
                         }
