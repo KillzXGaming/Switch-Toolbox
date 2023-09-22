@@ -1,4 +1,6 @@
-﻿namespace Toolbox
+﻿using System;
+
+namespace Toolbox
 {
     partial class MainForm
     {
@@ -48,6 +50,7 @@
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchExportModelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchReplaceFTPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.batchRenameBNTXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchReplaceTXTGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.experimentalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -196,7 +199,8 @@
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem,
             this.batchExportModelsToolStripMenuItem,
             this.batchReplaceFTPToolStripMenuItem,
-            this.batchReplaceTXTGToolStripMenuItem,});
+            this.batchReplaceTXTGToolStripMenuItem,
+            this.batchRenameBNTXToolStripMenuItem,});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 21);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -248,6 +252,13 @@
             this.batchReplaceTXTGToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
             this.batchReplaceTXTGToolStripMenuItem.Text = "Batch Replace TXTG";
             this.batchReplaceTXTGToolStripMenuItem.Click += new System.EventHandler(this.batchReplaceTXTGToolStripMenuItem_Click);
+            // 
+            // batchRenameBNTXToolStripMenuItem
+            // 
+            this.batchRenameBNTXToolStripMenuItem.Name = "batchRenameBNTXToolStripMenuItem";
+            this.batchRenameBNTXToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
+            this.batchRenameBNTXToolStripMenuItem.Text = "Batch Rename BNTX from Filename";
+            this.batchRenameBNTXToolStripMenuItem.Click += new System.EventHandler(this.batchRenameBNTXToolStripMenuItem_Click);
             // 
             // experimentalToolStripMenuItem
             // 
@@ -610,6 +621,7 @@
         private System.Windows.Forms.ToolStripMenuItem batchExportModelsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchReplaceFTPToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchReplaceTXTGToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem batchRenameBNTXToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openUserFolderToolStripMenuItem;
     }

@@ -18,6 +18,9 @@ using OpenTK.Graphics.OpenGL;
 using Toolbox.Library.NodeWrappers;
 using Toolbox.Library.Rendering;
 using Bfres.Structs;
+using Syroot.NintenTools.NSW.Bntx;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using FirstPlugin;
 
 namespace Toolbox
 {
@@ -1422,11 +1425,6 @@ namespace Toolbox
             }
         }
 
-        private void batchReplaceFTPToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BatchReplaceFTP();
-        }
-
         private void batchReplaceTXTGToolStripMenuItem_Click(object sender, EventArgs e)
         {
             BatchReplaceTXTG();
@@ -1456,6 +1454,10 @@ namespace Toolbox
                     }
                 }
             }
+        }
+        private void batchReplaceFTPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BatchReplaceFTP();
         }
 
         private void BatchReplaceFTP()
@@ -1509,6 +1511,43 @@ namespace Toolbox
 
             // If no match is found in this subtree, return null.
             return null;
+        }
+
+        private void batchRenameBNTXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ObjectEditor ObjectEditor = (ObjectEditor)ActiveMdiChild;
+
+            foreach (TreeNode node in ObjectEditor.GetNodes())
+            {
+                FirstPlugin.BNTX foundNode = (FirstPlugin.BNTX)node;
+
+                // Skip if no BNTX
+                if (foundNode == null)
+                {
+                    continue;
+                }
+
+                string fileName = Path.GetFileNameWithoutExtension(foundNode.FilePath).Split('.')[0];
+
+                // Rename file
+                foundNode.Text = fileName;
+                if (foundNode.BinaryTexFile != null)
+                {
+                    foundNode.BinaryTexFile.Name = fileName;
+                }
+
+                string textureKey = foundNode.Textures.Keys.FirstOrDefault();
+                TextureData textureData = foundNode.Textures.Values.FirstOrDefault();
+                if (textureData != null)
+                {
+                    textureData.Text = fileName;
+                    textureData.Name = fileName;
+                    textureData.Texture.Name = fileName;
+                    foundNode.Textures.Remove(textureKey);
+                    foundNode.Textures.Add(fileName, textureData);
+                }
+            }
+            ObjectEditor.Update();
         }
 
         private List<string> failedFiles = new List<string>();
