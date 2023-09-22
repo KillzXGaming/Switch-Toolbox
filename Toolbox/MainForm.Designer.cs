@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Toolbox
+﻿namespace Toolbox
 {
     partial class MainForm
     {
