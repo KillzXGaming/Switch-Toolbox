@@ -100,7 +100,7 @@ namespace Toolbox.Library.NodeWrappers
             ReplaceAll();
         }
 
-        public virtual void ReplaceAll()
+        public virtual void ReplaceAll(string ReplacePath = "")
         {
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)

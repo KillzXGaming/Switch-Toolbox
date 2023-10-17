@@ -17,6 +17,10 @@ using System.Reflection;
 using OpenTK.Graphics.OpenGL;
 using Toolbox.Library.NodeWrappers;
 using Toolbox.Library.Rendering;
+using Bfres.Structs;
+using Syroot.NintenTools.NSW.Bntx;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using FirstPlugin;
 
 namespace Toolbox
 {
@@ -475,7 +479,16 @@ namespace Toolbox
                 if (format != null)
                 {
                     if (!format.CanSave)
-                        return;
+                    {
+                        if (Runtime.AlwaysSaveAll)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
 
                     string FileName = format.FilePath;
                     if (!File.Exists(FileName))
@@ -488,7 +501,16 @@ namespace Toolbox
                         sfd.FileName = format.FileName;
 
                         if (sfd.ShowDialog() != DialogResult.OK)
-                            return;
+                        {
+                            if (Runtime.AlwaysSaveAll)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
 
                         FileName = sfd.FileName;
                     }
@@ -498,7 +520,14 @@ namespace Toolbox
                     if (format is STGenericWrapper && !(format is STGenericTexture))
                     {
                         ((STGenericWrapper)format).Export(FileName);
-                        return;
+                        if (Runtime.AlwaysSaveAll)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
 
                     if (node is ArchiveBase)
@@ -1394,6 +1423,131 @@ namespace Toolbox
                     BatchExportModels(ofd.FileNames, folderDlg.SelectedPath);
                 }
             }
+        }
+
+        private void batchReplaceTXTGToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BatchReplaceTXTG();
+        }
+
+        private void BatchReplaceTXTG()
+        {
+            ObjectEditor ObjectEditor = (ObjectEditor)ActiveMdiChild;
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                foreach (TreeNode node in ObjectEditor.GetNodes())
+                {
+                    STGenericWrapper foundNode = (STGenericWrapper)node;
+                    if (foundNode == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (string file in System.IO.Directory.GetFiles(sfd.SelectedPath))
+                    {
+                        if (!file.Contains(foundNode.Text + "."))
+                        {
+                            continue;
+                        }
+                        foundNode.Replace(file);
+                    }
+                }
+            }
+        }
+        private void batchReplaceFTPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BatchReplaceFTP();
+        }
+
+        private void BatchReplaceFTP()
+        {
+            ObjectEditor ObjectEditor = (ObjectEditor)ActiveMdiChild;
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                foreach (TreeNode node in ObjectEditor.GetNodes())
+                {
+                    TreeNode foundNode = FindNodeByText(node, "Texture Pattern Animations");
+
+                    // Skip if no Texture Pattern Animation node
+                    if (foundNode == null)
+                    {
+                        continue;
+                    }
+
+                    string parentName = foundNode.FullPath.Split('\\')[0];
+                    string sourcePath = Path.Combine(sfd.SelectedPath, parentName + ".bfres");
+                    
+                    // Skip if no path found
+                    if (!Directory.Exists(sourcePath))
+                    {
+                        continue;
+                    }
+
+                    BFRESGroupNode groupNode = (BFRESGroupNode)foundNode;
+                    groupNode.ReplaceAll(sourcePath);
+                }
+            }
+        }
+
+        private TreeNode FindNodeByText(TreeNode treeNode, string searchText)
+        {
+            // Check if the current node matches the searchText.
+            if (treeNode.Text == searchText)
+            {
+                return treeNode; // Found a match, return the current node.
+            }
+
+            // Recursively search in each child node.
+            foreach (TreeNode tn in treeNode.Nodes)
+            {
+                TreeNode result = FindNodeByText(tn, searchText);
+                if (result != null)
+                {
+                    return result; // If a match is found in the child nodes, return it.
+                }
+            }
+
+            // If no match is found in this subtree, return null.
+            return null;
+        }
+
+        private void batchRenameBNTXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ObjectEditor ObjectEditor = (ObjectEditor)ActiveMdiChild;
+
+            foreach (TreeNode node in ObjectEditor.GetNodes())
+            {
+                FirstPlugin.BNTX foundNode = (FirstPlugin.BNTX)node;
+
+                // Skip if no BNTX
+                if (foundNode == null)
+                {
+                    continue;
+                }
+
+                string fileName = Path.GetFileNameWithoutExtension(foundNode.FilePath).Split('.')[0];
+
+                // Rename file
+                foundNode.Text = fileName;
+                if (foundNode.BinaryTexFile != null)
+                {
+                    foundNode.BinaryTexFile.Name = fileName;
+                }
+
+                string textureKey = foundNode.Textures.Keys.FirstOrDefault();
+                TextureData textureData = foundNode.Textures.Values.FirstOrDefault();
+                if (textureData != null)
+                {
+                    textureData.Text = fileName;
+                    textureData.Name = fileName;
+                    textureData.Texture.Name = fileName;
+                    foundNode.Textures.Remove(textureKey);
+                    foundNode.Textures.Add(fileName, textureData);
+                }
+            }
+            ObjectEditor.Update();
         }
 
         private List<string> failedFiles = new List<string>();

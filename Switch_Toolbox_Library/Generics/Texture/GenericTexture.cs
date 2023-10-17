@@ -845,7 +845,7 @@ namespace Toolbox.Library
             {
                 if (IsAtscFormat(Format))
                 {
-                    return "Supported Formats|*.astc; *.png;*.tga;*.jpg;*.tiff|" +
+                    return "Supported Formats|*.dds; *.astc; *.png;*.tga;*.jpg;*.tiff|" +
                                 "ASTC |*.astc|" +
                                 "Portable Network Graphics |*.png|" +
                                 "Joint Photographic Experts Group |*.jpg|" +

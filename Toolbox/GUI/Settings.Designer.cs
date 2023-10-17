@@ -34,6 +34,8 @@
             this.chkBoxNormalMap = new Toolbox.Library.Forms.STCheckBox();
             this.shadingComboBox = new System.Windows.Forms.ComboBox();
             this.panel2 = new Toolbox.Library.Forms.STPanel();
+            this.chkViewportAxisLines = new Toolbox.Library.Forms.STCheckBox();
+            this.chkViewportGrid = new Toolbox.Library.Forms.STCheckBox();
             this.uvChannelRB3 = new System.Windows.Forms.RadioButton();
             this.uvChannelRB2 = new System.Windows.Forms.RadioButton();
             this.uvChannelRB = new System.Windows.Forms.RadioButton();
@@ -80,6 +82,7 @@
             this.stTabControl1 = new Toolbox.Library.Forms.STTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.chkAlwaysSaveAll = new Toolbox.Library.Forms.STCheckBox();
             this.chkAlwaysCompressOnSave = new Toolbox.Library.Forms.STCheckBox();
             this.chkFrameCamera = new Toolbox.Library.Forms.STCheckBox();
             this.modelLoadArchive = new Toolbox.Library.Forms.STCheckBox();
@@ -122,8 +125,6 @@
             this.stLabel17 = new Toolbox.Library.Forms.STLabel();
             this.chkBotwFileTable = new Toolbox.Library.Forms.STCheckBox();
             this.btnReset = new Toolbox.Library.Forms.STButton();
-            this.chkViewportGrid = new Toolbox.Library.Forms.STCheckBox();
-            this.chkViewportAxisLines = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cameraMaxSpeedUD)).BeginInit();
@@ -154,7 +155,9 @@
             this.contentContainer.Controls.Add(this.btnReset);
             this.contentContainer.Controls.Add(this.stTabControl1);
             this.contentContainer.Controls.Add(this.btnSave);
-            this.contentContainer.Size = new System.Drawing.Size(549, 490);
+            this.contentContainer.Location = new System.Drawing.Point(4, 2);
+            this.contentContainer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.contentContainer.Size = new System.Drawing.Size(732, 603);
             this.contentContainer.Controls.SetChildIndex(this.btnSave, 0);
             this.contentContainer.Controls.SetChildIndex(this.stTabControl1, 0);
             this.contentContainer.Controls.SetChildIndex(this.btnReset, 0);
@@ -162,18 +165,20 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(255, 30);
+            this.label1.Location = new System.Drawing.Point(340, 37);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 13);
+            this.label1.Size = new System.Drawing.Size(112, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "Viewport Shading";
             // 
             // chkBoxSpecular
             // 
             this.chkBoxSpecular.AutoSize = true;
-            this.chkBoxSpecular.Location = new System.Drawing.Point(10, 160);
+            this.chkBoxSpecular.Location = new System.Drawing.Point(13, 197);
+            this.chkBoxSpecular.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkBoxSpecular.Name = "chkBoxSpecular";
-            this.chkBoxSpecular.Size = new System.Drawing.Size(104, 17);
+            this.chkBoxSpecular.Size = new System.Drawing.Size(129, 20);
             this.chkBoxSpecular.TabIndex = 3;
             this.chkBoxSpecular.Text = "Enable Specular";
             this.chkBoxSpecular.UseVisualStyleBackColor = true;
@@ -181,9 +186,10 @@
             // chkBoxNormalMap
             // 
             this.chkBoxNormalMap.AutoSize = true;
-            this.chkBoxNormalMap.Location = new System.Drawing.Point(10, 137);
+            this.chkBoxNormalMap.Location = new System.Drawing.Point(13, 169);
+            this.chkBoxNormalMap.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkBoxNormalMap.Name = "chkBoxNormalMap";
-            this.chkBoxNormalMap.Size = new System.Drawing.Size(124, 17);
+            this.chkBoxNormalMap.Size = new System.Drawing.Size(156, 20);
             this.chkBoxNormalMap.TabIndex = 2;
             this.chkBoxNormalMap.Text = "Enable Normal Maps";
             this.chkBoxNormalMap.UseVisualStyleBackColor = true;
@@ -193,9 +199,10 @@
             // 
             this.shadingComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.shadingComboBox.FormattingEnabled = true;
-            this.shadingComboBox.Location = new System.Drawing.Point(351, 27);
+            this.shadingComboBox.Location = new System.Drawing.Point(468, 33);
+            this.shadingComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.shadingComboBox.Name = "shadingComboBox";
-            this.shadingComboBox.Size = new System.Drawing.Size(165, 21);
+            this.shadingComboBox.Size = new System.Drawing.Size(219, 24);
             this.shadingComboBox.TabIndex = 1;
             this.shadingComboBox.SelectedIndexChanged += new System.EventHandler(this.shadingComboBox_SelectedIndexChanged);
             // 
@@ -239,17 +246,43 @@
             this.panel2.Controls.Add(this.chkBoxDisplayModels);
             this.panel2.Controls.Add(this.chkBoxStereoscopy);
             this.panel2.Controls.Add(this.label2);
-            this.panel2.Location = new System.Drawing.Point(3, 106);
+            this.panel2.Location = new System.Drawing.Point(4, 130);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(534, 293);
+            this.panel2.Size = new System.Drawing.Size(712, 361);
             this.panel2.TabIndex = 4;
+            // 
+            // chkViewportAxisLines
+            // 
+            this.chkViewportAxisLines.AutoSize = true;
+            this.chkViewportAxisLines.Location = new System.Drawing.Point(13, 112);
+            this.chkViewportAxisLines.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkViewportAxisLines.Name = "chkViewportAxisLines";
+            this.chkViewportAxisLines.Size = new System.Drawing.Size(190, 20);
+            this.chkViewportAxisLines.TabIndex = 36;
+            this.chkViewportAxisLines.Text = "Enable Viewport Axis Lines";
+            this.chkViewportAxisLines.UseVisualStyleBackColor = true;
+            this.chkViewportAxisLines.CheckedChanged += new System.EventHandler(this.chkViewportAxisLines_CheckedChanged);
+            // 
+            // chkViewportGrid
+            // 
+            this.chkViewportGrid.AutoSize = true;
+            this.chkViewportGrid.Location = new System.Drawing.Point(13, 84);
+            this.chkViewportGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkViewportGrid.Name = "chkViewportGrid";
+            this.chkViewportGrid.Size = new System.Drawing.Size(155, 20);
+            this.chkViewportGrid.TabIndex = 35;
+            this.chkViewportGrid.Text = "Enable Viewport Grid";
+            this.chkViewportGrid.UseVisualStyleBackColor = true;
+            this.chkViewportGrid.CheckedChanged += new System.EventHandler(this.chkViewportGrid_CheckedChanged);
             // 
             // uvChannelRB3
             // 
             this.uvChannelRB3.AutoSize = true;
-            this.uvChannelRB3.Location = new System.Drawing.Point(477, 54);
+            this.uvChannelRB3.Location = new System.Drawing.Point(636, 66);
+            this.uvChannelRB3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.uvChannelRB3.Name = "uvChannelRB3";
-            this.uvChannelRB3.Size = new System.Drawing.Size(49, 17);
+            this.uvChannelRB3.Size = new System.Drawing.Size(57, 20);
             this.uvChannelRB3.TabIndex = 34;
             this.uvChannelRB3.TabStop = true;
             this.uvChannelRB3.Text = "UV 3";
@@ -259,9 +292,10 @@
             // uvChannelRB2
             // 
             this.uvChannelRB2.AutoSize = true;
-            this.uvChannelRB2.Location = new System.Drawing.Point(425, 54);
+            this.uvChannelRB2.Location = new System.Drawing.Point(567, 66);
+            this.uvChannelRB2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.uvChannelRB2.Name = "uvChannelRB2";
-            this.uvChannelRB2.Size = new System.Drawing.Size(49, 17);
+            this.uvChannelRB2.Size = new System.Drawing.Size(57, 20);
             this.uvChannelRB2.TabIndex = 33;
             this.uvChannelRB2.TabStop = true;
             this.uvChannelRB2.Text = "UV 2";
@@ -271,9 +305,10 @@
             // uvChannelRB
             // 
             this.uvChannelRB.AutoSize = true;
-            this.uvChannelRB.Location = new System.Drawing.Point(372, 54);
+            this.uvChannelRB.Location = new System.Drawing.Point(496, 66);
+            this.uvChannelRB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.uvChannelRB.Name = "uvChannelRB";
-            this.uvChannelRB.Size = new System.Drawing.Size(49, 17);
+            this.uvChannelRB.Size = new System.Drawing.Size(57, 20);
             this.uvChannelRB.TabIndex = 32;
             this.uvChannelRB.TabStop = true;
             this.uvChannelRB.Text = "UV 1";
@@ -283,9 +318,10 @@
             // displayBoundingBoxeChk
             // 
             this.displayBoundingBoxeChk.AutoSize = true;
-            this.displayBoundingBoxeChk.Location = new System.Drawing.Point(252, 183);
+            this.displayBoundingBoxeChk.Location = new System.Drawing.Point(336, 225);
+            this.displayBoundingBoxeChk.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.displayBoundingBoxeChk.Name = "displayBoundingBoxeChk";
-            this.displayBoundingBoxeChk.Size = new System.Drawing.Size(140, 17);
+            this.displayBoundingBoxeChk.Size = new System.Drawing.Size(176, 20);
             this.displayBoundingBoxeChk.TabIndex = 31;
             this.displayBoundingBoxeChk.Text = "Display Bounding Boxes";
             this.displayBoundingBoxeChk.CheckedChanged += new System.EventHandler(this.displayBoundingBoxeChk_CheckedChanged);
@@ -293,9 +329,10 @@
             // boneXRayChk
             // 
             this.boneXRayChk.AutoSize = true;
-            this.boneXRayChk.Location = new System.Drawing.Point(252, 137);
+            this.boneXRayChk.Location = new System.Drawing.Point(336, 169);
+            this.boneXRayChk.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.boneXRayChk.Name = "boneXRayChk";
-            this.boneXRayChk.Size = new System.Drawing.Size(120, 17);
+            this.boneXRayChk.Size = new System.Drawing.Size(149, 20);
             this.boneXRayChk.TabIndex = 30;
             this.boneXRayChk.Text = "Display Bone X Ray";
             this.boneXRayChk.CheckedChanged += new System.EventHandler(this.boneXRayChk_CheckedChanged);
@@ -303,9 +340,10 @@
             // stLabel9
             // 
             this.stLabel9.AutoSize = true;
-            this.stLabel9.Location = new System.Drawing.Point(13, 211);
+            this.stLabel9.Location = new System.Drawing.Point(17, 260);
+            this.stLabel9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel9.Name = "stLabel9";
-            this.stLabel9.Size = new System.Drawing.Size(103, 13);
+            this.stLabel9.Size = new System.Drawing.Size(130, 16);
             this.stLabel9.TabIndex = 29;
             this.stLabel9.Text = "Camera Max Speed:";
             // 
@@ -317,7 +355,8 @@
             0,
             0,
             131072});
-            this.cameraMaxSpeedUD.Location = new System.Drawing.Point(116, 209);
+            this.cameraMaxSpeedUD.Location = new System.Drawing.Point(155, 257);
+            this.cameraMaxSpeedUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cameraMaxSpeedUD.Maximum = new decimal(new int[] {
             999,
             0,
@@ -329,7 +368,7 @@
             0,
             65536});
             this.cameraMaxSpeedUD.Name = "cameraMaxSpeedUD";
-            this.cameraMaxSpeedUD.Size = new System.Drawing.Size(158, 20);
+            this.cameraMaxSpeedUD.Size = new System.Drawing.Size(211, 22);
             this.cameraMaxSpeedUD.TabIndex = 28;
             this.cameraMaxSpeedUD.Value = new decimal(new int[] {
             1,
@@ -342,9 +381,10 @@
             // 
             this.alphaChannelBtn.BackColor = System.Drawing.Color.Silver;
             this.alphaChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.alphaChannelBtn.Location = new System.Drawing.Point(341, 64);
+            this.alphaChannelBtn.Location = new System.Drawing.Point(455, 79);
+            this.alphaChannelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.alphaChannelBtn.Name = "alphaChannelBtn";
-            this.alphaChannelBtn.Size = new System.Drawing.Size(21, 21);
+            this.alphaChannelBtn.Size = new System.Drawing.Size(28, 26);
             this.alphaChannelBtn.TabIndex = 27;
             this.alphaChannelBtn.Text = "A";
             this.alphaChannelBtn.UseVisualStyleBackColor = false;
@@ -354,9 +394,10 @@
             // 
             this.blueChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.blueChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.blueChannelBtn.Location = new System.Drawing.Point(314, 64);
+            this.blueChannelBtn.Location = new System.Drawing.Point(419, 79);
+            this.blueChannelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.blueChannelBtn.Name = "blueChannelBtn";
-            this.blueChannelBtn.Size = new System.Drawing.Size(21, 21);
+            this.blueChannelBtn.Size = new System.Drawing.Size(28, 26);
             this.blueChannelBtn.TabIndex = 26;
             this.blueChannelBtn.Text = "B";
             this.blueChannelBtn.UseVisualStyleBackColor = false;
@@ -366,9 +407,10 @@
             // 
             this.greenChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.greenChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.greenChannelBtn.Location = new System.Drawing.Point(287, 64);
+            this.greenChannelBtn.Location = new System.Drawing.Point(383, 79);
+            this.greenChannelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.greenChannelBtn.Name = "greenChannelBtn";
-            this.greenChannelBtn.Size = new System.Drawing.Size(21, 21);
+            this.greenChannelBtn.Size = new System.Drawing.Size(28, 26);
             this.greenChannelBtn.TabIndex = 25;
             this.greenChannelBtn.Text = "G";
             this.greenChannelBtn.UseVisualStyleBackColor = false;
@@ -378,9 +420,10 @@
             // 
             this.redChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.redChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.redChannelBtn.Location = new System.Drawing.Point(260, 64);
+            this.redChannelBtn.Location = new System.Drawing.Point(347, 79);
+            this.redChannelBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.redChannelBtn.Name = "redChannelBtn";
-            this.redChannelBtn.Size = new System.Drawing.Size(21, 21);
+            this.redChannelBtn.Size = new System.Drawing.Size(28, 26);
             this.redChannelBtn.TabIndex = 24;
             this.redChannelBtn.Text = "R";
             this.redChannelBtn.UseVisualStyleBackColor = false;
@@ -389,9 +432,10 @@
             // stLabel8
             // 
             this.stLabel8.AutoSize = true;
-            this.stLabel8.Location = new System.Drawing.Point(280, 213);
+            this.stLabel8.Location = new System.Drawing.Point(373, 262);
+            this.stLabel8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel8.Name = "stLabel8";
-            this.stLabel8.Size = new System.Drawing.Size(82, 13);
+            this.stLabel8.Size = new System.Drawing.Size(101, 16);
             this.stLabel8.TabIndex = 23;
             this.stLabel8.Text = "Bone Point Size";
             // 
@@ -403,7 +447,8 @@
             0,
             0,
             131072});
-            this.boneSizeUD.Location = new System.Drawing.Point(369, 209);
+            this.boneSizeUD.Location = new System.Drawing.Point(492, 257);
+            this.boneSizeUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.boneSizeUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -415,7 +460,7 @@
             0,
             131072});
             this.boneSizeUD.Name = "boneSizeUD";
-            this.boneSizeUD.Size = new System.Drawing.Size(167, 20);
+            this.boneSizeUD.Size = new System.Drawing.Size(223, 22);
             this.boneSizeUD.TabIndex = 22;
             this.boneSizeUD.Value = new decimal(new int[] {
             1,
@@ -427,9 +472,10 @@
             // labelNormalsLine
             // 
             this.labelNormalsLine.AutoSize = true;
-            this.labelNormalsLine.Location = new System.Drawing.Point(280, 237);
+            this.labelNormalsLine.Location = new System.Drawing.Point(373, 292);
+            this.labelNormalsLine.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelNormalsLine.Name = "labelNormalsLine";
-            this.labelNormalsLine.Size = new System.Drawing.Size(81, 13);
+            this.labelNormalsLine.Size = new System.Drawing.Size(101, 16);
             this.labelNormalsLine.TabIndex = 21;
             this.labelNormalsLine.Text = "Normals Length";
             // 
@@ -441,7 +487,8 @@
             0,
             0,
             131072});
-            this.normalsLineUD.Location = new System.Drawing.Point(370, 235);
+            this.normalsLineUD.Location = new System.Drawing.Point(493, 289);
+            this.normalsLineUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.normalsLineUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -453,7 +500,7 @@
             0,
             131072});
             this.normalsLineUD.Name = "normalsLineUD";
-            this.normalsLineUD.Size = new System.Drawing.Size(167, 20);
+            this.normalsLineUD.Size = new System.Drawing.Size(223, 22);
             this.normalsLineUD.TabIndex = 20;
             this.normalsLineUD.Value = new decimal(new int[] {
             1,
@@ -465,9 +512,10 @@
             // normalPointsCB
             // 
             this.normalPointsCB.AutoSize = true;
-            this.normalPointsCB.Location = new System.Drawing.Point(402, 137);
+            this.normalPointsCB.Location = new System.Drawing.Point(536, 169);
+            this.normalPointsCB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.normalPointsCB.Name = "normalPointsCB";
-            this.normalPointsCB.Size = new System.Drawing.Size(128, 17);
+            this.normalPointsCB.Size = new System.Drawing.Size(162, 20);
             this.normalPointsCB.TabIndex = 19;
             this.normalPointsCB.Text = "Display Normal Points";
             this.normalPointsCB.UseVisualStyleBackColor = true;
@@ -476,9 +524,10 @@
             // vtxColorCB
             // 
             this.vtxColorCB.AutoSize = true;
-            this.vtxColorCB.Location = new System.Drawing.Point(402, 114);
+            this.vtxColorCB.Location = new System.Drawing.Point(536, 140);
+            this.vtxColorCB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.vtxColorCB.Name = "vtxColorCB";
-            this.vtxColorCB.Size = new System.Drawing.Size(125, 17);
+            this.vtxColorCB.Size = new System.Drawing.Size(158, 20);
             this.vtxColorCB.TabIndex = 18;
             this.vtxColorCB.Text = "Display Vertex Colors";
             this.vtxColorCB.UseVisualStyleBackColor = true;
@@ -487,9 +536,10 @@
             // chkBoxEnablePBR
             // 
             this.chkBoxEnablePBR.AutoSize = true;
-            this.chkBoxEnablePBR.Location = new System.Drawing.Point(10, 183);
+            this.chkBoxEnablePBR.Location = new System.Drawing.Point(13, 225);
+            this.chkBoxEnablePBR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkBoxEnablePBR.Name = "chkBoxEnablePBR";
-            this.chkBoxEnablePBR.Size = new System.Drawing.Size(84, 17);
+            this.chkBoxEnablePBR.Size = new System.Drawing.Size(103, 20);
             this.chkBoxEnablePBR.TabIndex = 17;
             this.chkBoxEnablePBR.Text = "Enable PBR";
             this.chkBoxEnablePBR.UseVisualStyleBackColor = true;
@@ -498,9 +548,10 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(280, 261);
+            this.label6.Location = new System.Drawing.Point(373, 321);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(75, 13);
+            this.label6.Size = new System.Drawing.Size(93, 16);
             this.label6.TabIndex = 15;
             this.label6.Text = "Preview Scale";
             // 
@@ -512,7 +563,8 @@
             0,
             0,
             131072});
-            this.previewScaleUD.Location = new System.Drawing.Point(370, 261);
+            this.previewScaleUD.Location = new System.Drawing.Point(493, 321);
+            this.previewScaleUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.previewScaleUD.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -524,7 +576,7 @@
             0,
             131072});
             this.previewScaleUD.Name = "previewScaleUD";
-            this.previewScaleUD.Size = new System.Drawing.Size(168, 20);
+            this.previewScaleUD.Size = new System.Drawing.Size(224, 22);
             this.previewScaleUD.TabIndex = 14;
             this.previewScaleUD.Value = new decimal(new int[] {
             1,
@@ -536,9 +588,10 @@
             // chkBoxDisplayPolyCount
             // 
             this.chkBoxDisplayPolyCount.AutoSize = true;
-            this.chkBoxDisplayPolyCount.Location = new System.Drawing.Point(252, 160);
+            this.chkBoxDisplayPolyCount.Location = new System.Drawing.Point(336, 197);
+            this.chkBoxDisplayPolyCount.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkBoxDisplayPolyCount.Name = "chkBoxDisplayPolyCount";
-            this.chkBoxDisplayPolyCount.Size = new System.Drawing.Size(114, 17);
+            this.chkBoxDisplayPolyCount.Size = new System.Drawing.Size(142, 20);
             this.chkBoxDisplayPolyCount.TabIndex = 13;
             this.chkBoxDisplayPolyCount.Text = "Display Poly Count";
             this.chkBoxDisplayPolyCount.CheckedChanged += new System.EventHandler(this.chkBoxDisplayPolyCount_CheckedChanged);
@@ -546,9 +599,10 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 261);
+            this.label5.Location = new System.Drawing.Point(17, 321);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(61, 13);
+            this.label5.Size = new System.Drawing.Size(78, 16);
             this.label5.TabIndex = 12;
             this.label5.Text = "Camera Far";
             // 
@@ -560,7 +614,8 @@
             0,
             0,
             196608});
-            this.camFarNumUD.Location = new System.Drawing.Point(116, 261);
+            this.camFarNumUD.Location = new System.Drawing.Point(155, 321);
+            this.camFarNumUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.camFarNumUD.Maximum = new decimal(new int[] {
             1316134912,
             2328,
@@ -572,16 +627,17 @@
             0,
             -2147483648});
             this.camFarNumUD.Name = "camFarNumUD";
-            this.camFarNumUD.Size = new System.Drawing.Size(158, 20);
+            this.camFarNumUD.Size = new System.Drawing.Size(211, 22);
             this.camFarNumUD.TabIndex = 11;
             this.camFarNumUD.ValueChanged += new System.EventHandler(this.camFarNumUD_ValueChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 237);
+            this.label4.Location = new System.Drawing.Point(17, 292);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(69, 13);
+            this.label4.Size = new System.Drawing.Size(88, 16);
             this.label4.TabIndex = 10;
             this.label4.Text = "Camera Near";
             // 
@@ -593,7 +649,8 @@
             0,
             0,
             131072});
-            this.camNearNumUD.Location = new System.Drawing.Point(116, 235);
+            this.camNearNumUD.Location = new System.Drawing.Point(155, 289);
+            this.camNearNumUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.camNearNumUD.Maximum = new decimal(new int[] {
             1,
             0,
@@ -605,7 +662,7 @@
             0,
             65536});
             this.camNearNumUD.Name = "camNearNumUD";
-            this.camNearNumUD.Size = new System.Drawing.Size(158, 20);
+            this.camNearNumUD.Size = new System.Drawing.Size(211, 22);
             this.camNearNumUD.TabIndex = 9;
             this.camNearNumUD.Value = new decimal(new int[] {
             1,
@@ -617,9 +674,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 30);
+            this.label3.Location = new System.Drawing.Point(4, 37);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(43, 13);
+            this.label3.Size = new System.Drawing.Size(55, 16);
             this.label3.TabIndex = 8;
             this.label3.Text = "Camera";
             // 
@@ -627,18 +685,20 @@
             // 
             this.camMoveComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.camMoveComboBox.FormattingEnabled = true;
-            this.camMoveComboBox.Location = new System.Drawing.Point(59, 27);
+            this.camMoveComboBox.Location = new System.Drawing.Point(79, 33);
+            this.camMoveComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.camMoveComboBox.Name = "camMoveComboBox";
-            this.camMoveComboBox.Size = new System.Drawing.Size(156, 21);
+            this.camMoveComboBox.Size = new System.Drawing.Size(207, 24);
             this.camMoveComboBox.TabIndex = 4;
             this.camMoveComboBox.SelectedIndexChanged += new System.EventHandler(this.camMoveComboBox_SelectedIndexChanged);
             // 
             // chkBoxDisplayBones
             // 
             this.chkBoxDisplayBones.AutoSize = true;
-            this.chkBoxDisplayBones.Location = new System.Drawing.Point(252, 114);
+            this.chkBoxDisplayBones.Location = new System.Drawing.Point(336, 140);
+            this.chkBoxDisplayBones.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkBoxDisplayBones.Name = "chkBoxDisplayBones";
-            this.chkBoxDisplayBones.Size = new System.Drawing.Size(93, 17);
+            this.chkBoxDisplayBones.Size = new System.Drawing.Size(117, 20);
             this.chkBoxDisplayBones.TabIndex = 7;
             this.chkBoxDisplayBones.Text = "Display Bones";
             this.chkBoxDisplayBones.UseVisualStyleBackColor = true;
@@ -647,9 +707,10 @@
             // chkBoxDisplayWireframe
             // 
             this.chkBoxDisplayWireframe.AutoSize = true;
-            this.chkBoxDisplayWireframe.Location = new System.Drawing.Point(402, 183);
+            this.chkBoxDisplayWireframe.Location = new System.Drawing.Point(536, 225);
+            this.chkBoxDisplayWireframe.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkBoxDisplayWireframe.Name = "chkBoxDisplayWireframe";
-            this.chkBoxDisplayWireframe.Size = new System.Drawing.Size(111, 17);
+            this.chkBoxDisplayWireframe.Size = new System.Drawing.Size(140, 20);
             this.chkBoxDisplayWireframe.TabIndex = 6;
             this.chkBoxDisplayWireframe.Text = "Display Wireframe";
             this.chkBoxDisplayWireframe.UseVisualStyleBackColor = true;
@@ -658,9 +719,10 @@
             // chkBoxDisplayModels
             // 
             this.chkBoxDisplayModels.AutoSize = true;
-            this.chkBoxDisplayModels.Location = new System.Drawing.Point(402, 160);
+            this.chkBoxDisplayModels.Location = new System.Drawing.Point(536, 197);
+            this.chkBoxDisplayModels.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkBoxDisplayModels.Name = "chkBoxDisplayModels";
-            this.chkBoxDisplayModels.Size = new System.Drawing.Size(97, 17);
+            this.chkBoxDisplayModels.Size = new System.Drawing.Size(123, 20);
             this.chkBoxDisplayModels.TabIndex = 5;
             this.chkBoxDisplayModels.Text = "Display Models";
             this.chkBoxDisplayModels.UseVisualStyleBackColor = true;
@@ -669,9 +731,10 @@
             // chkBoxStereoscopy
             // 
             this.chkBoxStereoscopy.AutoSize = true;
-            this.chkBoxStereoscopy.Location = new System.Drawing.Point(10, 114);
+            this.chkBoxStereoscopy.Location = new System.Drawing.Point(13, 140);
+            this.chkBoxStereoscopy.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkBoxStereoscopy.Name = "chkBoxStereoscopy";
-            this.chkBoxStereoscopy.Size = new System.Drawing.Size(121, 17);
+            this.chkBoxStereoscopy.Size = new System.Drawing.Size(152, 20);
             this.chkBoxStereoscopy.TabIndex = 4;
             this.chkBoxStereoscopy.Text = "Enable Stereoscopy";
             this.chkBoxStereoscopy.UseVisualStyleBackColor = true;
@@ -680,9 +743,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(56, 11);
+            this.label2.Location = new System.Drawing.Point(75, 14);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(89, 13);
+            this.label2.Size = new System.Drawing.Size(110, 16);
             this.label2.TabIndex = 4;
             this.label2.Text = "Viewport Settings";
             // 
@@ -691,17 +755,19 @@
             this.panel1.Controls.Add(this.enableVersionCheckCHK);
             this.panel1.Controls.Add(this.GLSLVerLabel);
             this.panel1.Controls.Add(this.openGLVerLabel);
-            this.panel1.Location = new System.Drawing.Point(3, 4);
+            this.panel1.Location = new System.Drawing.Point(4, 5);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(215, 96);
+            this.panel1.Size = new System.Drawing.Size(287, 118);
             this.panel1.TabIndex = 5;
             // 
             // enableVersionCheckCHK
             // 
             this.enableVersionCheckCHK.AutoSize = true;
-            this.enableVersionCheckCHK.Location = new System.Drawing.Point(0, 67);
+            this.enableVersionCheckCHK.Location = new System.Drawing.Point(0, 82);
+            this.enableVersionCheckCHK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.enableVersionCheckCHK.Name = "enableVersionCheckCHK";
-            this.enableVersionCheckCHK.Size = new System.Drawing.Size(131, 17);
+            this.enableVersionCheckCHK.Size = new System.Drawing.Size(162, 20);
             this.enableVersionCheckCHK.TabIndex = 16;
             this.enableVersionCheckCHK.Text = "Enable Version Check";
             this.enableVersionCheckCHK.UseVisualStyleBackColor = true;
@@ -710,27 +776,30 @@
             // GLSLVerLabel
             // 
             this.GLSLVerLabel.AutoSize = true;
-            this.GLSLVerLabel.Location = new System.Drawing.Point(3, 38);
+            this.GLSLVerLabel.Location = new System.Drawing.Point(4, 47);
+            this.GLSLVerLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.GLSLVerLabel.Name = "GLSLVerLabel";
-            this.GLSLVerLabel.Size = new System.Drawing.Size(72, 13);
+            this.GLSLVerLabel.Size = new System.Drawing.Size(89, 16);
             this.GLSLVerLabel.TabIndex = 10;
             this.GLSLVerLabel.Text = "GLSL Version";
             // 
             // openGLVerLabel
             // 
             this.openGLVerLabel.AutoSize = true;
-            this.openGLVerLabel.Location = new System.Drawing.Point(3, 13);
+            this.openGLVerLabel.Location = new System.Drawing.Point(4, 16);
+            this.openGLVerLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.openGLVerLabel.Name = "openGLVerLabel";
-            this.openGLVerLabel.Size = new System.Drawing.Size(91, 13);
+            this.openGLVerLabel.Size = new System.Drawing.Size(112, 16);
             this.openGLVerLabel.TabIndex = 9;
             this.openGLVerLabel.Text = "Open GL Version:";
             // 
             // btnSave
             // 
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Location = new System.Drawing.Point(434, 449);
+            this.btnSave.Location = new System.Drawing.Point(579, 553);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(104, 27);
+            this.btnSave.Size = new System.Drawing.Size(139, 33);
             this.btnSave.TabIndex = 6;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -739,15 +808,17 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(18, 68);
+            this.label7.Location = new System.Drawing.Point(24, 84);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(123, 13);
+            this.label7.Size = new System.Drawing.Size(156, 16);
             this.label7.TabIndex = 17;
             this.label7.Text = "Yaz0 Compression Level";
             // 
             // yazoCompressionLevelUD
             // 
-            this.yazoCompressionLevelUD.Location = new System.Drawing.Point(147, 66);
+            this.yazoCompressionLevelUD.Location = new System.Drawing.Point(196, 81);
+            this.yazoCompressionLevelUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.yazoCompressionLevelUD.Maximum = new decimal(new int[] {
             9,
             0,
@@ -759,7 +830,7 @@
             0,
             0});
             this.yazoCompressionLevelUD.Name = "yazoCompressionLevelUD";
-            this.yazoCompressionLevelUD.Size = new System.Drawing.Size(42, 20);
+            this.yazoCompressionLevelUD.Size = new System.Drawing.Size(56, 22);
             this.yazoCompressionLevelUD.TabIndex = 16;
             this.yazoCompressionLevelUD.Value = new decimal(new int[] {
             1,
@@ -775,17 +846,19 @@
             this.panel3.Controls.Add(this.stLabel1);
             this.panel3.Controls.Add(this.yazoCompressionLevelUD);
             this.panel3.Controls.Add(this.label7);
-            this.panel3.Location = new System.Drawing.Point(224, 3);
+            this.panel3.Location = new System.Drawing.Point(299, 4);
+            this.panel3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(313, 97);
+            this.panel3.Size = new System.Drawing.Size(417, 119);
             this.panel3.TabIndex = 18;
             // 
             // chkBoxMdiMaximized
             // 
             this.chkBoxMdiMaximized.AutoSize = true;
-            this.chkBoxMdiMaximized.Location = new System.Drawing.Point(21, 38);
+            this.chkBoxMdiMaximized.Location = new System.Drawing.Point(28, 47);
+            this.chkBoxMdiMaximized.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkBoxMdiMaximized.Name = "chkBoxMdiMaximized";
-            this.chkBoxMdiMaximized.Size = new System.Drawing.Size(162, 17);
+            this.chkBoxMdiMaximized.Size = new System.Drawing.Size(205, 20);
             this.chkBoxMdiMaximized.TabIndex = 17;
             this.chkBoxMdiMaximized.Text = "Always Maximized Mdi Forms";
             this.chkBoxMdiMaximized.UseVisualStyleBackColor = true;
@@ -795,18 +868,20 @@
             // 
             this.formThemeCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.formThemeCB.FormattingEnabled = true;
-            this.formThemeCB.Location = new System.Drawing.Point(90, 10);
+            this.formThemeCB.Location = new System.Drawing.Point(120, 12);
+            this.formThemeCB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.formThemeCB.Name = "formThemeCB";
-            this.formThemeCB.Size = new System.Drawing.Size(210, 21);
+            this.formThemeCB.Size = new System.Drawing.Size(279, 24);
             this.formThemeCB.TabIndex = 23;
             this.formThemeCB.SelectedIndexChanged += new System.EventHandler(this.formThemeCB_SelectedIndexChanged);
             // 
             // stLabel1
             // 
             this.stLabel1.AutoSize = true;
-            this.stLabel1.Location = new System.Drawing.Point(18, 14);
+            this.stLabel1.Location = new System.Drawing.Point(24, 17);
+            this.stLabel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel1.Name = "stLabel1";
-            this.stLabel1.Size = new System.Drawing.Size(66, 13);
+            this.stLabel1.Size = new System.Drawing.Size(84, 16);
             this.stLabel1.TabIndex = 22;
             this.stLabel1.Text = "Form Theme";
             // 
@@ -820,11 +895,12 @@
             this.stTabControl1.Controls.Add(this.tabPage3);
             this.stTabControl1.Controls.Add(this.tabPage4);
             this.stTabControl1.Controls.Add(this.tabPage5);
-            this.stTabControl1.Location = new System.Drawing.Point(0, 25);
+            this.stTabControl1.Location = new System.Drawing.Point(0, 31);
+            this.stTabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.stTabControl1.myBackColor = System.Drawing.Color.Empty;
             this.stTabControl1.Name = "stTabControl1";
             this.stTabControl1.SelectedIndex = 0;
-            this.stTabControl1.Size = new System.Drawing.Size(549, 424);
+            this.stTabControl1.Size = new System.Drawing.Size(732, 522);
             this.stTabControl1.TabIndex = 19;
             // 
             // tabPage1
@@ -832,16 +908,18 @@
             this.tabPage1.Controls.Add(this.panel3);
             this.tabPage1.Controls.Add(this.panel2);
             this.tabPage1.Controls.Add(this.panel1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Location = new System.Drawing.Point(4, 29);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(541, 395);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage1.Size = new System.Drawing.Size(724, 489);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.chkAlwaysSaveAll);
             this.tabPage2.Controls.Add(this.chkAlwaysCompressOnSave);
             this.tabPage2.Controls.Add(this.chkFrameCamera);
             this.tabPage2.Controls.Add(this.modelLoadArchive);
@@ -857,20 +935,35 @@
             this.tabPage2.Controls.Add(this.bgGradientTop);
             this.tabPage2.Controls.Add(this.stLabel2);
             this.tabPage2.Controls.Add(this.preferredTexFormatCB);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Location = new System.Drawing.Point(4, 29);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(541, 395);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage2.Size = new System.Drawing.Size(724, 489);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Editor";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // chkAlwaysSaveAll
+            // 
+            this.chkAlwaysSaveAll.AutoSize = true;
+            this.chkAlwaysSaveAll.Location = new System.Drawing.Point(12, 259);
+            this.chkAlwaysSaveAll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkAlwaysSaveAll.Name = "chkAlwaysSaveAll";
+            this.chkAlwaysSaveAll.Size = new System.Drawing.Size(183, 20);
+            this.chkAlwaysSaveAll.TabIndex = 20;
+            this.chkAlwaysSaveAll.Text = "Always save all open files";
+            this.chkAlwaysSaveAll.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.chkAlwaysSaveAll.UseVisualStyleBackColor = true;
+            this.chkAlwaysSaveAll.CheckedChanged += new System.EventHandler(this.chkAlwaysSaveAll_CheckedChanged);
+            // 
             // chkAlwaysCompressOnSave
             // 
             this.chkAlwaysCompressOnSave.AutoSize = true;
-            this.chkAlwaysCompressOnSave.Location = new System.Drawing.Point(9, 210);
+            this.chkAlwaysCompressOnSave.Location = new System.Drawing.Point(12, 284);
+            this.chkAlwaysCompressOnSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkAlwaysCompressOnSave.Name = "chkAlwaysCompressOnSave";
-            this.chkAlwaysCompressOnSave.Size = new System.Drawing.Size(219, 17);
+            this.chkAlwaysCompressOnSave.Size = new System.Drawing.Size(274, 20);
             this.chkAlwaysCompressOnSave.TabIndex = 19;
             this.chkAlwaysCompressOnSave.Text = "Always compress on save (if used on file)";
             this.chkAlwaysCompressOnSave.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -880,9 +973,10 @@
             // chkFrameCamera
             // 
             this.chkFrameCamera.AutoSize = true;
-            this.chkFrameCamera.Location = new System.Drawing.Point(9, 233);
+            this.chkFrameCamera.Location = new System.Drawing.Point(12, 309);
+            this.chkFrameCamera.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkFrameCamera.Name = "chkFrameCamera";
-            this.chkFrameCamera.Size = new System.Drawing.Size(210, 17);
+            this.chkFrameCamera.Size = new System.Drawing.Size(261, 20);
             this.chkFrameCamera.TabIndex = 18;
             this.chkFrameCamera.Text = "Center camera to model when selected";
             this.chkFrameCamera.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -892,9 +986,10 @@
             // modelLoadArchive
             // 
             this.modelLoadArchive.AutoSize = true;
-            this.modelLoadArchive.Location = new System.Drawing.Point(9, 256);
+            this.modelLoadArchive.Location = new System.Drawing.Point(12, 334);
+            this.modelLoadArchive.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.modelLoadArchive.Name = "modelLoadArchive";
-            this.modelLoadArchive.Size = new System.Drawing.Size(205, 17);
+            this.modelLoadArchive.Size = new System.Drawing.Size(254, 20);
             this.modelLoadArchive.TabIndex = 17;
             this.modelLoadArchive.Text = "Load models when an archive is open";
             this.modelLoadArchive.TextAlign = System.Drawing.ContentAlignment.TopLeft;
@@ -903,31 +998,34 @@
             // 
             // gridCellCountUD
             // 
-            this.gridCellCountUD.Location = new System.Drawing.Point(104, 166);
+            this.gridCellCountUD.Location = new System.Drawing.Point(139, 204);
+            this.gridCellCountUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridCellCountUD.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
             this.gridCellCountUD.Name = "gridCellCountUD";
-            this.gridCellCountUD.Size = new System.Drawing.Size(85, 20);
+            this.gridCellCountUD.Size = new System.Drawing.Size(113, 22);
             this.gridCellCountUD.TabIndex = 16;
             this.gridCellCountUD.ValueChanged += new System.EventHandler(this.gridCellCountUD_ValueChanged);
             // 
             // stLabel7
             // 
             this.stLabel7.AutoSize = true;
-            this.stLabel7.Location = new System.Drawing.Point(48, 111);
+            this.stLabel7.Location = new System.Drawing.Point(64, 137);
+            this.stLabel7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel7.Name = "stLabel7";
-            this.stLabel7.Size = new System.Drawing.Size(53, 13);
+            this.stLabel7.Size = new System.Drawing.Size(67, 16);
             this.stLabel7.TabIndex = 15;
             this.stLabel7.Text = "Grid Color";
             // 
             // gridColorPB
             // 
-            this.gridColorPB.Location = new System.Drawing.Point(9, 105);
+            this.gridColorPB.Location = new System.Drawing.Point(12, 129);
+            this.gridColorPB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridColorPB.Name = "gridColorPB";
-            this.gridColorPB.Size = new System.Drawing.Size(25, 25);
+            this.gridColorPB.Size = new System.Drawing.Size(33, 31);
             this.gridColorPB.TabIndex = 14;
             this.gridColorPB.TabStop = false;
             this.gridColorPB.Click += new System.EventHandler(this.gridColorPB_Click);
@@ -935,18 +1033,20 @@
             // stLabel6
             // 
             this.stLabel6.AutoSize = true;
-            this.stLabel6.Location = new System.Drawing.Point(9, 168);
+            this.stLabel6.Location = new System.Drawing.Point(12, 207);
+            this.stLabel6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel6.Name = "stLabel6";
-            this.stLabel6.Size = new System.Drawing.Size(77, 13);
+            this.stLabel6.Size = new System.Drawing.Size(95, 16);
             this.stLabel6.TabIndex = 12;
             this.stLabel6.Text = "Grid Cell Count";
             // 
             // stLabel5
             // 
             this.stLabel5.AutoSize = true;
-            this.stLabel5.Location = new System.Drawing.Point(6, 143);
+            this.stLabel5.Location = new System.Drawing.Point(8, 176);
+            this.stLabel5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel5.Name = "stLabel5";
-            this.stLabel5.Size = new System.Drawing.Size(69, 13);
+            this.stLabel5.Size = new System.Drawing.Size(87, 16);
             this.stLabel5.TabIndex = 11;
             this.stLabel5.Text = "Grid Cell Size";
             // 
@@ -958,7 +1058,8 @@
             0,
             0,
             196608});
-            this.gridCellSizeUD.Location = new System.Drawing.Point(104, 141);
+            this.gridCellSizeUD.Location = new System.Drawing.Point(139, 174);
+            this.gridCellSizeUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridCellSizeUD.Maximum = new decimal(new int[] {
             1410065408,
             2,
@@ -970,7 +1071,7 @@
             0,
             -2147483648});
             this.gridCellSizeUD.Name = "gridCellSizeUD";
-            this.gridCellSizeUD.Size = new System.Drawing.Size(85, 20);
+            this.gridCellSizeUD.Size = new System.Drawing.Size(113, 22);
             this.gridCellSizeUD.TabIndex = 10;
             this.gridCellSizeUD.Value = new decimal(new int[] {
             1,
@@ -982,17 +1083,19 @@
             // stLabel4
             // 
             this.stLabel4.AutoSize = true;
-            this.stLabel4.Location = new System.Drawing.Point(45, 81);
+            this.stLabel4.Location = new System.Drawing.Point(60, 100);
+            this.stLabel4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel4.Name = "stLabel4";
-            this.stLabel4.Size = new System.Drawing.Size(144, 13);
+            this.stLabel4.Size = new System.Drawing.Size(179, 16);
             this.stLabel4.TabIndex = 5;
             this.stLabel4.Text = "Background Gradient Bottom";
             // 
             // bgGradientBottom
             // 
-            this.bgGradientBottom.Location = new System.Drawing.Point(9, 74);
+            this.bgGradientBottom.Location = new System.Drawing.Point(12, 91);
+            this.bgGradientBottom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bgGradientBottom.Name = "bgGradientBottom";
-            this.bgGradientBottom.Size = new System.Drawing.Size(25, 25);
+            this.bgGradientBottom.Size = new System.Drawing.Size(33, 31);
             this.bgGradientBottom.TabIndex = 4;
             this.bgGradientBottom.TabStop = false;
             this.bgGradientBottom.Click += new System.EventHandler(this.bgGradientBottom_Click);
@@ -1000,17 +1103,19 @@
             // stLabel3
             // 
             this.stLabel3.AutoSize = true;
-            this.stLabel3.Location = new System.Drawing.Point(45, 50);
+            this.stLabel3.Location = new System.Drawing.Point(60, 62);
+            this.stLabel3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel3.Name = "stLabel3";
-            this.stLabel3.Size = new System.Drawing.Size(130, 13);
+            this.stLabel3.Size = new System.Drawing.Size(162, 16);
             this.stLabel3.TabIndex = 3;
             this.stLabel3.Text = "Background Gradient Top";
             // 
             // bgGradientTop
             // 
-            this.bgGradientTop.Location = new System.Drawing.Point(9, 43);
+            this.bgGradientTop.Location = new System.Drawing.Point(12, 53);
+            this.bgGradientTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bgGradientTop.Name = "bgGradientTop";
-            this.bgGradientTop.Size = new System.Drawing.Size(25, 25);
+            this.bgGradientTop.Size = new System.Drawing.Size(33, 31);
             this.bgGradientTop.TabIndex = 2;
             this.bgGradientTop.TabStop = false;
             this.bgGradientTop.Click += new System.EventHandler(this.bgGradientTop_Click);
@@ -1018,9 +1123,10 @@
             // stLabel2
             // 
             this.stLabel2.AutoSize = true;
-            this.stLabel2.Location = new System.Drawing.Point(6, 9);
+            this.stLabel2.Location = new System.Drawing.Point(8, 11);
+            this.stLabel2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel2.Name = "stLabel2";
-            this.stLabel2.Size = new System.Drawing.Size(127, 13);
+            this.stLabel2.Size = new System.Drawing.Size(159, 16);
             this.stLabel2.TabIndex = 1;
             this.stLabel2.Text = "Preferred Texture Format:";
             // 
@@ -1028,9 +1134,10 @@
             // 
             this.preferredTexFormatCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.preferredTexFormatCB.FormattingEnabled = true;
-            this.preferredTexFormatCB.Location = new System.Drawing.Point(136, 6);
+            this.preferredTexFormatCB.Location = new System.Drawing.Point(181, 7);
+            this.preferredTexFormatCB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.preferredTexFormatCB.Name = "preferredTexFormatCB";
-            this.preferredTexFormatCB.Size = new System.Drawing.Size(228, 21);
+            this.preferredTexFormatCB.Size = new System.Drawing.Size(303, 24);
             this.preferredTexFormatCB.TabIndex = 0;
             this.preferredTexFormatCB.SelectedIndexChanged += new System.EventHandler(this.preferredTexFormatCB_SelectedIndexChanged);
             // 
@@ -1048,10 +1155,11 @@
             this.tabPage3.Controls.Add(this.mk8DPathTB);
             this.tabPage3.Controls.Add(this.stLabel10);
             this.tabPage3.Controls.Add(this.mk8PathTB);
-            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Location = new System.Drawing.Point(4, 29);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(541, 395);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage3.Size = new System.Drawing.Size(724, 489);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Paths";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1059,9 +1167,10 @@
             // stLabel18
             // 
             this.stLabel18.AutoSize = true;
-            this.stLabel18.Location = new System.Drawing.Point(6, 148);
+            this.stLabel18.Location = new System.Drawing.Point(8, 182);
+            this.stLabel18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel18.Name = "stLabel18";
-            this.stLabel18.Size = new System.Drawing.Size(119, 13);
+            this.stLabel18.Size = new System.Drawing.Size(148, 16);
             this.stLabel18.TabIndex = 11;
             this.stLabel18.Text = "Pokemon Sword/Shield";
             // 
@@ -1069,33 +1178,36 @@
             // 
             this.pathPokemonSwShTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pathPokemonSwShTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.pathPokemonSwShTB.Location = new System.Drawing.Point(128, 146);
+            this.pathPokemonSwShTB.Location = new System.Drawing.Point(171, 180);
+            this.pathPokemonSwShTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pathPokemonSwShTB.Name = "pathPokemonSwShTB";
-            this.pathPokemonSwShTB.Size = new System.Drawing.Size(258, 20);
+            this.pathPokemonSwShTB.Size = new System.Drawing.Size(343, 22);
             this.pathPokemonSwShTB.TabIndex = 10;
             this.pathPokemonSwShTB.Click += new System.EventHandler(this.pathPokemonSwShTB_Click);
             this.pathPokemonSwShTB.TextChanged += new System.EventHandler(this.pathPokemonSwShTB_TextChanged);
             // 
             // stContextMenuStrip1
             // 
+            this.stContextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearSettingToolStripMenuItem});
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
-            this.stContextMenuStrip1.Size = new System.Drawing.Size(142, 26);
+            this.stContextMenuStrip1.Size = new System.Drawing.Size(164, 28);
             // 
             // clearSettingToolStripMenuItem
             // 
             this.clearSettingToolStripMenuItem.Name = "clearSettingToolStripMenuItem";
-            this.clearSettingToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.clearSettingToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
             this.clearSettingToolStripMenuItem.Text = "Clear Setting";
             this.clearSettingToolStripMenuItem.Click += new System.EventHandler(this.clearSettingToolStripMenuItem_Click);
             // 
             // stLabel13
             // 
             this.stLabel13.AutoSize = true;
-            this.stLabel13.Location = new System.Drawing.Point(6, 122);
+            this.stLabel13.Location = new System.Drawing.Point(8, 150);
+            this.stLabel13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel13.Name = "stLabel13";
-            this.stLabel13.Size = new System.Drawing.Size(98, 13);
+            this.stLabel13.Size = new System.Drawing.Size(119, 16);
             this.stLabel13.TabIndex = 9;
             this.stLabel13.Text = "Breath Of The Wild";
             // 
@@ -1103,18 +1215,20 @@
             // 
             this.botwGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.botwGamePathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.botwGamePathTB.Location = new System.Drawing.Point(128, 120);
+            this.botwGamePathTB.Location = new System.Drawing.Point(171, 148);
+            this.botwGamePathTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.botwGamePathTB.Name = "botwGamePathTB";
-            this.botwGamePathTB.Size = new System.Drawing.Size(258, 20);
+            this.botwGamePathTB.Size = new System.Drawing.Size(343, 22);
             this.botwGamePathTB.TabIndex = 8;
             this.botwGamePathTB.Click += new System.EventHandler(this.botwGamePathTB_Click);
             // 
             // stLabel14
             // 
             this.stLabel14.AutoSize = true;
-            this.stLabel14.Location = new System.Drawing.Point(6, 96);
+            this.stLabel14.Location = new System.Drawing.Point(8, 118);
+            this.stLabel14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel14.Name = "stLabel14";
-            this.stLabel14.Size = new System.Drawing.Size(105, 13);
+            this.stLabel14.Size = new System.Drawing.Size(130, 16);
             this.stLabel14.TabIndex = 7;
             this.stLabel14.Text = "Twilight Princess HD";
             // 
@@ -1122,18 +1236,20 @@
             // 
             this.tpGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tpGamePathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.tpGamePathTB.Location = new System.Drawing.Point(128, 94);
+            this.tpGamePathTB.Location = new System.Drawing.Point(171, 116);
+            this.tpGamePathTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tpGamePathTB.Name = "tpGamePathTB";
-            this.tpGamePathTB.Size = new System.Drawing.Size(258, 20);
+            this.tpGamePathTB.Size = new System.Drawing.Size(343, 22);
             this.tpGamePathTB.TabIndex = 6;
             this.tpGamePathTB.Click += new System.EventHandler(this.tpGamePathTB_Click);
             // 
             // stLabel12
             // 
             this.stLabel12.AutoSize = true;
-            this.stLabel12.Location = new System.Drawing.Point(6, 70);
+            this.stLabel12.Location = new System.Drawing.Point(8, 86);
+            this.stLabel12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel12.Name = "stLabel12";
-            this.stLabel12.Size = new System.Drawing.Size(76, 13);
+            this.stLabel12.Size = new System.Drawing.Size(98, 16);
             this.stLabel12.TabIndex = 5;
             this.stLabel12.Text = "Mario Odyssey";
             // 
@@ -1141,18 +1257,20 @@
             // 
             this.SMOPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SMOPathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.SMOPathTB.Location = new System.Drawing.Point(128, 68);
+            this.SMOPathTB.Location = new System.Drawing.Point(171, 84);
+            this.SMOPathTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.SMOPathTB.Name = "SMOPathTB";
-            this.SMOPathTB.Size = new System.Drawing.Size(258, 20);
+            this.SMOPathTB.Size = new System.Drawing.Size(343, 22);
             this.SMOPathTB.TabIndex = 4;
             this.SMOPathTB.Click += new System.EventHandler(this.SMOPathTB_Click);
             // 
             // stLabel11
             // 
             this.stLabel11.AutoSize = true;
-            this.stLabel11.Location = new System.Drawing.Point(6, 44);
+            this.stLabel11.Location = new System.Drawing.Point(8, 54);
+            this.stLabel11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel11.Name = "stLabel11";
-            this.stLabel11.Size = new System.Drawing.Size(100, 13);
+            this.stLabel11.Size = new System.Drawing.Size(122, 16);
             this.stLabel11.TabIndex = 3;
             this.stLabel11.Text = "Mario Kart 8 Deluxe";
             // 
@@ -1160,18 +1278,20 @@
             // 
             this.mk8DPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.mk8DPathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.mk8DPathTB.Location = new System.Drawing.Point(128, 42);
+            this.mk8DPathTB.Location = new System.Drawing.Point(171, 52);
+            this.mk8DPathTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.mk8DPathTB.Name = "mk8DPathTB";
-            this.mk8DPathTB.Size = new System.Drawing.Size(258, 20);
+            this.mk8DPathTB.Size = new System.Drawing.Size(343, 22);
             this.mk8DPathTB.TabIndex = 2;
             this.mk8DPathTB.Click += new System.EventHandler(this.mk8DPathTB_Click);
             // 
             // stLabel10
             // 
             this.stLabel10.AutoSize = true;
-            this.stLabel10.Location = new System.Drawing.Point(6, 18);
+            this.stLabel10.Location = new System.Drawing.Point(8, 22);
+            this.stLabel10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel10.Name = "stLabel10";
-            this.stLabel10.Size = new System.Drawing.Size(64, 13);
+            this.stLabel10.Size = new System.Drawing.Size(77, 16);
             this.stLabel10.TabIndex = 1;
             this.stLabel10.Text = "Mario Kart 8";
             // 
@@ -1180,9 +1300,10 @@
             this.mk8PathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.mk8PathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.mk8PathTB.Cursor = System.Windows.Forms.Cursors.Default;
-            this.mk8PathTB.Location = new System.Drawing.Point(128, 16);
+            this.mk8PathTB.Location = new System.Drawing.Point(171, 20);
+            this.mk8PathTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.mk8PathTB.Name = "mk8PathTB";
-            this.mk8PathTB.Size = new System.Drawing.Size(258, 20);
+            this.mk8PathTB.Size = new System.Drawing.Size(343, 22);
             this.mk8PathTB.TabIndex = 0;
             this.mk8PathTB.Click += new System.EventHandler(this.mk8PathTB_Click);
             // 
@@ -1194,10 +1315,11 @@
             this.tabPage4.Controls.Add(this.chkUseSkyobx);
             this.tabPage4.Controls.Add(this.stLabel15);
             this.tabPage4.Controls.Add(this.specularCubemapPathTB);
-            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Location = new System.Drawing.Point(4, 29);
+            this.tabPage4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(541, 395);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage4.Size = new System.Drawing.Size(724, 489);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "PBR";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1206,9 +1328,10 @@
             // 
             this.chkDiffyseSkybox.AutoSize = true;
             this.chkDiffyseSkybox.Enabled = false;
-            this.chkDiffyseSkybox.Location = new System.Drawing.Point(108, 16);
+            this.chkDiffyseSkybox.Location = new System.Drawing.Point(144, 20);
+            this.chkDiffyseSkybox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkDiffyseSkybox.Name = "chkDiffyseSkybox";
-            this.chkDiffyseSkybox.Size = new System.Drawing.Size(173, 17);
+            this.chkDiffyseSkybox.Size = new System.Drawing.Size(215, 20);
             this.chkDiffyseSkybox.TabIndex = 5;
             this.chkDiffyseSkybox.Text = "Display Diffuse Map on Skybox";
             this.chkDiffyseSkybox.UseVisualStyleBackColor = true;
@@ -1217,9 +1340,10 @@
             // stLabel16
             // 
             this.stLabel16.AutoSize = true;
-            this.stLabel16.Location = new System.Drawing.Point(16, 73);
+            this.stLabel16.Location = new System.Drawing.Point(21, 90);
+            this.stLabel16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel16.Name = "stLabel16";
-            this.stLabel16.Size = new System.Drawing.Size(150, 13);
+            this.stLabel16.Size = new System.Drawing.Size(187, 16);
             this.stLabel16.TabIndex = 4;
             this.stLabel16.Text = "Diffuse Cubemap (Irradiance) :";
             // 
@@ -1227,18 +1351,20 @@
             // 
             this.diffuseCubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.diffuseCubemapPathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.diffuseCubemapPathTB.Location = new System.Drawing.Point(181, 73);
+            this.diffuseCubemapPathTB.Location = new System.Drawing.Point(241, 90);
+            this.diffuseCubemapPathTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.diffuseCubemapPathTB.Name = "diffuseCubemapPathTB";
-            this.diffuseCubemapPathTB.Size = new System.Drawing.Size(197, 20);
+            this.diffuseCubemapPathTB.Size = new System.Drawing.Size(262, 22);
             this.diffuseCubemapPathTB.TabIndex = 3;
             this.diffuseCubemapPathTB.Click += new System.EventHandler(this.diffuseCubemapPathTBB_Click);
             // 
             // chkUseSkyobx
             // 
             this.chkUseSkyobx.AutoSize = true;
-            this.chkUseSkyobx.Location = new System.Drawing.Point(19, 16);
+            this.chkUseSkyobx.Location = new System.Drawing.Point(25, 20);
+            this.chkUseSkyobx.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkUseSkyobx.Name = "chkUseSkyobx";
-            this.chkUseSkyobx.Size = new System.Drawing.Size(83, 17);
+            this.chkUseSkyobx.Size = new System.Drawing.Size(102, 20);
             this.chkUseSkyobx.TabIndex = 2;
             this.chkUseSkyobx.Text = "Use Skybox";
             this.chkUseSkyobx.UseVisualStyleBackColor = true;
@@ -1247,9 +1373,10 @@
             // stLabel15
             // 
             this.stLabel15.AutoSize = true;
-            this.stLabel15.Location = new System.Drawing.Point(16, 47);
+            this.stLabel15.Location = new System.Drawing.Point(21, 58);
+            this.stLabel15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel15.Name = "stLabel15";
-            this.stLabel15.Size = new System.Drawing.Size(159, 13);
+            this.stLabel15.Size = new System.Drawing.Size(200, 16);
             this.stLabel15.TabIndex = 1;
             this.stLabel15.Text = "Specular Cubemap {Radiance) :";
             // 
@@ -1257,9 +1384,10 @@
             // 
             this.specularCubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.specularCubemapPathTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.specularCubemapPathTB.Location = new System.Drawing.Point(181, 45);
+            this.specularCubemapPathTB.Location = new System.Drawing.Point(241, 55);
+            this.specularCubemapPathTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.specularCubemapPathTB.Name = "specularCubemapPathTB";
-            this.specularCubemapPathTB.Size = new System.Drawing.Size(197, 20);
+            this.specularCubemapPathTB.Size = new System.Drawing.Size(262, 22);
             this.specularCubemapPathTB.TabIndex = 0;
             this.specularCubemapPathTB.Click += new System.EventHandler(this.cubemapPathTB_Click);
             this.specularCubemapPathTB.TextChanged += new System.EventHandler(this.specularCubemapPathTB_TextChanged);
@@ -1269,10 +1397,11 @@
             this.tabPage5.Controls.Add(this.chkTpFileTable);
             this.tabPage5.Controls.Add(this.stLabel17);
             this.tabPage5.Controls.Add(this.chkBotwFileTable);
-            this.tabPage5.Location = new System.Drawing.Point(4, 25);
+            this.tabPage5.Location = new System.Drawing.Point(4, 29);
+            this.tabPage5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(541, 395);
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage5.Size = new System.Drawing.Size(724, 489);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "File Size Tables";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1280,9 +1409,10 @@
             // chkTpFileTable
             // 
             this.chkTpFileTable.AutoSize = true;
-            this.chkTpFileTable.Location = new System.Drawing.Point(17, 84);
+            this.chkTpFileTable.Location = new System.Drawing.Point(23, 103);
+            this.chkTpFileTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkTpFileTable.Name = "chkTpFileTable";
-            this.chkTpFileTable.Size = new System.Drawing.Size(178, 17);
+            this.chkTpFileTable.Size = new System.Drawing.Size(223, 20);
             this.chkTpFileTable.TabIndex = 3;
             this.chkTpFileTable.Text = "Twilight Princess HD File Tables";
             this.chkTpFileTable.UseVisualStyleBackColor = true;
@@ -1293,9 +1423,10 @@
             this.stLabel17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.stLabel17.AutoSize = true;
-            this.stLabel17.Location = new System.Drawing.Point(3, 3);
+            this.stLabel17.Location = new System.Drawing.Point(4, 4);
+            this.stLabel17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel17.Name = "stLabel17";
-            this.stLabel17.Size = new System.Drawing.Size(558, 13);
+            this.stLabel17.Size = new System.Drawing.Size(688, 16);
             this.stLabel17.TabIndex = 2;
             this.stLabel17.Text = "These options can prevent file size restrictions.  Check these if you want them t" +
     "o be adjusted when a file gets saved. ";
@@ -1303,9 +1434,10 @@
             // chkBotwFileTable
             // 
             this.chkBotwFileTable.AutoSize = true;
-            this.chkBotwFileTable.Location = new System.Drawing.Point(17, 61);
+            this.chkBotwFileTable.Location = new System.Drawing.Point(23, 75);
+            this.chkBotwFileTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkBotwFileTable.Name = "chkBotwFileTable";
-            this.chkBotwFileTable.Size = new System.Drawing.Size(195, 17);
+            this.chkBotwFileTable.Size = new System.Drawing.Size(244, 20);
             this.chkBotwFileTable.TabIndex = 0;
             this.chkBotwFileTable.Text = "BOTW Resource File Table (RSTB)";
             this.chkBotwFileTable.UseVisualStyleBackColor = true;
@@ -1314,42 +1446,22 @@
             // btnReset
             // 
             this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReset.Location = new System.Drawing.Point(3, 449);
+            this.btnReset.Location = new System.Drawing.Point(4, 553);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(104, 27);
+            this.btnReset.Size = new System.Drawing.Size(139, 33);
             this.btnReset.TabIndex = 20;
             this.btnReset.Text = "Reset Settings";
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
-            // chkViewportGrid
-            // 
-            this.chkViewportGrid.AutoSize = true;
-            this.chkViewportGrid.Location = new System.Drawing.Point(10, 68);
-            this.chkViewportGrid.Name = "chkViewportGrid";
-            this.chkViewportGrid.Size = new System.Drawing.Size(125, 17);
-            this.chkViewportGrid.TabIndex = 35;
-            this.chkViewportGrid.Text = "Enable Viewport Grid";
-            this.chkViewportGrid.UseVisualStyleBackColor = true;
-            this.chkViewportGrid.CheckedChanged += new System.EventHandler(this.chkViewportGrid_CheckedChanged);
-            // 
-            // chkViewportAxisLines
-            // 
-            this.chkViewportAxisLines.AutoSize = true;
-            this.chkViewportAxisLines.Location = new System.Drawing.Point(10, 91);
-            this.chkViewportAxisLines.Name = "chkViewportAxisLines";
-            this.chkViewportAxisLines.Size = new System.Drawing.Size(153, 17);
-            this.chkViewportAxisLines.TabIndex = 36;
-            this.chkViewportAxisLines.Text = "Enable Viewport Axis Lines";
-            this.chkViewportAxisLines.UseVisualStyleBackColor = true;
-            this.chkViewportAxisLines.CheckedChanged += new System.EventHandler(this.chkViewportAxisLines_CheckedChanged);
-            // 
             // Settings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(549, 490);
-            this.MaximumSize = new System.Drawing.Size(1920, 1040);
+            this.ClientSize = new System.Drawing.Size(732, 603);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MaximumSize = new System.Drawing.Size(2560, 1280);
             this.Name = "Settings";
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.Settings_Load);
@@ -1479,6 +1591,7 @@
         private Toolbox.Library.Forms.STLabel stLabel17;
         private Toolbox.Library.Forms.STCheckBox chkBotwFileTable;
         private Toolbox.Library.Forms.STCheckBox chkFrameCamera;
+        private Toolbox.Library.Forms.STCheckBox chkAlwaysSaveAll;
         private Toolbox.Library.Forms.STCheckBox chkAlwaysCompressOnSave;
         private Library.Forms.STLabel stLabel18;
         private Library.Forms.STTextBox pathPokemonSwShTB;
