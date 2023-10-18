@@ -70,7 +70,7 @@ namespace Toolbox.Library
                 return decompressor.Unwrap(b, MaxDecompressedSize);
             }
         }
-        public static byte[] SCompress(byte[] b, int level = 5)
+        public static byte[] SCompress(byte[] b, int level = 19)
         {
             using (var compressor = new ZstdNet.Compressor(new ZstdNet.CompressionOptions(level)))
             {
