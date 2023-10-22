@@ -1564,6 +1564,9 @@ namespace FirstPlugin
                     ImageDataCached.Add(sliceData);
             }
 
+            //Check if current texture is SRGB
+            bool srgb = Texture != null && Texture.UseSRGB; 
+
             switch (ext)
             {
                 case ".bftex":
@@ -1577,7 +1580,8 @@ namespace FirstPlugin
                     break;
                 case ".astc":
                     setting.LoadASTC(FileName);
-                    ApplyImportSettings(setting, STCompressionMode.Normal, false);
+                    //Keep original SRGB setting as .astc has no SRGB flags
+                    ApplyImportSettings(setting, STCompressionMode.Normal, false, srgb);
                     break;
                 default:
                     setting.LoadBitMap(FileName);
@@ -1610,7 +1614,7 @@ namespace FirstPlugin
                     Texture.TextureData.Add(ImageDataCached[i]);
             }
         }
-        public void ApplyImportSettings(TextureImporterSettings setting,STCompressionMode CompressionMode, bool multiThread)
+        public void ApplyImportSettings(TextureImporterSettings setting,STCompressionMode CompressionMode, bool multiThread, bool force_srgb = false)
         {
             Cursor.Current = Cursors.WaitCursor;
 
@@ -1627,6 +1631,8 @@ namespace FirstPlugin
             }
 
             tex.Name = Text;
+            if (force_srgb)
+                tex.UseSRGB = true;
 
             Texture = tex;
             Load(tex);
