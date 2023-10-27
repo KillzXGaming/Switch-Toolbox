@@ -394,6 +394,8 @@ namespace FirstPlugin
                         Matrix4 sb = model.Skeleton.bones[boneIndex].Transform;
                         v.pos = Vector3.TransformPosition(v.pos, sb);
                         v.nrm = Vector3.TransformNormal(v.nrm, sb);
+                        v.tan.Xyz = Vector3.TransformNormal(v.tan.Xyz, sb);
+                        v.bitan.Xyz = Vector3.TransformNormal(v.bitan.Xyz, sb);
                     }
                 }
                 if (fshp.VertexSkinCount == 0)
@@ -403,6 +405,8 @@ namespace FirstPlugin
                     Matrix4 NoBindFix = model.Skeleton.bones[boneIndex].Transform;
                     v.pos = Vector3.TransformPosition(v.pos, NoBindFix);
                     v.nrm = Vector3.TransformNormal(v.nrm, NoBindFix);
+                    v.tan.Xyz = Vector3.TransformNormal(v.tan.Xyz, NoBindFix);
+                    v.bitan.Xyz = Vector3.TransformNormal(v.bitan.Xyz, NoBindFix);
                 }
                 fshp.vertices.Add(v);
             }

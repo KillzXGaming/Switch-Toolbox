@@ -290,6 +290,8 @@ namespace Bfres.Structs
                 {
                     vertices[v].pos = Vector3.TransformPosition(vertices[v].pos, SingleBind);
                     vertices[v].nrm = Vector3.TransformNormal(vertices[v].nrm, SingleBind);
+                    vertices[v].tan.Xyz = Vector3.TransformNormal(vertices[v].tan.Xyz, SingleBind);
+                    vertices[v].bitan.Xyz = Vector3.TransformNormal(vertices[v].bitan.Xyz, SingleBind);
                 }
                 else if (VertexSkinCount == 1)
                 {
@@ -301,6 +303,8 @@ namespace Bfres.Structs
 
                     vertices[v].pos = Vector3.TransformPosition(vertices[v].pos, SingleBindLocal);
                     vertices[v].nrm = Vector3.TransformNormal(vertices[v].nrm, SingleBindLocal);
+                    vertices[v].tan.Xyz = Vector3.TransformNormal(vertices[v].tan.Xyz, SingleBindLocal);
+                    vertices[v].bitan.Xyz = Vector3.TransformNormal(vertices[v].bitan.Xyz, SingleBindLocal);
                 }
             }
 
@@ -2076,6 +2080,8 @@ namespace Bfres.Structs
 
                     vtx.pos = TransformLocal(vtx.pos, boneId, VertexSkinCount == 1);
                     vtx.nrm = TransformLocal(vtx.nrm, boneId, VertexSkinCount == 1, false);
+                    vtx.tan.Xyz = TransformLocal(vtx.tan.Xyz, boneId, VertexSkinCount == 1, false);
+                    vtx.bitan.Xyz = TransformLocal(vtx.bitan.Xyz, boneId, VertexSkinCount == 1, false);
                 }
 
                 verts.Add(new Syroot.Maths.Vector4F(vtx.pos.X, vtx.pos.Y, vtx.pos.Z, 1.0f));
