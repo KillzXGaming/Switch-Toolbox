@@ -7,6 +7,7 @@ using Toolbox;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.IO;
+using System.IO;
 
 namespace FirstPlugin
 {
@@ -16,7 +17,7 @@ namespace FirstPlugin
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "U8" };
-        public string[] Extension { get; set; } = new string[] { "*.u8"};
+        public string[] Extension { get; set; } = new string[] { "*.u8", "*.arc", "*.cmparc"};
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -28,14 +29,30 @@ namespace FirstPlugin
 
         private readonly uint BEMagic = 0x55AA382D;
         private readonly uint LEMagic = 0x2D38AA55;
+        private int LZType = 0x0, LZSize = 0;
 
-        public bool Identify(System.IO.Stream stream)
+        public bool Identify(Stream stream)
         {
-            using (var reader = new Toolbox.Library.IO.FileReader(stream, true))
+            using (var reader = new FileReader(stream, true))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                byte LZCheck = reader.ReadByte();
+                if (LZCheck == 0x11 || LZCheck == 0x10)
+                {
+                    LZType = LZCheck;
+
+                    // For the Wii's U8 ARC files compressed with LZ77 Type 10 or Type 11, the decompiled file size is written in little endian.
+                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.LittleEndian;
+                    LZSize = reader.ReadInt32();
+                    reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
+                }
+                else
+                {
+                    reader.Position = 0;
+                }
 
                 uint signature = reader.ReadUInt32();
+
                 reader.Position = 0;
                 return signature == BEMagic || signature == LEMagic;
             }
@@ -65,9 +82,25 @@ namespace FirstPlugin
 
         private bool IsBigEndian = false;
 
-        public void Load(System.IO.Stream stream)
+        public void Load(Stream stream)
         {
-            using (var reader = new FileReader(stream))
+            SubStream sub;
+            if (LZType == 0x11 || LZType == 0x10)
+            {
+                sub = new SubStream(stream, 4);
+            }
+            else
+            {
+                sub = null;
+            }
+
+            Stream dataStream = 
+                LZType == 0x11 ? new MemoryStream(LZ77_WII.Decompress11(sub.ToArray(), LZSize)) : 
+                LZType == 0x10 ? new MemoryStream(LZ77_WII.Decompress10LZ(sub.ToArray(), LZSize)) : stream;
+            
+            dataStream.Position = 0;
+
+            using (var reader = new FileReader(dataStream))
             {
                 reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 

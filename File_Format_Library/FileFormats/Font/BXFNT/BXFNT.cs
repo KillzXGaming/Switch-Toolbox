@@ -20,8 +20,8 @@ namespace FirstPlugin
         public FileType FileType { get; set; } = FileType.Font;
 
         public bool CanSave { get; set; }
-        public string[] Description { get; set; } = new string[] { "Cafe Font", "CTR Font", "Revolution Font" };
-        public string[] Extension { get; set; } = new string[] { "*.bffnt", "*.bcfnt", "*.brfnt", };
+        public string[] Description { get; set; } = new string[] { "Cafe Font", "CTR Font", "Revolution Font", "Revolution Archived Font" };
+        public string[] Extension { get; set; } = new string[] { "*.bffnt", "*.bcfnt", "*.brfnt", "*.brfna" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
@@ -33,7 +33,8 @@ namespace FirstPlugin
                 return reader.CheckSignature(4, "FFNT") ||
                        reader.CheckSignature(4, "CFNT") ||
                        reader.CheckSignature(4, "RFNT") ||
-                       reader.CheckSignature(4, "TNFR");
+                       reader.CheckSignature(4, "TNFR") ||
+                       reader.CheckSignature(4, "RFNA");
             }
         }
 
@@ -101,7 +102,8 @@ namespace FirstPlugin
                 }
                 else if (bffnt.Platform == FFNT.PlatformType.Cafe)
                 {
-                    for (int s = 0; s < tglp.SheetDataList.Count; s++) {
+                    for (int s = 0; s < tglp.SheetDataList.Count; s++)
+                    {
                         var surface = new Gx2ImageBlock();
                         surface.Text = $"Sheet_{s}";
                         surface.Load(tglp, s);
@@ -206,6 +208,7 @@ namespace FirstPlugin
         public ushort HeaderSize;
         public uint Version { get; set; }
 
+        public GLGR GlyphGroup { get; set; }
         public FINF FontSection { get; set; }
         public FontKerningTable KerningTable { get; set; }
 
@@ -226,7 +229,7 @@ namespace FirstPlugin
             reader.ByteOrder = Syroot.BinaryData.ByteOrder.BigEndian;
 
             Signature = reader.ReadString(4, Encoding.ASCII);
-            if (Signature != "FFNT" && Signature != "CFNT" && Signature != "RFNT" && Signature != "TNFR")
+            if (Signature != "FFNT" && Signature != "CFNT" && Signature != "RFNT" && Signature != "TNFR" && Signature != "RFNA")
                 throw new Exception($"Invalid signature {Signature}! Expected FFNT or CFNT or RFNT.");
 
             BOM = reader.ReadUInt16();
@@ -237,7 +240,8 @@ namespace FirstPlugin
 
             //Parse header first and check the version
             //Brfnt uses a slightly different header structure
-            if (Signature == "RFNT" || Signature == "TNFR") {
+            if (Signature == "RFNT" || Signature == "TNFR" || Signature == "RFNA")
+            {
                 Version = reader.ReadUInt16();
                 uint FileSize = reader.ReadUInt32();
                 HeaderSize = reader.ReadUInt16();
@@ -265,13 +269,24 @@ namespace FirstPlugin
 
             if (Signature == "CFNT")
                 Platform = PlatformType.Ctr;
-            if (Signature == "RFNT" || Signature == "TNFR")
+            if (Signature == "RFNT" || Signature == "TNFR" || Signature == "RFNA")
                 Platform = PlatformType.Wii;
 
             Console.WriteLine($"Platform {Platform}");
 
             reader.Seek(HeaderSize, SeekOrigin.Begin);
+            if (Signature == "RFNA")
+            {
+                GlyphGroup = new GLGR();
+                GlyphGroup.Read(reader);
+                // It's needed to take off 22 because of the included header length in SectionSize.
+                reader.Seek(GlyphGroup.SectionSize - 0x16, SeekOrigin.Current);
+            }
             FontSection = new FINF();
+            if (GlyphGroup != null)
+            {
+                FontSection.GlyphGroup = GlyphGroup;
+            }
             FontSection.Read(reader, this);
 
             //Check for any unread blocks
@@ -347,7 +362,8 @@ namespace FirstPlugin
 
             writer.SeekBegin(HeaderSize);
             FontSection.Write(writer, this);
-            if (KerningTable != null) {
+            if (KerningTable != null)
+            {
                 BlockCounter++;
                 KerningTable.Write(writer, this);
             }
@@ -392,33 +408,33 @@ namespace FirstPlugin
             float YScale = (fontHeight / TextureGlyph.CellWidth);
             float height = (TextureGlyph.SheetHeight - 2) / TextureGlyph.ColumnCount;
 
-         /*   int pos = 0;
-            for (int i = 0; i < text.Length; i++)
-            {
-                char character = text[i];
+            /*   int pos = 0;
+               for (int i = 0; i < text.Length; i++)
+               {
+                   char character = text[i];
 
-                int charWidth = (int)FontInfo.DefaultCharWidth;
-                int glyphWidth = (int)FontInfo.DefaultGlyphWidth;
-                int leftWidth = (int)FontInfo.DefaultLeftWidth;
+                   int charWidth = (int)FontInfo.DefaultCharWidth;
+                   int glyphWidth = (int)FontInfo.DefaultGlyphWidth;
+                   int leftWidth = (int)FontInfo.DefaultLeftWidth;
 
-                if (FontInfo.CodeMapDictionary.ContainsKey(character))
-                {
-                    var idx = FontInfo.CodeMapDictionary[character];
-                    if (idx == 0xFFFF) continue;
-                    var charWidthInfo = GetCharWidthInfoByIndex(FontInfo, (ushort)idx);
+                   if (FontInfo.CodeMapDictionary.ContainsKey(character))
+                   {
+                       var idx = FontInfo.CodeMapDictionary[character];
+                       if (idx == 0xFFFF) continue;
+                       var charWidthInfo = GetCharWidthInfoByIndex(FontInfo, (ushort)idx);
 
-                    charWidth = charWidthInfo.CharWidth;
-                    glyphWidth = charWidthInfo.GlyphWidth;
-                    leftWidth = charWidthInfo.Left;
-                }
+                       charWidth = charWidthInfo.CharWidth;
+                       glyphWidth = charWidthInfo.GlyphWidth;
+                       leftWidth = charWidthInfo.Left;
+                   }
 
 
-              /*  Bitmap b = new Bitmap(width, height);
-                using (Graphics g = Graphics.FromImage(b))
-                {
-                    g.DrawImage();
-                }
-            }*/
+                 /*  Bitmap b = new Bitmap(width, height);
+                   using (Graphics g = Graphics.FromImage(b))
+                   {
+                       g.DrawImage();
+                   }
+               }*/
 
             if (bitmapFont == null)
                 bitmapFont = GetBitmapFont(true);
