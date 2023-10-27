@@ -4,9 +4,6 @@ using System.Linq;
 using System.IO;
 using System.Runtime.InteropServices;
 using Toolbox.Library.IO;
-using OpenTK.Platform.Egl;
-using static ScintillaNET.Style;
-using System.Activities.Statements;
 
 namespace Toolbox.Library
 {
