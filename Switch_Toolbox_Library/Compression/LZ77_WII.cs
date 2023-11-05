@@ -140,6 +140,64 @@ namespace Toolbox.Library
             return outdata;
         }
 
+        //Ported from 
+        //https://github.com/Barubary/dsdecmp/blob/master/Java/JavaDSDecmp.java#L27
+        //Rewrote to C#
+        public static byte[] Decompress10LZ(byte[] in_data, int decomp_size)
+        {
+            byte[] out_data = new byte[decomp_size];
+            int curr_size = 0, flags, disp, n, b, cdest;
+            bool flag;
+
+            var reader = new FileReader(new MemoryStream(in_data), true);
+
+            while (curr_size < decomp_size)
+            {
+                try { flags = reader.ReadByte(); }
+                catch (EndOfStreamException ex) { throw ex; }
+                for (int i = 0; i < 8; i++)
+                {
+                    flag = (flags & (0x80 >> i)) > 0;
+                    if (flag)
+                    {
+                        disp = 0;
+                        try { b = reader.ReadByte(); }
+                        catch (EndOfStreamException ex) { throw new InvalidDataException("Incomplete data", ex); }
+                        n = b >> 4;
+                        disp = (b & 0x0F) << 8;
+                        try { disp |= reader.ReadByte(); }
+                        catch (EndOfStreamException ex) { throw new InvalidDataException("Incomplete data", ex); }
+                        n += 3;
+                        cdest = curr_size;
+                        Console.WriteLine(string.Format("disp: 0x{0:x}", disp));
+                        if (disp > curr_size) { throw new InvalidDataException("Cannot go back more than already written"); }
+                        for (int j = 0; j < n; j++)
+                        {
+                            out_data[curr_size++] = out_data[cdest - disp - 1 + j];
+                        }
+                        if (curr_size > decomp_size) break;
+                    }
+                    else
+                    {
+                        try { b = reader.ReadByte(); }
+                        catch(EndOfStreamException ex) 
+                        {
+                            Console.Error.WriteLine("Incomplete data, " + ex);
+                            break; 
+                        }
+                        try { out_data[curr_size++] = (byte)b; }
+                        catch(IndexOutOfRangeException ex) 
+                        { if (b == 0) 
+                            { 
+                                break; 
+                            } 
+                        }
+                    }
+                }
+            }
+            return out_data;
+        }
+
 
         public static byte[] Decompress(byte[] input, bool useMagic = true)
         {

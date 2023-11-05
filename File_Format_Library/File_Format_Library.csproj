@@ -273,6 +273,7 @@
     <Compile Include="FileFormats\Font\BXFNT\CMAP.cs" />
     <Compile Include="FileFormats\Font\BXFNT\FINF.cs" />
     <Compile Include="FileFormats\Font\BXFNT\FontKerningTable.cs" />
+    <Compile Include="FileFormats\Font\BXFNT\GLGR.cs" />
     <Compile Include="FileFormats\Font\BXFNT\Images\CtrImageBlock.cs" />
     <Compile Include="FileFormats\Font\BXFNT\CWDH.cs" />
     <Compile Include="FileFormats\Font\BXFNT\Images\Gx2ImageBlock.cs" />

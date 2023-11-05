@@ -23,6 +23,7 @@ namespace FirstPlugin
         public byte DefaultGlyphWidth { get; set; }
         public byte DefaultCharWidth { get; set; }
         public CharacterCode CharEncoding { get; set; }
+        public GLGR GlyphGroup;
         public TGLP TextureGlyph;
         public CMAP CodeMap;
         public CWDH CharacterWidth;
