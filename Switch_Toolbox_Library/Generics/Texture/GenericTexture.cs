@@ -969,34 +969,27 @@ namespace Toolbox.Library
             progressBar.Show();
             progressBar.Refresh();
 
-            if (ArrayCount > 1 && !ExportSurfaceLevel && false)
+            if (ArrayCount > 1 && !ExportSurfaceLevel)
             {
-                progressBar.Task = "Select dialog option... ";
+                string ext = Path.GetExtension(FileName);
 
-                var result = MessageBox.Show("Multiple image surfaces found! Would you like to export them all?", "Image Exporter",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
+                int index = FileName.LastIndexOf('.');
+                string name = index == -1 ? FileName : FileName.Substring(0, index);
+
+                for (int i = 0; i < ArrayCount; i++)
                 {
-                    string ext = Path.GetExtension(FileName);
+                    progressBar.Task = $"Decoding Surface [{i}] for image {Text}... ";
+                    progressBar.Value = (i * 100) / (int)ArrayCount;
+                    progressBar.Refresh();
 
-                    int index = FileName.LastIndexOf('.');
-                    string name = index == -1 ? FileName : FileName.Substring(0, index);
-
-                    for (int i = 0; i < ArrayCount; i++)
-                    {
-                        progressBar.Task = $"Decoding Surface [{i}] for image {Text}... ";
-                        progressBar.Value = (i * 100) / (int)ArrayCount;
-                        progressBar.Refresh();
-
-                        Bitmap arrayBitMap = GetBitmap(i, 0);
-                        arrayBitMap.Save($"{name}_Slice_{i}_{ext}");
-                        arrayBitMap.Dispose();
-                    }
-
-                    progressBar.Value = 100;
-                    progressBar.Close();
-                    return;
+                    Bitmap arrayBitMap = GetBitmap(i, 0);
+                    arrayBitMap.Save($"{name}_Slice_{i}_{ext}");
+                    arrayBitMap.Dispose();
                 }
+
+                progressBar.Value = 100;
+                progressBar.Close();
+                return;
             }
 
             progressBar.Task = $"Decoding image {Text}... ";
