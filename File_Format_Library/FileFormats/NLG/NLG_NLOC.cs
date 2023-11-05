@@ -16,7 +16,7 @@ namespace FirstPlugin
 
         public bool CanSave { get; set; }
         public string[] Description { get; set; } = new string[] { "NLG Localization Text" };
-        public string[] Extension { get; set; } = new string[] { "*.nloc" };
+        public string[] Extension { get; set; } = new string[] { "*.nloc", "*.loc" };
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public IFileInfo IFileInfo { get; set; }
