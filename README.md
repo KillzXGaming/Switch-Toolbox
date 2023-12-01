@@ -109,6 +109,8 @@ To build make sure you have Visual Studio installed (I use 2017, older versions 
 
 In the event that the tool cannot compile, check references. All the libraries used are stored in Switch-Toolbox/Lib folder. 
 
+Also, while compiling, Visual Studio might throw errors about files coming from external sources (ie. the web) and will therefore fail to read and compile them. In this event, go into the project root folder and run: `Get-ChildItem -Path "C:\\Full\\Path\\To\\Folder" -Recurse | Unblock-File`.
+
 ## Credits
 
 - Smash Forge Devs (SMG, Ploaj,  jam1garner, smb123w64gb, etc.) for some code ported over, specifically animation stuff, ETC1 encoder and some rendering.
