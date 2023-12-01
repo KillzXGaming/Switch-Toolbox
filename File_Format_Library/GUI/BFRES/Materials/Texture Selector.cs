@@ -109,7 +109,8 @@ namespace FirstPlugin
 
                 if (pictureBoxCustom1.InvokeRequired)
                 {
-                    pictureBoxCustom1.Invoke((MethodInvoker)delegate {
+                    pictureBoxCustom1.Invoke((MethodInvoker)delegate
+                    {
                         pictureBoxCustom1.Image = image;
                         pictureBoxCustom1.Refresh();
                     });
@@ -122,7 +123,7 @@ namespace FirstPlugin
 
         private void listView1_DoubleClick(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK; 
+            DialogResult = DialogResult.OK;
         }
 
         private void addTextureBtn_Click(object sender, EventArgs e)
@@ -221,11 +222,25 @@ namespace FirstPlugin
             {
                 e.Graphics.FillRectangle(backBrush, e.Bounds);
             }
-            using (SolidBrush foreBrush = new SolidBrush(Color.FromArgb(255,255,255)))
+
+            using (SolidBrush foreBrush = new SolidBrush(Color.FromArgb(255, 255, 255)))
             {
                 e.Graphics.DrawString(e.Header.Text, e.Font, foreBrush, e.Bounds);
             }
-       //     e.DrawText();
+
+            //     e.DrawText();
+        }
+
+        private void listView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (listView1.SelectedItems.Count > 0)
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+            }
         }
     }
 }
