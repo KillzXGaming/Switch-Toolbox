@@ -15,7 +15,7 @@ namespace FirstPlugin
     {
         public FileType FileType { get; set; } = FileType.Message;
 
-        public bool CanSave { get; set; }
+        public bool CanSave { get; set; } = true;
         public string[] Description { get; set; } = new string[] { "Message Studio Binary Text" };
         public string[] Extension { get; set; } = new string[] { "*.msbt" };
         public string FileName { get; set; }
@@ -71,8 +71,6 @@ namespace FirstPlugin
 
         public void Load(System.IO.Stream stream)
         {
-            CanSave = false;
-
             header = new Header();
             header.Read(new FileReader(stream));
         }
@@ -266,16 +264,21 @@ namespace FirstPlugin
         {
             private uint _index;
 
+            public byte[] OriginalDataCached = new byte[0];
+
             public StringEntry(byte[] data) {
                 Data = data;
+                OriginalDataCached = Data;
             }
 
             public StringEntry(byte[] data, Encoding encoding) {
                 Data = data;
+                OriginalDataCached = Data;
             }
 
             public StringEntry(string text, Encoding encoding) {
                 Data = encoding.GetBytes(text);
+                OriginalDataCached = encoding.GetBytes(text);
             }
 
             public uint Index
@@ -295,6 +298,15 @@ namespace FirstPlugin
             public string GetText(Encoding encoding)
             {
                 return encoding.GetString(Data);
+            }
+
+            public string GetOriginalText(Encoding encoding) {
+                return encoding.GetString(OriginalDataCached);
+            }
+
+            public void SetText(string text, Encoding encoding)
+            {
+                Data = encoding.GetBytes(text);
             }
 
             public byte[] ToBytes(Encoding encoding, bool isBigEndian)
@@ -319,6 +331,12 @@ namespace FirstPlugin
                             {
                                 writer.Write((byte)text[++i]);
                             }
+                        }
+                        if (c == 0xF)
+                        {
+                            //end tag
+                            writer.Write((short)text[++i]);
+                            writer.Write((short)text[++i]);
                         }
                     }
                     writer.Write('\0');

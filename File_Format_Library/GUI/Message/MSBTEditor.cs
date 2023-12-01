@@ -33,7 +33,23 @@ namespace FirstPlugin.Forms
 
             hexEditor1.EnableMenuBar = false;
 
+            editTextTB.TextChanged += TextChanged;
+
             Reload();
+        }
+
+        private void TextChanged(object sender, EventArgs args)
+        {
+            if (listViewCustom1.SelectedItems.Count > 0)
+            {
+                var item = listViewCustom1.SelectedItems[0];
+                if (item.Tag is MSBT.StringEntry)
+                {
+                    var msbtString = (MSBT.StringEntry)item.Tag;
+                    msbtString.SetText(editTextTB.Text, activeMessageFile.header.StringEncoding); 
+                    hexEditor1.LoadData(msbtString.Data);
+                }
+            }
         }
 
         private void Reload()
@@ -107,7 +123,7 @@ namespace FirstPlugin.Forms
                     var msbtString = (MSBT.StringEntry)item.Tag;
 
                     editTextTB.Text = msbtString.GetText(activeMessageFile.header.StringEncoding);
-                    originalTextTB.Text = msbtString.GetText(activeMessageFile.header.StringEncoding);
+                    originalTextTB.Text = msbtString.GetOriginalText(activeMessageFile.header.StringEncoding);
                     hexEditor1.LoadData(msbtString.Data);
                 }
             }
