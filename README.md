@@ -1,6 +1,10 @@
 # Switch-Toolbox
 A tool to edit many formats of Nintendo Switch, 3DS and Wii U. 
 
+## Notice
+
+**This tool is now archived and no longer in development!**
+
 # Download
 https://github.com/KillzXGaming/Switch-Toolbox/releases
 
