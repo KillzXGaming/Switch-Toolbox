@@ -499,7 +499,7 @@ namespace Toolbox.Library
 
         public void Load(BinaryDataReader reader)
         {
-            Text = FileName;
+            Text = Path.GetFileNameWithoutExtension(FileName);
 
             reader.Seek(0);
             string Magic = reader.ReadString(4);
