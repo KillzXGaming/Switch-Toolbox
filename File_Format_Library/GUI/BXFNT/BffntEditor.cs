@@ -293,8 +293,8 @@ namespace FirstPlugin.Forms
             {
                 for (int r = 0; r < (int)textureGlyph.RowCount; r++)
                 {
-                    int x = r * textureGlyph.CellWidth;
-                    int y = c * textureGlyph.CellHeight;
+                    int x = r * (textureGlyph.CellWidth + 1);
+                    int y = c * (textureGlyph.CellHeight + 1);
 
                     var rect = new Rectangle(x, y, textureGlyph.CellWidth, textureGlyph.CellHeight);
 
