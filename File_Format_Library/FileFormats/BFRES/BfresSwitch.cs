@@ -778,6 +778,7 @@ namespace FirstPlugin
                         m.HasNormalMap = true;
                         texture.Type = MatTexture.TextureType.Normal;
                     }
+
                     else if (texture.SamplerName == "_e0")
                     {
                         m.HasEmissionMap = true;
@@ -795,9 +796,30 @@ namespace FirstPlugin
                     }
                     else if (texture.SamplerName == "_gn0") //Damage
                     {
-                      
+
                     }
-                 }
+                    // EOW Samplers
+                    else if (useSampler == "_albedo0")
+                    {
+                        m.HasDiffuseMap = true;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    else if (useSampler == "_metallic0")
+                    {
+                        m.HasMetalnessMap = true;
+                        texture.Type = MatTexture.TextureType.Metalness;
+                    }
+                    else if (useSampler == "_normal0")
+                    {
+                        m.HasNormalMap = true;
+                        texture.Type = MatTexture.TextureType.Normal;
+                    }
+                    else if (useSampler == "_smoothness0")
+                    {
+                        m.HasLightMap = true;
+                        texture.Type = MatTexture.TextureType.Light;
+                    }
+                }
                 else if (mat.ShaderAssign.ShaderArchiveName == "ssg" ||
                          mat.ShaderAssign.ShaderArchiveName == "rf4cmv")
                 {
@@ -1041,6 +1063,7 @@ namespace FirstPlugin
                         m.HasEmissionMap = true;
                         texture.Type = MatTexture.TextureType.Emission;
                     }
+
                     else if (texture.SamplerName == "_s0" || useSampler == "_s0")
                     {
                         m.HasSpecularMap = true;
@@ -1061,10 +1084,39 @@ namespace FirstPlugin
                         m.HasLightMap = true;
                         texture.Type = MatTexture.TextureType.Light;
                     }
+
                     else if (texture.SamplerName == "bake0")
                     {
                         m.HasShadowMap = true;
                         texture.Type = MatTexture.TextureType.Shadow;
+                    }
+
+                    // EOW Frag Samplers
+
+                    else if (useSampler == "Albedo0")
+                    {
+                        m.HasDiffuseLayer = true;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    else if (useSampler == "Normal0")
+                    {
+                        m.HasNormalMap = true;
+                        texture.Type = MatTexture.TextureType.Normal;
+                    }
+                    else if (useSampler == "Emissive1")
+                    {
+                        m.HasEmissionMap = true;
+                        texture.Type = MatTexture.TextureType.Emission;
+                    }
+                    else if (useSampler == "Smoothness0")
+                    {
+                        m.HasLightMap = true;
+                        texture.Type = MatTexture.TextureType.Light;
+                    }
+                    else if (useSampler == "Metalness0")
+                    {
+                        m.HasMetalnessMap = true;
+                        texture.Type = MatTexture.TextureType.Metalness;
                     }
                 }
 
