@@ -1053,14 +1053,11 @@ namespace FirstPlugin
                         m.HasDiffuseLayer = true;
                         texture.Type = MatTexture.TextureType.DiffuseLayer2;
                     }
-
-
-                        else if (useSampler == "_n0")
+                    else if (useSampler == "_n0")
                     {
                         m.HasNormalMap = true;
                         texture.Type = MatTexture.TextureType.Normal;
                     }
-
                     else if (useSampler == "_e0")
                     {
                         m.HasEmissionMap = true;
