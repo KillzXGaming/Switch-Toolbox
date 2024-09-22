@@ -26,6 +26,8 @@ namespace Toolbox
         {
             try
             {
+                VersionCheck versionCheck = new VersionCheck(true);
+
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 var client = new GitHubClient(new ProductHeaderValue("ST_UpdateTool"));
 
@@ -40,8 +42,8 @@ namespace Toolbox
                 var asssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
                 var version = string.Concat(asssemblyVersion.ToString().Reverse().Skip(2).Reverse());
 
-                var lastestRelease = Releases.FirstOrDefault(x => x.Name.Contains($"v{version}"));
-                if (lastestRelease != null)
+                var lastestRelease = Releases.FirstOrDefault();
+                if (lastestRelease != null && lastestRelease.Assets[0].UpdatedAt.ToString() == versionCheck.CompileDate)
                 {
                     Runtime.ProgramVersion = lastestRelease.TagName;
                     Runtime.CompileDate = lastestRelease.Assets[0].UpdatedAt.ToString();
