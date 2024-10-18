@@ -105,6 +105,7 @@
             this.stCheckBox1 = new Toolbox.Library.Forms.STCheckBox();
             this.chkMapOriginalMaterials = new Toolbox.Library.Forms.STCheckBox();
             this.ogSkinCountChkBox = new Toolbox.Library.Forms.STCheckBox();
+            this.combineUVs = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -460,6 +461,7 @@
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.combineUVs);
             this.panel8.Controls.Add(this.stLabel4);
             this.panel8.Controls.Add(this.lodCountUD);
             this.panel8.Controls.Add(this.chkCreateDummyLODs);
@@ -603,7 +605,6 @@
             this.chkBoxRotNegative90Y.Text = "Rotate -90 degrees";
             this.chkBoxRotNegative90Y.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.chkBoxRotNegative90Y.UseVisualStyleBackColor = true;
-            this.chkBoxRotNegative90Y.CheckedChanged += new System.EventHandler(this.chkBoxSettings_CheckedChanged);
             // 
             // textBoxMaterialPath
             // 
@@ -836,7 +837,7 @@
             this.tabPageAdvanced.Location = new System.Drawing.Point(4, 25);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(530, 347);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(192, 71);
             this.tabPageAdvanced.TabIndex = 0;
             this.tabPageAdvanced.Text = "Advanced Settings";
             // 
@@ -853,7 +854,7 @@
             this.stPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.stPanel1.Location = new System.Drawing.Point(3, 3);
             this.stPanel1.Name = "stPanel1";
-            this.stPanel1.Size = new System.Drawing.Size(524, 341);
+            this.stPanel1.Size = new System.Drawing.Size(186, 65);
             this.stPanel1.TabIndex = 17;
             // 
             // tabPage1
@@ -870,7 +871,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(530, 347);
+            this.tabPage1.Size = new System.Drawing.Size(192, 71);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Inject Mode";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -980,6 +981,16 @@
             this.ogSkinCountChkBox.TabIndex = 34;
             this.ogSkinCountChkBox.Text = "Keep Original Skin Count (can help crashes)";
             this.ogSkinCountChkBox.UseVisualStyleBackColor = true;
+            // 
+            // combineUVs
+            // 
+            this.combineUVs.AutoSize = true;
+            this.combineUVs.Location = new System.Drawing.Point(414, 88);
+            this.combineUVs.Name = "combineUVs";
+            this.combineUVs.Size = new System.Drawing.Size(90, 17);
+            this.combineUVs.TabIndex = 40;
+            this.combineUVs.Text = "Combine UVs";
+            this.combineUVs.UseVisualStyleBackColor = true;
             // 
             // BfresModelImportSettings
             // 
@@ -1097,5 +1108,6 @@
         private Toolbox.Library.Forms.STCheckBox chkCreateDummyLODs;
         private Toolbox.Library.Forms.STLabel stLabel4;
         private Toolbox.Library.Forms.NumericUpDownUint lodCountUD;
+        private Toolbox.Library.Forms.STCheckBox combineUVs;
     }
 }

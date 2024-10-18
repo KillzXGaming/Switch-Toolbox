@@ -773,7 +773,7 @@ namespace Bfres.Structs
                             if (AttributeMatcher.ContainsKey(obj.ObjectName))
                                 shape.vertexAttributes = csvsettings.CreateNewAttributes(AttributeMatcher[obj.ObjectName]);
                             else
-                                shape.vertexAttributes = csvsettings.CreateNewAttributes();
+                                shape.vertexAttributes = csvsettings.CreateNewAttributes(GetMaterial(shape.MaterialIndex));
 
                             shape.BoneIndex = 0;
                             shape.Text = obj.ObjectName;
@@ -1304,18 +1304,17 @@ namespace Bfres.Structs
 
                             shape.VertexBufferIndex = shapes.Count;
                             shape.vertices = obj.vertices;
-
-                            if (AttributeMatcher.ContainsKey(obj.ObjectName))
-                                shape.vertexAttributes = settings.CreateNewAttributes(AttributeMatcher[obj.ObjectName]);
-                            else
-                                shape.vertexAttributes = settings.CreateNewAttributes();
-
                             shape.BoneIndex = obj.BoneIndex;
 
                             if (obj.MaterialIndex + MatStartIndex < materials.Count && obj.MaterialIndex > 0)
                                 shape.MaterialIndex = obj.MaterialIndex + MatStartIndex;
                             else
                                 shape.MaterialIndex = 0;
+
+                            if (AttributeMatcher.ContainsKey(obj.ObjectName))
+                                shape.vertexAttributes = settings.CreateNewAttributes(AttributeMatcher[obj.ObjectName]);
+                            else
+                                shape.vertexAttributes = settings.CreateNewAttributes(GetMaterial(shape.MaterialIndex));
 
                             shape.lodMeshes = obj.lodMeshes;
                             shape.CreateBoneList(obj, this, ForceSkinInfluence, ForceSkinInfluenceMax);

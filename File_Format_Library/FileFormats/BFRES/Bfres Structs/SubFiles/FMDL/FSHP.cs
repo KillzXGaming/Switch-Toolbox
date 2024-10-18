@@ -1400,16 +1400,17 @@ namespace Bfres.Structs
                     max = CalculateBBMax(vertices);
                 }
 
-                //Get the largest values in local space to create the largest bounding box
-                foreach (var bounding in aabb)
+                var c = (min + max) / 2.0f;
+                var e = (max - min) / 2.0f;
+
+                float sphereRadius = (float)(c.Length + e.Length);
+
+                return new BoundingBox()
                 {
-                    min.X = Math.Min(min.X, bounding.Min.X);
-                    min.Y = Math.Min(min.Y, bounding.Min.Y);
-                    min.Z = Math.Min(min.Z, bounding.Min.Z);
-                    max.X = Math.Max(max.X, bounding.Max.X);
-                    max.Y = Math.Max(max.Y, bounding.Max.Y);
-                    max.Z = Math.Max(max.Z, bounding.Max.Z);
-                }
+                    Radius = sphereRadius,
+                    Center = new Vector3(c.X, c.Y, c.Z),
+                    Extend = new Vector3(e.X, e.Y, e.Z),
+                };
             }
             else
             {
@@ -1756,6 +1757,22 @@ namespace Bfres.Structs
                     vert.Format = att.Format;
                     atrib.Add(vert);
                 }
+                if (att.Name == "_g3d_02_u0_u1")
+                {
+                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                    vert.Name = att.Name;
+                    vert.Data = uv0.ToArray();
+                    vert.Format = att.Format;
+                    atrib.Add(vert);
+                }
+                if (att.Name == "_g3d_02_u2_u3")
+                {
+                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                    vert.Name = att.Name;
+                    vert.Data = uv2.ToArray();
+                    vert.Format = att.Format;
+                    atrib.Add(vert);
+                }
                 if (att.Name == "_b0")
                 {
                     VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
@@ -1777,6 +1794,31 @@ namespace Bfres.Structs
                     VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
                     vert.Name = att.Name;
                     vert.Data = colors.ToArray();
+                    vert.Format = att.Format;
+                    atrib.Add(vert);
+                }
+                if (att.Name == "_c1")
+                {
+                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                    vert.Name = att.Name;
+                    vert.Data = colors1.ToArray();
+                    vert.Format = att.Format;
+                    atrib.Add(vert);
+                }
+                if (att.Name == "_c2")
+                {
+                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                    vert.Name = att.Name;
+                    vert.Data = colors2.ToArray();
+                    vert.Format = att.Format;
+                    atrib.Add(vert);
+                }
+
+                if (att.Name == "_c3")
+                {
+                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                    vert.Name = att.Name;
+                    vert.Data = colors3.ToArray();
                     vert.Format = att.Format;
                     atrib.Add(vert);
                 }
@@ -1830,6 +1872,9 @@ namespace Bfres.Structs
         internal List<List<Syroot.Maths.Vector4F>> weights = new List<List<Syroot.Maths.Vector4F>>();
         internal List<List<Syroot.Maths.Vector4F>> boneInd = new List<List<Syroot.Maths.Vector4F>>();
         internal List<Syroot.Maths.Vector4F> colors = new List<Syroot.Maths.Vector4F>();
+        internal List<Syroot.Maths.Vector4F> colors1 = new List<Syroot.Maths.Vector4F>();
+        internal List<Syroot.Maths.Vector4F> colors2 = new List<Syroot.Maths.Vector4F>();
+        internal List<Syroot.Maths.Vector4F> colors3 = new List<Syroot.Maths.Vector4F>();
 
         public string GetBoneNameFromIndex(FMDL mdl, int index)
         {
@@ -2059,6 +2104,9 @@ namespace Bfres.Structs
             colors.Clear();
             weights.Clear();
             boneInd.Clear();
+            colors1.Clear();
+            colors2.Clear();
+            colors3.Clear();
 
             // Create arrays to be able to fit the needed skin count
             int listCount = (int)Math.Ceiling(VertexSkinCount / 4.0);
@@ -2086,12 +2134,15 @@ namespace Bfres.Structs
 
                 verts.Add(new Syroot.Maths.Vector4F(vtx.pos.X, vtx.pos.Y, vtx.pos.Z, 1.0f));
                 norms.Add(new Syroot.Maths.Vector4F(vtx.nrm.X, vtx.nrm.Y, vtx.nrm.Z, 0));
-                uv0.Add(new Syroot.Maths.Vector4F(vtx.uv0.X, vtx.uv0.Y, 0, 0));
+                uv0.Add(new Syroot.Maths.Vector4F(vtx.uv0.X, vtx.uv0.Y, vtx.uv1.X, vtx.uv1.Y));
                 uv1.Add(new Syroot.Maths.Vector4F(vtx.uv1.X, vtx.uv1.Y, 0, 0));
-                uv2.Add(new Syroot.Maths.Vector4F(vtx.uv2.X, vtx.uv2.Y, 0, 0));
+                uv2.Add(new Syroot.Maths.Vector4F(vtx.uv2.X, vtx.uv2.Y, vtx.uv3.X, vtx.uv3.Y));
                 tans.Add(new Syroot.Maths.Vector4F(vtx.tan.X, vtx.tan.Y, vtx.tan.Z, vtx.tan.W));
                 bitans.Add(new Syroot.Maths.Vector4F(vtx.bitan.X, vtx.bitan.Y, vtx.bitan.Z, vtx.bitan.W));
                 colors.Add(new Syroot.Maths.Vector4F(vtx.col.X, vtx.col.Y, vtx.col.Z, vtx.col.W));
+                colors1.Add(new Syroot.Maths.Vector4F(vtx.col2.X, vtx.col2.Y, vtx.col2.Z, vtx.col2.W));
+                colors2.Add(new Syroot.Maths.Vector4F(vtx.col3.X, vtx.col3.Y, vtx.col3.Z, vtx.col3.W));
+                colors3.Add(new Syroot.Maths.Vector4F(vtx.col4.X, vtx.col4.Y, vtx.col4.Z, vtx.col4.W));
 
                 // Init arrays based on skincount
                 float[] weightsA = new float[TargetVertexSkinCount];

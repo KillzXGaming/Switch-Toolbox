@@ -263,12 +263,18 @@ namespace FirstPlugin
             Syroot.Maths.Vector4F[] vec4uv1 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4uv2 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4c0 = new Syroot.Maths.Vector4F[0];
+            Syroot.Maths.Vector4F[] vec4c1 = new Syroot.Maths.Vector4F[0];
+            Syroot.Maths.Vector4F[] vec4c2 = new Syroot.Maths.Vector4F[0];
+            Syroot.Maths.Vector4F[] vec4c3 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4t0 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4b0 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4w0 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4w1 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4i0 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4i1 = new Syroot.Maths.Vector4F[0];
+
+            Syroot.Maths.Vector4F[] vec4uv01 = new Syroot.Maths.Vector4F[0];
+            Syroot.Maths.Vector4F[] vec4uv23 = new Syroot.Maths.Vector4F[0];
 
             //For shape morphing
             Syroot.Maths.Vector4F[] vec4Positions1 = new Syroot.Maths.Vector4F[0];
@@ -292,6 +298,12 @@ namespace FirstPlugin
                     vec4uv2 = AttributeData(att, helper, "_u2");
                 if (att.Name == "_c0")
                     vec4c0 = AttributeData(att, helper, "_c0");
+                if (att.Name == "_c1")
+                    vec4c1 = AttributeData(att, helper, "_c1");
+                if (att.Name == "_c2")
+                    vec4c2 = AttributeData(att, helper, "_c2");
+                if (att.Name == "_c3")
+                    vec4c3 = AttributeData(att, helper, "_c3");
                 if (att.Name == "_t0")
                     vec4t0 = AttributeData(att, helper, "_t0");
                 if (att.Name == "_b0")
@@ -300,10 +312,10 @@ namespace FirstPlugin
                     vec4w0 = AttributeData(att, helper, "_w0");
                 if (att.Name == "_i0")
                     vec4i0 = AttributeData(att, helper, "_i0");
-                if (att.Name == "_w1")
-                    vec4w1 = AttributeData(att, helper, "_w1");
-                if (att.Name == "_i1")
-                    vec4i1 = AttributeData(att, helper, "_i1");
+                if (att.Name == "_g3d_02_u0_u1")
+                    vec4uv01 = AttributeData(att, helper, "_g3d_02_u0_u1");
+                if (att.Name == "_g3d_02_u2_u3")
+                    vec4uv23 = AttributeData(att, helper, "_g3d_02_u2_u3");
 
                 if (att.Name == "_p1")
                     vec4Positions1 = AttributeData(att, helper, "_p1");
@@ -329,6 +341,17 @@ namespace FirstPlugin
                     v.uv1 = new Vector2(vec4uv1[i].X, vec4uv1[i].Y);
                 if (vec4uv2.Length > 0)
                     v.uv2 = new Vector2(vec4uv2[i].X, vec4uv2[i].Y);
+
+                if (vec4uv01.Length > 0)
+                {
+                    v.uv0 = new Vector2(vec4uv01[i].X, vec4uv01[i].Y);
+                    v.uv1 = new Vector2(vec4uv01[i].Z, vec4uv01[i].W);
+                }
+                if (vec4uv23.Length > 0)
+                {
+                    v.uv2 = new Vector2(vec4uv23[i].X, vec4uv23[i].Y);
+                    v.uv3 = new Vector2(vec4uv23[i].Z, vec4uv23[i].W);
+                }
 
                 if (vec4w0.Length > 0)
                 {
@@ -374,12 +397,19 @@ namespace FirstPlugin
                     if (fshp.VertexSkinCount > 7)
                         v.boneIds.Add((int)vec4i1[i].W);
                 }
+
                 if (vec4t0.Length > 0)
                     v.tan = new Vector4(vec4t0[i].X, vec4t0[i].Y, vec4t0[i].Z, vec4t0[i].W);
                 if (vec4b0.Length > 0)
                     v.bitan = new Vector4(vec4b0[i].X, vec4b0[i].Y, vec4b0[i].Z, vec4b0[i].W);
                 if (vec4c0.Length > 0)
                     v.col = new Vector4(vec4c0[i].X, vec4c0[i].Y, vec4c0[i].Z, vec4c0[i].W);
+                if (vec4c1.Length > 0)
+                    v.col2 = new Vector4(vec4c1[i].X, vec4c1[i].Y, vec4c1[i].Z, vec4c1[i].W);
+                if (vec4c2.Length > 0)
+                    v.col3 = new Vector4(vec4c2[i].X, vec4c2[i].Y, vec4c2[i].Z, vec4c2[i].W);
+                if (vec4c3.Length > 0)
+                    v.col4 = new Vector4(vec4c3[i].X, vec4c3[i].Y, vec4c3[i].Z, vec4c3[i].W);
 
                 if (fshp.VertexSkinCount == 1)
                 {
@@ -778,7 +808,6 @@ namespace FirstPlugin
                         m.HasNormalMap = true;
                         texture.Type = MatTexture.TextureType.Normal;
                     }
-
                     else if (texture.SamplerName == "_e0")
                     {
                         m.HasEmissionMap = true;
@@ -796,7 +825,7 @@ namespace FirstPlugin
                     }
                     else if (texture.SamplerName == "_gn0") //Damage
                     {
-
+                      
                     }
                     // EOW Samplers
                     else if (useSampler == "_albedo0")
@@ -1063,7 +1092,6 @@ namespace FirstPlugin
                         m.HasEmissionMap = true;
                         texture.Type = MatTexture.TextureType.Emission;
                     }
-
                     else if (texture.SamplerName == "_s0" || useSampler == "_s0")
                     {
                         m.HasSpecularMap = true;
@@ -1084,14 +1112,11 @@ namespace FirstPlugin
                         m.HasLightMap = true;
                         texture.Type = MatTexture.TextureType.Light;
                     }
-
                     else if (texture.SamplerName == "bake0")
                     {
                         m.HasShadowMap = true;
                         texture.Type = MatTexture.TextureType.Shadow;
-                    }
-
-                    // EOW Frag Samplers
+                    }       // EOW Frag Samplers
 
                     else if (useSampler == "Albedo0")
                     {

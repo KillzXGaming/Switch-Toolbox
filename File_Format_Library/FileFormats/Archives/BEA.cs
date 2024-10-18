@@ -179,6 +179,12 @@ namespace FirstPlugin
                 asset.FileName = node.FileName;
                 asset.FileData = node.CompressedData;
                 asset.UncompressedSize = node.FileData.Length;
+                asset.FileID1 = node.FileID1;
+                asset.FileID2 = node.FileID2;
+                asset.FileHash = node.FileHash;
+                asset.Unknown3 = node.Unknown3;
+                asset.FileType = node.FileType;
+
                 beaFile.FileList.Add(asset.FileName, asset);
                 beaFile.FileDictionary.Add(asset.FileName);
             }
@@ -204,6 +210,9 @@ namespace FirstPlugin
         public class FileEntry : ArchiveFileInfo
         {
             BEA ArchiveFile;
+
+
+
             public FileEntry(BEA bea)
             {
                 ArchiveFile = bea;
@@ -233,6 +242,11 @@ namespace FirstPlugin
             public ushort unk1;
             public ushort unk2;
             public bool IsCompressed;
+            public ulong FileID1;
+            public ulong FileID2;
+            public uint FileHash;
+            public string FileType = "";
+            public uint Unknown3;
 
             public override byte[] FileData
             {
@@ -248,6 +262,8 @@ namespace FirstPlugin
                 unk1 = 2;
                 unk2 = 12;
                 FileData = data;
+                FileID1 = (ulong)new Random().Next(0, int.MaxValue);
+                FileID2 = (ulong)new Random().Next(0, int.MaxValue);
             }
 
             public override Dictionary<string, string> ExtensionImageKeyLookup
@@ -309,6 +325,12 @@ namespace FirstPlugin
             fileEntry.unk2 = asset.unk2;
             fileEntry.IsCompressed = asset.IsCompressed;
             fileEntry.CompressedData = asset.FileData;
+            fileEntry.Unknown3 = asset.Unknown3;
+            fileEntry.FileID1 = asset.FileID1;
+            fileEntry.FileID2 = asset.FileID2;
+            fileEntry.FileHash = asset.FileHash;
+            fileEntry.FileType = asset.FileType;
+
             return fileEntry;
         }
     }

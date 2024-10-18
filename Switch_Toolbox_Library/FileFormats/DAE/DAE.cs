@@ -15,7 +15,7 @@ using Toolbox.Library.IO;
 
 namespace Toolbox.Library
 {
-    public class DAE 
+    public class DAE
     {
         public class ExportSettings
         {
@@ -55,11 +55,12 @@ namespace Toolbox.Library
                 new List<STGenericMaterial>(), new List<STGenericTexture>());
         }
 
-        public static void Export(string FileName, ExportSettings settings, STGenericModel model, List<STGenericTexture> Textures, STSkeleton skeleton = null, List<int> NodeArray = null) {
-            Export(FileName, settings, model.Objects.ToList(), model.Materials.ToList(),  Textures, skeleton, NodeArray);
+        public static void Export(string FileName, ExportSettings settings, STGenericModel model, List<STGenericTexture> Textures, STSkeleton skeleton = null, List<int> NodeArray = null)
+        {
+            Export(FileName, settings, model.Objects.ToList(), model.Materials.ToList(), Textures, skeleton, NodeArray);
         }
 
-        public static void Export(string FileName, ExportSettings settings, 
+        public static void Export(string FileName, ExportSettings settings,
             List<STGenericObject> Meshes, List<STGenericMaterial> Materials,
             List<STGenericTexture> Textures, STSkeleton skeleton = null, List<int> NodeArray = null)
         {
@@ -102,7 +103,8 @@ namespace Toolbox.Library
                         if (!textureNames.Contains(Textures[i].Text))
                             textureNames.Add(Textures[i].Text);
 
-                        if (settings.ExportTextures) {
+                        if (settings.ExportTextures)
+                        {
 
                             progressBar.Task = $"Exporting Texture {Textures[i].Text}";
                             progressBar.Value = ((i * 100) / Textures.Count);
@@ -137,7 +139,8 @@ namespace Toolbox.Library
                                     GC.Collect();
                                 }
                             }
-                            catch (Exception ex) {
+                            catch (Exception ex)
+                            {
                                 failedTextureExport.Add(Textures[i].Text);
                             }
                         }
@@ -189,7 +192,7 @@ namespace Toolbox.Library
                                 texMap.WrapModeT = SamplerWrapMode.WRAP;
                             else if (tex.WrapModeT == STTextureWrapMode.Mirror)
                                 texMap.WrapModeT = SamplerWrapMode.MIRROR;
-                            else if(tex.WrapModeT == STTextureWrapMode.Clamp)
+                            else if (tex.WrapModeT == STTextureWrapMode.Clamp)
                                 texMap.WrapModeT = SamplerWrapMode.CLAMP;
 
 
@@ -210,7 +213,8 @@ namespace Toolbox.Library
                 else
                     writer.WriteLibraryImages();
 
-                if (skeleton != null) {
+                if (skeleton != null)
+                {
                     //Search for bones with rigging first
                     List<string> riggedBones = new List<string>();
                     if (settings.OnlyExportRiggedBones)
@@ -223,7 +227,8 @@ namespace Toolbox.Library
                                 for (int j = 0; j < vertex.boneIds.Count; j++)
                                 {
                                     int id = -1;
-                                    if (NodeArray != null && NodeArray.Count > vertex.boneIds[j]) {
+                                    if (NodeArray != null && NodeArray.Count > vertex.boneIds[j])
+                                    {
                                         id = NodeArray[vertex.boneIds[j]];
                                     }
                                     else
@@ -288,7 +293,7 @@ namespace Toolbox.Library
                     if (mesh.MaterialIndex != -1 && Materials.Count > mesh.MaterialIndex)
                     {
                         writer.CurrentMaterial = Materials[mesh.MaterialIndex].Text;
-                        Console.WriteLine($"MaterialIndex {mesh.MaterialIndex } {Materials[mesh.MaterialIndex].Text}");
+                        Console.WriteLine($"MaterialIndex {mesh.MaterialIndex} {Materials[mesh.MaterialIndex].Text}");
                     }
 
 
@@ -312,18 +317,21 @@ namespace Toolbox.Library
                                     transform = diffuse.Transform;
 
                                 var vertexA = mesh.vertices[faces[v]];
-                                var vertexB = mesh.vertices[faces[v+1]];
-                                var vertexC = mesh.vertices[faces[v+2]];
+                                var vertexB = mesh.vertices[faces[v + 1]];
+                                var vertexC = mesh.vertices[faces[v + 2]];
 
-                                if (!transformedVertices.Contains(vertexA)) {
+                                if (!transformedVertices.Contains(vertexA))
+                                {
                                     vertexA.uv0 = (vertexA.uv0 * transform.Scale) + transform.Translate;
                                     transformedVertices.Add(vertexA);
                                 }
-                                if (!transformedVertices.Contains(vertexB)) {
+                                if (!transformedVertices.Contains(vertexB))
+                                {
                                     vertexB.uv0 = (vertexB.uv0 * transform.Scale) + transform.Translate;
                                     transformedVertices.Add(vertexB);
                                 }
-                                if (!transformedVertices.Contains(vertexC)) {
+                                if (!transformedVertices.Contains(vertexC))
+                                {
                                     vertexC.uv0 = (vertexC.uv0 * transform.Scale) + transform.Translate;
                                     transformedVertices.Add(vertexC);
                                 }
@@ -340,15 +348,20 @@ namespace Toolbox.Library
                     List<float> UV3 = new List<float>();
                     List<float> Color = new List<float>();
                     List<float> Color2 = new List<float>();
+                    List<float> Color3 = new List<float>();
+                    List<float> Color4 = new List<float>();
                     List<int[]> BoneIndices = new List<int[]>();
                     List<float[]> BoneWeights = new List<float[]>();
 
                     bool HasNormals = false;
                     bool HasColors = false;
                     bool HasColors2 = false;
+                    bool HasColors3 = false;
+                    bool HasColors4 = false;
                     bool HasUV0 = false;
                     bool HasUV1 = false;
                     bool HasUV2 = false;
+                    bool HasUV3 = false;
                     bool HasBoneIds = false;
 
                     foreach (var vertex in mesh.vertices)
@@ -356,9 +369,13 @@ namespace Toolbox.Library
                         if (vertex.nrm != Vector3.Zero) HasNormals = true;
                         if (vertex.col != Vector4.One && settings.UseVertexColors) HasColors = true;
                         if (vertex.col2 != Vector4.One && settings.UseVertexColors) HasColors2 = true;
+                        if (vertex.col3 != Vector4.One && settings.UseVertexColors) HasColors3 = true;
+                        if (vertex.col4 != Vector4.One && settings.UseVertexColors) HasColors4 = true;
+
                         if (vertex.uv0 != Vector2.Zero) HasUV0 = true;
                         if (vertex.uv1 != Vector2.Zero) HasUV1 = true;
                         if (vertex.uv2 != Vector2.Zero) HasUV2 = true;
+                        if (vertex.uv3 != Vector2.Zero) HasUV3 = true;
                         if (vertex.boneIds.Count > 0) HasBoneIds = true;
 
                         Position.Add(vertex.pos.X); Position.Add(vertex.pos.Y); Position.Add(vertex.pos.Z);
@@ -369,16 +386,20 @@ namespace Toolbox.Library
                             UV0.Add(vertex.uv0.X); UV0.Add(1 - vertex.uv0.Y);
                             UV1.Add(vertex.uv1.X); UV1.Add(1 - vertex.uv1.Y);
                             UV2.Add(vertex.uv2.X); UV2.Add(1 - vertex.uv2.Y);
+                            UV3.Add(vertex.uv3.X); UV3.Add(1 - vertex.uv3.Y);
                         }
                         else
                         {
                             UV0.Add(vertex.uv0.X); UV0.Add(vertex.uv0.Y);
                             UV1.Add(vertex.uv1.X); UV1.Add(vertex.uv1.Y);
                             UV2.Add(vertex.uv2.X); UV2.Add(vertex.uv2.Y);
+                            UV3.Add(vertex.uv3.X); UV3.Add(vertex.uv3.Y);
                         }
 
                         Color.AddRange(new float[] { vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W });
                         Color2.AddRange(new float[] { vertex.col2.X, vertex.col2.Y, vertex.col2.Z, vertex.col2.W });
+                        Color3.AddRange(new float[] { vertex.col3.X, vertex.col3.Y, vertex.col3.Z, vertex.col3.W });
+                        Color4.AddRange(new float[] { vertex.col4.X, vertex.col4.Y, vertex.col4.Z, vertex.col4.W });
 
                         List<int> bIndices = new List<int>();
                         List<float> bWeights = new List<float>();
@@ -446,7 +467,7 @@ namespace Toolbox.Library
                         foreach (var group in mesh.PolygonGroups)
                         {
                             TriangleList triangleList = new TriangleList();
-                          
+
                             triangleLists.Add(triangleList);
 
                             STGenericMaterial material = new STGenericMaterial();
@@ -484,9 +505,12 @@ namespace Toolbox.Library
 
                     if (HasColors)
                         writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color.ToArray(), triangleLists.ToArray(), 0);
-
                     if (HasColors2)
                         writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color2.ToArray(), triangleLists.ToArray(), 1);
+                    if (HasColors3)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color3.ToArray(), triangleLists.ToArray(), 2);
+                    if (HasColors4)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color4.ToArray(), triangleLists.ToArray(), 3);
 
                     if (HasUV0)
                         writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV0.ToArray(), triangleLists.ToArray(), 0);
@@ -496,6 +520,9 @@ namespace Toolbox.Library
 
                     if (HasUV2)
                         writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV2.ToArray(), triangleLists.ToArray(), 2);
+
+                    if (HasUV3)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV3.ToArray(), triangleLists.ToArray(), 3);
 
                     if (HasBoneIds)
                         writer.AttachGeometryController(BoneIndices, BoneWeights);
@@ -508,7 +535,7 @@ namespace Toolbox.Library
             progressBar?.Close();
 
             if (!settings.SuppressConfirmDialog)
-                System.Windows.Forms.MessageBox.Show($"Exported {FileName} successfully!");
+                System.Windows.Forms.MessageBox.Show($"Exported {FileName} Successfully!");
         }
 
 
@@ -530,7 +557,7 @@ namespace Toolbox.Library
 
             COLLADA collada = COLLADA.Load(FileName);
 
-           
+
             //Check axis up
             if (collada.asset != null)
             {
@@ -593,7 +620,7 @@ namespace Toolbox.Library
 
         private void LoadNodes(library_nodes nodes)
         {
-            
+
         }
 
         private void LoadMaterials(library_materials materials)

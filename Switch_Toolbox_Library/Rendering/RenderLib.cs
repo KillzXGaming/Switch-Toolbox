@@ -24,6 +24,8 @@ namespace Toolbox.Library.Rendering
         public Vector3 nrm = new Vector3(0);
         public Vector4 col = new Vector4(1);
         public Vector4 col2 = new Vector4(1);
+        public Vector4 col3 = new Vector4(1);
+        public Vector4 col4 = new Vector4(1);
 
         public Vector2 uv0 = new Vector2(0);
         public Vector2 uv1 = new Vector2(0);

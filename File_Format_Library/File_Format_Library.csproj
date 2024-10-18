@@ -50,10 +50,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolbox\Lib\BcresLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="BezelEngineArchive_Lib">
-      <HintPath>..\Toolbox\Lib\BezelEngineArchive_Lib.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="BfshaLibrary, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Toolbox\Lib\BfshaLibrary.dll</HintPath>
@@ -229,6 +225,13 @@
     <Compile Include="FileFormats\AAMP\AAMP.cs" />
     <Compile Include="FileFormats\Archives\APAK.cs" />
     <Compile Include="FileFormats\Archives\ARC.cs" />
+    <Compile Include="FileFormats\Archives\BEA\ASST.cs" />
+    <Compile Include="FileFormats\Archives\BEA\BevelEngineArchive.cs" />
+    <Compile Include="FileFormats\Archives\BEA\DIC\ResDict.cs" />
+    <Compile Include="FileFormats\Archives\BEA\IO\BinaryDataReader.cs" />
+    <Compile Include="FileFormats\Archives\BEA\IO\BinaryDataWriter.cs" />
+    <Compile Include="FileFormats\Archives\BEA\IO\IResData.cs" />
+    <Compile Include="FileFormats\Archives\BEA\IO\SubStreamBea.cs" />
     <Compile Include="FileFormats\Archives\BNR.cs" />
     <Compile Include="FileFormats\Archives\DARC.cs" />
     <Compile Include="FileFormats\Archives\DAT_Bayonetta.cs" />
