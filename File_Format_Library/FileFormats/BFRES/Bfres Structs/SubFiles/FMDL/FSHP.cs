@@ -1407,9 +1407,9 @@ namespace Bfres.Structs
                         min.X = Math.Min(bounding.Min.X, min.X);
                         min.Y = Math.Min(bounding.Min.Y, min.Y);
                         min.Z = Math.Min(bounding.Min.Z, min.Z);
-                        max.X = Math.Min(bounding.Max.X, max.X);
-                        max.Y = Math.Min(bounding.Max.Y, max.Y);
-                        max.Z = Math.Min(bounding.Max.Z, max.Z);
+                        max.X = Math.Max(bounding.Max.X, max.X);
+                        max.Y = Math.Max(bounding.Max.Y, max.Y);
+                        max.Z = Math.Max(bounding.Max.Z, max.Z);
                     }
                 }
 
