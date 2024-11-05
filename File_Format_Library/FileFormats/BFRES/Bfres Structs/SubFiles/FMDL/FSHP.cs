@@ -1399,6 +1399,19 @@ namespace Bfres.Structs
                     min = CalculateBBMin(vertices);
                     max = CalculateBBMax(vertices);
                 }
+                else
+                {
+                    //Find largest bounding box
+                    foreach (var bounding in aabb)
+                    {
+                        min.X = Math.Min(bounding.Min.X, min.X);
+                        min.Y = Math.Min(bounding.Min.Y, min.Y);
+                        min.Z = Math.Min(bounding.Min.Z, min.Z);
+                        max.X = Math.Min(bounding.Max.X, max.X);
+                        max.Y = Math.Min(bounding.Max.Y, max.Y);
+                        max.Z = Math.Min(bounding.Max.Z, max.Z);
+                    }
+                }
 
                 var c = (min + max) / 2.0f;
                 var e = (max - min) / 2.0f;
