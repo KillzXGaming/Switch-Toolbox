@@ -951,7 +951,7 @@ namespace FirstPlugin
         public void Save(Stream stream)
         {
             //Force mesh codec compression on save 
-            if (this.FilePath.EndsWith(".mc"))
+            if (this.FilePath != null && this.FilePath.EndsWith(".mc"))
             {
                 this.IFileInfo.FileCompression = new MeshCodecFormat();
                 this.IFileInfo.FileIsCompressed = true;
