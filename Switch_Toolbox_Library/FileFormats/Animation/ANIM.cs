@@ -85,7 +85,7 @@ namespace Toolbox.Library.Animations
 			bool isHeader = true;
 
 			string angularUnit, linearUnit, timeUnit;
-			int startTime = 0;
+			int startTime = 1;
 			int endTime = 0;
 			List<AnimBone> bones = new List<AnimBone>();
 			Animation.KeyNode current = null;
@@ -136,8 +136,8 @@ namespace Toolbox.Library.Animations
                             if (type.Contains("Y")) current.YSCA.Keys.Add(k);
                             if (type.Contains("Z")) current.ZSCA.Keys.Add(k);
                         }
-                        k.Frame = float.Parse (args [0])-1;
-						k.Value = float.Parse (args [1]);
+                        k.Frame = float.Parse(args[0]) - startTime;
+                        k.Value = float.Parse (args [1]);
                         if (type.Contains("rotate"))
                         {
                             k.Value *= Deg2Rad;
@@ -200,7 +200,7 @@ namespace Toolbox.Library.Animations
 				}
 			}
 
-            a.FrameCount = endTime-1;
+            a.FrameCount = endTime - startTime;
 
             reader.Close();
 			return a;
