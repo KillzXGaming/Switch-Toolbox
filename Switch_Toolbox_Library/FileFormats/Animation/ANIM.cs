@@ -282,20 +282,23 @@ namespace Toolbox.Library.Animations
 
                         if (n.XSCA.HasAnimation())
                         {
+                            Animation.KeyNode parentN = b.Parent != null ? a.GetBone(b.Parent.Text) : null;
                             file.WriteLine("anim scale.scaleX scaleX " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.XSCA, n, a.Size(), "scaleX", n.UseSegmentScaleCompensate);
+                            writeScaleKey(file, n.XSCA, n, "scaleX", parentN?.XSCA);
                             file.WriteLine("}");
                         }
                         if (n.YSCA.HasAnimation())
                         {
+                            Animation.KeyNode parentN = b.Parent != null ? a.GetBone(b.Parent.Text) : null;
                             file.WriteLine("anim scale.scaleY scaleY " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.YSCA, n, a.Size(), "scaleY", n.UseSegmentScaleCompensate);
+                            writeScaleKey(file, n.YSCA, n, "scaleY", parentN?.YSCA);
                             file.WriteLine("}");
                         }
                         if (n.ZSCA.HasAnimation())
                         {
+                            Animation.KeyNode parentN = b.Parent != null ? a.GetBone(b.Parent.Text) : null;
                             file.WriteLine("anim scale.scaleZ scaleZ " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.ZSCA, n, a.Size(), "scaleZ", n.UseSegmentScaleCompensate);
+                            writeScaleKey(file, n.ZSCA, n, "scaleZ", parentN?.ZSCA);
                             file.WriteLine("}");
                         }
 
@@ -310,7 +313,7 @@ namespace Toolbox.Library.Animations
             }
         }
 
-        private static void writeKey(StreamWriter file, Animation.KeyGroup keys, Animation.KeyNode rt, int size, string type, bool useSegmentCompenseateScale = false)
+        private static void writeKey(StreamWriter file, Animation.KeyGroup keys, Animation.KeyNode rt, int size, string type)
         {
             bool isAngular = type == "rotateX" || type == "rotateY" || type == "rotateZ";
 
@@ -366,13 +369,7 @@ namespace Toolbox.Library.Animations
                             v = quattoeul(q).Z * Rad2Deg;
                         }
                         break;
-                    case "scaleX":
-                    case "scaleY":
-                    case "scaleZ":
-                        if (useSegmentCompenseateScale)
-                        v = 1f / key.Value;
-                        else
-                            v = key.Value;
+                    default:
                         break;
                 }
 
@@ -381,6 +378,54 @@ namespace Toolbox.Library.Animations
 
             file.WriteLine(" }");
         }
+
+        private static void writeScaleKey(StreamWriter file, Animation.KeyGroup keys, Animation.KeyNode rt, string type, Animation.KeyGroup parentKeys)
+        {
+            file.WriteLine("animData {");
+            file.WriteLine("  input time;");
+            file.WriteLine("  output linear;");
+            file.WriteLine("  weighted 1;");
+            file.WriteLine("  preInfinity constant;");
+            file.WriteLine("  postInfinity constant;");
+            file.WriteLine("  keys {");
+            if (!rt.UseSegmentScaleCompensate || parentKeys == null)
+            {
+                foreach (Animation.KeyFrame key in keys.Keys)
+                {
+                    file.WriteLine(" " + (key.Frame + 1) + " {0:N6} fixed fixed 1 1 0 0 1 0 1;".Replace(",", "."), key.Value);
+                }
+            }
+            else
+            {
+                List<int> allKeys = new List<int>();
+                foreach (Animation.KeyFrame key in keys.Keys)
+                {
+                    int k = (int)Math.Floor(key.Frame + 0.01);
+                    if (allKeys.FindIndex((v) => { return k == v; }) < 0)
+                    {
+                        allKeys.Add(k);
+                    }
+                }
+                foreach (Animation.KeyFrame key in parentKeys.Keys)
+                {
+                    int k = (int)Math.Floor(key.Frame + 0.01);
+                    if (allKeys.FindIndex((v) => { return k == v; }) < 0)
+                    {
+                        allKeys.Add(k);
+                    }
+                }
+                allKeys.Sort();
+                foreach (int k in allKeys)
+                {
+                    float v;
+                    v = keys.GetValue(k) / parentKeys.GetValue(k);
+
+                    file.WriteLine(" " + (k + 1) + " {0:N6} fixed fixed 1 1 0 0 1 0 1;".Replace(",", "."), v);
+                }
+            }
+            file.WriteLine(" }");
+        }
+
         public static Vector3 quattoeul(Quaternion q){
 			float sqw = q.W * q.W;
 			float sqx = q.X * q.X;
