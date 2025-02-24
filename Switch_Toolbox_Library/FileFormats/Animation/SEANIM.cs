@@ -11,7 +11,7 @@ namespace Toolbox.Library.Animations
         {
             Animation anim = new Animation();
             var seanim = SEAnim.Read(FileName);
-            anim.FrameCount = seanim.FrameCount;
+            anim.FrameCount = seanim.FrameCount - 1;
             anim.CanLoop = seanim.Looping;
 
             foreach (var bone in seanim.Bones)
@@ -215,7 +215,7 @@ namespace Toolbox.Library.Animations
             seAnim.AnimType = AnimationType.Absolute;
             //Reset active animation to 0
             anim.SetFrame(0);
-            for (int frame = 0; frame < anim.FrameCount; frame++)
+            for (int frame = 0; frame <= anim.FrameCount; frame++)
             {
                 anim.NextFrame(skeleton, false, true);
 

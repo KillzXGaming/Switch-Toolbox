@@ -541,7 +541,7 @@ namespace BrawlboxHelper
         private static SkeletalAnim Chr02Fska(CHR0Node chr0)
         {
             SkeletalAnim fska = new SkeletalAnim();
-            fska.FrameCount = chr0.FrameCount;
+            fska.FrameCount = chr0.FrameCount - 1;
             fska.Name = chr0.Name;
             fska.Path = chr0.OriginalPath;
             fska.UserDatas = new List<Syroot.NintenTools.NSW.Bfres.UserData>();

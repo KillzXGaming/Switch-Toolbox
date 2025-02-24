@@ -206,14 +206,14 @@ namespace Toolbox.Library.Animations
 			return a;
 		}
 
-        public static void CreateANIM(string fname, Animation a, STSkeleton vbn)
+        public static void CreateANIM(string fname, Animation anim, STSkeleton vbn)
         {
             System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
 
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@fname))
             {
-                float frameCount = Math.Max(1, a.FrameCount);
+                float frameCount = Math.Max(1, anim.FrameCount + 1);
 
                 AnimHeader header = new AnimHeader();
                 file.WriteLine("animVersion " + header.animVersion + ";");
@@ -221,90 +221,109 @@ namespace Toolbox.Library.Animations
                 file.WriteLine("timeUnit " + header.timeUnit + ";");
                 file.WriteLine("linearUnit " + header.linearUnit + ";");
                 file.WriteLine("angularUnit " + header.angularUnit + ";");
-                file.WriteLine("startTime " + 1 + ";");
-                file.WriteLine("endTime " + frameCount + ";");
+                file.WriteLine("startTime " + 0 + ";");
+                file.WriteLine("endTime " + (frameCount - 1) + ";");
 
-                a.SetFrame(frameCount - 1); //from last frame
+                anim.SetFrame(anim.FrameCount); //from last frame
                 for (int li = 0; li < frameCount; ++li) //go through each frame with nextFrame
-                    a.NextFrame(vbn, false, true);
-                a.NextFrame(vbn, false, true);  //go on first frame
+                    anim.NextFrame(vbn, false, true);
+                anim.NextFrame(vbn, false, true);  //go on first frame
 
                 int i = 0;
 
                 // writing node attributes
-                foreach (STBone b in vbn.getBoneTreeOrder())
+                foreach (STBone bone in vbn.getBoneTreeOrder())
                 {
-                    i = vbn.boneIndex(b.Text);
+                    i = vbn.boneIndex(bone.Text);
 
-                    if (a.HasBone(b.Text))
+                    if (anim.HasBone(bone.Text))
                     {
                         // write the bone attributes
                         // count the attributes
-                        Animation.KeyNode n = a.GetBone(b.Text);
+                        Animation.KeyNode node = anim.GetBone(bone.Text);
                         int ac = 0;
 
-                        if (n.XPOS.HasAnimation())
+                        if (node.XPOS.HasAnimation())
                         {
-                            file.WriteLine("anim translate.translateX translateX " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.XPOS, n, a.Size(), "translateX");
+                            file.WriteLine("anim translate.translateX translateX " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeKey(file, node.XPOS, node, anim.Size(), "translateX");
                             file.WriteLine("}");
                         }
-                        if (n.YPOS.HasAnimation())
+                        else
                         {
-                            file.WriteLine("anim translate.translateY translateY " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.YPOS, n, a.Size(), "translateY");
-                            file.WriteLine("}");
-                        }
-                        if (n.ZPOS.HasAnimation())
-                        {
-                            file.WriteLine("anim translate.translateZ translateZ " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.ZPOS, n, a.Size(), "translateZ");
-                            file.WriteLine("}");
-                        }
-                        if (n.XROT.HasAnimation())
-                        {
-                            file.WriteLine("anim rotate.rotateX rotateX " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.XROT, n, a.Size(), "rotateX");
-                            file.WriteLine("}");
-                        }
-                        if (n.YROT.HasAnimation())
-                        {
-                            file.WriteLine("anim rotate.rotateY rotateY " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.YROT, n, a.Size(), "rotateY");
-                            file.WriteLine("}");
-                        }
-                        if (n.ZROT.HasAnimation())
-                        {
-                            file.WriteLine("anim rotate.rotateZ rotateZ " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.ZROT, n, a.Size(), "rotateZ");
+                            file.WriteLine("anim translate.translateX translateX " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeNotHasAnimKey(file, anim, vbn, bone, "translateX");
                             file.WriteLine("}");
                         }
 
-                        if (n.XSCA.HasAnimation())
+                        if (node.YPOS.HasAnimation())
                         {
-                            file.WriteLine("anim scale.scaleX scaleX " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.XSCA, n, a.Size(), "scaleX", n.UseSegmentScaleCompensate);
+                            file.WriteLine("anim translate.translateY translateY " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeKey(file, node.YPOS, node, anim.Size(), "translateY");
                             file.WriteLine("}");
                         }
-                        if (n.YSCA.HasAnimation())
+                        else
                         {
-                            file.WriteLine("anim scale.scaleY scaleY " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.YSCA, n, a.Size(), "scaleY", n.UseSegmentScaleCompensate);
+                            file.WriteLine("anim translate.translateY translateY " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeNotHasAnimKey(file, anim, vbn, bone, "translateY");
                             file.WriteLine("}");
                         }
-                        if (n.ZSCA.HasAnimation())
+                        if (node.ZPOS.HasAnimation())
                         {
-                            file.WriteLine("anim scale.scaleZ scaleZ " + b.Text + " 0 0 " + (ac++) + ";");
-                            writeKey(file, n.ZSCA, n, a.Size(), "scaleZ", n.UseSegmentScaleCompensate);
+                            file.WriteLine("anim translate.translateZ translateZ " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeKey(file, node.ZPOS, node, anim.Size(), "translateZ");
+                            file.WriteLine("}");
+                        }
+                        else
+                        {
+                            file.WriteLine("anim translate.translateZ translateZ " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeNotHasAnimKey(file, anim, vbn, bone, "translateZ");
+                            file.WriteLine("}");
+                        }
+                        if (node.XROT.HasAnimation())
+                        {
+                            file.WriteLine("anim rotate.rotateX rotateX " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeKey(file, node.XROT, node, anim.Size(), "rotateX");
+                            file.WriteLine("}");
+                        }
+                        if (node.YROT.HasAnimation())
+                        {
+                            file.WriteLine("anim rotate.rotateY rotateY " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeKey(file, node.YROT, node, anim.Size(), "rotateY");
+                            file.WriteLine("}");
+                        }
+                        if (node.ZROT.HasAnimation())
+                        {
+                            file.WriteLine("anim rotate.rotateZ rotateZ " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeKey(file, node.ZROT, node, anim.Size(), "rotateZ");
+                            file.WriteLine("}");
+                        }
+
+                        if (node.XSCA.HasAnimation())
+                        {
+                            file.WriteLine("anim scale.scaleX scaleX " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeKey(file, node.XSCA, node, anim.Size(), "scaleX", node.UseSegmentScaleCompensate);
+                            file.WriteLine("}");
+                        }
+                        if (node.YSCA.HasAnimation())
+                        {
+                            file.WriteLine("anim scale.scaleY scaleY " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeKey(file, node.YSCA, node, anim.Size(), "scaleY", node.UseSegmentScaleCompensate);
+                            file.WriteLine("}");
+                        }
+                        if (node.ZSCA.HasAnimation())
+                        {
+                            file.WriteLine("anim scale.scaleZ scaleZ " + bone.Text + " 0 0 " + (ac++) + ";");
+                            writeKey(file, node.ZSCA, node, anim.Size(), "scaleZ", node.UseSegmentScaleCompensate);
                             file.WriteLine("}");
                         }
 
                         if (ac == 0)
-                            file.WriteLine("anim " + b.Text + " 0 0 0;");
+                            file.WriteLine("anim " + bone.Text + " 0 0 0;");
                     }
                     else
                     {
-                        file.WriteLine("anim " + b.Text + " 0 0 0;");
+                        file.WriteLine("anim " + bone.Text + " 0 0 0;");
                     }
                 }
             }
@@ -370,50 +389,83 @@ namespace Toolbox.Library.Animations
                     case "scaleY":
                     case "scaleZ":
                         if (useSegmentCompenseateScale)
-                        v = 1f / key.Value;
+                            v = 1f / key.Value;
                         else
                             v = key.Value;
                         break;
                 }
 
-                file.WriteLine(" " + (key.Frame + 1) + " {0:N6} fixed fixed 1 1 0 0 1 0 1;".Replace(",","."), v);
+                file.WriteLine(" " + key.Frame + " {0:N6} fixed fixed 1 1 0 0 1 0 1;".Replace(",", "."), v);
             }
 
             file.WriteLine(" }");
         }
-        public static Vector3 quattoeul(Quaternion q){
-			float sqw = q.W * q.W;
-			float sqx = q.X * q.X;
-			float sqy = q.Y * q.Y;
-			float sqz = q.Z * q.Z;
 
-			float normal = (float)Math.Sqrt (sqw + sqx + sqy + sqz);
-			float pole_result = (q.X * q.Z) + (q.Y * q.W);
+        private static void writeNotHasAnimKey(StreamWriter file, Animation anim, STSkeleton vbn, STBone bone, string type)
 
-			if (pole_result > (0.5 * normal)){
-				float ry = (float)Math.PI / 2;
-				float rz = 0;
-				float rx = 2 * (float)Math.Atan2(q.X, q.W);
-				return new Vector3(rx, ry, rz);
-			}
-			if (pole_result < (-0.5 * normal)){
-				float ry = (float)Math.PI/2;
-				float rz = 0;
-				float rx = -2 * (float)Math.Atan2(q.X, q.W);
-				return new Vector3(rx, ry, rz);
-			}
+        {
+            anim.SetFrame(0);
+            anim.NextFrame(vbn, false, true);
+            STBone b = vbn.GetBone(bone.Text);
+            Vector3 translate = b.GetPosition();
+            file.WriteLine("animData {");
+            file.WriteLine("  input time;");
+            file.WriteLine($"  output linear;");
+            file.WriteLine("  weighted 1;");
+            file.WriteLine("  preInfinity constant;");
+            file.WriteLine("  postInfinity constant;");
+            file.WriteLine("  keys {");
+            switch (type)
+            {
+                case "translateX":
+                    file.WriteLine(" " + 0 + " {0:N6} fixed fixed 1 1 0 0 1 0 1;".Replace(",", "."), translate.X);
+                    break;
+                case "translateY":
+                    file.WriteLine(" " + 0 + " {0:N6} fixed fixed 1 1 0 0 1 0 1;".Replace(",", "."), translate.Y);
+                    break;
+                case "translateZ":
+                    file.WriteLine(" " + 0 + " {0:N6} fixed fixed 1 1 0 0 1 0 1;".Replace(",", "."), translate.Z);
+                    break;
+            }
+            file.WriteLine(" }");
+        }
 
-			float r11 = 2*(q.X*q.Y + q.W*q.Z);
-			float r12 = sqw + sqx - sqy - sqz;
-			float r21 = -2*(q.X*q.Z - q.W*q.Y);
-			float r31 = 2*(q.Y*q.Z + q.W*q.X);
-			float r32 = sqw - sqx - sqy + sqz;
+        public static Vector3 quattoeul(Quaternion q)
+        {
+            float sqw = q.W * q.W;
+            float sqx = q.X * q.X;
+            float sqy = q.Y * q.Y;
+            float sqz = q.Z * q.Z;
 
-			float frx = (float)Math.Atan2( r31, r32 );
-			float fry = (float)Math.Asin ( r21 );
-			float frz = (float)Math.Atan2( r11, r12 );
-			return new Vector3(frx, fry, frz);
-		}
-	}
+            float normal = (float)Math.Sqrt(sqw + sqx + sqy + sqz);
+            float pole_result = (q.X * q.Z) + (q.Y * q.W);
+
+            if (pole_result > (0.5 * normal))
+            {
+                float ry = (float)Math.PI / 2;
+                float rz = 0;
+                float rx = 2 * (float)Math.Atan2(q.X, q.W);
+                return new Vector3(rx, ry, rz);
+            }
+            if (pole_result < (-0.5 * normal))
+            {
+                float ry = (float)Math.PI / 2;
+                float rz = 0;
+                float rx = -2 * (float)Math.Atan2(q.X, q.W);
+                return new Vector3(rx, ry, rz);
+            }
+
+            float r11 = 2 * (q.X * q.Y + q.W * q.Z);
+            float r12 = sqw + sqx - sqy - sqz;
+            float r21 = -2 * (q.X * q.Z - q.W * q.Y);
+            float r31 = 2 * (q.Y * q.Z + q.W * q.X);
+            float r32 = sqw - sqx - sqy + sqz;
+
+            float frx = (float)Math.Atan2(r31, r32);
+            float fry = (float)Math.Asin(r21);
+            float frz = (float)Math.Atan2(r11, r12);
+            return new Vector3(frx, fry, frz);
+        }
+    }
 }
 
