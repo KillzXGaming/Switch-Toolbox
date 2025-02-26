@@ -164,94 +164,170 @@ namespace Bfres.Structs
         public override string ExportFilter => FileFilters.GetFilter(typeof(FSKA),null, true);
         public override string ReplaceFilter => FileFilters.GetFilter(typeof(FSKA));
 
-        public override void Export(string FileName)
+        public override void Export(string FilePath)
         {
-            string ext = Utils.GetExtension(FileName);
+            Export(FilePath, null);
+        }
+
+        public void Export(string FilePath, STSkeleton backupSkeleton)
+        {
+            Console.WriteLine($"Anim Export: {FilePath}");
+            string sourcePath = "";
+            if (SkeletalAnimU != null)
+                sourcePath = SkeletalAnimU.Path;
+            else if (SkeletalAnim != null)
+                sourcePath = SkeletalAnim.Path;
+
+                string ext = Utils.GetExtension(FilePath);
             if (ext == ".bfska")
             {
                 if (GetResFileU() != null)
                 {
-                    SkeletalAnimU.Export(FileName, GetResFileU());
+                    SkeletalAnimU.Export(FilePath, GetResFileU());
                 }
                 else
                 {
-                    SkeletalAnim.Export(FileName, GetResFile());
+                    SkeletalAnim.Export(FilePath, GetResFile());
                 }
             }
             else if (ext == ".json")
             {
                 if (SkeletalAnimU != null)
-                    System.IO.File.WriteAllText(FileName, Newtonsoft.Json.JsonConvert.SerializeObject(SkeletalAnimU,
+                    System.IO.File.WriteAllText(FilePath, Newtonsoft.Json.JsonConvert.SerializeObject(SkeletalAnimU,
                         Newtonsoft.Json.Formatting.Indented));
                 else
-                    System.IO.File.WriteAllText(FileName, Newtonsoft.Json.JsonConvert.SerializeObject(SkeletalAnim,
+                    System.IO.File.WriteAllText(FilePath, Newtonsoft.Json.JsonConvert.SerializeObject(SkeletalAnim,
                         Newtonsoft.Json.Formatting.Indented));
+            }
+            else if (ext == ".chr0")
+            {
+                if (SkeletalAnimU != null)
+                    BrawlboxHelper.FSKAConverter.Fska2Chr0(BfresPlatformConverter.FSKAConvertWiiUToSwitch(SkeletalAnimU), FilePath);
+                else
+                    BrawlboxHelper.FSKAConverter.Fska2Chr0(SkeletalAnim, FilePath);
             }
             else
             {
+                // The export functions of the following formats require a skeleton.
+                // Try to find best matching skeleton in the visible viewport skeletons,
+                // or the animation's nodegroup, if it's in the nodetree (when this function
+                // is called by right click->Export)
                 STSkeleton skeleton = GetActiveSkeleton();
                 if (skeleton == null)
-                    throw new Exception("No skeleton found to assign! Make sure a model is open in the viewport.");
-
-                if (ext == ".chr0")
+                    skeleton = backupSkeleton; // When this func is called from Tools->Batch Export Animations, backupSkeleton is the one from the .sbfres.
+                if (skeleton == null)
                 {
-                    if (SkeletalAnimU != null)
-                        BrawlboxHelper.FSKAConverter.Fska2Chr0(BfresPlatformConverter.FSKAConvertWiiUToSwitch(SkeletalAnimU), FileName);
-                    else
-                        BrawlboxHelper.FSKAConverter.Fska2Chr0(SkeletalAnim, FileName);
+                    throw new Exception($"{Text}No skeleton found.\n  Load a skeleton in the viewport with a skeleton matching the animations.");
                 }
-                else if (ext == ".smd")
-                    SMD.Save(this, skeleton, FileName);
+                var missingBones = new HashSet<string>();
+                foreach (KeyNode boneAnim in Bones)
+                {
+                    STBone bone = skeleton.GetBone(boneAnim.Text);
+                    if (bone == null)
+                    {
+                        missingBones.Add(boneAnim.Text);
+                    }
+                }
+                
+                if (ext == ".smd")
+                    SMD.Save(this, skeleton, FilePath);
                 else if (ext == ".anim")
-                    ANIM.CreateANIM(FileName, this, skeleton);
+                    ANIM.CreateANIM(FilePath, this, skeleton);
                 else if (ext == ".seanim")
-                    SEANIM.SaveAnimation(FileName, this, skeleton);
+                {
+                    SEANIM.SaveAnimation(FilePath, this, skeleton);
+                }
+
+                if (missingBones.Count > 0)
+                    throw new Exception($"{Text}: Discarded animation of {missingBones.Count} bones:\n  {string.Join("\n  ", missingBones)}\n  Load a skeleton in the viewport with a skeleton matching the animations.");
             }
         }
 
         private STSkeleton GetActiveSkeleton()
+        {
+            STSkeleton perfectSkeleton = GetPerfectMatchSkeleton_InViewport();
+            if (perfectSkeleton != null)
+                return perfectSkeleton;
+
+            perfectSkeleton = GetPerfectMatchSkeleton_InOwnNodeGroup();
+            if (perfectSkeleton != null)
+                return perfectSkeleton;
+
+            //If those didn't return, resort to the first model of the nodegroup,
+            //even though it's an imperfect match.
+            if (Parent == null)
+                return null;
+
+            var render = ((BFRES)Parent.Parent.Parent).BFRESRender;
+            if (render != null && render.models.Count == 1)
+                return render.models[0].Skeleton;
+
+            return null;
+        }
+
+        public STSkeleton GetPerfectMatchSkeleton_InViewport()
+        {
+            //Try to find a skeleton matching this animation out of visible viewport skeletons.
+            var viewport = LibraryGUI.GetActiveViewport();
+            if (viewport == null)
+                return null;
+
+            var containers = viewport.GetActiveContainers();
+            if (containers == null || containers.Count == 0)
+                return null;
+
+            var skeletons = new List<STSkeleton>();
+
+            foreach (var container in containers)
+            {
+                foreach (var drawable in container.Drawables)
+                {
+                    if (drawable is STSkeleton)
+                        skeletons.Add((STSkeleton)drawable);
+                }
+            }
+
+            return GetPerfectMatchSkeleton(skeletons);
+        }
+
+        public STSkeleton GetPerfectMatchSkeleton_InOwnNodeGroup()
         {
             if (Parent == null)
                 return null;
 
             //Check parent renderer and find skeleton
             var render = ((BFRES)Parent.Parent.Parent).BFRESRender;
-            if (render != null)
-            {
-                //Return individual skeleton for single model files
-                if (render.models.Count == 1)
-                    return render.models[0].Skeleton;
+            if (render == null)
+                return null;
 
-                //Search multiple FMDL to find matching bones
-                foreach (var model in render.models)
+            var skeletons = (from model in render.models select (STSkeleton)model.Skeleton).ToList();
+
+            STSkeleton bestMatchSkeleton = GetPerfectMatchSkeleton(skeletons);
+            if (bestMatchSkeleton != null)
+                return bestMatchSkeleton;
+
+            return null;
+        }
+
+        public STSkeleton GetPerfectMatchSkeleton(List<STSkeleton> skeletons)
+        {
+            //Search multiple FMDL to find matching bones
+            foreach (var skeleton in skeletons)
+            {
+                //Check if all the bones in the animation are present in the skeleton
+                bool areAllBonesPresent = skeleton.bones.Count > 0;
+                foreach (var bone in Bones)
                 {
-                    //Check if all the bones in the animation are present in the skeleton
-                    bool areAllBonesPresent = model.Skeleton.bones.Count > 0;
-                    foreach (var bone in Bones)
+                    var animBone = skeleton.GetBone(bone.Text);
+
+                    if (animBone == null)
                     {
-                        var animBone = model.Skeleton.GetBone(bone.Text);
-
-                        if (animBone == null)
-                            areAllBonesPresent = false;
+                        areAllBonesPresent = false;
+                        break;
                     }
-                    if (areAllBonesPresent)
-                        return model.Skeleton;
                 }
-
-                //If not all bones were present but models are present, use first model
-                if (render.models.Count > 0)
-                    return render.models[0].Skeleton;
-            }
-
-            //Search by viewport active model in the event the animation is externally loaded
-            var viewport = LibraryGUI.GetActiveViewport();
-            if (viewport != null)
-            {
-                foreach (var drawable in viewport.scene.objects)
-                {
-                    if (drawable is STSkeleton)
-                        return ((STSkeleton)drawable);
-                }
+                if (areAllBonesPresent)
+                    return skeleton;
             }
 
             return null;
