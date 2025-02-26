@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 
 namespace FirstPlugin
 {
-    public class GFBMDL : TreeNodeFile, IContextMenuNode, IFileFormat
+    public class GFBMDL : TreeNodeFile, IContextMenuNode, IFileFormat, IExportableModel
     {
         public FileType FileType { get; set; } = FileType.Model;
 
@@ -760,6 +760,28 @@ namespace FirstPlugin
         public void Unload()
         {
 
+        }
+
+        public IEnumerable<STGenericObject> ExportableMeshes => Model.GenericMeshes;
+        public IEnumerable<STGenericMaterial> ExportableMaterials => Model.GenericMaterials;
+        public IEnumerable<STGenericTexture> ExportableTextures => TextureList;
+        public STSkeleton ExportableSkeleton => Model.Skeleton;
+
+        public List<STGenericTexture> TextureList
+        {
+            get
+            {
+                //Export all textures that use the same archive
+                List<STGenericTexture> textures = new List<STGenericTexture>();
+                foreach (var bntx in PluginRuntime.bntxContainers)
+                    foreach (var tex in bntx.Textures.Values)
+                    {
+                        if (Model.Textures.Contains(tex.Text))
+                            textures.Add(tex);
+                    }
+                
+                return textures;
+            }
         }
     }
 }
