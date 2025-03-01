@@ -73,6 +73,14 @@
       <HintPath>Lib\OpenTK.GLControl.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Syroot.NintenTools.Bfres, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\Syroot.NintenTools.Bfres.dll</HintPath>
+    </Reference>
+    <Reference Include="Syroot.NintenTools.NSW.Bfres, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\Syroot.NintenTools.NSW.Bfres.dll</HintPath>
+    </Reference>
     <Reference Include="Syroot.NintenTools.NSW.Bntx, Version=1.2.3.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
