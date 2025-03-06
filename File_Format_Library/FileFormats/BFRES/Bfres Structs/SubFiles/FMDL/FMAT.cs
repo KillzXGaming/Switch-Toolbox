@@ -14,6 +14,12 @@ using ResGFX = Syroot.NintenTools.NSW.Bfres.GFX;
 using FirstPlugin;
 using OpenTK;
 using FirstPlugin.Forms;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System.Reflection;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Converters;
+
 
 namespace Bfres.Structs
 {
@@ -40,15 +46,27 @@ namespace Bfres.Structs
         {
             bool IncludeTextureMaps = false;
 
-            FolderSelectDialog sfd = new FolderSelectDialog();
+            List<string> formats = FileFilters.GetFilter(typeof(FMAT), null, true)
+                .Split('|')
+                .Where(format => !format.StartsWith("*") && !format.StartsWith("All"))
+                .ToList();
 
+            FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                string folderPath = sfd.SelectedPath;
-
-                foreach (FMAT mat in Nodes)
+                BatchFormatExport form = new BatchFormatExport(formats);
+                if (form.ShowDialog() == DialogResult.OK)
                 {
-                   mat.Export(folderPath + '\\' + mat.Text + ".bfmat", IncludeTextureMaps);
+                    string folderPath = $"{sfd.SelectedPath}\\{RootNode.Text}";
+                    Directory.CreateDirectory(folderPath);
+
+                    string extension = form.GetSelectedExtension();
+                    extension.Replace(" ", string.Empty);
+
+                    foreach (FMAT mat in Nodes)
+                    {
+                        mat.Export($"{folderPath}\\{mat.Text}{extension}", IncludeTextureMaps);
+                    }
                 }
             }
         }
@@ -89,6 +107,8 @@ namespace Bfres.Structs
 
         }
     }
+
+    [JsonObject(MemberSerialization.Fields)]
     public class FMAT : STGenericMaterial, IContextMenuNode
     {
         public FMAT()
@@ -338,9 +358,9 @@ namespace Bfres.Structs
                 BfresSwitch.SetMaterial(this, Material);
 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Supported Formats|*.bfmat;";
+            sfd.Filter = FileFilters.GetFilter(typeof(FMAT), null, true);
 
-            sfd.DefaultExt = ".bfmat";
+            sfd.DefaultExt = ".json";
             sfd.FileName = Text;
 
             if (sfd.ShowDialog() == DialogResult.OK)
@@ -350,16 +370,78 @@ namespace Bfres.Structs
         }
         public void Export(string path, bool IncludeTextureMaps)
         {
-            if (GetResFileU() != null)
-                MaterialU.Export(path, GetResFileU());
-            else
-                Material.Export(path, GetResFile());
+            string ext = Utils.GetExtension(path);
 
-            if (IncludeTextureMaps)
+            if (ext == ".json")
             {
+                var settings = new JsonSerializerSettings
+                {
+                    Formatting = Formatting.Indented,
+                    ContractResolver = new DeclaredFieldsOnlyResolver(),
+                    Converters = new List<JsonConverter> { new StringEnumConverter() },
+                };
+                string json = JsonConvert.SerializeObject(this, settings);
+                JObject jObject = JObject.Parse(json);
+                RecursivelyProcessJson(jObject);
 
+                json = jObject.ToString(Formatting.Indented);
+
+                File.WriteAllText(path, json);
+            }
+            else if (ext == ".bfmat") {
+                if (GetResFileU() != null)
+                    MaterialU.Export(path, GetResFileU());
+                else
+                    Material.Export(path, GetResFile());
+
+                if (IncludeTextureMaps)
+                {
+
+                }
             }
         }
+
+        private static void RecursivelyProcessJson(JObject jObject)
+        {
+            foreach (var property in jObject.Properties())
+            {
+                var value = property.Value;
+
+                if (value is JArray valueArray)
+                {
+                    for (int i = 0; i < valueArray.Count; i++)
+                    {
+                        var item = valueArray[i];
+
+                        if (item is JObject itemObject)
+                        {
+                            RecursivelyProcessJson(itemObject);
+
+                            var keyProperty = itemObject["Key"];
+                            var valProperty = itemObject["Value"];
+                            if (keyProperty != null && valProperty != null && valProperty is JObject valueDetails)
+                            {
+                                var stringProperty = valueDetails["String"];
+                                if (stringProperty != null)
+                                {
+                                    valueArray[i] = new JObject(new JProperty(keyProperty.ToString(), stringProperty.ToString()));
+                                } else
+                                {
+                                    valueArray[i] = new JObject(new JProperty(keyProperty.ToString(), valProperty));
+                                }
+                            }
+                        }
+                    }
+                }
+                // Handle case when the value is a JObject (nested object)
+                else if (value is JObject valueObject)
+                {
+                    RecursivelyProcessJson(valueObject);
+                }
+            }
+        }
+
+
         private void Replace()
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -825,4 +907,23 @@ namespace Bfres.Structs
             return texSampler;
         }
     }
-}
+
+    public class DeclaredFieldsOnlyResolver : DefaultContractResolver
+    {
+        protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+        {
+            return type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Select(field => new JsonProperty
+                {
+                    PropertyName = field.Name.Replace("<", "").Replace(">k__BackingField", ""),
+                    PropertyType = field.FieldType,
+                    Readable = true,
+                    Writable = true,
+                    ValueProvider = base.CreateMemberValueProvider(field)
+                })
+                .ToList();
+        }
+    }
+
+
+    }
