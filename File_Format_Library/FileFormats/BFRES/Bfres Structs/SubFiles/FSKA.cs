@@ -262,12 +262,18 @@ namespace Bfres.Structs
             if (render != null && render.models.Count == 1)
                 return render.models[0].Skeleton;
 
+            // If even that didn't work, resort to just WHATEVER THE HECK is loaded in the viewport.
+            var skeletons = GetViewportSkeletons();
+            if (skeletons.Count > 0)
+            {
+                return skeletons[0];
+            }
+
             return null;
         }
 
-        public STSkeleton GetPerfectMatchSkeleton_InViewport()
+        public List<STSkeleton> GetViewportSkeletons()
         {
-            //Try to find a skeleton matching this animation out of visible viewport skeletons.
             var viewport = LibraryGUI.GetActiveViewport();
             if (viewport == null)
                 return null;
@@ -287,6 +293,13 @@ namespace Bfres.Structs
                 }
             }
 
+            return skeletons;
+        }
+
+        public STSkeleton GetPerfectMatchSkeleton_InViewport()
+        {
+            //Try to find a skeleton matching this animation out of visible viewport skeletons.
+            var skeletons = GetViewportSkeletons();
             return GetPerfectMatchSkeleton(skeletons);
         }
 
