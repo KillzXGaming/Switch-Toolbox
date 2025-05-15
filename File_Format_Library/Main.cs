@@ -368,7 +368,6 @@ namespace FirstPlugin
             Formats.Add(typeof(PTCL));
             Formats.Add(typeof(EFF));
             Formats.Add(typeof(EFCF));
-            Formats.Add(typeof(NSP));
             Formats.Add(typeof(BNSH));
             Formats.Add(typeof(BFSHA));
             Formats.Add(typeof(BFSTM));
@@ -402,8 +401,6 @@ namespace FirstPlugin
             Formats.Add(typeof(GFBANMCFG));
             Formats.Add(typeof(Turbo.Course_MapCamera_bin));
             Formats.Add(typeof(SDF));
-            Formats.Add(typeof(IStorage));
-            Formats.Add(typeof(NCA));
             Formats.Add(typeof(RARC));
             Formats.Add(typeof(ME01));
             Formats.Add(typeof(LM3_DICT));
@@ -443,7 +440,6 @@ namespace FirstPlugin
             Formats.Add(typeof(BFLIM));
             Formats.Add(typeof(BCLIM));
             Formats.Add(typeof(DAT_Bayonetta));
-            Formats.Add(typeof(XCI));
             Formats.Add(typeof(VIBS));
             Formats.Add(typeof(NLG.StrikersRLT));
             Formats.Add(typeof(NLG.StrikersRLG));

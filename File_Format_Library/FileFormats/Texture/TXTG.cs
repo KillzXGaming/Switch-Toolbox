@@ -12,7 +12,6 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.IO;
 using static Toolbox.Library.STGenericTexture;
-using LibHac;
 using System.ComponentModel;
 using VGAudio.Utilities;
 

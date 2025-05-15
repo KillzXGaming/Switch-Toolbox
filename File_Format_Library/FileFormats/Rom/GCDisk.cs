@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Toolbox.Library;
-using LibHac.IO;
 using Toolbox.Library.IO;
-using LibHac;
 
 namespace FirstPlugin
 {
