@@ -85,10 +85,6 @@
       <HintPath>..\Toolbox\Lib\KclLibraryGUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="LibHac">
-      <HintPath>..\Toolbox\Lib\LibHac.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -989,8 +985,6 @@
     <Compile Include="FileFormats\GMX\GMX.cs" />
     <Compile Include="FileFormats\Hashes\SAHT.cs" />
     <Compile Include="FileFormats\MKAGPDX\MKAGPDX_Model.cs" />
-    <Compile Include="FileFormats\Rom\IStorage.cs" />
-    <Compile Include="FileFormats\Rom\RomfsNodeWrapper.cs" />
     <Compile Include="FileFormats\Shader\NSWShaderDecompile.cs" />
     <Compile Include="FileFormats\Shader\NUSHDB.cs" />
     <Compile Include="FileFormats\Shader\NVNSH.cs" />
@@ -1116,12 +1110,6 @@
     </Compile>
     <Compile Include="GUI\Editors\PTCL\EmitterEditorNX.Designer.cs">
       <DependentUpon>EmitterEditorNX.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Rom\SwitchKeySelectionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\Rom\SwitchKeySelectionForm.Designer.cs">
-      <DependentUpon>SwitchKeySelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\TextureUI\Importers\BNTX\BinaryTextureImporterList.cs">
       <SubType>Form</SubType>
@@ -1564,8 +1552,6 @@
     <Compile Include="FileFormats\Archives\GFPAK.cs" />
     <Compile Include="FileFormats\Collision\KCL.cs" />
     <Compile Include="FileFormats\Message\MSBT.cs" />
-    <Compile Include="FileFormats\Rom\NCA.cs" />
-    <Compile Include="FileFormats\Rom\NSP.cs" />
     <Compile Include="FileFormats\Effects\PCTL.cs" />
     <Compile Include="FileFormats\Archives\SARC.cs" />
     <Compile Include="FileFormats\Shader\SHARC\SHARC.cs" />
@@ -1577,7 +1563,6 @@
     <Compile Include="FileFormats\Texture\TexConv.cs" />
     <Compile Include="FileFormats\Texture\XTX.cs" />
     <Compile Include="FileFormats\Texture\TXTG.cs" />
-    <Compile Include="FileFormats\Rom\XCI.cs" />
     <Compile Include="GetSwitchKeys.cs" />
     <Compile Include="GL\BFRES\BFRES_Render.cs" />
     <Compile Include="GUI\Advanced Editor\TextureViewer.cs">
@@ -1653,10 +1638,6 @@
       <DependentUpon>VisibiltyAnimEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\FormLoader.cs" />
-    <Compile Include="GUI\KeySelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\KeySelection.Designer.cs" />
     <Compile Include="GUI\TextureLoader.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -2187,7 +2168,6 @@
     <EmbeddedResource Include="GUI\Editors\VisibiltyAnimEditor.resx">
       <DependentUpon>VisibiltyAnimEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\KeySelection.resx" />
     <EmbeddedResource Include="GUI\Byaml\ByamlEditor.resx">
       <DependentUpon>ByamlEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -2208,9 +2188,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Materials\Texture Selector.resx">
       <DependentUpon>Texture Selector.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Rom\SwitchKeySelectionForm.resx">
-      <DependentUpon>SwitchKeySelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SMO\OdysseyCostumeLoader.resx">
       <DependentUpon>OdysseyCostumeLoader.cs</DependentUpon>
@@ -2309,6 +2286,7 @@
     <Folder Include="FileFormats\NLG\Common\" />
     <Folder Include="FileFormats\Pokemon\GFL2\" />
     <Folder Include="GUI\Byaml\MuuntEditor\Renderables\" />
+    <Folder Include="GUI\Rom\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ArrowIcon.png" />
