@@ -46,7 +46,7 @@ namespace Toolbox.Library
         public static AnimationPanel Instance { get { return _instance == null ? _instance = new AnimationPanel() : _instance; } }
 
         //Animation Functions
-        public int AnimationSpeed = 60;
+        public int AnimationSpeed = 30;
         public float Frame = 0;
 
         // Frame rate control
@@ -456,7 +456,7 @@ namespace Toolbox.Library
            // UpdateViewport();
 
             int frameUpdateInterval = 5;
-            int animationUpdateInterval = 16;
+            int animationUpdateInterval = 1000 / AnimationSpeed;
 
             while (isOpen)
             {
@@ -518,6 +518,56 @@ namespace Toolbox.Library
         private void colorSlider1_Scroll(object sender, ScrollEventArgs e)
         {
 
+        }
+
+        private void toggleFrameRateBtn_Click(object sender, EventArgs e)
+        {
+            if (AnimationPlayerState == PlayerState.Playing)
+                ToggleFrameRate();
+        }
+
+        private void ToggleFrameRate()
+        {
+            // 切换帧率
+            if (AnimationSpeed == 60)
+            {
+                AnimationSpeed = 30; // 切换到30帧/秒
+                toggleFrameRateBtn.Text = "30 FPS"; // 更新按钮文本
+            }
+            else
+            {
+                AnimationSpeed = 60; // 切换到60帧/秒
+                toggleFrameRateBtn.Text = "60 FPS"; // 更新按钮文本
+            }
+
+            // 更新动画更新间隔
+            UpdateAnimationUpdateInterval();
+        }
+
+        private void UpdateAnimationUpdateInterval()
+        {
+            // 根据当前帧率计算更新间隔
+            int animationUpdateInterval = 1000 / AnimationSpeed;
+
+            // 更新动画更新逻辑
+            if (renderThreadIsUpdating || IsPlaying)
+            {
+                // 重新启动动画更新逻辑
+                renderThread.Abort(); // 停止当前线程
+                renderThread = new Thread(new ThreadStart(RenderAndAnimationLoop));
+                renderThread.Start();
+            }
+        }
+
+        private void GoToPreviousFrame(object sender, EventArgs e)
+        {
+            // 检查是否已经是第一帧
+            if (currentFrameUpDown.Value > 0)
+            {
+                Pause();
+                currentFrameUpDown.Value--; // 回退到上一帧
+                OnFrameAdvanced(); // 更新动画显示
+            }
         }
     }
 }
