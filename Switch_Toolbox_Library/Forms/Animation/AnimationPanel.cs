@@ -46,7 +46,7 @@ namespace Toolbox.Library
         public static AnimationPanel Instance { get { return _instance == null ? _instance = new AnimationPanel() : _instance; } }
 
         //Animation Functions
-        public int AnimationSpeed = 60;
+        public int AnimationSpeed = 30;
         public float Frame = 0;
 
         // Frame rate control
@@ -456,7 +456,7 @@ namespace Toolbox.Library
            // UpdateViewport();
 
             int frameUpdateInterval = 5;
-            int animationUpdateInterval = 16;
+            int animationUpdateInterval = 1000 / AnimationSpeed;
 
             while (isOpen)
             {
@@ -518,6 +518,50 @@ namespace Toolbox.Library
         private void colorSlider1_Scroll(object sender, ScrollEventArgs e)
         {
 
+        }
+
+        private void toggleFrameRateBtn_Click(object sender, EventArgs e)
+        {
+            if (AnimationPlayerState == PlayerState.Playing)
+                ToggleFrameRate();
+        }
+
+        private void ToggleFrameRate()
+        {
+            if (AnimationSpeed == 60)
+            {
+                AnimationSpeed = 30; 
+                toggleFrameRateBtn.Text = "30 FPS"; 
+            }
+            else
+            {
+                AnimationSpeed = 60; 
+                toggleFrameRateBtn.Text = "60 FPS"; 
+            }
+
+            UpdateAnimationUpdateInterval();
+        }
+
+        private void UpdateAnimationUpdateInterval()
+        {
+            int animationUpdateInterval = 1000 / AnimationSpeed;
+
+            if (renderThreadIsUpdating || IsPlaying)
+            {
+                renderThread.Abort(); 
+                renderThread = new Thread(new ThreadStart(RenderAndAnimationLoop));
+                renderThread.Start();
+            }
+        }
+
+        private void GoToPreviousFrame(object sender, EventArgs e)
+        {
+            if (currentFrameUpDown.Value > 0)
+            {
+                Pause();
+                currentFrameUpDown.Value--; 
+                OnFrameAdvanced(); 
+            }
         }
     }
 }
