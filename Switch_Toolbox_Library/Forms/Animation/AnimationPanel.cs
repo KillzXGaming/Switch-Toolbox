@@ -528,32 +528,27 @@ namespace Toolbox.Library
 
         private void ToggleFrameRate()
         {
-            // 切换帧率
             if (AnimationSpeed == 60)
             {
-                AnimationSpeed = 30; // 切换到30帧/秒
-                toggleFrameRateBtn.Text = "30 FPS"; // 更新按钮文本
+                AnimationSpeed = 30; 
+                toggleFrameRateBtn.Text = "30 FPS"; 
             }
             else
             {
-                AnimationSpeed = 60; // 切换到60帧/秒
-                toggleFrameRateBtn.Text = "60 FPS"; // 更新按钮文本
+                AnimationSpeed = 60; 
+                toggleFrameRateBtn.Text = "60 FPS"; 
             }
 
-            // 更新动画更新间隔
             UpdateAnimationUpdateInterval();
         }
 
         private void UpdateAnimationUpdateInterval()
         {
-            // 根据当前帧率计算更新间隔
             int animationUpdateInterval = 1000 / AnimationSpeed;
 
-            // 更新动画更新逻辑
             if (renderThreadIsUpdating || IsPlaying)
             {
-                // 重新启动动画更新逻辑
-                renderThread.Abort(); // 停止当前线程
+                renderThread.Abort(); 
                 renderThread = new Thread(new ThreadStart(RenderAndAnimationLoop));
                 renderThread.Start();
             }
@@ -561,12 +556,11 @@ namespace Toolbox.Library
 
         private void GoToPreviousFrame(object sender, EventArgs e)
         {
-            // 检查是否已经是第一帧
             if (currentFrameUpDown.Value > 0)
             {
                 Pause();
-                currentFrameUpDown.Value--; // 回退到上一帧
-                OnFrameAdvanced(); // 更新动画显示
+                currentFrameUpDown.Value--; 
+                OnFrameAdvanced(); 
             }
         }
     }
