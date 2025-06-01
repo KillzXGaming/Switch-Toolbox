@@ -557,6 +557,10 @@ namespace Bfres.Structs
                 default:
 
                     ExportModelSettings settings = new ExportModelSettings();
+                    // Toggle colors when necessary as we export them by force 
+                    settings.Settings.UseVertexColors = Model.VertexBuffers.Any(
+                        x => x.Attributes.Any(a => a.Name.StartsWith("_c")));
+
                     if (settings.ShowDialog() == DialogResult.OK)
                         DAE.Export(FileName, settings.Settings, this, GetTextures(),
                             Skeleton, Skeleton.Node_Array.ToList());
@@ -614,6 +618,11 @@ namespace Bfres.Structs
         //Function addes shapes, vertices and meshes
         public void AddOjects(string FileName, ResFile resFileNX, ResU.ResFile resFileU, bool Replace = true)
         {
+            // Hack, enable saving for BFRES during model replace/edit for .ptcl files
+            // Ptcl disables saving by default due to random corruption issues
+            if (this.Parent != null)
+                ((BFRES)Parent.Parent).CanSave = true;
+
             //If using original attributes, this to look them up
             Dictionary<string, List<FSHP.VertexAttribute>> AttributeMatcher = new Dictionary<string, List<FSHP.VertexAttribute>>();
 
