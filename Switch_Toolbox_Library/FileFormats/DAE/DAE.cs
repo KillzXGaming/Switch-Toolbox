@@ -396,30 +396,10 @@ namespace Toolbox.Library
                             UV3.Add(vertex.uv3.X); UV3.Add(vertex.uv3.Y);
                         }
 
-                        if (HasColors3)
-                        {
-                            Color.AddRange(new float[] { vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W });
-                            Color2.AddRange(new float[] { vertex.col2.X, vertex.col2.Y, vertex.col2.Z, vertex.col2.W });
-                            Color3.AddRange(new float[] { vertex.col3.X, vertex.col3.Y, vertex.col3.Z, vertex.col3.W });
-                            Color4.AddRange(new float[] { vertex.col4.X, vertex.col4.Y, vertex.col4.Z, vertex.col4.W });
-
-                            HasColors = true;
-                            HasColors2 = true;
-                            HasColors3 = true;
-                            HasColors4 = true;
-                        }
-                        else
-                        {
-                            Color.AddRange(new float[] { vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W });
-                            Color2.AddRange(new float[] { vertex.col2.X, vertex.col2.Y, vertex.col2.Z, vertex.col2.W });
-                            Color3.AddRange(new float[] { vertex.col3.X, vertex.col3.Y, vertex.col3.Z, vertex.col3.W });
-                            Color4.AddRange(new float[] { vertex.col4.X, vertex.col4.Y, vertex.col4.Z, vertex.col4.W });
-
-                            HasColors = true;
-                            HasColors2 = true;
-                            HasColors3 = true;
-                            HasColors4 = true;
-                        }
+                        Color.AddRange(new float[] { vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W });
+                        Color2.AddRange(new float[] { vertex.col2.X, vertex.col2.Y, vertex.col2.Z, vertex.col2.W });
+                        Color3.AddRange(new float[] { vertex.col3.X, vertex.col3.Y, vertex.col3.Z, vertex.col3.W });
+                        Color4.AddRange(new float[] { vertex.col4.X, vertex.col4.Y, vertex.col4.Z, vertex.col4.W });
 
                         List<int> bIndices = new List<int>();
                         List<float> bWeights = new List<float>();

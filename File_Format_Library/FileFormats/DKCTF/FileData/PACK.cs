@@ -126,7 +126,14 @@ namespace DKCTF
             {
                 Type = reader.ReadString(4, Encoding.ASCII);
                 FileID = IOFileExtension.ReadID(reader);
-                if (header.VersionA >= 1 && header.VersionB >= 1)
+                if (header.VersionA >= 0 && header.VersionB >= 0)
+                {
+                    long flag1 = reader.ReadUInt32();
+                    Offset = reader.ReadInt64();
+                    DecompressedSize = reader.ReadInt64();
+                    Size = reader.ReadInt64();
+                }
+                else if (header.VersionA >= 1 && header.VersionB >= 1)
                 {
                     long flag1 = reader.ReadUInt32();
                     long flag2 = reader.ReadUInt32();

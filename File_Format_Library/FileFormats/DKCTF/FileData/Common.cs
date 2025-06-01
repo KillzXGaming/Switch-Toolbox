@@ -37,6 +37,10 @@ namespace DKCTF
 
                 reader.SetByteOrder(!IsLittleEndian);
                 FileHeader = reader.ReadStruct<CFormDescriptor>();
+
+                if (FileHeader.VersionA == 0 && FileHeader.VersionB == 0)
+                    reader.SetByteOrder(true);
+
                 Read(reader);
                 AfterLoad();
             }
