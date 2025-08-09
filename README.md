@@ -5,6 +5,9 @@ A tool to edit many formats of Nintendo Switch, 3DS and Wii U.
 
 **This tool is now archived and no longer in development!**
 
+**The XCI/NSP/NCA formats are no longer supported as of the latest due to issues with LibHac. 
+Use other tools to load these formats instead.**
+
 # Download
 https://github.com/KillzXGaming/Switch-Toolbox/releases
 
@@ -77,9 +80,6 @@ Can preview:
 - TEX (3DS)
 - NUSHDB (Switch Namco Shaders)
 - SDF (Snow Drop Engine)
-- NCA
-- NSP
-- IStorage
 - NXARC
 - LZARC
 - IGA .pak
