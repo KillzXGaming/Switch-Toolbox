@@ -558,8 +558,12 @@ namespace Bfres.Structs
 
                     ExportModelSettings settings = new ExportModelSettings();
                     // Toggle colors when necessary as we export them by force 
-                    settings.Settings.UseVertexColors = Model.VertexBuffers.Any(
-                        x => x.Attributes.Any(a => a.Name.StartsWith("_c")));
+                    if (Model != null)
+                        settings.Settings.UseVertexColors = Model.VertexBuffers.Any(
+                            x => x.Attributes.Any(a => a.Name.StartsWith("_c")));
+                    else if (ModelU != null)
+                        settings.Settings.UseVertexColors = ModelU.VertexBuffers.Any(
+                            x => x.Attributes.Values.Any(a => a.Name.StartsWith("_c")));
 
                     if (settings.ShowDialog() == DialogResult.OK)
                         DAE.Export(FileName, settings.Settings, this, GetTextures(),
