@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Activities.Statements;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using System.IO;
 
 namespace Toolbox.Library.Collada
 {
@@ -500,10 +501,41 @@ namespace Toolbox.Library.Collada
             Writer.WriteAttributeString("sid", joint.Name);
             Writer.WriteAttributeString("type", "JOINT");
 
-            Writer.WriteStartElement("matrix");
-            Writer.WriteAttributeString("sid", "transform");
-            Writer.WriteString(string.Join(" ", joint.Transform));
-            Writer.WriteEndElement();
+            if (!joint.Decomposed)
+            {
+                Writer.WriteStartElement("matrix");
+                Writer.WriteAttributeString("sid", "transform");
+                Writer.WriteString(string.Join(" ", joint.Transform));
+                Writer.WriteEndElement();
+            }
+            else
+            {
+                Writer.WriteStartElement("translate");
+                Writer.WriteAttributeString("sid", "location");
+                Writer.WriteString(string.Join(" ", joint.Translate));
+                Writer.WriteEndElement();
+
+                Writer.WriteStartElement("rotate");
+                Writer.WriteAttributeString("sid", "rotationX");
+                Writer.WriteString($"1 0 0 {joint.Rotate[0]}");
+                Writer.WriteEndElement();
+
+                Writer.WriteStartElement("rotate");
+                Writer.WriteAttributeString("sid", "rotationY");
+                Writer.WriteString($"0 1 0 {joint.Rotate[1]}");
+                Writer.WriteEndElement();
+
+                Writer.WriteStartElement("rotate");
+                Writer.WriteAttributeString("sid", "rotationZ");
+                Writer.WriteString($"0 0 1 {joint.Rotate[2]}");
+                Writer.WriteEndElement();
+
+                Writer.WriteStartElement("scale");
+                Writer.WriteAttributeString("sid", "scale");
+                Writer.WriteString(string.Join(" ", joint.Scale));
+                Writer.WriteEndElement();
+            }
+
 
             foreach (var child in GetChildren(joint))
             {
@@ -571,7 +603,7 @@ namespace Toolbox.Library.Collada
         /// </summary>
         public void AddJoint(string name, string parentName,
             float[] Transform, float[] InvWorldTransform,
-            float[] translate, float[] rotate, float[] scale)
+            float[] translate, float[] rotate, float[] scale, bool exportDecomposed)
         {
             Joint j = new Joint();
             j.Name = name;
@@ -580,6 +612,7 @@ namespace Toolbox.Library.Collada
             j.Scale = scale;
             j.Translate = translate;
             j.Rotate = rotate;
+            j.Decomposed = exportDecomposed;
             foreach (var joint in Joints)
                 if (joint.Name.Equals(parentName))
                     j.ParentIndex = Joints.IndexOf(joint);
@@ -1067,6 +1100,7 @@ namespace Toolbox.Library.Collada
         public float[] Rotate;
         public float[] Translate;
         public float[] Scale;
+        public bool Decomposed;
     }
 
     public class Animation

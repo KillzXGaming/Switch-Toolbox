@@ -650,11 +650,18 @@ namespace FirstPlugin
                            bn.Position.X,
                            bn.Position.Y,
                            bn.Position.Z);
-            bone.Rotation = new OpenTK.Quaternion(
+            if (bn.FlagsRotation == BoneFlagsRotation.EulerXYZ)
+                bone.EulerRotation = new OpenTK.Vector3(
+                          bn.Rotation.X,
+                          bn.Rotation.Y,
+                          bn.Rotation.Z);
+            else
+                bone.Rotation = new OpenTK.Quaternion(
                           bn.Rotation.X,
                           bn.Rotation.Y,
                           bn.Rotation.Z,
                           bn.Rotation.W);
+
             bone.Scale = new OpenTK.Vector3(
                           bn.Scale.X,
                           bn.Scale.Y,

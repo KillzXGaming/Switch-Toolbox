@@ -19,6 +19,7 @@ namespace Toolbox.Library
     {
         public class ExportSettings
         {
+            public bool ExportDecomposed = true;
             public bool SuppressConfirmDialog = false;
             public bool OptmizeZeroWeights = true;
             public bool UseOldExporter = false;
@@ -270,8 +271,9 @@ namespace Toolbox.Library
                         writer.AddJoint(bone.Text, bone.parentIndex == -1 ? "" :
                             skeleton.bones[bone.parentIndex].Text, Transform, InvTransform,
                             new float[3] { bone.Position.X, bone.Position.Y, bone.Position.Z },
-                            new float[3] { bone.EulerRotation.X, bone.EulerRotation.Y, bone.EulerRotation.Z },
-                            new float[3] { bone.Scale.X, bone.Scale.Y, bone.Scale.Z });
+                            new float[3] { bone.EulerRotation.X * STMath.Rad2Deg, bone.EulerRotation.Y * STMath.Rad2Deg, bone.EulerRotation.Z * STMath.Rad2Deg },
+                            new float[3] { bone.Scale.X, bone.Scale.Y, bone.Scale.Z },
+                            settings.ExportDecomposed);
                     }
                 }
 
