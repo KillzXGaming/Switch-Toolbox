@@ -19,7 +19,7 @@ namespace Toolbox.Library
     {
         public class ExportSettings
         {
-            public bool ExportDecomposed = true;
+            public bool ExportDecomposed = false;
             public bool SuppressConfirmDialog = false;
             public bool OptmizeZeroWeights = true;
             public bool UseOldExporter = false;
