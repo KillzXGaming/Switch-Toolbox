@@ -653,7 +653,7 @@ namespace Toolbox.Library
 
             STGenericObject.LOD_Mesh lod = new STGenericObject.LOD_Mesh();
             lod.faces = GetFaces(msh);
-            lod.IndexFormat = STIndexFormat.UInt16;
+            lod.IndexFormat = msh.VertexCount > 65535 ? STIndexFormat.UInt32 : STIndexFormat.UInt16;
             lod.PrimativeType = STPrimitiveType.Triangles;
             lod.GenerateSubMesh();
             obj.lodMeshes.Add(lod);
