@@ -118,6 +118,8 @@ namespace FirstPlugin
                 }
             }
 
+            shaderParamAnim.UserData = ConvertUserDataSwitch2WiiU(materialAnim.UserData);
+
             return shaderParamAnim;
         }
 
@@ -242,6 +244,8 @@ namespace FirstPlugin
                 }
             }
 
+            texPatternAnim.UserData = ConvertUserDataSwitch2WiiU(materialAnim.UserData);
+
             return texPatternAnim;
         }
 
@@ -339,9 +343,10 @@ namespace FirstPlugin
             return UserDataNX;
         }
 
-        private static ResU.ResDict<ResU.UserData> ConvertUserDataSwitch2WiiU(List<ResNX.UserData> UserDataNX)
+        private static ResU.ResDict<ResU.UserData> ConvertUserDataSwitch2WiiU(IList<ResNX.UserData> UserDataNX)
         {
             var UserDataU = new ResU.ResDict<ResU.UserData>();
+            if (UserDataNX == null) return UserDataU;
             for (int i = 0; i < UserDataNX.Count; i++)
             {
                 var userData = new ResU.UserData();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Drawing;
 using System.IO;
+using System.Globalization;
 
 namespace Toolbox.Library
 {
@@ -88,29 +89,34 @@ namespace Toolbox.Library
                     case "stereoscopy": bool.TryParse(node.InnerText, out Runtime.stereoscopy);
                         break;
                     case "CameraFar":
-                        float.TryParse(node.InnerText, out Runtime.CameraFar);
+                        if (SafeTryParseFloat(node.InnerText, out float camFar))
+                            Runtime.CameraFar = Math.Max(camFar, 10.0f);
                         break;
                     case "CameraNear":
-                        float.TryParse(node.InnerText, out Runtime.CameraNear);
-						Runtime.CameraNear = (float)Math.Min(Math.Max(0.1, Runtime.CameraNear), 1.0f);
+                        if (SafeTryParseFloat(node.InnerText, out float camNear))
+                            Runtime.CameraNear = Math.Max(0.01f, Math.Min(camNear, 10.0f));
                         break;
                     case "PreviewScale":
-                        float.TryParse(node.InnerText, out Runtime.previewScale);
+                        if (SafeTryParseFloat(node.InnerText, out float pScale))
+                            Runtime.previewScale = pScale;
                         break;
                     case "Yaz0CompressionLevel":
-                        int.TryParse(node.InnerText, out Runtime.Yaz0CompressionLevel);
+                        if (SafeTryParseInt(node.InnerText, out int yazLevel))
+                            Runtime.Yaz0CompressionLevel = yazLevel;
                         break;
                     case "FormTheme":
                         Toolbox.Library.Forms.FormThemes.Preset preset;
-                        Enum.TryParse(node.InnerText, out preset);
-                        Toolbox.Library.Forms.FormThemes.ActivePreset = preset;
+                        if (Enum.TryParse(node.InnerText, out preset))
+                            Toolbox.Library.Forms.FormThemes.ActivePreset = preset;
                         break;
-                    case "MaximizeMdiWindow": bool.TryParse(node.InnerText, out Runtime.MaximizeMdiWindow);
+                    case "MaximizeMdiWindow": 
+                        if (bool.TryParse(node.InnerText, out bool maxMdi))
+                            Runtime.MaximizeMdiWindow = maxMdi;
                         break;
                     case "PreferredTexFormat":
                         TEX_FORMAT texFormat;
-                        Enum.TryParse(node.InnerText, out texFormat);
-                        Runtime.PreferredTexFormat = texFormat;
+                        if (Enum.TryParse(node.InnerText, out texFormat))
+                            Runtime.PreferredTexFormat = texFormat;
                         break;
                     case "backgroundGradientTop":
                         TryParseHexColor(node, ref Runtime.backgroundGradientTop);
@@ -131,7 +137,8 @@ namespace Toolbox.Library
                         bool.TryParse(node.InnerText, out Runtime.useNormalMap);
                         break;
                     case "CellSize":
-                        float.TryParse(node.InnerText, out Runtime.gridSettings.CellSize);
+                        if (SafeTryParseFloat(node.InnerText, out float cellSize))
+                            Runtime.gridSettings.CellSize = cellSize;
                         break;
                     case "CellAmount":
                         uint.TryParse(node.InnerText, out Runtime.gridSettings.CellAmount);
@@ -140,25 +147,31 @@ namespace Toolbox.Library
                         TryParseHexColor(node, ref Runtime.gridSettings.color);
                         break;
                     case "ListPanelWidth":
-                        int.TryParse(node.InnerText, out Runtime.ObjectEditor.ListPanelWidth);
+                        if (SafeTryParseInt(node.InnerText, out int lpWidth))
+                            Runtime.ObjectEditor.ListPanelWidth = lpWidth;
                         break;
                     case "EditorDiplayIndex":
-                        int.TryParse(node.InnerText, out Runtime.ObjectEditor.EditorDiplayIndex);
+                        if (SafeTryParseInt(node.InnerText, out int editIdx))
+                            Runtime.ObjectEditor.EditorDiplayIndex = editIdx;
                         break;
                     case "ViewportWidth":
-                        int.TryParse(node.InnerText, out Runtime.ViewportEditor.Width);
+                        if (SafeTryParseInt(node.InnerText, out int vpWidth))
+                            Runtime.ViewportEditor.Width = vpWidth;
                         break;
                     case "renderBones":
                         bool.TryParse(node.InnerText, out Runtime.renderBones);
                         break;
                     case "normalsLineLength":
-                        float.TryParse(node.InnerText, out Runtime.normalsLineLength);
+                        if (SafeTryParseFloat(node.InnerText, out float normLen))
+                            Runtime.normalsLineLength = normLen;
                         break;
                     case "bonePointSize":
-                        float.TryParse(node.InnerText, out Runtime.bonePointSize);
+                        if (SafeTryParseFloat(node.InnerText, out float boneSize))
+                            Runtime.bonePointSize = Math.Max(boneSize, 0.01f); // Critical for GUI stability
                         break;
                     case "MaxCameraSpeed":
-                        float.TryParse(node.InnerText, out Runtime.MaxCameraSpeed);
+                        if (SafeTryParseFloat(node.InnerText, out float camSpeed))
+                            Runtime.MaxCameraSpeed = Math.Max(camSpeed, 0.01f);
                         break;
                     case "AddFilesToActiveObjectEditor":
                         bool.TryParse(node.InnerText, out Runtime.AddFilesToActiveObjectEditor);
@@ -577,24 +590,24 @@ namespace Toolbox.Library
             parentNode.AppendChild(renderSettingsNode);
             renderSettingsNode.AppendChild(createNode(doc, "ViewportCameraMode", Runtime.ViewportCameraMode.ToString()));
             renderSettingsNode.AppendChild(createNode(doc, "viewportShading", Runtime.viewportShading.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "stereoscopy", Runtime.stereoscopy.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "CameraFar", Runtime.CameraFar.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "CameraNear", Runtime.CameraNear.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "PreviewScale", Runtime.previewScale.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "renderVertColor", Runtime.renderVertColor.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "renderReflection", Runtime.renderReflection.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "renderSpecular", Runtime.renderSpecular.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "renderBones", Runtime.renderBones.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "renderBoundingBoxes", Runtime.renderBoundingBoxes.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "useNormalMap", Runtime.useNormalMap.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "ViewportWidth", Runtime.ViewportEditor.Width.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "normalsLineLength", Runtime.normalsLineLength.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "bonePointSize", Runtime.bonePointSize.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "MaxCameraSpeed", Runtime.MaxCameraSpeed.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "FrameCamera", Runtime.FrameCamera.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "cameraMovement", Runtime.cameraMovement.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "displayAxisLines", Runtime.displayAxisLines.ToString()));
-            renderSettingsNode.AppendChild(createNode(doc, "displayGrid", Runtime.displayGrid.ToString()));
+            renderSettingsNode.AppendChild(createNode(doc, "stereoscopy", Runtime.stereoscopy.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "CameraFar", Runtime.CameraFar.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "CameraNear", Runtime.CameraNear.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "PreviewScale", Runtime.previewScale.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "renderVertColor", Runtime.renderVertColor.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "renderReflection", Runtime.renderReflection.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "renderSpecular", Runtime.renderSpecular.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "renderBones", Runtime.renderBones.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "renderBoundingBoxes", Runtime.renderBoundingBoxes.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "useNormalMap", Runtime.useNormalMap.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "ViewportWidth", Runtime.ViewportEditor.Width.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "normalsLineLength", Runtime.normalsLineLength.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "bonePointSize", Runtime.bonePointSize.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "MaxCameraSpeed", Runtime.MaxCameraSpeed.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "FrameCamera", Runtime.FrameCamera.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "cameraMovement", Runtime.cameraMovement.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "displayAxisLines", Runtime.displayAxisLines.ToString(CultureInfo.InvariantCulture)));
+            renderSettingsNode.AppendChild(createNode(doc, "displayGrid", Runtime.displayGrid.ToString(CultureInfo.InvariantCulture)));
 
         }
 
@@ -609,8 +622,8 @@ namespace Toolbox.Library
         private static void AppendGridSettings(XmlDocument doc, XmlNode parentNode)
         {
             parentNode.AppendChild(createNode(doc, "GridColor", ColorTranslator.ToHtml(Runtime.gridSettings.color)));
-            parentNode.AppendChild(createNode(doc, "CellAmount", Runtime.gridSettings.CellAmount.ToString()));
-            parentNode.AppendChild(createNode(doc, "CellSize", Runtime.gridSettings.CellSize.ToString()));
+            parentNode.AppendChild(createNode(doc, "CellAmount", Runtime.gridSettings.CellAmount.ToString(CultureInfo.InvariantCulture)));
+            parentNode.AppendChild(createNode(doc, "CellSize", Runtime.gridSettings.CellSize.ToString(CultureInfo.InvariantCulture)));
         }
 
         private static void AppendBackgroundSettings(XmlDocument doc, XmlNode parentNode)
@@ -625,6 +638,22 @@ namespace Toolbox.Library
             XmlNode floorstyle = doc.CreateElement(el);
             floorstyle.InnerText = v;
             return floorstyle;
+        }
+
+        private static bool SafeTryParseFloat(string value, out float result)
+        {
+            // First try invariant culture (standard dot format)
+            if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out result))
+                return true;
+
+            // If that fails, try current culture (localized comma format)
+            // Strictly use NumberStyles.Float to prevent thousands-separator misinterpretation (Giant Bones bug)
+            return float.TryParse(value, NumberStyles.Float, CultureInfo.CurrentCulture, out result);
+        }
+
+        private static bool SafeTryParseInt(string value, out int result)
+        {
+            return int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result);
         }
     }
 }

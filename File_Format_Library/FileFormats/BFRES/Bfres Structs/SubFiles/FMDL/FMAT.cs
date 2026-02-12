@@ -403,6 +403,7 @@ namespace Bfres.Structs
                 }
                 else
                 {
+                    MaterialU = new ResU.Material();
                     MaterialU.Import(path, GetResFileU());
                     MaterialU.Name = Text;
                     BfresWiiU.ReadMaterial(this, MaterialU);
@@ -449,11 +450,15 @@ namespace Bfres.Structs
                 }
                 else
                 {
+                    Material = new Material();
                     Material.Import(path);
                     Material.Name = Text;
                     BfresSwitch.ReadMaterial(this, Material);
                 }
             }
+            UpdateEditor();
+            UpdateTextureMaps();
+            UpdateRenderPass();
         }
 
         public Dictionary<string, float[]> anims = new Dictionary<string, float[]>();
