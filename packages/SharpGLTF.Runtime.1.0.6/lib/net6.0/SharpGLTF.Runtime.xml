@@ -1,0 +1,569 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SharpGLTF.Runtime</name>
+    </assembly>
+    <members>
+        <member name="T:SharpGLTF.Runtime.AnimatableProperty`1">
+            <summary>
+            Defines an animatable property with a default value and a collection of animation curve tracks.
+            </summary>
+            <typeparam name="T">A type that can be interpolated with <see cref="T:SharpGLTF.Animations.ICurveSampler`1"/></typeparam>
+        </member>
+        <member name="P:SharpGLTF.Runtime.AnimatableProperty`1.Value">
+            <summary>
+            Gets the default value of this instance.
+            When animations are disabled, or there's no animation track available, this will be the returned value.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Runtime.AnimatableProperty`1.GetValueAt(System.Int32,System.Single)">
+            <summary>
+            Evaluates the value of this <see cref="T:SharpGLTF.Runtime.AnimatableProperty`1"/> at a given <paramref name="offset"/> for a given <paramref name="trackLogicalIndex"/>.
+            </summary>
+            <param name="trackLogicalIndex">The index of the animation track.</param>
+            <param name="offset">The time offset within the curve</param>
+            <returns>The evaluated value taken from the animation <paramref name="trackLogicalIndex"/>, or <see cref="P:SharpGLTF.Runtime.AnimatableProperty`1.Value"/> if a track was not found.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.AnimatableProperty`1.SetCurve(System.Int32,SharpGLTF.Animations.ICurveSampler{`0})">
+            <summary>
+            Sets the animation curves for this property.
+            </summary>
+            <param name="trackLogicalIndex">The index of the animation track.</param>
+            <param name="curveSampler">A curve sampler, or null if the curve is to be removed.</param>
+        </member>
+        <member name="T:SharpGLTF.Runtime.ArmatureInstance">
+            <summary>
+            Represents the transform states of a collection of bones.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.ArmatureInstance.LogicalNodes">
+            <summary>
+            Gets a flattened collection of all the nodes of this armature.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.ArmatureInstance.VisualNodes">
+            <summary>
+            Gets all the <see cref="T:SharpGLTF.Runtime.NodeInstance"/> roots used by this <see cref="T:SharpGLTF.Runtime.SceneInstance"/>.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.ArmatureInstance.AnimationTracks">
+            <summary>
+            Gets the total number of animation tracks for this instance.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Runtime.ArmatureInstance.SetLocalMatrix(System.String,System.Numerics.Matrix4x4)">
+            <summary>
+            Sets the matrix of a bone.
+            </summary>
+            <param name="name">The name of the node to be set.</param>
+            <param name="localMatrix">A matrix relative to its parent bone.</param>
+        </member>
+        <member name="M:SharpGLTF.Runtime.ArmatureInstance.SetModelMatrix(System.String,System.Numerics.Matrix4x4)">
+            <summary>
+            Sets the matrix of a bone.
+            </summary>
+            <param name="name">The name of the node to be set.</param>
+            <param name="modelMatrix">A matrix relative to the model.</param>
+        </member>
+        <member name="M:SharpGLTF.Runtime.ArmatureInstance.SetPoseTransforms">
+            <summary>
+            Resets the bone transforms to their default positions.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Runtime.ArmatureInstance.SetAnimationFrame(System.Int32,System.Single,System.Boolean)">
+            <summary>
+            Sets the bone transforms from an animation frame.
+            </summary>
+            <param name="trackLogicalIndex">The animation track index.</param>
+            <param name="time">The animation time frame.</param>
+            <param name="looped">True to use the animation as a looped animation.</param>
+        </member>
+        <member name="T:SharpGLTF.Runtime.ArmatureTemplate">
+            <summary>
+            Represents a flattened collection of nodes/joints/bones, which define a Skeleton when correlated.
+            </summary>
+            /// <remarks>
+            Only the nodes used by a given <see cref="T:SharpGLTF.Schema2.Scene"/> will be copied.
+            Also, nodes will be reordered so children nodes always come after their parents (for fast evaluation),
+            so it's important to keep in mind that <see cref="T:SharpGLTF.Runtime.NodeTemplate"/> indices will differ from those
+            in <see cref="P:SharpGLTF.Schema2.Scene.VisualChildren"/>.
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Runtime.ArmatureTemplate.Create(SharpGLTF.Schema2.Scene,SharpGLTF.Runtime.RuntimeOptions)">
+            <summary>
+            Creates a new <see cref="T:SharpGLTF.Runtime.ArmatureTemplate"/> based on the nodes of <see cref="T:SharpGLTF.Schema2.Scene"/>.
+            </summary>
+            <param name="srcScene">The source <see cref="T:SharpGLTF.Schema2.Scene"/> from where to take the nodes.</param>
+            <param name="options">Custom processing options, or null.</param>
+            <returns>A new <see cref="T:SharpGLTF.Runtime.ArmatureTemplate"/> instance.</returns>
+        </member>
+        <member name="P:SharpGLTF.Runtime.ArmatureTemplate.Nodes">
+            <summary>
+            Gets the flattened list of nodes, ordered so parents appear before children.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.ArmatureTemplate.Materials">
+            <summary>
+            Gets the list of materials used by the meshes of this model
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.ArmatureTemplate.Tracks">
+            <summary>
+            Gets the animations tracks info.
+            </summary>
+        </member>
+        <member name="F:SharpGLTF.Runtime.DrawableInstance.Template">
+            <summary>
+            Represents WHAT to draw.
+            </summary>
+        </member>
+        <member name="F:SharpGLTF.Runtime.DrawableInstance.Transform">
+            <summary>
+            Represents WHERE to draw the <see cref="F:SharpGLTF.Runtime.DrawableInstance.Template"/>.
+            </summary>
+            <remarks>
+            This value can be casted to any of:
+            <list type="table">
+            <item><see cref="T:SharpGLTF.Transforms.MorphTransform"/></item>
+            <item><see cref="T:SharpGLTF.Transforms.RigidTransform"/></item>
+            <item><see cref="T:SharpGLTF.Transforms.SkinnedTransform"/></item>
+            <item><see cref="T:SharpGLTF.Transforms.InstancingTransform"/></item>
+            <item><see cref="T:SharpGLTF.Transforms.IGeometryInstancing"/></item>
+            <item><see cref="T:SharpGLTF.Transforms.IMaterialTransform"/></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Runtime.DrawableInstance.InstanceCount">
+            <summary>
+            If <see cref="F:SharpGLTF.Runtime.DrawableInstance.Transform"/> has instancing support,
+            it gets the number of times we need to render <see cref="F:SharpGLTF.Runtime.DrawableInstance.Template"/>
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.DrawableTemplate">
+            <summary>
+            Defines a reference to a drawable mesh
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.DrawableTemplate.LogicalNodeIndex">
+            <summary>
+            Gets the index of a <see cref="T:SharpGLTF.Schema2.Node"/> in <see cref="P:SharpGLTF.Schema2.ModelRoot.LogicalNodes"/>
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.DrawableTemplate.LogicalMeshIndex">
+            <summary>
+            Gets the index of a <see cref="T:SharpGLTF.Schema2.Mesh"/> in <see cref="P:SharpGLTF.Schema2.ModelRoot.LogicalMeshes"/>
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.RigidDrawableTemplate">
+            <summary>
+            Defines a reference to a drawable rigid mesh
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.SkinnedDrawableTemplate">
+            <summary>
+            Defines a reference to a drawable skinned mesh
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.MaterialTemplate.IsAnimated">
+            <summary>
+            If true, it means this material is animated.
+            </summary>
+            <remarks>
+            Before rendering a model using this material, you check this property and then call
+            <see cref="M:SharpGLTF.Runtime.MaterialTemplate.UpdateRuntimeMaterial(System.Int32,System.Single,System.Action{System.String,System.Single})"/> to update your
+            engine's material properties
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Runtime.MaterialTemplate.LogicalNodeIndex">
+            <summary>
+            Gets the index of the source <see cref="T:SharpGLTF.Schema2.Material"/> in <see cref="P:SharpGLTF.Schema2.ModelRoot.LogicalMaterials"/>
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.IMeshDecoder`1">
+            <summary>
+            Exposes an API to allow decoding a geometry mesh.
+            </summary>
+            <typeparam name="TMaterial">The primitive's material type</typeparam>
+            <remarks>
+            Implemented by <see cref="T:SharpGLTF.Runtime._MeshDecoder`1"/>
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshDecoder`1.Name">
+            <summary>
+            Mesh Name
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshDecoder`1.Extras">
+            <summary>
+            Mesh Extras
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshDecoder`1.LogicalIndex">
+            <summary>
+            Mesh Logical index in the original glTF model.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshDecoder`1.Primitives">
+            <summary>
+            Collection of mesh primitives
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.IMeshPrimitiveDecoder">
+            <summary>
+            Exposes an API to get geometry data from a mesh primitive
+            </summary>
+            <remarks>
+            Implemented by <see cref="T:SharpGLTF.Runtime._MeshPrimitiveDecoder"/>
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshPrimitiveDecoder.VertexCount">
+            <summary>
+            Gets a value indicating the total number of vertices for this primitive.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshPrimitiveDecoder.MorphTargetsCount">
+            <summary>
+            Gets a value indicating the total number of morph targets for this primitive.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshPrimitiveDecoder.ColorsCount">
+            <summary>
+            Gets a value indicating the number of color vertex attributes.
+            In the range of 0 to 2.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshPrimitiveDecoder.TexCoordsCount">
+            <summary>
+            Gets a value indicating the number of texture coordinate vertex attributes.
+            In the range of 0 to 2.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshPrimitiveDecoder.JointsWeightsCount">
+            <summary>
+            Gets a value indicating the number of skinning joint-weight attributes.
+            The values can be 0, 4 or 8.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshPrimitiveDecoder.LineIndices">
+            <summary>
+            Gets a sequence of tuples where each item represents the vertex indices of a line.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.IMeshPrimitiveDecoder.TriangleIndices">
+            <summary>
+            Gets a sequence of tuples where each item represents the vertex indices of a triangle.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetPosition(System.Int32)">
+            <summary>
+            Gets the position for the given vertex.
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <returns>A vertex relative position.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetNormal(System.Int32)">
+            <summary>
+            Gets the normal for the given vertex.
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetTangent(System.Int32)">
+            <summary>
+            Gets the tangent for the given vertex.
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetTextureCoord(System.Int32,System.Int32)">
+            <summary>
+            Gets the UV coordinate for the given vertex.
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <param name="textureSetIndex">The texture set index.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetColor(System.Int32,System.Int32)">
+            <summary>
+            Gets the color for the given vertex.
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <param name="colorSetIndex">The color set index.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetSkinWeights(System.Int32)">
+            <summary>
+            Gets the skin weights for the given vertex.
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetPositionDeltas(System.Int32)">
+            <summary>
+            Gets the sequence of position deltas for the given vertex. (morph targets)
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <returns>A collection of position deltas, one delta per morph target.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetNormalDeltas(System.Int32)">
+            <summary>
+            Gets the sequence of normals deltas for the given vertex. (morph targets)
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <returns>A collection of normal deltas, one delta per morph target.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetTangentDeltas(System.Int32)">
+            <summary>
+            Gets the sequence of tangent deltas for the given vertex. (morph targets)
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <returns>A collection of tangent deltas, one delta per morph target.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetTextureCoordDeltas(System.Int32,System.Int32)">
+            <summary>
+            Gets the sequence of texture coordinate deltas for the given vertex. (morph targets)
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <param name="textureSetIndex">The texture set index.</param>
+            <returns>A collection of texture coordinate deltas, one delta per morph target.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.IMeshPrimitiveDecoder.GetColorDeltas(System.Int32,System.Int32)">
+            <summary>
+            Gets the sequence of color deltas for the given vertex. (morph targets)
+            </summary>
+            <param name="vertexIndex">The vertex index.</param>
+            <param name="colorSetIndex">The color set index.</param>
+            <returns>A collection of color deltas, one delta per morph target.</returns>
+        </member>
+        <member name="T:SharpGLTF.Runtime.IMeshPrimitiveDecoder`1">
+            <summary>
+            Exposes an API to get geometry data from a mesh primitive
+            </summary>
+            <typeparam name="TMaterial">The material type used by the primitive</typeparam>
+            <remarks>
+            Implemented by <see cref="T:SharpGLTF.Runtime._MeshPrimitiveDecoder`1"/>
+            </remarks>
+        </member>
+        <member name="T:SharpGLTF.Runtime.MeshDecoder">
+            <summary>
+            Utility methods to help decode Meshes.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.NodeInstance">
+            <summary>
+            Defines a node of a scene graph in <see cref="T:SharpGLTF.Runtime.SceneInstance"/>
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.NodeInstance.LocalMatrix">
+            <summary>
+            Gets or sets the transform matrix of this node in Local Space.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.NodeInstance.ModelMatrix">
+            <summary>
+            Gets or sets the transform matrix of this node in Model Space.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.NodeInstance.TransformChainIsDirty">
+            <summary>
+            Gets a value indicating whether any of the transforms down the scene tree has been modified.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.NodeTemplate">
+            <summary>
+            Defines a hierarchical transform node of a scene graph tree.
+            </summary>
+        </member>
+        <member name="F:SharpGLTF.Runtime.NodeTemplate._LogicalSourceIndex">
+            <summary>
+            the index of this node within <see cref="F:SharpGLTF.Runtime.SceneTemplate._Armature"/>
+            </summary>
+        </member>
+        <member name="F:SharpGLTF.Runtime.NodeTemplate._ParentIndex">
+            <summary>
+            the index of the parent node within <see cref="F:SharpGLTF.Runtime.SceneTemplate._Armature"/>
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.NodeTemplate.LogicalNodeIndex">
+            <summary>
+            Gets the index of the source <see cref="T:SharpGLTF.Schema2.Node"/> in <see cref="P:SharpGLTF.Schema2.ModelRoot.LogicalNodes"/>
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.NodeTemplate.ParentIndex">
+            <summary>
+            Gets the index of the parent <see cref="T:SharpGLTF.Runtime.NodeTemplate"/> in <see cref="F:SharpGLTF.Runtime.SceneTemplate._Armature"/>
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.NodeTemplate.ChildIndices">
+            <summary>
+            Gets the list of indices of the children <see cref="T:SharpGLTF.Runtime.NodeTemplate"/> in <see cref="F:SharpGLTF.Runtime.SceneTemplate._Armature"/>
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime._NodeTemplateTransforms">
+            <summary>
+            Contains the transform animation curves of the node.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.RuntimeOptions.IsolateMemory">
+            <summary>
+            True if we want to copy buffers data instead of sharing it.
+            </summary>
+            <remarks>
+            If we want to create a runtime representation of the model, so the garbage collector will release the source model,
+            we have to set this to true, so we will not use any reference to the source model.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Runtime.RuntimeOptions.GpuMeshInstancing">
+            <summary>
+            Gets or sets a value indicating whether GPU instancing is enabled or disabled.
+            </summary>
+            <remarks>
+            When true, if a gltf mesh has gpu instancing elements, they will be converted<br/>
+            internally to the runtime as <see cref="T:SharpGLTF.Runtime.InstancedDrawableTemplate"/> elements.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Runtime.RuntimeOptions.ExtrasConverterCallback">
+            <summary>
+            Gets or sets the custom extras converter.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.SceneInstance">
+            <summary>
+            Represents a specific and independent state of a <see cref="T:SharpGLTF.Runtime.SceneTemplate"/>.
+            </summary>
+        </member>
+        <member name="F:SharpGLTF.Runtime.SceneInstance._Armature">
+            <summary>
+            Represents the skeleton that's going to be used by each drawing command to draw the model matrices.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.SceneTemplate">
+            <summary>
+            Defines a templatized representation of a <see cref="T:SharpGLTF.Schema2.Scene"/> that can be used
+            to create <see cref="T:SharpGLTF.Runtime.SceneInstance"/>, which can help render a scene on a client application.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Runtime.SceneTemplate.Create(SharpGLTF.Schema2.Scene,SharpGLTF.Runtime.RuntimeOptions)">
+            <summary>
+            Creates a new <see cref="T:SharpGLTF.Runtime.SceneTemplate"/> from a given <see cref="T:SharpGLTF.Schema2.Scene"/>.
+            </summary>
+            <param name="srcScene">The source <see cref="T:SharpGLTF.Schema2.Scene"/> to templatize.</param>
+            <param name="options">Custom processing options, or null.</param>
+            <returns>A new <see cref="T:SharpGLTF.Runtime.SceneTemplate"/> instance.</returns>
+        </member>
+        <member name="P:SharpGLTF.Runtime.SceneTemplate.LogicalMeshIds">
+            <summary>
+            Gets the unique indices of <see cref="T:SharpGLTF.Schema2.Mesh"/> instances in <see cref="P:SharpGLTF.Schema2.ModelRoot.LogicalMeshes"/> used by this template.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Runtime.SceneTemplate.CreateInstance">
+            <summary>
+            Creates a new <see cref="T:SharpGLTF.Runtime.SceneInstance"/> of this <see cref="T:SharpGLTF.Runtime.SceneTemplate"/>
+            that can be used to render the scene.
+            </summary>
+            <returns>A new <see cref="T:SharpGLTF.Runtime.SceneInstance"/> object.</returns>
+        </member>
+        <member name="T:SharpGLTF.Runtime.VertexNormalsFactory">
+            <summary>
+            Factory used to calculate the normals of a mesh which implements <see cref="T:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive"/>
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive">
+            <summary>
+            This interface must be implemented by a mesh, or a proxy of a mesh,
+            in order to calculate its normals
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive.VertexCount">
+            <summary>
+            gets the number of vertices.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive.GetVertexPosition(System.Int32)">
+            <summary>
+            Gets the position of a given vertex.
+            </summary>
+            <param name="idx">The Vertex Index</param>
+            <returns>The local vertex position.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive.SetVertexNormal(System.Int32,System.Numerics.Vector3)">
+            <summary>
+            Sets the normal for the given vertex
+            </summary>
+            <param name="idx">The vertex index to set</param>
+            <param name="normal">The normal that will be set to the vertex</param>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive.GetTriangleIndices">
+            <summary>
+            Gets a sequence of triangles, where each triangle is defined by three vertex indices.
+            </summary>
+            <returns>A collection of triangles</returns>
+        </member>
+        <member name="T:SharpGLTF.Runtime.VertexTangentsFactory">
+            <summary>
+            Factory used to calculate the tangents of a mesh which implements <see cref="T:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive"/>
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive">
+            <summary>
+            this interface must be defined by the input primitive to which we want to add tangents
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.VertexCount">
+            <summary>
+            gets the number of vertices.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.GetVertexPosition(System.Int32)">
+            <summary>
+            Gets the position of a given vertex.
+            </summary>
+            <param name="idx">The Vertex Index</param>
+            <returns>The local vertex position.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.GetVertexNormal(System.Int32)">
+            <summary>
+            Gets the normal of a given vertex.
+            </summary>
+            <param name="idx">The Vertex Index</param>
+            <returns>The local vertex normal.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.GetVertexTexCoord(System.Int32)">
+            <summary>
+            Gets the texture coordinate of a given vertex.
+            </summary>
+            <param name="idx">The Vertex Index</param>
+            <returns>The local texture coordinate.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.SetVertexTangent(System.Int32,System.Numerics.Vector4)">
+            <summary>
+            Sets the tangent for the given vertex
+            </summary>
+            <param name="idx">The vertex index to set</param>
+            <param name="tangent">The tangent that will be set to the vertex</param>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.GetTriangleIndices">
+            <summary>
+            Gets a sequence of triangles, where each triangle is defined by three vertex indices.
+            </summary>
+            <returns>A collection of triangles</returns>
+        </member>
+        <member name="T:SharpGLTF._Extensions">
+            <summary>
+            Extensions used internally.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF._Extensions.DeepClone(System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Creates a new instance of the <see cref="!:JsonNode"/>.
+            All children nodes are recursively cloned.
+            </summary>
+            <remarks>
+            DeepClone is available in System.Text.Json v8.0.0 or higher
+            so we need to provide a (much slower) implementation for net6.0.
+            </remarks>
+            <param name="node">The node to clone.</param>
+            <returns>A clone of <paramref name="node"/>.</returns>        
+        </member>
+    </members>
+</doc>
