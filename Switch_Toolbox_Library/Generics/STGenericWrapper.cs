@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library;
 using Toolbox.Library.Forms;
+using System.IO;
 
 namespace Toolbox.Library.NodeWrappers
 {
@@ -146,21 +147,35 @@ namespace Toolbox.Library.NodeWrappers
             FolderSelectDialog sfd = new FolderSelectDialog();
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                string folderPath = sfd.SelectedPath;
-
                 BatchFormatExport form = new BatchFormatExport(Formats);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
+                    string folderPath = $"{sfd.SelectedPath}\\{RootNode.Text}";
+                    Directory.CreateDirectory(folderPath);
+
                     string extension = form.GetSelectedExtension();
                     extension.Replace(" ", string.Empty);
 
+                    var failedExports = new List<string>();
+
                     foreach (TreeNode node in Nodes)
                     {
-                        if (node is STGenericWrapper)
+                        try
                         {
-                            ((STGenericWrapper)node).Export($"{folderPath}\\{node.Text}{extension}");
+                            if (node is STGenericWrapper)
+                            {
+                                ((STGenericWrapper)node).Export($"{folderPath}\\{node.Text}{extension}");
+                            }
+                        } catch (Exception ex)
+                        {
+                            failedExports.Add(ex.Message);
                         }
+
                     }
+
+                    if (failedExports.Count > 0)
+                        STErrorDialog.Show("Files exported with warnings.", "Switch Toolbox", string.Join("\n", failedExports));
+
                 }
             }
         }

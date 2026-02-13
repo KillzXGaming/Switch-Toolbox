@@ -46,6 +46,7 @@
             this.batchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hashCalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.batchExportAnimationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchExportModelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchReplaceFTPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchRenameBNTXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -195,6 +196,7 @@
             this.batchToolStripMenuItem,
             this.hashCalculatorToolStripMenuItem,
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem,
+            this.batchExportAnimationsToolStripMenuItem,
             this.batchExportModelsToolStripMenuItem,
             this.batchReplaceFTPToolStripMenuItem,
             this.batchReplaceTXTGToolStripMenuItem,
@@ -227,9 +229,18 @@
             // 
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem.Name = "batchExportTexturesAllSupportedFormatsToolStripMenuItem";
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
-            this.batchExportTexturesAllSupportedFormatsToolStripMenuItem.Text = "Batch Export Textures (All Supported Formats)";
+            this.batchExportTexturesAllSupportedFormatsToolStripMenuItem.Text = "Batch Export Textures";
             this.batchExportTexturesAllSupportedFormatsToolStripMenuItem.Click += new System.EventHandler(this.batchExportTexturesAllSupportedFormatsToolStripMenuItem_Click);
             // 
+
+            // batchExportAnimationsToolStripMenuItem
+            // 
+            this.batchExportAnimationsToolStripMenuItem.Name = "batchExportAnimationsToolStripMenuItem";
+            this.batchExportAnimationsToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
+            this.batchExportAnimationsToolStripMenuItem.Text = "Batch Export Animations";
+            this.batchExportAnimationsToolStripMenuItem.Click += new System.EventHandler(this.batchExportAnimationsToolStripMenuItem_Click);
+            // 
+
             // batchExportModelsToolStripMenuItem
             // 
             this.batchExportModelsToolStripMenuItem.Name = "batchExportModelsToolStripMenuItem";
@@ -616,6 +627,7 @@
         private System.Windows.Forms.ToolStripMenuItem batchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hashCalculatorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchExportTexturesAllSupportedFormatsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem batchExportAnimationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchExportModelsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchReplaceFTPToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem batchReplaceTXTGToolStripMenuItem;

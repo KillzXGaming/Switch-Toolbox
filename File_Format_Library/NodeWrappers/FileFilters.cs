@@ -21,8 +21,8 @@ namespace FirstPlugin
         public static string BONE = GetFilter(".bfbon");
         public static string FMAT = GetFilter(".bfmat");
 
-        public static string FSKA_EXPORT = GetFilter(".bfska", ".anim", ".seanim", ".smd", ".chr0");
-        public static string FSKA_REPLACE = GetFilter(".bfska",".anim", ".seanim", ".smd", ".chr0");
+        public static string FSKA_EXPORT = GetFilter(".seanim", ".smd", ".anim", ".bfska", ".chr0", ".json");
+        public static string FSKA_REPLACE = GetFilter(".seanim", ".smd", ".anim", ".bfska", ".chr0");
 
         public static string FMAA = GetFilter(".bfmaa",".yaml", ".gif");
 
@@ -142,6 +142,7 @@ namespace FirstPlugin
                     case ".yaml": filters.Add(ext, "Yet Another Markup Language"); break;
                     case ".gif": filters.Add(ext, "Graphics Interchange Format"); break;
                     case ".cmdl": filters.Add(ext, "CTR Model"); break;
+                    case ".json": filters.Add(ext, "JavaScript Object Notation"); break;
                     default:
                         filters.Add(ext, ""); break;
                 }
