@@ -11,6 +11,7 @@ using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
 using SharpGLTF.Materials;
 using SharpGLTF.Scenes;
+using Toolbox.Library.IO;
 
 namespace Toolbox.Library.GLTFModel
 {
@@ -42,7 +43,7 @@ namespace Toolbox.Library.GLTFModel
             bitmap.Save(ms, ImageFormat.Png);
             byte[] bytes = ms.ToArray();
             ImageBuilder image = ImageBuilder.From(bytes);
-            image.AlternateWriteFileName = textureName;
+            image.AlternateWriteFileName = textureName.RemoveIllegaleFileNameCharacters() + ".png";
             TextureMaps.Add(textureName, image);
         }
 

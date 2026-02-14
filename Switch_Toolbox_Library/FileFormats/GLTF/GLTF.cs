@@ -43,8 +43,6 @@ namespace Toolbox.Library
                         if (settings.UseTextureChannelComponents)
                             bitmap = Textures[i].GetComponentBitmap(bitmap);
                         string textureName = Textures[i].Text;
-                            //.RemoveIllegaleFileNameCharacters();
-
                         Exporter.AddTextureMap(textureName, bitmap);
                     }
 
