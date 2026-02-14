@@ -45,9 +45,7 @@ namespace Toolbox.Library
                         string textureName = Textures[i].Text;
                         Exporter.AddTextureMap(textureName, bitmap);
                     }
-
                     bitmap.Dispose();
-
                     GC.Collect();
                 }
                 catch (Exception ex)
@@ -60,12 +58,29 @@ namespace Toolbox.Library
             {
                 Exporter.AddMaterial(mat);
             }
-            
+
+            foreach (var bone in skeleton.bones)
+            {
+                var translation = bone.GetPosition();
+                var rotation = bone.GetRotation();
+                var scale = bone.GetScale();
+                Exporter.AddNode(bone.Text, 
+                    new Vector3(translation.X, translation.Y, translation.Z),
+                    new Quaternion(rotation.X, rotation.Y, rotation.Z, rotation.W),
+                    new Vector3(scale.X, scale.Y, scale.Z));
+            }
+
+            for (int i = 0; i < skeleton.bones.Count; i++)
+            {
+                Exporter.ParentNode(i, skeleton.bones[i].parentIndex);
+            }
+
             foreach (var mesh in Meshes)
             {
                 List<Vector3> Vertices = new List<Vector3>();
                 List<Vector3> Normals = new List<Vector3>();
                 List<Vector2> UV0 = new List<Vector2>();
+                List<Vector4> Colors = new List<Vector4>();
                 List<int> TriangleFaces = new List<int>();
 
                 bool HasNormals = false;
@@ -104,6 +119,9 @@ namespace Toolbox.Library
                     {
                         UV0.Add(new Vector2(vertex.uv0.X, vertex.uv0.Y));
                     }
+
+                    Colors.Add(new Vector4(vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W));
+
                 }
 
                 if (mesh.lodMeshes.Count > 0)

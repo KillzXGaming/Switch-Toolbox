@@ -21,6 +21,7 @@ namespace Toolbox.Library.GLTFModel
         private MaterialBuilder DefaultMaterial;
         private Dictionary<string, ImageBuilder> TextureMaps;
         private List<MaterialBuilder> Materials;
+        private List<NodeBuilder> Nodes;
 
         public GLTFExporter()
         {
@@ -28,6 +29,7 @@ namespace Toolbox.Library.GLTFModel
             DefaultMaterial = new MaterialBuilder("Default");
             TextureMaps = new Dictionary<string, ImageBuilder>();
             Materials = new List<MaterialBuilder>();
+            Nodes = new List<NodeBuilder>();
         }
 
         private MaterialBuilder GetMaterial(int MaterialIndex)
@@ -50,14 +52,12 @@ namespace Toolbox.Library.GLTFModel
         public void AddMaterial(STGenericMaterial mat)
         {
             string materialName = mat.Text;
-
             MaterialBuilder material = new MaterialBuilder(materialName)
                 .WithMetallicRoughnessShader();
 
             foreach (var tex in mat.TextureMaps)
             {
                 ImageBuilder image = TextureMaps[tex.Name];
-
                 switch (tex.Type)
                 {
                     case STGenericMatTexture.TextureType.Diffuse:
@@ -70,6 +70,27 @@ namespace Toolbox.Library.GLTFModel
             }    
 
             Materials.Add(material);
+        }
+
+        public void AddNode(string nodeName, Vector3 translation, Quaternion rotation, Vector3 scale)
+        {
+            NodeBuilder node = new NodeBuilder(nodeName);
+            node.WithLocalTranslation(translation);
+            node.WithLocalRotation(rotation);
+            node.WithLocalScale(scale);
+            Nodes.Add(node);
+        }
+
+        public void ParentNode(int nodeId, int parentId)
+        {
+            if (nodeId < 0 || nodeId >= Nodes.Count) return;
+            if (parentId >= Nodes.Count) return;
+            if (parentId < 0)
+            {
+                Scene.AddNode(Nodes[nodeId]);
+                return;
+            }
+            Nodes[parentId].AddNode(Nodes[nodeId]);
         }
 
         public void AddMesh(List<Vector3> Vertices, List<int> TriangleFaces, int MaterialIndex)
