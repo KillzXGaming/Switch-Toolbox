@@ -77,10 +77,11 @@ namespace Toolbox.Library
 
             foreach (var mesh in Meshes)
             {
+                string meshName = mesh.Text;
                 List<Vector3> Vertices = new List<Vector3>();
                 List<Vector3> Normals = new List<Vector3>();
                 List<Vector2> UV0 = new List<Vector2>();
-                List<Vector4> Colors = new List<Vector4>();
+                List<Vector4> Colors0 = new List<Vector4>();
                 List<int> TriangleFaces = new List<int>();
 
                 bool HasNormals = false;
@@ -120,7 +121,7 @@ namespace Toolbox.Library
                         UV0.Add(new Vector2(vertex.uv0.X, vertex.uv0.Y));
                     }
 
-                    Colors.Add(new Vector4(vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W));
+                    Colors0.Add(new Vector4(vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W));
 
                 }
 
@@ -153,8 +154,10 @@ namespace Toolbox.Library
                     TriangleFaces.AddRange(faces);
                 }
 
+                // TODO: Determine which type of export vertices to use
                 //Exporter.AddMeshNormal(Vertices, Normals, TriangleFaces, mesh.MaterialIndex);
-                Exporter.AddMeshNormalUV(Vertices, Normals, UV0, TriangleFaces, mesh.MaterialIndex);
+                Exporter.AddMeshNormalUV1(meshName, Vertices, Normals, UV0, TriangleFaces, mesh.MaterialIndex);
+                //Exporter.AddMeshNormalUV1Color1(meshName, Vertices, Normals, UV0, Colors0, TriangleFaces, mesh.MaterialIndex);
             }
 
             Exporter.Write(FileName);
