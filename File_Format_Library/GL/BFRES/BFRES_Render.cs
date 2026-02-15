@@ -274,9 +274,15 @@ namespace FirstPlugin
         {
             for (int i = 0; i < fmdl.Skeleton.Node_Array.Length; i++)
             {
-                GL.Uniform1(GL.GetUniformLocation(shader.Id, String.Format("boneIds[{0}]", i)), fmdl.Skeleton.Node_Array[i]);
+                int boneIndex = fmdl.Skeleton.Node_Array[i];
+                
+                // Bounds check - skip if bone index is out of range
+                if (boneIndex < 0 || boneIndex >= fmdl.Skeleton.bones.Count)
+                    continue;
+                
+                GL.Uniform1(GL.GetUniformLocation(shader.Id, String.Format("boneIds[{0}]", i)), boneIndex);
 
-                Matrix4 transform = fmdl.Skeleton.bones[fmdl.Skeleton.Node_Array[i]].invert * fmdl.Skeleton.bones[fmdl.Skeleton.Node_Array[i]].Transform;
+                Matrix4 transform = fmdl.Skeleton.bones[boneIndex].invert * fmdl.Skeleton.bones[boneIndex].Transform;
                 GL.UniformMatrix4(GL.GetUniformLocation(shader.Id, String.Format("bones[{0}]", i)), false, ref transform);
             }
         }

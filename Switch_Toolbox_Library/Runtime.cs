@@ -1,4 +1,4 @@
-﻿using GL_EditorFramework.EditorDrawables;
+using GL_EditorFramework.EditorDrawables;
 using GL_EditorFramework.Interfaces;
 using System;
 using System.Collections.Generic;

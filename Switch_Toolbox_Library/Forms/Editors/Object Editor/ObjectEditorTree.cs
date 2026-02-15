@@ -12,6 +12,7 @@ using Toolbox.Library.Animations;
 using Toolbox.Library.IO;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
+using Toolbox.Library.FBX;
 
 namespace Toolbox.Library.Forms
 {
@@ -552,14 +553,31 @@ namespace Toolbox.Library.Forms
             if (node != null)
             {
                 SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "Supported Formats|*.dae;";
+                sfd.Filter = "Autodesk FBX (*.fbx)|*.fbx|Supported Formats|*.dae;";
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     ExportModelSettings exportDlg = new ExportModelSettings();
                     if (exportDlg.ShowDialog() == DialogResult.OK)
-                        ExportModel(node, sfd.FileName, exportDlg.Settings);
+                    {
+                        if (sfd.FileName.ToLower().EndsWith(".fbx"))
+                            ExportModelFbx(node, sfd.FileName, exportDlg.Settings);
+                        else
+                            ExportModel(node, sfd.FileName, exportDlg.Settings);
+                    }
                 }
             }
+        }
+
+        public void ExportModelFbx(IExportableModel exportableModel, string fileName, DAE.ExportSettings settings)
+        {
+            var model = new STGenericModel();
+            model.Materials = exportableModel.ExportableMaterials;
+            model.Objects = exportableModel.ExportableMeshes;
+            var textures = new List<STGenericTexture>();
+            foreach (var tex in exportableModel.ExportableTextures)
+                textures.Add(tex);
+
+            Toolbox.Library.FBX.FbxExporter.Export(fileName, settings, model, textures, exportableModel.ExportableSkeleton);
         }
 
         public void ExportModel(IExportableModel exportableModel, string fileName, DAE.ExportSettings settings)

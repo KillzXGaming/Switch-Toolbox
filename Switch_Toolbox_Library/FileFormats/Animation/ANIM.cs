@@ -85,7 +85,7 @@ namespace Toolbox.Library.Animations
 			bool isHeader = true;
 
 			string angularUnit, linearUnit, timeUnit;
-			int startTime = 1;
+			int startTime = int.MinValue;
 			int endTime = 0;
 			List<AnimBone> bones = new List<AnimBone>();
 			Animation.KeyNode current = null;
@@ -136,7 +136,11 @@ namespace Toolbox.Library.Animations
                             if (type.Contains("Y")) current.YSCA.Keys.Add(k);
                             if (type.Contains("Z")) current.ZSCA.Keys.Add(k);
                         }
-                        k.Frame = float.Parse(args[0]) - startTime;
+                        float frame = float.Parse(args[0]);
+                        if (startTime == int.MinValue)
+                            startTime = (int)Math.Floor(frame);
+
+                        k.Frame = frame - startTime;
                         k.Value = float.Parse (args [1]);
                         if (type.Contains("rotate"))
                         {
@@ -200,11 +204,60 @@ namespace Toolbox.Library.Animations
 				}
 			}
 
-            a.FrameCount = endTime - startTime;
+            float minFrame = float.MaxValue;
+            float maxFrame = float.MinValue;
+
+            //Find min/max frames
+            foreach (var bone in a.Bones)
+            {
+                if (bone.XPOS.Keys.Count > 0) UpdateMinMax(bone.XPOS, ref minFrame, ref maxFrame);
+                if (bone.YPOS.Keys.Count > 0) UpdateMinMax(bone.YPOS, ref minFrame, ref maxFrame);
+                if (bone.ZPOS.Keys.Count > 0) UpdateMinMax(bone.ZPOS, ref minFrame, ref maxFrame);
+                if (bone.XROT.Keys.Count > 0) UpdateMinMax(bone.XROT, ref minFrame, ref maxFrame);
+                if (bone.YROT.Keys.Count > 0) UpdateMinMax(bone.YROT, ref minFrame, ref maxFrame);
+                if (bone.ZROT.Keys.Count > 0) UpdateMinMax(bone.ZROT, ref minFrame, ref maxFrame);
+                if (bone.XSCA.Keys.Count > 0) UpdateMinMax(bone.XSCA, ref minFrame, ref maxFrame);
+                if (bone.YSCA.Keys.Count > 0) UpdateMinMax(bone.YSCA, ref minFrame, ref maxFrame);
+                if (bone.ZSCA.Keys.Count > 0) UpdateMinMax(bone.ZSCA, ref minFrame, ref maxFrame);
+            }
+
+            if (minFrame == float.MaxValue) minFrame = 0;
+            if (maxFrame == float.MinValue) maxFrame = 0;
+
+            //Shift all keys to start at 0
+            foreach (var bone in a.Bones)
+            {
+                ShiftKeys(bone.XPOS, minFrame);
+                ShiftKeys(bone.YPOS, minFrame);
+                ShiftKeys(bone.ZPOS, minFrame);
+                ShiftKeys(bone.XROT, minFrame);
+                ShiftKeys(bone.YROT, minFrame);
+                ShiftKeys(bone.ZROT, minFrame);
+                ShiftKeys(bone.XSCA, minFrame);
+                ShiftKeys(bone.YSCA, minFrame);
+                ShiftKeys(bone.ZSCA, minFrame);
+            }
+
+            a.FrameCount = (int)((maxFrame - minFrame) + 1);
 
             reader.Close();
 			return a;
 		}
+
+        private static void UpdateMinMax(Animation.KeyGroup keys, ref float min, ref float max)
+        {
+            foreach (var key in keys.Keys)
+            {
+                if (key.Frame < min) min = key.Frame;
+                if (key.Frame > max) max = key.Frame;
+            }
+        }
+
+        private static void ShiftKeys(Animation.KeyGroup keys, float shift)
+        {
+            foreach (var key in keys.Keys)
+                key.Frame -= shift;
+        }
 
         public static void CreateANIM(string fname, Animation anim, STSkeleton vbn)
         {

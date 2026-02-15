@@ -469,6 +469,8 @@
     <Compile Include="FileFormats\CSharpImageLibrary\ImageEngine.cs" />
     <Compile Include="FileFormats\DAE\collada_schema_1_4.cs" />
     <Compile Include="FileFormats\DAE\DAE.cs" />
+    <Compile Include="FileFormats\FBX\FbxExporter.cs" />
+    <Compile Include="FileFormats\FBX\FbxNativeWrapper.cs" />
     <Compile Include="FileFormats\OBJ.cs" />
     <Compile Include="FileFormats\R4G4.cs" />
     <Compile Include="FileFormats\SEModel.cs" />

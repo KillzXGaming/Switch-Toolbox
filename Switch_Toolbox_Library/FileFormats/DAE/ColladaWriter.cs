@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Activities.Statements;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Globalization;
+using System.Linq;
+
 
 namespace Toolbox.Library.Collada
 {
@@ -31,6 +35,34 @@ namespace Toolbox.Library.Collada
         private Dictionary<string, string> MeshSkinIdList = new Dictionary<string, string>();
 
         private List<Joint> Joints = new List<Joint>();
+
+        private static string JoinFloats(IEnumerable<float> values)
+        {
+            return string.Join(" ", values.Select(v => v.ToString("R", CultureInfo.InvariantCulture)));
+        }
+
+        private static string JoinFloats(float[] values)
+        {
+            return string.Join(" ", values.Select(v => v.ToString("R", CultureInfo.InvariantCulture)));
+        }
+
+        private static string JoinDoubles(double[] values)
+        {
+            return string.Join(" ", values.Select(v => v.ToString("R", CultureInfo.InvariantCulture)));
+        }
+
+        private static string JoinObjectsRoundTrip(object[] values)
+        {
+            var inv = CultureInfo.InvariantCulture;
+            return string.Join(" ", values.Select(v =>
+            {
+                if (v is float f) return f.ToString("R", inv);
+                if (v is double d) return d.ToString("R", inv);
+                if (v is int i) return i.ToString(inv);
+                if (v is uint u) return u.ToString(inv);
+                return Convert.ToString(v, inv);
+            }));
+        }
 
         public string CurrentGeometryID;
         public string CurrentMaterial;
@@ -245,7 +277,7 @@ namespace Toolbox.Library.Collada
             Writer.WriteStartElement(type);
             Writer.WriteStartElement("color");
             Writer.WriteAttributeString("sid", type);
-            Writer.WriteString(string.Join(" ", color));
+            Writer.WriteString(JoinFloats(color));
             Writer.WriteEndElement();
             Writer.WriteEndElement();
         }
@@ -324,7 +356,7 @@ namespace Toolbox.Library.Collada
             string FloatArrayID = GetUniqueID(name + "-" + semantic.ToString().ToLower() + "-array");
             Writer.WriteAttributeString("id", FloatArrayID);
             Writer.WriteAttributeString("count", values.Length.ToString());
-            Writer.WriteString(string.Join(" ", values));
+            Writer.WriteString(JoinFloats(values));
             Writer.WriteEndElement();
 
             Writer.WriteStartElement("technique_common");
@@ -505,34 +537,34 @@ namespace Toolbox.Library.Collada
             {
                 Writer.WriteStartElement("matrix");
                 Writer.WriteAttributeString("sid", "transform");
-                Writer.WriteString(string.Join(" ", joint.Transform));
+                Writer.WriteString(JoinFloats(joint.Transform));
                 Writer.WriteEndElement();
             }
             else
             {
                 Writer.WriteStartElement("translate");
                 Writer.WriteAttributeString("sid", "location");
-                Writer.WriteString(string.Join(" ", joint.Translate));
+                Writer.WriteString(JoinFloats(joint.Translate));
                 Writer.WriteEndElement();
 
                 Writer.WriteStartElement("rotate");
                 Writer.WriteAttributeString("sid", "rotationX");
-                Writer.WriteString($"1 0 0 {joint.Rotate[0]}");
+                Writer.WriteString("1 0 0 " + joint.Rotate[0].ToString("R", CultureInfo.InvariantCulture));
                 Writer.WriteEndElement();
 
                 Writer.WriteStartElement("rotate");
                 Writer.WriteAttributeString("sid", "rotationY");
-                Writer.WriteString($"0 1 0 {joint.Rotate[1]}");
+                Writer.WriteString("0 1 0 " + joint.Rotate[1].ToString("R", CultureInfo.InvariantCulture));
                 Writer.WriteEndElement();
 
                 Writer.WriteStartElement("rotate");
                 Writer.WriteAttributeString("sid", "rotationZ");
-                Writer.WriteString($"0 0 1 {joint.Rotate[2]}");
+                Writer.WriteString("0 0 1 " + joint.Rotate[2].ToString("R", CultureInfo.InvariantCulture));
                 Writer.WriteEndElement();
 
                 Writer.WriteStartElement("scale");
                 Writer.WriteAttributeString("sid", "scale");
-                Writer.WriteString(string.Join(" ", joint.Scale));
+                Writer.WriteString(JoinFloats(joint.Scale));
                 Writer.WriteEndElement();
             }
 
@@ -558,7 +590,7 @@ namespace Toolbox.Library.Collada
         {
             Writer.WriteStartElement(name);
             Writer.WriteAttributeString("sid", sid);
-            Writer.WriteString(string.Join(" ", values));
+            Writer.WriteString(JoinFloats(values));
             Writer.WriteEndElement();
         }
 
@@ -757,7 +789,9 @@ namespace Toolbox.Library.Collada
             string FloatArrayID = GetUniqueID(Name + "-" + Semantic.ToString().ToLower() + "-array");
             Writer.WriteAttributeString("id", FloatArrayID);
             Writer.WriteAttributeString("count", Values.Length.ToString());
-            Writer.WriteString(string.Join(" ", Values));
+            Writer.WriteString(Semantic == SemanticType.JOINT
+                ? string.Join(" ", Values)   // names are fine
+                : JoinObjectsRoundTrip(Values));
             Writer.WriteEndElement();
 
             Writer.WriteStartElement("technique_common");

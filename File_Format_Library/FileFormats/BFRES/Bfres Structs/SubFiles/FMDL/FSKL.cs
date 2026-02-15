@@ -635,6 +635,8 @@ namespace Bfres.Structs
             Items.Add(new ToolStripSeparator());
             Items.Add(new ToolStripMenuItem("Export Bone", null, ExportAction, Keys.Control | Keys.E));
             Items.Add(new ToolStripMenuItem("Replace Bone", null, ReplaceAction, Keys.Control | Keys.R));
+            Items.Add(new ToolStripSeparator());
+            Items.Add(new ToolStripMenuItem("Delete Bone", null, DeleteAction, Keys.Delete));
             return Items.ToArray();
         }
 
@@ -721,10 +723,14 @@ namespace Bfres.Structs
             {
                 BoneU.Position = new Syroot.Maths.Vector3F(Position.X, Position.Y, Position.Z);
                 BoneU.Scale = new Syroot.Maths.Vector3F(Scale.X, Scale.Y, Scale.Z);
-                if (RotationType == BoneRotationType.Euler)
+                if (RotationType == BoneRotationType.Euler) {
                     BoneU.Rotation = new Syroot.Maths.Vector4F(EulerRotation.X, EulerRotation.Y, EulerRotation.Z, 1.0f);
-                else
+                    BoneU.FlagsRotation = ResU.BoneFlagsRotation.EulerXYZ;
+                }
+                else {
                     BoneU.Rotation = new Syroot.Maths.Vector4F(Rotation.X, Rotation.Y, Rotation.Z, Rotation.W);
+                    BoneU.FlagsRotation = ResU.BoneFlagsRotation.Quaternion;
+                }
                 BoneU.Name = Text;
                 BoneU.Flags = FlagVisible ? ResU.BoneFlags.Visible : 0;
                 BoneU.ParentIndex = (short)parentIndex;
@@ -737,10 +743,14 @@ namespace Bfres.Structs
             {
                 Bone.Position = new Syroot.Maths.Vector3F(Position.X, Position.Y, Position.Z);
                 Bone.Scale = new Syroot.Maths.Vector3F(Scale.X, Scale.Y, Scale.Z);
-                if (RotationType == BoneRotationType.Euler)
+                if (RotationType == BoneRotationType.Euler) {
                     Bone.Rotation = new Syroot.Maths.Vector4F(EulerRotation.X, EulerRotation.Y, EulerRotation.Z, 1.0f);
-                else
+                    Bone.FlagsRotation = BoneFlagsRotation.EulerXYZ;
+                }
+                else {
                     Bone.Rotation = new Syroot.Maths.Vector4F(Rotation.X, Rotation.Y, Rotation.Z, Rotation.W);
+                    Bone.FlagsRotation = BoneFlagsRotation.Quaternion;
+                }
                 Bone.Name = Text;
                 Bone.Flags = FlagVisible ? BoneFlags.Visible : 0;
                 Bone.ParentIndex = (short)parentIndex;
@@ -854,7 +864,154 @@ namespace Bfres.Structs
 
         private void RemoveBone(FMDL model, int CurrentIndex)
         {
+            // Step 1: Reparent all child bones to the deleted bone's parent
+            int newParentIndex = parentIndex;
+            foreach (BfresBone childBone in Nodes)
+            {
+                childBone.parentIndex = newParentIndex;
+                if (childBone.BoneU != null)
+                    childBone.BoneU.ParentIndex = (short)newParentIndex;
+                else
+                    childBone.Bone.ParentIndex = (short)newParentIndex;
+                
+                // Re-add child to parent's node collection
+                if (newParentIndex >= 0)
+                {
+                    var parentBone = skeletonParent.bones[newParentIndex];
+                    parentBone.Nodes.Add(childBone);
+                }
+                else
+                {
+                    // If deleted bone was root, children become roots
+                    ((FSKL)skeletonParent).node.Nodes.Add(childBone);
+                }
+            }
 
+            // Step 2: Update shape bone indices
+            foreach (var shape in model.shapes)
+            {
+                // Update primary bone index
+                if (shape.BoneIndex == CurrentIndex)
+                    shape.BoneIndex = 0; // Default to first bone
+                else if (shape.BoneIndex > CurrentIndex)
+                    shape.BoneIndex -= 1;
+
+                // Update bone indices list
+                if (shape.BoneIndices != null)
+                {
+                    // Remove the deleted bone index
+                    shape.BoneIndices.Remove((ushort)CurrentIndex);
+                    
+                    // Decrement all indices greater than CurrentIndex
+                    for (int i = 0; i < shape.BoneIndices.Count; i++)
+                    {
+                        if (shape.BoneIndices[i] > CurrentIndex)
+                            shape.BoneIndices[i] -= 1;
+                    }
+                }
+            }
+
+            // Step 3: Update all bone parent indices and matrix indices
+            foreach (BfresBone bone in skeletonParent.bones)
+            {
+                if (bone.parentIndex > CurrentIndex)
+                    bone.parentIndex -= 1;
+                
+                if (bone.SmoothMatrixIndex > CurrentIndex)
+                    bone.SmoothMatrixIndex -= 1;
+                
+                if (bone.RigidMatrixIndex > CurrentIndex)
+                    bone.RigidMatrixIndex -= 1;
+
+                // Update underlying bone data
+                if (bone.BoneU != null)
+                {
+                    if (bone.BoneU.ParentIndex > CurrentIndex)
+                        bone.BoneU.ParentIndex -= 1;
+                    if (bone.BoneU.SmoothMatrixIndex > CurrentIndex)
+                        bone.BoneU.SmoothMatrixIndex -= 1;
+                    if (bone.BoneU.RigidMatrixIndex > CurrentIndex)
+                        bone.BoneU.RigidMatrixIndex -= 1;
+                }
+                else if (bone.Bone != null)
+                {
+                    if (bone.Bone.ParentIndex > CurrentIndex)
+                        bone.Bone.ParentIndex -= 1;
+                    if (bone.Bone.SmoothMatrixIndex > CurrentIndex)
+                        bone.Bone.SmoothMatrixIndex -= 1;
+                    if (bone.Bone.RigidMatrixIndex > CurrentIndex)
+                        bone.Bone.RigidMatrixIndex -= 1;
+                }
+            }
+
+            // Step 4: Remove from skeleton structures
+            skeletonParent.bones.RemoveAt(CurrentIndex);
+            
+            // Remove from parent's node collection
+            if (Parent != null)
+                Parent.Nodes.Remove(this);
+
+            // Remove from underlying skeleton data
+            if (BoneU != null)
+            {
+                var skeleton = ((FSKL)skeletonParent).node.SkeletonU;
+                skeleton.Bones.Remove(BoneU.Name);
+                
+                // Remove inverse matrix
+                if (skeleton.InverseModelMatrices != null && CurrentIndex < skeleton.InverseModelMatrices.Count)
+                    skeleton.InverseModelMatrices.RemoveAt(CurrentIndex);
+                    
+                // Update MatrixToBoneList (Node_Array) - remove deleted index and decrement higher indices
+                if (skeleton.MatrixToBoneList != null)
+                {
+                    // Decrement all bone indices greater than CurrentIndex (bones array shrank)
+                    for (int i = 0; i < skeleton.MatrixToBoneList.Count; i++)
+                    {
+                        if (skeleton.MatrixToBoneList[i] > CurrentIndex)
+                            skeleton.MatrixToBoneList[i] -= 1;
+                        // If this entry pointed to the deleted bone, point to bone 0 instead
+                        else if (skeleton.MatrixToBoneList[i] == CurrentIndex)
+                            skeleton.MatrixToBoneList[i] = 0;
+                    }
+                    
+                    // Update the wrapper's Node_Array
+                    ((FSKL)skeletonParent).Node_Array = new int[skeleton.MatrixToBoneList.Count];
+                    for (int i = 0; i < skeleton.MatrixToBoneList.Count; i++)
+                        ((FSKL)skeletonParent).Node_Array[i] = skeleton.MatrixToBoneList[i];
+                }
+            }
+            else if (Bone != null)
+            {
+                var skeleton = ((FSKL)skeletonParent).node.Skeleton;
+                skeleton.BoneDict.Remove(Bone.Name);
+                skeleton.Bones.RemoveAt(CurrentIndex);
+                
+                // Remove inverse matrix
+                if (skeleton.InverseModelMatrices != null && CurrentIndex < skeleton.InverseModelMatrices.Count)
+                    skeleton.InverseModelMatrices.RemoveAt(CurrentIndex);
+                    
+                // Update MatrixToBoneList (Node_Array) - remove deleted index and decrement higher indices
+                if (skeleton.MatrixToBoneList != null)
+                {
+                    // Decrement all bone indices greater than CurrentIndex (bones array shrank)
+                    for (int i = 0; i < skeleton.MatrixToBoneList.Count; i++)
+                    {
+                        if (skeleton.MatrixToBoneList[i] > CurrentIndex)
+                            skeleton.MatrixToBoneList[i] -= 1;
+                        // If this entry pointed to the deleted bone, point to bone 0 instead
+                        else if (skeleton.MatrixToBoneList[i] == CurrentIndex)
+                            skeleton.MatrixToBoneList[i] = 0;
+                    }
+                    
+                    // Update the wrapper's Node_Array
+                    ((FSKL)skeletonParent).Node_Array = new int[skeleton.MatrixToBoneList.Count];
+                    for (int i = 0; i < skeleton.MatrixToBoneList.Count; i++)
+                        ((FSKL)skeletonParent).Node_Array[i] = skeleton.MatrixToBoneList[i];
+                }
+            }
+
+            // Step 5: Update vertex data and refresh display
+            model.UpdateVertexData();
         }
 
         public void ImportChild()

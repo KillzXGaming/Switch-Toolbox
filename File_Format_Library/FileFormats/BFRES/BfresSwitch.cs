@@ -650,18 +650,11 @@ namespace FirstPlugin
                            bn.Position.X,
                            bn.Position.Y,
                            bn.Position.Z);
-            if (bn.FlagsRotation == BoneFlagsRotation.EulerXYZ)
-                bone.EulerRotation = new OpenTK.Vector3(
-                          bn.Rotation.X,
-                          bn.Rotation.Y,
-                          bn.Rotation.Z);
-            else
-                bone.Rotation = new OpenTK.Quaternion(
+            bone.Rotation = new OpenTK.Quaternion(
                           bn.Rotation.X,
                           bn.Rotation.Y,
                           bn.Rotation.Z,
                           bn.Rotation.W);
-
             bone.Scale = new OpenTK.Vector3(
                           bn.Scale.X,
                           bn.Scale.Y,
@@ -764,6 +757,21 @@ namespace FirstPlugin
         public static void ReadTextureRefs(this FMAT m, Material mat)
         {
             m.TextureMaps.Clear();
+            m.HasDiffuseMap = false;
+            m.HasNormalMap = false;
+            m.HasSpecularMap = false;
+            m.HasEmissionMap = false;
+            m.HasDiffuseLayer = false;
+            m.HasTeamColorMap = false;
+            m.HasTransparencyMap = false;
+            m.HasShadowMap = false;
+            m.HasAmbientOcclusionMap = false;
+            m.HasLightMap = false;
+            m.HasSphereMap = false;
+            m.HasSubSurfaceScatteringMap = false;
+            m.HasMetalnessMap = false;
+            m.HasRoughnessMap = false;
+            m.HasMRA = false;
 
             int AlbedoCount = 0;
             int id = 0;

@@ -311,7 +311,7 @@ namespace Bfres.Structs
                             if (group.AnimDataOffset == 4) prm.ValueSrt2D.Scaling.Y = group.GetValue(Frame);
                             if (group.AnimDataOffset == 8) prm.ValueSrt2D.Rotation = group.GetValue(Frame);
                             if (group.AnimDataOffset == 12) prm.ValueSrt2D.Translation.X = group.GetValue(Frame);
-                            if (group.AnimDataOffset == 16) prm.ValueSrt2D.Translation.X = group.GetValue(Frame);
+                            if (group.AnimDataOffset == 16) prm.ValueSrt2D.Translation.Y = group.GetValue(Frame);
                         }
                         if (prm.Type == Syroot.NintenTools.NSW.Bfres.ShaderParamType.TexSrt)
                         {
