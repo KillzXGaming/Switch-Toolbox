@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Library.GLTFModel;
-using static Toolbox.Library.STGenericObject;
-using Toolbox.Library.IO;
+using SharpGLTF.Transforms;
 
 namespace Toolbox.Library
 {
@@ -82,6 +76,7 @@ namespace Toolbox.Library
                 List<Vector3> Normals = new List<Vector3>();
                 List<Vector2> UV0 = new List<Vector2>();
                 List<Vector4> Colors0 = new List<Vector4>();
+                List<SparseWeight8> JointWeights = new List<SparseWeight8>();
                 List<int> TriangleFaces = new List<int>();
 
                 bool HasNormals = false;
@@ -94,6 +89,7 @@ namespace Toolbox.Library
                 bool HasUV2 = false;
                 bool HasUV3 = false;
                 bool HasBoneIds = false;
+                bool HasSkin5 = false;
 
                 foreach (var vertex in mesh.vertices)
                 {
@@ -123,6 +119,48 @@ namespace Toolbox.Library
 
                     Colors0.Add(new Vector4(vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W));
 
+                    List<int> bIndices = new List<int>();
+                    List<float> bWeights = new List<float>();
+                    float weightSum = 0;
+                    for (int b = 0; b < Math.Min(vertex.boneIds.Count, mesh.VertexSkinCount); b++)
+                    {
+                        int boneIndex = vertex.boneIds[b];
+                        float boneWeight = (b < vertex.boneWeights.Count) ? vertex.boneWeights[b] : 0;
+
+                        if (boneIndex >= 0 && boneIndex < skeleton?.bones.Count)
+                        {
+                            bIndices.Add(boneIndex);
+                            bWeights.Add(boneWeight);
+                            weightSum += boneWeight;
+                        }
+                    }
+                    HasSkin5 = bIndices.Count >= 5;
+                    // Rigid bodies with a valid bone index
+                    if (bIndices.Count == 0 && mesh.boneList.Count > 0 && mesh.BoneIndex >= 0 && mesh.BoneIndex < skeleton?.bones.Count)
+                    {
+                        HasBoneIds = true;
+                        bIndices.Add(mesh.BoneIndex);
+                        bWeights.Add(1f);
+                    }
+                    // Bone indices exist with no weights mapped
+                    if (weightSum < 1e-6f && bIndices.Count > 0)
+                    {
+                        bWeights[0] = 1f;
+                        HasSkin5 = false;
+                    }
+                    // Fill enough to define SparseWeight8
+                    for (int i = bIndices.Count; i < 8; i++)
+                    {
+                        bIndices.Add(0);
+                        bWeights.Add(0);
+                    }
+
+                    JointWeights.Add(SparseWeight8.Create(
+                        new Vector4(bIndices[0], bIndices[1], bIndices[2], bIndices[3]),
+                        new Vector4(bIndices[4], bIndices[5], bIndices[6], bIndices[7]),
+                        new Vector4(bWeights[0], bWeights[1], bWeights[2], bWeights[3]),
+                        new Vector4(bWeights[4], bWeights[5], bWeights[6], bWeights[7])
+                    ));
                 }
 
                 if (mesh.lodMeshes.Count > 0)
@@ -155,9 +193,7 @@ namespace Toolbox.Library
                 }
 
                 // TODO: Determine which type of export vertices to use
-                //Exporter.AddMeshNormal(Vertices, Normals, TriangleFaces, mesh.MaterialIndex);
-                Exporter.AddMeshNormalUV1(meshName, Vertices, Normals, UV0, TriangleFaces, mesh.MaterialIndex);
-                //Exporter.AddMeshNormalUV1Color1(meshName, Vertices, Normals, UV0, Colors0, TriangleFaces, mesh.MaterialIndex);
+                Exporter.AddMeshNormalUV1Skin4(meshName, Vertices, Normals, UV0, JointWeights, TriangleFaces, mesh.MaterialIndex);
             }
 
             Exporter.Write(FileName);

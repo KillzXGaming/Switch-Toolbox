@@ -1,4 +1,9 @@
-﻿using System;
+﻿using SharpGLTF.Geometry;
+using SharpGLTF.Geometry.VertexTypes;
+using SharpGLTF.Materials;
+using SharpGLTF.Scenes;
+using SharpGLTF.Transforms;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -7,10 +12,6 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using SharpGLTF.Geometry;
-using SharpGLTF.Geometry.VertexTypes;
-using SharpGLTF.Materials;
-using SharpGLTF.Scenes;
 using Toolbox.Library.IO;
 
 namespace Toolbox.Library.GLTFModel
@@ -94,7 +95,7 @@ namespace Toolbox.Library.GLTFModel
 
                 NodeBuilder node = new NodeBuilder(armatureName);
                 node.AddNode(Nodes[nodeId]);
-                
+
                 Scene.AddNode(node);
                 return;
             }
@@ -223,6 +224,64 @@ namespace Toolbox.Library.GLTFModel
             }
 
             Scene.AddRigidMesh(mesh, Matrix4x4.Identity);
+        }
+
+        public void AddMeshNormalUV1Skin4(string meshName, List<Vector3> Vertices, List<Vector3> Normals, List<Vector2> UV0, List<SparseWeight8> JointWeights, List<int> TriangleFaces, int MaterialIndex)
+        {
+            var mesh = new MeshBuilder<VertexPositionNormal, VertexTexture1, VertexJoints4>(meshName);
+            var prim = mesh.UsePrimitive(GetMaterial(MaterialIndex));
+
+            if (TriangleFaces.Count % 3 != 0)
+                throw new Exception("Expected a multiple of 3!");
+
+            for (int i = 0; i < TriangleFaces.Count; i += 3)
+            {
+                var v0 = new VertexBuilder<VertexPositionNormal, VertexTexture1, VertexJoints4>();
+                v0.Geometry = new VertexPositionNormal(Vertices[TriangleFaces[i]], Normals[TriangleFaces[i]]);
+                v0.Material = new VertexTexture1(UV0[TriangleFaces[i]]);
+                v0.Skinning = new VertexJoints4(JointWeights[TriangleFaces[i]]);
+                var v1 = new VertexBuilder<VertexPositionNormal, VertexTexture1, VertexJoints4>();
+                v1.Geometry = new VertexPositionNormal(Vertices[TriangleFaces[i + 1]], Normals[TriangleFaces[i + 1]]);
+                v1.Material = new VertexTexture1(UV0[TriangleFaces[i + 1]]);
+                v1.Skinning = new VertexJoints4(JointWeights[TriangleFaces[i + 1]]);
+                var v2 = new VertexBuilder<VertexPositionNormal, VertexTexture1, VertexJoints4>();
+                v2.Geometry = new VertexPositionNormal(Vertices[TriangleFaces[i + 2]], Normals[TriangleFaces[i + 2]]);
+                v2.Material = new VertexTexture1(UV0[TriangleFaces[i + 2]]);
+                v2.Skinning = new VertexJoints4(JointWeights[TriangleFaces[i + 2]]);
+
+                prim.AddTriangle(v0, v1, v2);
+            }
+
+            Scene.AddSkinnedMesh(mesh, Matrix4x4.Identity, Nodes.ToArray());
+        }
+
+        public void AddMeshNormalUV1Color1Skin4(string meshName, List<Vector3> Vertices, List<Vector3> Normals, List<Vector2> UV0, List<Vector4> Colors0, List<SparseWeight8> JointWeights, List<int> TriangleFaces, int MaterialIndex)
+        {
+            var mesh = new MeshBuilder<VertexPositionNormal, VertexColor1Texture1, VertexJoints4>(meshName);
+            var prim = mesh.UsePrimitive(GetMaterial(MaterialIndex));
+
+            if (TriangleFaces.Count % 3 != 0)
+                throw new Exception("Expected a multiple of 3!");
+
+            for (int i = 0; i < TriangleFaces.Count; i += 3)
+            {
+                var v0 = new VertexBuilder<VertexPositionNormal, VertexColor1Texture1, VertexJoints4>();
+                v0.Geometry = new VertexPositionNormal(Vertices[TriangleFaces[i]], Normals[TriangleFaces[i]]);
+                v0.Material = new VertexColor1Texture1(Colors0[TriangleFaces[i]], UV0[TriangleFaces[i]]);
+                v0.Skinning = new VertexJoints4(JointWeights[TriangleFaces[i]]);
+                var v1 = new VertexBuilder<VertexPositionNormal, VertexColor1Texture1, VertexJoints4>();
+                v1.Geometry = new VertexPositionNormal(Vertices[TriangleFaces[i + 1]], Normals[TriangleFaces[i + 1]]);
+                v1.Material = new VertexColor1Texture1(Colors0[TriangleFaces[i + 1]], UV0[TriangleFaces[i + 1]]);
+                v1.Skinning = new VertexJoints4(JointWeights[TriangleFaces[i + 1]]);
+                var v2 = new VertexBuilder<VertexPositionNormal, VertexColor1Texture1, VertexJoints4>();
+                v2.Geometry = new VertexPositionNormal(Vertices[TriangleFaces[i + 2]], Normals[TriangleFaces[i + 2]]);
+                v2.Material = new VertexColor1Texture1(Colors0[TriangleFaces[i + 2]], UV0[TriangleFaces[i + 2]]);
+                v2.Skinning = new VertexJoints4(JointWeights[TriangleFaces[i + 2]]);
+
+                prim.AddTriangle(v0, v1, v2);
+            }
+
+            Scene.AddSkinnedMesh(mesh, Matrix4x4.Identity, Nodes.ToArray());
         }
 
         public void Write(string FileName)
