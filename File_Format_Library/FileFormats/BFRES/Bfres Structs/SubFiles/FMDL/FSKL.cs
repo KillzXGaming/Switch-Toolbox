@@ -824,8 +824,6 @@ namespace Bfres.Structs
             //Shift all indices in each shape's bone list
             //Shift every index in all the vertices indices from the changed node array
             //Shift every bone index in the shape
-            //Shift each smooth index in each bone
-            //Shift each rigid index in each bone
             //Remove the existing inverse matrix from the list
 
             string MappedNames = "";
@@ -917,30 +915,16 @@ namespace Bfres.Structs
                 if (bone.parentIndex > CurrentIndex)
                     bone.parentIndex -= 1;
                 
-                if (bone.SmoothMatrixIndex > CurrentIndex)
-                    bone.SmoothMatrixIndex -= 1;
-                
-                if (bone.RigidMatrixIndex > CurrentIndex)
-                    bone.RigidMatrixIndex -= 1;
-
                 // Update underlying bone data
                 if (bone.BoneU != null)
                 {
                     if (bone.BoneU.ParentIndex > CurrentIndex)
                         bone.BoneU.ParentIndex -= 1;
-                    if (bone.BoneU.SmoothMatrixIndex > CurrentIndex)
-                        bone.BoneU.SmoothMatrixIndex -= 1;
-                    if (bone.BoneU.RigidMatrixIndex > CurrentIndex)
-                        bone.BoneU.RigidMatrixIndex -= 1;
                 }
                 else if (bone.Bone != null)
                 {
                     if (bone.Bone.ParentIndex > CurrentIndex)
                         bone.Bone.ParentIndex -= 1;
-                    if (bone.Bone.SmoothMatrixIndex > CurrentIndex)
-                        bone.Bone.SmoothMatrixIndex -= 1;
-                    if (bone.Bone.RigidMatrixIndex > CurrentIndex)
-                        bone.Bone.RigidMatrixIndex -= 1;
                 }
             }
 
