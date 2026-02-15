@@ -41,6 +41,7 @@ after_build:
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\tegra_swizzle_x86.dll"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\DirectXTexNet.xml"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\runtimes"
+  - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\SwitchToolbox.FbxNative.dll"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Version.txt"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Updater.exe"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Updater.pdb"
