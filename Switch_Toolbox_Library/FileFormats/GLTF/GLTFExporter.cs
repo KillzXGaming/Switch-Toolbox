@@ -93,6 +93,9 @@ namespace Toolbox.Library.GLTFModel
                         case STGenericMatTexture.TextureType.Emission:
                             EmissiveImage = image;
                             break;
+                        case STGenericMatTexture.TextureType.MAR:
+                            // TODO: Swizzle and break channels
+                            break;
                     }
                 }
                 catch (Exception e) {}

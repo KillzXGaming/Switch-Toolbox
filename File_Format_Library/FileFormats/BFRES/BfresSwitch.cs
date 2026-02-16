@@ -804,7 +804,7 @@ namespace FirstPlugin
                 //Kirby star allies uses _#### ubder shaders. The game's sampler system is very picky!
                 bool isKirbyStarAllies = mat.ShaderAssign.ShaderArchiveName.StartsWith("_");
 
-                 if (Runtime.activeGame == Runtime.ActiveGame.BOTW) {
+                if (Runtime.activeGame == Runtime.ActiveGame.BOTW) {
                     if (useSampler == "_a0")
                     {
                         m.HasDiffuseMap = true;
@@ -1074,6 +1074,64 @@ namespace FirstPlugin
 
                         texture.Type = MatTexture.TextureType.SubSurfaceScattering;
                         m.HasSubSurfaceScatteringMap = true;
+                    }
+                }
+                else if (Runtime.activeGame == Runtime.ActiveGame.ACNH)
+                {
+                    if (useSampler == "_a0" && AlbedoCount == 0)
+                    {
+                        m.HasDiffuseMap = true;
+                        AlbedoCount++;
+                        texture.Type = MatTexture.TextureType.Diffuse;
+                    }
+                    else if (useSampler == "_a1")
+                    {
+                        m.HasDiffuseLayer = true;
+                        texture.Type = MatTexture.TextureType.DiffuseLayer2;
+                    }
+                    else if (useSampler == "_n0")
+                    {
+                        m.HasNormalMap = true;
+                        texture.Type = MatTexture.TextureType.Normal;
+                    }
+                    else if (useSampler == "_e0")
+                    {
+                        m.HasEmissionMap = true;
+                        texture.Type = MatTexture.TextureType.Emission;
+                    }
+                    else if (useSampler == "_s0")
+                    {
+                        // Mix pbr texture, usually
+                        // R=Metallic
+                        // G=AO
+                        // B=Roughness EXCEPT in clothing textures TODO
+                        m.HasMAR = true;
+                        texture.Type = MatTexture.TextureType.MAR;
+                    }
+                    else if (useSampler == "_o0")
+                    {
+                        m.HasOpacity = true;
+                        texture.Type = MatTexture.TextureType.Opacity;
+                    }
+                    else if (useSampler == "_x0" && TextureName.Contains("Mlt"))
+                    {
+                        m.HasSphereMap = true;
+                        texture.Type = MatTexture.TextureType.SphereMap;
+                    }
+                    else if (useSampler == "_b0")
+                    {
+                        m.HasShadowMap = true;
+                        texture.Type = MatTexture.TextureType.Shadow;
+                    }
+                    else if (useSampler == "_b1")
+                    {
+                        m.HasLightMap = true;
+                        texture.Type = MatTexture.TextureType.Light;
+                    }
+                    else if (texture.SamplerName == "bake0")
+                    {
+                        m.HasShadowMap = true;
+                        texture.Type = MatTexture.TextureType.Shadow;
                     }
                 }
                 else

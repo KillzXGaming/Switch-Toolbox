@@ -95,8 +95,10 @@ namespace Toolbox.Library
             Roughness = 11,
             Metalness = 12,
             MRA = 13, //Combined pbr texture HAL uses for KSA
-            SphereMap = 14,
-            SubSurfaceScattering = 15,
+            MAR = 14, //Mix pbr texture for ACNH
+            SphereMap = 15,
+            SubSurfaceScattering = 16,
+            Opacity = 17,
         }
 
         public static readonly Dictionary<STTextureMinFilter, TextureMinFilter> minfilter = new Dictionary<STTextureMinFilter, TextureMinFilter>()
