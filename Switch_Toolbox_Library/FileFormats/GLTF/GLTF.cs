@@ -39,8 +39,6 @@ namespace Toolbox.Library
                         string textureName = Textures[i].Text;
                         Exporter.AddTextureMap(textureName, bitmap);
                     }
-                    bitmap.Dispose();
-                    GC.Collect();
                 }
                 catch (Exception ex) {}
             }
