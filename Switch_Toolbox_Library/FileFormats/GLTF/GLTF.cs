@@ -42,10 +42,7 @@ namespace Toolbox.Library
                     bitmap.Dispose();
                     GC.Collect();
                 }
-                catch (Exception ex)
-                {
-
-                }
+                catch (Exception ex) {}
             }
 
             foreach (var mat in Materials)

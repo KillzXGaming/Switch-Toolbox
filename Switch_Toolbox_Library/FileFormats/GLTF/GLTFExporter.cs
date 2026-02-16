@@ -21,7 +21,7 @@ namespace Toolbox.Library.GLTFModel
     {
         private SceneBuilder Scene;
         private MaterialBuilder DefaultMaterial;
-        private Dictionary<string, ImageBuilder> TextureMaps;
+        private Dictionary<string, Bitmap> TextureMaps;
         private List<MaterialBuilder> Materials;
         private List<NodeBuilder> Nodes;
         private int ArmatureCount;
@@ -30,7 +30,7 @@ namespace Toolbox.Library.GLTFModel
         {
             Scene = new SceneBuilder();
             DefaultMaterial = new MaterialBuilder("Default");
-            TextureMaps = new Dictionary<string, ImageBuilder>();
+            TextureMaps = new Dictionary<string, Bitmap>();
             Materials = new List<MaterialBuilder>();
             Nodes = new List<NodeBuilder>();
             ArmatureCount = 0;
@@ -45,12 +45,13 @@ namespace Toolbox.Library.GLTFModel
 
         public void AddTextureMap(string textureName, Bitmap bitmap)
         {
-            var ms = new MemoryStream();
-            bitmap.Save(ms, ImageFormat.Png);
-            byte[] bytes = ms.ToArray();
-            ImageBuilder image = ImageBuilder.From(bytes);
-            image.AlternateWriteFileName = textureName.RemoveIllegaleFileNameCharacters() + ".png";
-            TextureMaps.Add(textureName, image);
+            //var ms = new MemoryStream();
+            //bitmap.Save(ms, ImageFormat.Png);
+            //byte[] bytes = ms.ToArray();
+            //ImageBuilder image = ImageBuilder.From(bytes);
+            //image.AlternateWriteFileName = textureName.RemoveIllegaleFileNameCharacters() + ".png";
+            //TextureMaps.Add(textureName, image);
+            TextureMaps.Add(textureName, bitmap);
         }
 
         public void AddMaterial(STGenericMaterial mat)
@@ -59,19 +60,54 @@ namespace Toolbox.Library.GLTFModel
             MaterialBuilder material = new MaterialBuilder(materialName)
                 .WithMetallicRoughnessShader();
 
+            ImageBuilder BaseColorImage = null;
+            ImageBuilder NormalImage = null;
+            ImageBuilder OcclusionImage = null;
+            ImageBuilder EmissiveImage = null;
+            ImageBuilder MetallicRoughnessImage = null;
+
             foreach (var tex in mat.TextureMaps)
             {
-                ImageBuilder image = TextureMaps[tex.Name];
-                switch (tex.Type)
+                try
                 {
-                    case STGenericMatTexture.TextureType.Diffuse:
-                        material = material.WithChannelImage(KnownChannel.BaseColor, image);
-                        break;
-                    case STGenericMatTexture.TextureType.Normal:
-                        material = material.WithChannelImage(KnownChannel.Normal, image);
-                        break;
+                    string textureName = tex.Name;
+                    Bitmap bitmap = TextureMaps[textureName];
+
+                    var ms = new MemoryStream();
+                    bitmap.Save(ms, ImageFormat.Png);
+                    byte[] bytes = ms.ToArray();
+                    ImageBuilder image = ImageBuilder.From(bytes);
+                    image.AlternateWriteFileName = textureName.RemoveIllegaleFileNameCharacters() + ".png";
+                    
+                    switch (tex.Type)
+                    {
+                        case STGenericMatTexture.TextureType.Diffuse:
+                            BaseColorImage = image;
+                            break;
+                        case STGenericMatTexture.TextureType.Normal:
+                            NormalImage = image;
+                            break;
+                        case STGenericMatTexture.TextureType.AO:
+                            OcclusionImage = image;
+                            break;
+                        case STGenericMatTexture.TextureType.Emission:
+                            EmissiveImage = image;
+                            break;
+                    }
                 }
-            }    
+                catch (Exception e) {}
+            }
+
+            if (BaseColorImage != null)
+                material = material.WithChannelImage(KnownChannel.BaseColor, BaseColorImage);
+            if (NormalImage != null)
+                material = material.WithChannelImage(KnownChannel.Normal, NormalImage);
+            if (OcclusionImage != null)
+                material = material.WithChannelImage(KnownChannel.Occlusion, OcclusionImage);
+            if (EmissiveImage != null)
+                material = material = material.WithChannelImage(KnownChannel.Emissive, EmissiveImage);
+            if (MetallicRoughnessImage != null)
+                material = material = material.WithChannelImage(KnownChannel.MetallicRoughness, MetallicRoughnessImage);
 
             Materials.Add(material);
         }
