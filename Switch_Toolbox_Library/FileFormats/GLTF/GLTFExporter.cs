@@ -11,6 +11,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Library.IO;
@@ -45,13 +46,91 @@ namespace Toolbox.Library.GLTFModel
 
         public void AddTextureMap(string textureName, Bitmap bitmap)
         {
-            //var ms = new MemoryStream();
-            //bitmap.Save(ms, ImageFormat.Png);
-            //byte[] bytes = ms.ToArray();
-            //ImageBuilder image = ImageBuilder.From(bytes);
-            //image.AlternateWriteFileName = textureName.RemoveIllegaleFileNameCharacters() + ".png";
-            //TextureMaps.Add(textureName, image);
             TextureMaps.Add(textureName, bitmap);
+        }
+
+        private static Bitmap MergeDiffuseAndOpacity(Bitmap diffuse, Bitmap opacity)
+        {
+            int width = diffuse.Width;
+            int height = diffuse.Height;
+
+            Bitmap result = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+
+            var rect = new Rectangle(0, 0, width, height);
+
+            var diffuseData = diffuse.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            var opacityData = opacity.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            var resultData = result.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+            int bytes = diffuseData.Stride * height;
+
+            byte[] diffuseBuffer = new byte[bytes];
+            byte[] opacityBuffer = new byte[bytes];
+            byte[] resultBuffer = new byte[bytes];
+
+            Marshal.Copy(diffuseData.Scan0, diffuseBuffer, 0, bytes);
+            Marshal.Copy(opacityData.Scan0, opacityBuffer, 0, bytes);
+
+            for (int i = 0; i < bytes; i += 4)
+            {
+                resultBuffer[i + 0] = diffuseBuffer[i + 0]; // B
+                resultBuffer[i + 1] = diffuseBuffer[i + 1]; // G
+                resultBuffer[i + 2] = diffuseBuffer[i + 2]; // R
+
+                resultBuffer[i + 3] = opacityBuffer[i + 2]; // A
+            }
+
+            Marshal.Copy(resultBuffer, 0, resultData.Scan0, bytes);
+
+            diffuse.UnlockBits(diffuseData);
+            opacity.UnlockBits(opacityData);
+            result.UnlockBits(resultData);
+
+            return result;
+        }
+
+
+        public static unsafe Bitmap Swizzle_Mix_to_ARM(Bitmap source)
+        {
+            Bitmap result = new Bitmap(source.Width, source.Height, PixelFormat.Format32bppArgb);
+
+            Rectangle rect = new Rectangle(0, 0, source.Width, source.Height);
+
+            BitmapData srcData = source.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData dstData = result.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+            int bytes = Math.Abs(srcData.Stride) * source.Height;
+
+            byte* srcPtr = (byte*)srcData.Scan0;
+            byte* dstPtr = (byte*)dstData.Scan0;
+
+            for (int i = 0; i < bytes; i += 4)
+            {
+                byte b = srcPtr[i + 0];
+                byte g = srcPtr[i + 1];
+                byte r = srcPtr[i + 2];
+                byte a = srcPtr[i + 3];
+
+                dstPtr[i + 0] = r; // B = Metallic
+                dstPtr[i + 1] = b; // G = Roughness
+                dstPtr[i + 2] = g; // R = AO
+                dstPtr[i + 3] = a; // preserve alpha
+            }
+
+            source.UnlockBits(srcData);
+            result.UnlockBits(dstData);
+
+            return result;
+        }
+
+        private static ImageBuilder BitmapToImageBuilder(string textureName, Bitmap bitmap)
+        {
+            var ms = new MemoryStream();
+            bitmap.Save(ms, ImageFormat.Png);
+            byte[] bytes = ms.ToArray();
+            ImageBuilder image = ImageBuilder.From(bytes);
+            image.AlternateWriteFileName = textureName.RemoveIllegaleFileNameCharacters() + ".png";
+            return image;
         }
 
         public void AddMaterial(STGenericMaterial mat)
@@ -60,11 +139,11 @@ namespace Toolbox.Library.GLTFModel
             MaterialBuilder material = new MaterialBuilder(materialName)
                 .WithMetallicRoughnessShader();
 
-            ImageBuilder BaseColorImage = null;
-            ImageBuilder NormalImage = null;
-            ImageBuilder OcclusionImage = null;
-            ImageBuilder EmissiveImage = null;
-            ImageBuilder MetallicRoughnessImage = null;
+            string diffuseTexture = null;
+            string opacityTexture = null;
+            string aoTexture = null;
+            string metallicTexture = null;
+            string roughnessTexture = null;
 
             foreach (var tex in mat.TextureMaps)
             {
@@ -73,44 +152,60 @@ namespace Toolbox.Library.GLTFModel
                     string textureName = tex.Name;
                     Bitmap bitmap = TextureMaps[textureName];
 
-                    var ms = new MemoryStream();
-                    bitmap.Save(ms, ImageFormat.Png);
-                    byte[] bytes = ms.ToArray();
-                    ImageBuilder image = ImageBuilder.From(bytes);
-                    image.AlternateWriteFileName = textureName.RemoveIllegaleFileNameCharacters() + ".png";
-                    
                     switch (tex.Type)
                     {
                         case STGenericMatTexture.TextureType.Diffuse:
-                            BaseColorImage = image;
+                            diffuseTexture = textureName;
                             break;
                         case STGenericMatTexture.TextureType.Normal:
-                            NormalImage = image;
+                            material = material.WithChannelImage(KnownChannel.Normal, BitmapToImageBuilder(textureName, bitmap));
                             break;
                         case STGenericMatTexture.TextureType.AO:
-                            OcclusionImage = image;
+                            aoTexture = textureName;
                             break;
                         case STGenericMatTexture.TextureType.Emission:
-                            EmissiveImage = image;
+                            material = material.WithChannelImage(KnownChannel.Emissive, BitmapToImageBuilder(textureName, bitmap));
                             break;
-                        case STGenericMatTexture.TextureType.MAR:
-                            // TODO: Swizzle and break channels
+                        case STGenericMatTexture.TextureType.Metalness:
+                            metallicTexture = textureName;
+                            break;
+                        case STGenericMatTexture.TextureType.Roughness:
+                            roughnessTexture = textureName;
+                            break;
+                        case STGenericMatTexture.TextureType.Opacity:
+                            opacityTexture = textureName;
+                            break;
+                        case STGenericMatTexture.TextureType.Mix:
+                            // Need more research on ACNH to understand channel rules
+                            Bitmap ARM = Swizzle_Mix_to_ARM(bitmap);
+                            material = material
+                                .WithChannelImage(KnownChannel.Occlusion, BitmapToImageBuilder(textureName, ARM))
+                                .WithChannelImage(KnownChannel.MetallicRoughness, BitmapToImageBuilder(textureName, ARM));
+                            break;
+                        default:
+                            // Unknown use
                             break;
                     }
                 }
                 catch (Exception e) {}
             }
 
-            if (BaseColorImage != null)
-                material = material.WithChannelImage(KnownChannel.BaseColor, BaseColorImage);
-            if (NormalImage != null)
-                material = material.WithChannelImage(KnownChannel.Normal, NormalImage);
-            if (OcclusionImage != null)
-                material = material.WithChannelImage(KnownChannel.Occlusion, OcclusionImage);
-            if (EmissiveImage != null)
-                material = material = material.WithChannelImage(KnownChannel.Emissive, EmissiveImage);
-            if (MetallicRoughnessImage != null)
-                material = material = material.WithChannelImage(KnownChannel.MetallicRoughness, MetallicRoughnessImage);
+            if (diffuseTexture != null)
+            {
+                Bitmap diffuseBitmap = TextureMaps[diffuseTexture];
+                if (opacityTexture != null)
+                {
+                    Bitmap opacityBitmap = TextureMaps[opacityTexture];
+                    Bitmap basecolorBitmap = MergeDiffuseAndOpacity(diffuseBitmap, opacityBitmap);
+                    material = material.WithChannelImage(KnownChannel.BaseColor, BitmapToImageBuilder(diffuseTexture, basecolorBitmap));
+                }
+                else
+                {
+                    material = material.WithChannelImage(KnownChannel.BaseColor, BitmapToImageBuilder(diffuseTexture, diffuseBitmap));
+                }
+            }
+
+            // TODO: Combine AO, Roughness, and Metalness and assign to material
 
             Materials.Add(material);
         }

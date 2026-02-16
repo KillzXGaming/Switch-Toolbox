@@ -500,7 +500,7 @@ namespace Bfres.Structs
         public bool HasMetalnessMap = false;
         public bool HasRoughnessMap = false;
         public bool HasMRA = false;
-        public bool HasMAR = false;
+        public bool HasMix = false;
     }
     public class BfresShaderParam
     {

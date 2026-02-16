@@ -1102,11 +1102,10 @@ namespace FirstPlugin
                     else if (useSampler == "_s0")
                     {
                         // Mix pbr texture, usually
-                        // R=Metallic
-                        // G=AO
-                        // B=Roughness EXCEPT in clothing textures TODO
-                        m.HasMAR = true;
-                        texture.Type = MatTexture.TextureType.MAR;
+                        // R=Metallic, G=AO, B=Roughness
+                        // But changes occasionally, especially in clothing textures
+                        m.HasMix = true;
+                        texture.Type = MatTexture.TextureType.Mix;
                     }
                     else if (useSampler == "_o0")
                     {

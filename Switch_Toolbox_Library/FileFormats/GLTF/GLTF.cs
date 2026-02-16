@@ -1,9 +1,10 @@
-﻿using System;
+﻿using SharpGLTF.Transforms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Toolbox.Library.GLTFModel;
-using SharpGLTF.Transforms;
+using Toolbox.Library.IO;
 
 namespace Toolbox.Library
 {
@@ -14,6 +15,64 @@ namespace Toolbox.Library
             public bool UseVertexColors = false;
             public bool FlipTexCoordsVertical = false;
             public bool UseTextureChannelComponents = true;
+            public bool ExportTextures = true;
+        }
+
+        public static void RawTextureExport(string FileName, List<STGenericTexture> Textures, List<STGenericMaterial> Materials, ExportSettings settings)
+        {
+            STProgressBar progressBar = new STProgressBar();
+            progressBar.Task = "Exporting Model...";
+            progressBar.Value = 0;
+            progressBar.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            progressBar.Show();
+            progressBar.Refresh();
+
+            string TexturePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(FileName), "Raw");
+            System.IO.Directory.CreateDirectory(TexturePath);
+            List<string> failedTextureExport = new List<string>();
+
+            for (int i = 0; i < Textures?.Count; i++)
+            {
+                progressBar.Task = $"Exporting Texture {Textures[i].Text}";
+                progressBar.Value = ((i * 100) / Textures.Count);
+                progressBar.Refresh();
+
+                try
+                {
+                    var bitmap = Textures[i].GetBitmap();
+                    if (bitmap != null)
+                    {
+                        if (settings.UseTextureChannelComponents)
+                            bitmap = Textures[i].GetComponentBitmap(bitmap);
+                        string textureName = Textures[i].Text;
+                        if (textureName.RemoveIllegaleFileNameCharacters() != textureName)
+                        {
+                            string properName = textureName.RemoveIllegaleFileNameCharacters();
+                            for (int m = 0; m < Materials?.Count; m++)
+                            {
+                                foreach (var tex in Materials[m].TextureMaps)
+                                {
+                                    if (tex.Name == textureName)
+                                        tex.Name = properName;
+                                }
+                            }
+
+                            textureName = properName;
+                        }
+
+                        bitmap.Save($"{TexturePath}/{textureName}.png");
+                        bitmap.Dispose();
+
+                        GC.Collect();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    failedTextureExport.Add(Textures[i].Text);
+                }
+            }
+
+            progressBar?.Close();
         }
 
         public static void Export(string FileName, ExportSettings settings, STGenericModel model, List<STGenericTexture> Textures, STSkeleton skeleton = null, List<int> NodeArray = null)
@@ -26,7 +85,10 @@ namespace Toolbox.Library
             List<STGenericTexture> Textures, STSkeleton skeleton = null, List<int> NodeArray = null)
         {
             var Exporter = new GLTFExporter();
-            
+
+            if (settings.ExportTextures)
+                RawTextureExport(FileName, Textures, Materials, settings);
+
             for (int i = 0; i < Textures?.Count; i++)
             {
                 try

@@ -95,7 +95,7 @@ namespace Toolbox.Library
             Roughness = 11,
             Metalness = 12,
             MRA = 13, //Combined pbr texture HAL uses for KSA
-            MAR = 14, //Mix pbr texture for ACNH
+            Mix = 14, //Mix pbr texture for ACNH
             SphereMap = 15,
             SubSurfaceScattering = 16,
             Opacity = 17,
