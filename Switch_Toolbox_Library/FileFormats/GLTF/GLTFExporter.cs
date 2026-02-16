@@ -245,7 +245,7 @@ namespace Toolbox.Library.GLTFModel
             List<int> TriangleFaces,
             int ColorsCount, int UVCount, int SkinsCount)
         {
-            if (ColorsCount == 0 && UVCount <= 1 && SkinsCount == 0)
+            if (ColorsCount == 0 && UVCount == 0 && SkinsCount == 0)
                 AddMeshNormal(meshName, materialIndex, Vertices, Normals, TriangleFaces);
             else if (ColorsCount == 0 && UVCount <= 1 && SkinsCount == 0)
                 AddMeshNormalUV1(meshName, materialIndex, Vertices,
