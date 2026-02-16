@@ -271,7 +271,11 @@ namespace Toolbox.Library
                     ColorsCount, UVCount, SkinsCount);
             }
 
-            Exporter.Write(FileName);
+            string ext = System.IO.Path.GetExtension(FileName);
+            if (ext == ".glb")
+                Exporter.WriteGLB(FileName);
+            else
+                Exporter.WriteGLTF(FileName);
         }
     }
 }

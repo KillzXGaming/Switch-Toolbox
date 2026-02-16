@@ -465,10 +465,16 @@ namespace Toolbox.Library.GLTFModel
             Scene.AddSkinnedMesh(mesh, Matrix4x4.Identity, Nodes.ToArray());
         }
 
-        public void Write(string FileName)
+        public void WriteGLTF(string FileName)
         {
             var model = Scene.ToGltf2();
             model.SaveGLTF(FileName);
+        }
+
+        public void WriteGLB(string FileName)
+        {
+            var model = Scene.ToGltf2();
+            model.SaveGLB(FileName);
         }
     }
 }
