@@ -11,7 +11,7 @@ namespace Toolbox.Library
     {
         public class ExportSettings
         {
-            public bool UseVertexColors = true;
+            public bool UseVertexColors = false;
             public bool FlipTexCoordsVertical = false;
             public bool UseTextureChannelComponents = true;
         }
@@ -74,31 +74,30 @@ namespace Toolbox.Library
                 string meshName = mesh.Text;
                 List<Vector3> Vertices = new List<Vector3>();
                 List<Vector3> Normals = new List<Vector3>();
-                List<Vector2> UV0 = new List<Vector2>();
                 List<Vector4> Colors0 = new List<Vector4>();
-                List<SparseWeight8> JointWeights = new List<SparseWeight8>();
+                List<Vector4> Colors1 = new List<Vector4>();
+                List<Vector2> UV0 = new List<Vector2>();
+                List<Vector2> UV1 = new List<Vector2>();
+                List<Vector2> UV2 = new List<Vector2>();
+                List<Vector2> UV3 = new List<Vector2>();
+                List<SparseWeight8> Skins = new List<SparseWeight8>();
                 List<int> TriangleFaces = new List<int>();
 
                 bool HasNormals = false;
-                bool HasColors = false;
-                bool HasColors2 = false;
-                bool HasColors3 = false;
-                bool HasColors4 = false;
+                bool HasColors0 = false;
+                bool HasColors1 = false;
                 bool HasUV0 = false;
                 bool HasUV1 = false;
                 bool HasUV2 = false;
                 bool HasUV3 = false;
                 bool HasBoneIds = false;
-                bool HasSkin5 = false;
+                int SkinsCount = 0;
 
                 foreach (var vertex in mesh.vertices)
                 {
                     if (vertex.nrm != OpenTK.Vector3.Zero) HasNormals = true;
-                    if (settings.UseVertexColors) HasColors = true;
-                    if (vertex.col2 != OpenTK.Vector4.One && settings.UseVertexColors) HasColors2 = true;
-                    if (vertex.col3 != OpenTK.Vector4.One && settings.UseVertexColors) HasColors3 = true;
-                    if (vertex.col4 != OpenTK.Vector4.One && settings.UseVertexColors) HasColors4 = true;
-
+                    if (settings.UseVertexColors) HasColors0 = true;
+                    if (vertex.col2 != OpenTK.Vector4.One && settings.UseVertexColors) HasColors1 = true;
                     if (vertex.uv0 != OpenTK.Vector2.Zero) HasUV0 = true;
                     if (vertex.uv1 != OpenTK.Vector2.Zero) HasUV1 = true;
                     if (vertex.uv2 != OpenTK.Vector2.Zero) HasUV2 = true;
@@ -111,13 +110,20 @@ namespace Toolbox.Library
                     if (settings.FlipTexCoordsVertical)
                     {
                         UV0.Add(new Vector2(vertex.uv0.X, 1 - vertex.uv0.Y));
+                        UV1.Add(new Vector2(vertex.uv1.X, 1 - vertex.uv1.Y));
+                        UV2.Add(new Vector2(vertex.uv2.X, 1 - vertex.uv2.Y));
+                        UV3.Add(new Vector2(vertex.uv3.X, 1 - vertex.uv3.Y));
                     }
                     else
                     {
                         UV0.Add(new Vector2(vertex.uv0.X, vertex.uv0.Y));
+                        UV1.Add(new Vector2(vertex.uv1.X, vertex.uv1.Y));
+                        UV2.Add(new Vector2(vertex.uv2.X, vertex.uv2.Y));
+                        UV3.Add(new Vector2(vertex.uv3.X, vertex.uv3.Y));
                     }
 
                     Colors0.Add(new Vector4(vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W));
+                    Colors1.Add(new Vector4(vertex.col2.X, vertex.col2.Y, vertex.col2.Z, vertex.col2.W));
 
                     List<int> bIndices = new List<int>();
                     List<float> bWeights = new List<float>();
@@ -134,28 +140,27 @@ namespace Toolbox.Library
                             weightSum += boneWeight;
                         }
                     }
-                    HasSkin5 = bIndices.Count >= 5;
                     // Rigid bodies with a valid bone index
                     if (bIndices.Count == 0 && mesh.boneList.Count > 0 && mesh.BoneIndex >= 0 && mesh.BoneIndex < skeleton?.bones.Count)
                     {
-                        HasBoneIds = true;
                         bIndices.Add(mesh.BoneIndex);
                         bWeights.Add(1f);
                     }
                     // Bone indices exist with no weights mapped
                     if (weightSum < 1e-6f && bIndices.Count > 0)
                     {
+                        bIndices.RemoveRange(1, bIndices.Count-1);
                         bWeights[0] = 1f;
-                        HasSkin5 = false;
                     }
+                    SkinsCount = Math.Max(SkinsCount, bIndices.Count);
+
                     // Fill enough to define SparseWeight8
                     for (int i = bIndices.Count; i < 8; i++)
                     {
                         bIndices.Add(0);
                         bWeights.Add(0);
                     }
-
-                    JointWeights.Add(SparseWeight8.Create(
+                    Skins.Add(SparseWeight8.Create(
                         new Vector4(bIndices[0], bIndices[1], bIndices[2], bIndices[3]),
                         new Vector4(bIndices[4], bIndices[5], bIndices[6], bIndices[7]),
                         new Vector4(bWeights[0], bWeights[1], bWeights[2], bWeights[3]),
@@ -192,8 +197,21 @@ namespace Toolbox.Library
                     TriangleFaces.AddRange(faces);
                 }
 
-                // TODO: Determine which type of export vertices to use
-                Exporter.AddMeshNormalUV1Skin4(meshName, Vertices, Normals, UV0, JointWeights, TriangleFaces, mesh.MaterialIndex);
+                int ColorsCount =
+                    HasColors1 ? 2 :
+                    HasColors0 ? 1 :
+                    0;
+                int UVCount =
+                    HasUV3 ? 4 :
+                    HasUV2 ? 3 :
+                    HasUV1 ? 2 :
+                    HasUV0 ? 1 :
+                    0;
+
+                Exporter.AddMesh(meshName, mesh.MaterialIndex,
+                    Vertices, Normals, Colors0, Colors1,
+                    UV0, UV1, UV2, UV3, Skins, TriangleFaces,
+                    ColorsCount, UVCount, SkinsCount);
             }
 
             Exporter.Write(FileName);
