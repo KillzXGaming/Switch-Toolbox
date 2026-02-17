@@ -381,7 +381,7 @@
     <Compile Include="FileFormats\DKCTF\FileData\Common.cs" />
     <Compile Include="FileFormats\DKCTF\MSBT.cs" />
     <Compile Include="FileFormats\DKCTF\PAK.cs" />
-    <Compile Include="FileFormats\Effects\ESET.cs" />
+    <Compile Include="FileFormats\Effects\EFTB.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HeaderCommon.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HedgeModel.cs" />
     <Compile Include="FileFormats\HedgehogEngine\PACx.cs" />
@@ -1091,6 +1091,24 @@
     </Compile>
     <Compile Include="GUI\Editors\PTCL\ColorConstantPanel.Designer.cs">
       <DependentUpon>ColorConstantPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\ColorArrayEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\ColorArrayEditor.Designer.cs">
+      <DependentUpon>ColorArrayEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterEditor.Designer.cs">
+      <DependentUpon>EmitterEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterTextureEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Editors\PTCL\EmitterTextureEditor.Designer.cs">
+      <DependentUpon>EmitterTextureEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\Editors\PTCL\EmitterTexturePanel.cs">
       <SubType>UserControl</SubType>
@@ -2114,8 +2132,14 @@
     <EmbeddedResource Include="GUI\Editors\PTCL\ColorConstantPanel.resx">
       <DependentUpon>ColorConstantPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\ColorArrayEditor.resx">
+      <DependentUpon>ColorArrayEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\PTCL\ColorRandomPanel.resx">
       <DependentUpon>ColorRandomPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\EmitterEditor.resx">
+      <DependentUpon>EmitterEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\PTCL\EmitterEditorNX.resx">
       <DependentUpon>EmitterEditorNX.cs</DependentUpon>
@@ -2146,6 +2170,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\BFRES\Scene\SceneAnimEditor.resx">
       <DependentUpon>SceneAnimEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Editors\PTCL\EmitterTextureEditor.resx">
+      <DependentUpon>EmitterTextureEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\Editors\PTCL\EmitterTexturePanel.resx">
       <DependentUpon>EmitterTexturePanel.cs</DependentUpon>

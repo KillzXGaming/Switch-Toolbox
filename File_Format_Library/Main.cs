@@ -366,6 +366,7 @@ namespace FirstPlugin
             Formats.Add(typeof(GTXFile));
             Formats.Add(typeof(AAMP));
             Formats.Add(typeof(PTCL));
+            Formats.Add(typeof(EFTB));
             Formats.Add(typeof(EFF));
             Formats.Add(typeof(EFCF));
             Formats.Add(typeof(BNSH));

@@ -1,90 +1,135 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Toolbox.Library;
+using System.Text.RegularExpressions;
 
 namespace FirstPlugin.Forms
 {
     public partial class ColorRandomPanel : UserControl, IColorPanelCommon
     {
         public bool IsAlpha { get; set; }
+        public STColor SelectedColor => SelectedColorKey?.MyColor;
+
+        public event EventHandler ColorSelected;
+
+        private ColorKey SelectedColorKey => colorKeys.Where(k => k.IsSelected).FirstOrDefault();
+
+        private ColorKey[] colorKeys;
 
         public ColorRandomPanel()
         {
             InitializeComponent();
+            colorKeys = Controls.OfType<Panel>().OrderBy(panel => Int32.Parse(Regex.Match(panel.Name, @"\d").Value)).Select(panel =>
+            {
+                var key = new ColorKey(panel);
+                key.Selected += ColorKey_Selected;
+
+                return key;
+            }).ToArray();
         }
 
-        private int SelectedIndex = 0;
-
-        public event EventHandler ColorSelected;
+        public void UpdateSelectedColor()
+        {
+            SelectedColorKey?.Refresh();
+        }
 
         public Color GetColor()
         {
-            var panel = GetColor(SelectedIndex);
-            return panel.BackColor;
+            return SelectedColor.Color; // assumes this is only called while a color is selected. otherwise null ref.
         }
 
         public void SetColor(Color color)
         {
-            var panel = GetColor(SelectedIndex);
-            panel.BackColor = color;
-            activeColors[SelectedIndex].Color = color;
-        }
-
-        public void SelectPanel()
-        {
-            var panel = GetColor(SelectedIndex);
-            panel.BorderStyle = BorderStyle.Fixed3D;
+            SelectedColor.Color = color; // assumes this is only called while a color is selected. otherwise null ref.
+            SelectedColorKey.Refresh();
         }
 
         public void DeselectPanel()
         {
-            foreach (var panel in Controls)
-                ((Panel)panel).BorderStyle = BorderStyle.None;
+            foreach (ColorKey key in colorKeys)
+            {
+                key.Deselect();
+            }
         }
-
-        STColor[] activeColors;
 
         public void LoadColors(STColor[] colors)
         {
-            activeColors = colors;
-            for (int i = 0; i < colors.Length; i++)
+            LoadColors(colors, 8);
+        }
+
+        public void LoadColors(STColor[] colors, int keyCount)
+        {
+            for (int i = 0; i < keyCount; i++)
             {
-                var panel = GetColor(i);
-                Color c = colors[i].Color;
-                panel.BackColor = Color.FromArgb(c.R, c.G, c.B);
+                colorKeys[i].LoadColor(colors[i]);
+            }
+
+            for (int i = keyCount; i < 8; i++)
+            {
+                colorKeys[i].Unload();
             }
         }
 
-        public Panel GetColor(int index)
+        private void ColorKey_Selected(object sender, EventArgs args)
         {
-            foreach (Control control in Controls)
+            foreach (ColorKey key in colorKeys)
             {
-                if (control.Name == $"color{index}PB")
-                    return (Panel)control;
+                if (key != sender)
+                {
+                    key.Deselect();
+                }
             }
-            return null;
+
+            ColorSelected?.Invoke(this, null);
         }
 
-        private void colorPB_Click(object sender, EventArgs e)
+        private class ColorKey
         {
-            var panel = sender as Panel;
-            if (panel == null) return;
+            public STColor MyColor { get; private set; }
+            public Panel MyPanel { get; private set; }
+            public bool IsSelected { get; private set; }
 
-            for (int i =0; i < 8; i++)
+            public event EventHandler Selected;
+
+            public ColorKey(Panel panel)
             {
-                if (panel.Name == $"color{i}PB")
-                    SelectedIndex = i;
+                MyPanel = panel;
+                MyPanel.Click += Panel_Click;
             }
 
-            if (ColorSelected != null)
-                ColorSelected(this, null);
+            public void LoadColor(STColor color)
+            {
+                MyColor = color;
+                MyPanel.BackColor = Color.FromArgb(color.Color.R, color.Color.G, color.Color.B);
+                MyPanel.Visible = true;
+            }
+
+            public void Unload()
+            {
+                MyColor = null;
+                MyPanel.Visible = false;
+            }
+
+            public void Refresh()
+            {
+                MyPanel.BackColor = MyColor.Color;
+            }
+
+            public void Deselect()
+            {
+                MyPanel.BorderStyle = BorderStyle.FixedSingle;
+                IsSelected = false;
+            }
+
+            private void Panel_Click(object sender, EventArgs args)
+            {
+                MyPanel.BorderStyle = BorderStyle.Fixed3D;
+                IsSelected = true;
+                Selected?.Invoke(this, null);
+            }
         }
     }
 }

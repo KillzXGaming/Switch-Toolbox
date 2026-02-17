@@ -15,8 +15,22 @@ namespace FirstPlugin.Forms
     public partial class Color8KeySlider : STPanel, IColorPanelCommon
     {
         public bool IsAlpha { get; set; }
+        public STColor SelectedColor
+        {
+            get
+            {
+                return activeColors[SelectedIndex]; // TODO get rid of SelectedIndex if possible
+            }
+        }
 
+        STColor[] activeColors;
         private int SelectedIndex = 0;
+
+        public void UpdateSelectedColor()
+        {
+            Invalidate();
+        }
+
         public Color GetColor()
         {
             return Keys[SelectedIndex].Color;
@@ -35,7 +49,6 @@ namespace FirstPlugin.Forms
 
         public event EventHandler ColorSelected;
 
-        public void SelectPanel() {}
         public void DeselectPanel() {}
 
         public Color8KeySlider()
@@ -60,9 +73,11 @@ namespace FirstPlugin.Forms
 
         public void LoadColors(STColor[] keys, int keyCount)
         {
+            activeColors = keys;
             Keys.Clear();
             for (int i = 0; i < keyCount; i++)
                 Keys.Add(new KeyFrame(keys[i]));
+            Invalidate();
         }
 
         private void HitDetect()
