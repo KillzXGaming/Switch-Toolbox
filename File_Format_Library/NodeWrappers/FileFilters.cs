@@ -15,7 +15,7 @@ namespace FirstPlugin
         public static string GTX = GetFilter(".dds", ".dds2", ".png", ".bmp", ".tga", ".jpg", ".tiff", ".tif", ".gif");
 
         public static string FMDL = GetFilter(".dae", ".bfmdl", ".fbx", ".obj", ".csv");
-        public static string FMDL_EXPORT = GetFilter(".dae", ".bfmdl");
+        public static string FMDL_EXPORT = GetFilter(".fbx", ".dae", ".bfmdl");
         public static string FSKL = GetFilter(".bfskl");
         public static string FSHP = GetFilter(".bfobj", ".dae");
         public static string BONE = GetFilter(".bfbon");

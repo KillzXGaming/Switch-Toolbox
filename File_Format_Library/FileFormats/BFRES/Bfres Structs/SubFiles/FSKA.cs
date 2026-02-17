@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using Syroot.NintenTools.NSW.Bfres;
@@ -7,6 +7,7 @@ using Toolbox.Library;
 using ResU = Syroot.NintenTools.Bfres;
 using FirstPlugin;
 using OpenTK;
+using GL_EditorFramework.StandardCameras;
 using Toolbox.Library.Animations;
 using Toolbox.Library.Forms;
 using SELib;
@@ -263,89 +264,213 @@ namespace Bfres.Structs
 
         public void Replace(string FileName, ResFile resFileNX, ResU.ResFile resFileU)
         {
-            string ext = Utils.GetExtension(FileName);
-            if (ext == ".bfska")
+            // Store current loop and camera framing settings to preserve them after replacement
+            bool preserveLoop = this.CanLoop;
+            bool previousFrameCamera = Runtime.FrameCamera;
+            Vector3 prevCameraTarget = Vector3.Zero;
+            float prevCamRotX = 0f;
+            float prevCamRotY = 0f;
+            float prevFov = 0f;
+            float prevZNear = 0f;
+            float prevZFar = 0f;
+            bool hasGLControl = false;
+            bool prevIsWalkCamera = false;
+            // Get the BfresEditor and its viewport to suppress updates
+            BfresEditor bfresEditor = (BfresEditor)LibraryGUI.GetActiveContent(typeof(BfresEditor));
+            bool previousSuppressUpdating = false;
+            if (bfresEditor != null && bfresEditor.GetViewport() != null && bfresEditor.GetViewport().GL_Control != null)
             {
-                bool IsSwitch = BfresUtilies.IsSubSectionSwitch(FileName);
-
-                if (resFileU != null)
+                var gl = bfresEditor.GetViewport().GL_Control;
+                prevCameraTarget = gl.CameraTarget;
+                prevCamRotX = gl.CamRotX;
+                prevCamRotY = gl.CamRotY;
+                prevFov = gl.Fov;
+                prevZNear = gl.ZNear;
+                prevZFar = gl.ZFar;
+                hasGLControl = true;
+                if (gl.ActiveCamera is WalkaroundCamera)
                 {
-                    //If it's a switch animation try to conver it to wii u
-                    if (IsSwitch)
+                    prevIsWalkCamera = true;
+                    gl.ActiveCamera = new InspectCamera(Runtime.MaxCameraSpeed);
+                }
+            }
+            // Disable camera framing and viewport updates during animation replacement
+            Runtime.FrameCamera = false;
+            
+            if (bfresEditor != null && bfresEditor.GetViewport() != null)
+            {
+                previousSuppressUpdating = bfresEditor.GetViewport().SuppressUpdating;
+                bfresEditor.GetViewport().SuppressUpdating = true;
+            }
+            
+            try
+            {
+                string ext = Utils.GetExtension(FileName);
+                if (ext == ".bfska")
+                {
+                    bool IsSwitch = BfresUtilies.IsSubSectionSwitch(FileName);
+
+                    if (resFileU != null)
                     {
-                        var ska = new SkeletalAnim();
-                        ska.Import(FileName);
-                        SkeletalAnimU = BfresPlatformConverter.FSKAConvertSwitchToWiiU(ska);
-                        SkeletalAnimU.Name = Text;
-                        LoadAnim(SkeletalAnimU);
+                        //If it's a switch animation try to conver it to wii u
+                        if (IsSwitch)
+                        {
+                            var ska = new SkeletalAnim();
+                            ska.Import(FileName);
+                            SkeletalAnimU = BfresPlatformConverter.FSKAConvertSwitchToWiiU(ska);
+                            SkeletalAnimU.Name = Text;
+                            SkeletalAnimU.Loop = preserveLoop;
+                            LoadAnim(SkeletalAnimU);
+                        }
+                        else
+                        {
+                            SkeletalAnimU.Import(FileName, resFileU);
+                            SkeletalAnimU.Name = Text;
+                            SkeletalAnimU.Loop = preserveLoop;
+                            LoadAnim(SkeletalAnimU);
+                        }
                     }
                     else
                     {
-                        SkeletalAnimU.Import(FileName, resFileU);
-                        SkeletalAnimU.Name = Text;
-                        LoadAnim(SkeletalAnimU);
+                        if (IsSwitch)
+                        {
+                            SkeletalAnim.Import(FileName);
+                            SkeletalAnim.Name = Text;
+                            SkeletalAnim.Loop = preserveLoop;
+                            LoadAnim(SkeletalAnim);
+                        }
+                        else
+                        {
+                            //Create a new wii u skeletal anim and try to convert it instead
+                            var ska = new ResU.SkeletalAnim();
+                            ska.Import(FileName, new ResU.ResFile());
+                            SkeletalAnim = BfresPlatformConverter.FSKAConvertWiiUToSwitch(ska);
+                            SkeletalAnim.Name = Text;
+                            SkeletalAnim.Loop = preserveLoop;
+                            LoadAnim(SkeletalAnim);
+                        }
                     }
                 }
-                else
+                else if (ext == ".anim")
                 {
-                    if (IsSwitch)
+                    FromAnim(FileName, preserveLoop);
+                }
+                else if (ext == ".seanim")
+                {
+                    STSkeleton skeleton = GetActiveSkeleton();
+
+                    if (skeleton != null)
                     {
-                        SkeletalAnim.Import(FileName);
-                        SkeletalAnim.Name = Text;
-                        LoadAnim(SkeletalAnim);
+                        var ska = FromGeneric(SEANIM.Read(FileName, skeleton));
+                        ska.Loop = preserveLoop;
+                        UpdateAnimation(ska);
                     }
                     else
+                        STErrorDialog.Show("No matching skeleton bones found to assign!", "Skeleton Importer", "");
+                }
+                else if (ext == ".smd")
+                {
+                    STSkeleton skeleton = GetActiveSkeleton();
+
+                    if (skeleton != null)
                     {
-                        //Create a new wii u skeletal anim and try to convert it instead
-                        var ska = new ResU.SkeletalAnim();
-                        ska.Import(FileName, new ResU.ResFile());
-                        SkeletalAnim = BfresPlatformConverter.FSKAConvertWiiUToSwitch(ska);
-                        SkeletalAnim.Name = Text;
-                        LoadAnim(SkeletalAnim);
+                        var ska = FromGeneric(SMD.Read(FileName, skeleton));
+                        ska.Loop = preserveLoop;
+                        UpdateAnimation(ska);
+                    }
+                    else
+                         STErrorDialog.Show("No matching skeleton bones found to assign!", "Skeleton Importer", "");
+                }
+                else if (ext == ".chr0")
+                {
+                    FromChr0(FileName, resFileU != null, preserveLoop);
+                }
+                else if (ext == ".dae")
+                {
+                 //   FromAssimp(FileName, resFileU != null);
+                }
+                else if (ext == ".fbx")
+                {
+                 //   FromAssimp(FileName, resFileU != null);
+                }
+            }
+            finally
+            {
+                if (bfresEditor != null && bfresEditor.GetViewport() != null)
+                {
+                    if (hasGLControl && bfresEditor.GetViewport().GL_Control != null)
+                    {
+                        var gl = bfresEditor.GetViewport().GL_Control;
+                        gl.CameraTarget = prevCameraTarget;
+                        gl.CamRotX = prevCamRotX;
+                        gl.CamRotY = prevCamRotY;
+                        gl.Fov = prevFov;
+                        gl.ZNear = prevZNear;
+                        gl.ZFar = prevZFar;
+                        if (prevIsWalkCamera)
+                            gl.ActiveCamera = new WalkaroundCamera(Runtime.MaxCameraSpeed);
+                    }
+                    bfresEditor.GetViewport().SuppressUpdating = previousSuppressUpdating;
+                    bfresEditor.GetViewport().UpdateViewport();
+                    if (hasGLControl && bfresEditor.GetViewport().GL_Control != null)
+                    {
+                        var gl = bfresEditor.GetViewport().GL_Control;
+                        if (gl.InvokeRequired)
+                        {
+                            gl.BeginInvoke((MethodInvoker)delegate {
+                                gl.CameraTarget = prevCameraTarget;
+                                gl.CamRotX = prevCamRotX;
+                                gl.CamRotY = prevCamRotY;
+                                gl.Fov = prevFov;
+                                gl.ZNear = prevZNear;
+                                gl.ZFar = prevZFar;
+                                gl.Refresh();
+                                var timer = new Timer();
+                                timer.Interval = 1;
+                                timer.Tick += (s, e2) =>
+                                {
+                                    gl.CameraTarget = prevCameraTarget;
+                                    gl.CamRotX = prevCamRotX;
+                                    gl.CamRotY = prevCamRotY;
+                                    gl.Fov = prevFov;
+                                    gl.ZNear = prevZNear;
+                                    gl.ZFar = prevZFar;
+                                    gl.Refresh();
+                                    Runtime.FrameCamera = previousFrameCamera;
+                                    timer.Stop();
+                                    timer.Dispose();
+                                };
+                                timer.Start();
+                            });
+                        }
+                        else
+                        {
+                            gl.CameraTarget = prevCameraTarget;
+                            gl.CamRotX = prevCamRotX;
+                            gl.CamRotY = prevCamRotY;
+                            gl.Fov = prevFov;
+                            gl.ZNear = prevZNear;
+                            gl.ZFar = prevZFar;
+                            gl.Refresh();
+                            var timer = new Timer();
+                            timer.Interval = 1;
+                            timer.Tick += (s, e2) =>
+                            {
+                                gl.CameraTarget = prevCameraTarget;
+                                gl.CamRotX = prevCamRotX;
+                                gl.CamRotY = prevCamRotY;
+                                gl.Fov = prevFov;
+                                gl.ZNear = prevZNear;
+                                gl.ZFar = prevZFar;
+                                gl.Refresh();
+                                Runtime.FrameCamera = previousFrameCamera;
+                                timer.Stop();
+                                timer.Dispose();
+                            };
+                            timer.Start();
+                        }
                     }
                 }
-            }
-            else if (ext == ".anim")
-            {
-                 FromAnim(FileName);
-            }
-            else if (ext == ".seanim")
-            {
-                STSkeleton skeleton = GetActiveSkeleton();
-
-                if (skeleton != null)
-                {
-                    var ska = FromGeneric(SEANIM.Read(FileName, skeleton));
-                    ska.Loop = this.CanLoop;
-                    UpdateAnimation(ska);
-                }
-                else
-                    STErrorDialog.Show("No matching skeleton bones found to assign!", "Skeleton Importer", "");
-            }
-            else if (ext == ".smd")
-            {
-                STSkeleton skeleton = GetActiveSkeleton();
-
-                if (skeleton != null)
-                {
-                    var ska = FromGeneric(SMD.Read(FileName, skeleton));
-                    ska.Loop = this.CanLoop;
-                    UpdateAnimation(ska);
-                }
-                else
-                     STErrorDialog.Show("No matching skeleton bones found to assign!", "Skeleton Importer", "");
-            }
-            else if (ext == ".chr0")
-            {
-                FromChr0(FileName, resFileU != null);
-            }
-            else if (ext == ".dae")
-            {
-             //   FromAssimp(FileName, resFileU != null);
-            }
-            else if (ext == ".fbx")
-            {
-             //   FromAssimp(FileName, resFileU != null);
             }
         }
 
@@ -564,7 +689,7 @@ namespace Bfres.Structs
 
             if (MaxFrame < Byte.MaxValue)
                 curve.FrameType = AnimCurveFrameType.Byte;
-            else if (MaxFrame < Int16.MaxValue)
+            else if (MaxFrame < 1000)
                 curve.FrameType = AnimCurveFrameType.Decimal10x5;
             else
                 curve.FrameType = AnimCurveFrameType.Single;
@@ -848,36 +973,40 @@ namespace Bfres.Structs
             Initialize();
         }
 
-        public void FromAnim(string FileName)
+        public void FromAnim(string FileName, bool preserveLoop = false)
         {
             if (SkeletalAnimU != null)
             {
                 var SkeletalAnimNX = BrawlboxHelper.FSKAConverter.Anim2Fska(FileName);
                 SkeletalAnimU = BfresPlatformConverter.FSKAConvertSwitchToWiiU(SkeletalAnimNX);
                 SkeletalAnimU.Name = Text;
+                SkeletalAnimU.Loop = preserveLoop;
                 LoadAnim(SkeletalAnimU);
             }
             else
             {
                 SkeletalAnim = BrawlboxHelper.FSKAConverter.Anim2Fska(FileName);
                 SkeletalAnim.Name = Text;
+                SkeletalAnim.Loop = preserveLoop;
                 LoadAnim(SkeletalAnim);
             }
         }
 
-        public void FromChr0(string FileName, bool IsWiiU)
+        public void FromChr0(string FileName, bool IsWiiU, bool preserveLoop = false)
         {
             if (IsWiiU)
             {
                 var SkeletalAnimNX = BrawlboxHelper.FSKAConverter.Chr02Fska(FileName);
                 SkeletalAnimU = BfresPlatformConverter.FSKAConvertSwitchToWiiU(SkeletalAnimNX);
                 SkeletalAnimU.Name = Text;
+                SkeletalAnimU.Loop = preserveLoop;
                 LoadAnim(SkeletalAnimU);
             }
             else
             {
                 SkeletalAnim = BrawlboxHelper.FSKAConverter.Chr02Fska(FileName);
                 SkeletalAnim.Name = Text;
+                SkeletalAnim.Loop = preserveLoop;
                 LoadAnim(SkeletalAnim);
             }
         }

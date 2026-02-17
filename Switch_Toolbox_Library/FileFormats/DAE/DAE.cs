@@ -36,7 +36,7 @@ namespace Toolbox.Library
 
             public ProgramPreset Preset = ProgramPreset.NONE;
 
-            public bool ExportTextures = true;
+            public bool ExportTextures = false;
 
             public string ImageExtension = ".png";
             public string ImageFolder = "";
