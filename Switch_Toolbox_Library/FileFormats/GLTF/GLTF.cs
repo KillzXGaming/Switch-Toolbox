@@ -20,6 +20,9 @@ namespace Toolbox.Library
 
         public static void RawTextureExport(string FileName, List<STGenericTexture> Textures, List<STGenericMaterial> Materials, ExportSettings settings)
         {
+            if (Textures?.Count == 0)
+                return;
+
             STProgressBar progressBar = new STProgressBar();
             progressBar.Task = "Exporting Model...";
             progressBar.Value = 0;
