@@ -309,6 +309,8 @@ namespace Bfres.Structs
                 Runtime.activeGame = Runtime.ActiveGame.BOTW;
             else if (ShaderName.Contains("Blitz_UBER"))
                 Runtime.activeGame = Runtime.ActiveGame.Splatoon2;
+            else if (ShaderName.Contains("Park_UBER"))
+                Runtime.activeGame = Runtime.ActiveGame.ACNH;
             else
                 Runtime.activeGame = Runtime.ActiveGame.KSA;
         }
@@ -492,11 +494,13 @@ namespace Bfres.Structs
         public bool HasLightMap = false;
         public bool HasSphereMap = false;
         public bool HasSubSurfaceScatteringMap = false;
+        public bool HasOpacity = false;
 
         //PBR (Switch) data
         public bool HasMetalnessMap = false;
         public bool HasRoughnessMap = false;
         public bool HasMRA = false;
+        public bool HasMix = false;
     }
     public class BfresShaderParam
     {

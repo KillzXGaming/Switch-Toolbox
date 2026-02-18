@@ -1,0 +1,11 @@
+<Project>
+
+  <!-- System.ValueTuple is inbox on .NET Framework >= 4.7.1 and therefore any potential redirect for it should be removed.
+       This is necessary as the assembly version in the already shipped packages is higher than what's provided inbox on .NET Framework. -->
+  <Target Name="RemoveValueTupleRedirectForNet471AndAbove" DependsOnTargets="ResolveAssemblyReferences" BeforeTargets="GenerateBindingRedirects">
+    <ItemGroup>
+      <SuggestedBindingRedirects Remove="System.ValueTuple, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
+    </ItemGroup>
+  </Target>
+
+</Project>

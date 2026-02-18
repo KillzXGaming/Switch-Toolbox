@@ -332,6 +332,7 @@ namespace Toolbox.Library
             BOTW,
             KSA,
             Bezel,
+            ACNH,
         }
 
         public enum PictureBoxBG
