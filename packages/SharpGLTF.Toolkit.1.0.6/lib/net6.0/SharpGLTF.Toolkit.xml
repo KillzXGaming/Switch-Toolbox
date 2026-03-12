@@ -1,0 +1,2690 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SharpGLTF.Toolkit</name>
+    </assembly>
+    <members>
+        <member name="T:SharpGLTF.Animations.AnimatableProperty`1">
+            <summary>
+            Represents a property value that can be animated using <see cref="T:SharpGLTF.Animations.ICurveSampler`1"/>.
+            </summary>
+            <typeparam name="T">The type of the value.</typeparam>
+        </member>
+        <member name="P:SharpGLTF.Animations.AnimatableProperty`1.Value">
+            <summary>
+            Gets or sets the default value of this instance.
+            When animations are disabled, or there's no animation track available, this will be the returned value.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Animations.AnimatableProperty`1.RemoveTrack(System.String)">
+            <summary>
+            Removes the animation <paramref name="track"/>.
+            </summary>
+            <param name="track">The name of the track.</param>
+        </member>
+        <member name="M:SharpGLTF.Animations.AnimatableProperty`1.GetValueAt(System.String,System.Single)">
+            <summary>
+            Evaluates the value of this <see cref="T:SharpGLTF.Animations.AnimatableProperty`1"/> at a given <paramref name="offset"/> for a given <paramref name="track"/>.
+            </summary>
+            <param name="track">An animation track name, or null.</param>
+            <param name="offset">A time offset within the given animation track.</param>
+            <returns>The evaluated value taken from the animation <paramref name="track"/>, or <see cref="P:SharpGLTF.Animations.AnimatableProperty`1.Value"/> if a track was not found.</returns>
+        </member>
+        <member name="M:SharpGLTF.Animations.AnimatableProperty`1.SetTrack(System.String,SharpGLTF.Animations.ICurveSampler{`0})">
+            <summary>
+            Assigns an animation curve to a given track.
+            </summary>
+            <param name="track">The name of the track.</param>
+            <param name="curve">
+            A <see cref="T:SharpGLTF.Animations.ICurveSampler`1"/> instance which also
+            implements <see cref="T:SharpGLTF.Animations.IConvertibleCurve`1"/>,
+            or null to remove a track.
+            </param>
+        </member>
+        <member name="T:SharpGLTF.Animations.CurveBuilder`1">
+            <summary>
+            Represents an editable curve of <typeparamref name="T"/> elements.
+            </summary>
+            <typeparam name="T">An element of the curve.</typeparam>
+            <remarks>
+            <para>
+            <see cref="T:SharpGLTF.Animations.CurveBuilder`1"/> instances are created using <see cref="M:SharpGLTF.Animations.CurveFactory.CreateCurveBuilder``1"/> with T being <see cref="T:System.Numerics.Vector3"/>, <see cref="T:System.Numerics.Quaternion"/> types and so on.
+            </para>
+            <para>
+            But <see cref="T:SharpGLTF.Animations.CurveFactory"/> is internal, the actual way of creating animation curves is using:<br/>
+            <see cref="M:SharpGLTF.Scenes.NodeBuilder.UseScale(System.String)"/><br/>
+            <see cref="M:SharpGLTF.Scenes.NodeBuilder.UseRotation(System.String)"/><br/>
+            <see cref="!:Scenes.NodeBuilder.UseTranslation()(string)"/><br/>
+            </para>
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Animations.CurveBuilder`1.CreateValue(System.Collections.Generic.IReadOnlyList{System.Single})">
+            <summary>
+            Creates a <typeparamref name="T"/> instance from an <see cref="T:System.Single"/>[] array.
+            </summary>
+            <param name="values">An array of floats.</param>
+            <returns>A <typeparamref name="T"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Animations.CurveBuilder`1.GetPoint(System.Single)">
+            <summary>
+            Samples the curve at a given <paramref name="offset"/>
+            </summary>
+            <param name="offset">The curve offset to sample.</param>
+            <returns>A curve <typeparamref name="T"/> point.</returns>
+        </member>
+        <member name="M:SharpGLTF.Animations.CurveBuilder`1.SetIncomingTangent(System.Single,`0)">
+            <summary>
+            Sets the incoming tangent to an existing point.
+            </summary>
+            <param name="offset">The offset of the existing point.</param>
+            <param name="tangent">The tangent value.</param>
+        </member>
+        <member name="M:SharpGLTF.Animations.CurveBuilder`1.SetOutgoingTangent(System.Single,`0)">
+            <summary>
+            Sets the outgoing tangent to an existing point.
+            </summary>
+            <param name="offset">The offset of the existing point.</param>
+            <param name="tangent">The tangent value.</param>
+        </member>
+        <member name="T:SharpGLTF.Animations.CurveFactory">
+            <summary>
+            This class is meant to be used internally.
+            </summary>
+            <remarks>
+            Functions of this class are being used by:
+            <see cref="M:SharpGLTF.Animations.AnimatableProperty`1.UseTrackBuilder(System.String)"/>
+            which is the public API.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.BaseBuilder.Name">
+            <summary>
+            Gets or sets the display text name, or null.
+            <para><b>⚠️ DO NOT USE AS AN OBJECT ID ⚠️</b> see remarks.</para>
+            </summary>
+            <remarks>
+            glTF does not define any rule for object names.<br/>
+            This means that names can be null or non unique.<br/>
+            So don't use <see cref="P:SharpGLTF.BaseBuilder.Name"/> for anything other than object name display.<br/>
+            If you need to reference objects by some ID, use lookup tables instead.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.BaseBuilder.Extras">
+            <summary>
+            Gets or sets the custom data of this object.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.BaseBuilder.SetNameAndExtrasFrom(SharpGLTF.Schema2.LogicalChildOfRoot)">
+            <summary>
+            Sets the name and extras from a Schema2 object.
+            </summary>
+            <param name="source"></param>
+        </member>
+        <member name="M:SharpGLTF.BaseBuilder.TryCopyNameAndExtrasTo(SharpGLTF.Schema2.LogicalChildOfRoot)">
+            <summary>
+            Copies the Name and Extras values to <paramref name="target"/> only if the values are defined.
+            </summary>
+            <param name="target">The target object</param>
+        </member>
+        <member name="T:SharpGLTF.Collections.EmptyDictionary`2">
+            <summary>
+            Represents an empty, read-only dictionary to use as a safe replacement of NULL.
+            </summary>
+            <typeparam name="TKey">The type of keys in the read-only dictionary.</typeparam>
+            <typeparam name="TValue">The type of values in the read-only dictionary.</typeparam>
+        </member>
+        <member name="T:SharpGLTF.Collections.ValueListSet`1">
+             <summary>
+             Represents A specialised list that requires all elements to be unique.
+             </summary>
+             <remarks>
+             - This collection is based on <see cref="T:System.Collections.Generic.Dictionary`2"/>
+             - Replaces <see cref="T:SharpGLTF.Collections.VertexList`1"/>
+             - Designed to work with lists of vertices.
+            
+             This collection is:
+             - like a HashSet, in the sense that every element must be unique.
+             - like a list, because elements can be accessed by index: <see cref="P:SharpGLTF.Collections.ValueListSet`1.Item(System.Int32)"/>.
+             - <see cref="M:SharpGLTF.Collections.ValueListSet`1.IndexOf(`0@)"/> and <see cref="M:SharpGLTF.Collections.ValueListSet`1.Use(`0@)"/> are fast as in a HashSet.
+             </remarks>
+             <typeparam name="T">Any value type.</typeparam>
+        </member>
+        <member name="T:SharpGLTF.Collections.VertexList`1">
+            <summary>
+            Represent an ordered collection of <typeparamref name="T"/> vertices, where every vertex is unique.
+            </summary>
+            <typeparam name="T">A Vertex type</typeparam>
+        </member>
+        <member name="T:SharpGLTF.Collections._PrimeNumberHelpers">
+            <summary>
+            Lifted from <see href="https://referencesource.microsoft.com/#System.ServiceModel.Internals/System/Runtime/HashHelper.cs"/>
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.MeshBuilder`4">
+            <summary>
+            Represents an utility class to help build meshes by adding primitives associated with a given material.
+            </summary>
+            <typeparam name="TMaterial">The material type used by this <see cref="T:SharpGLTF.Geometry.PrimitiveBuilder`4"/> instance.</typeparam>
+            <typeparam name="TvG">
+            The vertex fragment type with Position, Normal and Tangent.<br/>
+            Valid types are:<br/>
+            <list type="table">
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPosition"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent"/></item>
+            </list>
+            </typeparam>
+            <typeparam name="TvM">
+            The vertex fragment type with Colors and Texture Coordinates.<br/>
+            Valid types are:<br/>
+            <list type="table">
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexTexture1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture2"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture2"/></item>
+            </list>
+            </typeparam>
+            <typeparam name="TvS">
+            The vertex fragment type with Skin Joint Weights.<br/>
+            Valid types are:<br/>
+            <list type="table">
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints4"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints8"/></item>
+            </list>
+            </typeparam>
+        </member>
+        <member name="P:SharpGLTF.Geometry.MeshBuilder`4.IsEmpty">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.MeshBuilder`4.Materials">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MeshBuilder`4.UsePrimitive(`0,System.Int32)">
+            <summary>
+            Creates, or uses an existing primitive using <paramref name="material"/>.
+            </summary>
+            <param name="material">The material used by the primitive.</param>
+            <param name="primitiveVertexCount">
+            Defines the primitive type.<br/>
+            <list type="number">
+            <item>Points</item>
+            <item>Lines</item>
+            <item>Triangles (Default)</item>
+            </list>
+            </param>
+            <returns>An instance of <see cref="T:SharpGLTF.Geometry.IPrimitiveBuilder"/>.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MeshBuilder`4.TransformVertices(System.Func{SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3}})">
+            <summary>
+            Transforms all the points of all the <see cref="T:SharpGLTF.Geometry.PrimitiveBuilder`4"/>
+            of the this <see cref="T:SharpGLTF.Geometry.MeshBuilder`4"/> using the given lambfa function.
+            </summary>
+            <param name="vertexTransform">A lambda function to transform <see cref="T:SharpGLTF.Geometry.VertexBuilder`3"/> vertices.</param>
+        </member>
+        <member name="T:SharpGLTF.Geometry.MeshBuilder`3">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.MeshBuilder`2">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.MeshBuilder`1">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.IMeshBuilder`1">
+            <summary>
+            Represents an utility class to help build meshes by adding primitives associated with a given material.
+            </summary>
+            <typeparam name="TMaterial">The material type used by this <see cref="T:SharpGLTF.Geometry.PrimitiveBuilder`4"/> instance.</typeparam>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IMeshBuilder`1.Name">
+            <summary>
+            Gets or sets the display text name, or null.
+            <para><b>⚠️ DO NOT USE AS AN OBJECT ID ⚠️</b> see remarks.</para>
+            </summary>
+            <remarks>
+            glTF does not define any rule for object names.<br/>
+            This means that names can be null or non unique.<br/>
+            So don't use <see cref="P:SharpGLTF.Geometry.IMeshBuilder`1.Name"/> for anything other than object name display.<br/>
+            If you need to reference objects by some ID, use lookup tables instead.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IMeshBuilder`1.Extras">
+            <summary>
+            Gets or sets the custom data of this object.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IMeshBuilder`1.IsEmpty">
+            <summary>
+            Gets a value indicating whether this mesh does not contain any geometry.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IMeshBuilder`1.Materials">
+            <summary>
+            Gets a collection of materials used by this mesh.
+            </summary>
+            <remarks>
+            The materials are taken directly from the <see cref="P:SharpGLTF.Geometry.IMeshBuilder`1.Primitives"/>.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IMeshBuilder`1.Primitives">
+            <summary>
+            Gets a collection of primitives used by this mesh.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IMeshBuilder`1.UsePrimitive(`0,System.Int32)">
+            <summary>
+            Creates, or uses an existing primitive using <paramref name="material"/>.
+            </summary>
+            <param name="material">The material used by the primitive.</param>
+            <param name="primitiveVertexCount">
+            Defines the primitive type.<br/>
+            <list type="number">
+            <item>Points</item>
+            <item>Lines</item>
+            <item>Triangles (Default)</item>
+            </list>
+            </param>
+            <returns>An instance of <see cref="T:SharpGLTF.Geometry.IPrimitiveBuilder"/>.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MeshBuilderToolkit.GetQuadrangleDiagonal(System.Numerics.Vector3,System.Numerics.Vector3,System.Numerics.Vector3,System.Numerics.Vector3)">
+            <summary>
+            Given a set of 4 points defining a quadrangle, it determines which
+            is the optimal diagonal to choose to reprensent the quadrangle as two triangles.
+            </summary>
+            <param name="a">The first vertex.</param>
+            <param name="b">The second vertex.</param>
+            <param name="c">The third vertex.</param>
+            <param name="d">The fourth vertex.</param>
+            <returns>True if two triangles are (A,B,C),(A,C,D) , false if two triangles are (B,C,D),(B,D,A).</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IPrimitiveMorphTargetReader.GetTargetIndices">
+            <summary>
+            Gets the collection of vertex indices that have morph target deltas.
+            </summary>
+            <returns>A collection of vertex indices.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IPrimitiveMorphTargetReader.GetVertex(System.Int32)">
+            <summary>
+            Gets the vertex for the given <paramref name="vertexIndex"/> morphed by the current morph target (if any).
+            </summary>
+            <param name="vertexIndex">The index of the vertex.</param>
+            <returns>If the given index has a morphed vertex, it will return it, else it will return the base vertex.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IPrimitiveMorphTargetReader.GetVertexDelta(System.Int32)">
+            <summary>
+            Gets the <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta"/> of a given vertex for a given morph target.
+            </summary>
+            <param name="vertexIndex">The index of the vertex.</param>
+            <returns>A Vertex delta (Morphed vertex subtracted by base vertex).</returns>
+        </member>
+        <member name="T:SharpGLTF.Geometry.PrimitiveMorphTargetBuilder`2">
+            <summary>
+            Represents the vertex deltas of a specific morph target.
+            <see cref="M:SharpGLTF.Geometry.PrimitiveBuilder`4._UseMorphTarget(System.Int32)"/>
+            </summary>
+            <typeparam name="TvG">The vertex fragment type with Position, Normal and Tangent.</typeparam>
+            <typeparam name="TvM">The vertex fragment type with Color0, Color1, TexCoord0, TexCoord1.</typeparam>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveMorphTargetBuilder`2.GetTargetIndices">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveMorphTargetBuilder`2.GetVertexDelta(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveMorphTargetBuilder`2.SetVertexDelta(System.Int32,SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta,SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta)">
+            <summary>
+            Sets the morph target deltas for the given vertex.
+            </summary>
+            <param name="vertexIndex">The index of the vertex.</param>
+            <param name="geometryDelta">The Position, Normal and Tangent deltas</param>
+            <param name="materialDelta">The Color and TexCoords deltas</param>
+            <remarks>
+            if all the deltas are zero, it removes the vertex from the list of morph target vertices.
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveMorphTargetBuilder`2.SharpGLTF#Geometry#IPrimitiveMorphTargetReader#GetVertex(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveMorphTargetBuilder`2.GetVertex(System.Int32)">
+            <summary>
+            Gets the vertex for the given <paramref name="vertexIndex"/> morphed by the current morph target (if any).
+            </summary>
+            <param name="vertexIndex">The index of the vertex.</param>
+            <returns>If the given index has a morphed vertex, it will return it, else it will return the base vertex.</returns>
+        </member>
+        <member name="T:SharpGLTF.Geometry.IMorphTargetBuilder">
+            <summary>
+            Represents the vertex deltas of a specific morph target.
+            <see cref="M:SharpGLTF.Geometry.IMeshBuilder`1.UseMorphTarget(System.Int32)"/>
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IMorphTargetBuilder.Positions">
+            <summary>
+            Gets the collection of vertex positions in the base mesh
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IMorphTargetBuilder.Vertices">
+            <summary>
+            Gets the collection of vertex geometry parts in the base mesh
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IMorphTargetBuilder.GetVertices(System.Numerics.Vector3)">
+            <summary>
+            Gets a collection of vertices sharing this vertex position.
+            </summary>
+            <param name="position">A position given by <see cref="P:SharpGLTF.Geometry.IMorphTargetBuilder.Positions"/></param>
+            <returns>A collection of vertices (usually one, but can be two or more in boundaries)</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IMorphTargetBuilder.SetVertex(SharpGLTF.Geometry.VertexTypes.IVertexGeometry,SharpGLTF.Geometry.VertexTypes.IVertexGeometry)">
+            <summary>
+            Sets an absolute morph target.
+            </summary>
+            <param name="meshVertex">The base mesh vertex to morph.</param>
+            <param name="morphVertex">The morphed vertex.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IMorphTargetBuilder.SetVertex(SharpGLTF.Geometry.VertexTypes.IVertexGeometry,SharpGLTF.Geometry.VertexTypes.IVertexGeometry,SharpGLTF.Geometry.VertexTypes.IVertexMaterial)">
+            <summary>
+            Sets an absolute morph target.
+            </summary>
+            <param name="meshVertex">The base mesh vertex to morph.</param>
+            <param name="morphVertex">The morphed vertex.</param>
+            <param name="morphMaterial">The morphed vertex material.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IMorphTargetBuilder.SetVertexDelta(SharpGLTF.Geometry.VertexTypes.IVertexGeometry,SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta)">
+            <summary>
+            Sets a relative morph target
+            </summary>
+            <param name="meshVertex">The base mesh vertex to morph.</param>
+            <param name="geometryDelta">The offset from <paramref name="meshVertex"/> to morph.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IMorphTargetBuilder.SetVertexDelta(SharpGLTF.Geometry.VertexTypes.IVertexGeometry,SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta,SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta)">
+            <summary>
+            Sets a relative morph target
+            </summary>
+            <param name="meshVertex">The base mesh vertex to morph.</param>
+            <param name="geometryDelta">The offset from <paramref name="meshVertex"/> to morph.</param>
+            <param name="materialDelta">The offset from <paramref name="meshVertex"/> material to morph.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IMorphTargetBuilder.SetVertexDelta(System.Numerics.Vector3,SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta)">
+            <summary>
+            Sets a relative morph target to all base mesh vertices matching <paramref name="meshPosition"/>.
+            </summary>
+            <param name="meshPosition">The base vertex position.</param>
+            <param name="geometryDelta">The offset to apply to each matching vertex found.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IMorphTargetBuilder.SetVertexDelta(System.Numerics.Vector3,SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta,SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta)">
+            <summary>
+            Sets a relative morph target to all base mesh vertices matching <paramref name="meshPosition"/>.
+            </summary>
+            <param name="meshPosition">The base vertex position.</param>
+            <param name="geometryDelta">The offset to apply to each matching vertex found.</param>
+            <param name="materialDelta">The offset to apply to each matching vertex material found.</param>
+        </member>
+        <member name="T:SharpGLTF.Geometry.MorphTargetBuilder`4">
+            <summary>
+            Represents the vertex deltas of a specific morph target.
+            <see cref="M:SharpGLTF.Geometry.MeshBuilder`4.UseMorphTarget(System.Int32)"/>
+            </summary>
+            <typeparam name="TMaterial">The material type used by the base mesh.</typeparam>
+            <typeparam name="TvG">The vertex geometry type used by the base mesh.</typeparam>
+            <typeparam name="TvS">The vertex skinning type used by the base mesh.</typeparam>
+            <typeparam name="TvM">The vertex material type used by the base mesh.</typeparam>
+            <remarks>
+            Morph targets are stored separately on each <see cref="T:SharpGLTF.Geometry.PrimitiveBuilder`4"/>,
+            so connecting vertices between two primitives might be duplicated. This means that when we set
+            a displaced vertex, we must be sure we do so for all instances we can find.
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MorphTargetBuilder`4.GetVertices(System.Numerics.Vector3)">
+            <summary>
+            Gets a collection of vertices sharing this vertex position.
+            </summary>
+            <param name="position">A position given by <see cref="P:SharpGLTF.Geometry.MorphTargetBuilder`4.Positions"/></param>
+            <returns>A collection of vertices (usually one, but can be two or more in boundaries)</returns>
+        </member>
+        <member name="P:SharpGLTF.Geometry.MorphTargetBuilder`4.Positions">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.MorphTargetBuilder`4.SharpGLTF#Geometry#IMorphTargetBuilder#Vertices">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MorphTargetBuilder`4.SharpGLTF#Geometry#IMorphTargetBuilder#GetVertices(System.Numerics.Vector3)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MorphTargetBuilder`4.SharpGLTF#Geometry#IMorphTargetBuilder#SetVertex(SharpGLTF.Geometry.VertexTypes.IVertexGeometry,SharpGLTF.Geometry.VertexTypes.IVertexGeometry)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MorphTargetBuilder`4.SharpGLTF#Geometry#IMorphTargetBuilder#SetVertex(SharpGLTF.Geometry.VertexTypes.IVertexGeometry,SharpGLTF.Geometry.VertexTypes.IVertexGeometry,SharpGLTF.Geometry.VertexTypes.IVertexMaterial)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MorphTargetBuilder`4.SharpGLTF#Geometry#IMorphTargetBuilder#SetVertexDelta(SharpGLTF.Geometry.VertexTypes.IVertexGeometry,SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MorphTargetBuilder`4.SharpGLTF#Geometry#IMorphTargetBuilder#SetVertexDelta(SharpGLTF.Geometry.VertexTypes.IVertexGeometry,SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta,SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MorphTargetBuilder`4.SetVertexDelta(System.Numerics.Vector3,SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.MorphTargetBuilder`4.SetVertexDelta(System.Numerics.Vector3,SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta,SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.PackedMeshBuilder`1">
+            <summary>
+            Used internally to convert a <see cref="T:SharpGLTF.Geometry.MeshBuilder`4"/>
+            to <see cref="T:SharpGLTF.Schema2.Mesh"/>.
+            </summary>
+            <typeparam name="TMaterial">A material key to split primitives by material.</typeparam>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PackedMeshBuilder`1.CreatePackedMeshes(System.Collections.Generic.IEnumerable{SharpGLTF.Geometry.IMeshBuilder{`0}},SharpGLTF.Scenes.SceneBuilderSchema2Settings)">
+            <summary>
+            Converts a collection of <see cref="T:SharpGLTF.Geometry.IMeshBuilder`1"/> meshes into a collection of <see cref="T:SharpGLTF.Geometry.PackedMeshBuilder`1"/> meshes,
+            ensuring that the resources are shared across all meshes.
+            </summary>
+            <param name="meshBuilders">A collection of <see cref="T:SharpGLTF.Geometry.IMeshBuilder`1"/> meshes.</param>
+            <param name="settings">Mesh packaging settings.</param>
+            <returns>A collectio of <see cref="T:SharpGLTF.Geometry.PackedMeshBuilder`1"/> meshes.</returns>
+        </member>
+        <member name="T:SharpGLTF.Geometry.PrimitiveBuilder`4">
+            <summary>
+            Represents an utility class to help build mesh primitives by adding points, lines or triangles
+            </summary>
+            <typeparam name="TMaterial">The material type used by this <see cref="T:SharpGLTF.Geometry.PrimitiveBuilder`4"/> instance.</typeparam>
+            <typeparam name="TvG">
+            The vertex fragment type with Position, Normal and Tangent.<br/>
+            Valid types are:<br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPosition"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent"/><br/>
+            </typeparam>
+            <typeparam name="TvM">
+            The vertex fragment type with Colors and Texture Coordinates.<br/>
+            Valid types are:<br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexTexture1"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture2"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture2"/>
+            </typeparam>
+            <typeparam name="TvS">
+            The vertex fragment type with Skin Joint Weights.<br/>
+            Valid types are:<br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints4"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints8"/><br/>
+            </typeparam>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PrimitiveBuilder`4.Mesh">
+            <summary>
+            Gets the parent mesh that owns this primitive.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PrimitiveBuilder`4.Material">
+            <summary>
+            Gets the <typeparamref name="TMaterial"/> used by this primitive.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PrimitiveBuilder`4.VerticesPerPrimitive">
+            <summary>
+            Gets the number of vertices used by each primitive:
+            1 - Points
+            2 - Lines
+            3 - Triangles
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PrimitiveBuilder`4.VertexType">
+            <summary>
+            Gets the type of the vertex used by this primitive.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PrimitiveBuilder`4.Vertices">
+            <summary>
+            Gets the list of vertices used by this primitive.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PrimitiveBuilder`4.Points">
+            <summary>
+            Gets the list in indices of the points contained in this primitive.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PrimitiveBuilder`4.Lines">
+            <summary>
+            Gets the list in indices of the lines contained in this primitive.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PrimitiveBuilder`4.Triangles">
+            <summary>
+            Gets the list in indices of triangles contained in this primitive.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PrimitiveBuilder`4.Surfaces">
+            <summary>
+            Gets the list in indices of the surfaces contained in this primitive.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.ConvertVertex(SharpGLTF.Geometry.IVertexBuilder)">
+            <summary>
+            Checks if <paramref name="vertex"/> is a compatible vertex and casts it, or converts it if it is not.
+            </summary>
+            <param name="vertex">Any vertex</param>
+            <returns>A vertex compatible with this primitive.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.UseVertex(SharpGLTF.Geometry.VertexBuilder{`1,`2,`3}@)">
+            <summary>
+            Adds or reuses a vertex.
+            </summary>
+            <param name="vertex">
+            A vertex formed by
+            <typeparamref name="TvG"/>,
+            <typeparamref name="TvM"/> and
+            <typeparamref name="TvS"/> fragments.
+            </param>
+            <returns>The index of the vertex.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.ContainsVertex(SharpGLTF.Geometry.VertexBuilder{`1,`2,`3}@)">
+            <summary>
+            Checks if a vertex is already in the vertex buffer.
+            </summary>
+            <param name="vertex">The vertex to query.</param>
+            <returns>True if the vertex is already in.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.AddPoint(SharpGLTF.Geometry.IVertexBuilder)">
+            <summary>
+            Adds a point.
+            </summary>
+            <param name="a">vertex for this point.</param>
+            <returns>The index of the vertex.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.AddLine(SharpGLTF.Geometry.IVertexBuilder,SharpGLTF.Geometry.IVertexBuilder)">
+            <summary>
+            Adds a line.
+            </summary>
+            <param name="a">First end of the line.</param>
+            <param name="b">Last end of the line.</param>
+            <returns>The indices of the vertices, or, in case the line is degenerated, (-1,-1).</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.AddTriangle(SharpGLTF.Geometry.IVertexBuilder,SharpGLTF.Geometry.IVertexBuilder,SharpGLTF.Geometry.IVertexBuilder)">
+            <summary>
+            Adds a triangle.
+            </summary>
+            <param name="a">First corner of the triangle.</param>
+            <param name="b">Second corner of the triangle.</param>
+            <param name="c">Third corner of the triangle.</param>
+            <returns>The indices of the vertices, or, in case the triangle is degenerated, (-1,-1,-1).</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.AddQuadrangle(SharpGLTF.Geometry.IVertexBuilder,SharpGLTF.Geometry.IVertexBuilder,SharpGLTF.Geometry.IVertexBuilder,SharpGLTF.Geometry.IVertexBuilder)">
+            <summary>
+            Adds a quadrangle.
+            </summary>
+            <param name="a">First corner of the quadrangle.</param>
+            <param name="b">Second corner of the quadrangle.</param>
+            <param name="c">Third corner of the quadrangle.</param>
+            <param name="d">Fourth corner of the quadrangle.</param>
+            <returns>The indices of the vertices, or, in case the quadrangle is degenerated, (-1,-1,-1,-1).</returns>
+            <remarks>
+            If only one of the vertices is degenerated, leading to a single triangle, the resulting indices would
+            have just one negative index, like this: (16,-1,17,18)
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.AddPoint(SharpGLTF.Geometry.VertexBuilder{`1,`2,`3})">
+            <summary>
+            Adds a point.
+            </summary>
+            <param name="a">vertex for this point.</param>
+            <returns>The index of the vertex.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.AddLine(SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3})">
+            <summary>
+            Adds a line.
+            </summary>
+            <param name="a">First corner of the line.</param>
+            <param name="b">Second corner of the line.</param>
+            <returns>The indices of the vertices, or, in case the line is degenerated, (-1,-1).</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.AddTriangle(SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3})">
+            <summary>
+            Adds a triangle.
+            </summary>
+            <param name="a">First corner of the triangle.</param>
+            <param name="b">Second corner of the triangle.</param>
+            <param name="c">Third corner of the triangle.</param>
+            <returns>The indices of the vertices, or, in case the triangle is degenerated, (-1,-1,-1).</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PrimitiveBuilder`4.AddQuadrangle(SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3})">
+            <summary>
+            Adds a quadrangle.
+            </summary>
+            <param name="a">First corner of the quadrangle.</param>
+            <param name="b">Second corner of the quadrangle.</param>
+            <param name="c">Third corner of the quadrangle.</param>
+            <param name="d">Fourth corner of the quadrangle.</param>
+            <returns>The indices of the vertices, or, in case the quadrangle is degenerated, (-1,-1,-1,-1).</returns>
+        </member>
+        <member name="T:SharpGLTF.Geometry.PointsPrimitiveBuilder`4">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PointsPrimitiveBuilder`4.VerticesPerPrimitive">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.PointsPrimitiveBuilder`4.Points">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PointsPrimitiveBuilder`4.AddPoint(SharpGLTF.Geometry.VertexBuilder{`1,`2,`3})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.PointsPrimitiveBuilder`4.GetIndices">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.LinesPrimitiveBuilder`4">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.LinesPrimitiveBuilder`4.VerticesPerPrimitive">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.LinesPrimitiveBuilder`4.Lines">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.LinesPrimitiveBuilder`4.AddLine(SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.LinesPrimitiveBuilder`4.GetIndices">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.TrianglesPrimitiveBuilder`4">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.TrianglesPrimitiveBuilder`4.VerticesPerPrimitive">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.TrianglesPrimitiveBuilder`4.Triangles">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.TrianglesPrimitiveBuilder`4.Surfaces">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.TrianglesPrimitiveBuilder`4.AddTriangle(SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3})">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.TrianglesPrimitiveBuilder`4.AddQuadrangle(SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3},SharpGLTF.Geometry.VertexBuilder{`1,`2,`3})">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.MeshPrimitiveNormalsAndTangents`1">
+            <summary>
+            Helper class used to calculate Normals and Tangents of missing meshes.
+            </summary>
+            <typeparam name="TMaterial">default material</typeparam>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IPrimitiveReader`1.VertexType">
+            <summary>
+            Gets a generic type of <see cref="T:SharpGLTF.Geometry.VertexBuilder`3"/>.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IPrimitiveReader`1.Material">
+            <summary>
+            Gets the current <typeparamref name="TMaterial"/> instance used by this primitive.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IPrimitiveReader`1.VerticesPerPrimitive">
+            <summary>
+            Gets the number of vertices used by each primitive shape.
+            Valid values:
+              1- Points.
+              2- Lines.
+              3- Triangles.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IPrimitiveReader`1.Vertices">
+            <summary>
+            Gets the list of <see cref="T:SharpGLTF.Geometry.IVertexBuilder"/> vertices.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IPrimitiveReader`1.MorphTargets">
+            <summary>
+            Gets the list of <see cref="T:SharpGLTF.Geometry.IPrimitiveMorphTargetReader"/>.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IPrimitiveReader`1.Points">
+            <summary>
+            Gets the indices of all points.
+            </summary>
+            <exception cref="T:System.NotSupportedException">If <see cref="P:SharpGLTF.Geometry.IPrimitiveReader`1.VerticesPerPrimitive"/> is different than 1</exception>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IPrimitiveReader`1.Lines">
+            <summary>
+            Gets the indices of all lines.
+            </summary>
+            <exception cref="T:System.NotSupportedException">If <see cref="P:SharpGLTF.Geometry.IPrimitiveReader`1.VerticesPerPrimitive"/> is different than 2</exception>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IPrimitiveReader`1.Triangles">
+            <summary>
+            Gets the indices of all the surfaces as triangles.
+            </summary>
+            <exception cref="T:System.NotSupportedException">If <see cref="P:SharpGLTF.Geometry.IPrimitiveReader`1.VerticesPerPrimitive"/> is different than 3</exception>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IPrimitiveReader`1.Surfaces">
+            <summary>
+            Gets the indices of all the surfaces.
+            </summary>
+            <exception cref="T:System.NotSupportedException">If <see cref="P:SharpGLTF.Geometry.IPrimitiveReader`1.VerticesPerPrimitive"/> is different than 3</exception>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IPrimitiveReader`1.GetIndices">
+            <summary>
+            Calculates the raw list of indices to use for this primitive.
+            </summary>
+            <returns>a list of indices.</returns>
+        </member>
+        <member name="P:SharpGLTF.Geometry.IPrimitiveBuilder.VertexType">
+            <summary>
+            Gets a generic type of <see cref="T:SharpGLTF.Geometry.VertexBuilder`3"/>.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexBufferColumns">
+            <summary>
+            Represents a vertex buffer, where every vertex attribute is represented as a vector column.
+            </summary>
+            <remarks>
+            One of the use cases of <see cref="T:SharpGLTF.Geometry.VertexBufferColumns"/> is to bind the different attribute
+            columns directly to the <see cref="T:SharpGLTF.Schema2.Accessor"/> source feed, which means that
+            if you modify the contents of a column that is bound directly to a model, you're
+            modifying the model's internal data.
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexBufferColumns.IsolateColumns">
+            <summary>
+            Performs an in-place copy of the contents of every column,
+            which guarantees that the columns of this <see cref="T:SharpGLTF.Geometry.VertexBufferColumns"/>
+            are not shared by any other object and can be modified safely.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexBufferColumns._ApplyTransform(SharpGLTF.Transforms.IGeometryTransform)">
+            <summary>
+            Applies a transform to the columns of this <see cref="T:SharpGLTF.Geometry.VertexBufferColumns"/>
+            </summary>
+            <param name="transform">A Mesh transformer object</param>
+            <remarks>
+            This is a one time operation.
+            Once it's applied, skinning and morphing columns are removed, since they're baked
+            into the position, normal and tangent columns.
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IVertexBuilder.SetGeometry(SharpGLTF.Geometry.VertexTypes.IVertexGeometry)">
+            <summary>
+            Applies a <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexGeometry"/> set to this <see cref="T:SharpGLTF.Geometry.VertexBuilder`3"/>
+            Remember we're working with struct types; <see href="https://blogs.msdn.microsoft.com/abhinaba/2005/10/05/c-structs-and-interface/"/>
+            </summary>
+            <param name="geometry">A <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexGeometry"/> set.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IVertexBuilder.SetMaterial(SharpGLTF.Geometry.VertexTypes.IVertexMaterial)">
+            <summary>
+            Applies a <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexMaterial"/> set to this <see cref="T:SharpGLTF.Geometry.VertexBuilder`3"/>
+            Remember we're working with struct types; <see href="https://blogs.msdn.microsoft.com/abhinaba/2005/10/05/c-structs-and-interface/"/>
+            </summary>
+            <param name="material">A <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexMaterial"/> set.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.IVertexBuilder.SetSkinning(SharpGLTF.Geometry.VertexTypes.IVertexSkinning)">
+            <summary>
+            Applies a <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexSkinning"/> set to this <see cref="T:SharpGLTF.Geometry.VertexBuilder`3"/>
+            Remember we're working with struct types; <see href="https://blogs.msdn.microsoft.com/abhinaba/2005/10/05/c-structs-and-interface/"/>
+            </summary>
+            <param name="skinning">A <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexSkinning"/> set.</param>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexBuilder`3">
+            <summary>
+            Represents an individual vertex object.
+            </summary>
+            <typeparam name="TvG">
+            The vertex fragment type with Position, Normal and Tangent.<br/>
+            <br/>Valid types are:
+            <list type="table">
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPosition"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent"/></item>
+            </list>
+            </typeparam>
+            <typeparam name="TvM">
+            The vertex fragment type with Colors, Texture Coordinates, and custom attributes.<br/>
+            <br/>Valid types are:
+            <list type="table">
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor2"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexTexture1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexTexture2"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture2"/></item>
+            <item>Custom vertex material fragment types.</item>
+            </list>
+            </typeparam>
+            <typeparam name="TvS">
+            The vertex fragment type with Skin Joint Weights.<br/>
+            <br/>Valid types are:
+            <list type="table">
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints4"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints8"/></item>
+            </list>
+            </typeparam>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexBuilder`3.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexBuilder`3.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexBuilder`3.Equals(SharpGLTF.Geometry.VertexBuilder{`0,`1,`2})">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.IVertexCustom">
+            <summary>
+            Represents the interface that must be implemented by a custom vertex fragment.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexCustom.Validate">
+            <summary>
+            Validates the custom attributes of the vertex fragment.<br/>
+            Called by <see cref="M:SharpGLTF.Geometry.VertexBuilder`3.Validate"/>.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.IVertexCustom.CustomAttributes">
+            <summary>
+            Gets a collection of the attribute keys defined in this vertex.
+            </summary>
+            <example>
+            <code>
+            private static readonly string[] _CustomNames = { "CustomFloat" };
+            public IEnumerable&lt;string&gt; CustomAttributes =&gt; _CustomNames;
+            </code>
+            </example>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexCustom.TryGetCustomAttribute(System.String,System.Object@)">
+            <summary>
+            Tries to get a custom attribute.
+            </summary>
+            <param name="attributeName">The attribute name.</param>
+            <param name="value">the value if found, or null if not found.</param>
+            <returns>true if the value was found. False otherwise.</returns>
+            <example>
+            <code>
+            public bool TryGetCustomAttribute(string attributeName, out object value)
+            {
+                if (attributeName != "CustomFloat") { value = null; return false; }
+                value = this.CustomValue; return true;
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexCustom.SetCustomAttribute(System.String,System.Object)">
+            <summary>
+            Sets a custom attribute only if <paramref name="attributeName"/> is defined in the vertex.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="attributeName">The attribute name.</param>
+            <param name="value">The attribute value.</param>
+            <example>
+            <code>
+            public void SetCustomAttribute(string attributeName, object value)
+            {
+                if (attributeName == "CustomFloat" &amp;&amp; value is float f) this.CustomValue = f;
+            }
+            </code>
+            </example>
+            <remarks>
+            If <paramref name="attributeName"/> is not defined in the custom vertex,<br/>
+            the method must not do any action.
+            </remarks>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty">
+            <summary>
+            Represents an empty vertex attribute that can be used as an
+            empty <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexMaterial"/> or empty <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexSkinning"/>
+            in a <see cref="T:SharpGLTF.Geometry.VertexBuilder`3"/> structure.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.VertexEmpty.MaxBindings">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.VertexEmpty.MaxColors">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.VertexEmpty.MaxTextCoords">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexEmpty.GetBindings">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexEmpty.SetBindings(SharpGLTF.Transforms.SparseWeight8@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexEmpty.SetBindings(System.ValueTuple{System.Int32,System.Single}[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexEmpty.SharpGLTF#Geometry#VertexTypes#IVertexSkinning#GetBinding(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.IVertexGeometry">
+            <summary>
+            Represents the interface that must be implemented by a geometry vertex fragment.
+            </summary>
+            <remarks>
+            Implemented by:
+            <list type="table">
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPosition"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta"/></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexGeometry.GetPosition">
+            <summary>
+            Gets the position of the vertex.
+            </summary>
+            <returns>A <see cref="T:System.Numerics.Vector3"/> position.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexGeometry.TryGetNormal(System.Numerics.Vector3@)">
+            <summary>
+            Tries to get the normal of the vertex.
+            </summary>
+            <param name="normal">A <see cref="T:System.Numerics.Vector3"/> normal.</param>
+            <returns>True if the normal exists.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexGeometry.TryGetTangent(System.Numerics.Vector4@)">
+            <summary>
+            Tries to get the tangent of the vertex.
+            </summary>
+            <param name="tangent">A <see cref="T:System.Numerics.Vector4"/> tangent.</param>
+            <returns>True if the tangent exists.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexGeometry.SetPosition(System.Numerics.Vector3@)">
+            <summary>
+            Sets the position of the vertex.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="position">A <see cref="T:System.Numerics.Vector3"/> position.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexGeometry.SetNormal(System.Numerics.Vector3@)">
+            <summary>
+            Sets the normal of the vertex.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="normal">A <see cref="T:System.Numerics.Vector3"/> normal.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexGeometry.SetTangent(System.Numerics.Vector4@)">
+            <summary>
+            Sets the tangent of the vertex.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="tangent">A <see cref="T:System.Numerics.Vector4"/> tangent.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexGeometry.ApplyTransform(System.Numerics.Matrix4x4@)">
+            <summary>
+            Applies a transform to the position, the normal and the tangent of this vertex.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="xform">a valid <see cref="T:System.Numerics.Matrix4x4"/> transform.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexGeometry.Subtract(SharpGLTF.Geometry.VertexTypes.IVertexGeometry)">
+            <summary>
+            calculates the difference between this vertex and <paramref name="baseValue"/>
+            </summary>
+            <param name="baseValue">The other vertex.</param>
+            <returns>The <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta"/> value to subtract.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexGeometry.Add(SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta@)">
+            <summary>
+            Adds a vertex delta to this value.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="delta">The <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta"/> value to add.</param>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexPosition">
+            <summary>
+            Defines a Vertex attribute with a Position.
+            </summary>    
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPosition.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPosition.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPosition.Equals(SharpGLTF.Geometry.VertexTypes.VertexPosition)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPosition.Subtract(SharpGLTF.Geometry.VertexTypes.IVertexGeometry)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPosition.Add(SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPosition.GetPosition">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPosition.TryGetNormal(System.Numerics.Vector3@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPosition.TryGetTangent(System.Numerics.Vector4@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPosition.ApplyTransform(System.Numerics.Matrix4x4@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal">
+            <summary>
+            Defines a Vertex attribute with a Position and a Normal.
+            </summary>    
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal.Equals(SharpGLTF.Geometry.VertexTypes.VertexPositionNormal)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal.Subtract(SharpGLTF.Geometry.VertexTypes.IVertexGeometry)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal.Add(SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal.GetPosition">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal.TryGetNormal(System.Numerics.Vector3@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal.TryGetTangent(System.Numerics.Vector4@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal.ApplyTransform(System.Numerics.Matrix4x4@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent">
+            <summary>
+            Defines a Vertex attribute with a Position, a Normal and a Tangent.
+            </summary>    
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent.Equals(SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent.Subtract(SharpGLTF.Geometry.VertexTypes.IVertexGeometry)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent.Add(SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent.GetPosition">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent.TryGetNormal(System.Numerics.Vector3@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent.TryGetTangent(System.Numerics.Vector4@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent.ApplyTransform(System.Numerics.Matrix4x4@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta">
+            <summary>
+            Defines a Vertex attribute with a Position, a Normal and a Tangent.
+            </summary>    
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta.Equals(SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta.GetPosition">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta.TryGetNormal(System.Numerics.Vector3@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta.TryGetTangent(System.Numerics.Vector4@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta.ApplyTransform(System.Numerics.Matrix4x4@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta.Subtract(SharpGLTF.Geometry.VertexTypes.IVertexGeometry)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta.Add(SharpGLTF.Geometry.VertexTypes.VertexGeometryDelta@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.IVertexMaterial">
+            <summary>
+            Represents the interface that must be implemented by a material vertex fragment.
+            </summary>
+            <remarks>
+            Implemented by:
+            <list type="table">
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexCustom"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor2"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexTexture1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexTexture2"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture2"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture1"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture2"/></item>
+            <item>And also by other custom vertex material fragment types.</item>
+            </list>
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.MaxColors">
+            <summary>
+            Gets the number of color attributes available in this vertex
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.MaxTextCoords">
+            <summary>
+            Gets the number of texture coordinate attributes available in this vertex
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.GetColor(System.Int32)">
+            <summary>
+            Gets a color attribute.
+            </summary>
+            <param name="index">An index from 0 to <see cref="P:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.MaxColors"/>.</param>
+            <returns>A <see cref="T:System.Numerics.Vector4"/> value in the range of 0 to 1</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.GetTexCoord(System.Int32)">
+            <summary>
+            Gets a UV texture coordinate attribute.
+            </summary>
+            <param name="index">An index from 0 to <see cref="P:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.MaxTextCoords"/>.</param>
+            <returns>A <see cref="T:System.Numerics.Vector2"/> UV texture coordinate.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.SetColor(System.Int32,System.Numerics.Vector4)">
+            <summary>
+            Sets a color attribute.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="setIndex">An index from 0 to <see cref="P:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.MaxColors"/>.</param>
+            <param name="color">A <see cref="T:System.Numerics.Vector4"/> value in the range of 0 to 1</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.SetTexCoord(System.Int32,System.Numerics.Vector2)">
+            <summary>
+            Sets a UV texture coordinate attribute.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="setIndex">An index from 0 to <see cref="P:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.MaxTextCoords"/>.</param>
+            <param name="coord">A <see cref="T:System.Numerics.Vector2"/> UV texture coordinate.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.Subtract(SharpGLTF.Geometry.VertexTypes.IVertexMaterial)">
+            <summary>
+            calculates the difference between this vertex and <paramref name="baseValue"/>
+            </summary>
+            <param name="baseValue">The other vertex.</param>
+            <returns>The <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta"/> value to subtract.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexMaterial.Add(SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta@)">
+            <summary>
+            Adds a vertex delta to this value.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="delta">The <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta"/> value to add.</param>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexColor1">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexColor2">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexTexture1">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexTexture2">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture2">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture1">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture2">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta">
+            <summary>
+            Defines a Vertex attribute with two material Colors and two Texture Coordinates.
+            </summary>    
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta.MaxColors">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta.MaxTextCoords">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta.Equals(SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta.Subtract(SharpGLTF.Geometry.VertexTypes.IVertexMaterial)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta.Add(SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta.GetColor(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexMaterialDelta.GetTexCoord(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexTexture3">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexTexture4">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture3">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture4">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture3">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexColor2Texture4">
+            <summary>
+            Defines a Vertex attribute with a material Color.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexPreprocessor`3">
+            <summary>
+            Represents a <see cref="T:SharpGLTF.Geometry.VertexBuilder`3"/> preprocessor used by <see cref="P:SharpGLTF.Geometry.MeshBuilder`4.VertexPreprocessor"/>
+            </summary>
+            <typeparam name="TvG">
+            The vertex fragment type with Position, Normal and Tangent.
+            Valid types are:
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPosition"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent"/>.
+            </typeparam>
+            <typeparam name="TvM">
+            The vertex fragment type with Colors and Texture Coordinates.
+            Valid types are:
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexTexture1"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1"/>.
+            </typeparam>
+            <typeparam name="TvS">
+            The vertex fragment type with Skin Joint Weights.
+            Valid types are:
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints4"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints8"/>.
+            </typeparam>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexPreprocessorLambdas">
+            <summary>
+            Defines a set of vertex fragment preprocessors to be used with <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPreprocessor`3"/>
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPreprocessorLambdas.ValidateVertexGeometry``1(``0)">
+            <summary>
+            validates a vertex geometry, throwing exceptions if found invalid
+            </summary>
+            <typeparam name="TvG">
+            The vertex fragment type with Position, Normal and Tangent.
+            Valid types are:
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPosition"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent"/>.
+            </typeparam>
+            <param name="vertex">the source <typeparamref name="TvG"/> vertex.</param>
+            <returns>A sanitized <typeparamref name="TvG"/> vertex, or null if sanitization failed.</returns>
+            <exception cref="T:System.ArgumentException">When the vertex is invalid.</exception>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPreprocessorLambdas.ValidateVertexMaterial``1(``0)">
+            <summary>
+            Sanitizes a vertex material with a best effort approach
+            </summary>
+            <typeparam name="TvM">
+            The vertex fragment type with Colors and Texture Coordinates.
+            Valid types are:
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexTexture1"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1"/>.
+            </typeparam>
+            <param name="vertex">the source <typeparamref name="TvM"/> vertex.</param>
+            <returns>A sanitized <typeparamref name="TvM"/> vertex, or null if sanitization failed.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPreprocessorLambdas.ValidateVertexSkinning``1(``0)">
+            <summary>
+            Sanitizes a vertex skinning with a best effort approach
+            </summary>
+            <typeparam name="TvS">
+            The vertex fragment type with Skin Joint Weights.
+            Valid types are:
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints4"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints8"/>.
+            </typeparam>
+            <param name="vertex">the source <typeparamref name="TvS"/> vertex.</param>
+            <returns>A sanitized <typeparamref name="TvS"/> vertex, or null if sanitization failed.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPreprocessorLambdas.SanitizeVertexGeometry``1(``0)">
+            <summary>
+            Sanitizes a vertex geometry with a best effort approach
+            </summary>
+            <typeparam name="TvG">
+            The vertex fragment type with Position, Normal and Tangent.
+            Valid types are:
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPosition"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormal"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexPositionNormalTangent"/>.
+            </typeparam>
+            <param name="vertex">the source <typeparamref name="TvG"/> vertex.</param>
+            <returns>A sanitized <typeparamref name="TvG"/> vertex, or null if sanitization failed.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPreprocessorLambdas.SanitizeVertexMaterial``1(``0)">
+            <summary>
+            Sanitizes a vertex material with a best effort approach
+            </summary>
+            <typeparam name="TvM">
+            The vertex fragment type with Colors and Texture Coordinates.
+            Valid types are:
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexTexture1"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1"/>.
+            </typeparam>
+            <param name="vertex">the source <typeparamref name="TvM"/> vertex.</param>
+            <returns>A sanitized <typeparamref name="TvM"/> vertex, or null if sanitization failed.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexPreprocessorLambdas.SanitizeVertexSkinning``1(``0)">
+            <summary>
+            Sanitizes a vertex skinning with a best effort approach
+            </summary>
+            <typeparam name="TvS">
+            The vertex fragment type with Skin Joint Weights.
+            Valid types are:
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints4"/>,
+            <see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints8"/>.
+            </typeparam>
+            <param name="vertex">the source <typeparamref name="TvS"/> vertex.</param>
+            <returns>A sanitized <typeparamref name="TvS"/> vertex, or null if sanitization failed.</returns>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.IVertexReflection">
+            <summary>
+            Exposes "reflection like" functionality of vertex types
+            </summary>
+            <remarks>
+            Implemented by:<br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexGeometry"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexMaterial"/><br/>
+            - <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexSkinning"/><br/>    
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexReflection.GetEncodingAttributes">
+            <summary>
+            Gets the information used to know how to encode the attributes stored in this vertex fragment.
+            </summary>
+            <returns>A list of attribute-encoding pairs</returns>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.IVertexSkinning">
+            <summary>
+            Represents the interface that must be implemented by a skinning vertex fragment.
+            </summary>
+            <remarks>
+            Implemented by:
+            <list type="table">
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexEmpty"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints4"/></item>
+            <item><see cref="T:SharpGLTF.Geometry.VertexTypes.VertexJoints8"/></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.IVertexSkinning.MaxBindings">
+            <summary>
+            Gets the Number of valid joints supported.<br/>Typical values are 0, 4 or 8.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexSkinning.GetBinding(System.Int32)">
+            <summary>
+            Gets a joint-weight pair.
+            </summary>
+            <param name="index">An index from 0 to <see cref="P:SharpGLTF.Geometry.VertexTypes.IVertexSkinning.MaxBindings"/> exclusive.</param>
+            <returns>The joint-weight pair.</returns>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexSkinning.SetBindings(SharpGLTF.Transforms.SparseWeight8@)">
+            <summary>
+            Sets the packed joints-weights.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="bindings">The packed joints-weights.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexSkinning.SetBindings(System.ValueTuple{System.Int32,System.Single}[])">
+            <summary>
+            Sets the packed joints-weights.
+            <para><b>⚠️ USE ONLY ON UNBOXED VALUES ⚠️</b></para>
+            </summary>
+            <param name="bindings">the list of joint indices and weights.</param>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.IVertexSkinning.GetBindings">
+            <summary>
+            Gets the packed joints-weights.
+            </summary>
+            <returns>The packed joints-weights.</returns>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.IVertexSkinning.JointsLow">
+            <summary>
+            Gets the indices of the first 4 joints.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.IVertexSkinning.JointsHigh">
+            <summary>
+            Gets the indices of the next 4 joints, if supported.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.IVertexSkinning.WeightsLow">
+            <summary>
+            Gets the weights of the first 4 joints.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.IVertexSkinning.WeightsHigh">
+            <summary>
+            Gets the weights of the next 4 joints, if supported.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexJoints4">
+            <summary>
+            Defines a Vertex attribute with up to 65535 bone joints and 4 weights.
+            </summary>    
+        </member>
+        <member name="F:SharpGLTF.Geometry.VertexTypes.VertexJoints4.Joints">
+            <summary>
+            Stores the indices of the 4 joints.
+            </summary>
+            <remarks>
+            <para><b>⚠️ AVOID SETTING THIS VALUE DIRECTLY ⚠️</b></para>
+            Consider using the constructor, or setter methods like<see cref="M:SharpGLTF.Geometry.VertexTypes.VertexJoints4.SetBindings(SharpGLTF.Transforms.SparseWeight8@)"/> instead of setting this value directly.
+            </remarks>        
+        </member>
+        <member name="F:SharpGLTF.Geometry.VertexTypes.VertexJoints4.Weights">
+            <summary>
+            Stores the weights of the 4 joints.
+            </summary>
+            <remarks>
+            <para><b>⚠️ AVOID SETTING THIS VALUE DIRECTLY ⚠️</b></para>
+            Consider using the constructor, or setter methods like <see cref="M:SharpGLTF.Geometry.VertexTypes.VertexJoints4.SetBindings(SharpGLTF.Transforms.SparseWeight8@)"/> instead of setting this value directly.
+            </remarks>        
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.VertexJoints4.MaxBindings">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints4.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints4.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints4.Equals(SharpGLTF.Geometry.VertexTypes.VertexJoints4)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints4.GetBindings">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints4.SetBindings(SharpGLTF.Transforms.SparseWeight8@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints4.SetBindings(System.ValueTuple{System.Int32,System.Single}[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints4.GetBinding(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Geometry.VertexTypes.VertexJoints8">
+            <summary>
+            Defines a Vertex attribute with up to 65535 bone joints and 8 weights.
+            </summary>    
+        </member>
+        <member name="F:SharpGLTF.Geometry.VertexTypes.VertexJoints8.Joints0">
+            <summary>
+            Stores the indices of the first 4 joints.
+            </summary>
+            <remarks>
+            <para><b>⚠️ AVOID SETTING THIS VALUE DIRECTLY ⚠️</b></para>
+            Consider using the constructor, or setter methods like <see cref="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.SetBindings(SharpGLTF.Transforms.SparseWeight8@)"/> instead of setting this value directly.
+            </remarks>        
+        </member>
+        <member name="F:SharpGLTF.Geometry.VertexTypes.VertexJoints8.Joints1">
+            <summary>
+            Stores the indices of the next 4 joints.
+            </summary>
+            <remarks>
+            <para><b>⚠️ AVOID SETTING THIS VALUE DIRECTLY ⚠️</b></para>
+            Consider using the constructor, or setter methods like <see cref="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.SetBindings(SharpGLTF.Transforms.SparseWeight8@)"/> instead of setting this value directly.
+            </remarks>        
+        </member>
+        <member name="F:SharpGLTF.Geometry.VertexTypes.VertexJoints8.Weights0">
+            <summary>
+            Stores the weights of the first 4 joints.
+            </summary>
+            <remarks>
+            <para><b>⚠️ AVOID SETTING THESE VALUES DIRECTLY ⚠️</b></para>
+            Consider using the constructor, or setter methods like <see cref="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.SetBindings(SharpGLTF.Transforms.SparseWeight8@)"/> instead of setting this value directly.
+            </remarks>        
+        </member>
+        <member name="F:SharpGLTF.Geometry.VertexTypes.VertexJoints8.Weights1">
+            <summary>
+            Stores the weights of the next 4 joints.
+            </summary>
+            <remarks>
+            <para><b>⚠️ AVOID SETTING THESE VALUES DIRECTLY ⚠️</b></para>
+            Consider using the constructor, or setter methods like <see cref="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.SetBindings(SharpGLTF.Transforms.SparseWeight8@)"/> instead of setting this value directly.
+            </remarks>        
+        </member>
+        <member name="P:SharpGLTF.Geometry.VertexTypes.VertexJoints8.MaxBindings">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.Equals(SharpGLTF.Geometry.VertexTypes.VertexJoints8)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.GetBindings">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.SetBindings(SharpGLTF.Transforms.SparseWeight8@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.SetBindings(System.ValueTuple{System.Int32,System.Single}[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Geometry.VertexTypes.VertexJoints8.GetBinding(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.IO.WavefrontWriter">
+            <summary>
+            Tiny <see href="https://www.fileformat.info/format/wavefrontobj/egff.htm">wavefront object</see> writer
+            </summary>
+            <remarks>
+            Wavefront obj export is not intended to be a fully featured wavefront / converter exporter, but
+            to serve as support and reference for glTF development. Consider this feature as an "easter egg".
+            </remarks>
+        </member>
+        <member name="F:SharpGLTF.IO.WavefrontWriter.FILEENCODING">
+            <summary>
+            As per <see href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">Wikipedia</see> , the content of the file should be ASCII
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.IO.WavefrontWriter.WriteFiles(System.String)">
+            <summary>
+            Writes this model to two files:<br/>
+            - filePath.OBJ<br/>
+            - filePath.MTL<br/>
+            </summary>
+            <param name="filePath">the base file path.</param>
+            <remarks>
+            The extension of <paramref name="filePath"/> is discarded and replaced by .OBJ and .MTL when required.
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.IO.WavefrontWriter.GetFiles(System.String)">
+            <summary>
+            Serializes this model to a dictionary with 2 entries:<br/>
+            - ("baseName.OBJ", Byte[])<br/>
+            - ("baseName.MTL", Byte[])<br/>
+            </summary>
+            <param name="baseName">the file name.</param>
+            <returns>A dictionary with two entries.</returns>
+            <remarks>
+            The extension of <paramref name="baseName"/> is discarded and replaced by .OBJ and .MTL when required.
+            </remarks>
+        </member>
+        <member name="T:SharpGLTF.IO.ZipReader">
+            <summary>
+            Represents a context to read gltf files from a Zip archive.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.IO.ZipWriter">
+            <summary>
+            Represents a context to write gltf files to a Zip archive.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Materials.ChannelBuilder">
+            <summary>
+            Represents a material channel at <see cref="T:SharpGLTF.Materials.MaterialBuilder"/>.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Materials.ChannelBuilder.Key">
+            <summary>
+            Gets the <see cref="T:SharpGLTF.Materials.ChannelBuilder"/> name. It must be a name of <see cref="T:SharpGLTF.Materials.KnownChannel"/>.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Materials.ChannelBuilder.Parameter">
+            <summary>
+            Gets or sets the <see cref="T:SharpGLTF.Materials.ChannelBuilder"/> parameter.
+            </summary>
+            <remarks>
+            Its meaning differs depending on the value of <see cref="P:SharpGLTF.Materials.ChannelBuilder.Key"/>.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Materials.ChannelBuilder.Parameters">
+            <summary>
+            Gets the collection of parameters of this channel
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Materials.ChannelBuilder.ContentComparer">
+            <summary>
+            Gets an equality comparer that deep compares the internal fields and collections.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Materials.ImageBuilder">
+            <summary>
+            Represents an image that can be used at <see cref="P:SharpGLTF.Materials.TextureBuilder.PrimaryImage"/> and <see cref="P:SharpGLTF.Materials.TextureBuilder.FallbackImage"/>.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Materials.ImageBuilder.Content">
+            <summary>
+            Gets or sets the in-memory representation of the image file.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Materials.ImageBuilder.AlternateWriteFileName">
+            <summary>
+            When set to a FileName or a relative File Path, it will be used to write the texture.
+            </summary>
+            <remarks>
+            <para>
+            When null, the default file name will be used.
+            </para>
+            <para>
+            if not sure about the image extension, using ".*" as extension will replace
+            the extension with the appropiate one before writing.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:SharpGLTF.Materials.MaterialBuilder">
+            <summary>
+            Represents the root object of a material instance structure.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Materials.MaterialBuilder.DoubleSided">
+            <summary>
+            Gets or sets a value indicating whether triangles must be rendered from both sides.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Materials.MaterialBuilder.GetHashCode">
+            <inheritdoc/>
+            <remarks>
+            Material builder uses default class equality, but NUnit4 does some weird trickery on equality
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Materials.MaterialBuilder.Equals(System.Object)">
+            <inheritdoc/>
+            <remarks>
+            MaterialBuilder objects use reference comparison by default.<br/>
+            For content equality use <see cref="M:SharpGLTF.Materials.MaterialBuilder.AreEqualByContent(SharpGLTF.Materials.MaterialBuilder,SharpGLTF.Materials.MaterialBuilder)"/>
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Materials.MaterialBuilder.WithShader(System.String)">
+            <summary>
+            Sets <see cref="P:SharpGLTF.Materials.MaterialBuilder.ShaderStyle"/>.
+            </summary>
+            <param name="shader">
+            A valid shader style, which can be one of these values:
+            <see cref="F:SharpGLTF.Materials.MaterialBuilder.SHADERUNLIT"/>,
+            <see cref="F:SharpGLTF.Materials.MaterialBuilder.SHADERPBRMETALLICROUGHNESS"/>,
+            <see cref="F:SharpGLTF.Materials.MaterialBuilder.SHADERPBRSPECULARGLOSSINESS"/>
+            </param>
+            <returns>This <see cref="T:SharpGLTF.Materials.MaterialBuilder"/>.</returns>
+        </member>
+        <member name="M:SharpGLTF.Materials.MaterialBuilder.WithUnlitShader">
+            <summary>
+            Sets <see cref="P:SharpGLTF.Materials.MaterialBuilder.ShaderStyle"/> to use <see cref="F:SharpGLTF.Materials.MaterialBuilder.SHADERUNLIT"/>.
+            </summary>
+            <returns>This <see cref="T:SharpGLTF.Materials.MaterialBuilder"/>.</returns>
+        </member>
+        <member name="M:SharpGLTF.Materials.MaterialBuilder.WithMetallicRoughnessShader">
+            <summary>
+            Sets <see cref="P:SharpGLTF.Materials.MaterialBuilder.ShaderStyle"/> to use <see cref="F:SharpGLTF.Materials.MaterialBuilder.SHADERPBRMETALLICROUGHNESS"/>.
+            </summary>
+            <returns>This <see cref="T:SharpGLTF.Materials.MaterialBuilder"/>.</returns>
+        </member>
+        <member name="M:SharpGLTF.Materials.MaterialBuilder.WithSpecularGlossinessShader">
+            <summary>
+            Sets <see cref="P:SharpGLTF.Materials.MaterialBuilder.ShaderStyle"/> to use <see cref="F:SharpGLTF.Materials.MaterialBuilder.SHADERPBRSPECULARGLOSSINESS"/>.
+            </summary>
+            <returns>This <see cref="T:SharpGLTF.Materials.MaterialBuilder"/>.</returns>
+        </member>
+        <member name="M:SharpGLTF.Materials.MaterialBuilder.WithFallback(SharpGLTF.Materials.MaterialBuilder)">
+            <summary>
+            Defines a fallback <see cref="T:SharpGLTF.Materials.MaterialBuilder"/> instance for the current <see cref="T:SharpGLTF.Materials.MaterialBuilder"/>.
+            </summary>
+            <param name="fallback">
+            A <see cref="T:SharpGLTF.Materials.MaterialBuilder"/> instance
+            that must have a <see cref="P:SharpGLTF.Materials.MaterialBuilder.ShaderStyle"/>
+            of type <see cref="F:SharpGLTF.Materials.MaterialBuilder.SHADERPBRMETALLICROUGHNESS"/></param>
+            <returns>This <see cref="T:SharpGLTF.Materials.MaterialBuilder"/>.</returns>
+        </member>
+        <member name="T:SharpGLTF.Materials.AlphaMode">
+            <summary>
+            The alpha rendering mode of the material.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Materials.KnownProperty">
+            <summary>
+            Enumeration of channel properties used in <see cref="P:SharpGLTF.Materials.ChannelBuilder.Parameters"/>
+            </summary>
+            <remarks>
+            This enumeration must match <see cref="T:SharpGLTF.Schema2._MaterialParameterKey"/>
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Materials.MaterialValue._Property.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Materials.MaterialValue._Property.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpGLTF.Materials.MaterialValue._Property.Equals(SharpGLTF.Materials.MaterialValue._Property)">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Materials.MaterialValue.Collection.CombinedVector">
+            <summary>
+            Combines multiple properties into a single Vector4
+            (as long as the combined number of floats is 4 or less)
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Materials.TextureBuilder">
+            <summary>
+            Represents the texture used by a <see cref="T:SharpGLTF.Materials.ChannelBuilder"/>
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Materials.TextureBuilder.PrimaryImage">
+            <summary>
+            Gets or sets the default image bytes to use by this <see cref="T:SharpGLTF.Materials.TextureBuilder"/>,
+            Supported formats are: PNG, JPG, DDS, WEBP and KTX2
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Materials.TextureBuilder.FallbackImage">
+            <summary>
+            Gets or sets the fallback image bytes to use by this <see cref="T:SharpGLTF.Materials.TextureBuilder"/>,
+            Supported formats are: PNG, JPG.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Materials.TextureTransformBuilder.CoordinateSetOverride">
+            <summary>
+            Gets or sets the Texture Coordinate Set that will override <see cref="P:SharpGLTF.Materials.TextureBuilder.CoordinateSet"/>
+            If <see cref="T:SharpGLTF.Schema2.TextureTransform"/> is supported by the client.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.CameraBuilder">
+            <summary>
+            Represents an camera object.
+            </summary>
+            <remarks>
+            Derived types are:<br/>
+            - <see cref="T:SharpGLTF.Scenes.CameraBuilder.Orthographic"/><br/>
+            - <see cref="T:SharpGLTF.Scenes.CameraBuilder.Perspective"/><br/>
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Scenes.CameraBuilder.ZNear">
+            <summary>
+            Gets or sets the near plane distance in the Z axis.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.CameraBuilder.ZFar">
+            <summary>
+            Gets or sets the far plane distance in the Z axis.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.CameraBuilder.IsValid">
+            <summary>
+            Gets a value indicating whether the camera parameters are correct.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.CameraBuilder.Matrix">
+            <summary>
+            Gets the projection matrix for the camera parameters.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.CameraBuilder.Orthographic">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Scenes.CameraBuilder.Orthographic.XMag">
+            <summary>
+            Gets or sets the magnification factor in the X axis
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.CameraBuilder.Orthographic.YMag">
+            <summary>
+            Gets or sets the magnification factor in the Y axis
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.CameraBuilder.Perspective">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Scenes.CameraBuilder.Perspective.AspectRatio">
+            <summary>
+            Gets or sets the aspect ratio between horizontal window size and vertical window size.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.CameraBuilder.Perspective.VerticalFOV">
+            <summary>
+            Gets or sets the vertical field of view, in radians
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.EmptyContent">
+            <summary>
+            Represents a dummy, empty content of <see cref="P:SharpGLTF.Scenes.ContentTransformer.Content"/>.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.MeshContent">
+            <summary>
+            Represents a <see cref="T:SharpGLTF.Geometry.IMeshBuilder`1"/> content of <see cref="P:SharpGLTF.Scenes.ContentTransformer.Content"/>.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.CameraContent">
+            <summary>
+            Represents a <see cref="T:SharpGLTF.Scenes.CameraBuilder"/> content of <see cref="P:SharpGLTF.Scenes.ContentTransformer.Content"/>.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.LightContent">
+            <summary>
+            Represents a <see cref="T:SharpGLTF.Scenes.LightBuilder"/> content of <see cref="P:SharpGLTF.Scenes.ContentTransformer.Content"/>.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.InstanceBuilder">
+            <summary>
+            Represents an element within <see cref="P:SharpGLTF.Scenes.SceneBuilder.Instances"/>
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.InstanceBuilder.Name">
+            <summary>
+            Gets the display text name of this object, or null.
+            <para><b>⚠️ DO NOT USE AS AN OBJECT ID ⚠️</b> see remarks.</para>
+            </summary>
+            <remarks>
+            glTF does not define any rule for object names.<br/>
+            This means that names can be null or non unique.<br/>
+            So don't use names for anything other than object name display.<br/>
+            If you need to reference objects by some ID, use lookup tables instead.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Scenes.InstanceBuilder.Extras">
+            <summary>
+            Gets the custom data of this object.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.InstanceBuilder.Content">
+            <summary>
+            Gets or sets the content of this instance.<br/>
+            It can be one of those types:<br/>
+            - <see cref="T:SharpGLTF.Scenes.FixedTransformer"/><br/>
+            - <see cref="T:SharpGLTF.Scenes.RigidTransformer"/><br/>
+            - <see cref="T:SharpGLTF.Scenes.SkinnedTransformer"/><br/>
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.InstanceBuilder.Materials">
+            <summary>
+            Gets the materials used by <see cref="P:SharpGLTF.Scenes.InstanceBuilder.Content"/>.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Scenes.InstanceBuilder.Remove">
+            <summary>
+            Removes this instance from its parent <see cref="T:SharpGLTF.Scenes.SceneBuilder"/>.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.LightBuilder">
+            <summary>
+            Represents the base class light object.
+            </summary>
+            <remarks>
+            Derived types are:<br/>
+            - <see cref="T:SharpGLTF.Scenes.LightBuilder.Directional"/><br/>
+            - <see cref="T:SharpGLTF.Scenes.LightBuilder.Point"/><br/>
+            - <see cref="T:SharpGLTF.Scenes.LightBuilder.Spot"/><br/>
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Scenes.LightBuilder.Color">
+            <summary>
+            Gets or sets the RGB value for light's color in linear space.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.LightBuilder.Intensity">
+            <summary>
+            Gets or sets the Brightness of light in.<br/>
+            The units that this is defined in depend on the type of light.<br/>
+            Point and spot lights use luminous intensity in candela (lm/sr)
+            while directional lights use illuminance in lux (lm/m2)
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.LightBuilder.Directional">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Scenes.LightBuilder.Point">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Scenes.LightBuilder.Point.Range">
+            <summary>
+            Gets or sets a Hint defining a distance cutoff at which the
+            light's intensity may be considered to have reached zero.<br/>
+            Supported only for point and spot lights. Must be > 0.<br/>
+            When undefined, range is assumed to be infinite.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.LightBuilder.Spot">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Scenes.LightBuilder.Spot.Range">
+            <summary>
+            Gets or sets a Hint defining a distance cutoff at which the
+            light's intensity may be considered to have reached zero.<br/>
+            Supported only for point and spot lights. Must be > 0.<br/>
+            When undefined, range is assumed to be infinite.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.LightBuilder.Spot.InnerConeAngle">
+            <summary>
+            Gets or sets the Angle, in radians, from centre of spotlight where falloff begins.<br/>
+            Must be greater than or equal to 0 and less than outerConeAngle.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.LightBuilder.Spot.OuterConeAngle">
+            <summary>
+            Gets or sets Angle, in radians, from centre of spotlight where falloff ends.<br/>
+            Must be greater than innerConeAngle and less than or equal to PI / 2.0.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.NodeBuilder">
+            <summary>
+            Defines a node object within an armature.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.NodeBuilder.HasAnimations">
+            <summary>
+            Gets a value indicating whether this <see cref="T:SharpGLTF.Scenes.NodeBuilder"/> has animations.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.NodeBuilder.HasTransformAnimations">
+            <summary>
+            Gets a value indicating whether this <see cref="T:SharpGLTF.Scenes.NodeBuilder"/> has SRT animations.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.NodeBuilder.Scale">
+            <summary>
+            Gets the current Scale transform, or null.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.NodeBuilder.Rotation">
+            <summary>
+            Gets the current rotation transform, or null.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.NodeBuilder.Translation">
+            <summary>
+            Gets the current translation transform, or null.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.NodeBuilder.LocalMatrix">
+            <summary>
+            Gets or sets the local transform <see cref="T:System.Numerics.Matrix4x4"/> of this <see cref="T:SharpGLTF.Scenes.NodeBuilder"/>.
+            </summary>
+            <remarks>
+            When setting the value, If there's no animations currently attached to this node,<br/>
+            the transform is stored as a matrix. Otherwise, it's decomposed to a SRT chain.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Scenes.NodeBuilder.LocalTransform">
+            <summary>
+            Gets or sets the local Scale, Rotation and Translation of this <see cref="T:SharpGLTF.Scenes.NodeBuilder"/>.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.NodeBuilder.WorldMatrix">
+            <summary>
+            Gets or sets the world transform <see cref="T:System.Numerics.Matrix4x4"/> of this <see cref="T:SharpGLTF.Scenes.NodeBuilder"/>.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.NodeBuilder.LocalMatrixPrecise">
+            <summary>
+            Equivalent to <see cref="P:SharpGLTF.Scenes.NodeBuilder.LocalMatrix"/> but calculated at double precission.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.NodeBuilder.WorldMatrixPrecise">
+            <summary>
+            Equivalent to <see cref="P:SharpGLTF.Scenes.NodeBuilder.WorldMatrix"/> but calculated at double precission.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Scenes.NodeBuilder.IsValidArmature(System.Collections.Generic.IEnumerable{SharpGLTF.Scenes.NodeBuilder})">
+            <summary>
+            Checks if the collection of joints can be used for skinning a mesh.
+            </summary>
+            <param name="joints">A collection of joints.</param>
+            <returns>True if the joints can be used for skinning.</returns>
+        </member>
+        <member name="M:SharpGLTF.Scenes.NodeBuilder.SetLocalTransform(SharpGLTF.Transforms.AffineTransform,System.Boolean)">
+            <summary>
+            Sets the local transform of this node.
+            Optionally it is possible keep children from being affected by this node transformation change.
+            </summary>        
+            <param name="newLocalTransform">the new local transform</param>
+            <param name="keepChildrenInPlace">true to keep children in their world positions.</param>        
+        </member>
+        <member name="T:SharpGLTF.Scenes.SceneBuilder">
+            <summary>
+            Represents the root scene for models, cameras and lights.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.SceneBuilder.Instances">
+            <summary>
+            Gets all the instances in this scene.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.SceneBuilder.Materials">
+            <summary>
+            Gets all the unique material references shared by all the meshes in this scene.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Scenes.SceneBuilder.AddRigidMesh(SharpGLTF.Geometry.IMeshBuilder{SharpGLTF.Materials.MaterialBuilder},SharpGLTF.Scenes.NodeBuilder)">
+            <summary>
+            Adds a mesh instance to the scene, attached to an animatable <see cref="T:SharpGLTF.Scenes.NodeBuilder"/>
+            </summary>
+            <param name="mesh">The mesh to add.</param>
+            <param name="node">The node to which the mesh will be attached.</param>
+            <returns>The instance representing this mesh-node pair.</returns>
+        </member>
+        <member name="M:SharpGLTF.Scenes.SceneBuilder.AddRigidMesh(SharpGLTF.Geometry.IMeshBuilder{SharpGLTF.Materials.MaterialBuilder},SharpGLTF.Transforms.AffineTransform)">
+            <summary>
+            Adds a mesh instance to the scene, at the given location.
+            </summary>
+            <param name="mesh">The mesh to add.</param>
+            <param name="meshWorldTransform">The location of the mesh.</param>
+            <returns>The instance representing this mesh.</returns>
+            <remarks>
+            Mesh instances with a fixed transform cannot be animated,
+            If you need morph animations, use <see cref="M:SharpGLTF.Scenes.SceneBuilder.AddRigidMesh(SharpGLTF.Geometry.IMeshBuilder{SharpGLTF.Materials.MaterialBuilder},SharpGLTF.Scenes.NodeBuilder)"/> instead.
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Scenes.SceneBuilder.AddRigidMesh(SharpGLTF.Geometry.IMeshBuilder{SharpGLTF.Materials.MaterialBuilder},SharpGLTF.Scenes.NodeBuilder,SharpGLTF.Transforms.AffineTransform)">
+            <summary>
+            Adds a mesh instance to the scene, at the given location, relative to the given node.
+            </summary>
+            <param name="mesh">The mesh to add.</param>
+            <param name="node">The parent node.</param>
+            <param name="instanceTransform">The location of the mesh.</param>
+            <returns>The instance representing this mesh.</returns>
+            <remarks>
+            Mesh instances with a fixed transform cannot be animated,
+            If you need morph animations, use <see cref="M:SharpGLTF.Scenes.SceneBuilder.AddRigidMesh(SharpGLTF.Geometry.IMeshBuilder{SharpGLTF.Materials.MaterialBuilder},SharpGLTF.Scenes.NodeBuilder)"/> instead.
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Scenes.SceneBuilder.FindArmatures">
+            <summary>
+            Gets all the unique armatures used by this <see cref="T:SharpGLTF.Scenes.SceneBuilder"/>.
+            </summary>
+            <returns>A collection of <see cref="T:SharpGLTF.Scenes.NodeBuilder"/> objects representing the root of each armature.</returns>
+        </member>
+        <member name="M:SharpGLTF.Scenes.SceneBuilder.ApplyBasisTransform(System.Numerics.Matrix4x4,System.String)">
+            <summary>
+            Applies a tranform the this <see cref="T:SharpGLTF.Scenes.SceneBuilder"/>.
+            </summary>
+            <param name="basisTransform">The transform to apply.</param>
+            <param name="basisNodeName">The name of the dummy root node.</param>
+            <remarks>
+            <para>
+            In some circunstances, it's not possible to apply the
+            <paramref name="basisTransform"/> to the nodes in the scene.<br/>
+            In these cases a dummy node is created, and these
+            nodes are made children of this dummy node.
+            </para>
+            <para>
+            This method is useful to switch axes (Z-UP or Y-UP) and left right handed mode.
+            </para>
+            <para>
+            This method should be called at the end, when the scene has been created completely.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:SharpGLTF.Scenes.SceneBuilder.AddScene(SharpGLTF.Scenes.SceneBuilder,System.Numerics.Matrix4x4)">
+            <summary>
+            Copies the instances from <paramref name="scene"/> to this <see cref="T:SharpGLTF.Scenes.SceneBuilder"/>
+            </summary>
+            <param name="scene">The source scene.</param>
+            <param name="sceneTransform">A transform to apply to <paramref name="scene"/> before addition.</param>
+            <returns>The instances copied from <paramref name="scene"/>.</returns>
+        </member>
+        <member name="M:SharpGLTF.Scenes.SceneBuilder.ToGltf2">
+            <summary>
+            Converts this <see cref="T:SharpGLTF.Scenes.SceneBuilder"/> instance into a <see cref="T:SharpGLTF.Schema2.ModelRoot"/> instance.
+            </summary>
+            <returns>A new <see cref="T:SharpGLTF.Schema2.ModelRoot"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Scenes.SceneBuilder.ToGltf2(SharpGLTF.Scenes.SceneBuilderSchema2Settings)">
+            <summary>
+            Converts this <see cref="T:SharpGLTF.Scenes.SceneBuilder"/> instance into a <see cref="T:SharpGLTF.Schema2.ModelRoot"/> instance.
+            </summary>
+            <param name="settings">Conversion settings.</param>
+            <returns>A new <see cref="T:SharpGLTF.Schema2.ModelRoot"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Scenes.SceneBuilder.ToGltf2(System.Collections.Generic.IEnumerable{SharpGLTF.Scenes.SceneBuilder},SharpGLTF.Scenes.SceneBuilderSchema2Settings)">
+            <summary>
+            Converts a collection of <see cref="T:SharpGLTF.Scenes.SceneBuilder"/> instances to a single <see cref="T:SharpGLTF.Schema2.ModelRoot"/> instance.
+            </summary>
+            <param name="srcScenes">A collection of scenes</param>
+            <param name="settings">Conversion settings.</param>
+            <returns>A new <see cref="T:SharpGLTF.Schema2.ModelRoot"/> instance.</returns>
+        </member>
+        <member name="T:SharpGLTF.Scenes.SceneBuilderSchema2Settings">
+            <summary>
+            Defines configurable options for converting <see cref="T:SharpGLTF.Scenes.SceneBuilder"/> to <see cref="T:SharpGLTF.Schema2.ModelRoot"/>
+            </summary>
+            <remarks>
+            Used by <see cref="M:SharpGLTF.Scenes.SceneBuilder.ToGltf2(SharpGLTF.Scenes.SceneBuilderSchema2Settings)"/>
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Scenes.SceneBuilderSchema2Settings.UseStridedBuffers">
+            <summary>
+            When true, meshes will be created using strided vertices when possible.
+            </summary>
+            <remarks>
+            this option is not taken into account by meshes with morph targets.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Scenes.SceneBuilderSchema2Settings.CompactVertexWeights">
+            <summary>
+            if meshes have Skin Weights, defines the output vertex element format:<br/>
+            - True: Short<br/>
+            - False: Float<br/>
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.SceneBuilderSchema2Settings.GpuMeshInstancingMinCount">
+            <summary>
+            determines the mínimum number mesh instances required to enable Gpu mesh instancing.
+            </summary>
+            <remarks>
+            <para>
+            Set to <see cref="F:System.Int32.MaxValue"/> to disable gpu instancing.
+            </para>
+            <para>
+            If set to a small value like 10, any mesh instance collection smaller than this will be instantiated
+            using individual nodes, otherwise it will use Gpu Instancing extension.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Scenes.SceneBuilderSchema2Settings.MergeBuffers">
+            <summary>
+            Merges all the Buffer objects into a single big buffer.<br/>
+            Default value is TRUE.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.Schema2SceneBuilder">
+            <summary>
+            Helper class to create a Schema2.Scene from one or multiple <see cref="T:SharpGLTF.Scenes.SceneBuilder"/> instances.
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Scenes.Schema2SceneBuilder.IOperator`1">
+            <summary>
+            Represents an object that can operate on a target object.
+            </summary>
+            <typeparam name="T">
+            The target type.
+            This is usually <see cref="T:SharpGLTF.Schema2.Scene"/> or <see cref="T:SharpGLTF.Schema2.Node"/>.
+            </typeparam>
+        </member>
+        <member name="T:SharpGLTF.Scenes.ContentTransformer">
+            <summary>
+            Represents the transform of a <see cref="P:SharpGLTF.Scenes.InstanceBuilder.Content"/>.<br/>
+            Applies a transform to the underlaying content object (usually a Mesh, a Camera or a light)
+            </summary>
+            <remarks>
+            Base class of:<br/>
+            <see cref="T:SharpGLTF.Scenes.FixedTransformer"/><br/>
+            <see cref="T:SharpGLTF.Scenes.RigidTransformer"/><br/>
+            <see cref="T:SharpGLTF.Scenes.SkinnedTransformer"/><br/>
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Scenes.ContentTransformer.Name">
+            <summary>
+            Gets or sets the display text name, or null.
+            <para><b>⚠️ DO NOT USE AS AN OBJECT ID ⚠️</b> see remarks.</para>
+            </summary>
+            <remarks>
+            glTF does not define any rule for object names.<br/>
+            This means that names can be null or non unique.<br/>
+            So don't use <see cref="P:SharpGLTF.Scenes.ContentTransformer.Name"/> for anything other than object name display.<br/>
+            If you need to reference objects by some ID, use lookup tables instead.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Scenes.ContentTransformer.Extras">
+            <summary>
+            Gets or sets the custom data of this object.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.ContentTransformer.Content">
+            <summary>
+            Gets the content of this transformer.<br/>
+            </summary>
+            <remarks>
+            Available types for this object are:
+            <see cref="T:SharpGLTF.Scenes.MeshContent"/>, <see cref="T:SharpGLTF.Scenes.CameraContent"/>, <see cref="T:SharpGLTF.Scenes.LightContent"/>.
+            </remarks>
+        </member>
+        <member name="P:SharpGLTF.Scenes.ContentTransformer.HasRenderableContent">
+            <summary>
+            Gets a value indicating whether <see cref="P:SharpGLTF.Scenes.ContentTransformer.Content"/> implements <see cref="T:SharpGLTF.Scenes.IRenderableContent"/>
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Scenes.ContentTransformer.GetGeometryAsset">
+            <summary>
+            If this <see cref="T:SharpGLTF.Scenes.ContentTransformer"/> contains a <see cref="T:SharpGLTF.Geometry.IMeshBuilder`1"/>.
+            </summary>
+            <returns>A <see cref="T:SharpGLTF.Geometry.IMeshBuilder`1"/> instance, or NULL.</returns>
+        </member>
+        <member name="M:SharpGLTF.Scenes.ContentTransformer.GetCameraAsset">
+            <summary>
+            It this <see cref="T:SharpGLTF.Scenes.ContentTransformer"/> contains a <see cref="T:SharpGLTF.Scenes.CameraBuilder"/>
+            </summary>
+            <returns>A <see cref="T:SharpGLTF.Scenes.CameraBuilder"/> instance, or NULL.</returns>
+        </member>
+        <member name="M:SharpGLTF.Scenes.ContentTransformer.GetLightAsset">
+            <summary>
+            It this <see cref="T:SharpGLTF.Scenes.ContentTransformer"/> contains a <see cref="T:SharpGLTF.Scenes.LightBuilder"/>
+            </summary>
+            <returns>A <see cref="T:SharpGLTF.Scenes.LightBuilder"/> instance, or NULL.</returns>
+        </member>
+        <member name="M:SharpGLTF.Scenes.ContentTransformer.GetArmatureRoot">
+            <summary>
+            If this <see cref="T:SharpGLTF.Scenes.ContentTransformer"/> uses a <see cref="T:SharpGLTF.Scenes.NodeBuilder"/> armature, it returns the root of the armature.
+            </summary>
+            <returns>A <see cref="T:SharpGLTF.Scenes.NodeBuilder"/> instance, or NULL.</returns>
+        </member>
+        <member name="T:SharpGLTF.Scenes.FixedTransformer">
+            <summary>
+            Represents the transform of a <see cref="P:SharpGLTF.Scenes.InstanceBuilder.Content"/>.<br/>
+            Applies a fixed <see cref="T:System.Numerics.Matrix4x4"/> transform to the underlaying content.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.FixedTransformer.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Scenes.FixedTransformer.Extras">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Scenes.RigidTransformer">
+            <summary>
+            Represents the transform of a <see cref="P:SharpGLTF.Scenes.InstanceBuilder.Content"/>.<br/>
+            Applies the transform of a single <see cref="T:SharpGLTF.Scenes.NodeBuilder"/> to the underlaying content.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.RigidTransformer.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Scenes.RigidTransformer.Extras">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Scenes.SkinnedTransformer">
+            <summary>
+            Represents the transform of a <see cref="P:SharpGLTF.Scenes.InstanceBuilder.Content"/>.<br/>
+            Applies the transforms of many <see cref="T:SharpGLTF.Scenes.NodeBuilder"/> to the underlaying content.
+            </summary>
+        </member>
+        <member name="F:SharpGLTF.Scenes.SkinnedTransformer._MeshPoseWorldTransform">
+            <summary>
+            Defines the world matrix of the mesh at the time of binding.
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Scenes.SkinnedTransformer.Name">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpGLTF.Scenes.SkinnedTransformer.Extras">
+            <inheritdoc/>
+        </member>
+        <member name="T:SharpGLTF.Scenes._MeshInstancing">
+            <summary>
+            Groups instances of the same mesh being attached to the same node.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Scenes._MeshInstancing.CreateFrom(System.Collections.Generic.IEnumerable{SharpGLTF.Scenes.FixedTransformer},System.Int32)">
+            <summary>
+            Groups a collection of <see cref="T:SharpGLTF.Scenes.FixedTransformer"/> items into a sequence of <see cref="T:SharpGLTF.Scenes._MeshInstancing"/>.
+            </summary>
+            <param name="instances">The input instances.</param>
+            <param name="gpuMinCount">The minimum number of instances required to enable gpu mesh instancing extension.</param>
+            <returns>A collection of grouped instances.</returns>
+        </member>
+        <member name="T:SharpGLTF.Scenes._FixedIntance">
+            <summary>
+            helper class used to build <see cref="T:SharpGLTF.Scenes.FixedTransformer"/> into a <see cref="T:SharpGLTF.Schema2.Scene"/>
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.CreateMorphTargetAccessor(SharpGLTF.Schema2.ModelRoot,SharpGLTF.Memory.MemoryAccessor,System.Int32)">
+            <summary>
+            Creates a new <see cref="T:SharpGLTF.Schema2.Accessor"/> and fills it with data from <paramref name="memAccessor"/>
+            </summary>
+            <remarks>
+            If enough number of zero values is detected, a sparse accessor will be created instead.
+            </remarks>
+            <param name="root">the model where the <see cref="T:SharpGLTF.Schema2.Accessor"/> will be created.</param>
+            <param name="memAccessor">the data to be used to fill the <see cref="T:SharpGLTF.Schema2.Accessor"/>.</param>
+            <param name="sparsityPercent">The percentage threshold of zero values that determine whether to use sparse accessors. Or -1 to disable sparse accessors creation</param>
+            <returns>The created <see cref="T:SharpGLTF.Schema2.Accessor"/>.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.CreateVertexAccessor(SharpGLTF.Schema2.ModelRoot,SharpGLTF.Memory.MemoryAccessor)">
+            <summary>
+            Creates a new <see cref="T:SharpGLTF.Schema2.Accessor"/> and fills it with data from <paramref name="memAccessor"/>
+            </summary>
+            <param name="root">the model where the <see cref="T:SharpGLTF.Schema2.Accessor"/> will be created.</param>
+            <param name="memAccessor">the data to be used to fill the <see cref="T:SharpGLTF.Schema2.Accessor"/>.</param>
+            <returns>The created <see cref="T:SharpGLTF.Schema2.Accessor"/>.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.WithSpotCone(SharpGLTF.Schema2.PunctualLight,System.Single,System.Single)">
+            <summary>
+            Sets the cone angles for the <see cref="F:SharpGLTF.Schema2.PunctualLightType.Spot"/> light.
+            </summary>
+            <param name="light">This <see cref="T:SharpGLTF.Schema2.PunctualLight"/> instance.</param>
+            <param name="innerConeAngle">
+            Gets the Angle, in radians, from centre of spotlight where falloff begins.
+            Must be greater than or equal to 0 and less than outerConeAngle.
+            </param>
+            <param name="outerConeAngle">
+            Gets Angle, in radians, from centre of spotlight where falloff ends.
+            Must be greater than innerConeAngle and less than or equal to PI / 2.0.
+            </param>
+            <returns>This <see cref="T:SharpGLTF.Schema2.PunctualLight"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.WithColor(SharpGLTF.Schema2.PunctualLight,System.Numerics.Vector3,System.Single,System.Single)">
+            <summary>
+            Defines the light color, intensity and range for the current <see cref="T:SharpGLTF.Schema2.PunctualLight"/>.
+            </summary>
+            <param name="light">This <see cref="T:SharpGLTF.Schema2.PunctualLight"/> instance.</param>
+            <param name="color">RGB value for light's color in linear space.</param>
+            <param name="intensity">
+            Brightness of light in. The units that this is defined in depend on the type of light.
+            point and spot lights use luminous intensity in candela (lm/sr) while directional
+            lights use illuminance in lux (lm/m2)
+            </param>
+            <param name="range">
+            Hint defining a distance cutoff at which the light's intensity may be considered
+            to have reached zero. Supported only for point and spot lights. Must be > 0.
+            When undefined, range is assumed to be infinite.
+            </param>
+            <returns>This <see cref="T:SharpGLTF.Schema2.PunctualLight"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.WithDefault(SharpGLTF.Schema2.Material)">
+            <summary>
+            Initializes this <see cref="T:SharpGLTF.Schema2.Material"/> instance with default material attributes.
+            </summary>
+            <param name="material">The <see cref="T:SharpGLTF.Schema2.Material"/> instance to set.</param>
+            <returns>This <see cref="T:SharpGLTF.Schema2.Material"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.WithDefault(SharpGLTF.Schema2.Material,System.Numerics.Vector4)">
+            <summary>
+            Initializes this <see cref="T:SharpGLTF.Schema2.Material"/> instance with default material attributes.
+            </summary>
+            <param name="material">The <see cref="T:SharpGLTF.Schema2.Material"/> instance to set.</param>
+            <param name="diffuseColor">A <see cref="T:System.Numerics.Vector4"/> color where X=Red, Y=Green, Z=Blue, W=Alpha.</param>
+            <returns>This <see cref="T:SharpGLTF.Schema2.Material"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.WithPBRMetallicRoughness(SharpGLTF.Schema2.Material)">
+            <summary>
+            Initializes this <see cref="T:SharpGLTF.Schema2.Material"/> instance with PBR Metallic Roughness attributes.
+            </summary>
+            <param name="material">The <see cref="T:SharpGLTF.Schema2.Material"/> instance to set.</param>
+            <returns>This <see cref="T:SharpGLTF.Schema2.Material"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.WithPBRSpecularGlossiness(SharpGLTF.Schema2.Material)">
+            <summary>
+            Initializes this <see cref="T:SharpGLTF.Schema2.Material"/> instance with PBR Specular Glossiness attributes.
+            </summary>
+            <param name="material">The <see cref="T:SharpGLTF.Schema2.Material"/> instance to set.</param>
+            <returns>This <see cref="T:SharpGLTF.Schema2.Material"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.WithUnlit(SharpGLTF.Schema2.Material)">
+            <summary>
+            Initializes this <see cref="T:SharpGLTF.Schema2.Material"/> instance with Unlit attributes.
+            </summary>
+            <param name="material">The <see cref="T:SharpGLTF.Schema2.Material"/> instance to set.</param>
+            <returns>This <see cref="T:SharpGLTF.Schema2.Material"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.UseImageWithFile(SharpGLTF.Schema2.ModelRoot,System.String)">
+            <summary>
+            Creates or reuses an <see cref="T:SharpGLTF.Schema2.Image"/> with the file set by <paramref name="filePath"/>
+            </summary>
+            <param name="root">The <see cref="T:SharpGLTF.Schema2.ModelRoot"/> root instance.</param>
+            <param name="filePath">A valid file path pointing to a valid image</param>
+            <returns>A <see cref="T:SharpGLTF.Schema2.Image"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.UseImageWithContent(SharpGLTF.Schema2.ModelRoot,SharpGLTF.Memory.MemoryImage)">
+            <summary>
+            Creates or reuses an <see cref="T:SharpGLTF.Schema2.Image"/> with the image content set by <paramref name="image"/>
+            </summary>
+            <param name="root">The <see cref="T:SharpGLTF.Schema2.ModelRoot"/> root instance.</param>
+            <param name="image">A buffer containing the bytes of the image file.</param>
+            <returns>A <see cref="T:SharpGLTF.Schema2.Image"/> instance.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit._SelectAttribute``1(System.Collections.Generic.IReadOnlyList{System.Text.Json.Nodes.JsonNode},System.String)">
+            <summary>
+            Takes a list of <see cref="T:System.Text.Json.Nodes.JsonNode"/> and selects a specific property of a specific data type.
+            </summary>        
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.ToStaticMeshBuilder``3(SharpGLTF.Schema2.Scene,System.Converter{SharpGLTF.Schema2.Material,``0},SharpGLTF.Runtime.RuntimeOptions,SharpGLTF.Schema2.Animation,System.Single)">
+            <summary>
+            Evaluates the current <paramref name="srcScene"/> at a given <paramref name="animation"/> and <paramref name="time"/>
+            and creates a static <see cref="T:SharpGLTF.Geometry.MeshBuilder`4"/>
+            </summary>
+            <typeparam name="TMaterial">Any material type</typeparam>
+            <typeparam name="TvG">A subtype of <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexGeometry"/></typeparam>
+            <typeparam name="TvM">A subtype of <see cref="T:SharpGLTF.Geometry.VertexTypes.IVertexMaterial"/></typeparam>
+            <param name="srcScene">The source <see cref="T:SharpGLTF.Schema2.Scene"/> to evaluate.</param>
+            <param name="materialFunc">A function to convert <see cref="T:SharpGLTF.Schema2.Material"/> into <typeparamref name="TMaterial"/>.</param>
+            <param name="options">Evaluation options.</param>
+            <param name="animation">The source <see cref="T:SharpGLTF.Schema2.Animation"/> to evaluate.</param>
+            <param name="time">A time point, in seconds, within <paramref name="animation"/>.</param>
+            <returns>A new <see cref="T:SharpGLTF.Geometry.MeshBuilder`4"/> containing the evaluated geometry.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.FindNode(SharpGLTF.Schema2.Scene,System.Predicate{SharpGLTF.Schema2.Node})">
+            <summary>
+            Finds a <see cref="T:SharpGLTF.Schema2.Node"/> by name in the current graph.
+            </summary>
+            <param name="scene">This <see cref="T:SharpGLTF.Schema2.Scene"/> instance.</param>
+            <param name="predicate">A function to test each <see cref="T:SharpGLTF.Schema2.Node"/> for a condition.</param>
+            <returns>A <see cref="T:SharpGLTF.Schema2.Node"/> instance, or Null.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.FindNode(SharpGLTF.Schema2.Node,System.Predicate{SharpGLTF.Schema2.Node})">
+            <summary>
+            Finds a <see cref="T:SharpGLTF.Schema2.Node"/> by name in the current graph.
+            </summary>
+            <param name="node">This <see cref="T:SharpGLTF.Schema2.Node"/> instance.</param>
+            <param name="predicate">A function to test each <see cref="T:SharpGLTF.Schema2.Node"/> for a condition.</param>
+            <returns>A <see cref="T:SharpGLTF.Schema2.Node"/> instance, or Null.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.EvaluateTriangles(SharpGLTF.Schema2.Scene,SharpGLTF.Runtime.RuntimeOptions,SharpGLTF.Schema2.Animation,System.Single)">
+            <summary>
+            Yields a collection of triangles representing the geometry in world space.
+            </summary>
+            /// <param name="scene">A <see cref="T:SharpGLTF.Schema2.Scene"/> instance.</param>
+            <param name="options">Evaluation options.</param>
+            <param name="animation">An <see cref="T:SharpGLTF.Schema2.Animation"/> instance, or null.</param>
+            <param name="time">The animation time.</param>
+            <returns>A collection of triangles in world space.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.Toolkit.EvaluateTriangles``2(SharpGLTF.Schema2.Scene,SharpGLTF.Runtime.RuntimeOptions,SharpGLTF.Schema2.Animation,System.Single)">
+            <summary>
+            Yields a collection of triangles representing the geometry in world space.
+            </summary>
+            <typeparam name="TvG">The vertex fragment type with Position, Normal and Tangent.</typeparam>
+            <typeparam name="TvM">The vertex fragment type with Colors and Texture Coordinates.</typeparam>
+            <param name="scene">A <see cref="T:SharpGLTF.Schema2.Scene"/> instance.</param>
+            <param name="options">Evaluation options.</param>
+            <param name="animation">An <see cref="T:SharpGLTF.Schema2.Animation"/> instance, or null.</param>
+            <param name="time">The animation time.</param>
+            <returns>A collection of triangles in world space.</returns>
+        </member>
+        <member name="M:SharpGLTF.Schema2.EvaluatedTriangle`3.TransformTextureCoordsByMaterial(System.Collections.Generic.IEnumerable{SharpGLTF.Schema2.EvaluatedTriangle{`0,`1,`2}},SharpGLTF.Schema2.Animation,System.Single)">
+            <summary>
+            Materials may include a <see cref="T:SharpGLTF.Schema2.TextureTransform"/> which affects the texture coordinates.
+            </summary>
+            <param name="triangles">the triangles to be updated.</param>
+            <returns>A new collection fo triangles with transformed uv coordinates (if required)</returns>
+        </member>
+        <member name="T:SharpGLTF._Extensions">
+            <summary>
+            Extensions used internally.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF._Extensions.DeepClone(System.Text.Json.Nodes.JsonNode)">
+            <summary>
+            Creates a new instance of the <see cref="!:JsonNode"/>.
+            All children nodes are recursively cloned.
+            </summary>
+            <remarks>
+            DeepClone is available in System.Text.Json v8.0.0 or higher
+            so we need to provide a (much slower) implementation for net6.0.
+            </remarks>
+            <param name="node">The node to clone.</param>
+            <returns>A clone of <paramref name="node"/>.</returns>        
+        </member>
+        <member name="T:SharpGLTF.Runtime.VertexNormalsFactory">
+            <summary>
+            Factory used to calculate the normals of a mesh which implements <see cref="T:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive"/>
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive">
+            <summary>
+            This interface must be implemented by a mesh, or a proxy of a mesh,
+            in order to calculate its normals
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive.VertexCount">
+            <summary>
+            gets the number of vertices.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive.GetVertexPosition(System.Int32)">
+            <summary>
+            Gets the position of a given vertex.
+            </summary>
+            <param name="idx">The Vertex Index</param>
+            <returns>The local vertex position.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive.SetVertexNormal(System.Int32,System.Numerics.Vector3)">
+            <summary>
+            Sets the normal for the given vertex
+            </summary>
+            <param name="idx">The vertex index to set</param>
+            <param name="normal">The normal that will be set to the vertex</param>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexNormalsFactory.IMeshPrimitive.GetTriangleIndices">
+            <summary>
+            Gets a sequence of triangles, where each triangle is defined by three vertex indices.
+            </summary>
+            <returns>A collection of triangles</returns>
+        </member>
+        <member name="T:SharpGLTF.Runtime.VertexTangentsFactory">
+            <summary>
+            Factory used to calculate the tangents of a mesh which implements <see cref="T:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive"/>
+            </summary>
+        </member>
+        <member name="T:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive">
+            <summary>
+            this interface must be defined by the input primitive to which we want to add tangents
+            </summary>
+        </member>
+        <member name="P:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.VertexCount">
+            <summary>
+            gets the number of vertices.
+            </summary>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.GetVertexPosition(System.Int32)">
+            <summary>
+            Gets the position of a given vertex.
+            </summary>
+            <param name="idx">The Vertex Index</param>
+            <returns>The local vertex position.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.GetVertexNormal(System.Int32)">
+            <summary>
+            Gets the normal of a given vertex.
+            </summary>
+            <param name="idx">The Vertex Index</param>
+            <returns>The local vertex normal.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.GetVertexTexCoord(System.Int32)">
+            <summary>
+            Gets the texture coordinate of a given vertex.
+            </summary>
+            <param name="idx">The Vertex Index</param>
+            <returns>The local texture coordinate.</returns>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.SetVertexTangent(System.Int32,System.Numerics.Vector4)">
+            <summary>
+            Sets the tangent for the given vertex
+            </summary>
+            <param name="idx">The vertex index to set</param>
+            <param name="tangent">The tangent that will be set to the vertex</param>
+        </member>
+        <member name="M:SharpGLTF.Runtime.VertexTangentsFactory.IMeshPrimitive.GetTriangleIndices">
+            <summary>
+            Gets a sequence of triangles, where each triangle is defined by three vertex indices.
+            </summary>
+            <returns>A collection of triangles</returns>
+        </member>
+    </members>
+</doc>

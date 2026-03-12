@@ -70,6 +70,7 @@ StyleCopReport.xml
 *_i.c
 *_p.c
 *_h.h
+*.dll
 *.ilk
 *.meta
 *.obj

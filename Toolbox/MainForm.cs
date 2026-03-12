@@ -1,26 +1,27 @@
-﻿using System;
+﻿using Bfres.Structs;
+using FirstPlugin;
+using OpenTK.Graphics.OpenGL;
+using Syroot.NintenTools.NSW.Bntx;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Toolbox.Library.IO;
 using Toolbox.Library;
 using Toolbox.Library.Forms;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Reflection;
-using OpenTK.Graphics.OpenGL;
+using Toolbox.Library.IO;
 using Toolbox.Library.NodeWrappers;
 using Toolbox.Library.Rendering;
-using Bfres.Structs;
-using Syroot.NintenTools.NSW.Bntx;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using FirstPlugin;
 
 namespace Toolbox
 {
@@ -1556,6 +1557,8 @@ namespace Toolbox
         {
             List<string> Formats = new List<string>();
             Formats.Add("DAE (.dae)");
+            Formats.Add("glTF (.gltf)");
+            Formats.Add("glTF (.glb)");
 
             failedFiles = new List<string>();
 
@@ -1675,18 +1678,37 @@ namespace Toolbox
                 if (!Directory.Exists(outputFolder))
                     Directory.CreateDirectory(outputFolder);
 
-                DAE.ExportSettings daesettings = new DAE.ExportSettings();
-                daesettings.SuppressConfirmDialog = true;
-                daesettings.ExportTextures = settings.ExportTextures;
-
                 var textures = ((IExportableModelContainer)fileFormat).ExportableTextures.ToList();
-                foreach (var model in ((IExportableModelContainer)fileFormat).ExportableModels)
-                {
-                    string path = $"{outputFolder}/{model.Text}";
-                    path = Utils.RenameDuplicateString(batchExportFileList, path, 0, 3);
 
-                    DAE.Export($"{path}.{extension}", daesettings, model, textures, model.GenericSkeleton);
-                    batchExportFileList.Add(path);
+                switch (extension)
+                {
+                    case "gltf":
+                    case "glb":
+                        GLTF.ExportSettings gltfExportSettings = new GLTF.ExportSettings();
+
+                        foreach (var model in ((IExportableModelContainer)fileFormat).ExportableModels)
+                        {
+                            string path = $"{outputFolder}/{model.Text}";
+                            path = Utils.RenameDuplicateString(batchExportFileList, path, 0, 3);
+
+                            GLTF.Export($"{path}.{extension}", gltfExportSettings, model, textures, model.GenericSkeleton);
+                            batchExportFileList.Add(path);
+                        }
+                        break;
+                    default:
+                        DAE.ExportSettings daesettings = new DAE.ExportSettings();
+                        daesettings.SuppressConfirmDialog = true;
+                        daesettings.ExportTextures = settings.ExportTextures;
+
+                        foreach (var model in ((IExportableModelContainer)fileFormat).ExportableModels)
+                        {
+                            string path = $"{outputFolder}/{model.Text}";
+                            path = Utils.RenameDuplicateString(batchExportFileList, path, 0, 3);
+
+                            DAE.Export($"{path}.{extension}", daesettings, model, textures, model.GenericSkeleton);
+                            batchExportFileList.Add(path);
+                        }
+                        break;
                 }
             }
             else if (fileFormat is IExportableModel && exportMode == ExportMode.Models)

@@ -555,6 +555,10 @@ namespace Bfres.Structs
                 case ".obj":
                     OBJ.ExportModel(FileName, this, GetTextures());
                     break;
+                case ".gltf": case ".glb":
+                    GLTF.ExportSettings exportSettings = new GLTF.ExportSettings();
+                    GLTF.Export(FileName, exportSettings, this, GetTextures(), Skeleton, Skeleton.Node_Array.ToList());
+                    break;
                 case ".fbx":
                     {
                         // Ensure fbx runtime exists
