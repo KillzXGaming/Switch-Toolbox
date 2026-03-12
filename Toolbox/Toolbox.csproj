@@ -425,6 +425,9 @@
     <Content Include="Hashes\ACNHValues.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="libfbxsdk.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Lib\aamp_hashed_names.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -656,9 +659,6 @@
     <Content Include="Projects\Recent\DUMMY.txt" />
     <None Include="Shader\LevelEditor\LightingGraphics.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="SwitchToolbox.FbxNative.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="tegra_swizzle_x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
