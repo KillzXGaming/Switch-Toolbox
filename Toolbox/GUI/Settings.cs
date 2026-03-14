@@ -78,6 +78,7 @@ namespace Toolbox
             mk8PathTB.Text = Runtime.Mk8GamePath;
             SMOPathTB.Text = Runtime.SmoGamePath;
             botwGamePathTB.Text = Runtime.BotwGamePath;
+            totkGamePathTB.Text = Runtime.TotkGamePath;
             tpGamePathTB.Text = Runtime.TpGamePath;
             modelLoadArchive.Checked = Runtime.ObjectEditor.OpenModelsOnOpen;
             specularCubemapPathTB.Text = System.IO.Path.GetFileName(Runtime.PBR.SpecularCubeMapPath);
@@ -465,6 +466,24 @@ namespace Toolbox
             }
         }
 
+        private void totkGamePathTB_Click(object sender, EventArgs e)
+        {
+            FolderSelectDialog sfd = new FolderSelectDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                if (!IsValidTotkDirectory(sfd.SelectedPath))
+                    throw new Exception("Invalid path choosen. Make sure you have atleast |Shader/ExternalBinaryString.bfres.mc| in the path!");
+
+                totkGamePathTB.Text = sfd.SelectedPath;
+                Runtime.TotkGamePath = totkGamePathTB.Text;
+            }
+        }
+
+        private void totkGamePathTB_TextChanged(object sender, EventArgs e)
+        {
+            Runtime.TotkGamePath = totkGamePathTB.Text;
+        }
+
         private void displayBoundingBoxeChk_CheckedChanged(object sender, EventArgs e) {
             Runtime.renderBoundingBoxes = displayBoundingBoxeChk.Checked;
         }
@@ -578,6 +597,10 @@ namespace Toolbox
                             botwGamePathTB.Text = "";
                             Runtime.BotwGamePath = "";
                             break;
+                        case "totkGamePathTB":
+                            totkGamePathTB.Text = "";
+                            Runtime.TotkGamePath = "";
+                            break;
                         case "pathPokemonSwShTB":
                             pathPokemonSwShTB.Text = "";
                             Runtime.PkSwShGamePath = "";
@@ -641,6 +664,14 @@ namespace Toolbox
             string FileSizeList = System.IO.Path.Combine($"{GamePath}", "FileSizeList.txt");
 
             return System.IO.File.Exists(DecompressedSizeList) && System.IO.File.Exists(FileSizeList);
+        }
+
+        private bool IsValidTotkDirectory(string GamePath)
+        {
+            string ExternalStringPath = System.IO.Path.Combine($"{GamePath}",
+                 "Shader", "ExternalBinaryString.bfres.mc");
+
+            return System.IO.File.Exists(ExternalStringPath);
         }
 
         private void chkTpFileTable_CheckedChanged(object sender, EventArgs e) {

@@ -99,6 +99,8 @@
             this.stLabel2 = new Toolbox.Library.Forms.STLabel();
             this.preferredTexFormatCB = new System.Windows.Forms.ComboBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.stLabel19 = new Toolbox.Library.Forms.STLabel();
+            this.totkGamePathTB = new Toolbox.Library.Forms.STTextBox();
             this.stLabel18 = new Toolbox.Library.Forms.STLabel();
             this.pathPokemonSwShTB = new Toolbox.Library.Forms.STTextBox();
             this.stContextMenuStrip1 = new Toolbox.Library.Forms.STContextMenuStrip(this.components);
@@ -149,9 +151,9 @@
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // contentContainer
-            // 
+            //
             this.contentContainer.Controls.Add(this.btnReset);
             this.contentContainer.Controls.Add(this.stTabControl1);
             this.contentContainer.Controls.Add(this.btnSave);
@@ -161,9 +163,9 @@
             this.contentContainer.Controls.SetChildIndex(this.btnSave, 0);
             this.contentContainer.Controls.SetChildIndex(this.stTabControl1, 0);
             this.contentContainer.Controls.SetChildIndex(this.btnReset, 0);
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(340, 37);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -171,9 +173,9 @@
             this.label1.Size = new System.Drawing.Size(112, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "Viewport Shading";
-            // 
+            //
             // chkBoxSpecular
-            // 
+            //
             this.chkBoxSpecular.AutoSize = true;
             this.chkBoxSpecular.Location = new System.Drawing.Point(13, 197);
             this.chkBoxSpecular.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -182,9 +184,9 @@
             this.chkBoxSpecular.TabIndex = 3;
             this.chkBoxSpecular.Text = "Enable Specular";
             this.chkBoxSpecular.UseVisualStyleBackColor = true;
-            // 
+            //
             // chkBoxNormalMap
-            // 
+            //
             this.chkBoxNormalMap.AutoSize = true;
             this.chkBoxNormalMap.Location = new System.Drawing.Point(13, 169);
             this.chkBoxNormalMap.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -194,9 +196,9 @@
             this.chkBoxNormalMap.Text = "Enable Normal Maps";
             this.chkBoxNormalMap.UseVisualStyleBackColor = true;
             this.chkBoxNormalMap.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
+            //
             // shadingComboBox
-            // 
+            //
             this.shadingComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.shadingComboBox.FormattingEnabled = true;
             this.shadingComboBox.Location = new System.Drawing.Point(468, 33);
@@ -205,9 +207,9 @@
             this.shadingComboBox.Size = new System.Drawing.Size(219, 24);
             this.shadingComboBox.TabIndex = 1;
             this.shadingComboBox.SelectedIndexChanged += new System.EventHandler(this.shadingComboBox_SelectedIndexChanged);
-            // 
+            //
             // panel2
-            // 
+            //
             this.panel2.Controls.Add(this.chkViewportAxisLines);
             this.panel2.Controls.Add(this.chkViewportGrid);
             this.panel2.Controls.Add(this.uvChannelRB3);
@@ -251,9 +253,9 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(712, 361);
             this.panel2.TabIndex = 4;
-            // 
+            //
             // chkViewportAxisLines
-            // 
+            //
             this.chkViewportAxisLines.AutoSize = true;
             this.chkViewportAxisLines.Location = new System.Drawing.Point(13, 112);
             this.chkViewportAxisLines.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -263,9 +265,9 @@
             this.chkViewportAxisLines.Text = "Enable Viewport Axis Lines";
             this.chkViewportAxisLines.UseVisualStyleBackColor = true;
             this.chkViewportAxisLines.CheckedChanged += new System.EventHandler(this.chkViewportAxisLines_CheckedChanged);
-            // 
+            //
             // chkViewportGrid
-            // 
+            //
             this.chkViewportGrid.AutoSize = true;
             this.chkViewportGrid.Location = new System.Drawing.Point(13, 84);
             this.chkViewportGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -275,9 +277,9 @@
             this.chkViewportGrid.Text = "Enable Viewport Grid";
             this.chkViewportGrid.UseVisualStyleBackColor = true;
             this.chkViewportGrid.CheckedChanged += new System.EventHandler(this.chkViewportGrid_CheckedChanged);
-            // 
+            //
             // uvChannelRB3
-            // 
+            //
             this.uvChannelRB3.AutoSize = true;
             this.uvChannelRB3.Location = new System.Drawing.Point(636, 66);
             this.uvChannelRB3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -288,9 +290,9 @@
             this.uvChannelRB3.Text = "UV 3";
             this.uvChannelRB3.UseVisualStyleBackColor = true;
             this.uvChannelRB3.CheckedChanged += new System.EventHandler(this.uvChannelRB3_CheckedChanged);
-            // 
+            //
             // uvChannelRB2
-            // 
+            //
             this.uvChannelRB2.AutoSize = true;
             this.uvChannelRB2.Location = new System.Drawing.Point(567, 66);
             this.uvChannelRB2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -301,9 +303,9 @@
             this.uvChannelRB2.Text = "UV 2";
             this.uvChannelRB2.UseVisualStyleBackColor = true;
             this.uvChannelRB2.CheckedChanged += new System.EventHandler(this.uvChannelRB2_CheckedChanged);
-            // 
+            //
             // uvChannelRB
-            // 
+            //
             this.uvChannelRB.AutoSize = true;
             this.uvChannelRB.Location = new System.Drawing.Point(496, 66);
             this.uvChannelRB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -314,9 +316,9 @@
             this.uvChannelRB.Text = "UV 1";
             this.uvChannelRB.UseVisualStyleBackColor = true;
             this.uvChannelRB.CheckedChanged += new System.EventHandler(this.uvChannelRB_CheckedChanged);
-            // 
+            //
             // displayBoundingBoxeChk
-            // 
+            //
             this.displayBoundingBoxeChk.AutoSize = true;
             this.displayBoundingBoxeChk.Location = new System.Drawing.Point(336, 225);
             this.displayBoundingBoxeChk.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -325,9 +327,9 @@
             this.displayBoundingBoxeChk.TabIndex = 31;
             this.displayBoundingBoxeChk.Text = "Display Bounding Boxes";
             this.displayBoundingBoxeChk.CheckedChanged += new System.EventHandler(this.displayBoundingBoxeChk_CheckedChanged);
-            // 
+            //
             // boneXRayChk
-            // 
+            //
             this.boneXRayChk.AutoSize = true;
             this.boneXRayChk.Location = new System.Drawing.Point(336, 169);
             this.boneXRayChk.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -336,9 +338,9 @@
             this.boneXRayChk.TabIndex = 30;
             this.boneXRayChk.Text = "Display Bone X Ray";
             this.boneXRayChk.CheckedChanged += new System.EventHandler(this.boneXRayChk_CheckedChanged);
-            // 
+            //
             // stLabel9
-            // 
+            //
             this.stLabel9.AutoSize = true;
             this.stLabel9.Location = new System.Drawing.Point(17, 260);
             this.stLabel9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -346,9 +348,9 @@
             this.stLabel9.Size = new System.Drawing.Size(130, 16);
             this.stLabel9.TabIndex = 29;
             this.stLabel9.Text = "Camera Max Speed:";
-            // 
+            //
             // cameraMaxSpeedUD
-            // 
+            //
             this.cameraMaxSpeedUD.DecimalPlaces = 3;
             this.cameraMaxSpeedUD.Increment = new decimal(new int[] {
             5,
@@ -376,9 +378,9 @@
             0,
             65536});
             this.cameraMaxSpeedUD.ValueChanged += new System.EventHandler(this.cameraMaxSpeedUD_ValueChanged);
-            // 
+            //
             // alphaChannelBtn
-            // 
+            //
             this.alphaChannelBtn.BackColor = System.Drawing.Color.Silver;
             this.alphaChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.alphaChannelBtn.Location = new System.Drawing.Point(455, 79);
@@ -389,9 +391,9 @@
             this.alphaChannelBtn.Text = "A";
             this.alphaChannelBtn.UseVisualStyleBackColor = false;
             this.alphaChannelBtn.Click += new System.EventHandler(this.alphaChannelBtn_Click);
-            // 
+            //
             // blueChannelBtn
-            // 
+            //
             this.blueChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.blueChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.blueChannelBtn.Location = new System.Drawing.Point(419, 79);
@@ -402,9 +404,9 @@
             this.blueChannelBtn.Text = "B";
             this.blueChannelBtn.UseVisualStyleBackColor = false;
             this.blueChannelBtn.Click += new System.EventHandler(this.blueChannelBtn_Click);
-            // 
+            //
             // greenChannelBtn
-            // 
+            //
             this.greenChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.greenChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.greenChannelBtn.Location = new System.Drawing.Point(383, 79);
@@ -415,9 +417,9 @@
             this.greenChannelBtn.Text = "G";
             this.greenChannelBtn.UseVisualStyleBackColor = false;
             this.greenChannelBtn.Click += new System.EventHandler(this.greenChannelBtn_Click);
-            // 
+            //
             // redChannelBtn
-            // 
+            //
             this.redChannelBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.redChannelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.redChannelBtn.Location = new System.Drawing.Point(347, 79);
@@ -428,9 +430,9 @@
             this.redChannelBtn.Text = "R";
             this.redChannelBtn.UseVisualStyleBackColor = false;
             this.redChannelBtn.Click += new System.EventHandler(this.redChannelBtn_Click);
-            // 
+            //
             // stLabel8
-            // 
+            //
             this.stLabel8.AutoSize = true;
             this.stLabel8.Location = new System.Drawing.Point(373, 262);
             this.stLabel8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -438,9 +440,9 @@
             this.stLabel8.Size = new System.Drawing.Size(101, 16);
             this.stLabel8.TabIndex = 23;
             this.stLabel8.Text = "Bone Point Size";
-            // 
+            //
             // boneSizeUD
-            // 
+            //
             this.boneSizeUD.DecimalPlaces = 3;
             this.boneSizeUD.Increment = new decimal(new int[] {
             1,
@@ -468,9 +470,9 @@
             0,
             65536});
             this.boneSizeUD.ValueChanged += new System.EventHandler(this.boneSizeUD_ValueChanged);
-            // 
+            //
             // labelNormalsLine
-            // 
+            //
             this.labelNormalsLine.AutoSize = true;
             this.labelNormalsLine.Location = new System.Drawing.Point(373, 292);
             this.labelNormalsLine.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -478,9 +480,9 @@
             this.labelNormalsLine.Size = new System.Drawing.Size(101, 16);
             this.labelNormalsLine.TabIndex = 21;
             this.labelNormalsLine.Text = "Normals Length";
-            // 
+            //
             // normalsLineUD
-            // 
+            //
             this.normalsLineUD.DecimalPlaces = 3;
             this.normalsLineUD.Increment = new decimal(new int[] {
             1,
@@ -508,9 +510,9 @@
             0,
             65536});
             this.normalsLineUD.ValueChanged += new System.EventHandler(this.normalsLineUD_ValueChanged);
-            // 
+            //
             // normalPointsCB
-            // 
+            //
             this.normalPointsCB.AutoSize = true;
             this.normalPointsCB.Location = new System.Drawing.Point(536, 169);
             this.normalPointsCB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -520,9 +522,9 @@
             this.normalPointsCB.Text = "Display Normal Points";
             this.normalPointsCB.UseVisualStyleBackColor = true;
             this.normalPointsCB.CheckedChanged += new System.EventHandler(this.normalPointsCB_CheckedChanged);
-            // 
+            //
             // vtxColorCB
-            // 
+            //
             this.vtxColorCB.AutoSize = true;
             this.vtxColorCB.Location = new System.Drawing.Point(536, 140);
             this.vtxColorCB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -532,9 +534,9 @@
             this.vtxColorCB.Text = "Display Vertex Colors";
             this.vtxColorCB.UseVisualStyleBackColor = true;
             this.vtxColorCB.CheckedChanged += new System.EventHandler(this.vtxColorCB_CheckedChanged);
-            // 
+            //
             // chkBoxEnablePBR
-            // 
+            //
             this.chkBoxEnablePBR.AutoSize = true;
             this.chkBoxEnablePBR.Location = new System.Drawing.Point(13, 225);
             this.chkBoxEnablePBR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -544,9 +546,9 @@
             this.chkBoxEnablePBR.Text = "Enable PBR";
             this.chkBoxEnablePBR.UseVisualStyleBackColor = true;
             this.chkBoxEnablePBR.CheckedChanged += new System.EventHandler(this.chkBoxEnablePBR_CheckedChanged);
-            // 
+            //
             // label6
-            // 
+            //
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(373, 321);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -554,9 +556,9 @@
             this.label6.Size = new System.Drawing.Size(93, 16);
             this.label6.TabIndex = 15;
             this.label6.Text = "Preview Scale";
-            // 
+            //
             // previewScaleUD
-            // 
+            //
             this.previewScaleUD.DecimalPlaces = 3;
             this.previewScaleUD.Increment = new decimal(new int[] {
             1,
@@ -584,9 +586,9 @@
             0,
             65536});
             this.previewScaleUD.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
-            // 
+            //
             // chkBoxDisplayPolyCount
-            // 
+            //
             this.chkBoxDisplayPolyCount.AutoSize = true;
             this.chkBoxDisplayPolyCount.Location = new System.Drawing.Point(336, 197);
             this.chkBoxDisplayPolyCount.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -595,9 +597,9 @@
             this.chkBoxDisplayPolyCount.TabIndex = 13;
             this.chkBoxDisplayPolyCount.Text = "Display Poly Count";
             this.chkBoxDisplayPolyCount.CheckedChanged += new System.EventHandler(this.chkBoxDisplayPolyCount_CheckedChanged);
-            // 
+            //
             // label5
-            // 
+            //
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(17, 321);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -605,9 +607,9 @@
             this.label5.Size = new System.Drawing.Size(78, 16);
             this.label5.TabIndex = 12;
             this.label5.Text = "Camera Far";
-            // 
+            //
             // camFarNumUD
-            // 
+            //
             this.camFarNumUD.DecimalPlaces = 3;
             this.camFarNumUD.Increment = new decimal(new int[] {
             5,
@@ -630,9 +632,9 @@
             this.camFarNumUD.Size = new System.Drawing.Size(211, 22);
             this.camFarNumUD.TabIndex = 11;
             this.camFarNumUD.ValueChanged += new System.EventHandler(this.camFarNumUD_ValueChanged);
-            // 
+            //
             // label4
-            // 
+            //
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(17, 292);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -640,9 +642,9 @@
             this.label4.Size = new System.Drawing.Size(88, 16);
             this.label4.TabIndex = 10;
             this.label4.Text = "Camera Near";
-            // 
+            //
             // camNearNumUD
-            // 
+            //
             this.camNearNumUD.DecimalPlaces = 3;
             this.camNearNumUD.Increment = new decimal(new int[] {
             5,
@@ -670,9 +672,9 @@
             0,
             65536});
             this.camNearNumUD.ValueChanged += new System.EventHandler(this.camNearNumUD_ValueChanged);
-            // 
+            //
             // label3
-            // 
+            //
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(4, 37);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -680,9 +682,9 @@
             this.label3.Size = new System.Drawing.Size(55, 16);
             this.label3.TabIndex = 8;
             this.label3.Text = "Camera";
-            // 
+            //
             // camMoveComboBox
-            // 
+            //
             this.camMoveComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.camMoveComboBox.FormattingEnabled = true;
             this.camMoveComboBox.Location = new System.Drawing.Point(79, 33);
@@ -691,9 +693,9 @@
             this.camMoveComboBox.Size = new System.Drawing.Size(207, 24);
             this.camMoveComboBox.TabIndex = 4;
             this.camMoveComboBox.SelectedIndexChanged += new System.EventHandler(this.camMoveComboBox_SelectedIndexChanged);
-            // 
+            //
             // chkBoxDisplayBones
-            // 
+            //
             this.chkBoxDisplayBones.AutoSize = true;
             this.chkBoxDisplayBones.Location = new System.Drawing.Point(336, 140);
             this.chkBoxDisplayBones.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -703,9 +705,9 @@
             this.chkBoxDisplayBones.Text = "Display Bones";
             this.chkBoxDisplayBones.UseVisualStyleBackColor = true;
             this.chkBoxDisplayBones.CheckedChanged += new System.EventHandler(this.chkBoxDisplayBones_CheckedChanged);
-            // 
+            //
             // chkBoxDisplayWireframe
-            // 
+            //
             this.chkBoxDisplayWireframe.AutoSize = true;
             this.chkBoxDisplayWireframe.Location = new System.Drawing.Point(536, 225);
             this.chkBoxDisplayWireframe.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -715,9 +717,9 @@
             this.chkBoxDisplayWireframe.Text = "Display Wireframe";
             this.chkBoxDisplayWireframe.UseVisualStyleBackColor = true;
             this.chkBoxDisplayWireframe.CheckedChanged += new System.EventHandler(this.chkBoxDisplayWireframe_CheckedChanged);
-            // 
+            //
             // chkBoxDisplayModels
-            // 
+            //
             this.chkBoxDisplayModels.AutoSize = true;
             this.chkBoxDisplayModels.Location = new System.Drawing.Point(536, 197);
             this.chkBoxDisplayModels.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -727,9 +729,9 @@
             this.chkBoxDisplayModels.Text = "Display Models";
             this.chkBoxDisplayModels.UseVisualStyleBackColor = true;
             this.chkBoxDisplayModels.CheckedChanged += new System.EventHandler(this.chkBoxDisplayModels_CheckedChanged);
-            // 
+            //
             // chkBoxStereoscopy
-            // 
+            //
             this.chkBoxStereoscopy.AutoSize = true;
             this.chkBoxStereoscopy.Location = new System.Drawing.Point(13, 140);
             this.chkBoxStereoscopy.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -739,9 +741,9 @@
             this.chkBoxStereoscopy.Text = "Enable Stereoscopy";
             this.chkBoxStereoscopy.UseVisualStyleBackColor = true;
             this.chkBoxStereoscopy.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_1);
-            // 
+            //
             // label2
-            // 
+            //
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(75, 14);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -749,9 +751,9 @@
             this.label2.Size = new System.Drawing.Size(110, 16);
             this.label2.TabIndex = 4;
             this.label2.Text = "Viewport Settings";
-            // 
+            //
             // panel1
-            // 
+            //
             this.panel1.Controls.Add(this.enableVersionCheckCHK);
             this.panel1.Controls.Add(this.GLSLVerLabel);
             this.panel1.Controls.Add(this.openGLVerLabel);
@@ -760,9 +762,9 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(287, 118);
             this.panel1.TabIndex = 5;
-            // 
+            //
             // enableVersionCheckCHK
-            // 
+            //
             this.enableVersionCheckCHK.AutoSize = true;
             this.enableVersionCheckCHK.Location = new System.Drawing.Point(0, 82);
             this.enableVersionCheckCHK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -772,9 +774,9 @@
             this.enableVersionCheckCHK.Text = "Enable Version Check";
             this.enableVersionCheckCHK.UseVisualStyleBackColor = true;
             this.enableVersionCheckCHK.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_2);
-            // 
+            //
             // GLSLVerLabel
-            // 
+            //
             this.GLSLVerLabel.AutoSize = true;
             this.GLSLVerLabel.Location = new System.Drawing.Point(4, 47);
             this.GLSLVerLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -782,9 +784,9 @@
             this.GLSLVerLabel.Size = new System.Drawing.Size(89, 16);
             this.GLSLVerLabel.TabIndex = 10;
             this.GLSLVerLabel.Text = "GLSL Version";
-            // 
+            //
             // openGLVerLabel
-            // 
+            //
             this.openGLVerLabel.AutoSize = true;
             this.openGLVerLabel.Location = new System.Drawing.Point(4, 16);
             this.openGLVerLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -792,9 +794,9 @@
             this.openGLVerLabel.Size = new System.Drawing.Size(112, 16);
             this.openGLVerLabel.TabIndex = 9;
             this.openGLVerLabel.Text = "Open GL Version:";
-            // 
+            //
             // btnSave
-            // 
+            //
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Location = new System.Drawing.Point(579, 553);
             this.btnSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -804,9 +806,9 @@
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
+            //
             // label7
-            // 
+            //
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(24, 84);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -814,9 +816,9 @@
             this.label7.Size = new System.Drawing.Size(156, 16);
             this.label7.TabIndex = 17;
             this.label7.Text = "Yaz0 Compression Level";
-            // 
+            //
             // yazoCompressionLevelUD
-            // 
+            //
             this.yazoCompressionLevelUD.Location = new System.Drawing.Point(196, 81);
             this.yazoCompressionLevelUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.yazoCompressionLevelUD.Maximum = new decimal(new int[] {
@@ -838,9 +840,9 @@
             0,
             0});
             this.yazoCompressionLevelUD.ValueChanged += new System.EventHandler(this.yazoCompressionLevelUD_ValueChanged);
-            // 
+            //
             // panel3
-            // 
+            //
             this.panel3.Controls.Add(this.chkBoxMdiMaximized);
             this.panel3.Controls.Add(this.formThemeCB);
             this.panel3.Controls.Add(this.stLabel1);
@@ -851,9 +853,9 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(417, 119);
             this.panel3.TabIndex = 18;
-            // 
+            //
             // chkBoxMdiMaximized
-            // 
+            //
             this.chkBoxMdiMaximized.AutoSize = true;
             this.chkBoxMdiMaximized.Location = new System.Drawing.Point(28, 47);
             this.chkBoxMdiMaximized.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -863,9 +865,9 @@
             this.chkBoxMdiMaximized.Text = "Always Maximized Mdi Forms";
             this.chkBoxMdiMaximized.UseVisualStyleBackColor = true;
             this.chkBoxMdiMaximized.CheckedChanged += new System.EventHandler(this.chkBoxMdiMaximized_CheckedChanged_3);
-            // 
+            //
             // formThemeCB
-            // 
+            //
             this.formThemeCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.formThemeCB.FormattingEnabled = true;
             this.formThemeCB.Location = new System.Drawing.Point(120, 12);
@@ -874,9 +876,9 @@
             this.formThemeCB.Size = new System.Drawing.Size(279, 24);
             this.formThemeCB.TabIndex = 23;
             this.formThemeCB.SelectedIndexChanged += new System.EventHandler(this.formThemeCB_SelectedIndexChanged);
-            // 
+            //
             // stLabel1
-            // 
+            //
             this.stLabel1.AutoSize = true;
             this.stLabel1.Location = new System.Drawing.Point(24, 17);
             this.stLabel1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -884,11 +886,11 @@
             this.stLabel1.Size = new System.Drawing.Size(84, 16);
             this.stLabel1.TabIndex = 22;
             this.stLabel1.Text = "Form Theme";
-            // 
+            //
             // stTabControl1
-            // 
-            this.stTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.stTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.stTabControl1.Controls.Add(this.tabPage1);
             this.stTabControl1.Controls.Add(this.tabPage2);
@@ -902,9 +904,9 @@
             this.stTabControl1.SelectedIndex = 0;
             this.stTabControl1.Size = new System.Drawing.Size(732, 522);
             this.stTabControl1.TabIndex = 19;
-            // 
+            //
             // tabPage1
-            // 
+            //
             this.tabPage1.Controls.Add(this.panel3);
             this.tabPage1.Controls.Add(this.panel2);
             this.tabPage1.Controls.Add(this.panel1);
@@ -916,9 +918,9 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
+            //
             // tabPage2
-            // 
+            //
             this.tabPage2.Controls.Add(this.chkAlwaysSaveAll);
             this.tabPage2.Controls.Add(this.chkAlwaysCompressOnSave);
             this.tabPage2.Controls.Add(this.chkFrameCamera);
@@ -943,9 +945,9 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Editor";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
+            //
             // chkAlwaysSaveAll
-            // 
+            //
             this.chkAlwaysSaveAll.AutoSize = true;
             this.chkAlwaysSaveAll.Location = new System.Drawing.Point(12, 259);
             this.chkAlwaysSaveAll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -956,9 +958,9 @@
             this.chkAlwaysSaveAll.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.chkAlwaysSaveAll.UseVisualStyleBackColor = true;
             this.chkAlwaysSaveAll.CheckedChanged += new System.EventHandler(this.chkAlwaysSaveAll_CheckedChanged);
-            // 
+            //
             // chkAlwaysCompressOnSave
-            // 
+            //
             this.chkAlwaysCompressOnSave.AutoSize = true;
             this.chkAlwaysCompressOnSave.Location = new System.Drawing.Point(12, 284);
             this.chkAlwaysCompressOnSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -969,9 +971,9 @@
             this.chkAlwaysCompressOnSave.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.chkAlwaysCompressOnSave.UseVisualStyleBackColor = true;
             this.chkAlwaysCompressOnSave.CheckedChanged += new System.EventHandler(this.chkAlwaysCompressOnSave_CheckedChanged);
-            // 
+            //
             // chkFrameCamera
-            // 
+            //
             this.chkFrameCamera.AutoSize = true;
             this.chkFrameCamera.Location = new System.Drawing.Point(12, 309);
             this.chkFrameCamera.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -982,9 +984,9 @@
             this.chkFrameCamera.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.chkFrameCamera.UseVisualStyleBackColor = true;
             this.chkFrameCamera.CheckedChanged += new System.EventHandler(this.chkFrameCamera_CheckedChanged);
-            // 
+            //
             // modelLoadArchive
-            // 
+            //
             this.modelLoadArchive.AutoSize = true;
             this.modelLoadArchive.Location = new System.Drawing.Point(12, 334);
             this.modelLoadArchive.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -995,9 +997,9 @@
             this.modelLoadArchive.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.modelLoadArchive.UseVisualStyleBackColor = true;
             this.modelLoadArchive.CheckedChanged += new System.EventHandler(this.modelLoadArchive_CheckedChanged);
-            // 
+            //
             // gridCellCountUD
-            // 
+            //
             this.gridCellCountUD.Location = new System.Drawing.Point(139, 204);
             this.gridCellCountUD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridCellCountUD.Maximum = new decimal(new int[] {
@@ -1009,9 +1011,9 @@
             this.gridCellCountUD.Size = new System.Drawing.Size(113, 22);
             this.gridCellCountUD.TabIndex = 16;
             this.gridCellCountUD.ValueChanged += new System.EventHandler(this.gridCellCountUD_ValueChanged);
-            // 
+            //
             // stLabel7
-            // 
+            //
             this.stLabel7.AutoSize = true;
             this.stLabel7.Location = new System.Drawing.Point(64, 137);
             this.stLabel7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1019,9 +1021,9 @@
             this.stLabel7.Size = new System.Drawing.Size(67, 16);
             this.stLabel7.TabIndex = 15;
             this.stLabel7.Text = "Grid Color";
-            // 
+            //
             // gridColorPB
-            // 
+            //
             this.gridColorPB.Location = new System.Drawing.Point(12, 129);
             this.gridColorPB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.gridColorPB.Name = "gridColorPB";
@@ -1029,9 +1031,9 @@
             this.gridColorPB.TabIndex = 14;
             this.gridColorPB.TabStop = false;
             this.gridColorPB.Click += new System.EventHandler(this.gridColorPB_Click);
-            // 
+            //
             // stLabel6
-            // 
+            //
             this.stLabel6.AutoSize = true;
             this.stLabel6.Location = new System.Drawing.Point(12, 207);
             this.stLabel6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1039,9 +1041,9 @@
             this.stLabel6.Size = new System.Drawing.Size(95, 16);
             this.stLabel6.TabIndex = 12;
             this.stLabel6.Text = "Grid Cell Count";
-            // 
+            //
             // stLabel5
-            // 
+            //
             this.stLabel5.AutoSize = true;
             this.stLabel5.Location = new System.Drawing.Point(8, 176);
             this.stLabel5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1049,9 +1051,9 @@
             this.stLabel5.Size = new System.Drawing.Size(87, 16);
             this.stLabel5.TabIndex = 11;
             this.stLabel5.Text = "Grid Cell Size";
-            // 
+            //
             // gridCellSizeUD
-            // 
+            //
             this.gridCellSizeUD.DecimalPlaces = 5;
             this.gridCellSizeUD.Increment = new decimal(new int[] {
             5,
@@ -1079,9 +1081,9 @@
             0,
             0});
             this.gridCellSizeUD.ValueChanged += new System.EventHandler(this.girdCellSizeUD_ValueChanged);
-            // 
+            //
             // stLabel4
-            // 
+            //
             this.stLabel4.AutoSize = true;
             this.stLabel4.Location = new System.Drawing.Point(60, 100);
             this.stLabel4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1089,9 +1091,9 @@
             this.stLabel4.Size = new System.Drawing.Size(179, 16);
             this.stLabel4.TabIndex = 5;
             this.stLabel4.Text = "Background Gradient Bottom";
-            // 
+            //
             // bgGradientBottom
-            // 
+            //
             this.bgGradientBottom.Location = new System.Drawing.Point(12, 91);
             this.bgGradientBottom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bgGradientBottom.Name = "bgGradientBottom";
@@ -1099,9 +1101,9 @@
             this.bgGradientBottom.TabIndex = 4;
             this.bgGradientBottom.TabStop = false;
             this.bgGradientBottom.Click += new System.EventHandler(this.bgGradientBottom_Click);
-            // 
+            //
             // stLabel3
-            // 
+            //
             this.stLabel3.AutoSize = true;
             this.stLabel3.Location = new System.Drawing.Point(60, 62);
             this.stLabel3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1109,9 +1111,9 @@
             this.stLabel3.Size = new System.Drawing.Size(162, 16);
             this.stLabel3.TabIndex = 3;
             this.stLabel3.Text = "Background Gradient Top";
-            // 
+            //
             // bgGradientTop
-            // 
+            //
             this.bgGradientTop.Location = new System.Drawing.Point(12, 53);
             this.bgGradientTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bgGradientTop.Name = "bgGradientTop";
@@ -1119,9 +1121,9 @@
             this.bgGradientTop.TabIndex = 2;
             this.bgGradientTop.TabStop = false;
             this.bgGradientTop.Click += new System.EventHandler(this.bgGradientTop_Click);
-            // 
+            //
             // stLabel2
-            // 
+            //
             this.stLabel2.AutoSize = true;
             this.stLabel2.Location = new System.Drawing.Point(8, 11);
             this.stLabel2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1129,9 +1131,9 @@
             this.stLabel2.Size = new System.Drawing.Size(159, 16);
             this.stLabel2.TabIndex = 1;
             this.stLabel2.Text = "Preferred Texture Format:";
-            // 
+            //
             // preferredTexFormatCB
-            // 
+            //
             this.preferredTexFormatCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.preferredTexFormatCB.FormattingEnabled = true;
             this.preferredTexFormatCB.Location = new System.Drawing.Point(181, 7);
@@ -1140,9 +1142,11 @@
             this.preferredTexFormatCB.Size = new System.Drawing.Size(303, 24);
             this.preferredTexFormatCB.TabIndex = 0;
             this.preferredTexFormatCB.SelectedIndexChanged += new System.EventHandler(this.preferredTexFormatCB_SelectedIndexChanged);
-            // 
+            //
             // tabPage3
-            // 
+            //
+            this.tabPage3.Controls.Add(this.stLabel19);
+            this.tabPage3.Controls.Add(this.totkGamePathTB);
             this.tabPage3.Controls.Add(this.stLabel18);
             this.tabPage3.Controls.Add(this.pathPokemonSwShTB);
             this.tabPage3.Controls.Add(this.stLabel13);
@@ -1163,46 +1167,68 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Paths";
             this.tabPage3.UseVisualStyleBackColor = true;
-            // 
+            //
+            // stLabel19
+            //
+            this.stLabel19.AutoSize = true;
+            this.stLabel19.Location = new System.Drawing.Point(8, 182);
+            this.stLabel19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.stLabel19.Name = "stLabel19";
+            this.stLabel19.Size = new System.Drawing.Size(158, 16);
+            this.stLabel19.TabIndex = 13;
+            this.stLabel19.Text = "Tears Of The Kingdom";
+            //
+            // totkGamePathTB
+            //
+            this.totkGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.totkGamePathTB.ContextMenuStrip = this.stContextMenuStrip1;
+            this.totkGamePathTB.Location = new System.Drawing.Point(171, 180);
+            this.totkGamePathTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.totkGamePathTB.Name = "totkGamePathTB";
+            this.totkGamePathTB.Size = new System.Drawing.Size(343, 22);
+            this.totkGamePathTB.TabIndex = 12;
+            this.totkGamePathTB.Click += new System.EventHandler(this.totkGamePathTB_Click);
+            this.totkGamePathTB.TextChanged += new System.EventHandler(this.totkGamePathTB_TextChanged);
+            //
             // stLabel18
-            // 
+            //
             this.stLabel18.AutoSize = true;
-            this.stLabel18.Location = new System.Drawing.Point(8, 182);
+            this.stLabel18.Location = new System.Drawing.Point(8, 214);
             this.stLabel18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.stLabel18.Name = "stLabel18";
             this.stLabel18.Size = new System.Drawing.Size(148, 16);
             this.stLabel18.TabIndex = 11;
             this.stLabel18.Text = "Pokemon Sword/Shield";
-            // 
+            //
             // pathPokemonSwShTB
-            // 
+            //
             this.pathPokemonSwShTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pathPokemonSwShTB.ContextMenuStrip = this.stContextMenuStrip1;
-            this.pathPokemonSwShTB.Location = new System.Drawing.Point(171, 180);
+            this.pathPokemonSwShTB.Location = new System.Drawing.Point(171, 212);
             this.pathPokemonSwShTB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pathPokemonSwShTB.Name = "pathPokemonSwShTB";
             this.pathPokemonSwShTB.Size = new System.Drawing.Size(343, 22);
             this.pathPokemonSwShTB.TabIndex = 10;
             this.pathPokemonSwShTB.Click += new System.EventHandler(this.pathPokemonSwShTB_Click);
             this.pathPokemonSwShTB.TextChanged += new System.EventHandler(this.pathPokemonSwShTB_TextChanged);
-            // 
+            //
             // stContextMenuStrip1
-            // 
+            //
             this.stContextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.stContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearSettingToolStripMenuItem});
             this.stContextMenuStrip1.Name = "stContextMenuStrip1";
             this.stContextMenuStrip1.Size = new System.Drawing.Size(164, 28);
-            // 
+            //
             // clearSettingToolStripMenuItem
-            // 
+            //
             this.clearSettingToolStripMenuItem.Name = "clearSettingToolStripMenuItem";
             this.clearSettingToolStripMenuItem.Size = new System.Drawing.Size(163, 24);
             this.clearSettingToolStripMenuItem.Text = "Clear Setting";
             this.clearSettingToolStripMenuItem.Click += new System.EventHandler(this.clearSettingToolStripMenuItem_Click);
-            // 
+            //
             // stLabel13
-            // 
+            //
             this.stLabel13.AutoSize = true;
             this.stLabel13.Location = new System.Drawing.Point(8, 150);
             this.stLabel13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1210,9 +1236,9 @@
             this.stLabel13.Size = new System.Drawing.Size(119, 16);
             this.stLabel13.TabIndex = 9;
             this.stLabel13.Text = "Breath Of The Wild";
-            // 
+            //
             // botwGamePathTB
-            // 
+            //
             this.botwGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.botwGamePathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.botwGamePathTB.Location = new System.Drawing.Point(171, 148);
@@ -1221,9 +1247,9 @@
             this.botwGamePathTB.Size = new System.Drawing.Size(343, 22);
             this.botwGamePathTB.TabIndex = 8;
             this.botwGamePathTB.Click += new System.EventHandler(this.botwGamePathTB_Click);
-            // 
+            //
             // stLabel14
-            // 
+            //
             this.stLabel14.AutoSize = true;
             this.stLabel14.Location = new System.Drawing.Point(8, 118);
             this.stLabel14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1231,9 +1257,9 @@
             this.stLabel14.Size = new System.Drawing.Size(130, 16);
             this.stLabel14.TabIndex = 7;
             this.stLabel14.Text = "Twilight Princess HD";
-            // 
+            //
             // tpGamePathTB
-            // 
+            //
             this.tpGamePathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tpGamePathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.tpGamePathTB.Location = new System.Drawing.Point(171, 116);
@@ -1242,9 +1268,9 @@
             this.tpGamePathTB.Size = new System.Drawing.Size(343, 22);
             this.tpGamePathTB.TabIndex = 6;
             this.tpGamePathTB.Click += new System.EventHandler(this.tpGamePathTB_Click);
-            // 
+            //
             // stLabel12
-            // 
+            //
             this.stLabel12.AutoSize = true;
             this.stLabel12.Location = new System.Drawing.Point(8, 86);
             this.stLabel12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1252,9 +1278,9 @@
             this.stLabel12.Size = new System.Drawing.Size(98, 16);
             this.stLabel12.TabIndex = 5;
             this.stLabel12.Text = "Mario Odyssey";
-            // 
+            //
             // SMOPathTB
-            // 
+            //
             this.SMOPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SMOPathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.SMOPathTB.Location = new System.Drawing.Point(171, 84);
@@ -1263,9 +1289,9 @@
             this.SMOPathTB.Size = new System.Drawing.Size(343, 22);
             this.SMOPathTB.TabIndex = 4;
             this.SMOPathTB.Click += new System.EventHandler(this.SMOPathTB_Click);
-            // 
+            //
             // stLabel11
-            // 
+            //
             this.stLabel11.AutoSize = true;
             this.stLabel11.Location = new System.Drawing.Point(8, 54);
             this.stLabel11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1273,9 +1299,9 @@
             this.stLabel11.Size = new System.Drawing.Size(122, 16);
             this.stLabel11.TabIndex = 3;
             this.stLabel11.Text = "Mario Kart 8 Deluxe";
-            // 
+            //
             // mk8DPathTB
-            // 
+            //
             this.mk8DPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.mk8DPathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.mk8DPathTB.Location = new System.Drawing.Point(171, 52);
@@ -1284,9 +1310,9 @@
             this.mk8DPathTB.Size = new System.Drawing.Size(343, 22);
             this.mk8DPathTB.TabIndex = 2;
             this.mk8DPathTB.Click += new System.EventHandler(this.mk8DPathTB_Click);
-            // 
+            //
             // stLabel10
-            // 
+            //
             this.stLabel10.AutoSize = true;
             this.stLabel10.Location = new System.Drawing.Point(8, 22);
             this.stLabel10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1294,9 +1320,9 @@
             this.stLabel10.Size = new System.Drawing.Size(77, 16);
             this.stLabel10.TabIndex = 1;
             this.stLabel10.Text = "Mario Kart 8";
-            // 
+            //
             // mk8PathTB
-            // 
+            //
             this.mk8PathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.mk8PathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.mk8PathTB.Cursor = System.Windows.Forms.Cursors.Default;
@@ -1306,9 +1332,9 @@
             this.mk8PathTB.Size = new System.Drawing.Size(343, 22);
             this.mk8PathTB.TabIndex = 0;
             this.mk8PathTB.Click += new System.EventHandler(this.mk8PathTB_Click);
-            // 
+            //
             // tabPage4
-            // 
+            //
             this.tabPage4.Controls.Add(this.chkDiffyseSkybox);
             this.tabPage4.Controls.Add(this.stLabel16);
             this.tabPage4.Controls.Add(this.diffuseCubemapPathTB);
@@ -1323,9 +1349,9 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "PBR";
             this.tabPage4.UseVisualStyleBackColor = true;
-            // 
+            //
             // chkDiffyseSkybox
-            // 
+            //
             this.chkDiffyseSkybox.AutoSize = true;
             this.chkDiffyseSkybox.Enabled = false;
             this.chkDiffyseSkybox.Location = new System.Drawing.Point(144, 20);
@@ -1336,9 +1362,9 @@
             this.chkDiffyseSkybox.Text = "Display Diffuse Map on Skybox";
             this.chkDiffyseSkybox.UseVisualStyleBackColor = true;
             this.chkDiffyseSkybox.CheckedChanged += new System.EventHandler(this.chkDiffyseSkybox_CheckedChanged);
-            // 
+            //
             // stLabel16
-            // 
+            //
             this.stLabel16.AutoSize = true;
             this.stLabel16.Location = new System.Drawing.Point(21, 90);
             this.stLabel16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1346,9 +1372,9 @@
             this.stLabel16.Size = new System.Drawing.Size(187, 16);
             this.stLabel16.TabIndex = 4;
             this.stLabel16.Text = "Diffuse Cubemap (Irradiance) :";
-            // 
+            //
             // diffuseCubemapPathTB
-            // 
+            //
             this.diffuseCubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.diffuseCubemapPathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.diffuseCubemapPathTB.Location = new System.Drawing.Point(241, 90);
@@ -1357,9 +1383,9 @@
             this.diffuseCubemapPathTB.Size = new System.Drawing.Size(262, 22);
             this.diffuseCubemapPathTB.TabIndex = 3;
             this.diffuseCubemapPathTB.Click += new System.EventHandler(this.diffuseCubemapPathTBB_Click);
-            // 
+            //
             // chkUseSkyobx
-            // 
+            //
             this.chkUseSkyobx.AutoSize = true;
             this.chkUseSkyobx.Location = new System.Drawing.Point(25, 20);
             this.chkUseSkyobx.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -1369,9 +1395,9 @@
             this.chkUseSkyobx.Text = "Use Skybox";
             this.chkUseSkyobx.UseVisualStyleBackColor = true;
             this.chkUseSkyobx.CheckedChanged += new System.EventHandler(this.chkUseSkyobx_CheckedChanged);
-            // 
+            //
             // stLabel15
-            // 
+            //
             this.stLabel15.AutoSize = true;
             this.stLabel15.Location = new System.Drawing.Point(21, 58);
             this.stLabel15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -1379,9 +1405,9 @@
             this.stLabel15.Size = new System.Drawing.Size(200, 16);
             this.stLabel15.TabIndex = 1;
             this.stLabel15.Text = "Specular Cubemap {Radiance) :";
-            // 
+            //
             // specularCubemapPathTB
-            // 
+            //
             this.specularCubemapPathTB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.specularCubemapPathTB.ContextMenuStrip = this.stContextMenuStrip1;
             this.specularCubemapPathTB.Location = new System.Drawing.Point(241, 55);
@@ -1391,9 +1417,9 @@
             this.specularCubemapPathTB.TabIndex = 0;
             this.specularCubemapPathTB.Click += new System.EventHandler(this.cubemapPathTB_Click);
             this.specularCubemapPathTB.TextChanged += new System.EventHandler(this.specularCubemapPathTB_TextChanged);
-            // 
+            //
             // tabPage5
-            // 
+            //
             this.tabPage5.Controls.Add(this.chkTpFileTable);
             this.tabPage5.Controls.Add(this.stLabel17);
             this.tabPage5.Controls.Add(this.chkBotwFileTable);
@@ -1405,9 +1431,9 @@
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "File Size Tables";
             this.tabPage5.UseVisualStyleBackColor = true;
-            // 
+            //
             // chkTpFileTable
-            // 
+            //
             this.chkTpFileTable.AutoSize = true;
             this.chkTpFileTable.Location = new System.Drawing.Point(23, 103);
             this.chkTpFileTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -1417,10 +1443,10 @@
             this.chkTpFileTable.Text = "Twilight Princess HD File Tables";
             this.chkTpFileTable.UseVisualStyleBackColor = true;
             this.chkTpFileTable.CheckedChanged += new System.EventHandler(this.chkTpFileTable_CheckedChanged);
-            // 
+            //
             // stLabel17
-            // 
-            this.stLabel17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.stLabel17.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.stLabel17.AutoSize = true;
             this.stLabel17.Location = new System.Drawing.Point(4, 4);
@@ -1430,9 +1456,9 @@
             this.stLabel17.TabIndex = 2;
             this.stLabel17.Text = "These options can prevent file size restrictions.  Check these if you want them t" +
     "o be adjusted when a file gets saved. ";
-            // 
+            //
             // chkBotwFileTable
-            // 
+            //
             this.chkBotwFileTable.AutoSize = true;
             this.chkBotwFileTable.Location = new System.Drawing.Point(23, 75);
             this.chkBotwFileTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -1442,9 +1468,9 @@
             this.chkBotwFileTable.Text = "BOTW Resource File Table (RSTB)";
             this.chkBotwFileTable.UseVisualStyleBackColor = true;
             this.chkBotwFileTable.CheckedChanged += new System.EventHandler(this.chkBotwFileTable_CheckedChanged);
-            // 
+            //
             // btnReset
-            // 
+            //
             this.btnReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReset.Location = new System.Drawing.Point(4, 553);
             this.btnReset.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -1454,9 +1480,9 @@
             this.btnReset.Text = "Reset Settings";
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
+            //
             // Settings
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(732, 603);
@@ -1593,6 +1619,8 @@
         private Toolbox.Library.Forms.STCheckBox chkFrameCamera;
         private Toolbox.Library.Forms.STCheckBox chkAlwaysSaveAll;
         private Toolbox.Library.Forms.STCheckBox chkAlwaysCompressOnSave;
+        private Library.Forms.STLabel stLabel19;
+        private Library.Forms.STTextBox totkGamePathTB;
         private Library.Forms.STLabel stLabel18;
         private Library.Forms.STTextBox pathPokemonSwShTB;
         private Library.Forms.STButton btnReset;
