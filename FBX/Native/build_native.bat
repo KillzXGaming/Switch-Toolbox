@@ -32,7 +32,18 @@ if errorlevel 1 (
 
 echo Native Build Succeeded.
 
+REM Copy native dependencies.
+set FBXSDK_DLL=..\FBX SDK\2017.0.1\lib\vs2015\x64\release\libfbxsdk.dll
+if exist "%FBXSDK_DLL%" (
+    xcopy /y "%FBXSDK_DLL%" "dist\"
+) else (
+    echo WARNING: libfbxsdk.dll not found at "%FBXSDK_DLL%"
+)
+
 REM Copy to Toolbox bin/Release so it's picked up by the app and dist
 xcopy /y "dist\SwitchToolbox.FbxNative.dll" "..\..\Toolbox\bin\Release\"
+if exist "dist\libfbxsdk.dll" (
+    xcopy /y "dist\libfbxsdk.dll" "..\..\Toolbox\bin\Release\"
+)
 
 echo DLL Deployed to Toolbox/bin/Release.

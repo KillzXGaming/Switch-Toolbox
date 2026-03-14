@@ -29,6 +29,8 @@ namespace Toolbox.Library
             public bool UseTextureChannelComponents = true;
 
             public bool TransformColorUVs = false;
+            public bool ForceZeroShininessFbx = false;
+            public bool ExportNormalMapsAsFlatColorFbx = true;
 
             public bool AddLeafBones = false;
 
@@ -513,7 +515,7 @@ namespace Toolbox.Library
                         writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color3.ToArray(), triangleLists.ToArray(), 2);
                     if (HasColors4)
                         writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color4.ToArray(), triangleLists.ToArray(), 3);
-                    
+
                     if (HasUV0)
                         writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV0.ToArray(), triangleLists.ToArray(), 0);
 

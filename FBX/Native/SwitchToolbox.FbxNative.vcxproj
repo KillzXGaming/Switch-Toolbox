@@ -57,6 +57,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SwitchToolbox.FbxNative.Animation.cpp" />
     <ClCompile Include="SwitchToolbox.FbxNative.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
