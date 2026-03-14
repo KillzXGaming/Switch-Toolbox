@@ -13,7 +13,6 @@ using ResGFX = Syroot.NintenTools.NSW.Bfres.GFX;
 using FirstPlugin;
 using FirstPlugin.Forms;
 using OpenTK;
-using System.IO;
 
 namespace Bfres.Structs
 {
@@ -557,11 +556,6 @@ namespace Bfres.Structs
                     break;
                 case ".fbx":
                     {
-                        // Ensure fbx runtime exists
-                        string runtimePath = Path.Combine(Runtime.ExecutableDir, "SwitchToolbox.FbxNative.dll");
-                        if (!File.Exists(runtimePath))
-                            throw new Exception($"Failed to find SwitchToolbox.FbxNative.dll in tool folder! Ensure the build copied correctly!");
-
                         ExportModelSettings fbxSettings = new ExportModelSettings();
                         // Toggle colors when necessary as we export them by force 
                         if (Model != null)
