@@ -57,4 +57,5 @@ after_build:
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\Octokit.dll"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\System.Numerics.Vectors.dll"
   - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\System.Runtime.CompilerServices.Unsafe.dll"
+  - 7z a "Toolbox-Latest.zip" "%APPVEYOR_BUILD_FOLDER%\Toolbox\bin\Release\FbxNative.dll"
   - appveyor PushArtifact "Toolbox-Latest.zip"
