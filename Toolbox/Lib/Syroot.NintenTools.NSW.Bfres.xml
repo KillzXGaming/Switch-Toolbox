@@ -772,6 +772,11 @@
             Gets or sets the buffer instance that stores vertex data
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.BufferInfo.VertexAlignments">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="P:Syroot.NintenTools.NSW.Bfres.BufferInfo.unk">
             <summary>
             Gets or sets an unkown value

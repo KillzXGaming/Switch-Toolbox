@@ -276,7 +276,62 @@ namespace BrawlboxHelper
 
         public static SkeletalAnim Anim2Fska(string FileName)
         {
-            CHR0Node chr0 = AnimFormat.Read(FileName);
+            //Workaround: Shift all frames in the .anim file by +1. 
+            //This way, if the library deletes "frame 0", it only deletes a phantom frame, and our real data (starting at 1) is kept.
+            string tempFile = System.IO.Path.GetTempFileName();
+            var lines = System.IO.File.ReadAllLines(FileName);
+            List<string> newLines = new List<string>();
+
+            bool inKeys = false;
+            foreach (var line in lines)
+            {
+                string trimmed = line.TrimStart();
+                string[] args = trimmed.Replace(";", "").Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (trimmed.StartsWith("startTime") && args.Length > 1)
+                {
+                    if (float.TryParse(args[1], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out float val))
+                        newLines.Add(line.Replace(args[1], (val + 1.0f).ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                    else
+                        newLines.Add(line);
+                }
+                else if (trimmed.StartsWith("endTime") && args.Length > 1)
+                {
+                    if (float.TryParse(args[1], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out float val))
+                        newLines.Add(line.Replace(args[1], (val + 1.0f).ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                    else
+                        newLines.Add(line);
+                }
+                else if (trimmed.StartsWith("keys"))
+                {
+                    inKeys = true;
+                    newLines.Add(line);
+                }
+                else if (inKeys && trimmed.StartsWith("}"))
+                {
+                    inKeys = false;
+                    newLines.Add(line);
+                }
+                else if (inKeys && args.Length > 1 && float.TryParse(args[0], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out float frame))
+                {
+                    //Shift keyframe by +1 safely
+                    int index = line.IndexOf(args[0]);
+                    string newLine = line.Substring(0, index) + (frame + 1.0f).ToString(System.Globalization.CultureInfo.InvariantCulture) + line.Substring(index + args[0].Length);
+                    newLines.Add(newLine);
+                }
+                else
+                {
+                    newLines.Add(line);
+                }
+            }
+            System.IO.File.WriteAllLines(tempFile, newLines);
+
+            //Parse using the temp file
+            CHR0Node chr0 = null;
+            try { chr0 = AnimFormat.Read(tempFile); }
+            catch { chr0 = AnimFormat.Read(FileName); }
+            finally { if (System.IO.File.Exists(tempFile)) System.IO.File.Delete(tempFile); }
+
             return Chr02Fska(chr0);
         }
 
@@ -603,6 +658,15 @@ namespace BrawlboxHelper
             var baseData = new BoneAnimData();
 
             var FirstFrame = entry.GetAnimFrame(0);
+            for (int i = 0; i < entry.FrameCount; i++)
+            {
+                var f = entry.GetAnimFrame(i);
+                if (f.HasKeys)
+                {
+                    FirstFrame = f;
+                    break;
+                }
+            }
             if (FirstFrame.HasKeys)
             {
                 float xRadian = FirstFrame.Rotation._x * Deg2Rad;
@@ -645,69 +709,59 @@ namespace BrawlboxHelper
 
             if (FirstFrame.HasKeys)
             {
-                var AnimFrame = entry.GetAnimFrame(0);
-                if (AnimFrame.hasTx)
+                var curve = GenerateCurve(0x10, entry);
+                if (curve != null)
                 {
-                    boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateX;
-                    var curve = GenerateCurve(0x10, entry);
-                    if (curve != null)
-                        boneAnim.Curves.Add(curve);
+                     boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateX;
+                     boneAnim.Curves.Add(curve);
                 }
-                if (AnimFrame.hasTy)
+                curve = GenerateCurve(0x14, entry);
+                if (curve != null)
                 {
-                    boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateY;
-                    var curve = GenerateCurve(0x14, entry);
-                    if (curve != null)
-                        boneAnim.Curves.Add(curve);
+                     boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateY;
+                     boneAnim.Curves.Add(curve);
                 }
-                if (AnimFrame.hasTz)
+                curve = GenerateCurve(0x18, entry);
+                if (curve != null)
                 {
-                    boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateZ;
-                    var curve = GenerateCurve(0x18, entry);
-                    if (curve != null)
-                        boneAnim.Curves.Add(curve);
+                     boneAnim.FlagsCurve |= BoneAnimFlagsCurve.TranslateZ;
+                     boneAnim.Curves.Add(curve);
                 }
-                if (AnimFrame.hasRx)
+                curve = GenerateCurve(0x20, entry);
+                if (curve != null)
                 {
-                    boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateX;
-                    var curve = GenerateCurve(0x20, entry);
-                    if (curve != null)
-                        boneAnim.Curves.Add(curve);
+                     boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateX;
+                     boneAnim.Curves.Add(curve);
                 }
-                if (AnimFrame.hasRy)
+                curve = GenerateCurve(0x24, entry);
+                if (curve != null)
                 {
-                    boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateY;
-                    var curve = GenerateCurve(0x24, entry);
-                    if (curve != null)
-                        boneAnim.Curves.Add(curve);
+                     boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateY;
+                     boneAnim.Curves.Add(curve);
                 }
-                if (AnimFrame.hasRz)
+                curve = GenerateCurve(0x28, entry);
+                if (curve != null)
                 {
-                    boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateZ;
-                    var curve = GenerateCurve(0x28, entry);
-                    if (curve != null)
-                        boneAnim.Curves.Add(curve);
+                     boneAnim.FlagsCurve |= BoneAnimFlagsCurve.RotateZ;
+                     boneAnim.Curves.Add(curve);
                 }
-                if (AnimFrame.hasSx)
+                curve = GenerateCurve(0x04, entry);
+                if (curve != null)
                 {
-                    boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleX;
-                    var curve = GenerateCurve(0x4, entry);
-                    if (curve != null)
-                        boneAnim.Curves.Add(curve);
+                     boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleX;
+                     boneAnim.Curves.Add(curve);
                 }
-                if (AnimFrame.hasSy)
+                curve = GenerateCurve(0x08, entry);
+                if (curve != null)
                 {
-                    boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleY;
-                    var curve = GenerateCurve(0x8, entry);
-                    if (curve != null)
-                        boneAnim.Curves.Add(curve);
+                     boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleY;
+                     boneAnim.Curves.Add(curve);
                 }
-                if (AnimFrame.hasSz)
+                curve = GenerateCurve(0x0C, entry);
+                if (curve != null)
                 {
-                    boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleZ;
-                    var curve = GenerateCurve(0xC, entry);
-                    if (curve != null)
-                        boneAnim.Curves.Add(curve);
+                     boneAnim.FlagsCurve |= BoneAnimFlagsCurve.ScaleZ;
+                     boneAnim.Curves.Add(curve);
                 }
             }
 
@@ -768,27 +822,8 @@ namespace BrawlboxHelper
 
             }
 
-            if (MaxFrame < Byte.MaxValue)
-                curve.FrameType = AnimCurveFrameType.Byte;
-            else if (MaxFrame < Int16.MaxValue)
-                curve.FrameType = AnimCurveFrameType.Decimal10x5;
-            else
-                curve.FrameType = AnimCurveFrameType.Single;
-
-
-            if (IntegerValues.Any(x => x == false))
-            {
-                curve.KeyType = AnimCurveKeyType.Single;
-            }
-            else
-            {
-                if (MaxValues < Byte.MaxValue)
-                    curve.KeyType = AnimCurveKeyType.SByte;
-                else if (MaxFrame < Int16.MaxValue)
-                    curve.KeyType = AnimCurveKeyType.Int16;
-                else
-                    curve.KeyType = AnimCurveKeyType.Single;
-            }
+            curve.FrameType = AnimCurveFrameType.Single;
+            curve.KeyType = AnimCurveKeyType.Single;
         }
 
         private static bool IsInt(float value) => value == Math.Truncate(value);
@@ -829,7 +864,14 @@ namespace BrawlboxHelper
             if (Frames.Count <= 0)
                 return null;
 
-         //   Console.WriteLine($"AnimOffset {AnimOffset} Keys {Keys.Count}");
+            //Workaround: Shift back to 0 if the animation starts at 1
+            if (Frames[0] == 1)
+            {
+                for (int i = 0; i < Frames.Count; i++)
+                    Frames[i] -= 1;
+            }
+
+            //   Console.WriteLine($"AnimOffset {AnimOffset} Keys {Keys.Count}");
 
             //Max value in frames is our end frame
             curve.EndFrame = Frames.Max();
