@@ -130,7 +130,14 @@ namespace LayoutBXLYT.Cafe
             set { }
         }
 
-        public WindowKind WindowKind { get; set; }
+        public WindowKind WindowKind
+        {
+            get { return (WindowKind)((_flag >> 2) & 3); }
+            set {
+                _flag = (byte)(_flag & ~(3 << 2));
+                _flag |= (byte)(((byte)value & 3) << 2);
+            }
+        }
 
         public bool NotDrawnContent
         {
@@ -243,8 +250,6 @@ namespace LayoutBXLYT.Cafe
             reader.ReadUInt16();//padding
             uint contentOffset = reader.ReadUInt32();
             uint frameOffsetTbl = reader.ReadUInt32();
-
-            WindowKind = (WindowKind)((_flag >> 2) & 3);
 
             reader.SeekBegin(pos + contentOffset);
             Content = new BxlytWindowContent(reader, header);
