@@ -1410,6 +1410,21 @@ namespace Toolbox
             }
         }
 
+        private void batchExportAnimationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = true;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                FolderSelectDialog folderDlg = new FolderSelectDialog();
+                if (folderDlg.ShowDialog() == DialogResult.OK)
+                {
+                    BatchExportAnimations(ofd.FileNames, folderDlg.SelectedPath);
+                }
+            }
+        }
+
 
         private void batchExportModelsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1550,14 +1565,15 @@ namespace Toolbox
             ObjectEditor.Update();
         }
 
-        private List<string> failedFiles = new List<string>();
+        private List<string> failedImports = new List<string>();
+        private List<string> failedExports = new List<string>();
         private List<string> batchExportFileList = new List<string>();
         private void BatchExportModels(string[] files, string outputFolder)
         {
             List<string> Formats = new List<string>();
             Formats.Add("DAE (.dae)");
 
-            failedFiles = new List<string>();
+            failedImports = new List<string>();
 
             BatchFormatExport form = new BatchFormatExport(Formats);
             if (form.ShowDialog() == DialogResult.OK)
@@ -1572,7 +1588,7 @@ namespace Toolbox
                     }
                     catch (Exception ex)
                     {
-                        failedFiles.Add($"{file} \n Error:\n {ex} \n");
+                        failedImports.Add($"{file} \n Error:\n {ex} \n");
                     }
 
                     SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Models);
@@ -1582,10 +1598,10 @@ namespace Toolbox
             else
                 return;
 
-            if (failedFiles.Count > 0)
+            if (failedImports.Count > 0)
             {
                 string detailList = "";
-                foreach (var file in failedFiles)
+                foreach (var file in failedImports)
                     detailList += $"{file}\n";
 
                 STErrorDialog.Show("Some files failed to export! See detail list of failed files.", "Switch Toolbox", detailList);
@@ -1604,7 +1620,7 @@ namespace Toolbox
             Formats.Add("Tagged Image File Format (.tiff)");
             Formats.Add("ASTC (.astc)");
 
-           failedFiles = new List<string>();
+            failedImports = new List<string>();
 
             BatchFormatExport form = new BatchFormatExport(Formats);
             if (form.ShowDialog() == DialogResult.OK)
@@ -1615,11 +1631,11 @@ namespace Toolbox
                     IFileFormat fileFormat = null;
                     try
                     {
-                         fileFormat = STFileLoader.OpenFileFormat(file);
+                        fileFormat = STFileLoader.OpenFileFormat(file);
                     }
                     catch (Exception ex)
                     {
-                        failedFiles.Add($"{file} \n Error:\n {ex} \n");
+                        failedImports.Add($"{file} \n Error:\n {ex} \n");
                     }
 
                     SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Textures);
@@ -1627,16 +1643,59 @@ namespace Toolbox
                 batchExportFileList.Clear();
             }
 
-            if (failedFiles.Count > 0)
+            if (failedImports.Count > 0)
             {
                 string detailList = "";
-                foreach (var file in failedFiles)
+                foreach (var file in failedImports)
                     detailList += $"{file}\n";
 
                 STErrorDialog.Show("Some files failed to export! See detail list of failed files.", "Switch Toolbox", detailList);
             }
             else
                 MessageBox.Show("Files batched successfully!");
+        }
+
+
+        private void BatchExportAnimations(string[] files, string outputFolder)
+        {
+            List<string> formats = FileFilters.GetFilter(typeof(FSKA), null, true)
+                .Split('|')
+                .Where(format => !format.StartsWith("*") && !format.StartsWith("All"))
+                .ToList();
+
+            failedImports = new List<string>();
+            failedExports = new List<string>();
+
+            BatchFormatExport form = new BatchFormatExport(formats);
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                string extension = form.GetSelectedExtension().Substring(1);
+                foreach (var file in files)
+                {
+                    IFileFormat fileFormat = null;
+                    try
+                    {
+                        fileFormat = STFileLoader.OpenFileFormat(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        failedImports.Add($"{file} \n Error:\n {ex} \n");
+                    }
+
+                    SearchFileFormat(form.BatchSettings, fileFormat, extension, outputFolder, ExportMode.Animations);
+                }
+                batchExportFileList.Clear();
+            } else
+            {
+                return;
+            }
+
+            if (failedImports.Count > 0)
+                STErrorDialog.Show("Files imported with warnings.", "Switch Toolbox: Failed Imports", string.Join("\n", failedImports));
+            else if (failedExports.Count > 0)
+                STErrorDialog.Show("Files exported with warnings.", "Switch Toolbox: Failed Exports", string.Join("\n", failedExports));
+            else
+                MessageBox.Show("All files batch-processed successfully!");
         }
 
         private void SearchFileFormat(BatchFormatExport.Settings settings, IFileFormat fileFormat, 
@@ -1664,6 +1723,30 @@ namespace Toolbox
 
                 foreach (STGenericTexture tex in ((ITextureContainer)fileFormat).TextureList) {
                     ExportTexture(tex, settings, $"{outputFolder}/{tex.Text}", extension);
+                }
+            }
+            else if (exportMode == ExportMode.Animations)
+            {
+                var bfres = fileFormat as BFRES;
+                string path = Path.Combine(outputFolder, bfres.Text);
+                Directory.CreateDirectory(path);
+                foreach (var elem in bfres.resFileU.SkeletalAnims)
+                {
+                    string name = elem.Key;
+                    var skelanim = elem.Value;
+                    FSKA exportableAnim = new FSKA(skelanim);
+                    // It matters for .seanim and .smd export what skeleton is used for the animation.
+                    // We pass the skeleton included with the .bfres file here, so later code can
+                    // use it as a backup in case no matching skeleton was found in the viewport.
+                    STSkeleton backupSkeleton = null;
+                    if (bfres.BFRESRender.models.Count > 0)
+                        backupSkeleton = bfres.BFRESRender.models[0].Skeleton;
+                    try
+                    {
+                        exportableAnim.Export($"{path}/{name}.{extension}", backupSkeleton);
+                    } catch (Exception ex) {
+                        failedExports.Add($"\n{Path.GetFileName(bfres.FilePath)} -> {ex.Message}");
+                    }
                 }
             }
             else if (fileFormat is IExportableModelContainer && exportMode == ExportMode.Models)
@@ -1722,6 +1805,7 @@ namespace Toolbox
         {
             Models,
             Textures,
+            Animations,
         }
 
         private void ExportTexture(STGenericTexture tex, BatchFormatExport.Settings settings, string filePath, string ext) {
@@ -1751,7 +1835,7 @@ namespace Toolbox
                 }
                 catch (Exception ex)
                 {
-                    failedFiles.Add($"{file} \n Error:\n {ex} \n");
+                    failedImports.Add($"{file} \n Error:\n {ex} \n");
                 }
             }
         }
