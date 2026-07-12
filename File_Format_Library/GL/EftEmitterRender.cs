@@ -20,15 +20,73 @@ namespace FirstPlugin
     {
         public class EmitterInput {
             public string Name; public byte[] Data; public STGenericTexture Tex; public STGenericTexture Tex1; public STGenericTexture Tex2;
+            public string EmtrName;     // the emitter's OWN file name (head +0x10), the weather-profile key; Name stays the RNG-seed string
             public float[] MeshVerts;   // pos3+uv2 interleaved (mesh emitters only)
+            public float[] MeshNormals; // nrm3 per vertex (GPU preview feeds these to the game VS; the software path is unlit)
             public int[] MeshIndices;
+            public bool StreamMode;     // built for the GPU preview's instance streams: game units and the runtime's
+                                        // weather steady state, rather than the software preview's watchable approximation
+        }
+
+        /// <summary>Runtime overrides for the ambient weather and volume-mask emitters, which the
+        /// game's env/weather system drives itself rather than from the file: a constant per-particle
+        /// life, a sustained live count, a per-frame fall speed along the file's dir, and for some of
+        /// them a replaced wrap box (Box stays null where the emitter keeps its file volume). None of
+        /// it is derivable from the file, whose emission words stay at their authored values.
+        /// The key is the emitter's own name, unique to the weather families corpus-wide, and the
+        /// profile only applies while the emitter's FILE emission words (lifespan/emitRate/volScale)
+        /// still match FileSig, so demo variants and user-edited emitters keep their file
+        /// behavior.</summary>
+        public class WeatherProfile { public int Life, Alive; public float FallMin, FallMax; public float[] Box; internal float[] FileSig; }
+        public static WeatherProfile GetWeatherProfile(string emtrName, byte[] d, int structOff)
+        {
+            WeatherProfile wp;
+            switch (emtrName ?? "")
+            {                                                                                                  // FileSig = file lifespan, emitRate, volScale
+                case "rain_near":      wp = new WeatherProfile { Life = 25,  Alive = 270, Box = new float[]{13f,5f,13f}, FallMin = 1.08f, FallMax = 1.20f,
+                                                                 FileSig = new float[]{6f,1000f,15f,7.5f,15f} }; break;
+                case "rain_middle":    wp = new WeatherProfile { Life = 20,  Alive = 44,  FallMin = 0.27f, FallMax = 0.30f,
+                                                                 FileSig = new float[]{4f,1000f,15f,3f,15f} }; break;
+                case "rain_far":       wp = new WeatherProfile { Life = 21,  Alive = 230, Box = new float[]{80f,64f,80f}, FallMin = 2.81f, FallMax = 4.00f,
+                                                                 FileSig = new float[]{10f,100f,200f,200f,200f} }; break;
+                case "Flake_Near":     wp = new WeatherProfile { Life = 50,  Alive = 156, FallMin = 0.04f, FallMax = 0.08f,
+                                                                 FileSig = new float[]{2f,5f,200f,200f,200f} }; break;
+                case "Flake_Far":      wp = new WeatherProfile { Life = 50,  Alive = 208, FallMin = 0.10f, FallMax = 0.20f,
+                                                                 FileSig = new float[]{5f,60f,200f,200f,200f} }; break;
+                case "particle1":      wp = new WeatherProfile { Life = 100, Alive = 510, Box = new float[]{10f,10f,10f},
+                                                                 FileSig = new float[]{20f,1000f,50f,5f,50f} }; break;    // dust hovers (fall 0)
+                case "particle2":      wp = new WeatherProfile { Life = 100, Alive = 510, Box = new float[]{10f,10f,10f},
+                                                                 FileSig = new float[]{20f,1000f,50f,5f,50f} }; break;
+                case "particle_Copy1": wp = new WeatherProfile { Life = 100, Alive = 204,
+                                                                 FileSig = new float[]{20f,1000f,50f,5f,50f} }; break;
+                case "bokeh":          wp = new WeatherProfile { Life = 120, Alive = 122,                                 // file ls=1 sentinel; runtime streams 120-frame particles
+                                                                 FileSig = new float[]{1f,1000f,50f,5f,50f} }; break;
+                case "Moya":           wp = new WeatherProfile { Life = 100, Alive = 52,  Box = new float[]{24f,24f,24f},
+                                                                 FileSig = new float[]{10f,10000f,300f,300f,300f} }; break;
+                default: return null;
+            }
+            if (d == null || structOff + 0x818 > d.Length) return null;
+            int[] offs = { 0x6F0, 0x6F4, 0x80C, 0x810, 0x814 };
+            for (int i = 0; i < 5; i++)
+            {
+                int o = structOff + offs[i];
+                byte[] t = { d[o + 3], d[o + 2], d[o + 1], d[o] };
+                if (Math.Abs(BitConverter.ToSingle(t, 0) - wp.FileSig[i]) > 1e-4f) return null;
+            }
+            return wp;
         }
 
         class DrawEmitter
         {
-            public string Name; public bool Additive; public float Radius;
+            public string Name; public string EmtrName = ""; public bool Additive; public float Radius;
             public int Color0N, Alpha0N, ScaleN;
             public float[,] Color0 = new float[8,4], Alpha0 = new float[8,4], Scale = new float[8,4];
+            // the RAW alpha1 track (@0x4F0, count @0x1C): the emitter-lifecycle envelope some
+            // shader families read as a runtime-maintained bank7 slot (see EnvelopeAlpha1);
+            // kept unswapped even when the channel-1 fallback above adopts it as Alpha0
+            public int Alpha1N;
+            public float[,] Alpha1 = new float[8,4];
+            public bool Alpha0Adopted;   // channel-1 fallback replaced Alpha0[] (true track is blank)
             public Vector3 ConstColor0; public bool Drawable;
             public STGenericTexture Tex; public bool HasAlpha = true;
             public STGenericTexture Tex1; public bool HasAlpha1 = false; public int Tex1Mode = 0;  // (legacy fallback) 2nd-sampler format heuristic
@@ -59,12 +117,16 @@ namespace FirstPlugin
             public int DispSide = 0, ZBuf = 0, StaticIdx = 0;   // 0x84F displaySide, 0x88E zBufATest, 0x00D0 flipbook static index
             // motion (decoded via NW4F field-order overlay + library validation; VERIFIED unless noted)
             public int Lifespan = 60, EmitInterval = 1;
+            public int WeatherAlive = 0;   // weather steady state: sustain this many live particles (0 = no profile)
+            public float WeatherFallMin, WeatherFallMax;   // weather per-frame fall speed range along Dir (profiled emitters)
             public bool OneShot = false; public bool SingleBurst = false; public int EndFrame = -1;  // 0x6F0 ls<=1 sentinel; SingleBurst = infinite-endFrame (emit once); 0x780 endFrame (-1=inf)
             const int DEFAULT_BURST_LIFE = 60;                       // mesh ring (ripple/ShockWave) expands over the full life via its scale curve
             const int SPRAY_BURST_LIFE = 7;                          // billboard ls=0 burst = a SHORT puff. CAPTURE-CALIBRATED (WaterSplash eid15182 ptcl maxR~5.5u -> life~6; Splash 0.5u -> life~8): the fabricated 60 over-spread the spray ~10x; allDirVel carries the spread, so one short life reproduces both real spreads.
             public float EmitRate = 8f, AllDirVel = 1f, AirResist = 1f, Dispersion = 3.14159f, ArcLength = 6.28318f;
             public float RotInit = 0f, AngVel = 0f, MomRand = 0f; public bool RotEnabled = false;  // 0x6C8 init Z-rot (2pi=random), 0x6D8 angularVelocity, 0x7C4 momentumRandom
             public Vector3 VolScale = Vector3.One;
+            public Vector3 BaseScale = Vector3.One;   // ptclScaleStart @0x978 (GPU-preview stream scale; see parse)
+            public Vector3 ScaleRand = Vector3.Zero;  // ptclScaleRandom @0x984 (PERCENT; see parse)
             // nw::eft TWO-STAGE emission velocity (decompiled from open-ead/NW4F-Eft eft_EmitterVolume.cpp + eft_Emitter.cpp:288):
             //   v0 = vShape + vDir.  STAGE 1 vShape = shapeNormal(emitFunction@0x714) * allDirVel@0x7B0 (the OMNIDIRECTIONAL
             //   burst -> explosions). STAGE 2 vDir = cone(half-angle=dispersion@0x7F4, AXIS = dir@0x7C8) * dirVel@0x7D4 (the
@@ -80,10 +142,12 @@ namespace FirstPlugin
 
             static uint  U(byte[] d,int o){ return (uint)((d[o]<<24)|(d[o+1]<<16)|(d[o+2]<<8)|d[o+3]); }
             static float F(byte[] d,int o){ byte[] t={d[o+3],d[o+2],d[o+1],d[o]}; return BitConverter.ToSingle(t,0); }
+            static float San(float v){ return (float.IsNaN(v) || v <= 0f || v > 1e5f) ? 1f : v; }
+            static float SanPct(float v){ return (float.IsNaN(v) || v < 0f || v > 400f) ? 0f : v; }
 
             public DrawEmitter(EmitterInput inp)
             {
-                Name = inp.Name ?? ""; Tex = inp.Tex; Tex1 = inp.Tex1; Tex2 = inp.Tex2; Radius = 1;
+                Name = inp.Name ?? ""; EmtrName = inp.EmtrName ?? ""; Tex = inp.Tex; Tex1 = inp.Tex1; Tex2 = inp.Tex2; Radius = 1;
                 MeshVerts = inp.MeshVerts; MeshIndices = inp.MeshIndices;
                 IsMesh = (MeshVerts != null && MeshVerts.Length >= 15 && MeshIndices != null && MeshIndices.Length >= 3);
                 byte[] e = inp.Data;
@@ -115,6 +179,15 @@ namespace FirstPlugin
                 IsDistortion = (e[0x8B8]==1) || (e[0x701]==3);
                 Color0N=(int)U(e,0x10); Alpha0N=(int)U(e,0x14); ScaleN=(int)U(e,0x20);
                 Radius = F(e,0x360);
+                // ptclScaleStart @0x978 (vec3): the base particle scale, fed to the GPU preview's sysScaleAttr
+                // stream. Distinct from Radius@0x360 (emission-volume extent; the Fire family has 20-100 there
+                // against a true scale of 0.2-8). Used by the GPU-preview stream only.
+                BaseScale=new Vector3(San(F(e,0x978)),San(F(e,0x97C)),San(F(e,0x980)));
+                // ptclScaleRandom @0x984 (vec3, PERCENT): stream scale = ptclScaleStart * (1 - u*percent/100),
+                // with ONE uniform u per particle shared by all axes (the NW4F 1 - ptclScaleRandom*rand law).
+                // Percent > 100 lawfully flips the sign; the GPU draw runs cull-off, so the mirrored winding
+                // still renders.
+                ScaleRand=new Vector3(SanPct(F(e,0x984)),SanPct(F(e,0x988)),SanPct(F(e,0x98C)));
                 // blendType @0x88D (u8): 1=Add/additive, 0=Normal/alpha. VERIFIED vs captured GPU blend (0x8DC was REFUTED/inverted).
                 Additive = (e[0x88D] == 1);
                 DispSide = e[0x84F];   // 0=Both, 1=Front(cull back), 2=Back(cull front)
@@ -128,12 +201,15 @@ namespace FirstPlugin
                 // When Alpha0 is blank but Alpha1 is meaningful, adopt channel 1 as the particle colour/alpha (the colorMode that
                 // would combine the two channels is undecoded, but with channel 0 blank the visible result IS channel 1). Grounded.
                 int color1N=(int)U(e,0x18), alpha1N=(int)U(e,0x1C);
+                Alpha1N=alpha1N;
+                for (int k=0;k<8;k++) for(int c=0;c<4;c++) Alpha1[k,c]=F(e,0x4F0+k*16+c*4);
                 float a0max=0f; if(Alpha0N>0) for(int k=0;k<Alpha0N && k<8;k++) a0max=Math.Max(a0max,Alpha0[k,0]);
                 if (Alpha0N>0 && a0max<0.01f && alpha1N>0){
                     float a1max=0f; for(int k=0;k<alpha1N && k<8;k++) a1max=Math.Max(a1max,F(e,0x4F0+k*16));
                     if (a1max>0.05f){
                         for(int k=0;k<8;k++) for(int c=0;c<4;c++){ Color0[k,c]=F(e,0x470+k*16+c*4); Alpha0[k,c]=F(e,0x4F0+k*16+c*4); }
                         Alpha0N=alpha1N; if(color1N>0) Color0N=color1N;
+                        Alpha0Adopted=true;   // Alpha0[] no longer holds the channel-0 track (see EnvelopeAlpha0)
                         ConstColor0=new Vector3(F(e,0x968),F(e,0x96C),F(e,0x970));   // channel-1 const colour too
                     }
                 }
@@ -210,6 +286,18 @@ namespace FirstPlugin
                             break;
                         }
                 }
+                // Ambient weather/volume classes: the game's env system drives life, sustained count, and
+                // emission cadence itself (see GetWeatherProfile), so the stream build adopts that steady
+                // state. Ambient is continuous by definition, so the file's one-shot sentinel (bokeh ls=1)
+                // and any emission window give way to sustained streaming. The software preview keeps the
+                // file's own values.
+                var wp = inp.StreamMode ? GetWeatherProfile(EmtrName, e, 0) : null;
+                if (wp != null){
+                    Lifespan = wp.Life; WeatherAlive = wp.Alive;
+                    WeatherFallMin = wp.FallMin; WeatherFallMax = wp.FallMax;
+                    OneShot = false; SingleBurst = false; EndFrame = -1;
+                    EmitInterval = (wp.Alive >= wp.Life) ? 1 : Math.Max(1, (int)Math.Round(wp.Life/(float)wp.Alive));
+                }
             }
             static float Clamp01(float v){ if(float.IsNaN(v)||v<=0f||v>1f) return 1f; return v; }
             internal static bool FormatHasAlpha(TEX_FORMAT f){
@@ -274,6 +362,7 @@ namespace FirstPlugin
             public void ApplyOverride(EftOverride o){
                 if(o==null || !o.HasAny) return;
                 Radius *= o.ScaleMul;
+                BaseScale = new Vector3(BaseScale.X*o.ScaleMul, BaseScale.Y*o.ScaleMul, BaseScale.Z*o.ScaleMul);
                 if(o.LifeMul!=1f) Lifespan = Math.Max(1,(int)Math.Round(Lifespan*o.LifeMul));
                 DirVel *= o.DirVelMul;                                   // DirectionalVel = the Stage-2 directional speed only
                 EmitRate *= o.EmitRateMul;
@@ -281,6 +370,8 @@ namespace FirstPlugin
                 if(o.EmitVolMul!=1f) VolScale = new Vector3(VolScale.X*o.EmitVolMul, VolScale.Y*o.EmitVolMul, VolScale.Z*o.EmitVolMul); // EmissionScale -> emission-region size
                 ColorMul = o.RgbMul; AlphaMul = o.AlphaMul;
             }
+            public float Alpha1At(float t){ if(Alpha1N==0) return Alpha1[0,0]; Sample(Alpha1,Alpha1N,t,1,_c); return _c[0]; }
+            public float Alpha0EnvAt(float t){ if(Alpha0N==0) return Alpha0[0,0]; Sample(Alpha0,Alpha0N,t,1,_c); return _c[0]; }
             public float ScaleAt(float t){ if(ScaleN==0) return 1f; Sample(Scale,ScaleN,t,1,_c); return _c[0]; }
             // Scale has separate X,Y keys; the billboard used X only (a square), collapsing thin-tall sprites (Line_* :
             // scaleX 0.01 / scaleY 0.55) to an invisible dot. Expose both so the quad can be non-uniform (a visible line).
@@ -312,6 +403,8 @@ namespace FirstPlugin
         static readonly Dictionary<GL_ControlModern, ShaderProgram> sMeshShaders = new Dictionary<GL_ControlModern, ShaderProgram>();
         ShaderProgram shader, meshShader; static int vbo = 0;
         int frame = 0, cycle = 120;
+        readonly PlaybackClock clock = new PlaybackClock();
+        bool faithfulUnits = false;   // stream mode: GAME units (see Emit); preview draws keep the compressed units
         static int sceneTex = 0, sceneW = 0, sceneH = 0;   // grabbed-scene colour texture for the distortion/refraction pass (shared scratch)
         static readonly List<int> deadBuffers = new List<int>();   // mesh VBO/IBOs from swapped-out renders; deleted on the next Draw (GL context current)
         const float DISTORT_STRENGTH = 0.05f;        // screen-UV offset scale for refraction (absolute field undecoded; tuned for visibility)
@@ -512,7 +605,7 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
         public override void Prepare(GL_ControlLegacy control) { }
         public override void Draw(GL_ControlLegacy control, Pass pass) { }
 
-        static TextureWrapMode WrapMode(int m){ return m==0?TextureWrapMode.MirroredRepeat : m==1?TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge; }   // eft wrap enum 0=Mirror 1=Wrap 2=Clamp
+        internal static TextureWrapMode WrapMode(int m){ return m==0?TextureWrapMode.MirroredRepeat : m==1?TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge; }   // eft wrap enum 0=Mirror 1=Wrap 2=Clamp
         static bool BindUnit(STGenericTexture tex, TextureUnit unit, int wrapU=2, int wrapV=2)
         {
             if (tex==null) return false;
@@ -548,7 +641,8 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
             FlushDeadBuffers();   // delete mesh buffers from swapped-out renders here, where the GL context is guaranteed current
             Prepare(control);     // ensure THIS control's shaders/vbo exist and shader/meshShader point at them (a reopened file uses a new viewport)
             if (pass != Pass.TRANSPARENT || shader == null || emitters.Count == 0) return;
-            frame++;
+            int prevFrame = frame;
+            frame = clock.Advance();
             if (AutoFrame && !framed) { framed = true; try { control.FrameSelect(new List<Vector4>{ new Vector4(0f,0f,0f, frameRadius) }); } catch {} }   // frame camera once (suppressed on emitter-switch so the view persists)
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.DepthTest); GL.DepthFunc(DepthFunction.Lequal); GL.DepthMask(false); // translucent: depth test on, write off (per-emitter zBufATest@0x88E below)
@@ -584,7 +678,10 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
                 }
             } catch {}
             if (!emPathInit){ for(int k=0;k<emPath.Length;k++) emPath[k]=emPos; emPathInit=true; }
-            emPath[((frame%emPath.Length)+emPath.Length)%emPath.Length]=emPos;
+            // the wall clock can hold a frame across paints (fast refresh) or step several (slow
+            // paint): refresh the current slot and fill any skipped ones so the trail has no stale gaps
+            for (int fr=Math.Max(Math.Min(prevFrame+1, frame), frame-emPath.Length+1); fr<=frame; fr++)
+                emPath[((fr%emPath.Length)+emPath.Length)%emPath.Length]=emPos;
             shader.SetVector3("uCamRight", cr); shader.SetVector3("uCamUp", cu);
             shader.SetInt("tex",0); shader.SetInt("tex1",1); shader.SetInt("tex2",2); shader.SetInt("uStripe",0); shader.SetInt("uDistort",0);
             shader.SetFloat("uf_alphaTestRef",0f);   // per-emitter alphaTestRef offset TBD; 0 = discard only fully-transparent
@@ -755,9 +852,8 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
             GL.ActiveTexture(TextureUnit.Texture1); GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.ActiveTexture(TextureUnit.Texture0); GL.BindTexture(TextureTarget.Texture2D, 0);
             // Particle sim advances one tick per Draw; the viewport only repaints on demand (mouse/camera), so request the
-            // next repaint to drive continuous animation. Self-terminating: stops as soon as this drawable is no longer drawn.
-            // VSync (Viewport sets it) caps this at the refresh rate.
-            try { if (AppIsForeground()) control.Invalidate(); } catch { }
+            // next repaint to drive continuous animation. VSync (Viewport sets it) caps this at the refresh rate.
+            try { RequestNextFrame(control); } catch { }
         }
 
         // Per-instance GL cleanup. Called from the UI thread when this render is swapped out of the editor preview; the GL
@@ -786,13 +882,55 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
         static void Off(int loc){ if(loc>=0) GL.DisableVertexAttribArray(loc); }
         [System.Runtime.InteropServices.DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
         // True only when our main window is the foreground window. When a modal dialog (the save / Yaz0-compress prompt)
-        // or another app is in front, this is false, so the preview pauses its self-repaint loop below -> the dialog is
-        // not starved/buried by the repaint storm, and we stop burning CPU in the background. Resumes when the window
-        // repaints on regaining focus. Defaults to true on any error (keep animating = old behaviour).
-        static bool AppIsForeground()
+        // or another app is in front, this is false, so the preview pauses its repaint loop -> the dialog is not starved
+        // or buried, and we stop burning CPU in the background. Resumes when the window repaints on regaining focus.
+        // Defaults to true on any error (keep animating).
+        internal static bool AppIsForeground()
         {
             try { var mf = Toolbox.Library.Runtime.MainForm; return mf == null || !mf.IsHandleCreated || GetForegroundWindow() == mf.Handle; }
             catch { return true; }
+        }
+        // The repaint that drives the animation: requested once per Draw, served from the idle pump. Windows raises
+        // WM_PAINT only for an otherwise empty queue, so a viewport that invalidates itself from inside its own paint
+        // keeps one permanently pending and the FIRST paint of every sibling control (the GPU toggle, the viewport's
+        // own menu and model row) is never dispatched; they stay blank until a hover forces a synchronous repaint.
+        // Idle is raised only once the queue, pending paints included, has drained, so those paints land first and the
+        // animation still runs at the paint rate. Self-terminating: a request is consumed when it is served, so a
+        // viewport that is no longer drawing a preview stops being repainted.
+        static readonly List<System.Windows.Forms.Control> repaintTargets = new List<System.Windows.Forms.Control>();
+        static bool idleHooked;
+        internal static void RequestNextFrame(System.Windows.Forms.Control control)
+        {
+            if (control != null && !repaintTargets.Contains(control)) repaintTargets.Add(control);   // one entry per viewport
+            if (idleHooked) return;
+            idleHooked = true;
+            System.Windows.Forms.Application.Idle += OnIdleRepaint;
+        }
+        static void OnIdleRepaint(object sender, EventArgs e)
+        {
+            if (repaintTargets.Count == 0) return;
+            var pending = repaintTargets.ToArray();
+            repaintTargets.Clear();
+            if (!AppIsForeground()) return;
+            foreach (var c in pending)
+                if (!c.IsDisposed && c.IsHandleCreated) c.Invalidate();
+        }
+        // Wall-clock playback frame for the previews (software + GPU drawable). Sim frames are 60fps
+        // ticks (velocities = field/60, lifespans = frame counts), but paints arrive at the monitor's
+        // refresh rate or as fast as the repaint loop spins, so advance by elapsed wall time. A long gap
+        // between paints (window hidden, modal dialog, stall) counts as pause, preserving the
+        // foreground-pause behaviour.
+        internal sealed class PlaybackClock
+        {
+            readonly System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            double seconds;
+            public int Advance()
+            {
+                double dt = sw.Elapsed.TotalSeconds;
+                sw.Restart();
+                if (dt < 0.25) seconds += dt;
+                return (int)(seconds * 60.0);
+            }
         }
         // Surface GLSL compile/link failures to the toolbox console instead of failing silently. A non-ASCII char in the
         // inline GLSL (even in a comment), or any syntax error, makes the program never link -> every GetAttribute returns
@@ -824,6 +962,7 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
         // position with no stored state -> lets the trail-stripe builder walk a particle's history analytically.
         struct Ptcl {
             public Vector3 Ep, V0; public float Rf, AirResist, Ang, Grav; public int Age, Life;   // V0 = initial velocity (vShape+vDir); Grav = per-frame Y accel
+            public int Seq;   // index within the particle's emission burst (stream randoms seed per (birth, Seq))
             public Vector3 PosAt(int n){
                 if (n<0) n=0;
                 float ar=AirResist;
@@ -877,6 +1016,17 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
             return v*c + Vector3.Cross(k,v)*s + k*(Vector3.Dot(k,v)*(1f-c));
         }
 
+        static int NameSeed(string name){                                               // FNV-1a over the emitter name
+            uint h=2166136261u;
+            foreach (char c in name) h=(h^c)*16777619u;
+            return unchecked((int)h);
+        }
+
+        // Per-particle RNG seed. The stream build needs one that is stable across processes, so a given
+        // emitter places identical particles every run (string.GetHashCode is randomized per process); the
+        // software preview keeps the hash it has always seeded with.
+        int EmitSeed(string name){ return faithfulUnits ? NameSeed(name) : name.GetHashCode(); }
+
         // Emission core: yields one Ptcl per live particle (gating + the exact per-particle random draw order). Sim() and the
         // stripe/trail builders all consume this so the random sequence is defined in ONE place (existing renders unchanged).
         IEnumerable<Ptcl> Emit(DrawEmitter em, int rate)
@@ -889,11 +1039,20 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
             int perEmit;
             if      (em.SingleBurst) perEmit = em.IsMesh ? 1 : rate;
             else if (em.OneShot)    perEmit = 1;
+            // weather steady state: sustain WeatherAlive live particles
+            // (alive = perEmit * life / interval, so perEmit = alive * interval / life)
+            else if (em.WeatherAlive > 0) perEmit = Math.Max(1, (int)Math.Round(em.WeatherAlive*interval/(float)life));
+            // Stream mode emits the file's emission rate (0x6F4) as particles-per-second at 60fps, which is
+            // load-bearing for the dense emitters that only read as a cloud in bulk (low rates round to 1 and
+            // the ALIVE_CAP clamp below bounds the rest). Rates above 10000 are "fill as fast as possible"
+            // sentinels rather than literal counts, so they keep perEmit = 1.
+            else if (faithfulUnits) perEmit = (em.EmitRate > 0f && em.EmitRate <= 10000f)
+                                                ? Math.Max(1, (int)Math.Round(em.EmitRate / 60f)) : 1;
             else                    perEmit = Math.Max(1,Math.Min(rate,(int)Math.Round(em.EmitRate<=0f?rate:em.EmitRate)));
             // Alive-cap for continuous emitters: they stream perEmit every `interval` for `life` frames, so a high decoded
             // rate -> hundreds of live particles ("several hundred spawned at once"). Bound the on-screen count so dense
             // effects still read as dense without flooding the view. General (not per-effect); one-shots already emit 1/burst.
-            if (!em.SingleBurst && !em.OneShot){
+            if (!em.SingleBurst && !em.OneShot && em.WeatherAlive == 0){   // the weather profile's own count is already the bound
                 int emitFrames = Math.Max(1, life/interval);
                 perEmit = Math.Max(1, Math.Min(perEmit, ALIVE_CAP/emitFrames));
             }
@@ -901,12 +1060,16 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
             // effectActive (so the effect finishes and PAUSES); in an AMBIENT effect it streams the whole cycle (no pause).
             int emitEnd = (em.EndFrame>=2) ? em.EndFrame : (oneShotEffect ? effectActive : cycle);
             int cyc = Math.Max(life+1, cycle);                      // guarantee at most one instance alive for a single-burst one-shot
-            float volK=0.05f*motionScale;   // emission-VOLUME spread (kept tight: a wider factor over-spreads compact effects)
+            // GAME units (stream mode): emission spans +-volumeScale (captured Haze_30 births span
+            // +-27 of volScale 30) and velocity fields are units/second at 60fps (captured birth
+            // vel -1/60 of dirVel 1.0). Preview units: compressed for watchability (see VEL).
+            float volK = faithfulUnits ? 2f : 0.05f*motionScale;    // (rand-0.5)*volScale*volK -> +-volScale when faithful
+            float vel = faithfulUnits ? (1f/60f) : VEL;
             for (int birth=Math.Max(0,frame-life); birth<=frame; birth++){
                 int local=((birth%cyc)+cyc)%cyc;
                 bool emit = em.SingleBurst ? (local==0) : (local<emitEnd && local%interval==0);
                 if (!emit) continue;
-                var r=new Random(birth*7919 + em.Name.GetHashCode());
+                var r=new Random(unchecked(birth*7919 + EmitSeed(em.Name)));
                 for(int p=0;p<perEmit;p++){
                     int age=frame-birth; if(age<0||age>=life) continue;
                     var ep=new Vector3((float)(r.NextDouble()-0.5)*em.VolScale.X,
@@ -920,12 +1083,27 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
                     // the ring's real growth is its SCALE curve (stays centered). For N=1 Stage-2 follows the dir AXIS directly
                     // (no population dispersion cone), so any motion is the clean directional sink (ripple sinks per dir.Y).
                     bool singleParticle = (em.SingleBurst && perEmit==1);
-                    Vector3 v0 = singleParticle ? Vector3.Zero : ShapeDir(em.EmitFunc, ep, r)*(em.AllDirVel*VEL);
-                    if (em.DirLen>0.5f && em.DirVel>1e-4f){
-                        Vector3 dirV;
-                        if (singleParticle){ dirV=em.Dir; if(dirV.LengthSquared>1e-8f) dirV.Normalize(); }
-                        else                dirV=ConeAboutDir(em.Dir, em.Dispersion, r);
-                        v0 += dirV*(em.DirVel*VEL);
+                    Vector3 v0;
+                    // vtxMode-4 drops (rain/snow/dust/fog) move by an UNCOMPRESSED per-frame fall
+                    // vector straight along dir, with no Stage-1 shape term and no dispersion cone.
+                    // The magnitude is the weather system's own (profile FallMin..FallMax: rain
+                    // 1.08-1.20/frame vs snow 0.04-0.20 vs hovering dust, all from the SAME file
+                    // dir x dirVel 1); unprofiled class members keep the rain-anchored
+                    // dirVel x [1..1.15]. The /60 velocity law applies to units/second fields
+                    // (Haze), not to this class.
+                    if (faithfulUnits && em.VtxMode==4 && em.DirLen>0.5f){
+                        float fall = em.WeatherAlive > 0
+                            ? em.WeatherFallMin + (em.WeatherFallMax - em.WeatherFallMin)*(float)r.NextDouble()
+                            : em.DirVel*(1f + 0.15f*(float)r.NextDouble());
+                        v0 = em.Dir*(fall/em.DirLen);
+                    } else {
+                        v0 = singleParticle ? Vector3.Zero : ShapeDir(em.EmitFunc, ep, r)*(em.AllDirVel*vel);
+                        if (em.DirLen>0.5f && em.DirVel>1e-4f){
+                            Vector3 dirV;
+                            if (singleParticle){ dirV=em.Dir; if(dirV.LengthSquared>1e-8f) dirV.Normalize(); }
+                            else                dirV=ConeAboutDir(em.Dir, em.Dispersion, r);
+                            v0 += dirV*(em.DirVel*vel);
+                        }
                     }
                     // A lone ring's TRANSLATION must stay below its own size, else the dir.Y sink/drift dwarfs the
                     // scale-curve EXPANSION (the defining motion of a ring). ShockWave (ring grows to ~18u) keeps its
@@ -942,7 +1120,7 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
                     float rf=1f - em.MomRand*(float)(r.NextDouble()*2.0-1.0);                     // momentumRandom@0x7C4: per-particle speed spread
                     float ang=0f;                                                                  // particle Z-spin: init@0x6C8 (2pi=random) + angularVelocity@0x6D8*age
                     if (em.RotEnabled){ float ini=(em.RotInit>=6.0f)?(float)(r.NextDouble()*6.2831853):em.RotInit; ang=ini + em.AngVel*age; }
-                    yield return new Ptcl{ Ep=ep, V0=v0, Rf=rf, AirResist=em.AirResist, Ang=ang, Grav=GRAVITY_Y, Age=age, Life=life };
+                    yield return new Ptcl{ Ep=ep, V0=v0, Rf=rf, AirResist=em.AirResist, Ang=ang, Grav=GRAVITY_Y, Age=age, Life=life, Seq=p };
                 }
             }
         }
@@ -957,6 +1135,108 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
                 float sz=Math.Max(em.Radius,0.01f)*Math.Max(sc,0f);
                 yield return Tuple.Create(pos, col, al, sz, t, pt.Ang);
             }
+        }
+
+        /// <summary>Per-instance vertex streams for the GPU preview: one float4 row per live particle,
+        /// in the layout the game's own EFT vertex shaders consume. InPos = the particle's CURRENT
+        /// position, InVec = its current per-frame velocity (the streak direction and length); the
+        /// uniformMode-3 billboard VS renders the particle AT InPos, stretches it along InVec, and
+        /// ignores LocalPos/LocalVec xyz entirely. w-channel bookkeeping: InPos w = 0, InVec w = age,
+        /// LocalPos w = per-particle lifespan, LocalVec w = BIRTH emitterTime; the VS computes
+        /// age = bank8 emitterTime - LocalVec.w, gates 0 &lt;= age &lt; int(lifespan) and keys every
+        /// color/alpha/scale curve on it. Random = 4 uniform [0,1) values stable for the particle's
+        /// life, seeded independently of the motion RNG so existing renders are unchanged.
+        /// Scale = the BIRTH scale ptclScaleStart @0x978 (the VS applies the scale-over-life curve
+        /// from bank7). The shader does the rest (color/alpha curves, flipbook, rotation,
+        /// billboarding) from the EmitterStatic bank; the sim only integrates motion and keeps this
+        /// bookkeeping.</summary>
+        public class InstanceStreams
+        {
+            public int Count;                                          // live particles
+            public float[] InPos, InVec, LocalPos, LocalVec, Scale, Random;   // Count*4 floats each
+        }
+
+        /// <summary>The emitter-lifecycle alpha1 envelope (raw track @0x4F0) evaluated at the
+        /// playback frame, normalized over the effect's active window (one-shot: emit + fade,
+        /// then the pause holds the tail value; ambient: the whole cycle). Splash-family
+        /// shaders read this as a runtime-maintained bank7 slot, not a static curve key:
+        /// their erosion scale is bank7[0x540].x, and a fade-in curve's static key 0 is 0,
+        /// which erodes every pixel of the draw.</summary>
+        public float EnvelopeAlpha1(int emitterIndex, int atFrame)
+        {
+            if (emitterIndex < 0 || emitterIndex >= emitters.Count) return float.NaN;
+            var em = emitters[emitterIndex];
+            if (em.Alpha1N == 0) return float.NaN;   // disabled track: the bank's const-fill law already applies
+            int cyc = Math.Max(1, cycle);
+            int span = oneShotEffect ? Math.Min(cyc, effectActive + em.Lifespan) : cyc;
+            float t = (((atFrame % cyc) + cyc) % cyc) / (float)Math.Max(1, span);
+            return em.Alpha1At(Math.Min(t, 1f));
+        }
+
+        /// <summary>The alpha0 twin of EnvelopeAlpha1, for shaders that read ONLY the track's
+        /// key-0 slot (bank7[68].x = bank 0x440): the runtime maintains the evaluated envelope
+        /// there. NaN skips the patch: disabled track, or the channel-1 fallback adopted alpha1
+        /// as Alpha0 (the true channel-0 track is blank, so the game's slot stays at the static
+        /// key).</summary>
+        public float EnvelopeAlpha0(int emitterIndex, int atFrame)
+        {
+            if (emitterIndex < 0 || emitterIndex >= emitters.Count) return float.NaN;
+            var em = emitters[emitterIndex];
+            if (em.Alpha0N == 0 || em.Alpha0Adopted) return float.NaN;
+            int cyc = Math.Max(1, cycle);
+            int span = oneShotEffect ? Math.Min(cyc, effectActive + em.Lifespan) : cyc;
+            float t = (((atFrame % cyc) + cyc) % cyc) / (float)Math.Max(1, span);
+            return em.Alpha0EnvAt(Math.Min(t, 1f));
+        }
+
+        public InstanceStreams BuildInstanceStreams(int emitterIndex, int atFrame)
+        {
+            if (emitterIndex < 0 || emitterIndex >= emitters.Count)   // input was rejected at parse (not drawable)
+                return new InstanceStreams {
+                    Count = 0,
+                    InPos = new float[0], InVec = new float[0], LocalPos = new float[0],
+                    LocalVec = new float[0], Scale = new float[0], Random = new float[0],
+                };
+            var em = emitters[emitterIndex];
+            int saved = frame;
+            frame = atFrame;
+            faithfulUnits = true;
+            var pts = new List<Ptcl>();
+            try { foreach (var pt in Emit(em, RATE)) pts.Add(pt); }
+            finally { frame = saved; faithfulUnits = false; }
+            var s = new InstanceStreams {
+                Count = pts.Count,
+                InPos = new float[pts.Count*4], InVec = new float[pts.Count*4],
+                LocalPos = new float[pts.Count*4], LocalVec = new float[pts.Count*4],
+                Scale = new float[pts.Count*4], Random = new float[pts.Count*4],
+            };
+            for (int i = 0; i < pts.Count; i++){
+                var pt = pts[i];
+                int birth = atFrame - pt.Age;
+                var pos = pt.PosAt(pt.Age);
+                var vel = pos - pt.PosAt(pt.Age - 1);                  // frame-difference = current velocity
+                var rr = new Random(unchecked(birth*7919 + NameSeed(em.Name)*31 + pt.Seq*104729));
+                int o = i*4;
+                s.InPos[o]=pos.X;      s.InPos[o+1]=pos.Y;      s.InPos[o+2]=pos.Z;      s.InPos[o+3]=0f;
+                s.InVec[o]=vel.X;      s.InVec[o+1]=vel.Y;      s.InVec[o+2]=vel.Z;      s.InVec[o+3]=pt.Age;
+                s.LocalPos[o]=pos.X;   s.LocalPos[o+1]=pos.Y;   s.LocalPos[o+2]=pos.Z;   s.LocalPos[o+3]=pt.Life;
+                // vtxMode-4 drops need no special-casing here: Emit() gives the class the
+                // uncompressed per-frame fall as its velocity, so LocalVec (streak direction)
+                // and the motion agree by construction.
+                s.LocalVec[o]=vel.X;   s.LocalVec[o+1]=vel.Y;   s.LocalVec[o+2]=vel.Z;   s.LocalVec[o+3]=birth;
+                s.Random[o]=(float)rr.NextDouble(); s.Random[o+1]=(float)rr.NextDouble();
+                s.Random[o+2]=(float)rr.NextDouble(); s.Random[o+3]=(float)rr.NextDouble();
+                // The stream carries the BIRTH scale (ptclScaleStart @0x978) x the ptclScaleRandom law
+                // (@0x984, see the parse comment); the VS applies the scale-over-life curve from bank7.
+                // Draw the random u AFTER the 4 Random values so their sequence (and every
+                // random-dependent render) is unchanged.
+                float su=(float)rr.NextDouble();
+                s.Scale[o]  =em.BaseScale.X*(1f-su*em.ScaleRand.X*0.01f);
+                s.Scale[o+1]=em.BaseScale.Y*(1f-su*em.ScaleRand.Y*0.01f);
+                s.Scale[o+2]=em.BaseScale.Z*(1f-su*em.ScaleRand.Z*0.01f);
+                s.Scale[o+3]=1f;
+            }
+            return s;
         }
 
         float[] BuildBillboards(DrawEmitter em)
@@ -1103,6 +1383,10 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
                 Tex1 = em.GetSamplerTexture(1),
                 Tex2 = em.GetSamplerTexture(2),
             };
+            if (em.HeadBytes != null && em.HeadBytes.Length >= 0x50){   // emitter file name @ head+0x10 (weather-profile key)
+                int n = 0; while (0x10 + n < 0x50 && em.HeadBytes[0x10 + n] != 0) n++;
+                inp.EmtrName = System.Text.Encoding.ASCII.GetString(em.HeadBytes, 0x10, n);
+            }
             uint h = em.PrimitiveHash;
             if (h != 0 && h != 0xFFFFFFFF)
             {
@@ -1117,8 +1401,13 @@ void main(){ vec3 w=mPos*uSize+uPos; gl_Position=mtxMdl*mtxCam*vec4(w,1.0); vUV=
                     if (obj != null && obj.vertices != null && obj.vertices.Count > 0 && obj.faces != null && obj.faces.Count >= 3)
                     {
                         var vs = new System.Collections.Generic.List<float>(obj.vertices.Count * 5);
-                        foreach (var v in obj.vertices) { vs.Add(v.pos.X); vs.Add(v.pos.Y); vs.Add(v.pos.Z); vs.Add(v.uv0.X); vs.Add(v.uv0.Y); }
+                        var ns = new System.Collections.Generic.List<float>(obj.vertices.Count * 3);
+                        foreach (var v in obj.vertices) {
+                            vs.Add(v.pos.X); vs.Add(v.pos.Y); vs.Add(v.pos.Z); vs.Add(v.uv0.X); vs.Add(v.uv0.Y);
+                            ns.Add(v.nrm.X); ns.Add(v.nrm.Y); ns.Add(v.nrm.Z);
+                        }
                         inp.MeshVerts = vs.ToArray();
+                        inp.MeshNormals = ns.ToArray();
                         inp.MeshIndices = obj.faces.ToArray();
                     }
                 }

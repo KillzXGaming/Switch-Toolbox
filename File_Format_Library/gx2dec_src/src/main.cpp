@@ -60,7 +60,7 @@ static void dumpMapping(LatteDecompilerOutput_t& out)
 		return;
 	auto& rm = s->resourceMapping;
 	fprintf(stderr, "=== MAPPING ===\n");
-	fprintf(stderr, "uniformMode=%u pixelColorOutputMask=0x%x depthMask=%d\n", s->uniformMode, s->pixelColorOutputMask, (int)s->depthMask);
+	fprintf(stderr, "uniformMode=%u pixelColorOutputMask=0x%x\n", s->uniformMode, s->pixelColorOutputMask);
 	fprintf(stderr, "textures (%u):\n", (unsigned)s->textureUnitListCount);
 	for (uint32 i = 0; i < s->textureUnitListCount; i++)
 	{
@@ -135,7 +135,7 @@ int main(int argc, char** argv)
 	// LatteSHRC_GetPSInputTable() to emit the PS input varyings + their loads at the top of main()
 	// (and, for VS, to know which outputs the paired PS consumes). Cemu fills this during shader bind;
 	// standalone we must do it, or the table stays empty and every PS input register reads 0.
-	LatteShader_CreatePSInputTable(LatteSHRC_GetPSInputTable(), contextRegisters.data());
+	LatteShader_UpdatePSInputs(contextRegisters.data());
 
 	LatteDecompilerOptions opt{};
 	opt.strictMul = true;

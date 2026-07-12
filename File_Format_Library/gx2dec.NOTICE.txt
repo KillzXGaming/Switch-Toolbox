@@ -6,7 +6,7 @@ gx2dec.exe is a standalone command-line tool that decompiles Wii U GX2 (AMD
 derived from Cemu (the Wii U emulator), licensed under the Mozilla Public
 License 2.0 (MPL-2.0).
 
-  Upstream:  Cemu (https://github.com/cemu-project/Cemu), commit 079a4af
+  Upstream:  Cemu (https://github.com/cemu-project/Cemu), tag v2.6
   License:   Mozilla Public License 2.0 (https://www.mozilla.org/MPL/2.0/)
 
 Switch-Toolbox runs this binary as a separate process (see

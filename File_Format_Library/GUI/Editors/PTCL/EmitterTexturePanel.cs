@@ -101,8 +101,14 @@ namespace FirstPlugin.Forms
                 {
                     for (int i = 0; i < emitter.DrawableTex.Count; i++)
                     {
-                        var image = emitter.DrawableTex[i].GetBitmap();
-                        image = emitter.DrawableTex[i].GetComponentBitmap(image, showAlphaChk.Checked);
+                        //same raw-thread constraint as RenderSlot: a decode failure must not kill the process
+                        Bitmap image = null;
+                        try
+                        {
+                            image = emitter.DrawableTex[i].GetBitmap();
+                            image = emitter.DrawableTex[i].GetComponentBitmap(image, showAlphaChk.Checked);
+                        }
+                        catch (Exception ex) { Console.WriteLine("LoadTextures " + i + ": " + ex.Message); }
                         SafeUpdate(i, image);
                     }
                 }
@@ -127,15 +133,21 @@ namespace FirstPlugin.Forms
         }
 
         //Render the texture bound to a sampler slot into its preview box (hides the box when the slot is empty).
+        //Runs on a raw background thread, where any uncaught exception kills the PROCESS; a texture that
+        //fails to decode (e.g. a degenerate GX2 surface) must show an empty preview, not crash the toolbox.
         private void RenderSlot(PTCL.Emitter emitter, int slot)
         {
-            var tex = emitter.GetSamplerTexture(slot);
             Bitmap image = null;
-            if (tex != null)
+            try
             {
-                image = tex.GetBitmap();
-                image = tex.GetComponentBitmap(image, showAlphaChk.Checked);
+                var tex = emitter.GetSamplerTexture(slot);
+                if (tex != null)
+                {
+                    image = tex.GetBitmap();
+                    image = tex.GetComponentBitmap(image, showAlphaChk.Checked);
+                }
             }
+            catch (Exception ex) { Console.WriteLine("RenderSlot " + slot + ": " + ex.Message); }
             SafeUpdate(slot, image);
         }
 

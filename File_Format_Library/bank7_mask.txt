@@ -1,0 +1,236 @@
+# Per-word table for uniform bank 7 (EmitterStatic), consumed by EftUniformBanks.BuildBank7.
+# Offsets are hex, in bank-frame bytes (toolbox EmitterData struct offset + 0x50). One row per word:
+#   raw <off>          copy the payload word as-is, without the little-endian swap
+#   fill <off> <hex8>  write these 4 bytes (bank order) when the built word is zero
+#   zero <off>         clear the word
+raw 10
+raw 14
+raw 18
+raw 1c
+raw 20
+raw 750
+raw 754
+raw 758
+raw 760
+raw 764
+raw 768
+raw 76c
+raw 774
+raw 778
+raw 78c
+raw 794
+raw 798
+raw 79c
+raw 7a0
+raw 7a4
+raw 7a8
+raw 7ac
+raw 7b0
+raw 7b4
+raw 7b8
+raw 7bc
+raw 7c0
+raw 7c4
+raw 7c8
+raw 7cc
+raw 7d0
+raw 7d4
+raw 7e8
+raw 7ec
+raw 7f0
+raw 7f4
+raw 7f8
+raw 7fc
+raw 800
+raw 808
+raw 80c
+raw 810
+raw 814
+raw 81c
+raw 824
+raw 828
+raw 82c
+raw 834
+raw 838
+raw 83c
+raw 840
+raw 844
+raw 848
+raw 84c
+raw 850
+raw 858
+raw 85c
+raw 860
+raw 864
+raw 868
+raw 86c
+raw 870
+raw 874
+raw 880
+raw 888
+raw 898
+raw 89c
+raw 8a0
+raw 8a8
+raw 8ac
+raw 8b0
+raw 8b4
+raw 8b8
+raw 8bc
+raw 8c0
+raw 8c4
+raw 8cc
+raw 8d8
+raw 8dc
+raw 8e0
+raw 8e4
+raw 8e8
+raw 8ec
+raw 8f0
+raw 8f4
+raw 8f8
+raw 8fc
+raw 900
+raw 904
+raw 908
+raw 914
+raw 918
+raw 91c
+raw 920
+raw 92c
+raw 930
+raw 934
+raw 940
+raw 948
+raw 94c
+raw 950
+raw 96c
+raw 970
+raw 974
+raw 978
+raw 980
+raw 984
+raw 988
+raw 98c
+raw 990
+raw 994
+raw 998
+raw 99c
+raw 9a4
+raw 9a8
+raw 9ac
+raw 9b0
+raw 9b4
+raw 9b8
+raw 9bc
+raw 9c0
+raw 9c4
+raw 9c8
+raw 9cc
+raw 9d0
+raw 9d4
+raw 9d8
+raw 9dc
+raw 9e0
+raw 9e4
+raw 9e8
+raw 9ec
+raw 9fc
+raw a00
+raw a04
+raw a0c
+raw a10
+raw a1c
+raw a20
+raw a24
+raw a2c
+raw a30
+raw a3c
+raw a40
+raw a44
+raw a4c
+raw a50
+raw a58
+raw a68
+raw a78
+raw a88
+raw a8c
+raw a94
+raw a9c
+raw aa4
+raw aa8
+raw aac
+raw ab0
+raw ab4
+raw ab8
+raw abc
+raw ac0
+raw ac8
+raw acc
+raw ad0
+raw ad4
+raw adc
+raw ae0
+raw ae4
+raw ae8
+raw aec
+raw af0
+raw af4
+raw af8
+raw afc
+fill 124 01000000
+fill 1b4 01000000
+fill 1b8 02000000
+fill 1bc 03000000
+fill 304 0000803f
+fill 350 0000803f
+fill 354 0000803f
+fill 3a0 0000803f
+fill 3a4 0000803f
+fill 47c 0000803f
+fill 48c 0000803f
+fill 49c 0000803f
+fill 4ac 0000803f
+fill 4bc 0000803f
+fill 6c4 0000803f
+fill 6c8 0000803f
+fill 6cc 0000803f
+fill 6d4 0000803f
+fill 6d8 0000803f
+fill 6dc 0000803f
+fill 6e4 0000803f
+fill 6e8 0000803f
+fill 6ec 0000803f
+fill 6f4 0000803f
+fill 6f8 0000803f
+fill 6fc 0000803f
+fill 874 ffffffff
+zero 718
+zero 9b0
+zero 9b8
+zero 9c4
+zero 9c8
+zero 9cc
+zero 9d4
+zero 9d8
+zero 9dc
+zero 9ec
+zero 9fc
+zero a44
+zero a58
+zero a88
+zero aa4
+zero ab0
+zero ab4
+zero ab8
+zero ac4
+zero acc
+zero ad0
+zero ad4
+zero ae4
+zero ae8
+zero aec
+zero af0
+zero af4
+zero af8
+zero b44

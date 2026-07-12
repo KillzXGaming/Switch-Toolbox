@@ -19,11 +19,7 @@ uint8* memory_getPointerFromPhysicalOffset(uint32 physOffset)
 // renderer
 std::unique_ptr<Renderer> g_renderer;
 
-class StubRenderer : public Renderer
-{
-public:
-	RendererAPI GetType() override { return RendererAPI::OpenGL; }
-};
+#include "StubRenderer26.h"
 
 // GPU state
 LatteGPUState_t LatteGPUState{};
@@ -40,3 +36,16 @@ std::unique_ptr<Renderer> CreateStubRenderer()
 {
 	return std::make_unique<StubRenderer>();
 }
+
+// ---- v2.6 link stubs ----
+#include "config/ActiveSettings.h"
+#include "Cemu/Logging/CemuLogging.h"
+void Renderer::Initialize() {}
+void Renderer::Shutdown() {}
+bool Renderer::GetVRAMInfo(int& usageInMB, int& totalInMB) const { usageInMB = 0; totalInMB = 0; return false; }
+bool Renderer::ImguiBegin(bool mainWindow) { return false; }
+bool cemuLog_log(LogType type, std::string_view text) { return false; }
+uint64 s_loggingFlagMask = 0;
+bool ActiveSettings::DumpShadersEnabled() { return false; }
+bool ActiveSettings::ShaderPreventInfiniteLoopsEnabled() { return false; }
+bool ActiveSettings::ForceSamplerRoundToPrecision() { return false; }

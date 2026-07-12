@@ -61,22 +61,76 @@ namespace FirstPlugin
         // A .sesetlist emitter binds textures/meshes by a 32-bit HASH, and the referenced resource often lives in ANOTHER
         // loaded file (a shared GameResident texture, or a mesh in a sibling effect, e.g. AfterImage's "Biribiri" -> a mesh
         // in SiteBoss_ShieldDamage). Each loaded PTCL publishes its own TEXRs + Primitives here, so an emitter whose hash is
-        // absent in its OWN file still resolves it from any sibling that is ALSO open. (Load both files; nothing auto-loads
-        // GameResident.) Registered in Load(), removed in Unload().
+        // absent in its OWN file still resolves it from any sibling that is ALSO open. Registered in Load(), removed in
+        // Unload(). When a hash misses every open file, GameResident is loaded ONCE from beside an open file; the game
+        // keeps that set resident at all times, it IS the shared pool (e.g. the sword-fire flame sheets live there).
         internal static readonly List<PTCL> LoadedFiles = new List<PTCL>();
         internal readonly List<TEXR> FileTextures = new List<TEXR>();
         internal readonly List<Primitive> FilePrimitives = new List<Primitive>();
         internal static STGenericTexture FindGlobalTexture(uint id)
         {
             if (id == 0 || id == 0xFFFFFFFF) return null;
-            foreach (var f in LoadedFiles) foreach (var t in f.FileTextures) if (t.TextureID == id) return t;
+            for (int pass = 0; pass < 2; pass++)
+            {
+                foreach (var f in LoadedFiles) foreach (var t in f.FileTextures) if (t.TextureID == id) return t;
+                if (!LoadResidentPool()) break;
+            }
             return null;
         }
         internal static Primitive FindGlobalPrimitive(uint hash)
         {
             if (hash == 0 || hash == 0xFFFFFFFF) return null;
-            foreach (var f in LoadedFiles) foreach (var p in f.FilePrimitives) if (p.Hash == hash) return p;
+            for (int pass = 0; pass < 2; pass++)
+            {
+                foreach (var f in LoadedFiles) foreach (var p in f.FilePrimitives) if (p.Hash == hash) return p;
+                if (!LoadResidentPool()) break;
+            }
             return null;
+        }
+
+        static readonly HashSet<string> residentProbedDirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        // Probe for the pool beside each open file (GameResident*.sesetlist also accepts renamed copies) and at the
+        // dump layout's ..\Pack\Bootup\Effect, relative to an actor Effect dir. Each directory is probed once.
+        static bool LoadResidentPool()
+        {
+            var candidates = new List<string>();
+            foreach (var f in LoadedFiles.ToArray())
+            {
+                string dir = null;
+                try { dir = string.IsNullOrEmpty(f.FilePath) ? null : System.IO.Path.GetDirectoryName(f.FilePath); } catch { }
+                if (string.IsNullOrEmpty(dir) || !residentProbedDirs.Add(dir)) continue;
+                try
+                {
+                    string exact = System.IO.Path.Combine(dir, "GameResident.sesetlist");
+                    if (System.IO.File.Exists(exact)) candidates.Add(exact);
+                    else candidates.AddRange(System.IO.Directory.GetFiles(dir, "GameResident*.sesetlist"));
+                    candidates.Add(System.IO.Path.Combine(dir, @"..\Pack\Bootup\Effect\GameResident.sesetlist"));
+                }
+                catch { }
+            }
+            foreach (var cand in candidates)
+            {
+                try
+                {
+                    string full = System.IO.Path.GetFullPath(cand);
+                    if (!System.IO.File.Exists(full)) continue;
+                    if (LoadedFiles.Exists(p => string.Equals(p.FilePath, full, StringComparison.OrdinalIgnoreCase)))
+                        continue;   // already open (or already pooled)
+                    byte[] raw = System.IO.File.ReadAllBytes(full);
+                    if (raw.Length > 4 && raw[0] == 'Y' && raw[1] == 'a' && raw[2] == 'z' && raw[3] == '0')
+                    {
+                        var dec = new Toolbox.Library.Yaz0().Decompress(new System.IO.MemoryStream(raw));
+                        var ms = new System.IO.MemoryStream(); dec.CopyTo(ms); raw = ms.ToArray();
+                    }
+                    var pool = new PTCL();
+                    pool.FileName = System.IO.Path.GetFileName(full);
+                    pool.FilePath = full;
+                    pool.Load(new System.IO.MemoryStream(raw));   // registers itself in LoadedFiles
+                    return true;
+                }
+                catch { }
+            }
+            return false;
         }
 
         //Reveal the emitter SET named setName in any loaded .sesetlist, for the ELink viewer's "open original
@@ -2355,6 +2409,11 @@ namespace FirstPlugin
                     em.FragSamplerCount = em.ShaderFrgIndex < frag.Count ? fragSamplers[(int)em.ShaderFrgIndex] : -1;
                     em.FragGroupBytes = em.ShaderFrgIndex < frag.Count ? frag[(int)em.ShaderFrgIndex] : null;
                     em.VtxGroupBytes = em.ShaderVtxIndex < vtx.Count ? vtx[(int)em.ShaderVtxIndex] : null;
+                    if (em.DataPosition >= 0x50 && em.DataPosition <= ptcl.data.Length)
+                    {
+                        em.HeadBytes = new byte[0x50];
+                        Array.Copy(ptcl.data, em.DataPosition - 0x50, em.HeadBytes, 0, 0x50);
+                    }
                     long key = ((long)em.ShaderVtxIndex << 32) | em.ShaderFrgIndex;
                     if (!usage.ContainsKey(key)) usage[key] = new List<string>();
                     var parentSet = sec.Parent as SectionBase;
@@ -2971,6 +3030,7 @@ namespace FirstPlugin
             public int FragSamplerCount = -1; //texture samplers this emitter's fragment shader declares (-1 = unknown)
             public byte[] FragGroupBytes;     //this emitter's fragment-shader GFD group (header ++ program)
             public byte[] VtxGroupBytes;      //this emitter's vertex-shader GFD group
+            public byte[] HeadBytes;          //the 0x50 data-frame head preceding EmitterData (name @0x10); head + EmitterData = the GPU-preview payload
             //Re-point this emitter to a different existing shader in the pool (index clamped); bakes on save.
             public void SetShaderVtxIndex(uint v) { if (ShaderVtxCount > 0 && v > ShaderVtxCount - 1) v = (uint)(ShaderVtxCount - 1); SetU32(EmtShaderVtxOff, v); }
             public void SetShaderFrgIndex(uint v) { if (ShaderFrgCount > 0 && v > ShaderFrgCount - 1) v = (uint)(ShaderFrgCount - 1); SetU32(EmtShaderFrgOff, v); }
@@ -3189,6 +3249,10 @@ namespace FirstPlugin
             // GX2 texture address mode per sampler axis (struct sampler+0x08 wrapU / +0x09 wrapV). PINNED by RenderDoc cross-ref:
             // Smoke_Botttom Wrap/Clamp=1,2 ; Wind_sub Clamp/Clamp=2,2 ; Gdn_Target reticle ring Mirror/Mirror=0,0.
             public enum SamplerWrap : byte { Mirror = 0, Wrap = 1, Clamp = 2 }
+            // Alpha-fluctuation waveform @0x99F, driving bank7 word0 bits 0/1/2 (the vertex shader sums one term per
+            // waveform, so a value outside this set leaves alpha at zero and the emitter renders nothing). These three
+            // are the whole library: 8 = 8806 emitters, 16 = 563, 32 = 357, never combined and never absent.
+            public enum FluctuationWaveform : byte { Sine = 8, Random = 16, Blink = 32 }
 
             public class EmitterParameters
             {
@@ -3239,6 +3303,8 @@ namespace FirstPlugin
                 public float BlinkDuration1 { get { return e.BlinkDuration1; } set { e.BlinkDuration1 = value; } }
                 [Category("1. Documented"), DisplayName("Blink Duration 2"), Description("ZeldaMods 'Blink Duration 2'. Offset 0x9C.")]
                 public float BlinkDuration2 { get { return e.BlinkDuration2; } set { e.BlinkDuration2 = value; } }
+                [Category("1. Documented"), DisplayName("Fluctuation Waveform"), Description("Waveform the Blink Intensity/Duration pairs above drive the particle alpha with. Offset 0x99F: Sine(8), Random(16) or Blink(32). Every emitter in the library carries one of the three.")]
+                public FluctuationWaveform Fluctuation { get { return (FluctuationWaveform)e.GetByteAt(0x99F); } set { e.SetByteAt(0x99F, (byte)value); } }
                 [Category("1. Documented"), DisplayName("Scale X"), Description("First scale-array entry, X (ZeldaMods scale array). Offset 0x5B0.")]
                 public float ScaleX { get { return e.Scale0X; } set { e.Scale0X = value; } }
                 [Category("1. Documented"), DisplayName("Scale Y"), Description("First scale-array entry, Y. Offset 0x5B4.")]
@@ -3260,6 +3326,22 @@ namespace FirstPlugin
                 [Category("1b. Scale Curve"), DisplayName("Key3 X"), Description("@0x5E0")] public float Sk3X { get { return e.GetFloatAt(0x5E0); } set { e.SetFloatAt(0x5E0, value); } }
                 [Category("1b. Scale Curve"), DisplayName("Key3 Y"), Description("@0x5E4")] public float Sk3Y { get { return e.GetFloatAt(0x5E4); } set { e.SetFloatAt(0x5E4, value); } }
                 [Category("1b. Scale Curve"), DisplayName("Key3 Time"), Description("@0x5EC")] public float Sk3T { get { return e.GetFloatAt(0x5EC); } set { e.SetFloatAt(0x5EC, value); } }
+
+                // ===== 1d. Particle Scale (the scale a particle is BORN at, which the scale curve above multiplies).
+                //          This is the size the game's own vertex shader reads, NOT Radius @0x360 (the emission-volume
+                //          extent: the Fire family carries 20-100 there against a true scale of 0.2-8).
+                [Category("1d. Particle Scale"), DisplayName("Scale Start X"), Description("ptclScaleStart @0x978.")]
+                public float ScaleStartX { get { return e.GetFloatAt(0x978); } set { e.SetFloatAt(0x978, value); } }
+                [Category("1d. Particle Scale"), DisplayName("Scale Start Y"), Description("@0x97C.")]
+                public float ScaleStartY { get { return e.GetFloatAt(0x97C); } set { e.SetFloatAt(0x97C, value); } }
+                [Category("1d. Particle Scale"), DisplayName("Scale Start Z"), Description("@0x980. Read by mesh (PRIM) emitters; billboards are flat in XY.")]
+                public float ScaleStartZ { get { return e.GetFloatAt(0x980); } set { e.SetFloatAt(0x980, value); } }
+                [Category("1d. Particle Scale"), DisplayName("Scale Random X (%)"), Description("ptclScaleRandom @0x984, a PERCENT: a particle is born at Scale Start x (1 - u * percent/100), with one uniform u per particle shared by all three axes. Over 100 flips the sign (the game draws the mirrored particle).")]
+                public float ScaleRandomX { get { return e.GetFloatAt(0x984); } set { e.SetFloatAt(0x984, value); } }
+                [Category("1d. Particle Scale"), DisplayName("Scale Random Y (%)"), Description("@0x988.")]
+                public float ScaleRandomY { get { return e.GetFloatAt(0x988); } set { e.SetFloatAt(0x988, value); } }
+                [Category("1d. Particle Scale"), DisplayName("Scale Random Z (%)"), Description("@0x98C.")]
+                public float ScaleRandomZ { get { return e.GetFloatAt(0x98C); } set { e.SetFloatAt(0x98C, value); } }
 
                 // ===== 2. EMISSION =====
                 [Category("2. Emission"), DisplayName("Lifespan (frames)"), Description("ptclMaxLifespan @0x6F0. <=1 = one-shot/burst sentinel.")]

@@ -382,6 +382,7 @@
     <Compile Include="FileFormats\DKCTF\MSBT.cs" />
     <Compile Include="FileFormats\DKCTF\PAK.cs" />
     <Compile Include="FileFormats\Effects\ESET.cs" />
+    <Compile Include="FileFormats\Effects\EftUniformBanks.cs" />
     <Compile Include="FileFormats\Effects\Gx2ShaderDecompiler.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HeaderCommon.cs" />
     <Compile Include="FileFormats\HedgehogEngine\HedgeModel.cs" />
@@ -524,6 +525,8 @@
     <Compile Include="GL\BMD_Renderer.cs" />
     <Compile Include="GL\CMB_Renderer.cs" />
     <Compile Include="GL\EftEmitterRender.cs" />
+    <Compile Include="GL\EftGpuPreview.cs" />
+    <Compile Include="GL\EftGpuPreviewDrawable.cs" />
     <Compile Include="GL\G1M_Renderer.cs" />
     <Compile Include="GL\GXToOpenGL.cs" />
     <Compile Include="GL\KCL_Render.cs" />
@@ -2339,8 +2342,14 @@
     <Content Include="Resources\Hashes\Pkmn.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- Ship the GX2->GLSL decompiler (and its license NOTICE) next to the plugin so the shader viewer finds it. -->
-  <Target Name="CopyGx2Dec" AfterTargets="Build">
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)gx2dec.exe;$(MSBuildThisFileDirectory)gx2dec.NOTICE.txt" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+  <!-- Ship the plugin's loose payloads next to the assembly, where the code probes for them:
+       the GX2->GLSL decompiler used by the shader viewer (gx2dec.exe and its license NOTICE),
+       the bank7 uniform mask, and the EFT preview's static engine assets. -->
+  <Target Name="CopyNativeAndDataAssets" AfterTargets="Build">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)gx2dec.exe;$(MSBuildThisFileDirectory)gx2dec.NOTICE.txt;$(MSBuildThisFileDirectory)bank7_mask.txt" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
+    <ItemGroup>
+      <EftPreviewAsset Include="$(MSBuildThisFileDirectory)EftPreviewAssets\*.bin" />
+    </ItemGroup>
+    <Copy SourceFiles="@(EftPreviewAsset)" DestinationFolder="$(OutDir)EftPreviewAssets" SkipUnchangedFiles="true" ContinueOnError="true" />
   </Target>
 </Project>

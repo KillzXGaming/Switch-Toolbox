@@ -2057,7 +2057,9 @@ namespace Toolbox.Library
 
                     else
                     {
-                        pOut.sliceSize = (uint)(pOut.surfSize / pOut.depth);
+                        // a degenerate surface can reach here with depth 0; treat it as 1
+                        // instead of throwing DivideByZeroException up through GetBitmap
+                        pOut.sliceSize = (uint)(pOut.surfSize / Math.Max(1, pOut.depth));
 
                         if (pIn.slice == (pIn.numSlices - 1) && pIn.numSlices > 1)
                             pOut.sliceSize += pOut.sliceSize * (pOut.depth - pIn.numSlices);

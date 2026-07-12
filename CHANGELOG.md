@@ -1,7 +1,40 @@
 # BotW EFT Renderer Changelog
 
-> Releases are versioned by git tag and `AssemblyInfo` (semver); the `vN` numbers below are a finer-grained dev log.
-> `v1.0.0` is the renderer (entries `v1`-`v5`). The ELink work is the `V2.0.x` line, starting at `V2.0.0` (entry `v6`).
+## V3.0.0: Emitter preview with the game's own shaders (2026-07-12)
+
+Added an experimental but promising preview that uses the decoded GX2 vertex/fragment shaders.
+
+### Added
+- **The emitter editor previews through the shaders the game itself renders with.** Its *Game shaders (GPU)* mode,
+  on by default, decompiles the emitter's own GX2 vertex/fragment pair to GLSL and draws with it. The uniform banks
+  are rebuilt from the emitter's file data, the per-particle streams come from the existing simulation, and the
+  inputs the file does not carry (the environment and scene banks, the HDR environment cube, the vertex-shader
+  lookup tables and the scene depth) are shipped beside the plugin. Billboards, primitive meshes, connection and
+  trail stripes, and the rain and snow drop classes all draw. The software approximation is now the fallback, taking
+  over with a note when an emitter's shader pair will not decompile; the mode is offered only for files that carry
+  shaders at all.
+- **High dynamic range, resolved with the game's own tonemap.** The preview accumulates into a floating-point
+  target and resolves through BotW's operator, so an additive effect such as fire keeps its colour instead of
+  clipping to a flat yellow.
+- **Sampler state read from the file**, so art textures honour their per-slot GX2 wrap modes and their own flipbook
+  grid rather than the first slot's.
+- **Three more emitter fields in the Parameters tab**, decoded while wiring the shaders up. The scale a particle is
+  born at, and the percentage it is randomly shrunk by: this, not the emission radius the tab already showed, is the
+  size the game's vertex shader reads. And the waveform the blink intensity and duration pairs drive the alpha with,
+  which is a sine, a random or a blink in every emitter the library ships.
+
+### Changed
+- **The preview no longer starves the paint of the controls around it.** It asked for its next animation frame from
+  inside its own paint, which kept a repaint permanently pending and left the controls beside it (the shader toggle,
+  the viewport's menu bar and model row) unpainted until the mouse passed over them. The request now goes through the
+  idle pump, which runs only once everything else has been painted.
+- **Preview playback runs on 60fps** instead of one step per repaint, so an effect plays at its real
+  speed whatever the monitor does; on a 144Hz display it previously ran at 2.4x speed. This applies to the
+  software preview too.
+- **The GX2 to GLSL decompiler is rebuilt from Cemu v2.6**, which is what lets the emitter shaders decompile well
+  enough to execute. Its source, shims and build script are vendored under `gx2dec_src`; the script now locates
+  Visual Studio with `vswhere` instead of a fixed path.
+- A texture that fails to decode no longer takes the emitter texture panel down with it.
 
 ## V2.0.2: ELink2 actor names recovered from the file itself (2026-06-29)
 

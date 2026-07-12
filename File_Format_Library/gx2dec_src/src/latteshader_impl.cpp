@@ -9,6 +9,7 @@
 #include "Cafe/HW/Latte/Core/Latte.h"
 #include "Cafe/HW/Latte/LegacyShaderDecompiler/LatteDecompiler.h"
 #include "Cafe/HW/Latte/Core/LatteShader.h"
+#include "Cafe/HW/Latte/Core/LatteCachedFBO.h"
 
 // ----------------------------------------------------------------------------
 // PS input table (verbatim from Cemu/src/Cafe/HW/Latte/Core/LatteShader.cpp)
@@ -186,4 +187,10 @@ Latte::E_GX2SURFFMT LatteTexture_ReconstructGX2Format(const Latte::LATTE_SQ_TEX_
 		gx2Format |= Latte::E_GX2SURFFMT::FMT_BIT_SIGNED;
 
 	return gx2Format;
+}
+
+// v2.6 renamed entry point: fills the active PS input table from context registers
+void LatteShader_UpdatePSInputs(uint32* contextRegisters)
+{
+	LatteShader_CreatePSInputTable(&_activePSImportTable, contextRegisters);
 }

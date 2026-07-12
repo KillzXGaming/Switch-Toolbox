@@ -78,6 +78,50 @@ namespace FirstPlugin
             return map;
         }
 
+        public class SamplerVar
+        {
+            public string Name;    // NW4F source sampler name (sysTextureSampler0, sysDepthBufferTexture, sysCustomShaderCubeSampler0, ...)
+            public int Type;       // GX2SamplerVarType: 1 = 2D, 4 = cube
+            public int Location;   // GX2 texture slot = the textureUnitPS<N> binding in the decompiled GLSL
+        }
+
+        // Parse the GX2 samplerVar table from a pixel-shader group: count @ header+0xD0, table VA
+        // @ header+0xD4, entries = {name_VA, type, location} (12B BE). The names identify each unit's
+        // ROLE (art slot N / scene depth / environment cube), so lit-ness and unit assignment are file
+        // truth instead of convention (cube type 4 at slot 10, depth 2D at slot 4, art at slots 0..2).
+        // VAs map into the header payload by their low bits (payloads are small;
+        // table VAs sit in the 0xD06xxxxx space, names in 0xCA70xxxx). Never throws; empty on any doubt.
+        public static List<SamplerVar> ParseSamplerVars(byte[] group)
+        {
+            var vars = new List<SamplerVar>();
+            try
+            {
+                if (group == null || group.Length < 0x20 + 0xD8) return vars;
+                int count = (int)U32BE(group, 0x20 + 0xD0);
+                if (count <= 0 || count > 32) return vars;
+                int table = (int)(U32BE(group, 0x20 + 0xD4) & 0xFFFFF) + 0x20;
+                if (table + count * 12 > group.Length) return vars;
+                for (int i = 0; i < count; i++)
+                {
+                    int e = table + i * 12;
+                    int nameOff = (int)(U32BE(group, e) & 0xFFFFF) + 0x20;
+                    if (nameOff < 0 || nameOff >= group.Length) return new List<SamplerVar>();
+                    int end = nameOff;
+                    while (end < group.Length && group[end] != 0) end++;
+                    string name = Encoding.ASCII.GetString(group, nameOff, end - nameOff);
+                    if (name.Length == 0 || name.Length > 64 || !name.StartsWith("sys")) return new List<SamplerVar>();
+                    vars.Add(new SamplerVar
+                    {
+                        Name = name,
+                        Type = (int)U32BE(group, e + 4),
+                        Location = (int)U32BE(group, e + 8),
+                    });
+                }
+            }
+            catch { vars.Clear(); }
+            return vars;
+        }
+
         private static string _exePath;
         private static bool _searched;
 
@@ -116,7 +160,7 @@ namespace FirstPlugin
         // Scatter the GX2PixelShader 'regs' (big-endian, at the start of the header payload) into a
         // contextRegisters[0x10009] array, exactly as Cemu's GX2SetPixelShader submits them, then return it as
         // native little-endian bytes (the decompiler memcpy's it into a uint32[] and reads bitfields natively).
-        private static byte[] BuildPixelRegs(byte[] hdrPayload)
+        private static byte[] BuildPixelRegs(byte[] hdrPayload, int[] cubeUnits)
         {
             const int N = 0x10000 + 9;
             uint[] r = new uint[N];
@@ -127,6 +171,12 @@ namespace FirstPlugin
             for (uint i = 0; i < numInputs; i++) r[0xA191 + i] = rb((int)(5 + i)); // mmSPI_PS_INPUT_CNTL_0+i
             r[0xA08F] = rb(37); r[0xA1E8] = rb(38); r[0xA203] = rb(39); r[0xA1B6] = rb(40); // CB_SHADER_MASK/CONTROL, DB_SHADER_CONTROL, SPI_INPUT_Z
             for (int u = 0; u < 18; u++) r[0xE000 + u * 7] = 1; // mmSQ_TEX_RESOURCE_WORD0_0 + u*7, DIM_2D
+            // Env-cube units must decompile as DIM_CUBE(3); the blanket 2D silently drops the cube-sample
+            // instruction and with it the env-lighting term of lit translucents. Convention: env cube at PS
+            // slot 10, scene depth 2D at slot 4.
+            if (cubeUnits != null)
+                foreach (int u in cubeUnits)
+                    if (u >= 0 && u < 18) r[0xE000 + u * 7] = 3;
             byte[] outb = new byte[N * 4];
             Buffer.BlockCopy(r, 0, outb, 0, outb.Length); // x86 native = little-endian
             return outb;
@@ -162,10 +212,14 @@ namespace FirstPlugin
         }
 
         // Vertex-shader decompile. Scatters the GX2VertexShader regs into a Latte contextRegisters array as
-        // Cemu's GX2SetVertexShader does, ALSO scatters the paired fragment shader's SPI_PS_INPUT_CNTL registers
-        // (the VS only emits a passParameterSemN export when the paired PS consumes that semantic), and builds
-        // the runtime fetch-shader microcode (what nw::eft builds via GX2InitFetchShaderEx) with Cemu's
-        // fetch-shader bit-packing. regs.bin / fetch.bin are native little-endian u32 (how gx2dec reads both).
+        // Cemu's GX2SetVertexShader does, ALSO scatters the paired fragment shader's SPI_PS_INPUT_CNTL
+        // registers (the VS only emits a passParameterSemN export when the paired PS consumes that
+        // semantic), forces PA_CL_VTE_CNTL to the clip-space value (unset = Cemu's window-space path, i.e.
+        // garbage positions) and every VS texture DIM to 2D (sampler1D output is an artifact of unset dims),
+        // and builds the runtime fetch-shader microcode (what nw::eft builds via GX2InitFetchShaderEx) with
+        // Cemu's fetch-shader bit-packing: ENDIAN NONE + one float4 slot per semantic, matching the preview's
+        // pre-decoded little-endian streams. regs.bin / fetch.bin are native little-endian u32 (how gx2dec
+        // reads both).
 
         // --- mm* register indices (RegDefines.h) ---
         private const int mmSQ_PGM_RESOURCES_VS = 0xA21A;
@@ -173,17 +227,17 @@ namespace FirstPlugin
         private const int mmSPI_VS_OUT_CONFIG = 0xA1B1;
         private const int mmSPI_VS_OUT_ID_0 = 0xA185;
         private const int mmPA_CL_VS_OUT_CNTL = 0xA207;
+        private const int mmPA_CL_VTE_CNTL = 0xA206;
         private const int mmSQ_VTX_SEMANTIC_0 = 0xA0E0;
-        private const int mmVGT_INSTANCE_STEP_RATE_0 = 0xA2A8;
-        private const int mmVGT_INSTANCE_STEP_RATE_1 = 0xA2A9;
-        private const int mmSQ_VTX_ATTRIBUTE_BLOCK_START = 0xE000 + 0x8C0; // buffer stride regs (7 dwords/buffer)
+        private const int mmSQ_TEX_RESOURCE_WORD0_0 = 0xE000; // 7 dwords per texture unit (PS range)
+        private const int mmSQ_TEX_RESOURCE_WORD0_0_VS = 0xE460; // VS texture resources live in their own range
         private const int mmSPI_PS_IN_CONTROL_0 = 0xA1B3;
         private const int mmSPI_PS_INPUT_CNTL_0 = 0xA191;
 
         // --- Latte fetch-format / NFA constants (LatteConst.h) ---
         private const int FMT_32_32_32_32_FLOAT = 0x23;
         private const int NFA_SCALED = 2;          // NUM_FORMAT_SCALED (what float formats use)
-        private const int ENDIAN_SWAP_U32 = 2;     // VertexFetchEndianMode::SWAP_U32 (big-endian source)
+        private const int ENDIAN_NONE = 0;         // streams are pre-decoded LE floats
         private const int VTX_INST_SEMANTIC = 1;
         private const int FETCH_TYPE_VERTEX = 0;   // per-vertex index
 
@@ -221,13 +275,13 @@ namespace FirstPlugin
             w2 |= ((uint)offset & 0xFFFF) << 0;              // OFFSET
             w2 |= ((uint)endianSwap & 0x3) << 16;            // ENDIAN_SWAP
         }
-        // Build the runtime fetch shader (CF program + VTX clauses). Returns LE u32 bytes; cf_size via out param.
-        private static byte[] BuildFetchShader(uint[] semantics, out int cfSize)
+        // Build the runtime fetch shader (CF program + VTX clauses). One float4 slot per semantic, which is
+        // the preview's stream ABI: every attribute is fed as a full float4.
+        private static byte[] BuildFetchShader(uint[] semantics)
         {
             int n = semantics.Length;
             int numCf = ((n + 15) / 16) + 1;
-            cfSize = numCf * 8;
-            cfSize = (cfSize + 0xF) & ~0xF;          // pad to 16
+            int cfSize = (numCf * 8 + 0xF) & ~0xF;   // pad to 16
             var words = new List<uint>();
             // CF program
             int ai = 0;
@@ -242,13 +296,14 @@ namespace FirstPlugin
             words.Add(rw0); words.Add(rw1);
             while (words.Count * 4 < cfSize) words.Add(0);
             // VTX clauses
-            int[] dstSel = { 0, 1, 2, 3 }; // DST_X, DST_Y, DST_Z, DST_W
             for (int i = 0; i < n; i++)
             {
+                int sem = (int)(semantics[i] & 0xFF);
+                var dstSel = new int[] { 0, 1, 2, 3 };
                 int off = i * 16;                    // sequential, float4 stride
                 uint vw0, vw1, vw2, vw3;
-                MakeVtxSemantic((int)(semantics[i] & 0xFF), 0 + 0xA0, off, FMT_32_32_32_32_FLOAT,
-                    NFA_SCALED, ENDIAN_SWAP_U32, false, dstSel, out vw0, out vw1, out vw2, out vw3);
+                MakeVtxSemantic(sem, 0 + 0xA0, off, FMT_32_32_32_32_FLOAT,
+                    NFA_SCALED, ENDIAN_NONE, false, dstSel, out vw0, out vw1, out vw2, out vw3);
                 words.Add(vw0); words.Add(vw1); words.Add(vw2); words.Add(vw3);
             }
             byte[] outb = new byte[words.Count * 4];
@@ -256,87 +311,101 @@ namespace FirstPlugin
             return outb;
         }
 
-        /// <summary>Decompile an emitter's REAL vertex shader to GLSL. vtxGroup = its VS GFD group (header block
+        private class VertexInputs
+        {
+            public byte[] Program;    // raw GX2 VS microcode
+            public byte[] Regs;       // Latte contextRegisters image (LE u32)
+            public byte[] Fetch;      // synthetic fetch-shader microcode (LE u32)
+            public uint[] Semantics;  // SQ_VTX_SEMANTIC table (float4 slot order of the fetch)
+            public string Error;      // non-null on failure
+        }
+
+        // Build the three gx2dec inputs (program / regs / fetch) for an emitter's vertex shader. vtxGroup =
+        // its VS GFD group (header block ++ program block); fragGroup = the PAIRED fragment shader's group.
+        private static VertexInputs BuildVertexInputs(byte[] vtxGroup, byte[] fragGroup)
+        {
+            var inp = new VertexInputs();
+            if (vtxGroup == null || vtxGroup.Length < 0x40) { inp.Error = "no vertex shader for this emitter"; return inp; }
+            // VS GFD group layout (same as the PS group): 0x20 header BLK header, then the GX2VertexShader
+            // payload (big-endian), then the program BLK header + program payload.
+            int hdrDsz = (int)U32BE(vtxGroup, 0x14);          // header BLK data size = GX2VertexShader payload length
+            if (hdrDsz < 0 || hdrDsz > vtxGroup.Length - 0x20) { inp.Error = "vertex header block out of range"; return inp; }
+            byte[] h = new byte[hdrDsz];
+            Array.Copy(vtxGroup, 0x20, h, 0, hdrDsz);
+            Func<int, uint> rb = off => U32BE(h, off);        // read a GX2VertexShader field (BE)
+
+            int vsSize = (int)rb(0xD0);                       // shaderSize
+            int progPayloadStart = 0x20 + hdrDsz + 0x20;      // after header block, skip program BLK header
+            if (progPayloadStart > vtxGroup.Length) { inp.Error = "vertex program block out of range"; return inp; }
+            int progAvail = vtxGroup.Length - progPayloadStart;
+            if (vsSize <= 0 || vsSize > progAvail) vsSize = progAvail; // clamp shaderSize to the available program bytes
+            inp.Program = new byte[vsSize];
+            Array.Copy(vtxGroup, progPayloadStart, inp.Program, 0, vsSize);
+
+            const int N = 0x10000 + 9;
+            uint[] regs = new uint[N];
+            regs[mmPA_CL_VTE_CNTL] = 0x43F;                   // clip-space transforms; unset = window-space garbage
+            for (int u = 0; u < 18; u++)
+                regs[mmSQ_TEX_RESOURCE_WORD0_0_VS + u * 7] = 1; // every VS texture DIM_2D (unset = sampler1D artifact)
+
+            // scatter GX2VertexShader regs (GX2SetVertexShader)
+            regs[mmSQ_PGM_RESOURCES_VS] = rb(0x00);
+            regs[mmVGT_PRIMITIVEID_EN] = rb(0x04);
+            regs[mmSPI_VS_OUT_CONFIG] = rb(0x08);
+            uint vsOutIdTableSize = rb(0x0C);
+            for (uint i = 0; i < Math.Min(vsOutIdTableSize, 10u); i++)
+                regs[mmSPI_VS_OUT_ID_0 + i] = rb((int)(0x10 + i * 4));
+            regs[mmPA_CL_VS_OUT_CNTL] = rb(0x38);
+            uint semSize = rb(0x40);
+            int semCount = (int)Math.Min(semSize, 32u);
+            inp.Semantics = new uint[semCount];
+            for (int i = 0; i < semCount; i++)
+            {
+                uint v = rb(0x44 + i * 4);
+                regs[mmSQ_VTX_SEMANTIC_0 + i] = v;
+                inp.Semantics[i] = v;
+            }
+
+            // scatter the PAIRED frag's PS-input registers (so the VS emits the params the PS consumes)
+            if (fragGroup != null && fragGroup.Length >= 0x40)
+            {
+                int fHdrDsz = (int)U32BE(fragGroup, 0x14);
+                byte[] fh = new byte[fHdrDsz];
+                Array.Copy(fragGroup, 0x20, fh, 0, fHdrDsz);
+                Func<int, uint> fb = i => U32BE(fh, i * 4);   // GX2PixelShader regs[i]
+                regs[mmSPI_PS_IN_CONTROL_0] = fb(2);
+                regs[mmSPI_PS_IN_CONTROL_0 + 1] = fb(3);      // SPI_PS_IN_CONTROL_1
+                uint numPSInputs = Math.Min(fb(4), 0x20u);
+                for (uint i = 0; i < numPSInputs; i++)
+                    regs[mmSPI_PS_INPUT_CNTL_0 + i] = fb((int)(5 + i));
+            }
+
+            inp.Regs = new byte[N * 4];
+            Buffer.BlockCopy(regs, 0, inp.Regs, 0, inp.Regs.Length); // x86 native = little-endian
+            inp.Fetch = BuildFetchShader(inp.Semantics);
+            return inp;
+        }
+
+        /// <summary>Decompile an emitter's vertex shader to GLSL. vtxGroup = its VS GFD group (header block
         /// ++ program block); fragGroup = the PAIRED fragment shader's group (its SPI_PS_INPUT_CNTL registers are
         /// scattered too so the VS emits the params the PS consumes). Returns the VS GLSL in Result.Glsl.</summary>
         public static Result DecompileVertex(byte[] vtxGroup, byte[] fragGroup)
         {
             var res = new Result();
-            if (vtxGroup == null || vtxGroup.Length < 0x40) { res.Error = "no vertex shader for this emitter"; return res; }
             string exe = FindExe();
             if (exe == null) { res.Error = "gx2dec.exe not found (set GX2DEC_PATH, or place gx2dec.exe next to the plugin)"; return res; }
 
             string progPath = null, regsPath = null, fetchPath = null;
             try
             {
-                // VS GFD group layout (same as the PS group): 0x20 header BLK header, then the GX2VertexShader
-                // payload (big-endian), then the program BLK header + program payload.
-                int hdrDsz = (int)U32BE(vtxGroup, 0x14);          // header BLK data size = GX2VertexShader payload length
-                if (hdrDsz < 0 || hdrDsz > vtxGroup.Length - 0x20) { res.Error = "vertex header block out of range"; return res; }
-                byte[] h = new byte[hdrDsz];
-                Array.Copy(vtxGroup, 0x20, h, 0, hdrDsz);
-                Func<int, uint> rb = off => U32BE(h, off);        // read a GX2VertexShader field (BE)
-
-                int vsSize = (int)rb(0xD0);                       // shaderSize
-                int progPayloadStart = 0x20 + hdrDsz + 0x20;      // after header block, skip program BLK header
-                if (progPayloadStart > vtxGroup.Length) { res.Error = "vertex program block out of range"; return res; }
-                int progAvail = vtxGroup.Length - progPayloadStart;
-                if (vsSize <= 0 || vsSize > progAvail) vsSize = progAvail; // clamp shaderSize to the available program bytes
-                byte[] prog = new byte[vsSize];
-                Array.Copy(vtxGroup, progPayloadStart, prog, 0, vsSize);
-
-                const int N = 0x10000 + 9;
-                uint[] regs = new uint[N];
-
-                // scatter GX2VertexShader regs (GX2SetVertexShader)
-                regs[mmSQ_PGM_RESOURCES_VS] = rb(0x00);
-                regs[mmVGT_PRIMITIVEID_EN] = rb(0x04);
-                regs[mmSPI_VS_OUT_CONFIG] = rb(0x08);
-                uint vsOutIdTableSize = rb(0x0C);
-                for (uint i = 0; i < Math.Min(vsOutIdTableSize, 10u); i++)
-                    regs[mmSPI_VS_OUT_ID_0 + i] = rb((int)(0x10 + i * 4));
-                regs[mmPA_CL_VS_OUT_CNTL] = rb(0x38);
-                uint semSize = rb(0x40);
-                int semCount = (int)Math.Min(semSize, 32u);
-                uint[] semantics = new uint[semCount];
-                for (int i = 0; i < semCount; i++)
-                {
-                    uint v = rb(0x44 + i * 4);
-                    regs[mmSQ_VTX_SEMANTIC_0 + i] = v;
-                    semantics[i] = v;
-                }
-                regs[mmVGT_INSTANCE_STEP_RATE_0] = 0;
-                regs[mmVGT_INSTANCE_STEP_RATE_1] = 0;
-
-                // scatter the PAIRED frag's PS-input registers (so the VS emits the params the PS consumes)
-                if (fragGroup != null && fragGroup.Length >= 0x40)
-                {
-                    int fHdrDsz = (int)U32BE(fragGroup, 0x14);
-                    byte[] fh = new byte[fHdrDsz];
-                    Array.Copy(fragGroup, 0x20, fh, 0, fHdrDsz);
-                    Func<int, uint> fb = i => U32BE(fh, i * 4);   // GX2PixelShader regs[i]
-                    regs[mmSPI_PS_IN_CONTROL_0] = fb(2);
-                    regs[mmSPI_PS_IN_CONTROL_0 + 1] = fb(3);      // SPI_PS_IN_CONTROL_1
-                    uint numPSInputs = Math.Min(fb(4), 0x20u);
-                    for (uint i = 0; i < numPSInputs; i++)
-                        regs[mmSPI_PS_INPUT_CNTL_0 + i] = fb((int)(5 + i));
-                }
-
-                // buffer 0 stride register: stride stored in bits [11:26] (<<11). float4*n = 16*n bytes.
-                uint stride = (uint)(16 * semCount);
-                regs[mmSQ_VTX_ATTRIBUTE_BLOCK_START + 2] = (stride & 0xFFFF) << 11;
-
-                int cfSize;
-                byte[] fetch = BuildFetchShader(semantics, out cfSize);
-
-                byte[] regsBytes = new byte[N * 4];
-                Buffer.BlockCopy(regs, 0, regsBytes, 0, regsBytes.Length); // x86 native = little-endian
+                var inp = BuildVertexInputs(vtxGroup, fragGroup);
+                if (inp.Error != null) { res.Error = inp.Error; return res; }
 
                 string tmp = Path.Combine(Path.GetTempPath(), "gx2dec_" + Guid.NewGuid().ToString("N"));
                 progPath = tmp + "_vp.bin"; regsPath = tmp + "_vr.bin"; fetchPath = tmp + "_vf.bin";
-                File.WriteAllBytes(progPath, prog);
-                File.WriteAllBytes(regsPath, regsBytes);
-                File.WriteAllBytes(fetchPath, fetch);
+                File.WriteAllBytes(progPath, inp.Program);
+                File.WriteAllBytes(regsPath, inp.Regs);
+                File.WriteAllBytes(fetchPath, inp.Fetch);
 
                 RunDecompiler(exe, "vs \"" + progPath + "\" \"" + regsPath + "\" \"" + fetchPath + "\"", res);
             }
@@ -351,8 +420,15 @@ namespace FirstPlugin
             return res;
         }
 
-        /// <summary>Decompile an emitter's fragment shader group (header block ++ program block) to GLSL.</summary>
+        /// <summary>Decompile an emitter's fragment shader group (header block ++ program block) to GLSL.
+        /// cubeUnits lists PS texture slots holding environment CUBE maps (dim from the GX2 struct is
+        /// unavailable; the eft convention binds the env cube at slot 10 for lit translucents).</summary>
         public static Result DecompileFragment(byte[] fragGroup)
+        {
+            return DecompileFragment(fragGroup, null);
+        }
+
+        public static Result DecompileFragment(byte[] fragGroup, int[] cubeUnits)
         {
             var res = new Result();
             if (fragGroup == null || fragGroup.Length < 0x40) { res.Error = "no fragment shader for this emitter"; return res; }
@@ -371,7 +447,7 @@ namespace FirstPlugin
                 if (progPayloadStart + psSize > fragGroup.Length) { res.Error = "program block out of range"; return res; }
                 byte[] prog = new byte[psSize];
                 Array.Copy(fragGroup, progPayloadStart, prog, 0, psSize);
-                byte[] regs = BuildPixelRegs(hdrPayload);
+                byte[] regs = BuildPixelRegs(hdrPayload, cubeUnits);
 
                 string tmp = Path.Combine(Path.GetTempPath(), "gx2dec_" + Guid.NewGuid().ToString("N"));
                 progPath = tmp + "_p.bin"; regsPath = tmp + "_r.bin";

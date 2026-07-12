@@ -11,6 +11,7 @@ using Toolbox.Library.Forms;
 using Toolbox.Library;
 using FirstPlugin.Forms;
 using GL_EditorFramework.EditorDrawables;
+using GL_EditorFramework.Interfaces;
 
 namespace FirstPlugin
 {
@@ -85,7 +86,17 @@ namespace FirstPlugin
                 var split = new SplitContainer() { Dock = DockStyle.Fill, Orientation = Orientation.Vertical, FixedPanel = FixedPanel.Panel2, SplitterWidth = 5, Panel1MinSize = 580 };
                 split.Panel1.Controls.Add(stTabControl1);
                 previewHost = new STPanel() { Dock = DockStyle.Fill };
+                //GPU mode: render with the emitter's own decompiled game shaders (EftGpuPreview). On by default, since
+                //it is the emitter as the game draws it; unchecking falls back to the software approximation, as does an
+                //emitter whose shader pair will not decompile or a file that carries no shader bundle.
+                gpuPreviewCheck = new STCheckBox() { Text = "Game shaders (GPU)", AutoSize = true, Dock = DockStyle.Bottom, Checked = true };
+                gpuPreviewCheck.CheckedChanged += (s, e) => RefreshPreview();
+                //init/render failures inside the GL paint would otherwise show as a silent blank pane
+                gpuStatusLabel = new STLabel() { AutoSize = true, Dock = DockStyle.Bottom, ForeColor = System.Drawing.Color.Orange, Visible = false };
                 split.Panel2.Controls.Add(previewHost);
+                split.Panel2.Controls.Add(gpuPreviewCheck);
+                split.Panel2.Controls.Add(gpuStatusLabel);
+                previewHost.BringToFront();   //Fill pane lays out above the Bottom-docked toggle
                 this.Controls.Add(split);
                 this.HandleCreated += (s, e) => { try { split.SplitterDistance = Math.Max(580, this.Width - 300); RefreshPreview(); } catch { } };
                 if (this.IsHandleCreated) { try { split.SplitterDistance = Math.Max(580, this.Width - 300); } catch { } }
@@ -114,8 +125,11 @@ namespace FirstPlugin
         private PropertyGrid parameterGrid;
         // Live in-editor preview (see ctor). GL is created lazily + guarded so it never crashes the editor.
         private STPanel previewHost;
+        private STCheckBox gpuPreviewCheck;
+        private STLabel gpuStatusLabel;
         private Viewport previewViewport; private DrawableContainer previewContainer; private bool previewFailed = false;
         private EftEmitterRender previewRender;   // the render currently in the viewport, pulled out before the next one is added
+        private EftGpuPreviewDrawable previewGpu; // the GPU-mode render, ditto
         private bool previewFramed = false;       // true once the first emitter has framed the camera; later emitters keep the view
         // Rebuild the preview render from the current emitter (resolved textures/mesh) and refresh the viewport.
         private void RefreshPreview()
@@ -125,13 +139,44 @@ namespace FirstPlugin
             {
                 if (!(Runtime.UseOpenGL && !Runtime.UseLegacyGL)) return;
                 ActiveEmitter.FlushColorsToData();   // push edited colour/alpha tracks into EmitterData so the preview shows them
-                var inp = EftEmitterRender.BuildInput(ActiveEmitter, "emitter");
-                if (inp == null || inp.Data == null) return;
-                var render = new EftEmitterRender(new List<EftEmitterRender.EmitterInput> { inp });
-                // Frame the camera only for the FIRST emitter shown this session; afterwards leave the camera where the
-                // user put it, so switching between emitters (whose sizes vary a lot) no longer snaps the view back.
-                render.AutoFrame = !previewFramed;
-                previewFramed = true;
+                if (gpuStatusLabel != null) gpuStatusLabel.Visible = false;
+                // The GPU path renders the emitter's own shaders, which only the Wii U effect files carry; the
+                // toggle stays hidden for formats that have none (3DS and Switch .pctl).
+                bool hasShaders = ActiveEmitter.VtxGroupBytes != null && ActiveEmitter.FragGroupBytes != null;
+                if (gpuPreviewCheck != null) gpuPreviewCheck.Visible = hasShaders;
+                AbstractGlDrawable drawable = null;
+                // Frame the camera only for the FIRST emitter shown this session; afterwards leave the camera where
+                // the user put it, so switching between emitters (whose sizes vary a lot) does not snap the view back.
+                if (hasShaders && gpuPreviewCheck != null && gpuPreviewCheck.Checked)
+                {
+                    // without its shipped inputs the GPU path would draw the shaders with the engine-bound banks
+                    // and textures missing, which looks faithful and is not; stay on the software preview instead
+                    string missing = EftGpuPreview.MissingAsset();
+                    var gpu = missing == null ? BuildGpuPreview() : null;   // null also when the pair will not decompile
+                    if (gpu != null)
+                    {
+                        gpu.AutoFrame = !previewFramed;
+                        previewFramed = true;
+                        drawable = gpu;
+                    }
+                    else if (gpuStatusLabel != null)
+                    {
+                        gpuStatusLabel.Text = missing != null
+                            ? "GPU preview: " + missing + " is missing from the plugin folder, showing software preview"
+                            : "GPU preview: no shader bundle in this emitter, showing software preview";
+                        gpuStatusLabel.Visible = true;
+                    }
+                }
+                EftEmitterRender render = null;
+                if (drawable == null)
+                {
+                    var inp = EftEmitterRender.BuildInput(ActiveEmitter, "emitter");
+                    if (inp == null || inp.Data == null) return;
+                    render = new EftEmitterRender(new List<EftEmitterRender.EmitterInput> { inp });
+                    render.AutoFrame = !previewFramed;
+                    previewFramed = true;
+                    drawable = render;
+                }
                 if (previewViewport == null)
                 {
                     previewContainer = new DrawableContainer() { Name = "emitter" };
@@ -141,13 +186,51 @@ namespace FirstPlugin
                 // Viewport.ReloadDrawables only ADDS to scene.staticObjects (it never removes), so clearing the container
                 // alone leaves the previous emitter's render in the scene -> every selection stacks another emitter in
                 // the preview. Explicitly pull the old render from the viewport's scene before swapping in the new one.
-                if (previewRender != null) { previewViewport.RemoveDrawable(previewRender); previewRender.QueueDispose(); }
+                if (previewRender != null) { previewViewport.RemoveDrawable(previewRender); previewRender.QueueDispose(); previewRender = null; }
+                if (previewGpu != null) { previewViewport.RemoveDrawable(previewGpu); previewGpu.QueueDispose(); previewGpu = null; }
                 previewContainer.Drawables.Clear();
-                previewContainer.Drawables.Add(render);
-                previewRender = render;
+                previewContainer.Drawables.Add(drawable);
+                previewRender = drawable as EftEmitterRender;
+                previewGpu = drawable as EftGpuPreviewDrawable;
                 previewViewport.ReloadDrawables(previewContainer);
             }
             catch { previewFailed = true; }   // any GL/setup failure -> stop trying, leave a blank tab (editor unaffected)
+        }
+
+        // Editor teardown (swapping to another editor, or closing the file). The framework does not dispose a
+        // swapped-out editor, and with GraphicsContext.ShareContexts on (OpenTKSharedResources) a preview's
+        // program, textures and UBOs are SHARED objects that outlive their viewport's context, so retire the
+        // preview showing at close: QueueDispose frees its GL objects on the next preview Draw (where a context
+        // is current) and stops its repaint loop; disposing the viewport frees its GL control/context.
+        public override void OnControlClosing()
+        {
+            try
+            {
+                if (previewGpu != null) { previewGpu.QueueDispose(); previewGpu = null; }
+                if (previewRender != null) { previewRender.QueueDispose(); previewRender = null; }
+                if (previewViewport != null) { previewViewport.Dispose(); previewViewport = null; }
+            }
+            catch { }
+            base.OnControlClosing();
+        }
+
+        // GPU-preview inputs from the loaded file: the emitter's decompilable shader pair (cached at load
+        // by MapShaderInfo) plus the payload/art assembled by EftGpuPreview.BuildInputs.
+        private EftGpuPreviewDrawable BuildGpuPreview()
+        {
+            byte[] payload; List<EftGpuPreview.TextureInput> art;
+            float[] meshVerts, meshNormals; int[] meshIndices;
+            if (!EftGpuPreview.BuildInputs(ActiveEmitter, out payload, out art, out meshVerts, out meshNormals, out meshIndices))
+                return null;
+            var gpu = new EftGpuPreviewDrawable(ActiveEmitter.VtxGroupBytes, ActiveEmitter.FragGroupBytes, payload, art,
+                                                meshVerts, meshNormals, meshIndices);
+            gpu.ErrorReported = msg =>
+            {
+                if (gpuStatusLabel == null) return;
+                gpuStatusLabel.Text = "GPU preview: " + msg;
+                gpuStatusLabel.Visible = true;
+            };
+            return gpu;
         }
         private Thread Thread;
         PTCL.Emitter ActiveEmitter;
