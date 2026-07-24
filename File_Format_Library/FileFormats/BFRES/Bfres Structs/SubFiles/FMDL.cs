@@ -1192,13 +1192,23 @@ namespace Bfres.Structs
                                         targetBone = new BfresBone(Skeleton);
                                         targetBone.CloneBaseInstance(importedBone);
                                         targetBone.Text = importedBone.Text;
-                                        if (targetBone.Bone == null) targetBone.Bone = new Bone();
-                                        
-                                        //Ensure new bones get correct flags from the get-go
-                                        if (targetBone.RotationType == STBone.BoneRotationType.Quaternion)
-                                            targetBone.Bone.FlagsRotation = BoneFlagsRotation.Quaternion;
+                                        if (IsWiiU)
+                                        {
+                                            if (targetBone.BoneU == null) targetBone.BoneU = new ResU.Bone();
+                                            if (targetBone.RotationType == STBone.BoneRotationType.Quaternion)
+                                                targetBone.BoneU.FlagsRotation = ResU.BoneFlagsRotation.Quaternion;
+                                            else
+                                                targetBone.BoneU.FlagsRotation = ResU.BoneFlagsRotation.EulerXYZ;
+                                        }
                                         else
-                                            targetBone.Bone.FlagsRotation = BoneFlagsRotation.EulerXYZ;
+                                        {
+                                            if (targetBone.Bone == null) targetBone.Bone = new Bone();
+                                            //Ensure new bones get correct flags from the get-go
+                                            if (targetBone.RotationType == STBone.BoneRotationType.Quaternion)
+                                                targetBone.Bone.FlagsRotation = BoneFlagsRotation.Quaternion;
+                                            else
+                                                targetBone.Bone.FlagsRotation = BoneFlagsRotation.EulerXYZ;
+                                        }
                                     }
                                     
                                     NewBones.Add(targetBone);
@@ -1227,17 +1237,20 @@ namespace Bfres.Structs
                                 if (IsWiiU)
                                 {
                                    Skeleton.node.SkeletonU.Bones.Clear();
-                                   foreach (BfresBone bn in Skeleton.bones) {
-                                       bn.GenericToBfresBone();
-                                       Skeleton.node.SkeletonU.Bones.Add(bn.BoneU.Name, bn.BoneU);
-                                   }
+                                    foreach (BfresBone bn in Skeleton.bones)
+                                    {
+                                        bn.GenericToBfresBone();
+                                        if (bn.BoneU != null)
+                                            Skeleton.node.SkeletonU.Bones.Add(bn.BoneU.Name, bn.BoneU);
+                                    }
                                 }
                                 else
                                 {
                                    Skeleton.node.Skeleton.Bones.Clear();
                                    foreach (BfresBone bn in Skeleton.bones) {
                                        bn.GenericToBfresBone();
-                                       Skeleton.node.Skeleton.Bones.Add(bn.Bone);
+                                        if (bn.Bone != null)
+                                            Skeleton.node.Skeleton.Bones.Add(bn.Bone);
                                    }
                                 }
                                 
