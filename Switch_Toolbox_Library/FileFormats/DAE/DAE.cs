@@ -12,6 +12,8 @@ using OpenTK;
 using Toolbox.Library.Rendering;
 using Toolbox.Library.Collada;
 using Toolbox.Library.IO;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Toolbox.Library
 {
@@ -38,10 +40,27 @@ namespace Toolbox.Library
 
             public ProgramPreset Preset = ProgramPreset.NONE;
 
-            public bool ExportTextures = false;
+            public bool ExportTextures = true;
 
             public string ImageExtension = ".png";
             public string ImageFolder = "";
+
+            private string _configPath => Path.Combine(Runtime.ExecutableDir, "ExportSettings.json");
+
+            public ExportSettings Load()
+            {
+                if (!File.Exists(_configPath))
+                    Save();
+
+               return JsonConvert.DeserializeObject<ExportSettings>(File.ReadAllText(_configPath));
+            }
+            public void Save()
+            {
+                string json = JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings()
+                {
+                });
+                File.WriteAllText(_configPath, json);
+            }
         }
 
         public class Version

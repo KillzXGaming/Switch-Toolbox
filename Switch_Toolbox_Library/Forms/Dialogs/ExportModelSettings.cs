@@ -17,6 +17,7 @@ namespace Toolbox.Library.Forms
         public ExportModelSettings()
         {
             InitializeComponent();
+            Settings = Settings.Load();
 
             chkFlipUvsVertical.Checked = Settings.FlipTexCoordsVertical;
             exportTexturesChkBox.Checked = Settings.ExportTextures;
@@ -70,6 +71,12 @@ namespace Toolbox.Library.Forms
         private void chkNormalsAsFlatColorFbx_CheckedChanged(object sender, EventArgs e)
         {
             Settings.ExportNormalMapsAsFlatColorFbx = chkNormalsAsFlatColorFbx.Checked;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            Settings?.Save();
         }
     }
 }
