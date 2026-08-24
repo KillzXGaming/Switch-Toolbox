@@ -90,6 +90,11 @@ namespace FirstPlugin
                 DataBlockOutput.Add(Utils.CombineByteArray(surface.mipmaps.ToArray()));
 
             Format = TextureData.GenericToBntxSurfaceFormat(dds.Format);
+            if (dds.DX10header != null)
+            {
+                if (dds.DX10header.arrayFlag > 1)
+                    SurfaceDim = SurfaceDim.Dim2DArray;
+            }
         }
 
         public void LoadASTC(string FileName)
