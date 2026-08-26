@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using Toolbox.Library;
 
 namespace Yaz0Test
 {
@@ -34,7 +35,7 @@ namespace Yaz0Test
 
         public static bool CanUse()
         {
-            return File.Exists(LibraryName + ".dll");
+            return File.Exists(Path.Combine(Runtime.ExecutableDir, LibraryName + ".dll"));
         }
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
