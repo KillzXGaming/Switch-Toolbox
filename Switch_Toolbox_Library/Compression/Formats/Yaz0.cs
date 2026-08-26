@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Toolbox.Library.IO;
-using System.Runtime.InteropServices;
+using Yaz0Test;
 
 namespace Toolbox.Library
 {
@@ -66,6 +67,9 @@ namespace Toolbox.Library
 
         public Stream Compress(Stream stream)
         {
+            if (TrueYZ.CanUse())
+                return new MemoryStream(TrueYZ.Compress(stream.ToArray(), Alignment));
+
             return new MemoryStream(EveryFileExplorer.YAZ0.Compress(
              stream.ToArray(), Runtime.Yaz0CompressionLevel, (uint)Alignment));
 
