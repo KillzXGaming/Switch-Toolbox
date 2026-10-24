@@ -3729,6 +3729,11 @@
             <see cref="!:Buffer"/> in bytes divided by the <see cref="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.StrideArray"/>.
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.GPUBufferAlignent">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.MemoryPool">
             <summary>
             Gets or sets the <see cref="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.MemoryPool"/> instance storing buffer data at runtime
