@@ -25,22 +25,22 @@ namespace Toolbox.Library
             byte* source, ulong sourceLength,
             byte* destination, ulong destinationLength,
             BlockDimX64 blockDim, ulong blockHeightMip0, ulong bytesPerPixel,
-            ulong mipmapCount, ulong arrayCount);
+            ulong mipmapCount, ulong arrayCount, bool is_orin);
 
         [DllImport("tegra_swizzle_x64", EntryPoint = "swizzle_surface")]
         private static unsafe extern void SwizzleSurfaceX64(ulong width, ulong height, ulong depth,
             byte* source, ulong sourceLength,
             byte* destination, ulong destinationLength,
             BlockDimX64 blockDim, ulong blockHeightMip0, ulong bytesPerPixel,
-            ulong mipmapCount, ulong arrayCount);
+            ulong mipmapCount, ulong arrayCount, bool is_orin);
 
         [DllImport("tegra_swizzle_x64", EntryPoint = "deswizzle_block_linear")]
         private static unsafe extern void DeswizzleBlockLinearX64(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength,
-            byte* destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel);
+            byte* destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel, bool isOrin);
 
         [DllImport("tegra_swizzle_x64", EntryPoint = "swizzle_block_linear")]
         private static unsafe extern void SwizzleBlockLinearX64(ulong width, ulong height, ulong depth, byte* source, ulong sourceLength,
-            byte* destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel);
+            byte* destination, ulong destinationLength, ulong blockHeight, ulong bytesPerPixel, bool isOrin);
 
         [DllImport("tegra_swizzle_x64", EntryPoint = "swizzled_surface_size")]
         private static extern ulong SwizzledSurfaceSizeX64(ulong width, ulong height, ulong depth, BlockDimX64 blockDim, ulong blockHeightMip0, ulong bytesPerPixel, ulong mipmapCount, ulong arrayCount);
@@ -68,22 +68,22 @@ namespace Toolbox.Library
             byte* source, uint sourceLength,
             byte* destination, uint destinationLength,
             BlockDimX86 blockDim, uint blockHeightMip0, uint bytesPerPixel,
-            uint mipmapCount, uint arrayCount);
+            uint mipmapCount, uint arrayCount, bool is_orin);
 
         [DllImport("tegra_swizzle_x86", EntryPoint = "swizzle_surface")]
         private static unsafe extern void SwizzleSurfaceX86(uint width, uint height, uint depth,
             byte* source, uint sourceLength,
             byte* destination, uint destinationLength,
             BlockDimX86 blockDim, uint blockHeightMip0, uint bytesPerPixel,
-            uint mipmapCount, uint arrayCount);
+            uint mipmapCount, uint arrayCount, bool is_orin);
 
         [DllImport("tegra_swizzle_x86", EntryPoint = "deswizzle_block_linear")]
         private static unsafe extern void DeswizzleBlockLinearX86(uint width, uint height, uint depth, byte* source, uint sourceLength,
-            byte* destination, uint destinationLength, uint blockHeight, uint bytesPerPixel);
+            byte* destination, uint destinationLength, uint blockHeight, uint bytesPerPixel, bool isOrin);
 
         [DllImport("tegra_swizzle_x86", EntryPoint = "swizzle_block_linear")]
         private static unsafe extern void SwizzleBlockLinearX86(uint width, uint height, uint depth, byte* source, uint sourceLength,
-            byte* destination, uint destinationLength, uint blockHeight, uint bytesPerPixel);
+            byte* destination, uint destinationLength, uint blockHeight, uint bytesPerPixel, bool isOrin);
 
         [DllImport("tegra_swizzle_x86", EntryPoint = "swizzled_surface_size")]
         private static extern uint SwizzledSurfaceSizeX86(uint width, uint height, uint depth, BlockDimX86 blockDim, uint blockHeightMip0, uint bytesPerPixel, uint mipmapCount, uint arrayCount);
@@ -135,7 +135,8 @@ namespace Toolbox.Library
             return GetImageData(texture, ImageData, ArrayLevel, MipLevel, DepthLevel, BlockHeightLog2, target, LinearTileMode);
         }
 
-        public static byte[] GetDirectImageData(STGenericTexture texture, byte[] ImageData, int mipLevel, int target = 1, bool LinearTileMode = false)
+        public static byte[] GetDirectImageData(STGenericTexture texture, byte[] ImageData, int mipLevel, 
+            int target = 1, bool LinearTileMode = false, bool isOrin = false)
         {
             uint blkWidth = STGenericTexture.GetBlockWidth(texture.Format);
             uint blkHeight = STGenericTexture.GetBlockHeight(texture.Format);
@@ -153,7 +154,7 @@ namespace Toolbox.Library
 
             try
             {
-                byte[] result = deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, mipBlockHeightLog2, ImageData);
+                byte[] result = deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, mipBlockHeightLog2, ImageData, isOrin);
                 return result;
             }
             catch (Exception e)
@@ -166,7 +167,8 @@ namespace Toolbox.Library
         }
 
 
-        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel, int MipLevel, int DepthLevel, uint BlockHeightLog2, int target = 1, bool LinearTileMode = false)
+        public static byte[] GetImageData(STGenericTexture texture, byte[] ImageData, int ArrayLevel,
+            int MipLevel, int DepthLevel, uint BlockHeightLog2, int target = 1, bool LinearTileMode = false, bool isOrin = false)
         {
             uint bpp = STGenericTexture.GetBytesPerPixel(texture.Format);
             uint blkWidth = STGenericTexture.GetBlockWidth(texture.Format);
@@ -214,7 +216,8 @@ namespace Toolbox.Library
                             {
                                 // The set of swizzled addresses is at least as big as the set of linear addresses.
                                 // When defined appropriately, we only require a single memory allocation for the output.
-                                byte[] result = deswizzle(mipWidth, mipHeight, mipDepth, blkWidth, blkHeight, blkDepth, target, bpp, TileMode, mipBlockHeightLog2, mipData);
+                                byte[] result = deswizzle(mipWidth, mipHeight, mipDepth, 
+                                    blkWidth, blkHeight, blkDepth, target, bpp, TileMode, mipBlockHeightLog2, mipData, isOrin);
                                 return result;
                             }
                         }
@@ -236,7 +239,7 @@ namespace Toolbox.Library
         }
 
         private static unsafe byte[] SwizzleDeswizzleBlockLinear(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth,
-            uint bpp, int blockHeightLog2, byte[] data, bool deswizzle, uint size, uint alignment = 512)
+            uint bpp, int blockHeightLog2, byte[] data, bool deswizzle, uint size, uint alignment = 512, bool isOrin = false)
         {
 
             // tegra_swizzle only allows block heights supported by the TRM (1,2,4,8,16,32).
@@ -252,7 +255,7 @@ namespace Toolbox.Library
 
                 var output = new byte[width * height * depth * bpp];
 
-                DeswizzleBlockLinear(width, height, depth, bpp, data, (uint)blockHeightMip0, output);
+                DeswizzleBlockLinear(width, height, depth, bpp, data, (uint)blockHeightMip0, output, isOrin);
 
                 return output;
             }
@@ -269,36 +272,39 @@ namespace Toolbox.Library
                 height = DIV_ROUND_UP(height, blkHeight);
                 depth = DIV_ROUND_UP(depth, blkDepth);
 
-                SwizzleBlockLinear(width, height, depth, bpp, data, (uint)blockHeightMip0, output);
+                SwizzleBlockLinear(width, height, depth, bpp, data, (uint)blockHeightMip0, output, isOrin);
 
                 return output;
             }
         }
 
-        private static unsafe void SwizzleBlockLinear(uint width, uint height, uint depth, uint bpp, byte[] data, uint blockHeightMip0, byte[] output)
+        private static unsafe void SwizzleBlockLinear(uint width, uint height, uint depth, uint bpp, byte[] data, uint blockHeightMip0, byte[] output, bool isOrin)
         {
             fixed (byte* dataPtr = data)
             {
                 fixed (byte* outputPtr = output)
                 {
                     if (Environment.Is64BitProcess)
-                        SwizzleBlockLinearX64(width, height, depth, dataPtr, (ulong)data.Length, outputPtr, (ulong)output.Length, blockHeightMip0, bpp);
+                        SwizzleBlockLinearX64(width, height, depth, dataPtr, (ulong)data.Length, outputPtr, (ulong)output.Length, blockHeightMip0, bpp, isOrin);
                     else
-                        SwizzleBlockLinearX86(width, height, depth, dataPtr, (uint)data.Length, outputPtr, (uint)output.Length, blockHeightMip0, bpp);
+                        SwizzleBlockLinearX86(width, height, depth, dataPtr, (uint)data.Length, outputPtr, (uint)output.Length, blockHeightMip0, bpp, isOrin);
                 }
             }
         }
 
-        private static unsafe void DeswizzleBlockLinear(uint width, uint height, uint depth, uint bpp, byte[] data, uint blockHeightMip0, byte[] output)
+        private static unsafe void DeswizzleBlockLinear(uint width, uint height, 
+            uint depth, uint bpp, byte[] data, uint blockHeightMip0, byte[] output, bool isOrin)
         {
             fixed (byte* dataPtr = data)
             {
                 fixed (byte* outputPtr = output)
                 {
                     if (Environment.Is64BitProcess)
-                        DeswizzleBlockLinearX64(width, height, depth, dataPtr, (ulong)data.Length, outputPtr, (ulong)output.Length, blockHeightMip0, bpp);
+                        DeswizzleBlockLinearX64(width, height, depth, dataPtr, (ulong)data.Length, 
+                            outputPtr, (ulong)output.Length, blockHeightMip0, bpp, isOrin);
                     else
-                        DeswizzleBlockLinearX86(width, height, depth, dataPtr, (uint)data.Length, outputPtr, (uint)output.Length, blockHeightMip0, bpp);
+                        DeswizzleBlockLinearX86(width, height, depth, dataPtr, (uint)data.Length,
+                            outputPtr, (uint)output.Length, blockHeightMip0, bpp, isOrin);
                 }
             }
         }
@@ -333,20 +339,22 @@ namespace Toolbox.Library
         }
 
         // TODO: These should not be public.
-        public static byte[] deswizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data)
+        public static byte[] deswizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth,
+            int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data, bool isOrin)
         {
             if (tileMode == 1)
                 return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, true, 0);
             else
-                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, true, 0);
+                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, true, 0, 512, isOrin);
         }
 
-        public static byte[] swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, uint tileMode, int blockHeightLog2, byte[] data, uint size)
+        public static byte[] swizzle(uint width, uint height, uint depth, uint blkWidth, uint blkHeight, uint blkDepth, int roundPitch, uint bpp, 
+            uint tileMode, int blockHeightLog2, byte[] data, uint size, bool isOrin)
         {
             if (tileMode == 1)
                 return SwizzlePitchLinear(width, height, depth, blkWidth, blkHeight, blkDepth, roundPitch, bpp, blockHeightLog2, data, false, size);
             else
-                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, false, size);
+                return SwizzleDeswizzleBlockLinear(width, height, depth, blkWidth, blkHeight, blkDepth, bpp, blockHeightLog2, data, false, size, 512, isOrin);
         }
 
 

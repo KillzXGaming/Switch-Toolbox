@@ -299,7 +299,7 @@ namespace FirstPlugin
 
             return tex;
         }
-        public static List<byte[]> SwizzleSurfaceMipMaps(Texture tex, byte[] data, uint MipCount, int alignment = 512)
+        public static List<byte[]> SwizzleSurfaceMipMaps(Texture tex, byte[] data, uint MipCount, int alignment = 512, bool isOrin = false)
         {
             var TexFormat = TextureData.ConvertFormat(tex.Format);
 
@@ -385,7 +385,8 @@ namespace FirstPlugin
                     SurfaceSize += Pitch * TegraX1Swizzle.round_up(height__, Math.Max(1, blockHeight >> blockHeightShift) * 8);
                 }
 
-                byte[] SwizzledData = TegraX1Swizzle.swizzle(width_, height_, depth_, blkWidth, blkHeight, blkDepth, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), data_, size);
+                byte[] SwizzledData = TegraX1Swizzle.swizzle(width_, height_, depth_, blkWidth, blkHeight, 
+                    blkDepth, target, bpp, (uint)tex.TileMode, (int)Math.Max(0, tex.BlockHeightLog2 - blockHeightShift), data_, size, isOrin);
                 mipmaps.Add(AlignedData.Concat(SwizzledData).ToArray());
 
                 Console.WriteLine("SwizzledData " + SwizzledData.Length);

@@ -1736,6 +1736,8 @@ namespace FirstPlugin
                     target = 0;
             }
 
+            bool isOrin = ParentBNTX.BinaryTexFile.PlatformTarget == "Ounc";
+
             try
             {
                 RedChannel = SetChannel(Texture.ChannelRed);
@@ -1772,7 +1774,9 @@ namespace FirstPlugin
                                 blockHeightShift += 1;
 
                             Console.WriteLine($"{width} {height} {depth} {blkWidth} {blkHeight} {blkDepth} {target} {bpp} {Texture.TileMode} {(int)Math.Max(0, Texture.BlockHeightLog2 - blockHeightShift)} {Texture.TextureData[arrayLevel][mipLevel].Length}");
-                            byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, target, bpp, (uint)Texture.TileMode, (int)Math.Max(0, Texture.BlockHeightLog2 - blockHeightShift), Texture.TextureData[arrayLevel][mipLevel]);
+                            byte[] result = TegraX1Swizzle.deswizzle(width, height, depth, blkWidth, blkHeight, blkDepth, 
+                                target, bpp, (uint)Texture.TileMode, (int)Math.Max(0, Texture.BlockHeightLog2 - blockHeightShift), 
+                                Texture.TextureData[arrayLevel][mipLevel], isOrin);
                             //Create a copy and use that to remove uneeded data
                             byte[] result_ = new byte[size];
                             Array.Copy(result, 0, result_, 0, size);
