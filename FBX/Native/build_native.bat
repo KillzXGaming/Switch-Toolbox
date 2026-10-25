@@ -40,6 +40,11 @@ if exist "%FBXSDK_DLL%" (
     echo WARNING: libfbxsdk.dll not found at "%FBXSDK_DLL%"
 )
 
+xcopy /y "dist\SwitchToolbox.FbxNative.dll" "..\..\Toolbox\"
+if exist "dist\libfbxsdk.dll" (
+    xcopy /y "dist\libfbxsdk.dll" "..\..\Toolbox\"
+)
+
 REM Copy to Toolbox bin/Release so it's picked up by the app and dist
 xcopy /y "dist\SwitchToolbox.FbxNative.dll" "..\..\Toolbox\bin\Release\"
 if exist "dist\libfbxsdk.dll" (

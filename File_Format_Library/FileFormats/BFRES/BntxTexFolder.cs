@@ -14,7 +14,7 @@ namespace FirstPlugin
     {
         private List<BNTX> _cache = new List<BNTX>();
 
-        public BntxTexFolder(List<BNTX> textures) : base("Textures")
+        public BntxTexFolder(List<BNTX> textures) : base("External Textures")
         {
             foreach (var tex in textures)
             {
