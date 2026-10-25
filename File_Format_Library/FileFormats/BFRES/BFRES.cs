@@ -1,22 +1,24 @@
-﻿using System;
+﻿using Bfres.Structs;
+using FirstPlugin.Forms;
+using FirstPlugin.NodeWrappers;
+using GL_EditorFramework.Interfaces;
+using OpenTK;
+using Syroot.NintenTools.NSW.Bfres;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using System.Data;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Toolbox.Library;
+using Toolbox.Library.Animations;
 using Toolbox.Library.Forms;
 using Toolbox.Library.IO;
-using Bfres.Structs;
-using ResU = Syroot.NintenTools.Bfres;
-using Syroot.NintenTools.NSW.Bfres;
-using Toolbox.Library.Animations;
 using Toolbox.Library.NodeWrappers;
-using GL_EditorFramework.Interfaces;
-using FirstPlugin.Forms;
-using FirstPlugin.NodeWrappers;
-using OpenTK;
+using ZeldaLib.IO;
+using ResU = Syroot.NintenTools.Bfres;
 
 namespace FirstPlugin
 {
@@ -848,6 +850,10 @@ namespace FirstPlugin
                 }
             }
 
+            // V10.2 needs this
+            if (resFile != null)
+                PrepareExternalTextures();
+
             //Mesh codec type of bfres, load textures externallly
             if (externalFlags != (MeshCodec.ExternalFlags)0)
             {
@@ -867,6 +873,41 @@ namespace FirstPlugin
                     DrawableContainer.Drawables.Add(mdl.Skeleton);
                 }
             }
+        }
+
+        private void PrepareExternalTextures()
+        {
+            string modelFolder = Path.GetDirectoryName(this.FilePath);
+            string rootFolder = Path.GetDirectoryName(modelFolder);
+            Debug.WriteLine($"rootFolder {rootFolder}");
+
+            if (!Directory.Exists(Path.Combine(rootFolder, "Tex")))
+                return;
+
+            var materials = resFile.Models.SelectMany(x => x.Materials);
+
+            List<string> textureList = materials.SelectMany(x => x.TextureRefs).Distinct().ToList();
+            List<BNTX> containers = new List<BNTX>();
+            foreach (var tex in textureList)
+            {
+                string path = Path.Combine(rootFolder, "Tex", $"{tex}.bntx.zs");
+                if (File.Exists(path))
+                {
+                    try {
+                        BNTX bntx = STFileLoader.OpenFileFormat(path) as BNTX;
+                        if (bntx != null)
+                            containers.Add(bntx);
+                    }
+                    catch {
+
+                    }
+                }
+            }
+            if (containers.Count == 0)
+                return;
+
+            var textureFolder = new BntxTexFolder(containers);
+            this.Nodes.Add(textureFolder);
         }
 
         public void Unload()
