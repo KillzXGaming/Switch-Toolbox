@@ -15,9 +15,9 @@ namespace Toolbox.Library
         [StructLayout(LayoutKind.Sequential)]
         struct BlockDimX64
         {
-            public ulong width;
-            public ulong height;
-            public ulong depth;
+            public uint width;
+            public uint height;
+            public uint depth;
         }
 
         [DllImport("tegra_swizzle_x64", EntryPoint = "deswizzle_surface")]
