@@ -879,6 +879,9 @@ namespace FirstPlugin
         private void PrepareExternalTextures()
         {
             string modelFolder = Path.GetDirectoryName(this.FilePath);
+            if (string.IsNullOrEmpty(modelFolder)) // not valid path
+                return;
+
             string rootFolder = Path.GetDirectoryName(modelFolder);
             Debug.WriteLine($"rootFolder {rootFolder}");
 

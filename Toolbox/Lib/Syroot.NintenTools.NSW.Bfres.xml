@@ -3430,16 +3430,6 @@
             Represents flags determining which data is available for <see cref="T:Syroot.NintenTools.NSW.Bfres.Shape"/> instances.
             </summary>
         </member>
-        <member name="F:Syroot.NintenTools.NSW.Bfres.ShapeFlags.HasVertexBuffer">
-            <summary>
-            The <see cref="T:Syroot.NintenTools.NSW.Bfres.Shape"/> instance references a <see cref="T:Syroot.NintenTools.NSW.Bfres.VertexBuffer"/>.
-            </summary>
-        </member>
-        <member name="F:Syroot.NintenTools.NSW.Bfres.ShapeFlags.SubMeshBoundaryConsistent">
-            <summary>
-            The boundings in all submeshes are consistent.
-            </summary>
-        </member>
         <member name="T:Syroot.NintenTools.NSW.Bfres.SubMesh">
             <summary>
             Represents a subarray of a <see cref="T:Syroot.NintenTools.NSW.Bfres.Mesh"/> section, storing a slice of indices to draw from the index buffer

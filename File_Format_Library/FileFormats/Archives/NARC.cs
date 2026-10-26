@@ -211,6 +211,15 @@ namespace FirstPlugin {
                     var comp = new STLibraryCompression.MTA_CUSTOM();
                     return comp.Decompress(data, decompSize);
                 }
+                else if (compType == 0x5A)
+                {
+                    reader.Seek(4, System.IO.SeekOrigin.Begin);
+                    uint decompSize = reader.ReadUInt32();
+                    uint compSize = (uint)reader.BaseStream.Length - 8;
+                    byte[] filedata = reader.getSection(8, (int)compSize);
+
+                    return Zstb.SDecompress(filedata);
+                }
                 else if (compType == 0x30 || compType == 0x20)
                 {
                     uint decompSize = reader.ReadUInt32();

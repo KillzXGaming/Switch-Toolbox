@@ -606,6 +606,8 @@ namespace Bfres.Structs
                 case ShaderParamType.UInt3:
                 case ShaderParamType.UInt4:
                     ValueUint = reader.ReadUInt32s(Size / sizeof(uint)); break;
+                case ShaderParamType.Float3x4:
+                    ValueFloat = reader.ReadSingles((3 * 4) / sizeof(float)); break;
                 // Invalid
                 default:
                     throw new ArgumentException($"Invalid {nameof(ShaderParamType)} {Type}.",

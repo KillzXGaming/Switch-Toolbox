@@ -514,7 +514,7 @@ namespace FirstPlugin
 
         private void DrawModel(FSHP m, FMDL mdl, SF.Shader shader, bool ModelSelected)
         {
-            if (m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
+            if (m.lodMeshes.Count == 0 || m.lodMeshes[m.DisplayLODIndex].faces.Count <= 3)
                 return;
 
             var mat = m.GetFMAT();
@@ -597,6 +597,10 @@ namespace FirstPlugin
             {
                 shader.SetInt("RigidSkinning", 1);
             }
+            if (m.VertexSkinCount >= 5)
+            {
+                shader.SetInt("NoSkinning", 1);
+            }
             if (m.VertexSkinCount == 0)
             {
                 if (fmdl.Skeleton.bones.Count > 0)
@@ -638,6 +642,9 @@ namespace FirstPlugin
 
                 for (int shp = 0; shp < models[m].shapes.Count; shp++)
                 {
+                    if (models[m].shapes[shp].lodMeshes.Count == 0)
+                        continue;
+
                     //Update render pass aswell
                     CheckRenderPass(models[m].shapes[shp].GetFMAT());
 
