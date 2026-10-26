@@ -1,4 +1,5 @@
 ﻿using Bfres.Structs;
+using ByamlExt.Byaml;
 using FirstPlugin.Forms;
 using FirstPlugin.NodeWrappers;
 using GL_EditorFramework.Interfaces;
@@ -884,9 +885,32 @@ namespace FirstPlugin
             if (!Directory.Exists(Path.Combine(rootFolder, "Tex")))
                 return;
 
-            var materials = resFile.Models.SelectMany(x => x.Materials);
 
+            var materials = resFile.Models.SelectMany(x => x.Materials);
             List<string> textureList = materials.SelectMany(x => x.TextureRefs).Distinct().ToList();
+
+            // Bit janky, old bfres doesn't do index lookup right so just search in order.
+            for (int i = 0; i < resFile.ExternalFileDict.Count; i++)
+            {
+                var key = resFile.ExternalFileDict.GetKey(i);
+                if (key == "textureTable.byml")
+                {
+                    textureList.Clear();
+
+                    var idx = resFile.ExternalFileDict.GetIndex("textureTable.byml");
+                    var bymlData = ByamlFile.LoadN(new MemoryStream(resFile.ExternalFiles[i].Data));
+                    foreach (var v in (IDictionary<string, dynamic>)bymlData.RootNode)
+                    {
+                        // Name, then bntx name
+                        var name = v.Key;
+                        var bntx = v.Value;
+
+                        // Only need bntx name
+                        textureList.Add(bntx);
+                    }
+                }
+            }
+
             List<BNTX> containers = new List<BNTX>();
             foreach (var tex in textureList)
             {
