@@ -124,7 +124,7 @@ namespace Bfres.Structs
                 float InSlope = 0;
                 float OutSlope = 0;
                 for (int i = 0; i < curve.Frames.Length; i++)
-                {
+                {   
                     var coef0 = curve.Keys[i, 0] * curve.Scale + curve.Offset;
                     var coef1 = curve.Keys[i, 1] * curve.Scale;
                     var coef2 = curve.Keys[i, 2] * curve.Scale;
@@ -282,6 +282,42 @@ namespace Bfres.Structs
                 curve.Scale = 1;
 
             float valueScale = curve.Scale > 0 ? curve.Scale : 1;
+            // V10.2+ uses hermite slopes
+            if (curve.HasHermiteCurves)
+            {
+                track.InterpolationType = InterpolationType.CONSTANT;
+                switch (curve.CurveType)
+                {
+                    case AnimCurveType.Cubic:
+                        track.InterpolationType = InterpolationType.HERMITE;
+                        break;
+                    case AnimCurveType.Linear:
+                        track.InterpolationType = InterpolationType.LINEAR;
+                        break;
+                }
+
+                for (int index = 0; index < curve.Frames.Length; index++)
+                {
+                    float frame = curve.Frames[index];
+
+                    if (frame == 0f && track.Keys.Any(x => x.Frame == 0f))
+                        track.Keys.RemoveAt(0);
+
+                    float tangent = curve.CurveType == AnimCurveType.Cubic
+                        ? curve.Keys[index, 1]
+                        : 0f;
+
+                    track.Keys.Add(new Animation.KeyFrame
+                    {
+                        Frame = frame,
+                        Value = curve.Keys[index, 0],
+                        In = tangent,
+                        Out = tangent
+                    });
+                }
+
+                return track;
+            }
 
             for (int i = 0; i < curve.Frames.Length; i++)
             {

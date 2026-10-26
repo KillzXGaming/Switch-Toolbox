@@ -79,6 +79,27 @@
             <see cref="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.Frames"/> array.
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.IsHermite">
+            <summary>
+            Gets a value indicating whether this curve stores hermite keys (value and slope per key) in the
+            version 10+ layout.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.HasHermiteCurves">
+            <summary>
+            Gets a value indicating whether the keys of this curve were loaded in (or set to) the version 10+ layout.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.NSW.Bfres.AnimCurve.SetHermiteKeys(System.Single[],System.Single[],System.Single[],System.Boolean)">
+            <summary>
+            Replaces the keys of this curve with compressed version 10+ hermite keys built from the given values and
+            slopes.
+            </summary>
+            <param name="frames">The frame of each key.</param>
+            <param name="values">The value of each key.</param>
+            <param name="slopes">The slope of each key.</param>
+            <param name="use16Bit">true to quantize to 16 bits, false to quantize to 8 bits.</param>
+        </member>
         <member name="T:Syroot.NintenTools.NSW.Bfres.AnimCurveFrameType">
             <summary>
             Represents the possible data types in which <see cref="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.Frames"/> are stored. For simple library use,
@@ -3727,6 +3748,11 @@
             <summary>
             Gets the number of vertices stored by the <see cref="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.Buffers"/>. It is calculated from the size of the first
             <see cref="!:Buffer"/> in bytes divided by the <see cref="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.StrideArray"/>.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.GPUBufferAlignent">
+            <summary>
+            
             </summary>
         </member>
         <member name="P:Syroot.NintenTools.NSW.Bfres.VertexBuffer.MemoryPool">
