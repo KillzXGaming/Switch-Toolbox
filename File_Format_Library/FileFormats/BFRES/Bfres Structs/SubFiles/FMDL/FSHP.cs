@@ -2248,6 +2248,20 @@ namespace Bfres.Structs
 
             foreach (Vertex v in vertices)
             {
+                Vector4 weights = new Vector4(
+                    v.boneWeights.Count > 0 ? v.boneWeights[0] : 0,
+                    v.boneWeights.Count > 1 ? v.boneWeights[1] : 0,
+                    v.boneWeights.Count > 2 ? v.boneWeights[2] : 0,
+                    v.boneWeights.Count > 3 ? v.boneWeights[3] : 0);
+
+                // Normalize when over the skin count limit the shader supports
+                if (this.VertexSkinCount >= 5)
+                {
+                    float totalWeight = weights.X + weights.Y + weights.Z + weights.W;
+                    if (totalWeight > 0)
+                        weights /= totalWeight;
+                }
+
                 model.MaxPosition = OpenGLUtils.GetMax(model.MaxPosition, v.pos);
                 model.MinPosition = OpenGLUtils.GetMin(model.MinPosition, v.pos);
 
@@ -2266,11 +2280,7 @@ namespace Bfres.Structs
                          v.boneIds.Count > 1 ? v.boneIds[1] : -1,
                          v.boneIds.Count > 2 ? v.boneIds[2] : -1,
                          v.boneIds.Count > 3 ? v.boneIds[3] : -1),
-                    weight = new Vector4(
-                         v.boneWeights.Count > 0 ? v.boneWeights[0] : 0,
-                         v.boneWeights.Count > 1 ? v.boneWeights[1] : 0,
-                         v.boneWeights.Count > 2 ? v.boneWeights[2] : 0,
-                         v.boneWeights.Count > 3 ? v.boneWeights[3] : 0),
+                    weight = weights,
                 };
 
                 displayVertList.Add(displayVert);

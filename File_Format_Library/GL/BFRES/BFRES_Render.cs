@@ -597,10 +597,6 @@ namespace FirstPlugin
             {
                 shader.SetInt("RigidSkinning", 1);
             }
-            if (m.VertexSkinCount >= 5)
-            {
-                shader.SetInt("NoSkinning", 1);
-            }
             if (m.VertexSkinCount == 0)
             {
                 if (fmdl.Skeleton.bones.Count > 0)
