@@ -59,6 +59,7 @@ namespace FirstPlugin
         public bool IsSRGB = true;
         public bool GenerateMipmaps = false; //If bitmap and count more that 1 then generate
         public float alphaRef = 0.5f;
+        public bool IsOrin;
 
         public bool IsFinishedCompressing = false;
 
@@ -286,7 +287,7 @@ namespace FirstPlugin
 
             for (int i = 0; i < arrayFaces.Count; i++)
             {
-                List<byte[]> mipmaps = SwizzleSurfaceMipMaps(tex, arrayFaces[i], tex.MipCount, settings.Alignment);
+                List<byte[]> mipmaps = SwizzleSurfaceMipMaps(tex, arrayFaces[i], tex.MipCount, settings.Alignment, settings.IsOrin);
                 tex.TextureData.Add(mipmaps);
 
                 //Combine mip map data

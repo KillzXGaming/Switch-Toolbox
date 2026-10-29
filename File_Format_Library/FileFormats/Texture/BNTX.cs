@@ -88,6 +88,8 @@ namespace FirstPlugin
             set { }
         }
 
+        public bool IsOrin = this.BinaryTexFile.PlatformTarget == "Ounc";
+
         class MenuExt : IFileMenuExtension
         {
             public STToolStripItem[] NewFileMenuExtensions => newFileExt;
@@ -780,6 +782,7 @@ namespace FirstPlugin
         {
             TextureImporterSettings importDDS = new TextureImporterSettings();
             importDDS.LoadDDS(TextureName, data);
+            importDDS.IsOrin = this.IsOrin;
 
             Texture tex = importDDS.FromBitMap(importDDS.DataBlockOutput, importDDS);
             TextureData texData = new TextureData(tex, BinaryTexFile);
@@ -824,12 +827,14 @@ namespace FirstPlugin
         {
             var importer = new TextureImporterSettings();
             importer.LoadBitMap(image, Name);
+            importer.IsOrin = this.IsOrin;
             return importer;
         }
 
         public TextureImporterSettings LoadSettings(string name)
         {
             var importer = new TextureImporterSettings();
+            importer.IsOrin = this.IsOrin;
 
             string ext = Path.GetExtension(name);
             ext = ext.ToLower();
@@ -853,6 +858,7 @@ namespace FirstPlugin
         public TextureData AddTexture(string name)
         {
             var importer = new TextureImporterSettings();
+            importer.IsOrin = this.IsOrin;
 
             Texture tex = null;
             TextureData texData = null;
@@ -1551,7 +1557,7 @@ namespace FirstPlugin
 
             TextureImporterSettings setting = new TextureImporterSettings();
             BinaryTextureImporterList importer = new BinaryTextureImporterList();
-
+            setting.IsOrin = this.ParentBNTX.IsOrin;
             setting.SurfaceDim = surfaceDim;
             setting.Alignment = alignment;
             //Check if alignment is required for combining individual levels or not
