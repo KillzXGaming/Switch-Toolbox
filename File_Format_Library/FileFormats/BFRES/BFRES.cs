@@ -1045,6 +1045,10 @@ namespace FirstPlugin
 
             if (MeshCodec.TextureList.Count > 0)
                 MeshCodec.SaveTexToGo();
+
+            //Write edited external textures (Tex/*.bntx.zs of V10.2 bfres) back to their files
+            foreach (var textureFolder in Nodes.OfType<BntxTexFolder>().ToList())
+                textureFolder.SaveEditedTextures();
         }
 
         public TreeNodeCollection GetModels()
