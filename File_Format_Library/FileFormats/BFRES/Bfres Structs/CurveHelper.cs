@@ -283,19 +283,9 @@ namespace Bfres.Structs
 
             float valueScale = curve.Scale > 0 ? curve.Scale : 1;
             // V10.2+ uses hermite slopes
-            if (curve.HasHermiteCurves)
+            if (curve.IsHermite)
             {
-                track.InterpolationType = InterpolationType.CONSTANT;
-                switch (curve.CurveType)
-                {
-                    case AnimCurveType.Cubic:
-                        track.InterpolationType = InterpolationType.HERMITE;
-                        break;
-                    case AnimCurveType.Linear:
-                        track.InterpolationType = InterpolationType.LINEAR;
-                        break;
-                }
-
+                track.InterpolationType = InterpolationType.HERMITE;
                 for (int index = 0; index < curve.Frames.Length; index++)
                 {
                     float frame = curve.Frames[index];
@@ -303,16 +293,12 @@ namespace Bfres.Structs
                     if (frame == 0f && track.Keys.Any(x => x.Frame == 0f))
                         track.Keys.RemoveAt(0);
 
-                    float tangent = curve.CurveType == AnimCurveType.Cubic
-                        ? curve.Keys[index, 1]
-                        : 0f;
-
                     track.Keys.Add(new Animation.KeyFrame
                     {
                         Frame = frame,
-                        Value = curve.Keys[index, 0],
-                        In = tangent,
-                        Out = tangent
+                        Value = curve.HermiteValues[index],
+                        In = curve.HermiteSlopes[index],
+                        Out = curve.HermiteSlopes[index]
                     });
                 }
 

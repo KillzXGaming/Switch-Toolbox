@@ -14,11 +14,6 @@
             Initializes a new instance of the <see cref="T:Syroot.NintenTools.NSW.Bfres.AnimCurve"/> class.
             </summary>
         </member>
-        <member name="F:Syroot.NintenTools.NSW.Bfres.AnimCurve.AlignmentBuffer">
-            <summary>
-            Alignment of curve data
-            </summary>
-        </member>
         <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.FrameType">
             <summary>
             Gets or sets the data type in which <see cref="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.Frames"/> are loaded and saved. For simplicity, the class
@@ -34,6 +29,16 @@
         <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.CurveType">
             <summary>
             Gets or sets the curve type, determining the number of elements stored with each key.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.PreWrap">
+            <summary>
+            Gets or sets the pre wrap mode, determining how to wrap the key data.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.PostWrap">
+            <summary>
+            Gets or sets the post wrap mode, determining how to wrap the key data.
             </summary>
         </member>
         <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.AnimDataOffset">
@@ -79,26 +84,67 @@
             <see cref="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.Frames"/> array.
             </summary>
         </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.BooleanWords">
+            <summary>
+            The packed bits behind <see cref="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.KeyStepBoolData"/>, one bit per key, low bit
+            first. Held exactly because <see cref="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.Keys"/> is float and loses the low bits of
+            a full 32 bit mask.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.SourceFlags">
+            <summary>
+            The flags as the file stored them. A value keyed curve is converted on load to the
+            encoding of earlier files, so <see cref="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.Keys"/> and the type properties describe the
+            converted curve.
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.IsValueKeyed">
+            <summary>Whether the file stored this curve as value keys.</summary>
+        </member>
         <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.IsHermite">
+            <summary>Whether the file stored this curve as Hermite values and slopes.</summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.IsStepFloat">
             <summary>
-            Gets a value indicating whether this curve stores hermite keys (value and slope per key) in the
-            version 10+ layout.
+            Whether the file stored this curve as a held float value per key, a type earlier files
+            lack. It loads as a linear curve with no slope.
             </summary>
         </member>
-        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.HasHermiteCurves">
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.HermiteValues">
+            <summary>The decoded value at each key of a Hermite curve, null for other curves.</summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.HermiteSlopes">
+            <summary>The decoded slope per frame at each key of a Hermite curve.</summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.IsBoolType">
             <summary>
-            Gets a value indicating whether the keys of this curve were loaded in (or set to) the version 10+ layout.
+            Whether the key data is a bit array rather than per key elements (StepBoolean and BakedBoolean).
             </summary>
         </member>
-        <member name="M:Syroot.NintenTools.NSW.Bfres.AnimCurve.SetHermiteKeys(System.Single[],System.Single[],System.Single[],System.Boolean)">
+        <member name="P:Syroot.NintenTools.NSW.Bfres.AnimCurve.IsIntType">
             <summary>
-            Replaces the keys of this curve with compressed version 10+ hermite keys built from the given values and
-            slopes.
+            Whether integer curves read their keys as Int32 when stored unquantized (StepInteger and BakedInteger).
             </summary>
-            <param name="frames">The frame of each key.</param>
-            <param name="values">The value of each key.</param>
-            <param name="slopes">The slope of each key.</param>
-            <param name="use16Bit">true to quantize to 16 bits, false to quantize to 8 bits.</param>
+        </member>
+        <member name="M:Syroot.NintenTools.NSW.Bfres.AnimCurve.BoolWordCount(System.Int32)">
+            <summary>
+            The number of 32 bit words of a boolean bit array. The format allocates (count >> 5) + 1 words, so a
+            count that is a multiple of 32 carries one trailing word.
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.NSW.Bfres.AnimCurve.CalculateBakeSize(System.Boolean)">
+            <summary>
+            Calculates the bake size of the animation curve.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Syroot.NintenTools.NSW.Bfres.AnimCurve.ReadQuantizedValue(Syroot.NintenTools.NSW.Bfres.Core.ResFileLoader,System.Single,System.Single,System.Boolean,System.Boolean)">
+            <summary>
+            Reads one key element. <paramref name="unsignedQuantized"/> is set for Hermite curves, whose
+            quantized values and slopes are unsigned (0 = the stored offset, which is the curve minimum).
+            Verified against all 389 curves of DriverA_Mario_Common.anim.bfres; the other curve types still
+            read signed values as before, as no sample file has confirmed otherwise.
+            </summary>
         </member>
         <member name="T:Syroot.NintenTools.NSW.Bfres.AnimCurveFrameType">
             <summary>

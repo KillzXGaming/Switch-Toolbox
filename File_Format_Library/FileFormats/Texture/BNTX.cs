@@ -88,7 +88,7 @@ namespace FirstPlugin
             set { }
         }
 
-        public bool IsOrin = this.BinaryTexFile.PlatformTarget == "Ounc";
+        public bool IsOrin => BinaryTexFile.PlatformTarget == "Ounc";
 
         class MenuExt : IFileMenuExtension
         {
