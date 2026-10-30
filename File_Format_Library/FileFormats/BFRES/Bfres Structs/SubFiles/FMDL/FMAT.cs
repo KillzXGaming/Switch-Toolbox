@@ -633,6 +633,7 @@ namespace Bfres.Structs
                 case ShaderParamType.Float4x2:
                 case ShaderParamType.Float4x3:
                 case ShaderParamType.Float4x4:
+                case ShaderParamType.Float3x4:
                     writer.Write(ValueFloat); break;
                 case ShaderParamType.Int:
                 case ShaderParamType.Int2:
