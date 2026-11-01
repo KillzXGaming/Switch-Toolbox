@@ -77,7 +77,8 @@ namespace FirstPlugin
                                 {
                                     int frame = (int)curve.Frames[f];
                                     float Value = curve.Offset + curve.Keys[f, 0] * curve.Scale;
-                                    CurveCfg.KeyFrames.Add(frame, Value);
+                                    if (!CurveCfg.KeyFrames.ContainsKey(frame))
+                                        CurveCfg.KeyFrames.Add(frame, Value);
                                 }
 
                                 paramCfg.CurveData.Add(CurveCfg);
