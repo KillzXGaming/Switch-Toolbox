@@ -791,6 +791,7 @@ namespace FirstPlugin
         public BFRESRenderBase BFRESRender;
 
         private MeshCodec MeshCodec;
+        private BntxTexFolder BntxTexFolder;
 
         public void Dispose() { MeshCodec.Dispose(); }
 
@@ -933,12 +934,13 @@ namespace FirstPlugin
             if (containers.Count == 0)
                 return;
 
-            var textureFolder = new BntxTexFolder(containers);
-            this.Nodes.Add(textureFolder);
+            BntxTexFolder = new BntxTexFolder(containers);
+            this.Nodes.Add(BntxTexFolder);
         }
 
         public void Unload()
         {
+            BntxTexFolder?.Dispose();
             BFRESRender.Destroy();
             DrawableContainer.Drawables.Clear();
 

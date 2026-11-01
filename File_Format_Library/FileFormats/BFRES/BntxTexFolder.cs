@@ -35,6 +35,13 @@ namespace FirstPlugin
             }
         }
 
+        public void Dispose()
+        {
+            // Unload from caches
+            foreach (var entry in this._tracked)
+                entry.Bntx.Unload();
+        }
+
         public override ToolStripItem[] GetContextMenuItems()
         {
             List<ToolStripItem> Items = new List<ToolStripItem>();
