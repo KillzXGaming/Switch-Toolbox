@@ -1557,7 +1557,7 @@ namespace FirstPlugin
 
             TextureImporterSettings setting = new TextureImporterSettings();
             BinaryTextureImporterList importer = new BinaryTextureImporterList();
-            setting.IsOrin = this.ParentBNTX.IsOrin;
+            setting.IsOrin = this.ParentBNTX != null ? this.ParentBNTX.IsOrin : false;
             setting.SurfaceDim = surfaceDim;
             setting.Alignment = alignment;
             //Check if alignment is required for combining individual levels or not
@@ -1734,15 +1734,16 @@ namespace FirstPlugin
 
         public override byte[] GetImageData(int ArrayLevel = 0, int MipLevel = 0, int DepthLevel = 0)
         {
+            bool isOrin = false;
             int target = 1;
             if (ParentBNTX != null && ParentBNTX is BNTX && ParentBNTX.BinaryTexFile != null)
             {
                 bool IsNX = ParentBNTX.BinaryTexFile.PlatformTarget == "NX  ";
                 if (!IsNX)
                     target = 0;
-            }
 
-            bool isOrin = ParentBNTX.BinaryTexFile.PlatformTarget == "Ounc";
+                isOrin = ParentBNTX.BinaryTexFile.PlatformTarget == "Ounc";
+            }
 
             try
             {
