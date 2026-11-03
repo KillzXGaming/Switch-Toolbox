@@ -746,7 +746,7 @@ namespace Toolbox.Library
 
         public uint GenerateMipCount(uint Width, uint Height)
         {
-            uint MipmapNum = 0;
+            uint MipmapNum = 1;
             uint num = Math.Max(Width, Height);
 
             int width = (int)Width;
