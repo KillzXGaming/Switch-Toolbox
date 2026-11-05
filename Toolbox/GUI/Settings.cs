@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -472,7 +472,7 @@ namespace Toolbox
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 if (!IsValidTotkDirectory(sfd.SelectedPath))
-                    throw new Exception("Invalid path choosen. Make sure you have atleast |Shader/ExternalBinaryString.bfres.mc| in the path!");
+                    throw new Exception("Invalid path choosen. Make sure you have atleast |Shader/ExternalBinaryString.bfres.mc| or |Shader/ExternalBinaryString.bfres.zs| in the path!");
 
                 totkGamePathTB.Text = sfd.SelectedPath;
                 Runtime.TotkGamePath = totkGamePathTB.Text;
@@ -668,10 +668,15 @@ namespace Toolbox
 
         private bool IsValidTotkDirectory(string GamePath)
         {
-            string ExternalStringPath = System.IO.Path.Combine($"{GamePath}",
-                 "Shader", "ExternalBinaryString.bfres.mc");
-
-            return System.IO.File.Exists(ExternalStringPath);
+            //TOTK ships the external string table as .mc, later ModuleSystem games as .zs
+            foreach (var ext in new string[] { "mc", "zs" })
+            {
+                string ExternalStringPath = System.IO.Path.Combine($"{GamePath}",
+                     "Shader", $"ExternalBinaryString.bfres.{ext}");
+                if (System.IO.File.Exists(ExternalStringPath))
+                    return true;
+            }
+            return false;
         }
 
         private void chkTpFileTable_CheckedChanged(object sender, EventArgs e) {

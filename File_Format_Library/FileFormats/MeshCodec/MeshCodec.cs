@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -57,42 +57,144 @@ namespace FirstPlugin
             MeshCodecResave = 1 << 7,
         }
 
-        public static void Prepare()
+        // Every BFRES flagged HasExternalString stores some names as 64-bit IDs into a string table shared by the
+        // whole game: romfs/Shader/ExternalBinaryString.bfres. TOTK ships it mesh-codec compressed (.mc), later
+        // ModuleSystem titles (e.g. Ocarina of Time for Switch 2) ship it zstd compressed (.zs). The IDs differ per
+        // game, so the table must come from the same game as the model.
+        static readonly string[] ExternalStringTableNames = new string[]
         {
-            //Check if a valid directory exists
-            string path = Path.Combine(Runtime.TotkGamePath, "Shader", "ExternalBinaryString.bfres.mc");
-            if (!File.Exists(path))
+            "ExternalBinaryString.bfres.mc",
+            "ExternalBinaryString.bfres.zs",
+        };
+
+        // Loaded tables by file path, so files from different games can be opened in one session.
+        static readonly Dictionary<string, Dictionary<long, string>> ExternalStringTables =
+            new Dictionary<string, Dictionary<long, string>>(StringComparer.OrdinalIgnoreCase);
+
+        // Folder picked by the user this session for files outside of a romfs dump.
+        static string SelectedRomfsPath = "";
+
+        /// <summary>
+        /// The romfs root the last external string table was loaded from.
+        /// </summary>
+        public static string ExternalStringRomfsPath { get; private set; } = "";
+
+        /// <summary>
+        /// The path of the external string table used for the last loaded file.
+        /// </summary>
+        public static string ExternalStringTablePath { get; private set; } = "";
+
+        /// <summary>
+        /// Returns the external string table inside the given romfs folder, or null if there is none.
+        /// </summary>
+        public static string FindExternalStringTable(string romfsPath)
+        {
+            if (string.IsNullOrEmpty(romfsPath) || !Directory.Exists(romfsPath))
+                return null;
+
+            foreach (var name in ExternalStringTableNames)
             {
-                 MessageBox.Show("A game dump of TOTK is required to load this file. Please select the romfs folder path.");
+                string path = Path.Combine(romfsPath, "Shader", name);
+                if (File.Exists(path))
+                    return path;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Searches the folders containing the given file for the romfs root holding the external string table.
+        /// </summary>
+        static string FindExternalStringTableNear(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                return null;
+
+            string dir;
+            try { dir = Path.GetDirectoryName(Path.GetFullPath(filePath)); }
+            catch { return null; }
+
+            for (int i = 0; i < 8 && !string.IsNullOrEmpty(dir); i++)
+            {
+                string path = FindExternalStringTable(dir);
+                if (path != null)
+                    return path;
+                dir = Path.GetDirectoryName(dir);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Loads the external string table needed by a BFRES flagged HasExternalString.
+        /// The table is searched next to the file first (its romfs root), then in a folder selected this session,
+        /// then in the configured TOTK romfs path, and finally the user is asked for the game's romfs folder.
+        /// </summary>
+        /// <returns>True if a table was loaded.</returns>
+        public static bool Prepare(string filePath)
+        {
+            string path = FindExternalStringTableNear(filePath)
+                       ?? FindExternalStringTable(SelectedRomfsPath)
+                       ?? FindExternalStringTable(Runtime.TotkGamePath);
+
+            if (path == null)
+            {
+                MessageBox.Show("This BFRES stores its names in an external string table " +
+                    "(Shader/ExternalBinaryString.bfres.zs or .bfres.mc), which was not found in the folders " +
+                    "containing the file.\n\nPlease select the romfs folder of the game this file is from " +
+                    "(e.g. Tears of the Kingdom or Ocarina of Time).");
 
                 FolderSelectDialog dlg = new FolderSelectDialog();
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    Runtime.TotkGamePath = dlg.SelectedPath;
-                    path = Path.Combine(Runtime.TotkGamePath, "Shader", "ExternalBinaryString.bfres.mc");
-                    Toolbox.Library.Config.Save();
+                    path = FindExternalStringTable(dlg.SelectedPath);
+                    if (path == null)
+                    {
+                        MessageBox.Show($"Given folder was not valid! Expecting file " +
+                            $"{Path.Combine(dlg.SelectedPath, "Shader", ExternalStringTableNames[1])} or " +
+                            $"{Path.Combine(dlg.SelectedPath, "Shader", ExternalStringTableNames[0])}");
+                        return false;
+                    }
+
+                    SelectedRomfsPath = dlg.SelectedPath;
+                    //Only remember the folder if there is no valid TOTK path already, so it is never overwritten
+                    if (FindExternalStringTable(Runtime.TotkGamePath) == null)
+                    {
+                        Runtime.TotkGamePath = dlg.SelectedPath;
+                        Toolbox.Library.Config.Save();
+                    }
                 }
             }
 
-            if (!File.Exists(path))
-            {
-                MessageBox.Show($"Given folder was not valid! Expecting file {path}");
-                return;
-            }
+            if (path == null)
+                return false;
 
-            LoadExternalStrings();
+            LoadExternalStrings(path);
+            return true;
         }
 
-        public static void LoadExternalStrings()
+        public static void LoadExternalStrings(string path)
         {
-            if (ExternalStringBinary != null)
-                return;
+            path = Path.GetFullPath(path);
+            if (!ExternalStringTables.ContainsKey(path))
+            {
+                byte[] data = path.EndsWith(".mc", StringComparison.OrdinalIgnoreCase) ?
+                    DecompressMeshCodec(path) : DecompressZstd(path);
 
-            string path = Path.Combine(Runtime.TotkGamePath, "Shader", "ExternalBinaryString.bfres.mc");
-            byte[] data = DecompressMeshCodec(path);
-            //Load string table into memory
+                //Loading the table fills StringCache.Strings with its id -> string pairs
+                ExternalStringBinary = new ResFile(new MemoryStream(data));
+                ExternalStringTables.Add(path, new Dictionary<long, string>(StringCache.Strings));
+            }
+
             //Strings are stored in a static list which will be used for opened bfres
-            ExternalStringBinary = new ResFile(new MemoryStream(data));
+            StringCache.Strings = new Dictionary<long, string>(ExternalStringTables[path]);
+            ExternalStringTablePath = path;
+            ExternalStringRomfsPath = Path.GetDirectoryName(Path.GetDirectoryName(path));
+        }
+
+        static byte[] DecompressZstd(string path)
+        {
+            //Selects the zstd dictionary by file extension like any other opened .zs file
+            new Zstb().Init(path);
+            return Zstb.SDecompress(File.ReadAllBytes(path));
         }
 
         public static byte[] DecompressMeshCodec(string file)
@@ -196,10 +298,16 @@ namespace FirstPlugin
         {
             var materials = resFile.Models.SelectMany(x => x.Materials);
 
+            //Use the romfs the external strings came from, so the textures match the game of the model
+            string romfsPath = resFile.UsesExternalStrings && !string.IsNullOrEmpty(ExternalStringRomfsPath) ?
+                ExternalStringRomfsPath : Runtime.TotkGamePath;
+            if (string.IsNullOrEmpty(romfsPath) || !Directory.Exists(Path.Combine(romfsPath, "TexToGo")))
+                return;
+
             List<string> textureList = materials.SelectMany(x => x.TextureRefs).Distinct().ToList();
             foreach (var tex in textureList)
             {
-                string path = Path.Combine(Runtime.TotkGamePath, "TexToGo", $"{tex}.txtg");
+                string path = Path.Combine(romfsPath, "TexToGo", $"{tex}.txtg");
                 if (File.Exists(path))
                 {
                     try

@@ -1,4 +1,4 @@
-﻿using Bfres.Structs;
+using Bfres.Structs;
 using ByamlExt.Byaml;
 using FirstPlugin.Forms;
 using FirstPlugin.NodeWrappers;
@@ -828,8 +828,10 @@ namespace FirstPlugin
                         this.FilePath += ".mc";
                 }
             }
+            //Names are stored as IDs into the game's Shader/ExternalBinaryString.bfres (TOTK and later titles).
+            //If no table could be found, the parser throws a descriptive error at the first external name.
             if (externalFlags.HasFlag(MeshCodec.ExternalFlags.HasExternalString))
-                MeshCodec.Prepare();
+                MeshCodec.Prepare(this.FilePath);
 
             if (IsWiiU)
             {
@@ -838,6 +840,7 @@ namespace FirstPlugin
             else
             {
                 LoadFile(new Syroot.NintenTools.NSW.Bfres.ResFile(stream));
+                WarnUnresolvedExternalStrings();
             }
 
             if (resFileU != null) {
@@ -860,8 +863,12 @@ namespace FirstPlugin
             if (externalFlags != (MeshCodec.ExternalFlags)0)
             {
                 MeshCodec.PrepareTexToGo(resFile);
-                MeshCodec.TextureFolder = new TexToGoFolder(MeshCodec);
-                this.Nodes.Add(MeshCodec.TextureFolder);
+                //Games without TexToGo (e.g. Ocarina of Time) use the Tex folder loaded above instead
+                if (MeshCodec.TextureList.Count > 0 || externalFlags != MeshCodec.ExternalFlags.HasExternalString)
+                {
+                    MeshCodec.TextureFolder = new TexToGoFolder(MeshCodec);
+                    this.Nodes.Add(MeshCodec.TextureFolder);
+                }
             }
 
             DrawableContainer.Drawables.Add(BFRESRender);
@@ -875,6 +882,22 @@ namespace FirstPlugin
                     DrawableContainer.Drawables.Add(mdl.Skeleton);
                 }
             }
+        }
+
+        private void WarnUnresolvedExternalStrings()
+        {
+            if (resFile == null || resFile.UnresolvedExternalStringIDs.Count == 0)
+                return;
+
+            var ids = resFile.UnresolvedExternalStringIDs;
+            string list = string.Join(", ", ids.Take(5).Select(x => x.ToString("X16")));
+            if (ids.Count > 5)
+                list += ", ...";
+
+            MessageBox.Show($"{ids.Count} name(s) in {FileName} reference external string IDs that are not in " +
+                $"{MeshCodec.ExternalStringTablePath}.\n\nThey were loaded as ExtStr_<ID> placeholders: {list}\n\n" +
+                "If many names are missing, the string table is probably from a different game than this file.",
+                "Unresolved external strings", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private void PrepareExternalTextures()
