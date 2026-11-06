@@ -22,8 +22,12 @@ uniform mat4 mtxCam;
 uniform mat4 mtxMdl;
 uniform mat4 camMtx;
 
-// Skinning uniforms
-uniform mat4 bones[200];
+#define MAX_BONES 1024
+
+layout(std140) uniform BoneBlock
+{
+    mat4 bones[MAX_BONES];
+};
 
 uniform int NoSkinning;
 uniform int RigidSkinning;

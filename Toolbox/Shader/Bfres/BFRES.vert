@@ -44,6 +44,7 @@ uniform vec2 SRT_Translate;
 uniform sampler2D weightRamp1;
 uniform sampler2D weightRamp2;
 uniform int selectedBoneIndex;
+uniform int selectedNodeIndex;
 uniform int debugOption;
 
 
@@ -51,17 +52,19 @@ uniform int debugOption;
 uniform vec4 gsys_bake_st0;
 uniform vec4 gsys_bake_st1;
 
-uniform int boneIds[190];
+#define MAX_BONES 1024
 
-// Skinning uniforms
-uniform mat4 bones[190];
-
+layout(std140) uniform BoneBlock
+{
+    mat4 bones[MAX_BONES];
+};
 
  //Meshes have a bone index and will use their transform depending on skin influence amount
 uniform int SingleBoneIndex;
 uniform mat4 SingleBoneBindTransform;
 uniform int NoSkinning;
 uniform int RigidSkinning;
+uniform int VertexSkinCount;
 
 vec4 skin(vec3 pos, ivec4 index)
 {
@@ -103,16 +106,16 @@ vec3 BoneWeightColor(float weights)
 float BoneWeightDisplay(ivec4 index)
 {
     float weight = 0;
-    if (selectedBoneIndex == boneIds[index.x])
+    if (selectedNodeIndex == index.x)
         weight += vWeight.x;
-    if (selectedBoneIndex == boneIds[index.y])
+    if (selectedNodeIndex == index.y)
         weight += vWeight.y;
-    if (selectedBoneIndex == boneIds[index.z])
+    if (selectedNodeIndex == index.z)
         weight += vWeight.z;
-    if (selectedBoneIndex == boneIds[index.w])
+    if (selectedNodeIndex == index.w)
         weight += vWeight.w;
 
-    if (selectedBoneIndex == boneIds[index.x] && RigidSkinning == 1)
+    if (selectedNodeIndex == index.x && RigidSkinning == 1)
         weight = 1;
    if (selectedBoneIndex == SingleBoneIndex && NoSkinning == 1)
         weight = 1;

@@ -84,7 +84,7 @@ namespace FirstPlugin
             UpdateTextureMaps();
         }
 
-        public void Destroy()
+        public virtual void Destroy()
         {
             bool buffersWereInitialized = ibo_elements != 0 && vbo_position != 0;
 

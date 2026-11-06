@@ -29,11 +29,19 @@ namespace FirstPlugin
         protected bool Selected = false;
         public bool Hovered = false;
 
+        private readonly BoneUniformBuffer boneUniformBuffer = new BoneUniformBuffer();
+
         public bool IsSelected() => Selected;
 
         public BFRESRender()
         {
 
+        }
+
+        public override void Destroy()
+        {
+            boneUniformBuffer.Dispose();
+            base.Destroy();
         }
 
         #region Rendering
@@ -204,10 +212,14 @@ namespace FirstPlugin
         private void DrawModels(SF.Shader shader, GL_ControlModern control)
         {
             shader.EnableVertexAttributes();
+            boneUniformBuffer.Bind(shader.Id);
+
             for (int m = 0; m < models.Count; m++)
             {
                 if (models[m].Checked)
                 {
+                    boneUniformBuffer.Update(models[m]);
+
                     List<FSHP> opaque = new List<FSHP>();
                     List<FSHP> transparent = new List<FSHP>();
 
@@ -270,20 +282,72 @@ namespace FirstPlugin
             shader.SetBoolToInt("HasRoughnessMap", mat.HasRoughnessMap);
             shader.SetBoolToInt("HasMRA", mat.HasMRA);
         }
-        private static void SetBoneUniforms(SF.Shader shader, FMDL fmdl, FSHP fshp)
-        {
-            for (int i = 0; i < fmdl.Skeleton.Node_Array.Length; i++)
-            {
-                int boneIndex = fmdl.Skeleton.Node_Array[i];
-                
-                // Bounds check - skip if bone index is out of range
-                if (boneIndex < 0 || boneIndex >= fmdl.Skeleton.bones.Count)
-                    continue;
-                
-                GL.Uniform1(GL.GetUniformLocation(shader.Id, String.Format("boneIds[{0}]", i)), boneIndex);
 
-                Matrix4 transform = fmdl.Skeleton.bones[boneIndex].invert * fmdl.Skeleton.bones[boneIndex].Transform;
-                GL.UniformMatrix4(GL.GetUniformLocation(shader.Id, String.Format("bones[{0}]", i)), false, ref transform);
+        private class BoneUniformBuffer
+        {
+            public const int MaxBones = 1024;
+            private const int BoneBlockBinding = 12;
+            private const int MatrixSize = 16 * sizeof(float);
+
+            private int bufferID = 0;
+
+            private readonly Matrix4[] matrices = new Matrix4[MaxBones];
+
+            private void CreateBuffer(ref int buffer, int binding, int sizeInBytes)
+            {
+                buffer = GL.GenBuffer();
+                GL.BindBuffer(BufferTarget.UniformBuffer, buffer);
+                GL.BufferData(BufferTarget.UniformBuffer, (IntPtr)sizeInBytes, IntPtr.Zero, BufferUsageHint.DynamicDraw);
+                GL.BindBufferBase(BufferRangeTarget.UniformBuffer, binding, buffer);
+            }
+
+            public void Bind(int program)
+            {
+                int boneBlock = GL.GetUniformBlockIndex(program, "BoneBlock");
+                if (boneBlock >= 0)
+                    GL.UniformBlockBinding(program, boneBlock, BoneBlockBinding);
+            }
+
+            public void Update(FMDL fmdl)
+            {
+                if (bufferID <= 0)
+                    CreateBuffer(ref bufferID, BoneBlockBinding, MaxBones * MatrixSize);
+
+                GL.BindBufferBase(BufferRangeTarget.UniformBuffer, BoneBlockBinding, bufferID);
+
+                int[] nodeArray = fmdl.Skeleton.Node_Array;
+                int count = nodeArray != null ? nodeArray.Length : 0;
+                if (count > MaxBones)
+                    count = MaxBones;
+
+                if (count == 0)
+                    return;
+
+                // Would be more accurate to do smooth, then rigid matrices but would rather not rewrite the attribute handling.
+                for (int i = 0; i < count; i++)
+                {
+                    int boneIndex = nodeArray[i];
+                    if (boneIndex < 0 || boneIndex >= fmdl.Skeleton.bones.Count)
+                    {
+                        matrices[i] = Matrix4.Identity;
+                        continue;
+                    }
+
+                    matrices[i] = fmdl.Skeleton.bones[boneIndex].invert * fmdl.Skeleton.bones[boneIndex].Transform;
+                }
+
+                GL.BindBuffer(BufferTarget.UniformBuffer, bufferID);
+                GL.BufferSubData(BufferTarget.UniformBuffer, IntPtr.Zero, (IntPtr)(count * MatrixSize), matrices);
+
+                GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+            }
+
+            public void Dispose()
+            {
+                if (bufferID > 0)
+                    GL.DeleteBuffer(bufferID);
+
+                bufferID = 0;
             }
         }
 
@@ -530,7 +594,6 @@ namespace FirstPlugin
                 SetUniforms(mat, shader, m, m.DisplayId);
                 SetTextureUniforms(mat, m, shader);
             }
-            SetBoneUniforms(shader, mdl, m);
             ApplyTransformFix(mdl, m, shader);
             SetVertexAttributes(m, shader);
 
@@ -589,6 +652,15 @@ namespace FirstPlugin
             shader.SetInt("NoSkinning", 0);
             shader.SetInt("RigidSkinning", 0);
             shader.SetInt("SingleBoneIndex", m.BoneIndex);
+
+            int selectedNode = int.MinValue;
+            if (fmdl.Skeleton.Node_Array != null)
+            {
+                int slot = Array.IndexOf(fmdl.Skeleton.Node_Array, Runtime.SelectedBoneIndex);
+                if (slot >= 0)
+                    selectedNode = slot;
+            }
+            shader.SetInt("selectedNodeIndex", selectedNode);
 
             shader.SetMatrix4x4("SingleBoneBindTransform", ref idenity);
             //Some objects will have no weights or indices. These will weigh to the bone index in the shape section.
