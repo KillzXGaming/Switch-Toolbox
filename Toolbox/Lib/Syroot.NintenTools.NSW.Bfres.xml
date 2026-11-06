@@ -2062,6 +2062,20 @@
             <param name="encoding">The optional encoding of the text.</param>
             <returns>The read text.</returns>
         </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.Core.ResFileLoader.UsesExternalStrings">
+            <summary>
+            Gets or sets whether the file being loaded stores some names as 64-bit IDs into an external string table
+            (<see cref="F:Syroot.NintenTools.NSW.Bfres.ResFile.ExternalFlags.HasExternalString"/>) instead of offsets into its own string pool.
+            The IDs are resolved through <see cref="T:Syroot.NintenTools.NSW.Bfres.StringCache"/>, which is filled by loading the game's
+            ExternalBinaryString.bfres (a file flagged <see cref="F:Syroot.NintenTools.NSW.Bfres.ResFile.ExternalFlags.HoldsExternalStrings"/>).
+            </summary>
+        </member>
+        <member name="M:Syroot.NintenTools.NSW.Bfres.Core.ResFileLoader.IsUnresolvedExternalStringID(System.Int64)">
+            <summary>
+            A string field of a file using external strings holds an ID rather than an offset when the value cannot
+            be a position inside the file. Real offsets always point inside the file, so this never misclassifies one.
+            </summary>
+        </member>
         <member name="M:Syroot.NintenTools.NSW.Bfres.Core.ResFileLoader.LoadStrings(System.Int32,System.Text.Encoding)">
             <summary>
             Reads and returns <paramref name="count"/> <see cref="T:System.String"/> instances from the following offsets.
@@ -4037,6 +4051,18 @@
             Saves the contents in the file with the given <paramref name="fileName"/>.
             </summary>
             <param name="fileName">The name of the file to save the contents into.</param>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.ResFile.UsesExternalStrings">
+            <summary>
+            Gets whether this file stores names as IDs into an external string table
+            (<see cref="F:Syroot.NintenTools.NSW.Bfres.ResFile.ExternalFlags.HasExternalString"/>, used by TOTK and later ModuleSystem titles).
+            </summary>
+        </member>
+        <member name="P:Syroot.NintenTools.NSW.Bfres.ResFile.UnresolvedExternalStringIDs">
+            <summary>
+            External string IDs referenced by this file that were not present in the loaded
+            <see cref="T:Syroot.NintenTools.NSW.Bfres.StringCache"/>. Names using them were loaded as "ExtStr_&lt;ID&gt;" placeholders.
+            </summary>
         </member>
         <member name="T:Syroot.NintenTools.NSW.Bfres.CameraAnim">
             <summary>
