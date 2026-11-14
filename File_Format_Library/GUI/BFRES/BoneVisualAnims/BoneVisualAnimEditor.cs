@@ -124,7 +124,7 @@ namespace FirstPlugin.Forms
         {
             foreach (BooleanKeyGroup track in fvis.Values)
             {
-                if (track.GetKeyFrame(Frame).IsKeyed == true)
+                if (track.Keys.Any(k => k.Frame == Frame && k.IsKeyed))
                     return true;
             }
 
