@@ -12,6 +12,7 @@ using Bfres.Structs;
 using Toolbox.Library.Forms;
 using Toolbox.Library.Animations;
 using BrightIdeasSoftware;
+using Toolbox.Library;
 
 namespace FirstPlugin.Forms
 {
@@ -34,8 +35,14 @@ namespace FirstPlugin.Forms
             };
             var btnAddKey = new STButton() { Text = "Add key", Size = new Size(75, 23) };
             var btnRemoveKey = new STButton() { Text = "Remove key", Size = new Size(85, 23) };
+            var btnRemoveBone = new STButton() { Text = "Remove bone", Size = new Size(90, 23) };
             btnAddKey.Click += btnAddKey_Click;
             btnRemoveKey.Click += btnRemoveKey_Click;
+            btnRemoveBone.Click += btnRemoveBone_Click;
+            Controls.Remove(btnAdd);
+            btnAdd.Text = "Add bones";
+            btnAdd.Dock = DockStyle.None;
+            btnAdd.Size = new Size(80, 23);
             bar.Controls.Add(new Label()
             {
                 Text = "Frame",
@@ -43,13 +50,17 @@ namespace FirstPlugin.Forms
                 Margin = new Padding(3, 7, 0, 0),
                 ForeColor = FormThemes.BaseTheme.FormForeColor
             });
-            bar.Controls.AddRange(new Control[] { keyFrameUD, btnAddKey, btnRemoveKey });
+            bar.Controls.AddRange(new Control[] { keyFrameUD, btnAddKey, btnRemoveKey, btnAdd, btnRemoveBone });
 
             Controls.Add(bar);
             dataGridView1.Dock = DockStyle.Fill;
             Controls.SetChildIndex(dataGridView1, 0);
             Controls.SetChildIndex(bar, 1);
 
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToDeleteRows = false;
+
+            //Commit check box clicks right away instead of when the cell loses focus
             dataGridView1.CurrentCellDirtyStateChanged += (s, e) => {
                 if (dataGridView1.IsCurrentCellDirty)
                     dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
@@ -84,6 +95,8 @@ namespace FirstPlugin.Forms
                     UpdateFrameCells(activeFVIS);
                 }
             }
+
+            keyFrameUD.Maximum = Math.Max(activeFVIS.FrameCount, 1);
         }
 
         FVIS activeFVIS;
@@ -103,6 +116,9 @@ namespace FirstPlugin.Forms
 
         private void UpdateBoneColumns(FVIS vis)
         {
+            if (dataGridView1.Rows.Count > 0 && dataGridView1.Columns.Count > 0)
+                dataGridView1.CurrentCell = dataGridView1.Rows[0].Cells[0];
+
             dataGridView1.Columns.Clear();
             dataGridView1.Refresh();
 
@@ -133,7 +149,7 @@ namespace FirstPlugin.Forms
         private void UpdateFrameCells(FVIS vis)
         {
             bool wasLoaded = isLoaded;
-            isLoaded = false;
+            isLoaded = false; //Filling the table isn't an edit
 
             dataGridView1.DataSource = null;
             dataGridView1.Rows.Clear();
@@ -221,14 +237,20 @@ namespace FirstPlugin.Forms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            BoneVisListEditor editor = new BoneVisListEditor();
-            editor.LoadBones(activeFVIS.BoneNames);
-            if (editor.ShowDialog() == DialogResult.OK)
-            {
-                activeFVIS.BoneNames = editor.GetNewBones();
+            if (activeFVIS == null)
+                return;
 
-                foreach (string bone in activeFVIS.BoneNames)
+            //Only the bones picked from those without keys yet
+            var modelBones = ModelBones();
+            var candidates = activeFVIS.BoneNames.Concat(modelBones.Keys.Where(b => !activeFVIS.BoneNames.Contains(b)));
+            var picked = PickBones(candidates.Where(b => !activeFVIS.Values.Any(x => x.Text == b)));
+            if (picked.Count > 0)
+            {
+                foreach (string bone in picked)
                 {
+                    if (!activeFVIS.BoneNames.Contains(bone))
+                        activeFVIS.BoneNames.Add(bone);
+
                     bool HasBone = activeFVIS.Values.Any(x => x.Text == bone);
                     if (!HasBone)
                     {
@@ -241,16 +263,16 @@ namespace FirstPlugin.Forms
                         //One key at frame 0 with the bone's current visibility
                         var names = activeFVIS.VisibilityAnimU != null ? activeFVIS.VisibilityAnimU.Names : activeFVIS.VisibilityAnim.Names;
                         int baseIndex = names.IndexOf(bone);
-                        bool visible = baseIndex < 0 || activeFVIS.BaseValues == null || baseIndex >= activeFVIS.BaseValues.Length || activeFVIS.BaseValues[baseIndex];
+                        bool visible = baseIndex >= 0 && activeFVIS.BaseValues != null && baseIndex < activeFVIS.BaseValues.Length
+                            ? activeFVIS.BaseValues[baseIndex]
+                            : !modelBones.ContainsKey(bone) || modelBones[bone];
                         group.Keys.Add(new BooleanKeyFrame() { Frame = 0, InterType = InterpolationType.STEPBOOL, Visible = visible, IsKeyed = true });
 
                         activeFVIS.Values.Add(group);
                     }
                 }
 
-                //If a keygroup exists not in the bonename, we need to remove it as it was removed from the list
-                activeFVIS.Values.RemoveAll(x => !activeFVIS.BoneNames.Contains(x.Text));
-
+                activeFVIS.IsEdited = true;
                 UpdateBoneColumns(activeFVIS);
                 UpdateFrameCells(activeFVIS);
             }
@@ -304,6 +326,7 @@ namespace FirstPlugin.Forms
             }
         }
 
+        //A key changes the bone up to its next key, so recompute that bone's column
         private void RefreshColumn(int columnIndex, BooleanKeyGroup track)
         {
             bool wasLoaded = isLoaded;
@@ -350,6 +373,126 @@ namespace FirstPlugin.Forms
                     break;
                 }
             }
+        }
+
+        private Dictionary<string, bool> ModelBones()
+        {
+            var models = new List<FMDL>();
+            var bfres = activeFVIS.Parent?.Parent?.Parent as BFRES;
+            if (bfres?.BFRESRender != null)
+                models.AddRange(bfres.BFRESRender.models);
+
+            var viewport = LibraryGUI.GetActiveViewport();
+            if (viewport?.scene != null)
+            {
+                foreach (var drawable in viewport.scene.staticObjects)
+                {
+                    if (drawable is BFRESRender)
+                        models.AddRange(((BFRESRender)drawable).models);
+                }
+            }
+
+            var bones = new Dictionary<string, bool>();
+            foreach (var model in models)
+            {
+                if (model.Skeleton == null)
+                    continue;
+                foreach (var bone in model.Skeleton.bones)
+                {
+                    if (!bones.ContainsKey(bone.Text))
+                        bones[bone.Text] = !(bone is BfresBone) || ((BfresBone)bone).FlagVisible;
+                }
+            }
+            return bones;
+        }
+
+        private List<string> PickBones(IEnumerable<string> names)
+        {
+            var all = names.ToList();
+            var picked = new HashSet<string>();
+
+            using (var form = new Form())
+            {
+                form.Text = "Add bones (type to filter)";
+                form.StartPosition = FormStartPosition.CenterParent;
+                form.Size = new Size(320, 480);
+                form.MinimizeBox = false;
+                form.MaximizeBox = false;
+                form.ShowIcon = false;
+                form.ShowInTaskbar = false;
+                form.BackColor = FormThemes.BaseTheme.FormBackColor;
+                form.ForeColor = FormThemes.BaseTheme.FormForeColor;
+
+                var filter = new TextBox()
+                {
+                    Dock = DockStyle.Top,
+                    BackColor = FormThemes.BaseTheme.FormBackColor,
+                    ForeColor = FormThemes.BaseTheme.FormForeColor
+                };
+                var list = new CheckedListBox()
+                {
+                    Dock = DockStyle.Fill,
+                    CheckOnClick = true,
+                    IntegralHeight = false,
+                    BackColor = FormThemes.BaseTheme.FormBackColor,
+                    ForeColor = FormThemes.BaseTheme.FormForeColor
+                };
+                var buttons = new FlowLayoutPanel() { Dock = DockStyle.Bottom, Height = 32, FlowDirection = FlowDirection.RightToLeft };
+                var ok = new STButton() { Text = "Add", Size = new Size(75, 23), DialogResult = DialogResult.OK };
+                var cancel = new STButton() { Text = "Cancel", Size = new Size(75, 23), DialogResult = DialogResult.Cancel };
+                buttons.Controls.AddRange(new Control[] { cancel, ok });
+                form.AcceptButton = ok;
+                form.CancelButton = cancel;
+
+                bool filling = false;
+                Action fill = () =>
+                {
+                    filling = true;
+                    list.Items.Clear();
+                    foreach (string name in all)
+                    {
+                        if (name.IndexOf(filter.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                            list.Items.Add(name, picked.Contains(name));
+                    }
+                    filling = false;
+                };
+                list.ItemCheck += (s, e) =>
+                {
+                    if (filling)
+                        return;
+                    string name = (string)list.Items[e.Index];
+                    if (e.NewValue == CheckState.Checked)
+                        picked.Add(name);
+                    else
+                        picked.Remove(name);
+                };
+                filter.TextChanged += (s, e) => fill();
+                fill();
+
+                form.Controls.Add(list);
+                form.Controls.Add(filter);
+                form.Controls.Add(buttons);
+
+                if (form.ShowDialog(this) != DialogResult.OK)
+                    return new List<string>();
+            }
+            return all.Where(picked.Contains).ToList();
+        }
+
+        private void btnRemoveBone_Click(object sender, EventArgs e)
+        {
+            if (activeFVIS == null || dataGridView1.CurrentCell == null || dataGridView1.CurrentCell.ColumnIndex < 1)
+                return;
+
+            string bone = dataGridView1.Columns[dataGridView1.CurrentCell.ColumnIndex].Name;
+            if (MessageBox.Show($"Remove {bone}'s keys from this animation? It goes back to its starting visibility from the file.",
+                "Remove bone", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                return;
+
+            activeFVIS.Values.RemoveAll(x => x.Text == bone);
+            activeFVIS.IsEdited = true;
+            UpdateBoneColumns(activeFVIS);
+            UpdateFrameCells(activeFVIS);
         }
 
         private void btnRemoveKey_Click(object sender, EventArgs e)
