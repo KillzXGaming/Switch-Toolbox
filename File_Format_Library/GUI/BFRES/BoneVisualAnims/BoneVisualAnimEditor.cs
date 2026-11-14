@@ -17,9 +17,48 @@ namespace FirstPlugin.Forms
 {
     public partial class BoneVisualAnimEditor : UserControl
     {
+        private NumericUpDown keyFrameUD;
+
         public BoneVisualAnimEditor()
         {
             InitializeComponent();
+
+            var bar = new FlowLayoutPanel() { Dock = DockStyle.Top, Height = 29, WrapContents = false };
+            keyFrameUD = new NumericUpDown()
+            {
+                Width = 70,
+                Maximum = 1000000,
+                Margin = new Padding(3, 4, 3, 0),
+                BackColor = FormThemes.BaseTheme.FormBackColor,
+                ForeColor = FormThemes.BaseTheme.FormForeColor
+            };
+            var btnAddKey = new STButton() { Text = "Add key", Size = new Size(75, 23) };
+            var btnRemoveKey = new STButton() { Text = "Remove key", Size = new Size(85, 23) };
+            btnAddKey.Click += btnAddKey_Click;
+            btnRemoveKey.Click += btnRemoveKey_Click;
+            bar.Controls.Add(new Label()
+            {
+                Text = "Frame",
+                AutoSize = true,
+                Margin = new Padding(3, 7, 0, 0),
+                ForeColor = FormThemes.BaseTheme.FormForeColor
+            });
+            bar.Controls.AddRange(new Control[] { keyFrameUD, btnAddKey, btnRemoveKey });
+
+            Controls.Add(bar);
+            dataGridView1.Dock = DockStyle.Fill;
+            Controls.SetChildIndex(dataGridView1, 0);
+            Controls.SetChildIndex(bar, 1);
+
+            dataGridView1.CurrentCellDirtyStateChanged += (s, e) => {
+                if (dataGridView1.IsCurrentCellDirty)
+                    dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            };
+            dataGridView1.SelectionChanged += (s, e) => {
+                int frame;
+                if (dataGridView1.CurrentRow != null && int.TryParse(dataGridView1.CurrentRow.Cells["FrameColumn"].Value?.ToString(), out frame))
+                    keyFrameUD.Value = Math.Min(frame, keyFrameUD.Maximum);
+            };
         }
 
         public void UpdateDataGrid()
@@ -53,6 +92,8 @@ namespace FirstPlugin.Forms
         public void LoadVisualAnim(FVIS vis)
         {
             activeFVIS = vis;
+            keyFrameUD.Maximum = Math.Max(vis.FrameCount, 1);
+            keyFrameUD.Value = Math.Min(Math.Max((decimal)vis.Frame, 0), keyFrameUD.Maximum);
 
             UpdateBoneColumns(vis);
             UpdateFrameCells(vis);
@@ -91,6 +132,9 @@ namespace FirstPlugin.Forms
 
         private void UpdateFrameCells(FVIS vis)
         {
+            bool wasLoaded = isLoaded;
+            isLoaded = false;
+
             dataGridView1.DataSource = null;
             dataGridView1.Rows.Clear();
 
@@ -118,6 +162,7 @@ namespace FirstPlugin.Forms
 
 
             dataGridView1.ApplyStyles();
+            isLoaded = wasLoaded;
         }
 
         private bool IsKeyed(FVIS fvis, int Frame)
@@ -142,10 +187,12 @@ namespace FirstPlugin.Forms
             };
             dataGridView1.Columns.Add(column);
 
-            if (activeFVIS.VisibilityAnimU != null) {
+            if (activeFVIS.VisibilityAnimU != null)
+            {
                 activeFVIS.VisibilityAnimU.Names.Add(BoneName);
             }
-            else {
+            else
+            {
                 activeFVIS.VisibilityAnim.Names.Add(BoneName);
             }
 
@@ -155,10 +202,12 @@ namespace FirstPlugin.Forms
         {
             dataGridView1.Columns.Remove(dataGridView1.Columns[BoneName]);
 
-            if (activeFVIS.VisibilityAnimU != null) {
+            if (activeFVIS.VisibilityAnimU != null)
+            {
                 activeFVIS.VisibilityAnimU.Names.Remove(BoneName);
             }
-            else {
+            else
+            {
                 activeFVIS.VisibilityAnim.Names.Remove(BoneName);
             }
         }
@@ -189,10 +238,11 @@ namespace FirstPlugin.Forms
                         group.Scale = 0;
                         group.Delta = 0;
 
-                        for (int frame = 0; frame <= activeFVIS.FrameCount; frame++)
-                        {
-                            group.Keys.Add(new BooleanKeyFrame() { Frame = frame, InterType = InterpolationType.STEPBOOL, Visible = false });
-                        }
+                        //One key at frame 0 with the bone's current visibility
+                        var names = activeFVIS.VisibilityAnimU != null ? activeFVIS.VisibilityAnimU.Names : activeFVIS.VisibilityAnim.Names;
+                        int baseIndex = names.IndexOf(bone);
+                        bool visible = baseIndex < 0 || activeFVIS.BaseValues == null || baseIndex >= activeFVIS.BaseValues.Length || activeFVIS.BaseValues[baseIndex];
+                        group.Keys.Add(new BooleanKeyFrame() { Frame = 0, InterType = InterpolationType.STEPBOOL, Visible = visible, IsKeyed = true });
 
                         activeFVIS.Values.Add(group);
                     }
@@ -221,7 +271,9 @@ namespace FirstPlugin.Forms
 
             if (cell != null && cell.Value != null)
             {
-                float Frame = e.RowIndex;
+                float Frame;
+                if (!float.TryParse(row.Cells["FrameColumn"].Value?.ToString(), out Frame))
+                    return;
 
                 string BoneName = dataGridView1.Columns[e.ColumnIndex].HeaderText;
 
@@ -232,18 +284,94 @@ namespace FirstPlugin.Forms
                         bool IsChecked = (bool)(Convert.ToBoolean(cell.Value) == true);
                         bool IsNotChecked = (bool)(Convert.ToBoolean(cell.Value) == false);
 
+                        var key = value.GetKeyFrame(Frame);
+                        key.IsKeyed = true;
+                        key.InterType = InterpolationType.STEPBOOL;
+
                         if (IsChecked)
                         {
-                            value.SetBoolean(Frame, true);
+                            key.Visible = true;
                         }
                         if (IsNotChecked)
                         {
-                            value.SetBoolean(Frame, false);
+                            key.Visible = false;
                         }
 
                         activeFVIS.IsEdited = true;
+                        RefreshColumn(e.ColumnIndex, value);
                     }
                 }
+            }
+        }
+
+        private void RefreshColumn(int columnIndex, BooleanKeyGroup track)
+        {
+            bool wasLoaded = isLoaded;
+            isLoaded = false;
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                float frame;
+                if (float.TryParse(row.Cells["FrameColumn"].Value?.ToString(), out frame))
+                    row.Cells[columnIndex].Value = track.GetValue(frame);
+            }
+
+            isLoaded = wasLoaded;
+        }
+
+        private void btnAddKey_Click(object sender, EventArgs e)
+        {
+            if (activeFVIS == null || activeFVIS.Values.Count == 0)
+                return;
+
+            float frame = (float)keyFrameUD.Value;
+
+            //Key every bone at this frame with the value it already has there
+            foreach (var track in activeFVIS.Values)
+            {
+                bool current = track.Keys.Count == 0 || track.GetValue(frame);
+                var key = track.GetKeyFrame(frame);
+                if (!key.IsKeyed)
+                {
+                    key.IsKeyed = true;
+                    key.InterType = InterpolationType.STEPBOOL;
+                    key.Visible = current;
+                }
+            }
+
+            activeFVIS.IsEdited = true;
+            UpdateFrameCells(activeFVIS);
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.Cells["FrameColumn"].Value?.ToString() == ((int)frame).ToString())
+                {
+                    dataGridView1.CurrentCell = row.Cells["FrameColumn"];
+                    break;
+                }
+            }
+        }
+
+        private void btnRemoveKey_Click(object sender, EventArgs e)
+        {
+            if (activeFVIS == null)
+                return;
+
+            float frame = (float)keyFrameUD.Value;
+            if (frame == 0)
+            {
+                MessageBox.Show("Frame 0 holds each bone's starting visibility. Change its boxes instead of removing it.");
+                return;
+            }
+
+            int removed = 0;
+            foreach (var track in activeFVIS.Values)
+                removed += track.Keys.RemoveAll(k => k.Frame == frame);
+
+            if (removed > 0)
+            {
+                activeFVIS.IsEdited = true;
+                UpdateFrameCells(activeFVIS);
             }
         }
     }
