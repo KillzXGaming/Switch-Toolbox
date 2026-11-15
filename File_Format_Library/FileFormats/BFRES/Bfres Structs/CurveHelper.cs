@@ -17,7 +17,7 @@ namespace Bfres.Structs
         public static AnimCurveFrameType GetFrameType(uint FrameCount)
         {
             if (FrameCount < byte.MaxValue) return AnimCurveFrameType.Byte;
-            if (FrameCount < Int16.MaxValue) return AnimCurveFrameType.Decimal10x5;
+            if (FrameCount <= Int16.MaxValue / 32) return AnimCurveFrameType.Decimal10x5;
             else return AnimCurveFrameType.Single;
         }
 

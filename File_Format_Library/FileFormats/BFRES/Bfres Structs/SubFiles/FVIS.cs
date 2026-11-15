@@ -31,17 +31,20 @@ namespace Bfres.Structs
             CanDelete = true;
         }
 
-        public ResFile GetResFile() {
+        public ResFile GetResFile()
+        {
             return ((BFRESGroupNode)Parent).GetResFile();
         }
 
-        public ResU.ResFile GetResFileU() {
+        public ResU.ResFile GetResFileU()
+        {
             return ((BFRESGroupNode)Parent).GetResFileU();
         }
 
         public override void OnClick(TreeView treeView) => UpdateEditor();
 
-        public void UpdateEditor(){
+        public void UpdateEditor()
+        {
             ((BFRES)Parent?.Parent?.Parent)?.LoadEditors(this);
         }
 
@@ -101,10 +104,20 @@ namespace Bfres.Structs
             }
             else
             {
+                //Keep each bone's visibility when it has no keys
+                var oldBase = new Dictionary<string, bool>();
+                for (int i = 0; VisibilityAnim.Names != null && VisibilityAnim.BaseDataList != null &&
+                    i < VisibilityAnim.Names.Count && i < VisibilityAnim.BaseDataList.Length; i++)
+                    oldBase[VisibilityAnim.Names[i]] = VisibilityAnim.BaseDataList[i];
+
                 VisibilityAnim.Names = BoneNames;
                 VisibilityAnim.Path = "";
                 VisibilityAnim.FrameCount = FrameCount;
                 VisibilityAnim.BaseDataList = new bool[BoneNames.Count];
+                for (int i = 0; i < BoneNames.Count; i++)
+                    VisibilityAnim.BaseDataList[i] = !oldBase.ContainsKey(BoneNames[i]) || oldBase[BoneNames[i]];
+
+                var curves = new List<AnimCurve>();
 
                 int boneIndex = 0;
                 foreach (BooleanKeyGroup value in Values)
@@ -115,7 +128,7 @@ namespace Bfres.Structs
                         curve.AnimDataOffset = (uint)BoneNames.IndexOf(value.Text);
                         curve.Scale = value.Scale;
                         curve.Offset = value.Offset;
-                        curve.KeyType = AnimCurveKeyType.SByte;
+                        curve.KeyType = AnimCurveKeyType.Single;
                         curve.FrameType = CurveHelper.GetFrameType((uint)FrameCount);
                         curve.CurveType = AnimCurveType.StepBool;
 
@@ -147,11 +160,25 @@ namespace Bfres.Structs
                             {
                                 KeyFrames.Add(currentFrame);
                                 KeyBooleans.Add(currentValue);
-                                VisibilityAnim.BaseDataList[boneIndex] = currentValue;
+                                VisibilityAnim.BaseDataList[curve.AnimDataOffset] = currentValue;
                             }
                         }
 
                         curve.KeyStepBoolData = KeyBooleans.ToArray();
+                        curve.Frames = KeyFrames.ToArray();
+                        curve.StartFrame = KeyFrames[0];
+                        curve.EndFrame = KeyFrames[KeyFrames.Count - 1];
+
+                        //On/off keys are stored as bits, 32 per word
+                        uint[] words = new uint[(KeyBooleans.Count + 31) / 32];
+                        for (int k = 0; k < KeyBooleans.Count; k++)
+                        {
+                            if (KeyBooleans[k])
+                                words[k / 32] |= 1u << (k % 32);
+                        }
+                        curve.BooleanWords = words;
+                        curve.Keys = new float[words.Length, 1];
+                        curves.Add(curve);
 
                         for (int frame = 0; frame < FrameCount; frame++)
                         {
@@ -165,6 +192,23 @@ namespace Bfres.Structs
                     boneIndex++;
                 }
 
+                //Pack the start values into BaseDataList
+                var packed = new byte[(VisibilityAnim.BaseDataList.Length + 31) / 32 * 4];
+                for (int i = 0; i < VisibilityAnim.BaseDataList.Length; i++)
+                {
+                    if (VisibilityAnim.BaseDataList[i])
+                        packed[i / 8] |= (byte)(1 << (i % 8));
+                }
+                VisibilityAnim.BaseSDataList = packed;
+
+                VisibilityAnim.Curves = curves;
+                if (VisibilityAnim.BindIndices == null || VisibilityAnim.BindIndices.Length != BoneNames.Count)
+                {
+                    //0xFFFF: bound to the model's bones by name when played
+                    VisibilityAnim.BindIndices = new ushort[BoneNames.Count];
+                    for (int i = 0; i < BoneNames.Count; i++)
+                        VisibilityAnim.BindIndices[i] = 0xFFFF;
+                }
 
             }
         }
@@ -242,7 +286,7 @@ namespace Bfres.Structs
                 if (Frame == 0)
                 {
                     foreach (var bone in model.Skeleton.bones)
-                            bone.Visible = true;
+                        bone.Visible = true;
 
                     //Hide base values
                     int index = 0;

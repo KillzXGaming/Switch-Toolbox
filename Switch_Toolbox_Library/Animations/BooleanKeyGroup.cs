@@ -83,38 +83,22 @@ namespace Toolbox.Library.Animations
             return key;
         }
 
-        int LastFound = 0;
-        float LastFrame;
         public bool GetValue(float frame)
         {
-            BooleanKeyFrame k1 = (BooleanKeyFrame)Keys[0], k2 = (BooleanKeyFrame)Keys[0];
-            int i = 0;
-            if (frame < LastFrame)
-                LastFound = 0;
-            for (i = LastFound; i < Keys.Count; i++)
+            if (Keys.Count == 0)
+                return true;
+
+            BooleanKeyFrame k1 = Keys[0];
+            int lo = 0, hi = Keys.Count - 1;
+            while (lo <= hi)
             {
-                LastFound = i % (Keys.Count);
-                BooleanKeyFrame k = Keys[LastFound];
-                if (k.Frame < frame)
-                {
-                    k1 = k;
+                int mid = (lo + hi) / 2;
+                if (Keys[mid].Frame <= frame)
+                { 
+                    k1 = Keys[mid]; lo = mid + 1;
                 }
-                else
-                {
-                    k2 = k;
-                    break;
-                }
+                else hi = mid - 1;
             }
-            LastFound -= 1;
-            if (LastFound < 0)
-                LastFound = 0;
-            if (LastFound >= Keys.Count - 2)
-                LastFound = 0;
-            LastFrame = frame;
-
-            if (k1.InterType == InterpolationType.STEPBOOL)
-                return k1.Visible;
-
             return k1.Visible;
         }
     }
