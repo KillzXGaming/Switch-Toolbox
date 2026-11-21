@@ -89,6 +89,14 @@ namespace Toolbox.Library
         public List<string> boneList = new List<string>();
         public List<Vertex> vertices = new List<Vertex>();
 
+        public List<Vertex> GetLodVertices(int index)
+        {
+            index = Math.Max(0, Math.Min(index, lodMeshes.Count - 1));
+            var maxVertex = lodMeshes[index].faces.Max(x => x + 1);
+            var firstVertex = lodMeshes[index].FirstVertex;
+            return vertices.Skip((int)firstVertex).Take(maxVertex).ToList();
+        }
+
         public List<LOD_Mesh> lodMeshes = new List<LOD_Mesh>();
         public class LOD_Mesh
         {

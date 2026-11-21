@@ -1,10 +1,11 @@
+using Collada141;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using OpenTK;
 using Toolbox.Library.IO;
 using Toolbox.Library.Rendering;
 
@@ -115,7 +116,8 @@ namespace Toolbox.Library.FBX
                 bool hasTangents = false;
                 bool hasBitangents = false;
 
-                foreach (var vertex in mesh.vertices)
+                var vertices = mesh.GetLodVertices(0);
+                foreach (var vertex in vertices)
                 {
                     if (vertex.nrm != Vector3.Zero) hasNormals = true;
                     if (settings.UseVertexColors && vertex.col != Vector4.One) hasColors = true;
@@ -131,9 +133,9 @@ namespace Toolbox.Library.FBX
                     if (vertex.bitan != Vector4.Zero && vertex.bitan.Xyz != Vector3.Zero) hasBitangents = true;
                 }
 
-                for (int vertexIndex = 0; vertexIndex < mesh.vertices.Count; vertexIndex++)
+                for (int vertexIndex = 0; vertexIndex < vertices.Count; vertexIndex++)
                 {
-                    Vertex v = mesh.vertices[vertexIndex];
+                    Vertex v = vertices[vertexIndex];
 
                     int[] bIndices = new int[4] { -1, -1, -1, -1 };
                     double[] bWeights = new double[4] { 0, 0, 0, 0 };
@@ -354,14 +356,15 @@ namespace Toolbox.Library.FBX
                 if (faces == null || faces.Count == 0)
                     continue;
 
+                var vertices = mesh.GetLodVertices(0);
                 int faceCount = poly.displayFaceSize > 0 ? Math.Min(poly.displayFaceSize, faces.Count) : faces.Count;
                 for (int i = 0; i < faceCount; i++)
                 {
                     int vertexIndex = faces[i];
-                    if (vertexIndex < 0 || vertexIndex >= mesh.vertices.Count || transformedUvs.ContainsKey(vertexIndex))
+                    if (vertexIndex < 0 || vertexIndex >= vertices.Count || transformedUvs.ContainsKey(vertexIndex))
                         continue;
 
-                    Vector2 uv = mesh.vertices[vertexIndex].uv0;
+                    Vector2 uv = vertices[vertexIndex].uv0;
                     transformedUvs.Add(vertexIndex, (uv * transform.Scale) + transform.Translate);
                 }
             }

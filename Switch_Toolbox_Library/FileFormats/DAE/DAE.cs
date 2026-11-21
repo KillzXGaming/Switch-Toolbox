@@ -243,9 +243,10 @@ namespace Toolbox.Library
                     {
                         for (int i = 0; i < Meshes.Count; i++)
                         {
-                            for (int v = 0; v < Meshes[i].vertices.Count; v++)
+                            var vertices = Meshes[i].GetLodVertices(0);
+                            for (int v = 0; v < vertices.Count; v++)
                             {
-                                var vertex = Meshes[i].vertices[v];
+                                var vertex = vertices[v];
                                 for (int j = 0; j < vertex.boneIds.Count; j++)
                                 {
                                     int id = -1;
@@ -387,7 +388,8 @@ namespace Toolbox.Library
                     bool HasUV3 = false;
                     bool HasBoneIds = false;
 
-                    foreach (var vertex in mesh.vertices)
+                    var vertices = mesh.GetLodVertices(0);
+                    foreach (var vertex in vertices)
                     {
                         if (vertex.nrm != Vector3.Zero) HasNormals = true;
                         if (settings.UseVertexColors) HasColors = true;
