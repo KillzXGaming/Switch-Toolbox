@@ -19,7 +19,7 @@ namespace FirstPlugin
         public static string FSKL = GetFilter(".bfskl");
         public static string FSHP = GetFilter(".bfobj", ".dae");
         public static string BONE = GetFilter(".bfbon");
-        public static string FMAT = GetFilter(".bfmat");
+        public static string FMAT = GetFilter(".json", ".bfmat");
 
         public static string FSKA_EXPORT = GetFilter(".bfska", ".anim", ".seanim", ".smd", ".chr0");
         public static string FSKA_REPLACE = GetFilter(".bfska",".anim", ".seanim", ".smd", ".chr0");

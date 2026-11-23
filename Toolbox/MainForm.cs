@@ -1686,6 +1686,12 @@ namespace Toolbox
                     path = Utils.RenameDuplicateString(batchExportFileList, path, 0, 3);
 
                     DAE.Export($"{path}.{extension}", daesettings, model, textures, model.GenericSkeleton);
+                    foreach (var material in model.Materials
+                                             .Select(m => m as FMAT)
+                                             .Where(m => m != null))
+                    {
+                        material.Export($"{path}_{material.Text}.json", false);
+                    }
                     batchExportFileList.Add(path);
                 }
             }
@@ -1713,6 +1719,12 @@ namespace Toolbox
                 batchExportFileList.Add(path);
 
                 DAE.Export($"{path}.{extension}", daesettings, model, textures, skeleton);
+                foreach (var material in model.Materials
+                                         .Select(m => m as FMAT)
+                                         .Where(m => m != null))
+                {
+                    material.Export($"{path}_{material.Text}.json", false);
+                }
             }
 
             fileFormat.Unload();
