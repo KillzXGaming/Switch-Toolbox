@@ -105,10 +105,12 @@ namespace Toolbox.Library.FBX
                 // Detect what attributes are actually present in the mesh
                 // This matches the DAE exporter's approach of checking actual vertex data
                 bool hasNormals = false;
-                bool hasColors = false;
-                bool hasColors2 = false;
-                bool hasColors3 = false;
-                bool hasColors4 = false;
+                bool hasColor0 = false;
+                bool hasColor1 = false;
+                bool hasColor2 = false;
+                bool hasColor3 = false;
+                int colorCount = 0;
+                int uvCount = 0;
                 bool hasUV0 = false;
                 bool hasUV1 = false;
                 bool hasUV2 = false;
@@ -120,14 +122,47 @@ namespace Toolbox.Library.FBX
                 foreach (var vertex in vertices)
                 {
                     if (vertex.nrm != Vector3.Zero) hasNormals = true;
-                    if (settings.UseVertexColors && vertex.col != Vector4.One) hasColors = true;
-                    if (settings.UseVertexColors && vertex.col2 != Vector4.One) hasColors2 = true;
-                    if (settings.UseVertexColors && vertex.col3 != Vector4.One) hasColors3 = true;
-                    if (settings.UseVertexColors && vertex.col4 != Vector4.One) hasColors4 = true;
-                    if (vertex.uv0 != Vector2.Zero) hasUV0 = true;
-                    if (vertex.uv1 != Vector2.Zero) hasUV1 = true;
-                    if (vertex.uv2 != Vector2.Zero) hasUV2 = true;
-                    if (vertex.uv3 != Vector2.Zero) hasUV3 = true;
+                    if (settings.UseVertexColors && vertex.col != Vertex.DEFAULT_COLOR)
+                    {
+                        hasColor0 = true;
+                        colorCount = 1;
+                    }
+                    if (settings.UseVertexColors && vertex.col1 != Vertex.DEFAULT_COLOR)
+                    {
+                        hasColor1 = true;
+                        colorCount = 2;
+                    }
+                    if (settings.UseVertexColors && vertex.col2 != Vertex.DEFAULT_COLOR)
+                    {
+                        hasColor2 = true;
+                        colorCount = 3;
+                    }
+                    if (settings.UseVertexColors && vertex.col3 != Vertex.DEFAULT_COLOR)
+                    {
+                        hasColor3 = true;
+                        colorCount = 4;
+                    }
+
+                    if (vertex.uv0 != Vertex.DEFAULT_UV)
+                    {
+                        hasUV0 = true;
+                        uvCount = 1;
+                    }
+                    if (vertex.uv1 != Vertex.DEFAULT_UV)
+                    {
+                        hasUV1 = true;
+                        uvCount = 2;
+                    }
+                    if (vertex.uv2 != Vertex.DEFAULT_UV)
+                    {
+                        hasUV2 = true;
+                        uvCount = 3;
+                    }
+                    if (vertex.uv3 != Vertex.DEFAULT_UV)
+                    {
+                        hasUV3 = true;
+                        uvCount = 4;
+                    }
                     // Check for tangents and bitangents (from BFRES _t0 and _b0 attributes)
                     if (vertex.tan != Vector4.Zero && vertex.tan.Xyz != Vector3.Zero) hasTangents = true;
                     if (vertex.bitan != Vector4.Zero && vertex.bitan.Xyz != Vector3.Zero) hasBitangents = true;
@@ -201,6 +236,21 @@ namespace Toolbox.Library.FBX
                         FbxNativeWrapper.Exp_AddVertexBitangent(v.bitan.X, v.bitan.Y, v.bitan.Z);
                     }
 
+                    if (settings.InsertDummyAttributes)
+                    {
+                        // Force UVs and Vertex Colors on for dummy attributes
+                        // SB sets colors automatically to RED (R=1.0 G=0.0 B=0.0 A=0.0)
+                        hasUV0 = hasUV0 || (uvCount > 0);
+                        hasUV1 = hasUV0 || (uvCount > 1);
+                        hasUV2 = hasUV0 || (uvCount > 2);
+                        hasUV3 = hasUV0 || (uvCount > 3);
+
+                        hasColor0 = hasColor0 || (colorCount > 0);
+                        hasColor1 = hasColor1 || (colorCount > 1);
+                        hasColor2 = hasColor2 || (colorCount > 2);
+                        hasColor3 = hasColor3 || (colorCount > 3);
+                    }
+
                     // Add ALL UV channels that exist in the mesh
                     // This matches the DAE exporter which exports all UV sets
                     if (hasUV0 || mesh.HasUv0)
@@ -231,14 +281,14 @@ namespace Toolbox.Library.FBX
                     // This matches the DAE exporter which exports all color sets
                     if (settings.UseVertexColors)
                     {
-                        if (hasColors || mesh.HasVertColors || v.col != Vector4.One)
+                        if (hasColor0 || mesh.HasVertColors || v.col != Vertex.DEFAULT_COLOR)
                             FbxNativeWrapper.Exp_AddVertexColor(0, v.col.X, v.col.Y, v.col.Z, v.col.W);
-                        if (hasColors2 || mesh.HasVertColors2 || v.col2 != Vector4.One)
-                            FbxNativeWrapper.Exp_AddVertexColor(1, v.col2.X, v.col2.Y, v.col2.Z, v.col2.W);
-                        if (hasColors3 || v.col3 != Vector4.One)
-                            FbxNativeWrapper.Exp_AddVertexColor(2, v.col3.X, v.col3.Y, v.col3.Z, v.col3.W);
-                        if (hasColors4 || v.col4 != Vector4.One)
-                            FbxNativeWrapper.Exp_AddVertexColor(3, v.col4.X, v.col4.Y, v.col4.Z, v.col4.W);
+                        if (hasColor1 || mesh.HasVertColors2 || v.col1 != Vertex.DEFAULT_COLOR)
+                            FbxNativeWrapper.Exp_AddVertexColor(1, v.col1.X, v.col1.Y, v.col1.Z, v.col1.W);
+                        if (hasColor2 || v.col2 != Vertex.DEFAULT_COLOR)
+                            FbxNativeWrapper.Exp_AddVertexColor(2, v.col2.X, v.col2.Y, v.col2.Z, v.col2.W);
+                        if (hasColor3 || v.col3 != Vertex.DEFAULT_COLOR)
+                            FbxNativeWrapper.Exp_AddVertexColor(3, v.col3.X, v.col3.Y, v.col3.Z, v.col3.W);
                     }
                     else
                     {

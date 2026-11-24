@@ -463,7 +463,7 @@ namespace FirstPlugin
                 {
                     if (setting.SetNormalsToColorChannel2)
                     {
-                           mesh.vertices[i].col2 = new OpenTK.Vector4(
+                           mesh.vertices[i].col1 = new OpenTK.Vector4(
                            mesh.vertices[i].nrm.X * 0.5f + 0.5f,
                            mesh.vertices[i].nrm.Y * 0.5f + 0.5f,
                            mesh.vertices[i].nrm.Z * 0.5f + 0.5f,

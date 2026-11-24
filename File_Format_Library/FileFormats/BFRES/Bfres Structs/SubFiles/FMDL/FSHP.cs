@@ -2169,9 +2169,9 @@ namespace Bfres.Structs
                 tans.Add(new Syroot.Maths.Vector4F(vtx.tan.X, vtx.tan.Y, vtx.tan.Z, vtx.tan.W));
                 bitans.Add(new Syroot.Maths.Vector4F(vtx.bitan.X, vtx.bitan.Y, vtx.bitan.Z, vtx.bitan.W));
                 colors.Add(new Syroot.Maths.Vector4F(vtx.col.X, vtx.col.Y, vtx.col.Z, vtx.col.W));
-                colors1.Add(new Syroot.Maths.Vector4F(vtx.col2.X, vtx.col2.Y, vtx.col2.Z, vtx.col2.W));
-                colors2.Add(new Syroot.Maths.Vector4F(vtx.col3.X, vtx.col3.Y, vtx.col3.Z, vtx.col3.W));
-                colors3.Add(new Syroot.Maths.Vector4F(vtx.col4.X, vtx.col4.Y, vtx.col4.Z, vtx.col4.W));
+                colors1.Add(new Syroot.Maths.Vector4F(vtx.col1.X, vtx.col1.Y, vtx.col1.Z, vtx.col1.W));
+                colors2.Add(new Syroot.Maths.Vector4F(vtx.col2.X, vtx.col2.Y, vtx.col2.Z, vtx.col2.W));
+                colors3.Add(new Syroot.Maths.Vector4F(vtx.col3.X, vtx.col3.Y, vtx.col3.Z, vtx.col3.W));
 
                 // Init arrays based on skincount
                 float[] weightsA = new float[TargetVertexSkinCount];

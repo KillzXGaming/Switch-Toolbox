@@ -477,7 +477,7 @@ namespace FirstPlugin
                     Position = v.pos,
                     Normal = v.nrm,
                     Color0 = v.col,
-                    Color1 = v.col2,
+                    Color1 = v.col1,
                     TexCoord0 = v.uv0,
                     TexCoord1 = v.uv1,
                     TexCoord2 = v.uv2,

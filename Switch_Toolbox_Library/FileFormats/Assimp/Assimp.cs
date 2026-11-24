@@ -722,11 +722,11 @@ namespace Toolbox.Library
                     if (msh.HasVertexColors(0))
                         vert.col = new Vector4(msh.VertexColorChannels[0][v].R, msh.VertexColorChannels[0][v].G, msh.VertexColorChannels[0][v].B, msh.VertexColorChannels[0][v].A);
                     if (msh.HasVertexColors(1))
-                        vert.col2 = new Vector4(msh.VertexColorChannels[1][v].R, msh.VertexColorChannels[1][v].G, msh.VertexColorChannels[1][v].B, msh.VertexColorChannels[1][v].A);
+                        vert.col1 = new Vector4(msh.VertexColorChannels[1][v].R, msh.VertexColorChannels[1][v].G, msh.VertexColorChannels[1][v].B, msh.VertexColorChannels[1][v].A);
                     if (msh.HasVertexColors(2))
-                        vert.col3 = new Vector4(msh.VertexColorChannels[2][v].R, msh.VertexColorChannels[2][v].G, msh.VertexColorChannels[2][v].B, msh.VertexColorChannels[2][v].A);
+                        vert.col2 = new Vector4(msh.VertexColorChannels[2][v].R, msh.VertexColorChannels[2][v].G, msh.VertexColorChannels[2][v].B, msh.VertexColorChannels[2][v].A);
                     if (msh.HasVertexColors(3))
-                        vert.col4 = new Vector4(msh.VertexColorChannels[3][v].R, msh.VertexColorChannels[3][v].G, msh.VertexColorChannels[3][v].B, msh.VertexColorChannels[3][v].A);
+                        vert.col3 = new Vector4(msh.VertexColorChannels[3][v].R, msh.VertexColorChannels[3][v].G, msh.VertexColorChannels[3][v].B, msh.VertexColorChannels[3][v].A);
                 }
                 if (msh.HasTangentBasis)
                     vert.bitan = new Vector4(msh.BiTangents[v].X, msh.BiTangents[v].Y, msh.BiTangents[v].Z, 1);

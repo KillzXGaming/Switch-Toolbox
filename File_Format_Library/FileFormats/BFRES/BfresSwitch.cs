@@ -405,11 +405,11 @@ namespace FirstPlugin
                 if (vec4c0.Length > 0)
                     v.col = new Vector4(vec4c0[i].X, vec4c0[i].Y, vec4c0[i].Z, vec4c0[i].W);
                 if (vec4c1.Length > 0)
-                    v.col2 = new Vector4(vec4c1[i].X, vec4c1[i].Y, vec4c1[i].Z, vec4c1[i].W);
+                    v.col1 = new Vector4(vec4c1[i].X, vec4c1[i].Y, vec4c1[i].Z, vec4c1[i].W);
                 if (vec4c2.Length > 0)
-                    v.col3 = new Vector4(vec4c2[i].X, vec4c2[i].Y, vec4c2[i].Z, vec4c2[i].W);
+                    v.col2 = new Vector4(vec4c2[i].X, vec4c2[i].Y, vec4c2[i].Z, vec4c2[i].W);
                 if (vec4c3.Length > 0)
-                    v.col4 = new Vector4(vec4c3[i].X, vec4c3[i].Y, vec4c3[i].Z, vec4c3[i].W);
+                    v.col3 = new Vector4(vec4c3[i].X, vec4c3[i].Y, vec4c3[i].Z, vec4c3[i].W);
 
                 if (fshp.VertexSkinCount == 1)
                 {

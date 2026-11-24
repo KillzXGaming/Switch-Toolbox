@@ -39,11 +39,13 @@
             this.chkTextureChannelComps = new Toolbox.Library.Forms.STCheckBox();
             this.chkForceZeroShininessFbx = new Toolbox.Library.Forms.STCheckBox();
             this.chkNormalsAsFlatColorFbx = new Toolbox.Library.Forms.STCheckBox();
+            this.chkDummyAttributes = new Toolbox.Library.Forms.STCheckBox();
             this.contentContainer.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // contentContainer
-            //
+            // 
+            this.contentContainer.Controls.Add(this.chkDummyAttributes);
             this.contentContainer.Controls.Add(this.chkNormalsAsFlatColorFbx);
             this.contentContainer.Controls.Add(this.chkForceZeroShininessFbx);
             this.contentContainer.Controls.Add(this.chkTextureChannelComps);
@@ -68,9 +70,10 @@
             this.contentContainer.Controls.SetChildIndex(this.chkTextureChannelComps, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkForceZeroShininessFbx, 0);
             this.contentContainer.Controls.SetChildIndex(this.chkNormalsAsFlatColorFbx, 0);
-            //
+            this.contentContainer.Controls.SetChildIndex(this.chkDummyAttributes, 0);
+            // 
             // exportTexturesChkBox
-            //
+            // 
             this.exportTexturesChkBox.AutoSize = true;
             this.exportTexturesChkBox.Checked = true;
             this.exportTexturesChkBox.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -81,9 +84,9 @@
             this.exportTexturesChkBox.Text = "Export Textures";
             this.exportTexturesChkBox.UseVisualStyleBackColor = true;
             this.exportTexturesChkBox.CheckedChanged += new System.EventHandler(this.exportTexturesChkBox_CheckedChanged);
-            //
+            // 
             // stButton1
-            //
+            // 
             this.stButton1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.stButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.stButton1.Location = new System.Drawing.Point(254, 261);
@@ -92,9 +95,9 @@
             this.stButton1.TabIndex = 12;
             this.stButton1.Text = "Cancel";
             this.stButton1.UseVisualStyleBackColor = false;
-            //
+            // 
             // stButton2
-            //
+            // 
             this.stButton2.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.stButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.stButton2.Location = new System.Drawing.Point(173, 261);
@@ -103,9 +106,9 @@
             this.stButton2.TabIndex = 13;
             this.stButton2.Text = "Ok";
             this.stButton2.UseVisualStyleBackColor = false;
-            //
+            // 
             // chkFlipUvsVertical
-            //
+            // 
             this.chkFlipUvsVertical.AutoSize = true;
             this.chkFlipUvsVertical.Location = new System.Drawing.Point(20, 147);
             this.chkFlipUvsVertical.Name = "chkFlipUvsVertical";
@@ -114,9 +117,9 @@
             this.chkFlipUvsVertical.Text = "Flp UVs Vertical";
             this.chkFlipUvsVertical.UseVisualStyleBackColor = true;
             this.chkFlipUvsVertical.CheckedChanged += new System.EventHandler(this.chkFlipUvsVertical_CheckedChanged);
-            //
+            // 
             // chkOldExporter
-            //
+            // 
             this.chkOldExporter.AutoSize = true;
             this.chkOldExporter.Location = new System.Drawing.Point(20, 170);
             this.chkOldExporter.Name = "chkOldExporter";
@@ -125,9 +128,9 @@
             this.chkOldExporter.Text = "Use Old Exporter (If new one breaks)";
             this.chkOldExporter.UseVisualStyleBackColor = true;
             this.chkOldExporter.CheckedChanged += new System.EventHandler(this.stCheckBox1_CheckedChanged);
-            //
+            // 
             // chkVertexColors
-            //
+            // 
             this.chkVertexColors.AutoSize = true;
             this.chkVertexColors.Checked = true;
             this.chkVertexColors.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -138,9 +141,9 @@
             this.chkVertexColors.Text = "Export Vertex Colors";
             this.chkVertexColors.UseVisualStyleBackColor = true;
             this.chkVertexColors.CheckedChanged += new System.EventHandler(this.chkVertexColors_CheckedChanged);
-            //
+            // 
             // chkExportRiggedBonesOnly
-            //
+            // 
             this.chkExportRiggedBonesOnly.AutoSize = true;
             this.chkExportRiggedBonesOnly.Enabled = false;
             this.chkExportRiggedBonesOnly.Location = new System.Drawing.Point(23, 93);
@@ -150,9 +153,9 @@
             this.chkExportRiggedBonesOnly.Text = "Export Only Rigged Bones";
             this.chkExportRiggedBonesOnly.UseVisualStyleBackColor = true;
             this.chkExportRiggedBonesOnly.CheckedChanged += new System.EventHandler(this.chkExportRiggedBonesOnly_CheckedChanged);
-            //
+            // 
             // chkApplyUVTransforms
-            //
+            // 
             this.chkApplyUVTransforms.AutoSize = true;
             this.chkApplyUVTransforms.Location = new System.Drawing.Point(23, 116);
             this.chkApplyUVTransforms.Name = "chkApplyUVTransforms";
@@ -161,9 +164,9 @@
             this.chkApplyUVTransforms.Text = "Apply UV Transforms (diffuse only)";
             this.chkApplyUVTransforms.UseVisualStyleBackColor = true;
             this.chkApplyUVTransforms.CheckedChanged += new System.EventHandler(this.chkApplyUVTransforms_CheckedChanged);
-            //
+            // 
             // chkTextureChannelComps
-            //
+            // 
             this.chkTextureChannelComps.AutoSize = true;
             this.chkTextureChannelComps.Checked = true;
             this.chkTextureChannelComps.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -174,33 +177,44 @@
             this.chkTextureChannelComps.Text = "Use Texture Channel Swaps";
             this.chkTextureChannelComps.UseVisualStyleBackColor = true;
             this.chkTextureChannelComps.CheckedChanged += new System.EventHandler(this.chkTextureChannelComps_CheckedChanged);
-            //
+            // 
             // chkForceZeroShininessFbx
-            //
+            // 
             this.chkForceZeroShininessFbx.AutoSize = true;
             this.chkForceZeroShininessFbx.Location = new System.Drawing.Point(20, 193);
             this.chkForceZeroShininessFbx.Name = "chkForceZeroShininessFbx";
-            this.chkForceZeroShininessFbx.Size = new System.Drawing.Size(211, 17);
+            this.chkForceZeroShininessFbx.Size = new System.Drawing.Size(197, 17);
             this.chkForceZeroShininessFbx.TabIndex = 20;
             this.chkForceZeroShininessFbx.Text = "FBX: Force Material Shininess to 0.0";
             this.chkForceZeroShininessFbx.UseVisualStyleBackColor = true;
             this.chkForceZeroShininessFbx.CheckedChanged += new System.EventHandler(this.chkForceZeroShininessFbx_CheckedChanged);
-            //
+            // 
             // chkNormalsAsFlatColorFbx
-            //
+            // 
             this.chkNormalsAsFlatColorFbx.AutoSize = true;
             this.chkNormalsAsFlatColorFbx.Checked = true;
             this.chkNormalsAsFlatColorFbx.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkNormalsAsFlatColorFbx.Location = new System.Drawing.Point(20, 216);
             this.chkNormalsAsFlatColorFbx.Name = "chkNormalsAsFlatColorFbx";
-            this.chkNormalsAsFlatColorFbx.Size = new System.Drawing.Size(241, 17);
+            this.chkNormalsAsFlatColorFbx.Size = new System.Drawing.Size(143, 17);
             this.chkNormalsAsFlatColorFbx.TabIndex = 21;
-            this.chkNormalsAsFlatColorFbx.Text = "★";
+            this.chkNormalsAsFlatColorFbx.Text = "★ (Normals as Flat Color)";
             this.chkNormalsAsFlatColorFbx.UseVisualStyleBackColor = true;
             this.chkNormalsAsFlatColorFbx.CheckedChanged += new System.EventHandler(this.chkNormalsAsFlatColorFbx_CheckedChanged);
-            //
+            // 
+            // chkDummyAttributes
+            // 
+            this.chkDummyAttributes.AutoSize = true;
+            this.chkDummyAttributes.Location = new System.Drawing.Point(20, 239);
+            this.chkDummyAttributes.Name = "chkDummyAttributes";
+            this.chkDummyAttributes.Size = new System.Drawing.Size(137, 17);
+            this.chkDummyAttributes.TabIndex = 22;
+            this.chkDummyAttributes.Text = "Insert Dummy Attributes";
+            this.chkDummyAttributes.UseVisualStyleBackColor = true;
+            this.chkDummyAttributes.CheckedChanged += new System.EventHandler(this.chkDummyAttributes_CheckedChanged);
+            // 
             // ExportModelSettings
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(344, 298);
@@ -225,5 +239,6 @@
         private STCheckBox chkTextureChannelComps;
         private STCheckBox chkForceZeroShininessFbx;
         private STCheckBox chkNormalsAsFlatColorFbx;
+        private STCheckBox chkDummyAttributes;
     }
 }
