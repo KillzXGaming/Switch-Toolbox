@@ -20,7 +20,7 @@ namespace Toolbox.Library.Rendering
 
     public class Vertex
     {
-        public static readonly Vector4 DEFAULT_COLOR = new Vector4(1); // White
+        public static readonly Vector4 DEFAULT_COLOR = Vector4.One; // White
         public static readonly Vector2 DEFAULT_UV = Vector2.Zero;
 
         public Vector3 pos = new Vector3(0);
@@ -29,6 +29,10 @@ namespace Toolbox.Library.Rendering
         public Vector4 col1 = DEFAULT_COLOR;
         public Vector4 col2 = DEFAULT_COLOR;
         public Vector4 col3 = DEFAULT_COLOR;
+        public Vector4 col4 = DEFAULT_COLOR;
+        public Vector4 col5 = DEFAULT_COLOR;
+        public Vector4 col6 = DEFAULT_COLOR;
+        public Vector4 col7 = DEFAULT_COLOR;
 
         public Vector2 uv0 = DEFAULT_UV;
         public Vector2 uv1 = DEFAULT_UV;

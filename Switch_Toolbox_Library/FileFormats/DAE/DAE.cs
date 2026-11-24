@@ -376,6 +376,10 @@ namespace Toolbox.Library
                     List<float> Color2 = new List<float>();
                     List<float> Color3 = new List<float>();
                     List<float> Color4 = new List<float>();
+                    List<float> Color5 = new List<float>();
+                    List<float> Color6 = new List<float>();
+                    List<float> Color7 = new List<float>();
+                    List<float> Color8 = new List<float>();
                     List<int[]> BoneIndices = new List<int[]>();
                     List<float[]> BoneWeights = new List<float[]>();
 
@@ -384,6 +388,10 @@ namespace Toolbox.Library
                     bool HasColor1 = false;
                     bool HasColor2 = false;
                     bool HasColor3 = false;
+                    bool HasColor4 = false;
+                    bool HasColor5 = false;
+                    bool HasColor6 = false;
+                    bool HasColor7 = false;
                     bool HasUV0 = false;
                     bool HasUV1 = false;
                     bool HasUV2 = false;
@@ -415,6 +423,26 @@ namespace Toolbox.Library
                             {
                                 HasColor3 = true;
                                 ColorCount = 4;
+                            }
+                            if (vertex.col4 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor4 = true;
+                                ColorCount = 5;
+                            }
+                            if (vertex.col5 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor5 = true;
+                                ColorCount = 6;
+                            }
+                            if (vertex.col6 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor6 = true;
+                                ColorCount = 7;
+                            }
+                            if (vertex.col7 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor7 = true;
+                                ColorCount = 8;
                             }
                         }
 
@@ -462,6 +490,10 @@ namespace Toolbox.Library
                         Color2.AddRange(new float[] { vertex.col1.X, vertex.col1.Y, vertex.col1.Z, vertex.col1.W });
                         Color3.AddRange(new float[] { vertex.col2.X, vertex.col2.Y, vertex.col2.Z, vertex.col2.W });
                         Color4.AddRange(new float[] { vertex.col3.X, vertex.col3.Y, vertex.col3.Z, vertex.col3.W });
+                        Color5.AddRange(new float[] { vertex.col4.X, vertex.col4.Y, vertex.col4.Z, vertex.col4.W });
+                        Color6.AddRange(new float[] { vertex.col5.X, vertex.col5.Y, vertex.col5.Z, vertex.col5.W });
+                        Color7.AddRange(new float[] { vertex.col6.X, vertex.col6.Y, vertex.col6.Z, vertex.col6.W });
+                        Color8.AddRange(new float[] { vertex.col7.X, vertex.col7.Y, vertex.col7.Z, vertex.col7.W });
 
                         List<int> bIndices = new List<int>();
                         List<float> bWeights = new List<float>();
@@ -579,6 +611,10 @@ namespace Toolbox.Library
                         HasColor1 = HasColor1 || (ColorCount > 1);
                         HasColor2 = HasColor2 || (ColorCount > 2);
                         HasColor3 = HasColor3 || (ColorCount > 3);
+                        HasColor4 = HasColor4 || (ColorCount > 4);
+                        HasColor5 = HasColor5 || (ColorCount > 5);
+                        HasColor6 = HasColor6 || (ColorCount > 6);
+                        HasColor7 = HasColor7 || (ColorCount > 7);
                     }
 
                     TriangleList[] trigList = triangleLists.ToArray();
@@ -592,6 +628,14 @@ namespace Toolbox.Library
                         writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color3.ToArray(), trigList, 2);
                     if (HasColor3)
                         writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color4.ToArray(), trigList, 3);
+                    if (HasColor4)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color5.ToArray(), trigList, 4);
+                    if (HasColor5)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color6.ToArray(), trigList, 5);
+                    if (HasColor6)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color7.ToArray(), trigList, 6);
+                    if (HasColor7)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color8.ToArray(), trigList, 7);
 
                     // Insert UVs
                     if (HasUV0)

@@ -109,6 +109,10 @@ namespace Toolbox.Library.FBX
                 bool hasColor1 = false;
                 bool hasColor2 = false;
                 bool hasColor3 = false;
+                bool hasColor4 = false;
+                bool hasColor5 = false;
+                bool hasColor6 = false;
+                bool hasColor7 = false;
                 int colorCount = 0;
                 int uvCount = 0;
                 bool hasUV0 = false;
@@ -141,6 +145,26 @@ namespace Toolbox.Library.FBX
                     {
                         hasColor3 = true;
                         colorCount = 4;
+                    }
+                    if (settings.UseVertexColors && vertex.col4 != Vertex.DEFAULT_COLOR)
+                    {
+                        hasColor4 = true;
+                        colorCount = 5;
+                    }
+                    if (settings.UseVertexColors && vertex.col5 != Vertex.DEFAULT_COLOR)
+                    {
+                        hasColor5 = true;
+                        colorCount = 6;
+                    }
+                    if (settings.UseVertexColors && vertex.col6 != Vertex.DEFAULT_COLOR)
+                    {
+                        hasColor6 = true;
+                        colorCount = 7;
+                    }
+                    if (settings.UseVertexColors && vertex.col7 != Vertex.DEFAULT_COLOR)
+                    {
+                        hasColor7 = true;
+                        colorCount = 8;
                     }
 
                     if (vertex.uv0 != Vertex.DEFAULT_UV)
@@ -249,6 +273,10 @@ namespace Toolbox.Library.FBX
                         hasColor1 = hasColor1 || (colorCount > 1);
                         hasColor2 = hasColor2 || (colorCount > 2);
                         hasColor3 = hasColor3 || (colorCount > 3);
+                        hasColor4 = hasColor4 || (colorCount > 4);
+                        hasColor5 = hasColor5 || (colorCount > 5);
+                        hasColor6 = hasColor6 || (colorCount > 6);
+                        hasColor7 = hasColor7 || (colorCount > 7);
                     }
 
                     // Add ALL UV channels that exist in the mesh
@@ -281,14 +309,22 @@ namespace Toolbox.Library.FBX
                     // This matches the DAE exporter which exports all color sets
                     if (settings.UseVertexColors)
                     {
-                        if (hasColor0 || mesh.HasVertColors || v.col != Vertex.DEFAULT_COLOR)
+                        if (hasColor0 || mesh.HasVertColors)
                             FbxNativeWrapper.Exp_AddVertexColor(0, v.col.X, v.col.Y, v.col.Z, v.col.W);
-                        if (hasColor1 || mesh.HasVertColors2 || v.col1 != Vertex.DEFAULT_COLOR)
+                        if (hasColor1 || mesh.HasVertColors2)
                             FbxNativeWrapper.Exp_AddVertexColor(1, v.col1.X, v.col1.Y, v.col1.Z, v.col1.W);
-                        if (hasColor2 || v.col2 != Vertex.DEFAULT_COLOR)
+                        if (hasColor2)
                             FbxNativeWrapper.Exp_AddVertexColor(2, v.col2.X, v.col2.Y, v.col2.Z, v.col2.W);
-                        if (hasColor3 || v.col3 != Vertex.DEFAULT_COLOR)
+                        if (hasColor3)
                             FbxNativeWrapper.Exp_AddVertexColor(3, v.col3.X, v.col3.Y, v.col3.Z, v.col3.W);
+                        if (hasColor4)
+                            FbxNativeWrapper.Exp_AddVertexColor(4, v.col4.X, v.col4.Y, v.col4.Z, v.col4.W);
+                        if (hasColor5)
+                            FbxNativeWrapper.Exp_AddVertexColor(5, v.col5.X, v.col5.Y, v.col5.Z, v.col5.W);
+                        if (hasColor6)
+                            FbxNativeWrapper.Exp_AddVertexColor(6, v.col6.X, v.col6.Y, v.col6.Z, v.col6.W);
+                        if (hasColor7)
+                            FbxNativeWrapper.Exp_AddVertexColor(7, v.col7.X, v.col7.Y, v.col7.Z, v.col7.W);
                     }
                     else
                     {
