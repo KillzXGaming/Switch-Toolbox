@@ -266,6 +266,10 @@ namespace FirstPlugin
             Syroot.Maths.Vector4F[] vec4c1 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4c2 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4c3 = new Syroot.Maths.Vector4F[0];
+            Syroot.Maths.Vector4F[] vec4c4 = new Syroot.Maths.Vector4F[0];
+            Syroot.Maths.Vector4F[] vec4c5 = new Syroot.Maths.Vector4F[0];
+            Syroot.Maths.Vector4F[] vec4c6 = new Syroot.Maths.Vector4F[0];
+            Syroot.Maths.Vector4F[] vec4c7 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4t0 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4b0 = new Syroot.Maths.Vector4F[0];
             Syroot.Maths.Vector4F[] vec4w0 = new Syroot.Maths.Vector4F[0];
@@ -304,6 +308,14 @@ namespace FirstPlugin
                     vec4c2 = AttributeData(att, helper, "_c2");
                 if (att.Name == "_c3")
                     vec4c3 = AttributeData(att, helper, "_c3");
+                if (att.Name == "_c4")
+                    vec4c4 = AttributeData(att, helper, "_c4");
+                if (att.Name == "_c5")
+                    vec4c5 = AttributeData(att, helper, "_c5");
+                if (att.Name == "_c6")
+                    vec4c6 = AttributeData(att, helper, "_c6");
+                if (att.Name == "_c7")
+                    vec4c7 = AttributeData(att, helper, "_c7");
                 if (att.Name == "_t0")
                     vec4t0 = AttributeData(att, helper, "_t0");
                 if (att.Name == "_b0")
@@ -405,11 +417,19 @@ namespace FirstPlugin
                 if (vec4c0.Length > 0)
                     v.col = new Vector4(vec4c0[i].X, vec4c0[i].Y, vec4c0[i].Z, vec4c0[i].W);
                 if (vec4c1.Length > 0)
-                    v.col2 = new Vector4(vec4c1[i].X, vec4c1[i].Y, vec4c1[i].Z, vec4c1[i].W);
+                    v.col1 = new Vector4(vec4c1[i].X, vec4c1[i].Y, vec4c1[i].Z, vec4c1[i].W);
                 if (vec4c2.Length > 0)
-                    v.col3 = new Vector4(vec4c2[i].X, vec4c2[i].Y, vec4c2[i].Z, vec4c2[i].W);
+                    v.col2 = new Vector4(vec4c2[i].X, vec4c2[i].Y, vec4c2[i].Z, vec4c2[i].W);
                 if (vec4c3.Length > 0)
-                    v.col4 = new Vector4(vec4c3[i].X, vec4c3[i].Y, vec4c3[i].Z, vec4c3[i].W);
+                    v.col3 = new Vector4(vec4c3[i].X, vec4c3[i].Y, vec4c3[i].Z, vec4c3[i].W);
+                if (vec4c4.Length > 0)
+                    v.col4 = new Vector4(vec4c4[i].X, vec4c4[i].Y, vec4c4[i].Z, vec4c4[i].W);
+                if (vec4c5.Length > 0)
+                    v.col5 = new Vector4(vec4c5[i].X, vec4c5[i].Y, vec4c5[i].Z, vec4c5[i].W);
+                if (vec4c6.Length > 0)
+                    v.col6 = new Vector4(vec4c6[i].X, vec4c6[i].Y, vec4c6[i].Z, vec4c6[i].W);
+                if (vec4c7.Length > 0)
+                    v.col7 = new Vector4(vec4c7[i].X, vec4c7[i].Y, vec4c7[i].Z, vec4c7[i].W);
 
                 if (fshp.VertexSkinCount == 1)
                 {

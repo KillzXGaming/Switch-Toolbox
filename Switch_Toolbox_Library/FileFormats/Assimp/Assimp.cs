@@ -717,10 +717,25 @@ namespace Toolbox.Library
                     vert.uv2 = new Vector2(msh.TextureCoordinateChannels[2][v].X, msh.TextureCoordinateChannels[2][v].Y);
                 if (msh.HasTangentBasis)
                     vert.tan = new Vector4(msh.Tangents[v].X, msh.Tangents[v].Y, msh.Tangents[v].Z, 1);
-                if (msh.HasVertexColors(0) && !isDae)
-                    vert.col = new Vector4(msh.VertexColorChannels[0][v].R, msh.VertexColorChannels[0][v].G, msh.VertexColorChannels[0][v].B, msh.VertexColorChannels[0][v].A);
-                if (msh.HasVertexColors(1) && !isDae)
-                    vert.col2 = new Vector4(msh.VertexColorChannels[1][v].R, msh.VertexColorChannels[1][v].G, msh.VertexColorChannels[1][v].B, msh.VertexColorChannels[1][v].A);
+                if (!isDae)
+                {
+                    if (msh.HasVertexColors(0))
+                        vert.col = new Vector4(msh.VertexColorChannels[0][v].R, msh.VertexColorChannels[0][v].G, msh.VertexColorChannels[0][v].B, msh.VertexColorChannels[0][v].A);
+                    if (msh.HasVertexColors(1))
+                        vert.col1 = new Vector4(msh.VertexColorChannels[1][v].R, msh.VertexColorChannels[1][v].G, msh.VertexColorChannels[1][v].B, msh.VertexColorChannels[1][v].A);
+                    if (msh.HasVertexColors(2))
+                        vert.col2 = new Vector4(msh.VertexColorChannels[2][v].R, msh.VertexColorChannels[2][v].G, msh.VertexColorChannels[2][v].B, msh.VertexColorChannels[2][v].A);
+                    if (msh.HasVertexColors(3))
+                        vert.col3 = new Vector4(msh.VertexColorChannels[3][v].R, msh.VertexColorChannels[3][v].G, msh.VertexColorChannels[3][v].B, msh.VertexColorChannels[3][v].A);
+                    if (msh.HasVertexColors(4))
+                        vert.col4 = new Vector4(msh.VertexColorChannels[4][v].R, msh.VertexColorChannels[4][v].G, msh.VertexColorChannels[4][v].B, msh.VertexColorChannels[4][v].A);
+                    if (msh.HasVertexColors(5))
+                        vert.col5 = new Vector4(msh.VertexColorChannels[5][v].R, msh.VertexColorChannels[5][v].G, msh.VertexColorChannels[5][v].B, msh.VertexColorChannels[5][v].A);
+                    if (msh.HasVertexColors(6))
+                        vert.col6 = new Vector4(msh.VertexColorChannels[6][v].R, msh.VertexColorChannels[6][v].G, msh.VertexColorChannels[6][v].B, msh.VertexColorChannels[6][v].A);
+                    if (msh.HasVertexColors(7))
+                        vert.col7 = new Vector4(msh.VertexColorChannels[7][v].R, msh.VertexColorChannels[7][v].G, msh.VertexColorChannels[7][v].B, msh.VertexColorChannels[7][v].A);
+                }
                 if (msh.HasTangentBasis)
                     vert.bitan = new Vector4(msh.BiTangents[v].X, msh.BiTangents[v].Y, msh.BiTangents[v].Z, 1);
                 vertices.Add(vert);

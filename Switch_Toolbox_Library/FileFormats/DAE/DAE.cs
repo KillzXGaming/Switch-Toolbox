@@ -1,19 +1,20 @@
-﻿using System;
+﻿using Collada141;
+using Newtonsoft.Json;
+using Octokit;
+using OpenTK;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Collada141;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
-using OpenTK;
-using Toolbox.Library.Rendering;
 using Toolbox.Library.Collada;
 using Toolbox.Library.IO;
-using Newtonsoft.Json;
-using System.IO;
+using Toolbox.Library.Rendering;
 
 namespace Toolbox.Library
 {
@@ -33,6 +34,7 @@ namespace Toolbox.Library
             public bool TransformColorUVs = false;
             public bool ForceZeroShininessFbx = false;
             public bool ExportNormalMapsAsFlatColorFbx = true;
+            public bool InsertDummyAttributes = false;
 
             public bool AddLeafBones = false;
 
@@ -374,33 +376,96 @@ namespace Toolbox.Library
                     List<float> Color2 = new List<float>();
                     List<float> Color3 = new List<float>();
                     List<float> Color4 = new List<float>();
+                    List<float> Color5 = new List<float>();
+                    List<float> Color6 = new List<float>();
+                    List<float> Color7 = new List<float>();
+                    List<float> Color8 = new List<float>();
                     List<int[]> BoneIndices = new List<int[]>();
                     List<float[]> BoneWeights = new List<float[]>();
 
                     bool HasNormals = false;
-                    bool HasColors = false;
-                    bool HasColors2 = false;
-                    bool HasColors3 = false;
-                    bool HasColors4 = false;
+                    bool HasColor0 = false;
+                    bool HasColor1 = false;
+                    bool HasColor2 = false;
+                    bool HasColor3 = false;
+                    bool HasColor4 = false;
+                    bool HasColor5 = false;
+                    bool HasColor6 = false;
+                    bool HasColor7 = false;
                     bool HasUV0 = false;
                     bool HasUV1 = false;
                     bool HasUV2 = false;
                     bool HasUV3 = false;
                     bool HasBoneIds = false;
+                    int ColorCount = 0;
+                    int UVCount = 0;
 
                     var vertices = mesh.GetLodVertices(0);
                     foreach (var vertex in vertices)
                     {
                         if (vertex.nrm != Vector3.Zero) HasNormals = true;
-                        if (settings.UseVertexColors) HasColors = true;
-                        if (vertex.col2 != Vector4.One && settings.UseVertexColors) HasColors2 = true;
-                        if (vertex.col3 != Vector4.One && settings.UseVertexColors) HasColors3 = true;
-                        if (vertex.col4 != Vector4.One && settings.UseVertexColors) HasColors4 = true;
+                        if (settings.UseVertexColors)
+                        {
+                            HasColor0 = true;
+                            ColorCount = 1;
 
-                        if (vertex.uv0 != Vector2.Zero) HasUV0 = true;
-                        if (vertex.uv1 != Vector2.Zero) HasUV1 = true;
-                        if (vertex.uv2 != Vector2.Zero) HasUV2 = true;
-                        if (vertex.uv3 != Vector2.Zero) HasUV3 = true;
+                            if (vertex.col1 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor1 = true;
+                                ColorCount = 2;
+                            }
+                            if (vertex.col2 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor2 = true;
+                                ColorCount = 3;
+                            }
+                            if (vertex.col3 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor3 = true;
+                                ColorCount = 4;
+                            }
+                            if (vertex.col4 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor4 = true;
+                                ColorCount = 5;
+                            }
+                            if (vertex.col5 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor5 = true;
+                                ColorCount = 6;
+                            }
+                            if (vertex.col6 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor6 = true;
+                                ColorCount = 7;
+                            }
+                            if (vertex.col7 != Vertex.DEFAULT_COLOR)
+                            {
+                                HasColor7 = true;
+                                ColorCount = 8;
+                            }
+                        }
+
+                        if (vertex.uv0 != Vertex.DEFAULT_UV)
+                        {
+                            HasUV0 = true;
+                            UVCount = 1;
+                        }
+                        if (vertex.uv1 != Vertex.DEFAULT_UV)
+                        {
+                            HasUV1 = true;
+                            UVCount = 2;
+                        }
+                        if (vertex.uv2 != Vertex.DEFAULT_UV)
+                        {
+                            HasUV2 = true;
+                            UVCount = 3;
+                        }
+                        if (vertex.uv3 != Vertex.DEFAULT_UV)
+                        {
+                            HasUV3 = true;
+                            UVCount = 4;
+                        }
                         if (vertex.boneIds.Count > 0) HasBoneIds = true;
 
                         Position.Add(vertex.pos.X); Position.Add(vertex.pos.Y); Position.Add(vertex.pos.Z);
@@ -422,9 +487,13 @@ namespace Toolbox.Library
                         }
 
                         Color.AddRange(new float[] { vertex.col.X, vertex.col.Y, vertex.col.Z, vertex.col.W });
-                        Color2.AddRange(new float[] { vertex.col2.X, vertex.col2.Y, vertex.col2.Z, vertex.col2.W });
-                        Color3.AddRange(new float[] { vertex.col3.X, vertex.col3.Y, vertex.col3.Z, vertex.col3.W });
-                        Color4.AddRange(new float[] { vertex.col4.X, vertex.col4.Y, vertex.col4.Z, vertex.col4.W });
+                        Color2.AddRange(new float[] { vertex.col1.X, vertex.col1.Y, vertex.col1.Z, vertex.col1.W });
+                        Color3.AddRange(new float[] { vertex.col2.X, vertex.col2.Y, vertex.col2.Z, vertex.col2.W });
+                        Color4.AddRange(new float[] { vertex.col3.X, vertex.col3.Y, vertex.col3.Z, vertex.col3.W });
+                        Color5.AddRange(new float[] { vertex.col4.X, vertex.col4.Y, vertex.col4.Z, vertex.col4.W });
+                        Color6.AddRange(new float[] { vertex.col5.X, vertex.col5.Y, vertex.col5.Z, vertex.col5.W });
+                        Color7.AddRange(new float[] { vertex.col6.X, vertex.col6.Y, vertex.col6.Z, vertex.col6.W });
+                        Color8.AddRange(new float[] { vertex.col7.X, vertex.col7.Y, vertex.col7.Z, vertex.col7.W });
 
                         List<int> bIndices = new List<int>();
                         List<float> bWeights = new List<float>();
@@ -528,26 +597,55 @@ namespace Toolbox.Library
                     if (HasNormals)
                         writer.WriteGeometrySource(mesh.Text, SemanticType.NORMAL, Normal.ToArray(), triangleLists.ToArray());
 
-                    if (HasColors)
-                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color.ToArray(), triangleLists.ToArray(), 0);
-                    if (HasColors2)
-                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color2.ToArray(), triangleLists.ToArray(), 1);
-                    if (HasColors3)
-                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color3.ToArray(), triangleLists.ToArray(), 2);
-                    if (HasColors4)
-                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color4.ToArray(), triangleLists.ToArray(), 3);
+                    if (settings.InsertDummyAttributes)
+                    {
+                        // Force UVs and Vertex Colors on for dummy attributes
+                        // SB sets the missing colors automatically to RED (R=1.0 G=0.0 B=0.0 A=0.0)
 
+                        HasUV0 = HasUV0 || (UVCount > 0);
+                        HasUV1 = HasUV0 || (UVCount > 1);
+                        HasUV2 = HasUV0 || (UVCount > 2);
+                        HasUV3 = HasUV0 || (UVCount > 3);
+
+                        HasColor0 = HasColor0 || (ColorCount > 0);
+                        HasColor1 = HasColor1 || (ColorCount > 1);
+                        HasColor2 = HasColor2 || (ColorCount > 2);
+                        HasColor3 = HasColor3 || (ColorCount > 3);
+                        HasColor4 = HasColor4 || (ColorCount > 4);
+                        HasColor5 = HasColor5 || (ColorCount > 5);
+                        HasColor6 = HasColor6 || (ColorCount > 6);
+                        HasColor7 = HasColor7 || (ColorCount > 7);
+                    }
+
+                    TriangleList[] trigList = triangleLists.ToArray();
+
+                    // Insert Colors
+                    if (HasColor0)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color.ToArray(), trigList, 0);
+                    if (HasColor1)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color2.ToArray(), trigList, 1);
+                    if (HasColor2)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color3.ToArray(), trigList, 2);
+                    if (HasColor3)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color4.ToArray(), trigList, 3);
+                    if (HasColor4)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color5.ToArray(), trigList, 4);
+                    if (HasColor5)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color6.ToArray(), trigList, 5);
+                    if (HasColor6)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color7.ToArray(), trigList, 6);
+                    if (HasColor7)
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.COLOR, Color8.ToArray(), trigList, 7);
+
+                    // Insert UVs
                     if (HasUV0)
-                        writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV0.ToArray(), triangleLists.ToArray(), 0);
-
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV0.ToArray(), trigList, 0);
                     if (HasUV1)
-                        writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV1.ToArray(), triangleLists.ToArray(), 1);
-
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV1.ToArray(), trigList, 1);
                     if (HasUV2)
-                        writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV2.ToArray(), triangleLists.ToArray(), 2);
-
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV2.ToArray(), trigList, 2);
                     if (HasUV3)
-                        writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV3.ToArray(), triangleLists.ToArray(), 3);
+                        writer.WriteGeometrySource(mesh.Text, SemanticType.TEXCOORD, UV3.ToArray(), trigList, 3);
 
                     if (HasBoneIds)
                         writer.AttachGeometryController(BoneIndices, BoneWeights);

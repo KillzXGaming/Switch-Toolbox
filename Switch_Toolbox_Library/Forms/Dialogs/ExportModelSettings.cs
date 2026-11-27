@@ -28,6 +28,7 @@ namespace Toolbox.Library.Forms
             chkTextureChannelComps.Checked = Settings.UseTextureChannelComponents;
             chkForceZeroShininessFbx.Checked = Settings.ForceZeroShininessFbx;
             chkNormalsAsFlatColorFbx.Checked = Settings.ExportNormalMapsAsFlatColorFbx;
+            chkDummyAttributes.Checked = Settings.InsertDummyAttributes;
         }
 
         private void exportTexturesChkBox_CheckedChanged(object sender, EventArgs e) {
@@ -71,6 +72,11 @@ namespace Toolbox.Library.Forms
         private void chkNormalsAsFlatColorFbx_CheckedChanged(object sender, EventArgs e)
         {
             Settings.ExportNormalMapsAsFlatColorFbx = chkNormalsAsFlatColorFbx.Checked;
+        }
+
+        private void chkDummyAttributes_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.InsertDummyAttributes = chkDummyAttributes.Checked;
         }
 
         protected override void OnClosing(CancelEventArgs e)

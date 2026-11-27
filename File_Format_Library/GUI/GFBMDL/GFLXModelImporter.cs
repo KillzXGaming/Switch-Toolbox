@@ -159,7 +159,7 @@ namespace FirstPlugin.Forms
                                 setting.Color2Format = (BufferFormat)attribute.BufferFormat;
                                 setting.HasColor2 = true;
 
-                                bool hasColors = mesh.vertices.Any(x => x.col2 != OpenTK.Vector4.Zero);
+                                bool hasColors = mesh.vertices.Any(x => x.col1 != OpenTK.Vector4.Zero);
                                 if (!hasColors)
                                     setting.SetNormalsToColorChannel2 = true;
                                 break;

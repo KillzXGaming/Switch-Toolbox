@@ -1852,6 +1852,42 @@ namespace Bfres.Structs
                     atrib.Add(vert);
                 }
 
+                if (att.Name == "_c4")
+                {
+                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                    vert.Name = att.Name;
+                    vert.Data = colors4.ToArray();
+                    vert.Format = att.Format;
+                    atrib.Add(vert);
+                }
+
+                if (att.Name == "_c5")
+                {
+                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                    vert.Name = att.Name;
+                    vert.Data = colors5.ToArray();
+                    vert.Format = att.Format;
+                    atrib.Add(vert);
+                }
+
+                if (att.Name == "_c6")
+                {
+                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                    vert.Name = att.Name;
+                    vert.Data = colors6.ToArray();
+                    vert.Format = att.Format;
+                    atrib.Add(vert);
+                }
+
+                if (att.Name == "_c7")
+                {
+                    VertexBufferHelperAttrib vert = new VertexBufferHelperAttrib();
+                    vert.Name = att.Name;
+                    vert.Data = colors7.ToArray();
+                    vert.Format = att.Format;
+                    atrib.Add(vert);
+                }
+
                 // Set _w and _i 
                 for (int i = 0; i < weights.Count; i++)
                 {
@@ -1904,6 +1940,10 @@ namespace Bfres.Structs
         internal List<Syroot.Maths.Vector4F> colors1 = new List<Syroot.Maths.Vector4F>();
         internal List<Syroot.Maths.Vector4F> colors2 = new List<Syroot.Maths.Vector4F>();
         internal List<Syroot.Maths.Vector4F> colors3 = new List<Syroot.Maths.Vector4F>();
+        internal List<Syroot.Maths.Vector4F> colors4 = new List<Syroot.Maths.Vector4F>();
+        internal List<Syroot.Maths.Vector4F> colors5 = new List<Syroot.Maths.Vector4F>();
+        internal List<Syroot.Maths.Vector4F> colors6 = new List<Syroot.Maths.Vector4F>();
+        internal List<Syroot.Maths.Vector4F> colors7 = new List<Syroot.Maths.Vector4F>();
 
         public string GetBoneNameFromIndex(FMDL mdl, int index)
         {
@@ -2136,6 +2176,10 @@ namespace Bfres.Structs
             colors1.Clear();
             colors2.Clear();
             colors3.Clear();
+            colors4.Clear();
+            colors5.Clear();
+            colors6.Clear();
+            colors7.Clear();
 
             // Create arrays to be able to fit the needed skin count
             int listCount = (int)Math.Ceiling(VertexSkinCount / 4.0);
@@ -2169,9 +2213,13 @@ namespace Bfres.Structs
                 tans.Add(new Syroot.Maths.Vector4F(vtx.tan.X, vtx.tan.Y, vtx.tan.Z, vtx.tan.W));
                 bitans.Add(new Syroot.Maths.Vector4F(vtx.bitan.X, vtx.bitan.Y, vtx.bitan.Z, vtx.bitan.W));
                 colors.Add(new Syroot.Maths.Vector4F(vtx.col.X, vtx.col.Y, vtx.col.Z, vtx.col.W));
-                colors1.Add(new Syroot.Maths.Vector4F(vtx.col2.X, vtx.col2.Y, vtx.col2.Z, vtx.col2.W));
-                colors2.Add(new Syroot.Maths.Vector4F(vtx.col3.X, vtx.col3.Y, vtx.col3.Z, vtx.col3.W));
-                colors3.Add(new Syroot.Maths.Vector4F(vtx.col4.X, vtx.col4.Y, vtx.col4.Z, vtx.col4.W));
+                colors1.Add(new Syroot.Maths.Vector4F(vtx.col1.X, vtx.col1.Y, vtx.col1.Z, vtx.col1.W));
+                colors2.Add(new Syroot.Maths.Vector4F(vtx.col2.X, vtx.col2.Y, vtx.col2.Z, vtx.col2.W));
+                colors3.Add(new Syroot.Maths.Vector4F(vtx.col3.X, vtx.col3.Y, vtx.col3.Z, vtx.col3.W));
+                colors4.Add(new Syroot.Maths.Vector4F(vtx.col4.X, vtx.col4.Y, vtx.col4.Z, vtx.col4.W));
+                colors5.Add(new Syroot.Maths.Vector4F(vtx.col5.X, vtx.col5.Y, vtx.col5.Z, vtx.col5.W));
+                colors6.Add(new Syroot.Maths.Vector4F(vtx.col6.X, vtx.col6.Y, vtx.col6.Z, vtx.col6.W));
+                colors7.Add(new Syroot.Maths.Vector4F(vtx.col7.X, vtx.col7.Y, vtx.col7.Z, vtx.col7.W));
 
                 // Init arrays based on skincount
                 float[] weightsA = new float[TargetVertexSkinCount];

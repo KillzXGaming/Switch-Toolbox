@@ -67,10 +67,10 @@ namespace FirstPlugin
                                 values.Add(mesh.vertices[v].col.W * 255);
                                 break;
                             case VertexType.Color2:
-                                values.Add(mesh.vertices[v].col2.X * 255);
-                                values.Add(mesh.vertices[v].col2.Y * 255);
-                                values.Add(mesh.vertices[v].col2.Z * 255);
-                                values.Add(mesh.vertices[v].col2.W * 255);
+                                values.Add(mesh.vertices[v].col1.X * 255);
+                                values.Add(mesh.vertices[v].col1.Y * 255);
+                                values.Add(mesh.vertices[v].col1.Z * 255);
+                                values.Add(mesh.vertices[v].col1.W * 255);
                                 break;
                             case VertexType.UV1:
                                 values.Add(mesh.vertices[v].uv0.X);
@@ -291,7 +291,7 @@ namespace FirstPlugin
                                 if (attribute.BufferFormat == (uint)BufferFormat.Byte)
                                     colors2 = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
 
-                                vertex.col2 = colors2 / 255f;
+                                vertex.col1 = colors2 / 255f;
                                 break;
                             case VertexType.Bitangent:
                                 var bitans = ParseBuffer(reader, attribute.BufferFormat, attribute.VertexType, attribute.ElementCount);
